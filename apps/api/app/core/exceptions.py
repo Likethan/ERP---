@@ -20,11 +20,15 @@ class CampusOSException(HTTPException):
 
 
 class NotFoundException(CampusOSException):
-    def __init__(self, resource: str, identifier: Any):
+    def __init__(self, resource: str, identifier: Any = None):
+        if identifier is not None:
+            msg = f"{resource} with identifier '{identifier}' was not found."
+        else:
+            msg = resource
         super().__init__(
             status_code=status.HTTP_404_NOT_FOUND,
             code="RESOURCE_NOT_FOUND",
-            message=f"{resource} with identifier '{identifier}' was not found.",
+            message=msg,
         )
 
 
@@ -56,3 +60,22 @@ class ValidationException(CampusOSException):
             message=message,
             details=details,
         )
+
+
+class ConflictException(CampusOSException):
+    def __init__(
+        self,
+        resource_or_message: str,
+        conflict_field: str | None = None,
+        value: Any = None,
+    ):
+        if conflict_field is not None:
+            msg = f"{resource_or_message} with {conflict_field} '{value}' already exists."
+        else:
+            msg = resource_or_message
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
+            code="RESOURCE_CONFLICT",
+            message=msg,
+        )
+

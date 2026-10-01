@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 
 
 class BaseModel(Base):
-    """Abstract base model with UUID primary key and timestamp tracking."""
+    """Abstract base model with UUID primary key and timezone-aware timestamps."""
 
     __abstract__ = True
 
@@ -44,6 +44,37 @@ class TenantScopedModel(BaseModel):
 
     tenant_id: Mapped[UUID] = mapped_column(
         PG_UUID(as_uuid=True),
+        ForeignKey("core_institutions.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
+    )
+
+
+class SoftDeleteMixin:
+    """Mixin for models requiring recoverable soft deletion."""
+
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=None,
+    )
+
+    @property
+    def is_deleted(self) -> bool:
+        return self.deleted_at is not None
+
+
+class AuditMixin:
+    """Mixin tracking creator and modifier user IDs."""
+
+    created_by_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("people_users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+
+    updated_by_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("people_users.id", ondelete="SET NULL"),
+        nullable=True,
     )

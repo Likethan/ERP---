@@ -62,12 +62,22 @@ Step 13: Multi-Tenant SaaS Evolution (Self-service provisioning, custom subdomai
 - Unified `users` table linked to polymorphic profile extensions: `students`, `faculty`, `staff`, `parents`.
 - Roll number generation, admission tracking, and biographical data governance.
 
-### Phase 5–11: Operational Domain Implementations
+### Phase 5–9: Operational Domain Implementations (Completed & Verified)
 
-- Step-by-step rollout of academic, attendance, exam, finance, placement, infrastructure, and document modules.
+- **Step 5: Academic Operations**: Curricula schemes, subjects, course offerings, syllabus units, and conflict-free timetables.
+- **Step 6: Attendance Management**: Multi-status attendance sessions, bulk record entry, leave requests, and immutability locking.
+- **Step 7: Examination & Evaluation**: Grading scales, internal assessments, semester exams, bulk marks entry, and GPA calculation.
+- **Step 8: Finance & Billing Engine**: Fee categories, structures, student billing, exact decimal arithmetic, payments, receipts, and refunds.
+- **Step 9: Career & Placements Engine**: Corporate directory, recruitment drives, deterministic rule evaluation (CGPA, backlogs, attendance, fees), interview scheduling/scoring, official offer acceptance, and accreditation analytics.
 
-### Phase 12–13: Intelligence & Scale
+### Phase 10: Campus Life & Infrastructure (Next Milestone)
 
-- Aggregated analytics dashboards for administrative leadership.
-- Permission-guarded AI assistant with deterministic tool calling.
-- Automated tenant onboarding and multi-institution isolation.
+- Comprehensive residential hostel management (blocks, rooms, bed allocations, wardens, gate passes).
+- Institutional transport logistics (vehicles, drivers, routes, stops, student/staff subscriptions).
+- Integrated campus engagement (clubs, memberships, events, and institutional announcements).
+
+### Phase 11–13: Documents, Intelligence & Scale
+
+- **Step 11: Documents & Certification**: Digital repository, automated verifiable certificate generation (bonafide, degree, transcript), QR verification.
+- **Step 12: Intelligence & Reporting**: Executive institutional dashboards, audit trails, and deterministic AI assistant layer.
+- **Step 13: Multi-Tenant SaaS Evolution**: Self-service provisioning, custom subdomains, and subscription billing.

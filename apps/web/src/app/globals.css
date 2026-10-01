@@ -4,40 +4,70 @@
 
 @layer base {
   :root {
+    --background: #090d16;
+    --foreground: #f8fafc;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #6366f1;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --card-subtle: #131b2e;
+    --popover: #0f172a;
+    --popover-foreground: #f8fafc;
+    --primary: #4f46e5;
+    --primary-foreground: #ffffff;
+    --primary-hover: #4338ca;
+    --secondary: #1e293b;
+    --secondary-foreground: #f1f5f9;
+    --secondary-hover: #334155;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --accent: #3b82f6;
+    --accent-foreground: #ffffff;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --success: #10b981;
+    --success-foreground: #ffffff;
+    --warning: #f59e0b;
+    --warning-foreground: #0f172a;
+    --info: #38bdf8;
+    --info-foreground: #0f172a;
+    --radius: 0.5rem;
+  }
+
+  .theme-light {
     --background: #f8fafc;
     --foreground: #0f172a;
     --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #4f46e5;
     --card: #ffffff;
     --card-foreground: #0f172a;
-    --primary: #0f172a;
+    --card-subtle: #f1f5f9;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #4f46e5;
     --primary-foreground: #ffffff;
-    --primary-hover: #1e293b;
+    --primary-hover: #4338ca;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    --secondary-hover: #e2e8f0;
     --muted: #f1f5f9;
     --muted-foreground: #64748b;
     --accent: #2563eb;
     --accent-foreground: #ffffff;
-    --destructive: #ef4444;
+    --destructive: #dc2626;
     --destructive-foreground: #ffffff;
-    --radius: 0.5rem;
+    --success: #059669;
+    --success-foreground: #ffffff;
+    --warning: #d97706;
+    --warning-foreground: #ffffff;
+    --info: #0284c7;
+    --info-foreground: #ffffff;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #090d16;
-      --foreground: #f8fafc;
-      --border: #1e293b;
-      --card: #0f172a;
-      --card-foreground: #f8fafc;
-      --primary: #f8fafc;
-      --primary-foreground: #0f172a;
-      --primary-hover: #e2e8f0;
-      --muted: #1e293b;
-      --muted-foreground: #94a3b8;
-      --accent: #3b82f6;
-      --accent-foreground: #ffffff;
-      --destructive: #dc2626;
-      --destructive-foreground: #ffffff;
-    }
+  * {
+    border-color: var(--border);
   }
 
   body {
@@ -47,5 +77,22 @@
       "rlig" 1,
       "calt" 1;
     -webkit-font-smoothing: antialiased;
+    selection-background-color: #4f46e5;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
   }
 }
