@@ -2,352 +2,283 @@
 
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
-import { useAuth } from "@/lib/auth-context";
-import type {
-  StudentOverallAttendanceSummary,
-  AttendanceAlert,
-  StudentCourseAttendanceSummary,
-  AttendanceRecord,
-} from "@campusos/types";
+import { attendanceService } from "@/services/attendance.service";
+import { AttendanceStudentSummary, AttendanceRiskLevel } from "@/types/attendance";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/stat-card";
+import { useToast } from "@/components/ui/toast";
+import {
+  ArrowLeft,
+  CalendarCheck,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldAlert,
+  Clock,
+  TrendingDown,
+  TrendingUp,
+  FileCheck2,
+  ExternalLink,
+  BookOpen,
+} from "lucide-react";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function StudentAttendanceDetailPage({ params }: PageProps) {
+export default function StudentAttendanceProfilePage({ params }: PageProps) {
   const resolvedParams = use(params);
   const studentId = resolvedParams.id;
-  const { hasPermission } = useAuth();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [summary, setSummary] = useState<StudentOverallAttendanceSummary | null>(null);
+  const [summary, setSummary] = useState<AttendanceStudentSummary | null>(null);
 
   useEffect(() => {
-    async function loadSummary() {
+    async function loadData() {
       try {
         setLoading(true);
-        setError(null);
-
-        const res = await apiFetch<StudentOverallAttendanceSummary>(
-          `/api/v1/attendance/students/${studentId}/summary`
-        );
-        setSummary(res.data);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Failed to load student attendance summary.");
+        const res = await attendanceService.getStudentAttendanceSummary(studentId);
+        if (res.success && res.data) {
+          setSummary(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to load student attendance summary", err);
+        showToast({ type: "error", title: "Load Error", message: "Failed to load student attendance summary." });
       } finally {
         setLoading(false);
       }
     }
-
-    loadSummary();
+    loadData();
   }, [studentId]);
+
+  if (loading && !summary) {
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+      </div>
+    );
+  }
+
+  if (!summary) {
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white">Student Not Found</h3>
+        <p className="mt-1 text-xs text-slate-500">Could not resolve attendance records for this student.</p>
+        <Link href="/app/attendance/students" className="mt-4 inline-block">
+          <Button variant="outline" size="sm">Back to Student Directory</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const getRiskBadge = (risk: AttendanceRiskLevel) => {
+    switch (risk) {
+      case "HEALTHY":
+        return <Badge variant="success">Healthy (&ge;80%)</Badge>;
+      case "WARNING":
+        return <Badge variant="warning">Warning (&lt;80%)</Badge>;
+      case "CRITICAL":
+        return <Badge variant="destructive">Critical Shortage (&lt;65%)</Badge>;
+      default:
+        return <Badge variant="outline">{risk}</Badge>;
+    }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/app/attendance/students"
-              className="text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-            >
-              &larr; Risk Telemetry
-            </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <Link href="/app/attendance/students">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                {summary.studentName}
+              </h1>
+              {getRiskBadge(summary.riskLevel)}
+            </div>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              Roll No: <strong className="text-slate-700 dark:text-slate-300">{summary.rollNumber}</strong> •{" "}
+              {summary.program} • Semester {summary.semester}, Section {summary.section}
+            </p>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            {summary?.student_name || "Student Attendance Profile"}
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Roll: <strong className="text-slate-700 dark:text-slate-300">{summary?.roll_number || "—"}</strong> •
-            Admission: <strong className="text-slate-700 dark:text-slate-300">{summary?.admission_number}</strong> •
-            Program: <strong className="text-slate-700 dark:text-slate-300">{summary?.program_name || "General"}</strong> •
-            Section: <strong className="text-slate-700 dark:text-slate-300">{summary?.section_name || "A"}</strong>
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          {hasPermission("leave:create") && (
-            <Link
-              href="/app/attendance/leaves"
-              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition"
-            >
+          <Link href={`/app/students/${summary.studentId}`}>
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <ExternalLink className="h-3.5 w-3.5" />
+              Student 360° Profile
+            </Button>
+          </Link>
+          <Link href="/app/attendance/leaves">
+            <Button variant="primary" size="sm" className="gap-1.5 text-xs">
+              <FileCheck2 className="h-3.5 w-3.5" />
               Apply Leave
-            </Link>
-          )}
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          {error}
-        </div>
-      )}
-
-      {/* Top Telemetry KPI Cards */}
+      {/* KPI Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Overall Percentage */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">
-            Overall Attendance Rate
-          </span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span
-              className={`text-3xl font-extrabold ${
-                (summary?.overall_percentage ?? 100) < 65
-                  ? "text-rose-600 dark:text-rose-400"
-                  : (summary?.overall_percentage ?? 100) < 75
-                  ? "text-amber-500"
-                  : "text-emerald-600 dark:text-emerald-400"
-              }`}
-            >
-              {loading ? "..." : `${summary?.overall_percentage ?? 100}%`}
-            </span>
-            <span className="text-xs text-slate-400">
-              (Min: {summary?.minimum_required_percentage ?? 75}%)
-            </span>
-          </div>
-          <div className="mt-3 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2.5">
-            <span>Status:</span>
-            <span
-              className={`font-bold uppercase text-[11px] px-2 py-0.5 rounded-full ${
-                summary?.status === "CRITICAL"
-                  ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                  : summary?.status === "WARNING"
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                  : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-              }`}
-            >
-              {summary?.status || "NORMAL"}
-            </span>
-          </div>
-        </div>
-
-        {/* Sessions Attended */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">
-            Sessions Attended
-          </span>
-          <div className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
-            {loading ? "..." : summary?.total_attended_sessions ?? 0}
-          </div>
-          <p className="mt-1 text-xs text-slate-400">
-            Present + Excused/Leave sessions
-          </p>
-        </div>
-
-        {/* Total Sessions Conducted */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">
-            Total Sessions Conducted
-          </span>
-          <div className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
-            {loading ? "..." : summary?.total_conducted_sessions ?? 0}
-          </div>
-          <p className="mt-1 text-xs text-slate-400">Teaching hours recorded</p>
-        </div>
-
-        {/* Total Courses Enrolled */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">
-            Enrolled Courses
-          </span>
-          <div className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
-            {loading ? "..." : summary?.courses.length ?? 0}
-          </div>
-          <p className="mt-1 text-xs text-slate-400">Under active curriculum term</p>
-        </div>
+        <StatCard
+          title="Overall Attendance"
+          value={`${summary.percentage}%`}
+          description={`${summary.attendedSessions} of ${summary.totalSessions} sessions attended`}
+          icon={<CalendarCheck className="h-5 w-5 text-indigo-600" />}
+        />
+        <StatCard
+          title="Present Sessions"
+          value={String(summary.presentCount)}
+          description="Full lecture attendance"
+          icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+        />
+        <StatCard
+          title="Absences & Shortages"
+          value={String(summary.absentCount)}
+          description={`${summary.lateCount} late punches (0.5x credit)`}
+          icon={<AlertTriangle className="h-5 w-5 text-rose-600" />}
+        />
+        <StatCard
+          title="Excused Leave Sessions"
+          value={String(summary.excusedCount)}
+          description="Approved medical / on-duty events"
+          icon={<Clock className="h-5 w-5 text-blue-600" />}
+        />
       </div>
 
-      {/* Active Alerts (if any) */}
-      {summary?.alerts && summary.alerts.length > 0 && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-4 dark:border-rose-900/40 dark:bg-rose-950/20">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-rose-800 dark:text-rose-300">
-            Active Attendance Alerts
-          </h3>
-          <div className="mt-2 space-y-2">
-            {summary.alerts.map((al: AttendanceAlert) => (
-              <div
-                key={al.id}
-                className="text-xs flex items-center justify-between text-rose-900 dark:text-rose-200"
-              >
-                <span>
-                  • <strong>{al.course_name || "Course"}</strong>: {al.message}
-                </span>
-                <span className="font-mono text-[10px] uppercase font-bold">
-                  {al.severity}
-                </span>
+      {/* Two Column Layout: Weekly Trend & Course Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Trend Visualization */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 lg:col-span-1">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                Semester Attendance Trend
+              </h3>
+              <p className="text-[11px] text-slate-500">Weekly progression curve</p>
+            </div>
+            {summary.percentage >= 80 ? (
+              <span className="flex items-center gap-1 text-xs text-emerald-600 font-semibold">
+                <TrendingUp className="h-3.5 w-3.5" /> Stable
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-xs text-rose-600 font-semibold">
+                <TrendingDown className="h-3.5 w-3.5" /> Shortage
+              </span>
+            )}
+          </div>
+
+          <div className="mt-4 space-y-4">
+            {summary.trend.map((w) => (
+              <div key={w.period} className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{w.period}</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {w.percentage}% <span className="text-[10px] text-slate-400 font-normal">({w.present}/{w.total})</span>
+                  </span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      w.percentage >= 85
+                        ? "bg-emerald-500"
+                        : w.percentage >= 75
+                        ? "bg-amber-500"
+                        : "bg-rose-500"
+                    }`}
+                    style={{ width: `${w.percentage}%` }}
+                  />
+                </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
 
-      {/* Subject-Wise Breakdown Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-            Course-Wise Attendance Breakdown
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Individual course session metrics derived from authoritative teaching registers.
-          </p>
-        </div>
-
-        {loading ? (
-          <div className="py-12 text-center text-sm text-slate-400">Loading course breakdown...</div>
-        ) : !summary?.courses || summary.courses.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No course attendance records found for this student.
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Ensure student has active course enrollments and sessions have been marked.
-            </p>
+          <div className="mt-6 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Policy Note: </span>
+            A minimum of 75% aggregate attendance is mandatory under University Autonomous Regulation 2026.
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Subject / Course</th>
-                  <th className="px-4 py-3">Faculty Instructor</th>
-                  <th className="px-4 py-3 text-center">Conducted</th>
-                  <th className="px-4 py-3 text-center">Attended</th>
-                  <th className="px-4 py-3 text-center">Breakdown (P / A / L / E)</th>
-                  <th className="px-4 py-3 text-right">Attendance %</th>
-                  <th className="px-4 py-3 text-center">Status</th>
+        </div>
+
+        {/* Right Column: Course Breakdown Table */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                Course Offering Attendance Breakdown
+              </h3>
+              <p className="text-[11px] text-slate-500">Subject-wise delivery and eligibility threshold</p>
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {summary.courseSummaries.length} Enrolled Courses
+            </Badge>
+          </div>
+
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                  <th className="pb-3 font-semibold">Subject</th>
+                  <th className="pb-3 font-semibold">Faculty Instructor</th>
+                  <th className="pb-3 font-semibold text-center">Sessions</th>
+                  <th className="pb-3 font-semibold text-center">Attendance Rate</th>
+                  <th className="pb-3 font-semibold text-right">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {summary.courses.map((course: StudentCourseAttendanceSummary) => (
-                  <tr key={course.course_offering_id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-3.5">
-                      <div className="font-semibold text-slate-900 dark:text-white">
-                        {course.subject_code}
+                {summary.courseSummaries.map((c) => (
+                  <tr key={c.courseOfferingId} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                    <td className="py-3">
+                      <div className="font-semibold text-slate-900 dark:text-white">{c.courseCode}</div>
+                      <div className="text-[11px] text-slate-500 truncate max-w-[200px]">{c.courseName}</div>
+                    </td>
+                    <td className="py-3 text-slate-600 dark:text-slate-400">
+                      {c.facultyName}
+                    </td>
+                    <td className="py-3 text-center text-slate-600 dark:text-slate-400">
+                      {c.presentCount} / {c.totalSessions}
+                      <div className="text-[10px] text-slate-400">{c.absentCount} absent • {c.lateCount} late</div>
+                    </td>
+                    <td className="py-3 text-center">
+                      <span
+                        className={`font-bold text-sm ${
+                          c.percentage >= 80
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : c.percentage >= 75
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-rose-600 dark:text-rose-400"
+                        }`}
+                      >
+                        {c.percentage}%
+                      </span>
+                      <div className="mt-1 h-1.5 w-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${
+                            c.percentage >= 80
+                              ? "bg-emerald-500"
+                              : c.percentage >= 75
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                          }`}
+                          style={{ width: `${c.percentage}%` }}
+                        />
                       </div>
-                      <div className="text-xs text-slate-400">{course.subject_name}</div>
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {course.faculty_name || "Instructor"}
-                    </td>
-                    <td className="px-4 py-3.5 text-center font-medium text-slate-900 dark:text-white">
-                      {course.total_conducted}
-                    </td>
-                    <td className="px-4 py-3.5 text-center font-bold text-slate-900 dark:text-white">
-                      {course.attended_sessions}
-                    </td>
-                    <td className="px-4 py-3.5 text-center whitespace-nowrap text-xs">
-                      <span className="text-emerald-600 font-semibold">{course.present_count}P</span> •{" "}
-                      <span className="text-rose-600 font-semibold">{course.absent_count}A</span> •{" "}
-                      <span className="text-amber-500 font-semibold">{course.late_count}L</span> •{" "}
-                      <span className="text-blue-500 font-semibold">{course.excused_count + course.leave_count}E</span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap font-extrabold">
-                      <span
-                        className={
-                          course.attendance_percentage < 65
-                            ? "text-rose-600 dark:text-rose-400"
-                            : course.attendance_percentage < 75
-                            ? "text-amber-500"
-                            : "text-emerald-600 dark:text-emerald-400"
-                        }
-                      >
-                        {course.attendance_percentage}%
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 text-center whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                          course.status === "CRITICAL"
-                            ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                            : course.status === "WARNING"
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                            : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                        }`}
-                      >
-                        {course.status}
-                      </span>
+                    <td className="py-3 text-right">
+                      {getRiskBadge(c.riskLevel)}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        )}
-      </div>
-
-      {/* Recent Session Records Log */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-            Recent Attendance History
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Log of teaching sessions marked for this student.
-          </p>
         </div>
-
-        {loading ? (
-          <div className="py-8 text-center text-sm text-slate-400">Loading history...</div>
-        ) : !summary?.recent_records || summary.recent_records.length === 0 ? (
-          <div className="py-8 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No recent attendance records.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-2.5">Date Marked</th>
-                  <th className="px-4 py-2.5">Status</th>
-                  <th className="px-4 py-2.5">Remarks / Reason</th>
-                  <th className="px-4 py-2.5">Leave Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {summary.recent_records.map((rec: AttendanceRecord) => (
-                  <tr key={rec.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-2.5 text-xs font-medium text-slate-900 dark:text-white whitespace-nowrap">
-                      {new Date(rec.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-2.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                          rec.status === "PRESENT"
-                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                            : rec.status === "ABSENT"
-                            ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                            : rec.status === "LATE"
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                            : rec.status === "ON_LEAVE"
-                            ? "bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300"
-                            : "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300"
-                        }`}
-                      >
-                        {rec.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-400">
-                      {rec.remarks || "—"}
-                    </td>
-                    <td className="px-4 py-2.5 text-xs whitespace-nowrap">
-                      {rec.has_approved_leave ? (
-                        <span className="text-purple-600 font-semibold">Excused by Leave</span>
-                      ) : (
-                        <span className="text-slate-400">—</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </div>
   );

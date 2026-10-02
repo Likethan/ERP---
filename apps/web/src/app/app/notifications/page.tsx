@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api-client";
 import type { NotificationItem } from "@campusos/types";
@@ -13,7 +13,7 @@ export default function NotificationCenterPage() {
   const [selectedModule, setSelectedModule] = useState("ALL");
   const [actionLoading, setActionLoading] = useState(false);
 
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -32,11 +32,11 @@ export default function NotificationCenterPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [unreadOnly, selectedModule]);
 
   useEffect(() => {
     loadNotifications();
-  }, [unreadOnly, selectedModule]);
+  }, [loadNotifications]);
 
   const handleMarkAsRead = async (notifId: string) => {
     try {

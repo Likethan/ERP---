@@ -4,6 +4,17 @@
  */
 
 export * from "@campusos/types";
+export * from "./people";
+import {
+  GuardianRecord,
+  PersonDocument,
+  AcademicMilestone,
+  FacultyWorkloadSummary,
+  LabDesignationItem,
+  FacultyPublication,
+  StaffShiftItem,
+  StaffLeaveRequest,
+} from "./people";
 
 // Additional frontend domain entities and view-models
 export type RoleName =
@@ -128,6 +139,9 @@ export interface StudentComprehensiveDetail {
     fileSize: string;
     verified: boolean;
   }>;
+  guardians?: GuardianRecord[];
+  documentsVault?: PersonDocument[];
+  milestones?: AcademicMilestone[];
 }
 
 export interface FacultyDetailView {
@@ -165,6 +179,9 @@ export interface FacultyDetailView {
     averageAttendance: number;
     pendingCorrections: number;
   };
+  workloadSummary?: FacultyWorkloadSummary;
+  labDesignations?: LabDesignationItem[];
+  publications?: FacultyPublication[];
 }
 
 export interface StaffDetailView {
@@ -176,8 +193,17 @@ export interface StaffDetailView {
   phone: string;
   department: string;
   role: string;
+  designation?: string;
+  employmentType?: "PERMANENT" | "CONTRACT" | "PROBATION";
   joiningDate: string;
   status: "ACTIVE" | "ON_LEAVE" | "RESIGNED";
+  shift?: StaffShiftItem;
+  leaveBalance?: {
+    casual: number;
+    sick: number;
+    earned: number;
+  };
+  leaves?: StaffLeaveRequest[];
 }
 
 export interface CourseOfferingDetail {
@@ -207,7 +233,7 @@ export interface GlobalSearchResultItem {
   id: string;
   title: string;
   subtitle: string;
-  category: "Student" | "Faculty" | "Course" | "Drive" | "Invoice" | "Document" | "Event";
+  category: "Student" | "Faculty" | "Staff" | "Course" | "Curriculum" | "Offering" | "Attendance" | "Examination" | "Assessment" | "Drive" | "Placement" | "Company" | "Offer" | "Application" | "Interview" | "Invoice" | "Finance" | "Payment" | "Receipt" | "Scholarship" | "Document" | "Event";
   href: string;
   badge?: string;
 }

@@ -7,14 +7,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { facultyService } from "@/services/faculty.service";
-import { attendanceService } from "@/services/attendance.service";
 import { FacultyDetailView } from "@/types/domain";
-import { AttendanceSessionItem } from "@/mocks/attendance.mock";
 import {
-  Calendar,
   Clock,
   CheckCircle2,
-  AlertCircle,
   BookOpen,
   ArrowRight,
   FileSpreadsheet,
@@ -23,15 +19,11 @@ import {
 
 export function FacultyDashboard() {
   const [faculty, setFaculty] = useState<FacultyDetailView | null>(null);
-  const [sessions, setSessions] = useState<AttendanceSessionItem[]>([]);
 
   useEffect(() => {
     // Default faculty: Dr. Rajesh Sharma
     facultyService.getById("fac-cse-01").then((res) => {
       if (res.data) setFaculty(res.data);
-    });
-    attendanceService.getSessions("2026-09-30").then((res) => {
-      setSessions(res.data);
     });
   }, []);
 

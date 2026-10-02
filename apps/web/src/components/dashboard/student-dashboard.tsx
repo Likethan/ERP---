@@ -13,7 +13,6 @@ import { StudentComprehensiveDetail } from "@/types/domain";
 import { TimetableSlotItem } from "@/mocks/academics.mock";
 import { JobDriveItem } from "@/mocks/placements.mock";
 import {
-  Calendar,
   CheckCircle2,
   Clock,
   DollarSign,
@@ -23,8 +22,6 @@ import {
   FileText,
   BedDouble,
   Bus,
-  Sparkles,
-  AlertCircle,
 } from "lucide-react";
 
 export function StudentDashboard() {

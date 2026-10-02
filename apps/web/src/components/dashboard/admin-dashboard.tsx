@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { intelligenceService } from "@/services/intelligence.service";
 import { CampusMetricCard, OperationalAlertItem, DepartmentKpiItem } from "@/mocks/intelligence.mock";
 import {
-  Users,
   GraduationCap,
   DollarSign,
   Briefcase,

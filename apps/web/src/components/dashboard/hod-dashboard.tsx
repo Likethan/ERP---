@@ -15,9 +15,7 @@ import {
   Users,
   GraduationCap,
   CheckCircle2,
-  AlertTriangle,
   ArrowRight,
-  BookOpen,
   FileSpreadsheet,
 } from "lucide-react";
 

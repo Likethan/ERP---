@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import type { AuthenticatedUser } from "@campusos/types";
 import { DEMO_PERSONAS } from "@/mocks/auth.mock";
-import { DemoPersona, RoleName } from "@/types/domain";
+import { DemoPersona } from "@/types/domain";
 import { apiFetch } from "./api-client";
 
 interface AuthContextValue {

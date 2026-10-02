@@ -5,13 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
-  Server,
-  Layers,
-  Database,
   CheckCircle2,
   AlertCircle,
   FileCode2,
-  Lock,
   ArrowRight,
   GraduationCap,
   Building,
@@ -25,11 +21,8 @@ import {
   Bot,
   Sparkles,
   Home,
-  Bus,
   FileText,
-  Activity,
   ChevronRight,
-  Sparkle,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { DEMO_PERSONAS } from "@/mocks/auth.mock";

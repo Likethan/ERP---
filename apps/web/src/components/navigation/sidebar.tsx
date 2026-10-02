@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -27,12 +27,14 @@ import {
   ShieldCheck,
   Building,
   Layers,
-  ChevronDown,
   X,
   CreditCard,
   Gift,
   RotateCcw,
   Bot,
+  Award,
+  Globe,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +58,7 @@ interface SidebarProps {
 
 export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
-  const { user, activePersona } = useAuth();
+  const { user } = useAuth();
 
   const NAV_SECTIONS: NavSection[] = [
     {
@@ -73,6 +75,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       title: "PEOPLE",
       items: [
         {
+          label: "People Overview",
+          href: "/app/people",
+          icon: <Users className="h-4 w-4" />,
+        },
+        {
           label: "Students",
           href: "/app/students",
           icon: <GraduationCap className="h-4 w-4" />,
@@ -85,7 +92,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         {
           label: "Staff",
           href: "/app/staff",
-          icon: <Users className="h-4 w-4" />,
+          icon: <Briefcase className="h-4 w-4" />,
         },
       ],
     },
@@ -118,6 +125,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           icon: <CheckSquare className="h-4 w-4" />,
         },
         {
+          label: "Course Enrollments",
+          href: "/app/academics/enrollments",
+          icon: <UserCheck className="h-4 w-4" />,
+        },
+        {
           label: "Timetable",
           href: "/app/academics/timetable",
           icon: <Calendar className="h-4 w-4" />,
@@ -138,20 +150,50 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           icon: <Calendar className="h-4 w-4" />,
         },
         {
+          label: "Records Ledger",
+          href: "/app/attendance/records",
+          icon: <FileSpreadsheet className="h-4 w-4" />,
+        },
+        {
+          label: "Student 360°",
+          href: "/app/attendance/students",
+          icon: <GraduationCap className="h-4 w-4" />,
+        },
+        {
+          label: "Course Registers",
+          href: "/app/attendance/courses",
+          icon: <BookOpen className="h-4 w-4" />,
+        },
+        {
           label: "Leave Requests",
           href: "/app/attendance/leaves",
-          icon: <CalendarDays className="h-4 w-4" />,
+          icon: <FileCheck2 className="h-4 w-4" />,
         },
         {
           label: "Corrections",
           href: "/app/attendance/corrections",
           icon: <RotateCcw className="h-4 w-4" />,
         },
+        {
+          label: "Policies",
+          href: "/app/attendance/policies",
+          icon: <ShieldCheck className="h-4 w-4" />,
+        },
+        {
+          label: "Reports & Audits",
+          href: "/app/attendance/reports",
+          icon: <FileText className="h-4 w-4" />,
+        },
       ],
     },
     {
       title: "EXAMINATIONS",
       items: [
+        {
+          label: "Overview",
+          href: "/app/examinations",
+          icon: <Award className="h-4 w-4" />,
+        },
         {
           label: "Assessments",
           href: "/app/examinations/assessments",
@@ -163,6 +205,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           icon: <Calendar className="h-4 w-4" />,
         },
         {
+          label: "Eligibility",
+          href: "/app/examinations/eligibility",
+          icon: <ShieldCheck className="h-4 w-4" />,
+        },
+        {
           label: "Marks Entry",
           href: "/app/examinations/marks",
           icon: <FileSpreadsheet className="h-4 w-4" />,
@@ -171,6 +218,16 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           label: "Results & GPA",
           href: "/app/examinations/results",
           icon: <FileCheck2 className="h-4 w-4" />,
+        },
+        {
+          label: "Publications",
+          href: "/app/examinations/publications",
+          icon: <Globe className="h-4 w-4" />,
+        },
+        {
+          label: "Exam Reports",
+          href: "/app/examinations/reports",
+          icon: <BarChart3 className="h-4 w-4" />,
         },
       ],
     },
@@ -183,9 +240,19 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           icon: <DollarSign className="h-4 w-4" />,
         },
         {
+          label: "Fee Categories",
+          href: "/app/finance/fee-categories",
+          icon: <FileText className="h-4 w-4" />,
+        },
+        {
           label: "Fee Structures",
           href: "/app/finance/fee-structures",
           icon: <Layers className="h-4 w-4" />,
+        },
+        {
+          label: "Fee Assignments",
+          href: "/app/finance/assignments",
+          icon: <UserCheck className="h-4 w-4" />,
         },
         {
           label: "Invoices",
@@ -212,15 +279,65 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           href: "/app/finance/refunds",
           icon: <RotateCcw className="h-4 w-4" />,
         },
+        {
+          label: "Finance Reports",
+          href: "/app/finance/reports",
+          icon: <BarChart3 className="h-4 w-4" />,
+        },
       ],
     },
     {
       title: "CAREER & PLACEMENT",
       items: [
         {
-          label: "Placement Hub",
+          label: "Operations Dashboard",
           href: "/app/placement",
           icon: <Briefcase className="h-4 w-4" />,
+        },
+        {
+          label: "Student Profiles",
+          href: "/app/placement/students",
+          icon: <Users className="h-4 w-4" />,
+        },
+        {
+          label: "Corporate Partners",
+          href: "/app/placement/companies",
+          icon: <Building2 className="h-4 w-4" />,
+        },
+        {
+          label: "Job Drives",
+          href: "/app/placement/drives",
+          icon: <CalendarDays className="h-4 w-4" />,
+        },
+        {
+          label: "Positions",
+          href: "/app/placement/positions",
+          icon: <Layers className="h-4 w-4" />,
+        },
+        {
+          label: "Applications & Shortlist",
+          href: "/app/placement/applications",
+          icon: <FileCheck2 className="h-4 w-4" />,
+        },
+        {
+          label: "Interviews",
+          href: "/app/placement/interviews",
+          icon: <Calendar className="h-4 w-4" />,
+        },
+        {
+          label: "Job Offers",
+          href: "/app/placement/offers",
+          icon: <Award className="h-4 w-4" />,
+        },
+        {
+          label: "Placement Outcomes",
+          href: "/app/placement/outcomes",
+          icon: <ShieldCheck className="h-4 w-4" />,
+        },
+        {
+          label: "Placement Reports",
+          href: "/app/placement/reports",
+          icon: <BarChart3 className="h-4 w-4" />,
         },
       ],
     },

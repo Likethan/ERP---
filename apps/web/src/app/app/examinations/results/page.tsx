@@ -2,677 +2,393 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { examinationsService } from "@/services/examinations.service";
-import type {
-  SemesterResult,
-  StudentSemesterTranscript,
-  CourseOffering,
-  ExamTerm,
-} from "@campusos/types";
+import { Result, ResultStatus } from "@/types/examinations";
+import { DEFAULT_GRADE_SCALE } from "@/services/grading-calculator";
+import { DataGrid } from "@/components/data-grid/data-grid";
+import { ColumnDef } from "@/components/data-grid/data-grid.types";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { StatCard } from "@/components/ui/stat-card";
+import { useToast } from "@/components/ui/toast";
 import {
   Award,
-  CheckCircle2,
   Lock,
   Globe,
-  Calculator,
+  CheckCircle2,
+  Filter,
   GraduationCap,
-  Layers,
+  ArrowRight,
+  Sparkles,
+  BookOpen,
+  Info,
 } from "lucide-react";
 
-export default function ResultsAndPublicationPage() {
-  const { hasPermission, hasRole } = useAuth();
-  const [calculating, setCalculating] = useState(false);
-  const [publishing, setPublishing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+export default function ResultsAndFinalizationPage() {
+  const { hasPermission } = useAuth();
+  const { showToast } = useToast();
 
-  // Aux state
-  const [courseOfferings, setCourseOfferings] = useState<CourseOffering[]>([]);
-  const [examTerms, setExamTerms] = useState<ExamTerm[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState<Result[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
+  const [selectedDept, setSelectedDept] = useState<string>("ALL");
 
-  // Selection
-  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
-  const [selectedTermId, setSelectedTermId] = useState<string>("");
+  // Finalization State
+  const [finalizeModalOpen, setFinalizeModalOpen] = useState(false);
+  const [finalizing, setFinalizing] = useState(false);
 
-  // Loaded data
-  const [courseResults, setCourseResults] = useState<SemesterResult[]>([]);
-  const [studentTranscript, setStudentTranscript] = useState<StudentSemesterTranscript | null>(null);
+  // Grade Scale Modal
+  const [scaleModalOpen, setScaleModalOpen] = useState(false);
 
-  // Publication modal
-  const [publishModalOpen, setPublishModalOpen] = useState(false);
-
-  // Determine if viewing as Student
-  const isStudentUser = hasRole("STUDENT");
-  const [viewMode, setViewMode] = useState<"ADMIN" | "STUDENT">(
-    isStudentUser ? "STUDENT" : "ADMIN"
-  );
-
-  // Load initial courses & terms
-  useEffect(() => {
-    async function loadAux() {
-      try {
-        setError(null);
-
-        const [coursesRes, termsRes] = await Promise.all([
-          apiFetch<CourseOffering[]>("/api/v1/academics/course-offerings"),
-          apiFetch<ExamTerm[]>("/api/v1/examinations/terms"),
-        ]);
-
-        const courses = coursesRes.data || [];
-        const terms = termsRes.data || [];
-        setCourseOfferings(courses);
-        setExamTerms(terms);
-
-        if (courses.length > 0) setSelectedCourseId(courses[0].id);
-        if (terms.length > 0) setSelectedTermId(terms[0].id);
-      } catch {
-        const mockCourses = [
-          { id: "off-cs301", course_code: "CS301", course_name: "Data Structures & Algorithms" } as unknown as CourseOffering,
-          { id: "off-cs302", course_code: "CS302", course_name: "Database Management Systems" } as unknown as CourseOffering,
-        ];
-        const mockTerms = [{ id: "term-odd-2026", name: "Odd Semester 2026-27", is_active: true } as unknown as ExamTerm];
-        setCourseOfferings(mockCourses);
-        setExamTerms(mockTerms);
-        setSelectedCourseId(mockCourses[0].id);
-        setSelectedTermId(mockTerms[0].id);
-      }
-    }
-
-    loadAux();
-  }, []);
-
-  // Load results whenever course changes (in admin mode)
-  useEffect(() => {
-    if (viewMode === "ADMIN" && selectedCourseId) {
-      loadCourseResults();
-    }
-  }, [selectedCourseId, viewMode]);
-
-  // Load student results/transcript (in student mode)
-  useEffect(() => {
-    if (viewMode === "STUDENT" && selectedTermId) {
-      loadStudentResults();
-    }
-  }, [selectedTermId, viewMode]);
-
-  async function loadCourseResults() {
-    if (!selectedCourseId) return;
+  const loadResults = async () => {
     try {
-      setError(null);
-      const res = await apiFetch<SemesterResult[]>(
-        `/api/v1/examinations/results?course_offering_id=${selectedCourseId}`
-      );
-      setCourseResults(res.data || []);
+      setLoading(true);
+      const res = await examinationsService.getResults({
+        status: selectedStatus !== "ALL" ? selectedStatus : undefined,
+        department: selectedDept !== "ALL" ? selectedDept : undefined,
+      });
+      setResults(res.data);
     } catch {
-      const mockRes = await examinationsService.getResults();
-      const mapped: SemesterResult[] = (mockRes.data || []).map((r, i) => ({
-        id: `res-${r.studentId}`,
-        student_id: r.studentId,
-        student_name: r.name,
-        roll_number: r.rollNumber,
-        course_offering_id: selectedCourseId,
-        course_code: "CS301",
-        course_name: "Data Structures & Algorithms",
-        final_marks_obtained: i === 0 ? 94 : i === 1 ? 88 : 82,
-        final_percentage: i === 0 ? 94 : i === 1 ? 88 : 82,
-        letter_grade: i === 0 ? "O" : i === 1 ? "A+" : "A",
-        grade_points: i === 0 ? 10 : i === 1 ? 9 : 8,
-        credits_earned: 4,
-        result_status: "PASS",
-        publication_status: "PUBLISHED",
-      } as unknown as SemesterResult));
-      setCourseResults(mapped);
-    }
-  }
-
-  async function loadStudentResults() {
-    try {
-      setError(null);
-      const res = await apiFetch<SemesterResult[]>(
-        `/api/v1/examinations/results?exam_term_id=${selectedTermId}&publication_status=PUBLISHED`
-      );
-      setCourseResults(res.data || []);
-    } catch {
-      const mockRes = await examinationsService.getResults();
-      const mapped: SemesterResult[] = (mockRes.data || []).map((r, i) => ({
-        id: `res-${r.studentId}`,
-        student_id: r.studentId,
-        student_name: r.name,
-        roll_number: r.rollNumber,
-        course_offering_id: "off-cs301",
-        course_code: "CS301",
-        course_name: "Data Structures & Algorithms",
-        final_marks_obtained: i === 0 ? 94 : i === 1 ? 88 : 82,
-        final_percentage: i === 0 ? 94 : i === 1 ? 88 : 82,
-        letter_grade: i === 0 ? "O" : i === 1 ? "A+" : "A",
-        grade_points: i === 0 ? 10 : i === 1 ? 9 : 8,
-        credits_earned: 4,
-        result_status: "PASS",
-        publication_status: "PUBLISHED",
-      } as unknown as SemesterResult));
-      setCourseResults(mapped);
-    }
-  }
-
-  // Trigger automated course result calculation
-  async function handleCalculateCourseResults() {
-    if (!selectedCourseId) return;
-    try {
-      setCalculating(true);
-      setError(null);
-
-      const res = await apiFetch<SemesterResult[]>(
-        `/api/v1/examinations/results/calculate-course/${selectedCourseId}`,
-        { method: "POST" }
-      );
-
-      setCourseResults(res.data || []);
-      setSuccessMsg(
-        `Calculated authoritative results for ${res.data?.length || 0} students based on weighted scores and UGC grade scale.`
-      );
-    } catch {
-      await loadCourseResults();
-      setSuccessMsg(
-        "Calculated authoritative results for 5 students based on weighted scores and UGC grade scale."
-      );
+      showToast({ title: "Error", message: "Failed to load results", type: "error" });
     } finally {
-      setCalculating(false);
+      setLoading(false);
     }
-  }
+  };
 
-  // Publish results for course
-  async function handlePublishCourseResults() {
-    if (!selectedCourseId) return;
+  useEffect(() => {
+    loadResults();
+  }, [selectedStatus, selectedDept]);
+
+  const handleFinalizeBatch = async () => {
     try {
-      setPublishing(true);
-      setError(null);
-
-      const res = await apiFetch<{ published_count: number }>(
-        `/api/v1/examinations/results/publish-course/${selectedCourseId}`,
-        { method: "POST" }
-      );
-
-      setSuccessMsg(
-        `Successfully published ${res.data?.published_count || 0} results! Results are now visible to students on their portal.`
-      );
-      setPublishModalOpen(false);
-      loadCourseResults();
-    } catch {
-      setCourseResults((prev) =>
-        prev.map((r) => ({ ...r, publication_status: "PUBLISHED" as any }))
-      );
-      setSuccessMsg(
-        "Successfully published results! Results are now visible to students on their portal."
-      );
-      setPublishModalOpen(false);
+      setFinalizing(true);
+      await examinationsService.finalizeResults("exam-2026-ese");
+      showToast({ title: "Finalized", message: "All semester candidate results finalized successfully.", type: "success" });
+      setFinalizeModalOpen(false);
+      loadResults();
+    } catch (err: unknown) {
+      showToast({
+        title: "Error",
+        message: err instanceof Error ? err.message : "Failed to finalize results",
+        type: "error",
+      });
     } finally {
-      setPublishing(false);
+      setFinalizing(false);
     }
-  }
+  };
 
-  const selectedCourse = useMemo(
-    () => courseOfferings.find((c) => c.id === selectedCourseId),
-    [courseOfferings, selectedCourseId]
+  const passCount = results.filter((r) => r.status === "PASS").length;
+  const failCount = results.filter((r) => r.status === "FAIL" || r.status === "ABSENT").length;
+  const passRate = Math.round((passCount / (results.length || 1)) * 100);
+
+  const columns: ColumnDef<Result>[] = useMemo(
+    () => [
+      {
+        id: "student",
+        header: "Candidate",
+        cell: (row) => (
+          <div>
+            <Link
+              href={`/app/examinations/results/${row.id}`}
+              className="font-semibold text-slate-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400"
+            >
+              {row.studentName}
+            </Link>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-500">
+              <span className="font-mono font-medium text-slate-600 dark:text-slate-300">
+                {row.rollNumber}
+              </span>
+              <span>•</span>
+              <span>{row.program}</span>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "course",
+        header: "Course & Subject",
+        cell: (row) => (
+          <div className="text-xs">
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
+              {row.courseCode}
+            </span>
+            <p className="text-slate-500">{row.courseName}</p>
+            <span className="text-[11px] text-slate-400">{row.credits} Credits</span>
+          </div>
+        ),
+      },
+      {
+        id: "score",
+        header: "Percentage & Total",
+        cell: (row) => (
+          <div className="text-xs font-mono">
+            <span className="font-bold text-slate-900 dark:text-white">
+              {row.percentage}%
+            </span>
+            <div className="text-[11px] text-slate-400 font-normal">
+              {row.totalMarks} / {row.maxMarks} pts
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "grade",
+        header: "Grade & GP",
+        cell: (row) => (
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-xs ${
+                row.grade === "A+" || row.grade === "A"
+                  ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300"
+                  : row.grade === "B+" || row.grade === "B"
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                  : row.grade === "C" || row.grade === "D"
+                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                  : "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+              }`}
+            >
+              {row.grade}
+            </span>
+            <div className="text-xs">
+              <p className="font-bold text-slate-800 dark:text-slate-200">{row.gradePoint}.0</p>
+              <p className="text-[10px] text-slate-400">Grade Point</p>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "status",
+        header: "Result Status",
+        cell: (row) => (
+          <div>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
+                row.status === "PASS"
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                  : row.status === "FAIL"
+                  ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              }`}
+            >
+              {row.status}
+            </span>
+            {row.isPublished && (
+              <span className="block text-[10px] text-blue-600 dark:text-blue-400 mt-0.5 font-medium">
+                Published to Student
+              </span>
+            )}
+          </div>
+        ),
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: (row) => (
+          <Link href={`/app/examinations/results/${row.id}`}>
+            <Button size="sm" variant="outline" className="h-7 text-xs gap-1">
+              Breakdown
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </Link>
+        ),
+      },
+    ],
+    []
   );
-
-  const publicationStats = useMemo(() => {
-    const total = courseResults.length;
-    const published = courseResults.filter((r) => r.publication_status === "PUBLISHED").length;
-    const passing = courseResults.filter((r) => r.result_status === "PASS").length;
-    return {
-      total,
-      published,
-      passing,
-      passPercentage: total > 0 ? Math.round((passing / total) * 100) : 0,
-    };
-  }, [courseResults]);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/app/examinations"
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-            >
-              Examination Hub
-            </Link>
-            <span className="text-slate-400 text-xs">/</span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Results & Publication</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+              UGC CBCS Evaluation
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Semester 5 Grade Ledger</span>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Award className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-            Grading & Result Publication
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Semester Examination Results
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Authoritative 10-point grade scale calculation, semester GPA computation, and controlled result publication.
+            Weighted assessment outcomes, 10-point grade conversions, and formal finalization gates prior to publication.
           </p>
         </div>
 
-        {/* View mode toggle for non-students */}
-        {!isStudentUser && (
-          <div className="flex items-center rounded-lg border border-slate-300 dark:border-slate-700 p-0.5 bg-slate-50 dark:bg-slate-800">
-            <button
-              onClick={() => setViewMode("ADMIN")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
-                viewMode === "ADMIN"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              Faculty / Admin
-            </button>
-            <button
-              onClick={() => setViewMode("STUDENT")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
-                viewMode === "STUDENT"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              Student Portal Preview
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-2.5">
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setScaleModalOpen(true)}>
+            <GraduationCap className="h-3.5 w-3.5" />
+            View Grade Scale
+          </Button>
+
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setFinalizeModalOpen(true)}
+            className="gap-1.5 text-xs"
+          >
+            <Lock className="h-3.5 w-3.5" />
+            Finalize Cohort Results
+          </Button>
+        </div>
       </div>
 
-      {/* Alerts */}
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 flex items-start justify-between">
-          <div>
-            <p className="font-semibold">Calculation Alert</p>
-            <p className="mt-0.5">{error}</p>
-          </div>
-          <button
-            onClick={() => setError(null)}
-            className="text-rose-600 hover:text-rose-800 dark:text-rose-400 text-xs font-semibold"
-          >
-            Dismiss
-          </button>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Evaluated Candidates"
+          value={String(results.length)}
+          description="Semester 5 courses"
+          icon={<Award className="h-5 w-5 text-indigo-600" />}
+        />
+        <StatCard
+          title="Cohort Pass Rate"
+          value={`${passRate}%`}
+          description={`${passCount} candidates passing`}
+          icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+        />
+        <StatCard
+          title="Fails / Arrears"
+          value={String(failCount)}
+          description="Eligible for supplementary"
+          icon={<Info className="h-5 w-5 text-rose-600" />}
+        />
+        <StatCard
+          title="Published Results"
+          value={String(results.filter((r) => r.isPublished).length)}
+          description="Visible on student portal"
+          icon={<Globe className="h-5 w-5 text-blue-600" />}
+        />
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex flex-wrap items-center gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+          <Filter className="h-3.5 w-3.5" />
+          Filter Outcome:
         </div>
-      )}
 
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300 flex items-start justify-between">
-          <p className="font-medium">{successMsg}</p>
-          <button
-            onClick={() => setSuccessMsg(null)}
-            className="text-emerald-700 hover:text-emerald-900 text-xs font-semibold"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        >
+          <option value="ALL">All Outcomes</option>
+          <option value="PASS">Passed (Grade A+ to D)</option>
+          <option value="FAIL">Failed (Grade F)</option>
+          <option value="ABSENT">Absent</option>
+          <option value="WITHHELD">Withheld</option>
+        </select>
 
-      {/* ADMIN VIEW */}
-      {viewMode === "ADMIN" && (
-        <div className="space-y-6">
-          {/* Controls & Operations */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div className="w-full md:w-1/2">
-                <label className="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                  Course Offering
-                </label>
-                <select
-                  value={selectedCourseId}
-                  onChange={(e) => setSelectedCourseId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                >
-                  {courseOfferings.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.subject_code ? `${c.subject_code} - ` : ""}
-                      {c.subject_name} ({c.section_name || "A"})
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <select
+          value={selectedDept}
+          onChange={(e) => setSelectedDept(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        >
+          <option value="ALL">All Departments</option>
+          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+          <option value="Electronics & Communication">Electronics & Communication</option>
+        </select>
+      </div>
 
-              <div className="flex items-center gap-2.5">
-                {hasPermission("results:finalize") && (
-                  <button
-                    onClick={handleCalculateCourseResults}
-                    disabled={calculating}
-                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition disabled:opacity-50"
-                  >
-                    <Calculator className="h-4 w-4" />
-                    {calculating ? "Calculating..." : "Calculate Results"}
-                  </button>
-                )}
+      {/* Enterprise DataGrid */}
+      <DataGrid<Result>
+        data={results}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        loading={loading}
+        searchPlaceholder="Search result by candidate name, roll number, or course code..."
+        emptyTitle="No results found"
+        emptyDescription="Finalize assessment marks to compile course results."
+      />
 
-                {hasPermission("results:publish") && (
-                  <button
-                    onClick={() => setPublishModalOpen(true)}
-                    disabled={courseResults.length === 0}
-                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-50"
-                  >
-                    <Globe className="h-4 w-4" />
-                    Publish to Students
-                  </button>
-                )}
-              </div>
+      {/* Finalization Confirmation Modal */}
+      <Dialog open={finalizeModalOpen} onClose={() => setFinalizeModalOpen(false)}>
+        <div className="p-6 space-y-4 max-w-md">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+              <Lock className="h-5 w-5" />
             </div>
-
-            {/* Course Telemetry & KPI */}
-            {selectedCourse && (
-              <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Total Enrolled</span>
-                  <div className="text-xl font-bold text-slate-900 dark:text-white mt-1">
-                    {publicationStats.total}
-                  </div>
-                </div>
-
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Passing Rate</span>
-                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-                    {publicationStats.passPercentage}%
-                  </div>
-                </div>
-
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Publication Status</span>
-                  <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
-                    {publicationStats.published === publicationStats.total && publicationStats.total > 0 ? (
-                      <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                        <CheckCircle2 className="h-4 w-4" />
-                        100% Published
-                      </span>
-                    ) : (
-                      <span className="text-amber-600 dark:text-amber-400">
-                        {publicationStats.published} / {publicationStats.total} Published
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Grading Standard</span>
-                  <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mt-1">
-                    UGC 10-Point Scale
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Results Table */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-            <div className="p-5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Layers className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-                  Course Results Ledger
-                </h2>
-                <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
-                  {courseResults.length}
-                </span>
-              </div>
-            </div>
-
-            {courseResults.length === 0 ? (
-              <div className="p-12 text-center">
-                <Calculator className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-600" />
-                <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-white">
-                  No calculated results found
-                </h3>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  Click &apos;Calculate Results&apos; to process marks across all assessment components.
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                  <thead className="bg-slate-50/75 dark:bg-slate-800/50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200/80 dark:border-slate-800">
-                    <tr>
-                      <th className="py-3 px-4">Student</th>
-                      <th className="py-3 px-4">Internal</th>
-                      <th className="py-3 px-4">External</th>
-                      <th className="py-3 px-4">Total Score</th>
-                      <th className="py-3 px-4">Grade Letter</th>
-                      <th className="py-3 px-4">Grade Point</th>
-                      <th className="py-3 px-4">Outcome</th>
-                      <th className="py-3 px-4">Publication</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {courseResults.map((r) => (
-                      <tr key={r.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                        <td className="py-3.5 px-4">
-                          <div className="font-semibold text-slate-900 dark:text-white">
-                            {r.student_name}
-                          </div>
-                          <div className="text-xs text-slate-400 font-mono mt-0.5">
-                            {r.student_roll_number || r.student_admission_number}
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 font-mono">{r.internal_marks}</td>
-                        <td className="py-3.5 px-4 font-mono">{r.external_marks}</td>
-                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white">
-                          {r.total_marks}%
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-mono font-bold text-sm ${
-                              r.grade_letter === "F"
-                                ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                                : r.grade_letter === "O" || r.grade_letter === "A+"
-                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                                : "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300"
-                            }`}
-                          >
-                            {r.grade_letter}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 font-mono font-semibold">{r.grade_point}</td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                              r.result_status === "PASS"
-                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                                : "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                            }`}
-                          >
-                            {r.result_status}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          {r.publication_status === "PUBLISHED" ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                              <Globe className="h-3 w-3" />
-                              Published
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
-                              <Lock className="h-3 w-3" />
-                              Unpublished
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* STUDENT SELF-SERVICE VIEW */}
-      {viewMode === "STUDENT" && (
-        <div className="space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <GraduationCap className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                  Official Published Academic Transcript
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Verified results published by the Office of the Controller of Examinations.
-                </p>
-              </div>
-
-              <div className="w-full sm:w-64">
-                <select
-                  value={selectedTermId}
-                  onChange={(e) => setSelectedTermId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                >
-                  {examTerms.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Transcript GPA Telemetry Card */}
-            {studentTranscript && (
-              <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-800/80 bg-linear-to-r from-indigo-50/50 to-purple-50/50 dark:from-slate-800/50 dark:to-slate-800/20 p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                    Semester Performance
-                  </span>
-                  <div className="text-lg font-bold text-slate-900 dark:text-white mt-0.5">
-                    {studentTranscript.student_name}
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                    Roll: {studentTranscript.student_roll_number || studentTranscript.student_admission_number}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">Credits Earned</span>
-                    <div className="text-lg font-bold text-slate-900 dark:text-white">
-                      {studentTranscript.total_credits_earned} / {studentTranscript.total_credits_registered}
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">Semester GPA</span>
-                    <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
-                      {studentTranscript.semester_gpa != null ? studentTranscript.semester_gpa.toFixed(2) : "N/A"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Published Courses Table */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-            {courseResults.length === 0 ? (
-              <div className="p-12 text-center">
-                <Lock className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-600" />
-                <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-white">
-                  No published results available
-                </h3>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-                  Results for this examination term have not been officially published yet. In accordance with institutional examination privacy policy, marks remain confidential until official publication.
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                  <thead className="bg-slate-50/75 dark:bg-slate-800/50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200/80 dark:border-slate-800">
-                    <tr>
-                      <th className="py-3 px-4">Course</th>
-                      <th className="py-3 px-4">Credits</th>
-                      <th className="py-3 px-4">Marks (%)</th>
-                      <th className="py-3 px-4">Letter Grade</th>
-                      <th className="py-3 px-4">Grade Point</th>
-                      <th className="py-3 px-4">Earned</th>
-                      <th className="py-3 px-4">Result</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {courseResults.map((r) => (
-                      <tr key={r.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                        <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-white">
-                          <div>
-                            {r.course_code ? `${r.course_code} - ` : ""}
-                            {r.course_name}
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 font-mono">{r.credits ?? 3}</td>
-                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white">
-                          {r.total_marks}%
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center justify-center w-7 h-7 rounded-md font-mono font-bold text-xs ${
-                              r.grade_letter === "F"
-                                ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                                : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                            }`}
-                          >
-                            {r.grade_letter}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 font-mono font-semibold">{r.grade_point}</td>
-                        <td className="py-3.5 px-4 font-mono">{r.credits_earned}</td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                              r.result_status === "PASS"
-                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                                : "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                            }`}
-                          >
-                            {r.result_status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Publish Confirmation */}
-      {publishModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400">
-              <Globe className="h-6 w-6" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Confirm Result Publication
-              </h3>
-            </div>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Publishing will make the finalized course outcomes immediately visible to all enrolled students on their student portal. Once published, grades cannot be silently modified without formal audited correction procedures.
-            </p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setPublishModalOpen(false)}
-                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={publishing}
-                onClick={handlePublishCourseResults}
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
-              >
-                {publishing ? "Publishing..." : "Confirm & Publish"}
-              </button>
+            <div>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                Finalize Semester Results
+              </h2>
+              <p className="text-xs text-slate-500">Lock course outcomes for publication</p>
             </div>
           </div>
+
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Finalizing results locks all grades across the semester cohort and compiles official GPA scores. Once finalized, results will be ready for release via the <strong>Publications Ledger</strong>.
+          </p>
+
+          <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 text-xs space-y-1.5">
+            <div className="flex justify-between">
+              <span>Total Candidate Records:</span>
+              <span className="font-bold">{results.length}</span>
+            </div>
+            <div className="flex justify-between text-emerald-600">
+              <span>Passing:</span>
+              <span>{passCount}</span>
+            </div>
+            <div className="flex justify-between text-rose-600">
+              <span>Arrears / Fails:</span>
+              <span>{failCount}</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button variant="outline" onClick={() => setFinalizeModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleFinalizeBatch} disabled={finalizing}>
+              {finalizing ? "Finalizing..." : "Confirm Finalization"}
+            </Button>
+          </div>
         </div>
-      )}
+      </Dialog>
+
+      {/* Grade Scale Reference Modal */}
+      <Dialog open={scaleModalOpen} onClose={() => setScaleModalOpen(false)}>
+        <div className="p-6 space-y-4 max-w-lg">
+          <div className="border-b border-slate-200 pb-3 dark:border-slate-800">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-indigo-600" />
+              {DEFAULT_GRADE_SCALE.name}
+            </h2>
+            <p className="text-xs text-slate-500">Academic Year {DEFAULT_GRADE_SCALE.academicYear}</p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
+                <tr>
+                  <th className="p-2">Grade</th>
+                  <th className="p-2">Range %</th>
+                  <th className="p-2">Grade Point</th>
+                  <th className="p-2">Classification</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {DEFAULT_GRADE_SCALE.rules.map((rule) => (
+                  <tr key={rule.grade}>
+                    <td className="p-2 font-bold">{rule.grade}</td>
+                    <td className="p-2 font-mono text-slate-500">{rule.minPercentage}% - {rule.maxPercentage}%</td>
+                    <td className="p-2 font-bold text-indigo-600">{rule.gradePoint}.0</td>
+                    <td className="p-2 text-slate-600 dark:text-slate-400">{rule.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button variant="outline" onClick={() => setScaleModalOpen(false)}>
+              Close
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }

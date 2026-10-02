@@ -2,757 +2,672 @@
 
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import type {
+import {
   AttendanceSession,
-  AttendanceSessionDetail,
-  AttendanceRosterStudentItem,
   AttendanceRecord,
-  AttendanceRecordStatus,
-} from "@campusos/types";
+  AttendanceStatus,
+} from "@/types/attendance";
+import { calculateAttendancePercentage } from "@/services/attendance-calculator";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  BookOpen,
+  ArrowLeft,
+  Save,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  HelpCircle,
+  Search,
+  History,
+  AlertTriangle,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function SessionMarkingPage({ params }: PageProps) {
+export default function SessionDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const sessionId = resolvedParams.id;
+  const router = useRouter();
   const { hasPermission } = useAuth();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [session, setSession] = useState<AttendanceSession | null>(null);
+  const [roster, setRoster] = useState<AttendanceRecord[]>([]);
 
-  const [detail, setDetail] = useState<AttendanceSessionDetail | null>(null);
-  const [rosterStates, setRosterStates] = useState<
-    Record<string, { status: AttendanceRecordStatus | string; remarks: string }>
+  // Working state for active attendance marking: studentId -> { status, remarks }
+  const [studentStates, setStudentStates] = useState<
+    Record<string, { status: AttendanceStatus; remarks: string }>
   >({});
+  const [initialStates, setInitialStates] = useState<
+    Record<string, { status: AttendanceStatus; remarks: string }>
+  >({});
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Correction Modal for locked session
+  // Search & Filter
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+
+  // Correction Modal
   const [correctionModalOpen, setCorrectionModalOpen] = useState(false);
-  const [selectedStudentForCorrection, setSelectedStudentForCorrection] =
-    useState<AttendanceRosterStudentItem | null>(null);
-  const [correctionForm, setCorrectionForm] = useState({
-    requested_status: "PRESENT",
-    reason: "",
-  });
+  const [selectedStudentForCorrection, setSelectedStudentForCorrection] = useState<AttendanceRecord | null>(null);
+  const [correctionReason, setCorrectionReason] = useState("");
+  const [requestedStatus, setRequestedStatus] = useState<AttendanceStatus>("PRESENT");
+  const [submittingCorrection, setSubmittingCorrection] = useState(false);
 
-  async function loadSessionDetail() {
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
+      const [sessRes, rosterRes] = await Promise.all([
+        attendanceService.getSessionById(sessionId),
+        attendanceService.getSessionRoster(sessionId),
+      ]);
 
-      const res = await apiFetch<AttendanceSessionDetail>(
-        `/api/v1/attendance/sessions/${sessionId}`
-      );
-      const data = res.data;
-      setDetail(data);
-
-      // Initialize roster states from existing records or defaults
-      const initialMap: Record<
-        string,
-        { status: AttendanceRecordStatus | string; remarks: string }
-      > = {};
-      const recordMap = new Map((data.records || []).map((r: AttendanceRecord) => [r.student_id, r]));
-
-      for (const item of data.roster || []) {
-        const existingRec = recordMap.get(item.student_id);
-        if (existingRec) {
-          initialMap[item.student_id] = {
-            status: existingRec.status,
-            remarks: existingRec.remarks || "",
-          };
-        } else if (item.has_approved_leave) {
-          initialMap[item.student_id] = {
-            status: "ON_LEAVE",
-            remarks: item.leave_reason || "Approved Leave",
-          };
-        } else {
-          initialMap[item.student_id] = {
-            status: "PRESENT",
-            remarks: "",
-          };
-        }
+      if (sessRes.success && sessRes.data) {
+        setSession(sessRes.data);
       }
-      setRosterStates(initialMap);
-    } catch {
-      const sessRes = await attendanceService.getSessionById(sessionId);
-      const rosterRes = await attendanceService.getSessionRoster(sessionId);
-      const session = sessRes.data || {
-        id: sessionId,
-        courseCode: "CS301",
-        courseName: "Data Structures & Algorithms",
-        section: "5th Sem CSE — Sec A",
-        facultyName: "Dr. Rajesh Sharma",
-        periodSlot: "09:30 - 10:30 AM",
-        room: "Hall 302",
-        status: "MARKED" as const,
-        totalStudents: 68,
-        presentCount: 62,
-        absentCount: 6,
-        sessionDate: "2026-09-30",
-      };
-
-      const rosterItems = (rosterRes.data || []).map((r) => ({
-        student_id: r.studentId,
-        roll_number: r.rollNumber,
-        first_name: r.name.split(" ")[0] || "",
-        last_name: r.name.split(" ").slice(1).join(" ") || "",
-        email: `${r.rollNumber.toLowerCase()}@campusos.edu`,
-        enrollment_status: "ENROLLED",
-        cumulative_attendance_percentage: 88.5,
-        has_approved_leave: r.status === "ON_LEAVE",
-        leave_reason: r.remarks,
-      } as unknown as AttendanceRosterStudentItem));
-
-      const mockData = {
-        session: {
-          id: session.id,
-          academic_year_id: "ay-2026-27",
-          semester_id: "sem-5",
-          course_offering_id: "off-cs301",
-          section_id: "sec-5a",
-          faculty_id: "fac-1",
-          session_date: session.sessionDate,
-          period_number: 1,
-          start_time: session.periodSlot.split(" - ")[0] || "09:30",
-          end_time: session.periodSlot.split(" - ")[1] || "10:30",
-          session_type: "LECTURE",
-          status: session.status,
-          topic: session.courseName,
-          created_at: "2026-09-30T00:00:00Z",
-          course_code: session.courseCode,
-          course_name: session.courseName,
-          section_name: session.section,
-          faculty_name: session.facultyName,
-          total_enrolled: session.totalStudents,
-          present_count: session.presentCount,
-          absent_count: session.absentCount,
-        } as unknown as AttendanceSession,
-        roster: rosterItems,
-        records: (rosterRes.data || []).map((r) => ({
-          id: `rec-${r.studentId}`,
-          session_id: sessionId,
-          student_id: r.studentId,
-          status: r.status,
-          remarks: r.remarks || "",
-          student_name: r.name,
-          roll_number: r.rollNumber,
-        } as unknown as AttendanceRecord)),
-      };
-      setDetail(mockData as unknown as AttendanceSessionDetail);
-
-      const initialMap: Record<string, { status: AttendanceRecordStatus | string; remarks: string }> = {};
-      for (const item of rosterRes.data || []) {
-        initialMap[item.studentId] = {
-          status: item.status,
-          remarks: item.remarks || "",
-        };
+      if (rosterRes.success) {
+        setRoster(rosterRes.data);
+        const map: Record<string, { status: AttendanceStatus; remarks: string }> = {};
+        rosterRes.data.forEach((r) => {
+          map[r.studentId] = { status: r.status, remarks: r.remarks || "" };
+        });
+        setStudentStates(map);
+        setInitialStates(map);
+        setIsDirty(false);
       }
-      setRosterStates(initialMap);
+    } catch (err) {
+      console.error("Failed to load session details", err);
+      showToast({ type: "error", title: "Load Error", message: "Failed to load session roster." });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadSessionDetail();
+    loadData();
   }, [sessionId]);
 
-  function handleStatusChange(studentId: string, status: AttendanceRecordStatus | string) {
-    if (detail?.session.status === "LOCKED") return;
-    setRosterStates((prev) => ({
-      ...prev,
-      [studentId]: {
-        ...prev[studentId],
-        status,
-      },
-    }));
-  }
-
-  function handleRemarksChange(studentId: string, remarks: string) {
-    if (detail?.session.status === "LOCKED") return;
-    setRosterStates((prev) => ({
-      ...prev,
-      [studentId]: {
-        ...prev[studentId],
-        remarks,
-      },
-    }));
-  }
-
-  function handleMarkAll(status: AttendanceRecordStatus | string) {
-    if (detail?.session.status === "LOCKED") return;
-    setRosterStates((prev) => {
-      const next = { ...prev };
-      for (const studentId of Object.keys(next)) {
-        // preserve ON_LEAVE students if marking present
-        const item = detail?.roster.find((r: AttendanceRosterStudentItem) => r.student_id === studentId);
-        if (item?.has_approved_leave && status === "PRESENT") {
-          continue;
-        }
-        next[studentId] = {
-          ...next[studentId],
-          status,
-        };
+  // Unsaved changes alert before unloading page
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
       }
-      return next;
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
+
+  const updateStudentStatus = (studentId: string, status: AttendanceStatus) => {
+    setStudentStates((prev) => {
+      const updated = {
+        ...prev,
+        [studentId]: { ...prev[studentId], status },
+      };
+      setIsDirty(true);
+      return updated;
     });
-  }
+  };
 
-  async function handleOpenSession() {
-    try {
-      setSaving(true);
-      setError(null);
-      await apiFetch(`/api/v1/attendance/sessions/${sessionId}/open`, {
-        method: "POST",
+  const handleMarkAll = (status: AttendanceStatus) => {
+    setStudentStates((prev) => {
+      const updated = { ...prev };
+      roster.forEach((r) => {
+        updated[r.studentId] = { ...updated[r.studentId], status };
       });
-      setSuccessMsg("Attendance register successfully opened for marking.");
-      await loadSessionDetail();
-    } catch {
-      if (detail) {
-        setDetail({
-          ...detail,
-          session: {
-            ...detail.session,
-            status: "OPEN" as any,
-          },
-        });
-      }
-      setSuccessMsg("Attendance register opened for marking.");
-    } finally {
-      setSaving(false);
-    }
-  }
+      setIsDirty(true);
+      return updated;
+    });
+    showToast({ type: "info", title: "Batch Action", message: `All ${roster.length} students marked as ${status}.` });
+  };
 
-  async function handleSubmitAttendance() {
+  const handleReset = () => {
+    setStudentStates({ ...initialStates });
+    setIsDirty(false);
+    showToast({ type: "info", title: "Reset Complete", message: "Restored initial roster state." });
+  };
+
+  const handleSaveAttendance = async () => {
     try {
       setSaving(true);
-      setError(null);
-      setSuccessMsg(null);
-
-      const records = Object.entries(rosterStates).map(([studentId, s]) => ({
-        student_id: studentId,
-        status: s.status,
-        remarks: s.remarks || undefined,
+      const recordsToSubmit = roster.map((r) => ({
+        studentId: r.studentId,
+        status: studentStates[r.studentId]?.status || "PRESENT",
+        remarks: studentStates[r.studentId]?.remarks,
       }));
 
-      await apiFetch(`/api/v1/attendance/sessions/${sessionId}/records/bulk`, {
-        method: "POST",
-        body: JSON.stringify({ records }),
-      });
-
-      setSuccessMsg("Attendance records saved and verified successfully.");
-      await loadSessionDetail();
-    } catch {
-      if (detail) {
-        const present = Object.values(rosterStates).filter((s) => s.status === "PRESENT").length;
-        const absent = Object.values(rosterStates).filter((s) => s.status === "ABSENT").length;
-        setDetail({
-          ...detail,
-          session: {
-            ...detail.session,
-            status: "MARKED" as any,
-            total_present: present,
-            total_absent: absent,
-          },
+      const res = await attendanceService.submitSessionAttendance(sessionId, recordsToSubmit);
+      if (res.success) {
+        showToast({
+          type: "success",
+          title: "Attendance Saved",
+          message: `Successfully recorded attendance for ${res.data.updatedCount} students.`,
         });
+        setIsDirty(false);
+        await loadData();
       }
-      setSuccessMsg("Attendance records saved and verified successfully.");
+    } catch (err) {
+      console.error("Failed to save attendance", err);
+      showToast({ type: "error", title: "Save Error", message: "Unable to persist attendance records." });
     } finally {
       setSaving(false);
     }
-  }
+  };
 
-  async function handleLockSession() {
-    if (
-      !confirm(
-        "Are you sure you want to LOCK this attendance session? Once locked, ordinary edits are disabled and any changes require a formal supervised correction workflow."
-      )
-    ) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-      setError(null);
-
-      // Save records first then lock
-      const records = Object.entries(rosterStates).map(([studentId, s]) => ({
-        student_id: studentId,
-        status: s.status,
-        remarks: s.remarks || undefined,
-      }));
-
-      await apiFetch(`/api/v1/attendance/sessions/${sessionId}/records/bulk`, {
-        method: "POST",
-        body: JSON.stringify({ records }),
-      });
-
-      await apiFetch(`/api/v1/attendance/sessions/${sessionId}/lock`, {
-        method: "POST",
-      });
-
-      setSuccessMsg("Attendance session locked successfully. Register is now authoritative.");
-      await loadSessionDetail();
-    } catch {
-      if (detail) {
-        setDetail({
-          ...detail,
-          session: {
-            ...detail.session,
-            status: "LOCKED" as any,
-          },
-        });
-      }
-      setSuccessMsg("Attendance session locked successfully. Register is now authoritative.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handleRequestCorrection(e: React.FormEvent) {
+  const handleRequestCorrection = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedStudentForCorrection || !detail) return;
-
+    if (!selectedStudentForCorrection || !session) return;
     try {
-      setError(null);
-      const record = detail.records.find(
-        (r: AttendanceRecord) => r.student_id === selectedStudentForCorrection.student_id
-      );
-      if (!record) {
-        throw new Error("Cannot locate attendance record for correction.");
+      setSubmittingCorrection(true);
+      const res = await attendanceService.submitCorrection({
+        sessionId: session.id,
+        recordId: selectedStudentForCorrection.id,
+        studentId: selectedStudentForCorrection.studentId,
+        studentName: selectedStudentForCorrection.studentName,
+        rollNumber: selectedStudentForCorrection.rollNumber,
+        courseCode: session.courseCode,
+        courseName: session.courseName,
+        sessionDate: session.date,
+        originalStatus: studentStates[selectedStudentForCorrection.studentId]?.status || selectedStudentForCorrection.status,
+        requestedStatus,
+        reason: correctionReason,
+        requestedBy: session.facultyName,
+        requestedRole: "FACULTY",
+      });
+
+      if (res.success) {
+        showToast({
+          type: "success",
+          title: "Correction Requested",
+          message: "Request submitted to HOD for formal review and sign-off.",
+        });
+        setCorrectionModalOpen(false);
+        setCorrectionReason("");
       }
-
-      await apiFetch("/api/v1/attendance/corrections", {
-        method: "POST",
-        body: JSON.stringify({
-          attendance_record_id: record.id,
-          requested_status: correctionForm.requested_status,
-          reason: correctionForm.reason,
-        }),
-      });
-
-      setSuccessMsg("Correction request submitted for HOD / Admin approval.");
-      setCorrectionModalOpen(false);
-      setSelectedStudentForCorrection(null);
-      setCorrectionForm({ requested_status: "PRESENT", reason: "" });
-    } catch {
-      await attendanceService.submitCorrection({
-        studentName: selectedStudentForCorrection.student_name,
-        rollNumber: selectedStudentForCorrection.roll_number || "",
-        courseCode: detail.session.course_code || "",
-        currentStatus: rosterStates[selectedStudentForCorrection.student_id]?.status || "ABSENT",
-        requestedStatus: correctionForm.requested_status,
-        reason: correctionForm.reason,
-      });
-      setSuccessMsg("Correction request submitted for HOD / Admin approval.");
-      setCorrectionModalOpen(false);
-      setSelectedStudentForCorrection(null);
-      setCorrectionForm({ requested_status: "PRESENT", reason: "" });
+    } catch (err) {
+      console.error("Failed to submit correction", err);
+      showToast({ type: "error", title: "Request Failed", message: "Could not submit correction request." });
+    } finally {
+      setSubmittingCorrection(false);
     }
+  };
+
+  // Filtered Roster
+  const filteredRoster = roster.filter((r) => {
+    const currentState = studentStates[r.studentId]?.status || r.status;
+    const matchesStatus = filterStatus === "ALL" || currentState === filterStatus;
+    const matchesSearch =
+      r.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.rollNumber.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+  // Dynamic Live Metrics based on working state
+  const totalInRoster = roster.length;
+  const currentPresent = Object.values(studentStates).filter((s) => s.status === "PRESENT").length;
+  const currentAbsent = Object.values(studentStates).filter((s) => s.status === "ABSENT").length;
+  const currentLate = Object.values(studentStates).filter((s) => s.status === "LATE").length;
+  const currentExcused = Object.values(studentStates).filter((s) => s.status === "EXCUSED").length;
+  const livePercentage = calculateAttendancePercentage({
+    present: currentPresent,
+    absent: currentAbsent,
+    late: currentLate,
+    excused: currentExcused,
+    total: totalInRoster,
+  });
+
+  if (loading && !session) {
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+      </div>
+    );
   }
 
-  // Calculate live presence tallies
-  const tallies = Object.values(rosterStates).reduce(
-    (acc, curr) => {
-      acc.total += 1;
-      if (curr.status === "PRESENT") acc.present += 1;
-      else if (curr.status === "ABSENT") acc.absent += 1;
-      else if (curr.status === "LATE") acc.late += 1;
-      else if (curr.status === "EXCUSED") acc.excused += 1;
-      else if (curr.status === "ON_LEAVE") acc.leave += 1;
-      return acc;
-    },
-    { total: 0, present: 0, absent: 0, late: 0, excused: 0, leave: 0 }
-  );
-
-  const isLocked = detail?.session.status === "LOCKED";
-  const isScheduled = detail?.session.status === "SCHEDULED";
+  if (!session) {
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white">Session Not Found</h3>
+        <p className="mt-1 text-xs text-slate-500">The requested attendance session does not exist.</p>
+        <Link href="/app/attendance/sessions" className="mt-4 inline-block">
+          <Button variant="outline" size="sm">Back to Sessions</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Top Breadcrumb & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/app/attendance/sessions"
-              className="text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-            >
-              &larr; Class Registers
-            </Link>
-            <span className="text-xs text-slate-400">•</span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              {detail?.session.session_date}
-            </span>
+      {/* Top Breadcrumb & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <Link href="/app/attendance/sessions">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-900 dark:text-white text-lg">
+                {session.courseCode}: {session.courseName}
+              </span>
+              <Badge variant={session.status === "COMPLETED" ? "success" : "info"}>
+                {session.status}
+              </Badge>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {session.section} • {session.sessionType} Lecture Register
+            </p>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
-            <span>{detail?.session.course_code || "Course"} — {detail?.session.course_name}</span>
-            <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                isLocked
-                  ? "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                  : detail?.session.status === "MARKED"
-                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                  : detail?.session.status === "OPEN"
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                  : "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300"
-              }`}
-            >
-              {detail?.session.status || "..."}
-            </span>
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Section: <strong className="text-slate-700 dark:text-slate-300">{detail?.session.section_name || "General"}</strong> •
-            Faculty: <strong className="text-slate-700 dark:text-slate-300">{detail?.session.faculty_name || "Instructor"}</strong> •
-            Period: <strong className="text-slate-700 dark:text-slate-300">P{detail?.session.period_number} ({detail?.session.start_time || "Scheduled"} - {detail?.session.end_time || ""})</strong>
-          </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {isScheduled && hasPermission("attendance:mark") && (
-            <button
-              type="button"
-              disabled={saving}
-              onClick={handleOpenSession}
-              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 transition"
-            >
-              Open Register
-            </button>
+        <div className="flex items-center gap-2">
+          {isDirty && (
+            <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5 text-xs">
+              <RotateCcw className="h-3.5 w-3.5" />
+              Discard
+            </Button>
           )}
-
-          {!isLocked && !isScheduled && hasPermission("attendance:mark") && (
-            <>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => handleMarkAll("PRESENT")}
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition"
-              >
-                All Present
-              </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => handleMarkAll("ABSENT")}
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition"
-              >
-                All Absent
-              </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={handleSubmitAttendance}
-                className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 transition"
-              >
-                {saving ? "Saving..." : "Save Register"}
-              </button>
-              {hasPermission("attendance:lock") && (
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={handleLockSession}
-                  className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 disabled:opacity-50 transition"
-                >
-                  Lock Session
-                </button>
-              )}
-            </>
-          )}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleSaveAttendance}
+            disabled={saving}
+            className="gap-1.5 text-xs"
+          >
+            <Save className="h-3.5 w-3.5" />
+            {saving ? "Saving..." : "Save Attendance"}
+          </Button>
         </div>
       </div>
 
-      {/* Notifications */}
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          {error}
-        </div>
-      )}
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-          {successMsg}
+      {/* Unsaved Changes Banner */}
+      {isDirty && (
+        <div className="rounded-xl border border-amber-300 bg-amber-50 p-3.5 flex items-center justify-between dark:border-amber-900/60 dark:bg-amber-950/40">
+          <div className="flex items-center gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+            <span>
+              <strong>You have unsaved changes.</strong> Any modifications to attendance will be lost if you leave this page without saving.
+            </span>
+          </div>
+          <Button size="sm" variant="primary" onClick={handleSaveAttendance} disabled={saving} className="h-7 text-xs bg-amber-600 hover:bg-amber-700">
+            Save Changes
+          </Button>
         </div>
       )}
 
-      {/* Locked Notice Banner */}
-      {isLocked && (
-        <div className="rounded-xl border border-slate-300 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/60 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <svg className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <div>
-              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                This attendance register is locked and immutable.
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Direct edits are disabled. To request modifications for any student, click &quot;Request Correction&quot; below.
-              </p>
+      {/* Session Metadata & Live Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 md:col-span-2">
+          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">
+            Session Details
+          </h3>
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+              <Calendar className="h-4 w-4 text-slate-400" />
+              <span>{session.date}</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+              <Clock className="h-4 w-4 text-slate-400" />
+              <span>{session.startTime} — {session.endTime}</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+              <User className="h-4 w-4 text-slate-400" />
+              <span>{session.facultyName}</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+              <MapPin className="h-4 w-4 text-slate-400" />
+              <span>{session.room}</span>
             </div>
           </div>
-          <Link
-            href="/app/attendance/corrections"
-            className="text-xs font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
-          >
-            Correction Audit Log &rarr;
-          </Link>
+          {session.topicCovered && (
+            <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 text-xs">
+              <span className="font-medium text-slate-500">Topic: </span>
+              <span className="text-slate-800 dark:text-slate-200">{session.topicCovered}</span>
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Roster Presence Live Counter Bar */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-6 text-sm">
+        {/* Live Attendance Rate Card */}
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between">
           <div>
-            <span className="text-xs text-slate-400 block">Enrolled Roster</span>
-            <strong className="text-slate-900 dark:text-white font-bold">{tallies.total} Students</strong>
-          </div>
-          <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-            <span className="text-xs text-slate-400 block">Present</span>
-            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{tallies.present}</strong>
-          </div>
-          <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-            <span className="text-xs text-slate-400 block">Absent</span>
-            <strong className="text-rose-600 dark:text-rose-400 font-bold">{tallies.absent}</strong>
-          </div>
-          <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-            <span className="text-xs text-slate-400 block">Late</span>
-            <strong className="text-amber-500 font-bold">{tallies.late}</strong>
-          </div>
-          <div className="border-l border-slate-200 dark:border-slate-800 pl-6">
-            <span className="text-xs text-slate-400 block">Excused / Leave</span>
-            <strong className="text-blue-500 font-bold">{tallies.excused + tallies.leave}</strong>
-          </div>
-        </div>
-
-        <div className="text-xs text-slate-400">
-          Effective Rate:{" "}
-          <strong className="text-slate-800 dark:text-slate-200 font-bold">
-            {tallies.total > 0
-              ? `${Math.round(((tallies.present + tallies.excused + tallies.leave) / tallies.total) * 100)}%`
-              : "0%"}
-          </strong>
-        </div>
-      </div>
-
-      {/* Student Roster Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        {loading ? (
-          <div className="py-12 text-center text-sm text-slate-400">Loading student roster...</div>
-        ) : !detail?.roster || detail.roster.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No students enrolled in this course offering.
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Ensure students have active course enrollments under the academic engine.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Roll & Admission</th>
-                  <th className="px-4 py-3">Student Name</th>
-                  <th className="px-4 py-3">Attendance Status</th>
-                  <th className="px-4 py-3">Remarks / Notes</th>
-                  {isLocked && <th className="px-4 py-3 text-right">Correction</th>}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {detail.roster.map((student: AttendanceRosterStudentItem) => {
-                  const state = rosterStates[student.student_id] || {
-                    status: "PRESENT",
-                    remarks: "",
-                  };
-
-                  return (
-                    <tr
-                      key={student.student_id}
-                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
-                    >
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <div className="font-semibold text-slate-900 dark:text-white">
-                          {student.roll_number || "—"}
-                        </div>
-                        <div className="text-xs text-slate-400">{student.admission_number}</div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <div className="font-medium text-slate-900 dark:text-white">
-                          {student.student_name}
-                        </div>
-                        {student.has_approved_leave && (
-                          <span className="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300">
-                            Approved Leave: {student.leave_reason || "Excused"}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50 dark:border-slate-700 dark:bg-slate-800">
-                          {(["PRESENT", "ABSENT", "LATE", "EXCUSED", "ON_LEAVE"] as const).map(
-                            (st) => {
-                              const isSelected = state.status === st;
-                              let activeClass = "";
-                              if (isSelected) {
-                                if (st === "PRESENT")
-                                  activeClass =
-                                    "bg-emerald-600 text-white font-bold shadow-xs";
-                                else if (st === "ABSENT")
-                                  activeClass = "bg-rose-600 text-white font-bold shadow-xs";
-                                else if (st === "LATE")
-                                  activeClass =
-                                    "bg-amber-500 text-white font-bold shadow-xs";
-                                else if (st === "EXCUSED")
-                                  activeClass = "bg-blue-600 text-white font-bold shadow-xs";
-                                else if (st === "ON_LEAVE")
-                                  activeClass =
-                                    "bg-purple-600 text-white font-bold shadow-xs";
-                              } else {
-                                activeClass =
-                                  "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white";
-                              }
-
-                              return (
-                                <button
-                                  key={st}
-                                  type="button"
-                                  disabled={isLocked}
-                                  onClick={() => handleStatusChange(student.student_id, st)}
-                                  className={`px-2.5 py-1 text-xs rounded-md transition ${activeClass} ${
-                                    isLocked ? "cursor-not-allowed opacity-90" : ""
-                                  }`}
-                                >
-                                  {st === "ON_LEAVE" ? "Leave" : st.charAt(0) + st.slice(1).toLowerCase()}
-                                </button>
-                              );
-                            }
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <input
-                          type="text"
-                          disabled={isLocked}
-                          placeholder={isLocked ? "" : "Optional remark..."}
-                          value={state.remarks}
-                          onChange={(e) =>
-                            handleRemarksChange(student.student_id, e.target.value)
-                          }
-                          className="w-full max-w-xs rounded border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 disabled:opacity-50"
-                        />
-                      </td>
-                      {isLocked && (
-                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                          {hasPermission("attendance:correct") && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedStudentForCorrection(student);
-                                setCorrectionForm({
-                                  requested_status: state.status === "PRESENT" ? "ABSENT" : "PRESENT",
-                                  reason: "",
-                                });
-                                setCorrectionModalOpen(true);
-                              }}
-                              className="text-xs font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
-                            >
-                              Request Change
-                            </button>
-                          )}
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Modal: Request Correction on Locked Session */}
-      {correctionModalOpen && selectedStudentForCorrection && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Request Attendance Correction
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
+              Attendance Rate
             </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Submit a formal change request for{" "}
-              <strong>{selectedStudentForCorrection.student_name}</strong>. Requires HOD / Admin approval.
-            </p>
+            <div className="flex items-baseline gap-2 mt-2">
+              <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+                {livePercentage}%
+              </span>
+              <span className="text-xs text-slate-500">effective</span>
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div
+                className={`h-full rounded-full ${
+                  livePercentage >= 85 ? "bg-emerald-500" : livePercentage >= 75 ? "bg-amber-500" : "bg-rose-500"
+                }`}
+                style={{ width: `${livePercentage}%` }}
+              />
+            </div>
+          </div>
+        </div>
 
-            <form onSubmit={handleRequestCorrection} className="mt-4 space-y-4">
+        {/* Headcount Breakdown */}
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            Roster Headcount
+          </h3>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="rounded-lg bg-emerald-50 p-2 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+              <div className="font-bold text-base">{currentPresent}</div>
+              <div className="text-[10px] text-emerald-600">Present</div>
+            </div>
+            <div className="rounded-lg bg-rose-50 p-2 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300">
+              <div className="font-bold text-base">{currentAbsent}</div>
+              <div className="text-[10px] text-rose-600">Absent</div>
+            </div>
+            <div className="rounded-lg bg-amber-50 p-2 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+              <div className="font-bold text-base">{currentLate}</div>
+              <div className="text-[10px] text-amber-600">Late (0.5x)</div>
+            </div>
+            <div className="rounded-lg bg-blue-50 p-2 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300">
+              <div className="font-bold text-base">{currentExcused}</div>
+              <div className="text-[10px] text-blue-600">Excused</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Roster Controls: Search, Quick Mark All, Filters */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-2 flex-1 max-w-sm">
+          <div className="relative w-full">
+            <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search student by name or roll number..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 bg-white pl-8 pr-3 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Status filter */}
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            <option value="ALL">All ({roster.length})</option>
+            <option value="PRESENT">Present only</option>
+            <option value="ABSENT">Absent only</option>
+            <option value="LATE">Late only</option>
+            <option value="EXCUSED">Excused only</option>
+          </select>
+
+          {/* Quick Mark All Buttons */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleMarkAll("PRESENT")}
+            className="text-xs h-7 text-emerald-700 border-emerald-300 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-300"
+          >
+            Mark All Present
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleMarkAll("ABSENT")}
+            className="text-xs h-7 text-rose-700 border-rose-300 hover:bg-rose-50 dark:border-rose-800 dark:text-rose-300"
+          >
+            Mark All Absent
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Student Roster Table (Optimized for speed & keyboard navigation) */}
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden dark:border-slate-800 dark:bg-slate-900">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 dark:bg-slate-800/50 dark:border-slate-800 dark:text-slate-400">
+                <th className="py-3 px-4 font-semibold w-12 text-center">#</th>
+                <th className="py-3 px-4 font-semibold">Student Name & Roll Number</th>
+                <th className="py-3 px-4 font-semibold text-center">Attendance Marking</th>
+                <th className="py-3 px-4 font-semibold">Remarks</th>
+                <th className="py-3 px-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              {filteredRoster.map((record, index) => {
+                const currentStatus = studentStates[record.studentId]?.status || record.status;
+                const remarks = studentStates[record.studentId]?.remarks || "";
+
+                return (
+                  <tr
+                    key={record.studentId}
+                    className="hover:bg-slate-50/70 transition dark:hover:bg-slate-800/40"
+                  >
+                    <td className="py-3 px-4 text-center text-slate-400 font-medium">
+                      {index + 1}
+                    </td>
+
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-slate-900 dark:text-white">
+                        {record.studentName}
+                      </div>
+                      <div className="text-[11px] text-slate-500">{record.rollNumber}</div>
+                    </td>
+
+                    {/* Quick Button Group: [Present] [Absent] [Late] [Excused] */}
+                    <td className="py-3 px-4 text-center">
+                      <div className="inline-flex rounded-lg border border-slate-200 bg-slate-100/70 p-0.5 dark:border-slate-700 dark:bg-slate-800">
+                        <button
+                          type="button"
+                          onClick={() => updateStudentStatus(record.studentId, "PRESENT")}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            currentStatus === "PRESENT"
+                              ? "bg-emerald-600 text-white shadow-xs"
+                              : "text-slate-600 hover:text-slate-900 dark:text-slate-300"
+                          }`}
+                        >
+                          Present
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateStudentStatus(record.studentId, "ABSENT")}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            currentStatus === "ABSENT"
+                              ? "bg-rose-600 text-white shadow-xs"
+                              : "text-slate-600 hover:text-slate-900 dark:text-slate-300"
+                          }`}
+                        >
+                          Absent
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateStudentStatus(record.studentId, "LATE")}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            currentStatus === "LATE"
+                              ? "bg-amber-600 text-white shadow-xs"
+                              : "text-slate-600 hover:text-slate-900 dark:text-slate-300"
+                          }`}
+                        >
+                          Late
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateStudentStatus(record.studentId, "EXCUSED")}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            currentStatus === "EXCUSED"
+                              ? "bg-blue-600 text-white shadow-xs"
+                              : "text-slate-600 hover:text-slate-900 dark:text-slate-300"
+                          }`}
+                        >
+                          Excused
+                        </button>
+                      </div>
+                    </td>
+
+                    <td className="py-3 px-4">
+                      <input
+                        type="text"
+                        placeholder="Optional remarks..."
+                        value={remarks}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setStudentStates((prev) => ({
+                            ...prev,
+                            [record.studentId]: { ...prev[record.studentId], remarks: val },
+                          }));
+                          setIsDirty(true);
+                        }}
+                        className="w-full rounded-md border border-slate-200 bg-transparent px-2 py-1 text-xs text-slate-800 dark:border-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                    </td>
+
+                    <td className="py-3 px-4 text-right">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setSelectedStudentForCorrection(record);
+                          setRequestedStatus(currentStatus === "ABSENT" ? "PRESENT" : "EXCUSED");
+                          setCorrectionModalOpen(true);
+                        }}
+                        className="h-7 text-xs text-slate-500 hover:text-indigo-600"
+                      >
+                        Request Correction
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Audit Timeline */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex items-center gap-2 mb-3">
+          <History className="h-4 w-4 text-slate-500" />
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            Session Audit Log
+          </h3>
+        </div>
+        <div className="space-y-3 text-xs">
+          <div className="flex items-start gap-3">
+            <div className="h-2 w-2 rounded-full bg-indigo-500 mt-1.5" />
+            <div>
+              <div className="font-medium text-slate-900 dark:text-white">
+                Session Scheduled & Timetable Synced
+              </div>
+              <div className="text-[11px] text-slate-500">
+                Created on {new Date(session.createdAt).toLocaleString()} by Academic Timetable Engine
+              </div>
+            </div>
+          </div>
+          {session.submittedAt && (
+            <div className="flex items-start gap-3">
+              <div className="h-2 w-2 rounded-full bg-emerald-500 mt-1.5" />
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Current Status
-                </label>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 p-2 rounded">
-                  {rosterStates[selectedStudentForCorrection.student_id]?.status || "PRESENT"}
+                <div className="font-medium text-slate-900 dark:text-white">
+                  Attendance Register Recorded & Signed
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  Submitted on {new Date(session.submittedAt).toLocaleString()} by {session.facultyName}
                 </div>
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Requested New Status *
-                </label>
-                <select
-                  required
-                  value={correctionForm.requested_status}
-                  onChange={(e) =>
-                    setCorrectionForm({ ...correctionForm, requested_status: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="PRESENT">Present</option>
-                  <option value="ABSENT">Absent</option>
-                  <option value="LATE">Late</option>
-                  <option value="EXCUSED">Excused</option>
-                  <option value="ON_LEAVE">On Leave</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Justification / Reason *
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="e.g. Student was present in class but was accidentally recorded as absent due to late roll call."
-                  value={correctionForm.reason}
-                  onChange={(e) =>
-                    setCorrectionForm({ ...correctionForm, reason: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setCorrectionModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                >
-                  Submit Request
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
+
+      {/* Attendance Correction Modal */}
+      <Dialog
+        open={correctionModalOpen}
+        onClose={() => setCorrectionModalOpen(false)}
+        title="Request Attendance Correction"
+      >
+        <form onSubmit={handleRequestCorrection} className="space-y-4 text-xs">
+          <p className="text-slate-500">
+            Attendance records cannot be silently overwritten once marked. Submit a justification for HOD scrutiny.
+          </p>
+
+          <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+            <div className="font-semibold text-slate-900 dark:text-white">
+              {selectedStudentForCorrection?.studentName} ({selectedStudentForCorrection?.rollNumber})
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5">
+              Course: {session.courseCode} • Date: {session.date}
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Requested Corrected Status
+            </label>
+            <select
+              value={requestedStatus}
+              onChange={(e) => setRequestedStatus(e.target.value as AttendanceStatus)}
+              className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            >
+              <option value="PRESENT">PRESENT</option>
+              <option value="EXCUSED">EXCUSED (On-Duty / Medical)</option>
+              <option value="LATE">LATE</option>
+              <option value="ABSENT">ABSENT</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Justification / Reason
+            </label>
+            <textarea
+              required
+              rows={3}
+              value={correctionReason}
+              onChange={(e) => setCorrectionReason(e.target.value)}
+              placeholder="e.g. Student was present in lecture hall; biometric card scanner failure verified by faculty."
+              className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCorrectionModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={submittingCorrection}>
+              {submittingCorrection ? "Submitting..." : "Submit for HOD Review"}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </div>
   );
 }

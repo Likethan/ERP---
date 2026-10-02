@@ -14,6 +14,7 @@ export interface HostelItem {
 
 export interface HostelRoomItem {
   id: string;
+  hostelId?: string;
   hostelName: string;
   block: string;
   floor: number;
@@ -94,6 +95,7 @@ export const MOCK_HOSTELS: HostelItem[] = [
 export const MOCK_HOSTEL_ROOMS: HostelRoomItem[] = [
   {
     id: "rm-304-a",
+    hostelId: "hst-raman",
     hostelName: "Sir C. V. Raman Hall of Residence",
     block: "Block A",
     floor: 3,
@@ -105,6 +107,7 @@ export const MOCK_HOSTEL_ROOMS: HostelRoomItem[] = [
   },
   {
     id: "rm-214-b",
+    hostelId: "hst-kalpana",
     hostelName: "Kalpana Chawla Hall of Residence",
     block: "Block B",
     floor: 2,
@@ -116,6 +119,7 @@ export const MOCK_HOSTEL_ROOMS: HostelRoomItem[] = [
   },
   {
     id: "rm-305-a",
+    hostelId: "hst-raman",
     hostelName: "Sir C. V. Raman Hall of Residence",
     block: "Block A",
     floor: 3,

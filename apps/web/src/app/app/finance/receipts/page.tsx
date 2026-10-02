@@ -1,62 +1,179 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import {
+  Receipt as ReceiptIcon,
+  Search,
+  Filter,
+  Eye,
+  Printer,
+  FileText,
+  DollarSign,
+  CreditCard,
+  Building2,
+  Calendar,
+} from "lucide-react";
+import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/stat-card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { useToast } from "@/components/ui/toast";
 import { financeService } from "@/services/finance.service";
-import type { Receipt } from "@campusos/types";
+import { formatMoney } from "@/services/financial-calculator";
+import { Receipt } from "@/types/finance";
 
 export default function ReceiptsPage() {
+  const { showToast } = useToast();
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(null);
 
-  async function loadReceipts() {
+  // Filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [methodFilter, setMethodFilter] = useState<string>("ALL");
+
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const res = await apiFetch<Receipt[]>("/api/v1/finance/receipts?limit=100");
+      const res = await financeService.getReceipts();
       setReceipts(res.data);
     } catch {
-      const mockRes = await financeService.getPayments();
-      const mapped: Receipt[] = (mockRes.data || []).map((p) => ({
-        id: p.id,
-        receipt_number: p.receiptNumber,
-        transaction_reference: p.transactionRef,
-        amount_paid: p.amount,
-        payment_mode: p.paymentMode,
-        issued_at: new Date().toISOString(),
-        student_name: p.studentName,
-        student_admission_number: p.rollNumber,
-        student_roll_number: p.rollNumber,
-        invoice_number: p.invoiceNumber,
-      } as unknown as Receipt));
-      setReceipts(mapped);
+      showToast({ title: "Error", message: "Error loading official receipts", type: "error" });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadReceipts();
+    loadData();
   }, []);
 
-  const formatCurrency = (amount: number | string | undefined) => {
-    const num = typeof amount === "string" ? parseFloat(amount) : (amount ?? 0);
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  };
+  const totalReceiptsAmount = useMemo(() => {
+    return receipts.reduce((sum, r) => sum + r.amount, 0);
+  }, [receipts]);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const filteredReceipts = useMemo(() => {
+    return receipts.filter((r) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        r.receiptNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.transactionRef.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesMethod = methodFilter === "ALL" || r.paymentMethod === methodFilter;
+
+      return matchesSearch && matchesMethod;
+    });
+  }, [receipts, searchQuery, methodFilter]);
+
+  const columns: ColumnDef<Receipt>[] = [
+    {
+      id: "receiptNumber",
+      header: "Receipt Voucher #",
+      accessorKey: "receiptNumber",
+      sortable: true,
+      cell: ({ row }) => (
+        <Link
+          href={`/app/finance/receipts/${row.id}`}
+          className="font-mono text-sm font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline"
+        >
+          {row.receiptNumber}
+        </Link>
+      ),
+    },
+    {
+      id: "student",
+      header: "Student",
+      accessorKey: "studentName",
+      sortable: true,
+      cell: ({ row }) => (
+        <div>
+          <div className="font-medium text-slate-900 dark:text-white">{row.studentName}</div>
+          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+        </div>
+      ),
+    },
+    {
+      id: "invoiceNumber",
+      header: "Billed Invoice",
+      accessorKey: "invoiceNumber",
+      sortable: true,
+      cell: ({ row }) => (
+        <Link
+          href={`/app/finance/invoices/${row.invoiceId}`}
+          className="text-xs font-mono font-medium text-blue-600 hover:underline dark:text-blue-400"
+        >
+          {row.invoiceNumber}
+        </Link>
+      ),
+    },
+    {
+      id: "paymentMethod",
+      header: "Payment Method",
+      accessorKey: "paymentMethod",
+      cell: ({ row }) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          {row.paymentMethod.replace("_", " ")}
+        </span>
+      ),
+    },
+    {
+      id: "date",
+      header: "Issued Date",
+      accessorKey: "date",
+      sortable: true,
+      cell: ({ row }) => (
+        <span className="text-xs text-slate-600 dark:text-slate-300">{row.date}</span>
+      ),
+    },
+    {
+      id: "amount",
+      header: "Settled Amount",
+      accessorKey: "amount",
+      sortable: true,
+      cell: ({ row }) => (
+        <span className="font-bold text-slate-900 dark:text-white">
+          {formatMoney(row.amount)}
+        </span>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorKey: "status",
+      cell: ({ row }) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <Link href={`/app/finance/receipts/${row.id}`}>
+            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+              <Eye className="w-3.5 h-3.5 mr-1" />
+              View
+            </Button>
+          </Link>
+          <Link href={`/app/finance/receipts/${row.id}?print=true`}>
+            <Button variant="outline" size="sm" className="h-8 px-2 text-xs">
+              <Printer className="w-3.5 h-3.5 mr-1 text-slate-500" />
+              Print
+            </Button>
+          </Link>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
@@ -76,173 +193,69 @@ export default function ReceiptsPage() {
         </div>
       </div>
 
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          <p className="font-semibold">Unable to load Receipts</p>
-          <p className="mt-0.5">{error}</p>
-        </div>
-      )}
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard
+          title="Total Receipts Value"
+          value={formatMoney(totalReceiptsAmount)}
+          description="Cumulative institutional fee settlements"
+          icon={<DollarSign className="w-5 h-5 text-emerald-600" />}
+        />
+        <StatCard
+          title="Receipts Issued"
+          value={receipts.length.toString()}
+          description="Validated electronic fee vouchers"
+          icon={<ReceiptIcon className="w-5 h-5 text-blue-600" />}
+        />
+        <StatCard
+          title="Audit Integrity"
+          value="100% Immutable"
+          description="Direct double-entry ledger allocation"
+          icon={<Building2 className="w-5 h-5 text-teal-600" />}
+        />
+      </div>
 
-      {/* Receipts Table */}
-      {loading ? (
-        <div className="text-center py-16 text-slate-500">Loading receipts archive...</div>
-      ) : receipts.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
-          <p className="text-sm font-medium text-slate-900 dark:text-white">No payment receipts issued yet.</p>
-          <p className="mt-1 text-xs text-slate-500">Receipts are automatically generated when payments are recorded.</p>
+      {/* Filter and Search */}
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-4 rounded-xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Input
+            placeholder="Search Receipt #, Student, UTR..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 text-sm"
+          />
         </div>
-      ) : (
-        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Receipt #</th>
-                  <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3">Date & Time</th>
-                  <th className="px-4 py-3">Amount</th>
-                  <th className="px-4 py-3">Payment Mode</th>
-                  <th className="px-4 py-3">Transaction Reference</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {receipts.map((rcp) => (
-                  <tr key={rcp.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                    <td className="px-4 py-3 font-mono font-semibold text-emerald-600 dark:text-emerald-400">
-                      {rcp.receipt_number}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-slate-900 dark:text-white">
-                        {rcp.student_name || "Student"}
-                      </div>
-                      <div className="text-xs text-slate-400 font-mono">{rcp.student_admission_number || ""}</div>
-                    </td>
-                    <td className="px-4 py-3 text-slate-500">{new Date(rcp.issued_at).toLocaleString()}</td>
-                    <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
-                      {formatCurrency(rcp.amount_paid)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800">
-                        {rcp.payment_mode}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">{rcp.transaction_reference}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => setSelectedReceipt(rcp)}
-                        className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-                      >
-                        View Voucher
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <Filter className="w-3.5 h-3.5" />
+            Channel:
           </div>
+          <Select
+            value={methodFilter}
+            onChange={(e) => setMethodFilter(e.target.value)}
+            className="text-xs h-9 w-40"
+          >
+            <option value="ALL">All Methods</option>
+            <option value="UPI">UPI</option>
+            <option value="BANK_TRANSFER">Bank Transfer</option>
+            <option value="CARD">Card</option>
+            <option value="CASH">Cash</option>
+            <option value="CHEQUE">Cheque</option>
+            <option value="ONLINE">Online</option>
+          </Select>
         </div>
-      )}
+      </div>
 
-      {/* Official Receipt Voucher Modal */}
-      {selectedReceipt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-xl rounded-2xl bg-white p-8 shadow-2xl dark:bg-slate-900 border border-slate-200 dark:border-slate-800 my-8">
-            {/* Printable Voucher Card */}
-            <div id="printable-voucher" className="border-2 border-slate-900/10 dark:border-slate-700 p-6 rounded-xl bg-slate-50/50 dark:bg-slate-800/40">
-              {/* Institution Header */}
-              <div className="text-center border-b border-slate-200 pb-4 dark:border-slate-700">
-                <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white uppercase">
-                  {selectedReceipt.institution_legal_name || "CampusOS Academic Institution"}
-                </h2>
-                <p className="text-xs text-slate-500">{selectedReceipt.institution_address || "Central Campus"}</p>
-                <div className="mt-2 inline-block rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                  OFFICIAL PAYMENT RECEIPT
-                </div>
-              </div>
-
-              {/* Receipt Metadata */}
-              <div className="mt-4 grid grid-cols-2 gap-4 text-xs">
-                <div>
-                  <span className="text-slate-400">Receipt No:</span>
-                  <p className="font-mono font-bold text-slate-900 dark:text-white text-sm">
-                    {selectedReceipt.receipt_number}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span className="text-slate-400">Date Issued:</span>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    {new Date(selectedReceipt.issued_at).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-
-              {/* Student Particulars */}
-              <div className="mt-4 border-t border-slate-200/80 pt-3 dark:border-slate-700 text-xs">
-                <span className="text-slate-400">Received With Thanks From:</span>
-                <p className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">
-                  {selectedReceipt.student_name || "Enrolled Student"}
-                </p>
-                <p className="text-slate-500 font-mono">Admission No: {selectedReceipt.student_admission_number || "—"}</p>
-              </div>
-
-              {/* Payment Details */}
-              <div className="mt-4 bg-white p-4 rounded-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700 space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Amount Paid:</span>
-                  <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-base">
-                    {formatCurrency(selectedReceipt.amount_paid)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Payment Mode:</span>
-                  <span className="font-medium text-slate-900 dark:text-white">{selectedReceipt.payment_mode}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Transaction Reference:</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300">{selectedReceipt.transaction_reference}</span>
-                </div>
-                {selectedReceipt.payment_number && (
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Payment Voucher:</span>
-                    <span className="font-mono text-slate-700 dark:text-slate-300">{selectedReceipt.payment_number}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Signatures & Seal */}
-              <div className="mt-8 pt-4 border-t border-dashed border-slate-300 dark:border-slate-700 flex justify-between items-end text-[10px] text-slate-400">
-                <div>
-                  <p>Computer Generated Forensic Receipt</p>
-                  <p>CampusOS Finance Core v8.0</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-28 border-b border-slate-400 mb-1" />
-                  <p className="font-semibold text-slate-600 dark:text-slate-300">Authorized Signatory</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Buttons */}
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
-              >
-                Print / Save PDF
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedReceipt(null)}
-                className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Main DataGrid */}
+      <DataGrid
+        columns={columns}
+        data={filteredReceipts}
+        loading={loading}
+        keyExtractor={(row) => row.id}
+        emptyMessage="No official receipts found matching the filters."
+      />
     </div>
   );
 }

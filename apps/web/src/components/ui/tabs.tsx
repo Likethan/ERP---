@@ -34,8 +34,9 @@ interface TabsContextValue {
 
 const TabsContext = createContext<TabsContextValue | null>(null);
 
-export function Tabs(props: any) {
-  const [internalValue, setInternalValue] = useState(props?.defaultValue || "");
+export function Tabs(props: TabsProps) {
+  const defaultValue = "defaultValue" in props ? props.defaultValue : "";
+  const [internalValue, setInternalValue] = useState(defaultValue || "");
 
   // If legacy props provided
   if ("tabs" in props && Array.isArray(props.tabs)) {

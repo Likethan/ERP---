@@ -93,7 +93,7 @@ class PlacementsService {
       id: `comp-${Date.now()}`,
       name: data.name || "Enterprise Partner",
       industry: data.industry || "Software & Technology",
-      tier: (data.tier as any) || "TIER_1_SUPER_DREAM",
+      tier: data.tier || "TIER_1_SUPER_DREAM",
       headquarters: data.headquarters || "Bangalore, India",
       website: data.website || "https://partner.enterprise.com",
       hrContact: data.hrContact || {

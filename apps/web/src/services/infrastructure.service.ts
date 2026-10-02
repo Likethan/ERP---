@@ -23,7 +23,11 @@ class InfrastructureService {
 
   async getRooms(hostelId?: string): Promise<ApiResponse<HostelRoomItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
-    return { success: true, data: this.rooms };
+    let items = [...this.rooms];
+    if (hostelId) {
+      items = items.filter((r) => r.hostelId === hostelId || r.hostelName === hostelId);
+    }
+    return { success: true, data: items };
   }
 
   async getTransportRoutes(): Promise<ApiResponse<TransportRouteItem[]>> {

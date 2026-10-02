@@ -7,20 +7,20 @@ import {
   HostelItem,
   HostelRoomItem,
 } from "@/mocks/infrastructure.mock";
+import { useCallback } from "react";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Building2,
   Bed,
   Users,
   Wrench,
   Search,
-  Filter,
   CheckCircle2,
   Phone,
   DoorOpen,
@@ -47,7 +47,7 @@ export default function HostelManagementPage() {
     remarks: "",
   });
 
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [hstRes, rmRes] = await Promise.all([
@@ -65,11 +65,11 @@ export default function HostelManagementPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [toast]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const totalCapacity = hostels.reduce((acc, h) => acc + h.capacityBeds, 0);
   const totalOccupied = hostels.reduce((acc, h) => acc + h.occupiedBeds, 0);
@@ -287,10 +287,25 @@ export default function HostelManagementPage() {
           </div>
 
           {/* Rooms Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredRooms.map((rm) => {
-              const isFull = rm.status === "FULL" || rm.occupiedBeds >= rm.capacityBeds;
-              return (
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-800 p-5 space-y-3 bg-white dark:bg-slate-900">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-full mt-4" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredRooms.map((rm) => {
+                const isFull = rm.status === "FULL" || rm.occupiedBeds >= rm.capacityBeds;
+                return (
                 <div
                   key={rm.id}
                   className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs hover:border-indigo-400 hover:shadow-md transition dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-600"
@@ -371,6 +386,7 @@ export default function HostelManagementPage() {
               );
             })}
           </div>
+          )}
         </div>
       )}
 

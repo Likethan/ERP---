@@ -1,142 +1,294 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import {
+  RotateCcw,
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  CheckCircle2,
+  Clock,
+  DollarSign,
+  AlertTriangle,
+  ShieldCheck,
+  Building2,
+} from "lucide-react";
+import { DataGrid, ColumnDef } from "@/components/data-grid";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/stat-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { useToast, ToastType } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
-import type { PaymentTransaction, RefundStatus, RefundTransaction } from "@campusos/types";
+import { financeService } from "@/services/finance.service";
+import { formatMoney } from "@/services/financial-calculator";
+import { Refund, RefundStatus, Invoice } from "@/types/finance";
+import { MOCK_STUDENTS } from "@/mocks/students.mock";
 
 export default function RefundsPage() {
   const { hasPermission } = useAuth();
-  const [refunds, setRefunds] = useState<RefundTransaction[]>([]);
-  const [payments, setPayments] = useState<PaymentTransaction[]>([]);
+  const { showToast } = useToast();
+  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+
+  const [refunds, setRefunds] = useState<Refund[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  // Filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
   // Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-
-  // Form Fields
-  const [paymentId, setPaymentId] = useState("");
-  const [refundAmount, setRefundAmount] = useState<number | string>("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState("");
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState("");
+  const [requestedAmount, setRequestedAmount] = useState<number>(0);
   const [reason, setReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const canCreate = hasPermission("refunds:create");
-  const canApprove = hasPermission("refunds:approve");
-  const canProcess = hasPermission("refunds:process");
+  const canManage = hasPermission("finance.manage_refunds") || hasPermission("refunds:create");
 
-  async function loadData() {
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const [refRes, payRes] = await Promise.all([
-        apiFetch<RefundTransaction[]>("/api/v1/finance/refunds?limit=100"),
-        apiFetch<PaymentTransaction[]>("/api/v1/finance/payments?limit=100").catch(() => ({ data: [] })),
+      const [refRes, invRes] = await Promise.all([
+        financeService.getRefunds(),
+        financeService.getInvoices(),
       ]);
-
       setRefunds(refRes.data);
-      setPayments((payRes.data || []).filter((p) => p.status === "SUCCESS"));
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load refund transactions.");
+      setInvoices(invRes.data);
+    } catch {
+      notify("Error loading refund petitions", "error");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  const handleRequestRefund = async (e: React.FormEvent) => {
+  // Invoices for student with paid amount > 0
+  const eligibleInvoices = useMemo(() => {
+    if (!selectedStudentId) return [];
+    return invoices.filter(
+      (inv) =>
+        (inv.studentId === selectedStudentId ||
+          inv.studentName.toLowerCase().includes(selectedStudentId.toLowerCase())) &&
+        inv.paidAmount > 0
+    );
+  }, [selectedStudentId, invoices]);
+
+  const selectedInvoice = useMemo(() => {
+    return invoices.find((inv) => inv.id === selectedInvoiceId);
+  }, [selectedInvoiceId, invoices]);
+
+  const handleStudentSelect = (studentId: string) => {
+    setSelectedStudentId(studentId);
+    const eligible = invoices.filter(
+      (inv) =>
+        (inv.studentId === studentId ||
+          inv.studentName.toLowerCase().includes(studentId.toLowerCase())) &&
+        inv.paidAmount > 0
+    );
+    if (eligible.length > 0) {
+      setSelectedInvoiceId(eligible[0].id);
+      setRequestedAmount(eligible[0].paidAmount);
+    } else {
+      setSelectedInvoiceId("");
+      setRequestedAmount(0);
+    }
+  };
+
+  const handleInvoiceSelect = (invId: string) => {
+    setSelectedInvoiceId(invId);
+    const target = invoices.find((inv) => inv.id === invId);
+    if (target) {
+      setRequestedAmount(target.paidAmount);
+    }
+  };
+
+  const handleCreateRefund = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedInvoice) {
+      notify("Please pick a settled invoice to petition refund against.", "error");
+      return;
+    }
+    if (requestedAmount <= 0) {
+      notify("Refund amount must be greater than zero.", "error");
+      return;
+    }
+    if (requestedAmount > selectedInvoice.paidAmount) {
+      notify(
+        `Requested refund (${formatMoney(requestedAmount)}) cannot exceed total settled amount (${formatMoney(selectedInvoice.paidAmount)}).`,
+        "error"
+      );
+      return;
+    }
+    if (!reason.trim()) {
+      notify("A detailed refund justification is mandatory.", "error");
+      return;
+    }
+
     try {
       setSubmitting(true);
-      setFormError(null);
-
-      const amountNum = Number(refundAmount);
-      if (!paymentId) throw new Error("Please select the original payment transaction.");
-      if (isNaN(amountNum) || amountNum <= 0) throw new Error("Refund amount must be greater than zero.");
-      if (!reason.trim()) throw new Error("Reason for refund is required.");
-
-      const selectedPay = payments.find((p) => p.id === paymentId);
-      if (selectedPay && amountNum > Number(selectedPay.amount)) {
-        throw new Error(`Refund amount cannot exceed payment amount (₹${selectedPay.amount}).`);
-      }
-
-      await apiFetch("/api/v1/finance/refunds", {
-        method: "POST",
-        body: JSON.stringify({
-          payment_id: paymentId,
-          refund_amount: amountNum,
-          reason: reason.trim(),
-        }),
+      await financeService.requestRefund({
+        studentId: selectedInvoice.studentId,
+        invoiceId: selectedInvoice.id,
+        requestedAmount: Number(requestedAmount),
+        reason: reason.trim(),
+        requestedBy: "Accounts Desk",
       });
 
-      setShowModal(false);
-      setPaymentId("");
-      setRefundAmount("");
+      notify("Refund petition registered for audit review.", "success");
+      setModalOpen(false);
+      setSelectedStudentId("");
+      setSelectedInvoiceId("");
+      setRequestedAmount(0);
       setReason("");
-      await loadData();
+      loadData();
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "Failed to request refund.");
+      const msg = err instanceof Error ? err.message : "Failed to petition refund.";
+      notify(msg, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleApprove = async (id: string) => {
-    if (!confirm("Are you sure you want to approve this refund request?")) return;
-    try {
-      await apiFetch(`/api/v1/finance/refunds/${id}/approve`, { method: "POST" });
-      await loadData();
-    } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to approve refund.");
-    }
-  };
+  // Metrics
+  const pendingCount = useMemo(() => {
+    return refunds.filter((r) => r.status === "REQUESTED" || r.status === "UNDER_REVIEW").length;
+  }, [refunds]);
 
-  const handleProcess = async (id: string) => {
-    const reference = prompt("Enter bank disbursal reference (e.g. NEFT/IMPS UTR):");
-    if (!reference) return;
-    try {
-      await apiFetch(`/api/v1/finance/refunds/${id}/process`, {
-        method: "POST",
-        body: JSON.stringify({
-          refund_mode: "BANK_TRANSFER",
-          refund_reference: reference,
-        }),
-      });
-      await loadData();
-    } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to process refund disbursal.");
-    }
-  };
+  const approvedCount = useMemo(() => {
+    return refunds.filter((r) => r.status === "APPROVED").length;
+  }, [refunds]);
 
-  const formatCurrency = (amountVal: number | string | undefined) => {
-    const num = typeof amountVal === "string" ? parseFloat(amountVal) : (amountVal ?? 0);
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  };
+  const totalProcessed = useMemo(() => {
+    return refunds
+      .filter((r) => r.status === "PROCESSED")
+      .reduce((sum, r) => sum + (r.approvedAmount || r.requestedAmount), 0);
+  }, [refunds]);
 
-  const getStatusBadge = (status: RefundStatus | string) => {
-    switch (status) {
-      case "PROCESSED":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300";
-      case "APPROVED":
-        return "bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300";
-      case "REJECTED":
-        return "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300";
-      default:
-        return "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300";
-    }
-  };
+  const filteredRefunds = useMemo(() => {
+    return refunds.filter((r) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        r.refundNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.reason.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = statusFilter === "ALL" || r.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [refunds, searchQuery, statusFilter]);
+
+  const columns: ColumnDef<Refund>[] = [
+    {
+      id: "refundNumber",
+      header: "Refund Petition #",
+      accessorKey: "refundNumber",
+      sortable: true,
+      cell: ({ row }) => (
+        <Link
+          href={`/app/finance/refunds/${row.id}`}
+          className="font-mono text-sm font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline"
+        >
+          {row.refundNumber}
+        </Link>
+      ),
+    },
+    {
+      id: "student",
+      header: "Student",
+      accessorKey: "studentName",
+      sortable: true,
+      cell: ({ row }) => (
+        <div>
+          <div className="font-semibold text-slate-900 dark:text-white">{row.studentName}</div>
+          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+        </div>
+      ),
+    },
+    {
+      id: "invoiceNumber",
+      header: "Invoice Reference",
+      accessorKey: "invoiceNumber",
+      sortable: true,
+      cell: ({ row }) => (
+        <Link
+          href={`/app/finance/invoices/${row.invoiceId}`}
+          className="text-xs font-mono font-medium text-blue-600 hover:underline dark:text-blue-400"
+        >
+          {row.invoiceNumber}
+        </Link>
+      ),
+    },
+    {
+      id: "requestedAmount",
+      header: "Requested Amount",
+      accessorKey: "requestedAmount",
+      sortable: true,
+      cell: ({ row }) => (
+        <span className="font-semibold text-slate-900 dark:text-white">
+          {formatMoney(row.requestedAmount)}
+        </span>
+      ),
+    },
+    {
+      id: "approvedAmount",
+      header: "Approved Amount",
+      cell: ({ row }) => (
+        <span className="font-bold text-emerald-600 dark:text-emerald-400">
+          {row.approvedAmount ? formatMoney(row.approvedAmount) : "—"}
+        </span>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorKey: "status",
+      cell: ({ row }) => {
+        const badges: Record<string, string> = {
+          REQUESTED: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300",
+          UNDER_REVIEW: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
+          APPROVED: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300",
+          PROCESSED: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+          REJECTED: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
+        };
+        return (
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+              badges[row.status] || "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {row.status.replace("_", " ")}
+          </span>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Link href={`/app/finance/refunds/${row.id}`}>
+          <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+            <Eye className="w-3.5 h-3.5 mr-1" />
+            Review
+          </Button>
+        </Link>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
@@ -148,194 +300,191 @@ export default function RefundsPage() {
             <span className="font-semibold text-slate-700 dark:text-slate-300">Refunds</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Fee Refunds & Accounting Reversals
+            Refunds & Disbursement Workflow
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Multi-stage refund authorization and outward disbursal tracking without historical data loss.
+            Multi-stage audit verification, authorization committee review, and electronic reimbursement.
           </p>
         </div>
 
-        {canCreate && (
-          <button
-            onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-emerald-700 transition"
+        {canManage && (
+          <Button
+            variant="primary"
+            onClick={() => setModalOpen(true)}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
           >
-            + Request Refund
-          </button>
+            <Plus className="w-4 h-4" />
+            Petition Refund
+          </Button>
         )}
       </div>
 
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          <p className="font-semibold">Unable to load Refunds</p>
-          <p className="mt-0.5">{error}</p>
-        </div>
-      )}
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard
+          title="Pending Audit Review"
+          value={pendingCount.toString()}
+          description="Requests awaiting committee deliberation"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
+        <StatCard
+          title="Approved for Payout"
+          value={approvedCount.toString()}
+          description="Awaiting electronic treasury release"
+          icon={<CheckCircle2 className="w-5 h-5 text-indigo-600" />}
+        />
+        <StatCard
+          title="Total Disbursed"
+          value={formatMoney(totalProcessed)}
+          description="Completed electronic reimbursements"
+          icon={<DollarSign className="w-5 h-5 text-emerald-600" />}
+        />
+      </div>
 
-      {/* Table */}
-      {loading ? (
-        <div className="text-center py-16 text-slate-500">Loading refunds journal...</div>
-      ) : refunds.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
-          <p className="text-sm font-medium text-slate-900 dark:text-white">No refund transactions recorded.</p>
-          <p className="mt-1 text-xs text-slate-500">Refund requests are authorized through a dual-control approval protocol.</p>
+      {/* Filter and Search */}
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-4 rounded-xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Input
+            placeholder="Search Petition #, Student, Invoice..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 text-sm"
+          />
         </div>
-      ) : (
-        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3">Payment #</th>
-                  <th className="px-4 py-3">Refund Amount</th>
-                  <th className="px-4 py-3">Reason</th>
-                  <th className="px-4 py-3">Disbursal Ref</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {refunds.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
-                      {r.student_name || "Enrolled Student"}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">
-                      {r.payment_number || "Payment"}
-                    </td>
-                    <td className="px-4 py-3 font-bold text-rose-600 dark:text-rose-400">
-                      {formatCurrency(r.refund_amount)}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-slate-600 dark:text-slate-300">{r.reason}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">
-                      {r.refund_reference ? `${r.refund_mode}: ${r.refund_reference}` : "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${getStatusBadge(
-                          r.status
-                        )}`}
-                      >
-                        {r.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      {r.status === "REQUESTED" && canApprove && (
-                        <button
-                          onClick={() => handleApprove(r.id)}
-                          className="text-xs font-semibold text-sky-600 hover:text-sky-700 mr-2"
-                        >
-                          Approve
-                        </button>
-                      )}
-                      {r.status === "APPROVED" && canProcess && (
-                        <button
-                          onClick={() => handleProcess(r.id)}
-                          className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
-                        >
-                          Disburse
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <Filter className="w-3.5 h-3.5" />
+            Status:
           </div>
+          <Select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="text-xs h-9 w-40"
+          >
+            <option value="ALL">All Status</option>
+            <option value="REQUESTED">Requested</option>
+            <option value="UNDER_REVIEW">Under Review</option>
+            <option value="APPROVED">Approved</option>
+            <option value="PROCESSED">Processed</option>
+            <option value="REJECTED">Rejected</option>
+          </Select>
         </div>
-      )}
+      </div>
 
-      {/* Request Refund Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 border border-slate-200 dark:border-slate-800 my-8">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Request Payment Refund</h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xl font-bold"
+      {/* Main DataGrid */}
+      <DataGrid
+        columns={columns}
+        data={filteredRefunds}
+        loading={loading}
+        keyExtractor={(row) => row.id}
+        emptyMessage="No refund petitions found matching the filters."
+      />
+
+      {/* Petition Refund Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+              <RotateCcw className="w-5 h-5 text-emerald-600" />
+              Petition Student Fee Refund
+            </DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleCreateRefund} className="space-y-4 pt-2">
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Select Student <span className="text-rose-500">*</span>
+              </label>
+              <Select
+                value={selectedStudentId}
+                onChange={(e) => handleStudentSelect(e.target.value)}
+                className="mt-1"
               >
-                ×
-              </button>
+                <option value="">-- Choose Candidate --</option>
+                {MOCK_STUDENTS.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.firstName} {s.lastName} ({s.rollNumber})
+                  </option>
+                ))}
+              </Select>
             </div>
 
-            {formError && (
-              <div className="mt-4 rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
-                {formError}
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Settled Invoice <span className="text-rose-500">*</span>
+              </label>
+              {eligibleInvoices.length > 0 ? (
+                <Select
+                  value={selectedInvoiceId}
+                  onChange={(e) => handleInvoiceSelect(e.target.value)}
+                  className="mt-1"
+                >
+                  {eligibleInvoices.map((inv) => (
+                    <option key={inv.id} value={inv.id}>
+                      {inv.invoiceNumber} — Paid: {formatMoney(inv.paidAmount)}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <div className="mt-1 p-3 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                  {selectedStudentId
+                    ? "Selected student has no settled payments available for refund."
+                    : "Pick a student to view eligible payment transactions."}
+                </div>
+              )}
+            </div>
+
+            {selectedInvoice && (
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Refund Requested Amount (₹) <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={selectedInvoice.paidAmount}
+                  value={requestedAmount || ""}
+                  onChange={(e) => setRequestedAmount(Number(e.target.value))}
+                  className="mt-1"
+                  required
+                />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Maximum allowable refund for this invoice: {formatMoney(selectedInvoice.paidAmount)}
+                </p>
               </div>
             )}
 
-            <form onSubmit={handleRequestRefund} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Original Payment Voucher *
-                </label>
-                <select
-                  required
-                  value={paymentId}
-                  onChange={(e) => setPaymentId(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">Select Payment</option>
-                  {payments.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.payment_number} • {p.student_name} ({formatCurrency(p.amount)}) - Ref: {p.transaction_reference}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Audit Justification & Reason <span className="text-rose-500">*</span>
+              </label>
+              <Input
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="e.g. Caution deposit refund post clearance, double debit adjustment"
+                className="mt-1"
+                required
+              />
+            </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Refund Amount (₹) *
-                </label>
-                <input
-                  type="number"
-                  required
-                  min="1"
-                  step="0.01"
-                  placeholder="e.g. 10000"
-                  value={refundAmount}
-                  onChange={(e) => setRefundAmount(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white font-mono"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Justification / Refund Reason *
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="Provide audit justification (e.g. Admission withdrawal, duplicate transfer)"
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50"
-                >
-                  {submitting ? "Submitting..." : "Submit Refund Request"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            <DialogFooter className="pt-3">
+              <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={!selectedInvoice || requestedAmount <= 0 || !reason.trim() || submitting}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                {submitting ? "Submitting..." : "Submit Petition"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

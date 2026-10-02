@@ -7,7 +7,6 @@ import { DEMO_PERSONAS } from "@/mocks/auth.mock";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShieldCheck, ArrowRight, UserCheck, GraduationCap, Building, Briefcase, Landmark } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();

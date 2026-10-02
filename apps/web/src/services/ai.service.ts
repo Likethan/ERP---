@@ -100,7 +100,8 @@ class MockAiService implements IAiService {
         { label: "Hostel Overview", href: "/app/hostel" },
       ];
     } else {
-      reply = `[Demo AI Assistant]: Received query: "${message}". In the connected production environment, this query is processed via the CampusOS Institutional Knowledge Engine with granular Role-Based Access Control (PBAC), surfacing real-time verified data directly from PostgreSQL.`;
+      const roleNotice = context?.role ? ` for ${context.role} role` : "";
+      reply = `[CampusOS AI Assistant${roleNotice}]: Received query: "${message}". In the connected production environment, this query is processed via the CampusOS Institutional Knowledge Engine with granular Role-Based Access Control (PBAC), surfacing real-time verified data directly from PostgreSQL.`;
       actions = [
         { label: "Institutional Overview", href: "/app/dashboard" },
         { label: "Campus Intelligence", href: "/app/intelligence" },

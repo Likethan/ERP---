@@ -29,7 +29,7 @@ export function StatCard({
   className,
 }: StatCardProps) {
   const displayLabel = label || title || "";
-  const displayVariant = (variant !== "default" ? variant : (color as any)) || "default";
+  const displayVariant = (variant !== "default" ? variant : (color as StatCardProps["variant"])) || "default";
 
   const iconBgs: Record<string, string> = {
     default: "bg-slate-800 text-slate-300 border-slate-700/60",

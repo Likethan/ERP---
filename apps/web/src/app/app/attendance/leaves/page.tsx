@@ -1,569 +1,534 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import { studentsService } from "@/services/students.service";
-import type { StudentLeaveRequest, StudentDetail } from "@campusos/types";
+import { AttendanceLeave, AttendanceLeaveStatus, LeaveType } from "@/types/attendance";
+import { DataGrid } from "@/components/data-grid/data-grid";
+import { ColumnDef } from "@/components/data-grid/data-grid.types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
+import {
+  FileCheck2,
+  Plus,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Filter,
+  FileText,
+  User,
+  ArrowRight,
+} from "lucide-react";
 
 export default function LeaveManagementPage() {
   const { hasPermission } = useAuth();
+  const { showToast } = useToast();
+
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [leaves, setLeaves] = useState<AttendanceLeave[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
-  const [leaves, setLeaves] = useState<StudentLeaveRequest[]>([]);
-  const [students, setStudents] = useState<StudentDetail[]>([]);
-
-  // Filter
-  const [statusFilter, setStatusFilter] = useState<string>("");
-
-  // Modals
+  // Create Modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState<StudentLeaveRequest | null>(null);
-  const [reviewAction, setReviewAction] = useState<"APPROVE" | "REJECT">("APPROVE");
-  const [reviewNotes, setReviewNotes] = useState("");
-
-  // Create form
-  const [createForm, setCreateForm] = useState({
-    student_id: "",
-    leave_type: "SICK",
-    start_date: new Date().toISOString().split("T")[0],
-    end_date: new Date().toISOString().split("T")[0],
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    studentName: "Aarav Patel",
+    rollNumber: "24CSE0101",
+    department: "Computer Science & Engineering",
+    section: "A",
+    leaveType: "MEDICAL" as LeaveType,
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
+    totalDays: 1,
     reason: "",
+    supportingDocName: "",
   });
 
-  async function loadLeaves() {
+  // Review Modal
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState<AttendanceLeave | null>(null);
+  const [reviewAction, setReviewAction] = useState<"APPROVED" | "REJECTED">("APPROVED");
+  const [reviewNotes, setReviewNotes] = useState("");
+  const [reviewing, setReviewing] = useState(false);
+
+  const loadLeaves = async () => {
     try {
       setLoading(true);
-      setError(null);
-
-      const qs = statusFilter ? `?status=${statusFilter}` : "";
-      const res = await apiFetch<StudentLeaveRequest[]>(`/api/v1/attendance/leaves${qs}`);
-      setLeaves(res.data || []);
-    } catch {
-      const mockRes = await attendanceService.getLeaves();
-      let items = mockRes.data || [];
-      if (statusFilter) {
-        items = items.filter((l) => l.status === statusFilter);
+      const res = await attendanceService.getLeaves({
+        status: statusFilter !== "ALL" ? statusFilter : undefined,
+      });
+      if (res.success) {
+        setLeaves(res.data);
       }
-      const mapped: StudentLeaveRequest[] = items.map((l) => ({
-        id: l.id,
-        student_id: l.studentId,
-        student_name: l.studentName,
-        roll_number: l.rollNumber,
-        leave_type: l.leaveType as any,
-        start_date: l.startDate,
-        end_date: l.endDate,
-        total_days: l.totalDays,
-        reason: l.reason,
-        status: l.status,
-        submitted_at: l.submittedOn,
-      } as unknown as StudentLeaveRequest));
-      setLeaves(mapped);
+    } catch (err) {
+      console.error("Failed to load leaves", err);
+      showToast({ type: "error", title: "Load Error", message: "Failed to load leave requests." });
     } finally {
       setLoading(false);
     }
-  }
-
-  useEffect(() => {
-    async function loadStudents() {
-      try {
-        const res = await apiFetch<StudentDetail[]>("/api/v1/students?page_size=100");
-        setStudents(res.data || []);
-        if (res.data && res.data.length > 0) {
-          setCreateForm((prev) => ({ ...prev, student_id: res.data[0].id }));
-        }
-      } catch {
-        const stuRes = await studentsService.list({ pageSize: 100 });
-        const rawList = Array.isArray(stuRes.data) ? stuRes.data : [];
-        const list = rawList.map((s) => ({
-          id: s.id,
-          first_name: s.firstName,
-          last_name: s.lastName,
-          roll_number: s.rollNumber,
-          user: {
-            first_name: s.firstName,
-            last_name: s.lastName,
-            email: s.email,
-          },
-        } as unknown as StudentDetail));
-        setStudents(list);
-        if (list.length > 0) {
-          setCreateForm((prev) => ({ ...prev, student_id: list[0].id }));
-        }
-      }
-    }
-
-    loadStudents();
-    loadLeaves();
-  }, []);
+  };
 
   useEffect(() => {
     loadLeaves();
   }, [statusFilter]);
 
-  async function handleCreateLeave(e: React.FormEvent) {
+  const handleCreateLeave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setError(null);
-      setSuccessMsg(null);
-
-      await apiFetch("/api/v1/attendance/leaves", {
-        method: "POST",
-        body: JSON.stringify(createForm),
-      });
-
-      setSuccessMsg("Leave request submitted successfully for approval.");
-      setCreateModalOpen(false);
-      setCreateForm({
-        student_id: students[0]?.id || "",
-        leave_type: "SICK",
-        start_date: new Date().toISOString().split("T")[0],
-        end_date: new Date().toISOString().split("T")[0],
-        reason: "",
-      });
-      await loadLeaves();
-    } catch {
-      const stu = students.find((s) => s.id === createForm.student_id);
-      await attendanceService.submitLeave({
-        studentId: createForm.student_id,
-        studentName: stu ? `${stu.first_name} ${stu.last_name}` : "Aarav Patel",
-        rollNumber: stu?.roll_number || "24CSE0101",
-        leaveType: createForm.leave_type as any,
-        startDate: createForm.start_date,
-        endDate: createForm.end_date,
-        reason: createForm.reason,
-      });
-      setSuccessMsg("Leave request submitted successfully for approval.");
-      setCreateModalOpen(false);
-      setCreateForm({
-        student_id: students[0]?.id || "",
-        leave_type: "SICK",
-        start_date: new Date().toISOString().split("T")[0],
-        end_date: new Date().toISOString().split("T")[0],
-        reason: "",
-      });
-      await loadLeaves();
+      setSubmitting(true);
+      const res = await attendanceService.submitLeave(formData);
+      if (res.success) {
+        showToast({
+          type: "success",
+          title: "Leave Submitted",
+          message: "Application queued for academic review.",
+        });
+        setCreateModalOpen(false);
+        setFormData({ ...formData, reason: "", supportingDocName: "" });
+        await loadLeaves();
+      }
+    } catch (err) {
+      console.error("Failed to submit leave", err);
+      showToast({ type: "error", title: "Submission Failed", message: "Could not submit leave request." });
+    } finally {
+      setSubmitting(false);
     }
-  }
+  };
 
-  async function handleReviewSubmit(e: React.FormEvent) {
+  const handleReviewLeave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedLeave) return;
-
     try {
-      setError(null);
-      setSuccessMsg(null);
-
-      const endpoint =
-        reviewAction === "APPROVE"
-          ? `/api/v1/attendance/leaves/${selectedLeave.id}/approve`
-          : `/api/v1/attendance/leaves/${selectedLeave.id}/reject`;
-
-      await apiFetch(endpoint, {
-        method: "POST",
-        body: JSON.stringify({ review_notes: reviewNotes || undefined }),
-      });
-
-      setSuccessMsg(
-        `Leave request for ${selectedLeave.student_name} ${
-          reviewAction === "APPROVE"
-            ? "APPROVED. Attendance records have been excused automatically."
-            : "REJECTED."
-        }`
+      setReviewing(true);
+      const res = await attendanceService.updateLeaveStatus(
+        selectedLeave.id,
+        reviewAction,
+        reviewNotes,
+        "Dr. K. S. Anand (HOD - CSE)"
       );
-      setReviewModalOpen(false);
-      setSelectedLeave(null);
-      setReviewNotes("");
-      await loadLeaves();
-    } catch {
-      await attendanceService.updateLeaveStatus(selectedLeave.id, reviewAction === "APPROVE" ? "APPROVED" : "REJECTED");
-      setSuccessMsg(
-        `Leave request for ${selectedLeave.student_name} ${
-          reviewAction === "APPROVE"
-            ? "APPROVED. Attendance records have been excused automatically."
-            : "REJECTED."
-        }`
-      );
-      setReviewModalOpen(false);
-      setSelectedLeave(null);
-      setReviewNotes("");
-      await loadLeaves();
+      if (res.success) {
+        showToast({
+          type: "success",
+          title: `Leave ${reviewAction}`,
+          message: `Application for ${res.data.studentName} has been ${reviewAction.toLowerCase()}.`,
+        });
+        setReviewModalOpen(false);
+        setSelectedLeave(null);
+        setReviewNotes("");
+        await loadLeaves();
+      }
+    } catch (err) {
+      console.error("Failed to update leave", err);
+      showToast({ type: "error", title: "Update Failed", message: "Could not update leave status." });
+    } finally {
+      setReviewing(false);
     }
-  }
+  };
+
+  const getStatusBadge = (status: AttendanceLeaveStatus) => {
+    switch (status) {
+      case "APPROVED":
+        return <Badge variant="success">Approved</Badge>;
+      case "REJECTED":
+        return <Badge variant="destructive">Rejected</Badge>;
+      case "PENDING":
+        return <Badge variant="warning">Pending Review</Badge>;
+      case "CANCELLED":
+        return <Badge variant="secondary">Cancelled</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  const columns: ColumnDef<AttendanceLeave>[] = useMemo(
+    () => [
+      {
+        id: "student",
+        header: "Student Name & Roll No.",
+        cell: (row) => (
+          <div>
+            <div className="font-semibold text-slate-900 dark:text-white">
+              {row.studentName}
+            </div>
+            <div className="text-xs text-slate-500">{row.rollNumber} • Sec {row.section}</div>
+          </div>
+        ),
+        sortable: true,
+      },
+      {
+        id: "leaveType",
+        header: "Leave Category",
+        cell: (row) => (
+          <div>
+            <span className="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              {row.leaveType}
+            </span>
+            <div className="text-xs text-slate-500 mt-1 truncate max-w-[200px]">
+              {row.reason}
+            </div>
+          </div>
+        ),
+        sortable: true,
+      },
+      {
+        id: "duration",
+        header: "Duration & Days",
+        cell: (row) => (
+          <div>
+            <div className="font-medium text-slate-800 dark:text-slate-200 text-xs">
+              {row.startDate} to {row.endDate}
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5 font-semibold text-indigo-600 dark:text-indigo-400">
+              {row.totalDays} {row.totalDays === 1 ? "Day" : "Days"}
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "status",
+        header: "Status",
+        cell: (row) => getStatusBadge(row.status),
+        sortable: true,
+      },
+      {
+        id: "reviewedBy",
+        header: "Review Details",
+        cell: (row) => (
+          <div className="text-xs text-slate-600 dark:text-slate-400">
+            {row.reviewedBy ? (
+              <div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">{row.reviewedBy}</div>
+                <div className="text-[10px] text-slate-400">{new Date(row.reviewedAt || "").toLocaleDateString()}</div>
+              </div>
+            ) : (
+              <span className="text-slate-400 italic">Awaiting HOD sign-off</span>
+            )}
+          </div>
+        ),
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: (row) => (
+          <div className="flex items-center gap-2">
+            {row.status === "PENDING" && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setSelectedLeave(row);
+                  setReviewAction("APPROVED");
+                  setReviewModalOpen(true);
+                }}
+                className="h-7 text-xs"
+              >
+                Review Request
+              </Button>
+            )}
+            {row.status !== "PENDING" && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setSelectedLeave(row);
+                  setReviewModalOpen(true);
+                }}
+                className="h-7 text-xs text-slate-500"
+              >
+                View Details
+              </Button>
+            )}
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/app/attendance"
-              className="text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-            >
-              &larr; Attendance Engine
-            </Link>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+              Absence Exemption
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Excused Absence Workflow</span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Student Leave Management
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Submit absence requests and authorize leaves with automated retrospective attendance reconciliation.
+            Submit and review medical, sports, and official on-duty leave requests for percentage exemption.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {hasPermission("leave:create") && (
-            <button
+        <Button variant="primary" className="gap-2" onClick={() => setCreateModalOpen(true)}>
+          <Plus className="h-4 w-4" />
+          Apply for Leave
+        </Button>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex flex-wrap items-center gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+          <Filter className="h-3.5 w-3.5" />
+          Filter Status:
+        </div>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        >
+          <option value="ALL">All Requests ({leaves.length})</option>
+          <option value="PENDING">Pending Review</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
+
+      {/* Enterprise DataGrid */}
+      <DataGrid<AttendanceLeave>
+        data={leaves}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        loading={loading}
+        searchPlaceholder="Search leaves by student name, roll number, or reason..."
+        emptyTitle="No leave requests found"
+        emptyDescription="Submit a new application to request an excused attendance exemption."
+      />
+
+      {/* Apply Leave Modal */}
+      <Dialog
+        open={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        title="Submit Excused Leave Application"
+      >
+        <form onSubmit={handleCreateLeave} className="space-y-4 text-xs">
+          <p className="text-slate-500">
+            Approved leaves are counted as valid exemptions in course attendance calculations.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Student Name
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.studentName}
+                onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Roll Number
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.rollNumber}
+                onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Leave Type
+              </label>
+              <select
+                value={formData.leaveType}
+                onChange={(e) => setFormData({ ...formData, leaveType: e.target.value as LeaveType })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="MEDICAL">Medical Emergency</option>
+                <option value="ON_DUTY">On-Duty Official</option>
+                <option value="SPORTS">Sports Championship</option>
+                <option value="ACADEMIC">Academic Conference</option>
+                <option value="CASUAL">Personal / Casual</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Start Date
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                End Date
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Detailed Reason / Event Description
+            </label>
+            <textarea
+              required
+              rows={3}
+              value={formData.reason}
+              onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+              placeholder="e.g. Hospitalized with dengue fever at Apollo Hospitals; medical certificate verified by medical officer."
+              className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Supporting Document (Optional filename)
+            </label>
+            <input
+              type="text"
+              value={formData.supportingDocName}
+              onChange={(e) => setFormData({ ...formData, supportingDocName: e.target.value })}
+              placeholder="Medical_Certificate_Oct26.pdf"
+              className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button
               type="button"
-              onClick={() => setCreateModalOpen(true)}
-              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition"
+              variant="outline"
+              onClick={() => setCreateModalOpen(false)}
             >
-              + Submit Leave Request
-            </button>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={submitting}>
+              {submitting ? "Submitting..." : "Submit Application"}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
+
+      {/* Review Leave Modal */}
+      <Dialog
+        open={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        title="Leave Request Review & Sign-off"
+      >
+        <form onSubmit={handleReviewLeave} className="space-y-4 text-xs">
+          {selectedLeave && (
+            <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 space-y-2">
+              <div className="flex justify-between">
+                <span className="font-semibold text-slate-900 dark:text-white">{selectedLeave.studentName}</span>
+                <span className="text-slate-500">{selectedLeave.rollNumber}</span>
+              </div>
+              <div className="text-slate-600 dark:text-slate-400">
+                <strong>Type: </strong>{selectedLeave.leaveType} • <strong>Duration: </strong>{selectedLeave.startDate} to {selectedLeave.endDate} ({selectedLeave.totalDays} Days)
+              </div>
+              <div className="text-slate-700 dark:text-slate-300 pt-1 border-t border-slate-200 dark:border-slate-700">
+                <strong>Reason: </strong>{selectedLeave.reason}
+              </div>
+              {selectedLeave.supportingDocName && (
+                <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-medium">
+                  <FileText className="h-3.5 w-3.5" />
+                  Attachment: {selectedLeave.supportingDocName}
+                </div>
+              )}
+            </div>
           )}
-        </div>
-      </div>
 
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          {error}
-        </div>
-      )}
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-          {successMsg}
-        </div>
-      )}
-
-      {/* Workflow Explanation Banner */}
-      <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 text-xs text-indigo-900 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-300">
-        <span className="font-bold">Enterprise Leave Impact Protocol: </span>
-        Approved leave automatically updates historical absence records during the approved date range to{" "}
-        <strong className="font-semibold underline">ON_LEAVE</strong> and pre-populates upcoming class registers, preventing unwarranted attendance penalties.
-      </div>
-
-      {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
-        {[
-          { label: "All Requests", value: "" },
-          { label: "Pending Review", value: "PENDING" },
-          { label: "Approved", value: "APPROVED" },
-          { label: "Rejected", value: "REJECTED" },
-        ].map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setStatusFilter(tab.value)}
-            className={`px-4 py-2 text-xs font-semibold border-b-2 transition -mb-px ${
-              statusFilter === tab.value
-                ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Requests Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        {loading ? (
-          <div className="py-12 text-center text-sm text-slate-400">Loading leave requests...</div>
-        ) : leaves.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No leave requests found.
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Student leave applications and approval requests will appear here.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Student Name & Roll</th>
-                  <th className="px-4 py-3">Leave Type</th>
-                  <th className="px-4 py-3">Dates & Duration</th>
-                  <th className="px-4 py-3">Reason / Justification</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Reviewed By</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {leaves.map((leave) => (
-                  <tr key={leave.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="font-semibold text-slate-900 dark:text-white">
-                        {leave.student_name}
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        {leave.student_roll_number || leave.student_admission_number}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span className="font-medium text-slate-800 dark:text-slate-200">
-                        {leave.leave_type}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="text-slate-900 dark:text-white font-medium text-xs">
-                        {leave.start_date} &rarr; {leave.end_date}
-                      </div>
-                      <div className="text-[11px] text-slate-400">
-                        {leave.days_count} day(s)
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-xs">
-                        {leave.reason}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          leave.status === "APPROVED"
-                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                            : leave.status === "REJECTED"
-                            ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                            : leave.status === "PENDING"
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                        }`}
-                      >
-                        {leave.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {leave.reviewed_by_name ? (
-                        <div>
-                          <div>{leave.reviewed_by_name}</div>
-                          <div className="text-[10px] text-slate-400">{leave.review_notes}</div>
-                        </div>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                      {leave.status === "PENDING" && hasPermission("leave:approve") && (
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedLeave(leave);
-                              setReviewAction("APPROVE");
-                              setReviewNotes("");
-                              setReviewModalOpen(true);
-                            }}
-                            className="text-xs font-semibold text-emerald-600 hover:underline dark:text-emerald-400"
-                          >
-                            Approve
-                          </button>
-                          <span className="text-slate-300">|</span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedLeave(leave);
-                              setReviewAction("REJECT");
-                              setReviewNotes("");
-                              setReviewModalOpen(true);
-                            }}
-                            className="text-xs font-semibold text-rose-600 hover:underline dark:text-rose-400"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Modal: Create Leave Request */}
-      {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Submit Student Leave Request
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Absence periods are validated against active leaves and existing academic schedules.
-            </p>
-
-            <form onSubmit={handleCreateLeave} className="mt-4 space-y-4">
+          {selectedLeave?.status === "PENDING" && (
+            <>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Student *
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  Review Decision
                 </label>
-                <select
-                  required
-                  value={createForm.student_id}
-                  onChange={(e) =>
-                    setCreateForm({ ...createForm, student_id: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">Select Student</option>
-                  {students.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.first_name} {s.last_name} ({s.roll_number || s.admission_number})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Leave Category *
-                </label>
-                <select
-                  required
-                  value={createForm.leave_type}
-                  onChange={(e) =>
-                    setCreateForm({ ...createForm, leave_type: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="SICK">Sick Leave</option>
-                  <option value="CASUAL">Casual Leave</option>
-                  <option value="DUTY">On Duty (OD) / Official Representation</option>
-                  <option value="MEDICAL">Medical Leave (Hospitalization)</option>
-                  <option value="BEREAVEMENT">Bereavement Leave</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Start Date *
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer font-medium text-emerald-700">
+                    <input
+                      type="radio"
+                      name="decision"
+                      value="APPROVED"
+                      checked={reviewAction === "APPROVED"}
+                      onChange={() => setReviewAction("APPROVED")}
+                    />
+                    Approve Exemption
                   </label>
-                  <input
-                    type="date"
-                    required
-                    value={createForm.start_date}
-                    onChange={(e) =>
-                      setCreateForm({ ...createForm, start_date: e.target.value })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    End Date *
+                  <label className="flex items-center gap-2 cursor-pointer font-medium text-rose-700">
+                    <input
+                      type="radio"
+                      name="decision"
+                      value="REJECTED"
+                      checked={reviewAction === "REJECTED"}
+                      onChange={() => setReviewAction("REJECTED")}
+                    />
+                    Reject Application
                   </label>
-                  <input
-                    type="date"
-                    required
-                    value={createForm.end_date}
-                    onChange={(e) =>
-                      setCreateForm({ ...createForm, end_date: e.target.value })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Reason / Purpose *
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  Reviewer Notes / Feedback
                 </label>
                 <textarea
-                  required
-                  rows={3}
-                  placeholder="Provide clinical or authorized purpose for absence..."
-                  value={createForm.reason}
-                  onChange={(e) =>
-                    setCreateForm({ ...createForm, reason: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setCreateModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                >
-                  Submit Leave
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Review Leave Request */}
-      {reviewModalOpen && selectedLeave && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              {reviewAction === "APPROVE" ? "Authorize Leave Request" : "Reject Leave Request"}
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              For student <strong>{selectedLeave.student_name}</strong> ({selectedLeave.start_date} to {selectedLeave.end_date}).
-            </p>
-
-            <form onSubmit={handleReviewSubmit} className="mt-4 space-y-4">
-              <div className="text-xs bg-slate-50 dark:bg-slate-800 p-3 rounded-lg space-y-1">
-                <div><strong>Category:</strong> {selectedLeave.leave_type}</div>
-                <div><strong>Duration:</strong> {selectedLeave.days_count} day(s)</div>
-                <div><strong>Reason:</strong> {selectedLeave.reason}</div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Reviewer Decision Notes (Optional)
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="e.g. Approved per medical certificate attached."
+                  rows={2}
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  placeholder="e.g. Medical certificate verified with university medical officer."
+                  className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => setReviewModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
                 >
-                  Cancel
-                </button>
-                <button
+                  Close
+                </Button>
+                <Button
                   type="submit"
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition ${
-                    reviewAction === "APPROVE"
-                      ? "bg-emerald-600 hover:bg-emerald-700"
-                      : "bg-rose-600 hover:bg-rose-700"
-                  }`}
+                  variant={reviewAction === "APPROVED" ? "primary" : "destructive"}
+                  disabled={reviewing}
                 >
-                  Confirm {reviewAction === "APPROVE" ? "Approval" : "Rejection"}
-                </button>
+                  {reviewing ? "Processing..." : `Confirm ${reviewAction}`}
+                </Button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </>
+          )}
+
+          {selectedLeave?.status !== "PENDING" && (
+            <div className="pt-2 flex justify-end">
+              <Button type="button" variant="outline" onClick={() => setReviewModalOpen(false)}>
+                Close
+              </Button>
+            </div>
+          )}
+        </form>
+      </Dialog>
     </div>
   );
 }

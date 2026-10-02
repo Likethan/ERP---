@@ -1,668 +1,530 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import { MOCK_COURSE_OFFERINGS, MOCK_SECTIONS } from "@/mocks/academics.mock";
-import type {
-  AttendanceSession,
-  CourseOffering,
-  Section,
-  AcademicYear,
-  Semester,
-} from "@campusos/types";
+import { AttendanceSession, AttendanceSessionStatus, SessionType } from "@/types/attendance";
+import { DataGrid } from "@/components/data-grid/data-grid";
+import { ColumnDef } from "@/components/data-grid/data-grid.types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
+import {
+  CalendarCheck,
+  Plus,
+  Clock,
+  MapPin,
+  User,
+  BookOpen,
+  Calendar,
+  Layers,
+  ArrowRight,
+  Filter,
+} from "lucide-react";
 
 export default function AttendanceSessionsPage() {
   const { hasPermission } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const router = useRouter();
+  const { showToast } = useToast();
 
+  const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<AttendanceSession[]>([]);
-  const [courseOfferings, setCourseOfferings] = useState<CourseOffering[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
-  const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
-  const [semesters, setSemesters] = useState<Semester[]>([]);
 
   // Filters
-  const [filterDate, setFilterDate] = useState<string>("");
-  const [filterStatus, setFilterStatus] = useState<string>("");
-  const [filterCourse, setFilterCourse] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("ALL");
+  const [sectionFilter, setSectionFilter] = useState<string>("ALL");
+  const [dateFilter, setDateFilter] = useState<string>("");
 
-  // Modals
-  const [timetableModalOpen, setTimetableModalOpen] = useState(false);
-  const [manualModalOpen, setManualModalOpen] = useState(false);
-
-  // Timetable generation form
-  const [timetableForm, setTimetableForm] = useState({
-    target_date: new Date().toISOString().split("T")[0],
-    section_id: "",
-    academic_year_id: "",
-    semester_id: "",
+  // Create Modal
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    courseOfferingId: "off-cs301-a",
+    courseCode: "CS301",
+    courseName: "Data Structures & Algorithms",
+    section: "5th Sem CSE — Sec A",
+    department: "Computer Science & Engineering",
+    facultyName: "Dr. Rajesh Sharma",
+    date: new Date().toISOString().split("T")[0],
+    startTime: "09:30 AM",
+    endTime: "10:30 AM",
+    room: "Hall 302, Academic Block A",
+    sessionType: "THEORY" as SessionType,
+    totalStudents: 68,
+    topicCovered: "",
   });
 
-  // Manual session form
-  const [manualForm, setManualForm] = useState({
-    course_offering_id: "",
-    section_id: "",
-    academic_year_id: "",
-    semester_id: "",
-    session_date: new Date().toISOString().split("T")[0],
-    period_number: 1,
-    start_time: "09:00",
-    end_time: "10:00",
-    session_type: "LECTURE",
-    topic: "",
-  });
-
-  async function loadSessions() {
+  const loadSessions = async () => {
     try {
       setLoading(true);
-      setError(null);
-
-      const params = new URLSearchParams();
-      if (filterDate) params.append("date", filterDate);
-      if (filterStatus) params.append("status", filterStatus);
-      if (filterCourse) params.append("course_offering_id", filterCourse);
-
-      const qs = params.toString() ? `?${params.toString()}` : "";
-      const res = await apiFetch<AttendanceSession[]>(`/api/v1/attendance/sessions${qs}`);
-      setSessions(res.data || []);
-    } catch {
-      const mockRes = await attendanceService.getSessions(filterDate || undefined);
-      let items = mockRes.data || [];
-      if (filterStatus) {
-        items = items.filter((s) => s.status === filterStatus);
+      const res = await attendanceService.getSessions({
+        date: dateFilter || undefined,
+        department: departmentFilter !== "ALL" ? departmentFilter : undefined,
+        section: sectionFilter !== "ALL" ? sectionFilter : undefined,
+        status: statusFilter !== "ALL" ? statusFilter : undefined,
+      });
+      if (res.success) {
+        setSessions(res.data);
       }
-      if (filterCourse) {
-        items = items.filter((s) => s.courseCode === filterCourse || s.id === filterCourse);
-      }
-      const mapped: AttendanceSession[] = items.map((s) => ({
-        id: s.id,
-        academic_year_id: "ay-2026-27",
-        semester_id: "sem-5",
-        course_offering_id: "off-cs301",
-        section_id: "sec-5a",
-        faculty_id: "fac-1",
-        session_date: s.sessionDate,
-        period_number: 1,
-        start_time: s.periodSlot.split(" - ")[0] || "09:30",
-        end_time: s.periodSlot.split(" - ")[1] || "10:30",
-        session_type: "LECTURE",
-        status: s.status,
-        topic: s.courseName,
-        created_at: "2026-09-30T00:00:00Z",
-        course_code: s.courseCode,
-        course_name: s.courseName,
-        section_name: s.section,
-        faculty_name: s.facultyName,
-        total_enrolled: s.totalStudents,
-        present_count: s.presentCount,
-        absent_count: s.absentCount,
-      } as unknown as AttendanceSession));
-      setSessions(mapped);
+    } catch (err) {
+      console.error("Failed to load sessions", err);
+      showToast({ type: "error", title: "Load Error", message: "Unable to retrieve attendance sessions." });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    async function loadAuxData() {
-      try {
-        const [offRes, secRes, ayRes, semRes] = await Promise.all([
-          apiFetch<CourseOffering[]>("/api/v1/academics/course-offerings"),
-          apiFetch<Section[]>("/api/v1/sections"),
-          apiFetch<AcademicYear[]>("/api/v1/academic-years"),
-          apiFetch<Semester[]>("/api/v1/semesters"),
-        ]);
-        setCourseOfferings(offRes.data || []);
-        setSections(secRes.data || []);
-        setAcademicYears(ayRes.data || []);
-        setSemesters(semRes.data || []);
-      } catch {
-        // Fallback to mock course offerings and sections
-        const mockOff = MOCK_COURSE_OFFERINGS.map((o) => ({
-          id: o.id,
-          course_code: o.subjectCode,
-          course_name: o.subjectName,
-          faculty_name: o.facultyName,
-          section_name: o.section,
-        } as unknown as CourseOffering));
-        setCourseOfferings(mockOff);
-        setSections([
-          { id: "sec-5a", name: "Sec A", department_id: "dept-cse" } as unknown as Section,
-          { id: "sec-5b", name: "Sec B", department_id: "dept-cse" } as unknown as Section,
-        ]);
-      }
-    }
-    loadAuxData();
     loadSessions();
-  }, []);
+  }, [statusFilter, departmentFilter, sectionFilter, dateFilter]);
 
-  async function handleFilterSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    await loadSessions();
-  }
-
-  async function handleGenerateFromTimetable(e: React.FormEvent) {
+  const handleCreateSession = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setError(null);
-      setSuccessMsg(null);
-
-      const res = await apiFetch<AttendanceSession[]>("/api/v1/attendance/sessions/from-timetable", {
-        method: "POST",
-        body: JSON.stringify({
-          target_date: timetableForm.target_date,
-          section_id: timetableForm.section_id || undefined,
-          academic_year_id: timetableForm.academic_year_id || undefined,
-          semester_id: timetableForm.semester_id || undefined,
-        }),
-      });
-
-      const count = res.data?.length || 0;
-      setSuccessMsg(`Successfully instantiated ${count} session register(s) from authoritative timetable.`);
-      setTimetableModalOpen(false);
-      await loadSessions();
-    } catch {
-      setSuccessMsg(`Instantiated 4 session registers for ${timetableForm.target_date} from timetable.`);
-      setTimetableModalOpen(false);
-      await loadSessions();
+      setSaving(true);
+      const res = await attendanceService.createSession(formData);
+      if (res.success) {
+        showToast({ type: "success", title: "Session Created", message: `Session for ${res.data.courseCode} scheduled successfully.` });
+        setCreateModalOpen(false);
+        await loadSessions();
+        router.push(`/app/attendance/sessions/${res.data.id}`);
+      }
+    } catch (err) {
+      console.error("Failed to create session", err);
+      showToast({ type: "error", title: "Creation Failed", message: "Could not schedule session." });
+    } finally {
+      setSaving(false);
     }
-  }
+  };
 
-  async function handleCreateManualSession(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      setError(null);
-      setSuccessMsg(null);
-
-      await apiFetch<AttendanceSession>("/api/v1/attendance/sessions", {
-        method: "POST",
-        body: JSON.stringify(manualForm),
-      });
-
-      setSuccessMsg("Manual attendance session created successfully.");
-      setManualModalOpen(false);
-      await loadSessions();
-    } catch {
-      await attendanceService.createSession({
-        sessionDate: manualForm.session_date,
-        periodSlot: `${manualForm.start_time} - ${manualForm.end_time}`,
-        topic: manualForm.topic,
-      } as any);
-      setSuccessMsg("Manual attendance session created successfully.");
-      setManualModalOpen(false);
-      await loadSessions();
+  const getStatusBadge = (status: AttendanceSessionStatus) => {
+    switch (status) {
+      case "COMPLETED":
+        return <Badge variant="success">Completed</Badge>;
+      case "OPEN":
+        return <Badge variant="info">Open for Marking</Badge>;
+      case "SCHEDULED":
+        return <Badge variant="secondary">Scheduled</Badge>;
+      case "CANCELLED":
+        return <Badge variant="destructive">Cancelled</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
     }
-  }
+  };
+
+  const columns: ColumnDef<AttendanceSession>[] = useMemo(
+    () => [
+      {
+        id: "date",
+        header: "Date & Period",
+        cell: (row) => (
+          <div>
+            <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-slate-400" />
+              {row.date}
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+              <Clock className="h-3 w-3 text-slate-400" />
+              {row.startTime} — {row.endTime}
+            </div>
+          </div>
+        ),
+        sortable: true,
+      },
+      {
+        id: "subject",
+        header: "Course & Type",
+        cell: (row) => (
+          <div>
+            <div className="font-semibold text-slate-900 dark:text-white">
+              {row.courseCode}
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
+              {row.courseName}
+            </div>
+            <span className="inline-block mt-1 px-1.5 py-0.5 text-[10px] font-medium rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              {row.sessionType}
+            </span>
+          </div>
+        ),
+        sortable: true,
+      },
+      {
+        id: "section",
+        header: "Section & Venue",
+        cell: (row) => (
+          <div>
+            <div className="font-medium text-slate-800 dark:text-slate-200">
+              {row.section}
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+              <MapPin className="h-3 w-3 text-slate-400" />
+              {row.room}
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "faculty",
+        header: "Instructor",
+        cell: (row) => (
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-full bg-slate-100 text-slate-700 font-semibold flex items-center justify-center text-xs dark:bg-slate-800 dark:text-slate-300">
+              {row.facultyName.charAt(0)}
+            </div>
+            <div>
+              <div className="font-medium text-slate-900 dark:text-white text-xs">
+                {row.facultyName}
+              </div>
+              <div className="text-[11px] text-slate-500">{row.department}</div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "attendanceSummary",
+        header: "Attendance",
+        cell: (row) => {
+          if (row.status !== "COMPLETED") {
+            return (
+              <span className="text-xs text-slate-400 italic">Not marked</span>
+            );
+          }
+          return (
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xs text-slate-900 dark:text-white">
+                  {row.attendancePercentage}%
+                </span>
+                <span className="text-[11px] text-slate-500">
+                  ({row.presentCount}P / {row.absentCount}A)
+                </span>
+              </div>
+              <div className="mt-1 h-1.5 w-24 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${
+                    row.attendancePercentage >= 85
+                      ? "bg-emerald-500"
+                      : row.attendancePercentage >= 75
+                      ? "bg-amber-500"
+                      : "bg-rose-500"
+                  }`}
+                  style={{ width: `${row.attendancePercentage}%` }}
+                />
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: "status",
+        header: "Status",
+        cell: (row) => getStatusBadge(row.status),
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: (row) => (
+          <div className="flex items-center gap-2">
+            <Link href={`/app/attendance/sessions/${row.id}`}>
+              <Button
+                size="sm"
+                variant={row.status === "OPEN" ? "primary" : "outline"}
+                className="h-8 gap-1.5 text-xs"
+              >
+                {row.status === "OPEN" ? "Mark Attendance" : "View Register"}
+                <ArrowRight className="h-3 w-3" />
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/app/attendance"
-              className="text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-            >
-              &larr; Attendance Engine
-            </Link>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+              Timetable Registers
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Class Attendance</span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Class Attendance Registers
+            Attendance Sessions & Rosters
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Teaching sessions, authoritative student roster registers, and session locking workflows.
+            Schedule lecture periods, open real-time biometric or manual student rosters, and audit signed registers.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          {hasPermission("attendance:mark") && (
-            <>
-              <button
-                type="button"
-                onClick={() => setTimetableModalOpen(true)}
-                className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition"
-              >
-                + From Timetable
-              </button>
-              <button
-                type="button"
-                onClick={() => setManualModalOpen(true)}
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition"
-              >
-                + Manual Session
-              </button>
-            </>
-          )}
+        <div className="flex items-center gap-3">
+          <Button
+            variant="primary"
+            className="gap-2"
+            onClick={() => setCreateModalOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            Schedule New Session
+          </Button>
         </div>
       </div>
 
-      {/* Alerts */}
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          {error}
+      {/* Filter Bar */}
+      <div className="flex flex-wrap items-center gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+          <Filter className="h-3.5 w-3.5" />
+          Filters:
         </div>
-      )}
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-          {successMsg}
-        </div>
-      )}
 
-      {/* Filters Bar */}
-      <form
-        onSubmit={handleFilterSubmit}
-        className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 flex flex-wrap gap-4 items-end"
-      >
+        {/* Date Filter */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            Session Date
-          </label>
           <input
             type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
         </div>
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            Status
-          </label>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          >
-            <option value="">All Statuses</option>
-            <option value="SCHEDULED">Scheduled</option>
-            <option value="OPEN">Open</option>
-            <option value="MARKED">Marked</option>
-            <option value="LOCKED">Locked</option>
-            <option value="CANCELLED">Cancelled</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            Course Offering
-          </label>
-          <select
-            value={filterCourse}
-            onChange={(e) => setFilterCourse(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white max-w-xs"
-          >
-            <option value="">All Courses</option>
-            {courseOfferings.map((co) => (
-              <option key={co.id} value={co.id}>
-                {co.subject_code} - {co.subject_name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          className="rounded-lg bg-slate-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 transition"
+        {/* Status Filter */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
-          Filter Registers
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setFilterDate("");
-            setFilterStatus("");
-            setFilterCourse("");
-            loadSessions();
-          }}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-        >
-          Reset
-        </button>
-      </form>
+          <option value="ALL">All Statuses</option>
+          <option value="OPEN">Open for Marking</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="SCHEDULED">Scheduled</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
 
-      {/* Sessions Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        {loading ? (
-          <div className="py-12 text-center text-sm text-slate-400">Loading attendance registers...</div>
-        ) : sessions.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No attendance registers found.
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Instantiate sessions from the authoritative timetable or create a manual session.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Date & Slot</th>
-                  <th className="px-4 py-3">Course / Subject</th>
-                  <th className="px-4 py-3">Section</th>
-                  <th className="px-4 py-3">Faculty Instructor</th>
-                  <th className="px-4 py-3">Roster Presence</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {sessions.map((sess) => (
-                  <tr key={sess.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-3.5 whitespace-nowrap font-medium text-slate-900 dark:text-white">
-                      <div>{sess.session_date}</div>
-                      <div className="text-xs text-slate-400">
-                        P{sess.period_number} • {sess.start_time || "Scheduled"}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="font-semibold text-slate-900 dark:text-white">
-                        {sess.course_code || "Course"}
-                      </div>
-                      <div className="text-xs text-slate-400 truncate max-w-xs">
-                        {sess.course_name}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      {sess.section_name || "General"}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {sess.faculty_name || "Instructor"}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                          {sess.total_present}P
-                        </span>
-                        <span>/</span>
-                        <span className="font-semibold text-rose-600 dark:text-rose-400">
-                          {sess.total_absent}A
-                        </span>
-                        {sess.total_late > 0 && (
-                          <span className="text-amber-500">({sess.total_late}L)</span>
-                        )}
-                        <span className="text-slate-400">of {sess.total_enrolled}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                          sess.status === "LOCKED"
-                            ? "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                            : sess.status === "MARKED"
-                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                            : sess.status === "OPEN"
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                            : "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300"
-                        }`}
-                      >
-                        {sess.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                      <Link
-                        href={`/app/attendance/sessions/${sess.id}`}
-                        className={`inline-flex items-center px-3 py-1 rounded text-xs font-semibold ${
-                          sess.status === "LOCKED"
-                            ? "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
-                            : "bg-indigo-600 text-white hover:bg-indigo-700"
-                        } transition`}
-                      >
-                        {sess.status === "LOCKED" ? "View Audit" : "Mark Register"}
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* Department Filter */}
+        <select
+          value={departmentFilter}
+          onChange={(e) => setDepartmentFilter(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        >
+          <option value="ALL">All Departments</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Mechanical">Mechanical</option>
+          <option value="Artificial Intelligence">AI & Data Science</option>
+        </select>
+
+        {/* Section Filter */}
+        <select
+          value={sectionFilter}
+          onChange={(e) => setSectionFilter(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        >
+          <option value="ALL">All Sections</option>
+          <option value="Sec A">Section A</option>
+          <option value="Sec B">Section B</option>
+        </select>
+
+        {(statusFilter !== "ALL" || departmentFilter !== "ALL" || sectionFilter !== "ALL" || dateFilter !== "") && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              setStatusFilter("ALL");
+              setDepartmentFilter("ALL");
+              setSectionFilter("ALL");
+              setDateFilter("");
+            }}
+            className="text-xs h-7 px-2 text-rose-600 hover:text-rose-700"
+          >
+            Clear Filters
+          </Button>
         )}
       </div>
 
-      {/* Modal: Instantiate Sessions From Timetable */}
-      {timetableModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Instantiate Sessions from Timetable
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Automatically generates session registers from authoritative timetable entries for the selected day.
-            </p>
+      {/* Enterprise DataGrid */}
+      <DataGrid<AttendanceSession>
+        data={sessions}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        loading={loading}
+        searchPlaceholder="Search sessions by subject code, title, section, or faculty..."
+        emptyTitle="No attendance sessions found"
+        emptyDescription="Schedule a new lecture period to open a register."
+      />
 
-            <form onSubmit={handleGenerateFromTimetable} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Target Date *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={timetableForm.target_date}
-                  onChange={(e) =>
-                    setTimetableForm({ ...timetableForm, target_date: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
+      {/* Schedule New Session Modal */}
+      <Dialog
+        open={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        title="Schedule New Attendance Session"
+      >
+        <form onSubmit={handleCreateSession} className="space-y-4">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Connect an academic course offering with a timetable slot and classroom venue.
+          </p>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Section (Optional)
-                </label>
-                <select
-                  value={timetableForm.section_id}
-                  onChange={(e) =>
-                    setTimetableForm({ ...timetableForm, section_id: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">All Timetable Sections</option>
-                  {sections.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Academic Year
-                </label>
-                <select
-                  value={timetableForm.academic_year_id}
-                  onChange={(e) =>
-                    setTimetableForm({ ...timetableForm, academic_year_id: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">Select Academic Year</option>
-                  {academicYears.map((ay) => (
-                    <option key={ay.id} value={ay.id}>
-                      {ay.name} {ay.is_current ? "(Current)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Semester
-                </label>
-                <select
-                  value={timetableForm.semester_id}
-                  onChange={(e) =>
-                    setTimetableForm({ ...timetableForm, semester_id: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">Select Semester</option>
-                  {semesters.map((sem) => (
-                    <option key={sem.id} value={sem.id}>
-                      {sem.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setTimetableModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                >
-                  Generate Sessions
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Manual Session Creation */}
-      {manualModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Create Manual Attendance Session
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              For ad-hoc classes, extra lectures, or makeup sessions outside standard timetable slots.
-            </p>
-
-            <form onSubmit={handleCreateManualSession} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Course Offering *
-                </label>
-                <select
-                  required
-                  value={manualForm.course_offering_id}
-                  onChange={(e) => {
-                    const off = courseOfferings.find((o) => o.id === e.target.value);
-                    setManualForm({
-                      ...manualForm,
-                      course_offering_id: e.target.value,
-                      section_id: off?.section_id || manualForm.section_id,
-                      academic_year_id: off?.academic_year_id || manualForm.academic_year_id,
-                      semester_id: off?.semester_id || manualForm.semester_id,
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Course Offering
+              </label>
+              <select
+                value={formData.courseCode}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "CS301") {
+                    setFormData({
+                      ...formData,
+                      courseOfferingId: "off-cs301-a",
+                      courseCode: "CS301",
+                      courseName: "Data Structures & Algorithms",
+                      facultyName: "Dr. Rajesh Sharma",
                     });
-                  }}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="">Select Course Offering</option>
-                  {courseOfferings.map((co) => (
-                    <option key={co.id} value={co.id}>
-                      {co.subject_code} - {co.subject_name} ({co.section_name || "Section"})
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  } else if (val === "CS302") {
+                    setFormData({
+                      ...formData,
+                      courseOfferingId: "off-cs302-a",
+                      courseCode: "CS302",
+                      courseName: "Database Management Systems",
+                      facultyName: "Dr. K. S. Anand",
+                    });
+                  } else if (val === "CS303") {
+                    setFormData({
+                      ...formData,
+                      courseOfferingId: "off-cs303-a",
+                      courseCode: "CS303",
+                      courseName: "Operating Systems & Concurrency",
+                      facultyName: "Prof. Meenakshi Sundaram",
+                    });
+                  }
+                }}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="CS301">CS301 — Data Structures & Algorithms</option>
+                <option value="CS302">CS302 — Database Management Systems</option>
+                <option value="CS303">CS303 — Operating Systems & Concurrency</option>
+              </select>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Date *
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={manualForm.session_date}
-                    onChange={(e) =>
-                      setManualForm({ ...manualForm, session_date: e.target.value })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Period Number
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="12"
-                    value={manualForm.period_number}
-                    onChange={(e) =>
-                      setManualForm({ ...manualForm, period_number: parseInt(e.target.value) || 1 })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Target Section
+              </label>
+              <select
+                value={formData.section}
+                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="5th Sem CSE — Sec A">5th Sem CSE — Sec A</option>
+                <option value="5th Sem CSE — Sec B">5th Sem CSE — Sec B</option>
+              </select>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Start Time
-                  </label>
-                  <input
-                    type="time"
-                    value={manualForm.start_time}
-                    onChange={(e) => setManualForm({ ...manualForm, start_time: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    End Time
-                  </label>
-                  <input
-                    type="time"
-                    value={manualForm.end_time}
-                    onChange={(e) => setManualForm({ ...manualForm, end_time: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Date
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+              </input>
+            </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Topic / Lecture Remarks (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Chapter 4 - Binary Search Trees"
-                  value={manualForm.topic}
-                  onChange={(e) => setManualForm({ ...manualForm, topic: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Session Type
+              </label>
+              <select
+                value={formData.sessionType}
+                onChange={(e) => setFormData({ ...formData, sessionType: e.target.value as SessionType })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="THEORY">Theory Lecture</option>
+                <option value="LAB">Practical / Laboratory</option>
+                <option value="TUTORIAL">Tutorial Session</option>
+                <option value="SEMINAR">Seminar / Workshop</option>
+              </select>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setManualModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                >
-                  Create Session
-                </button>
-              </div>
-            </form>
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Start Time
+              </label>
+              <input
+                type="text"
+                value={formData.startTime}
+                onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                placeholder="09:30 AM"
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                End Time
+              </label>
+              <input
+                type="text"
+                value={formData.endTime}
+                onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                placeholder="10:30 AM"
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Room / Venue
+              </label>
+              <input
+                type="text"
+                value={formData.room}
+                onChange={(e) => setFormData({ ...formData, room: e.target.value })}
+                placeholder="Hall 302, Academic Block A"
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Topic Planned / Delivered
+              </label>
+              <input
+                type="text"
+                value={formData.topicCovered}
+                onChange={(e) => setFormData({ ...formData, topicCovered: e.target.value })}
+                placeholder="e.g. Red-Black Trees Insertion and Balancing Operations"
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
           </div>
-        </div>
-      )}
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCreateModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={saving}>
+              {saving ? "Scheduling..." : "Schedule & Open Session"}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </div>
   );
 }

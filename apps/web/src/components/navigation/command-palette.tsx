@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Command, X, ArrowRight, User, BookOpen, Briefcase, FileText, Calendar, DollarSign, Sparkles } from "lucide-react";
+import { Search, Command, X, ArrowRight, User, BookOpen, Briefcase, FileText, Calendar, DollarSign, Sparkles, Loader2, FileSpreadsheet, CheckSquare, Award } from "lucide-react";
 import { searchService } from "@/services/search.service";
 import { GlobalSearchResultItem } from "@/types/domain";
-import { cn } from "@/lib/utils";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -71,11 +70,35 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         return <User className="h-4 w-4 text-emerald-400" />;
       case "Faculty":
         return <User className="h-4 w-4 text-sky-400" />;
+      case "Staff":
+        return <Briefcase className="h-4 w-4 text-purple-400" />;
       case "Course":
         return <BookOpen className="h-4 w-4 text-amber-400" />;
+      case "Curriculum":
+        return <FileSpreadsheet className="h-4 w-4 text-emerald-400" />;
+      case "Offering":
+        return <CheckSquare className="h-4 w-4 text-sky-400" />;
+      case "Attendance":
+        return <Calendar className="h-4 w-4 text-teal-400" />;
+      case "Examination":
+      case "Assessment":
+        return <Award className="h-4 w-4 text-rose-400" />;
       case "Drive":
+      case "Placement":
         return <Briefcase className="h-4 w-4 text-purple-400" />;
+      case "Company":
+        return <Briefcase className="h-4 w-4 text-indigo-400" />;
+      case "Application":
+        return <FileSpreadsheet className="h-4 w-4 text-sky-400" />;
+      case "Interview":
+        return <Calendar className="h-4 w-4 text-amber-400" />;
+      case "Offer":
+        return <Award className="h-4 w-4 text-emerald-400" />;
       case "Invoice":
+      case "Finance":
+      case "Payment":
+      case "Receipt":
+      case "Scholarship":
         return <DollarSign className="h-4 w-4 text-emerald-400" />;
       case "Event":
         return <Calendar className="h-4 w-4 text-blue-400" />;
@@ -101,7 +124,11 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       >
         {/* Search Input Bar */}
         <div className="flex items-center px-4 border-b border-slate-800 bg-slate-950/40">
-          <Search className="h-5 w-5 text-slate-500 shrink-0 mr-3" />
+          {isSearching ? (
+            <Loader2 className="h-5 w-5 text-indigo-400 animate-spin shrink-0 mr-3" />
+          ) : (
+            <Search className="h-5 w-5 text-slate-500 shrink-0 mr-3" />
+          )}
           <input
             type="text"
             autoFocus

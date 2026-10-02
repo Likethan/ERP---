@@ -1,195 +1,382 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import {
+  CreditCard,
+  Plus,
+  Search,
+  Filter,
+  ArrowRight,
+  Eye,
+  Calendar,
+  CheckCircle2,
+  DollarSign,
+  FileText,
+  Clock,
+  Ban,
+  Building2,
+  ShieldCheck,
+  Receipt as ReceiptIcon,
+} from "lucide-react";
+import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/stat-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { useToast, ToastType } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
 import { financeService } from "@/services/finance.service";
-import type { Invoice, PaymentMode, PaymentTransaction } from "@campusos/types";
-
-interface StudentItem {
-  id: string;
-  first_name: string;
-  last_name: string;
-  admission_number: string;
-  roll_number?: string | null;
-}
+import { formatMoney } from "@/services/financial-calculator";
+import { Payment, PaymentMethod, Invoice } from "@/types/finance";
+import { MOCK_STUDENTS } from "@/mocks/students.mock";
 
 export default function PaymentsPage() {
   const { hasPermission } = useAuth();
-  const [payments, setPayments] = useState<PaymentTransaction[]>([]);
-  const [students, setStudents] = useState<StudentItem[]>([]);
+  const { showToast } = useToast();
+  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  // Filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [methodFilter, setMethodFilter] = useState<string>("ALL");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
   // Record Payment Modal State
-  const [showPayModal, setShowPayModal] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [payError, setPayError] = useState<string | null>(null);
-
-  // Form Fields
+  const [modalOpen, setModalOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState("");
-  const [paymentAmount, setPaymentAmount] = useState<number | string>("");
-  const [paymentMode, setPaymentMode] = useState<PaymentMode>("UPI");
-  const [transactionRef, setTransactionRef] = useState("");
-  const [remarks, setRemarks] = useState("");
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState<number>(0);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("UPI");
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [chequeNumber, setChequeNumber] = useState("");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
 
-  // Student Unpaid Invoices for Allocation
-  const [studentInvoices, setStudentInvoices] = useState<Invoice[]>([]);
-  const [allocations, setAllocations] = useState<Record<string, number>>({});
+  const canRecord = hasPermission("finance.record_payments") || hasPermission("payments:create");
 
-  const canRecord = hasPermission("payments:create");
-
-  async function loadData() {
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
-
-      const [payRes, stuRes] = await Promise.all([
-        apiFetch<PaymentTransaction[]>("/api/v1/finance/payments?limit=100"),
-        apiFetch<StudentItem[]>("/api/v1/students?limit=200").catch(() => ({ data: [] })),
+      const [payRes, invRes] = await Promise.all([
+        financeService.getPayments(),
+        financeService.getInvoices(),
       ]);
-
       setPayments(payRes.data);
-      setStudents(stuRes.data || []);
+      setInvoices(invRes.data);
     } catch {
-      const mockRes = await financeService.getPayments();
-      const mapped = (mockRes.data || []).map((p) => ({
-        id: p.id,
-        receipt_number: p.receiptNumber,
-        transaction_reference: p.transactionRef,
-        amount: p.amount,
-        payment_mode: p.paymentMode,
-        status: p.status,
-        created_at: p.paymentDate,
-        student_name: p.studentName,
-        roll_number: p.rollNumber,
-        allocated_amount: p.amount,
-        unallocated_amount: 0,
-      } as unknown as PaymentTransaction));
-      setPayments(mapped);
-      setStudents([
-        { id: "stu-24cse0101", first_name: "Aarav", last_name: "Patel", admission_number: "ADM2024001", roll_number: "24CSE0101" },
-        { id: "stu-24cse0102", first_name: "Priya", last_name: "Sundaram", admission_number: "ADM2024002", roll_number: "24CSE0102" },
-      ]);
+      notify("Error loading payment transaction ledger", "error");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  // When a student is selected in modal, load their unsettled invoices
-  const handleStudentSelect = async (studentId: string) => {
+  // Filtered unpaid invoices for selected student in modal
+  const studentPayableInvoices = useMemo(() => {
+    if (!selectedStudentId) return [];
+    return invoices.filter(
+      (inv) =>
+        (inv.studentId === selectedStudentId ||
+          inv.studentName.toLowerCase().includes(selectedStudentId.toLowerCase())) &&
+        inv.outstandingAmount > 0 &&
+        inv.status !== "CANCELLED"
+    );
+  }, [selectedStudentId, invoices]);
+
+  const selectedInvoice = useMemo(() => {
+    return invoices.find((inv) => inv.id === selectedInvoiceId);
+  }, [selectedInvoiceId, invoices]);
+
+  // When selected student changes, pick their first unpaid invoice
+  const handleStudentSelect = (studentId: string) => {
     setSelectedStudentId(studentId);
-    setAllocations({});
-    if (!studentId) {
-      setStudentInvoices([]);
-      return;
-    }
-    try {
-      const res = await apiFetch<Invoice[]>(`/api/v1/finance/invoices?student_id=${studentId}&limit=50`);
-      const unsettled = (res.data || []).filter((inv) => Number(inv.balance_amount) > 0 && inv.status !== "DRAFT");
-      setStudentInvoices(unsettled);
-    } catch {
-      setStudentInvoices([
-        {
-          id: "inv-mock-1",
-          invoice_number: "INV-2026-0042",
-          total_amount: 85000,
-          paid_amount: 0,
-          balance_amount: 85000,
-          status: "ISSUED",
-          due_date: "2026-10-31",
-        } as unknown as Invoice,
-      ]);
+    const payable = invoices.filter(
+      (inv) =>
+        (inv.studentId === studentId ||
+          inv.studentName.toLowerCase().includes(studentId.toLowerCase())) &&
+        inv.outstandingAmount > 0 &&
+        inv.status !== "CANCELLED"
+    );
+    if (payable.length > 0) {
+      setSelectedInvoiceId(payable[0].id);
+      setPaymentAmount(payable[0].outstandingAmount);
+    } else {
+      setSelectedInvoiceId("");
+      setPaymentAmount(0);
     }
   };
 
-  const handleAllocationChange = (invoiceId: string, value: number) => {
-    setAllocations({
-      ...allocations,
-      [invoiceId]: Math.max(0, value),
-    });
+  const handleInvoiceSelect = (invId: string) => {
+    setSelectedInvoiceId(invId);
+    const target = invoices.find((inv) => inv.id === invId);
+    if (target) {
+      setPaymentAmount(target.outstandingAmount);
+    }
   };
 
-  const totalAllocated = Object.values(allocations).reduce((acc, curr) => acc + (curr || 0), 0);
-
+  // Submit payment
   const handleRecordPayment = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedInvoice) {
+      notify("Please choose an invoice to allocate payment against.", "error");
+      return;
+    }
+    if (paymentAmount <= 0) {
+      notify("Payment amount must be greater than zero.", "error");
+      return;
+    }
+    if (paymentAmount > selectedInvoice.outstandingAmount) {
+      notify(
+        `Amount (${formatMoney(paymentAmount)}) exceeds invoice outstanding balance of ${formatMoney(selectedInvoice.outstandingAmount)}.`,
+        "error"
+      );
+      return;
+    }
+    if (!referenceNumber.trim()) {
+      notify("Transaction reference / UTR is required.", "error");
+      return;
+    }
+
     try {
       setSubmitting(true);
-      setPayError(null);
-
-      const amountNum = Number(paymentAmount);
-      if (!selectedStudentId) throw new Error("Please select a student.");
-      if (isNaN(amountNum) || amountNum <= 0) throw new Error("Payment amount must be greater than zero.");
-      if (!transactionRef.trim()) throw new Error("Transaction reference ID / UTR is required.");
-
-      if (totalAllocated > amountNum) {
-        throw new Error(
-          `Allocated amount (₹${totalAllocated}) cannot exceed the total payment amount (₹${amountNum}).`
-        );
-      }
-
-      const allocationItems = Object.entries(allocations)
-        .filter(([, val]) => val > 0)
-        .map(([invId, val]) => ({
-          invoice_id: invId,
-          amount: val,
-        }));
-
-      await apiFetch("/api/v1/finance/payments", {
-        method: "POST",
-        body: JSON.stringify({
-          student_id: selectedStudentId,
-          amount: amountNum,
-          payment_mode: paymentMode,
-          transaction_reference: transactionRef.trim(),
-          remarks: remarks.trim() || undefined,
-          allocations: allocationItems,
-        }),
-      });
-
-      setShowPayModal(false);
-      setSelectedStudentId("");
-      setPaymentAmount("");
-      setTransactionRef("");
-      setRemarks("");
-      setAllocations({});
-      await loadData();
-    } catch {
       await financeService.recordPayment({
-        invoiceId: Object.keys(allocations)[0] || "inv-1",
-        amount: Number(paymentAmount) || 85000,
-        paymentMode: (paymentMode === "CASH" ? "CASH_COUNTER" : paymentMode) as "UPI" | "NET_BANKING" | "NEFT_RTGS" | "DEMAND_DRAFT" | "CASH_COUNTER",
+        invoiceId: selectedInvoice.id,
+        amount: Number(paymentAmount),
+        paymentMethod,
+        referenceNumber: referenceNumber.trim(),
+        bankName: bankName.trim() || undefined,
+        chequeNumber: chequeNumber.trim() || undefined,
+        notes: notes.trim() || undefined,
+        recordedBy: "Accounts Cashier",
       });
-      setShowPayModal(false);
+
+      notify(`Payment of ${formatMoney(paymentAmount)} recorded successfully!`, "success");
+      setModalOpen(false);
+      setIsConfirming(false);
       setSelectedStudentId("");
-      setPaymentAmount("");
-      setTransactionRef("");
-      setRemarks("");
-      setAllocations({});
-      await loadData();
+      setSelectedInvoiceId("");
+      setPaymentAmount(0);
+      setReferenceNumber("");
+      setBankName("");
+      setChequeNumber("");
+      setNotes("");
+      loadData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to record payment.";
+      notify(msg, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const formatCurrency = (amount: number | string | undefined) => {
-    const num = typeof amount === "string" ? parseFloat(amount) : (amount ?? 0);
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  };
+  // Computed metrics
+  const totalCollected = useMemo(() => {
+    return payments
+      .filter((p) => p.status === "SUCCESS")
+      .reduce((sum, p) => sum + p.amount, 0);
+  }, [payments]);
+
+  const upiCollected = useMemo(() => {
+    return payments
+      .filter((p) => p.status === "SUCCESS" && p.paymentMethod === "UPI")
+      .reduce((sum, p) => sum + p.amount, 0);
+  }, [payments]);
+
+  const bankWireCollected = useMemo(() => {
+    return payments
+      .filter((p) => p.status === "SUCCESS" && p.paymentMethod === "BANK_TRANSFER")
+      .reduce((sum, p) => sum + p.amount, 0);
+  }, [payments]);
+
+  const cashChequeCollected = useMemo(() => {
+    return payments
+      .filter(
+        (p) =>
+          p.status === "SUCCESS" && (p.paymentMethod === "CASH" || p.paymentMethod === "CHEQUE")
+      )
+      .reduce((sum, p) => sum + p.amount, 0);
+  }, [payments]);
+
+  // Filtered rows
+  const filteredPayments = useMemo(() => {
+    return payments.filter((p) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        p.transactionRef.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.receiptNumber.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesMethod = methodFilter === "ALL" || p.paymentMethod === methodFilter;
+      const matchesStatus = statusFilter === "ALL" || p.status === statusFilter;
+
+      return matchesSearch && matchesMethod && matchesStatus;
+    });
+  }, [payments, searchQuery, methodFilter, statusFilter]);
+
+  const columns: ColumnDef<Payment>[] = [
+    {
+      id: "transactionRef",
+      header: "Transaction Ref / UTR",
+      accessorKey: "transactionRef",
+      sortable: true,
+      cell: ({ row }) => (
+        <div>
+          <Link
+            href={`/app/finance/payments/${row.id}`}
+            className="font-mono text-sm font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline"
+          >
+            {row.transactionRef}
+          </Link>
+          <div className="text-xs text-slate-500 font-mono">Rec: {row.receiptNumber}</div>
+        </div>
+      ),
+    },
+    {
+      id: "student",
+      header: "Student",
+      accessorKey: "studentName",
+      sortable: true,
+      cell: ({ row }) => (
+        <div>
+          <div className="font-medium text-slate-900 dark:text-white">{row.studentName}</div>
+          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+        </div>
+      ),
+    },
+    {
+      id: "invoiceNumber",
+      header: "Invoice",
+      accessorKey: "invoiceNumber",
+      sortable: true,
+      cell: ({ row }) => (
+        <Link
+          href={`/app/finance/invoices/${row.invoiceId}`}
+          className="text-xs font-mono font-medium text-blue-600 hover:underline dark:text-blue-400"
+        >
+          {row.invoiceNumber}
+        </Link>
+      ),
+    },
+    {
+      id: "paymentDate",
+      header: "Date & Time",
+      accessorKey: "paymentDate",
+      sortable: true,
+      cell: ({ row }) => (
+        <span className="text-xs text-slate-600 dark:text-slate-300">{row.paymentDate}</span>
+      ),
+    },
+    {
+      id: "paymentMethod",
+      header: "Method",
+      accessorKey: "paymentMethod",
+      cell: ({ row }) => {
+        const colors: Record<string, string> = {
+          UPI: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300",
+          BANK_TRANSFER: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300",
+          CARD: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-300",
+          CASH: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300",
+          CHEQUE: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/50 dark:text-purple-300",
+          ONLINE: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/50 dark:text-teal-300",
+          OTHER: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300",
+        };
+        return (
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${
+              colors[row.paymentMethod] || "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {row.paymentMethod.replace("_", " ")}
+          </span>
+        );
+      },
+    },
+    {
+      id: "amount",
+      header: "Amount",
+      accessorKey: "amount",
+      sortable: true,
+      cell: ({ row }) => (
+        <span className="font-semibold text-slate-900 dark:text-white">
+          {formatMoney(row.amount)}
+        </span>
+      ),
+    },
+    {
+      id: "allocation",
+      header: "Allocation",
+      cell: ({ row }) => (
+        <div className="text-xs">
+          <span className="font-medium text-emerald-700 dark:text-emerald-400">
+            {formatMoney(row.allocatedAmount)}
+          </span>
+          {row.unallocatedAmount > 0 && (
+            <span className="ml-1.5 text-amber-600 dark:text-amber-400">
+              ({formatMoney(row.unallocatedAmount)} unallocated)
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorKey: "status",
+      cell: ({ row }) => {
+        const badges: Record<string, string> = {
+          SUCCESS: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+          PENDING: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
+          FAILED: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
+          REVERSED: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
+        };
+        return (
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+              badges[row.status] || "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {row.status}
+          </span>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <Link href={`/app/finance/payments/${row.id}`}>
+            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+              <Eye className="w-3.5 h-3.5 mr-1" />
+              Audit
+            </Button>
+          </Link>
+          <Link href={`/app/finance/receipts`}>
+            <Button variant="outline" size="sm" className="h-8 px-2 text-xs">
+              <ReceiptIcon className="w-3.5 h-3.5 mr-1 text-slate-500" />
+              Receipt
+            </Button>
+          </Link>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-6">
+      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
@@ -200,281 +387,387 @@ export default function PaymentsPage() {
             <span className="font-semibold text-slate-700 dark:text-slate-300">Payments</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Payment Collection & Multi-Invoice Allocation
+            Payments & Collections Ledger
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Record inward payments across UPI, Bank Transfer, Card, and Cash with instant allocation and official receipt issuance.
+            Real-time institutional collections registry, allocation audit, and bank transaction vouchers.
           </p>
         </div>
 
-        {canRecord && (
-          <button
-            onClick={() => setShowPayModal(true)}
-            className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-emerald-700 transition"
-          >
-            + Record Payment
-          </button>
-        )}
-      </div>
-
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          <p className="font-semibold">Unable to load Payments</p>
-          <p className="mt-0.5">{error}</p>
-        </div>
-      )}
-
-      {/* Payments Table */}
-      {loading ? (
-        <div className="text-center py-16 text-slate-500">Loading payments journal...</div>
-      ) : payments.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
-          <p className="text-sm font-medium text-slate-900 dark:text-white">No payments recorded yet.</p>
-          <p className="mt-1 text-xs text-slate-500">Record a payment to settle student invoices and generate official receipts.</p>
+        <div className="flex items-center gap-3">
           {canRecord && (
-            <button
-              onClick={() => setShowPayModal(true)}
-              className="mt-4 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
+            <Button
+              variant="primary"
+              onClick={() => {
+                setModalOpen(true);
+                if (MOCK_STUDENTS[0]) {
+                  handleStudentSelect(MOCK_STUDENTS[0].id);
+                }
+              }}
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
             >
-              + Record Payment
-            </button>
+              <Plus className="w-4 h-4" />
+              Record Payment
+            </Button>
           )}
         </div>
-      ) : (
-        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Payment #</th>
-                  <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Mode</th>
-                  <th className="px-4 py-3">Reference</th>
-                  <th className="px-4 py-3">Amount</th>
-                  <th className="px-4 py-3">Receipt #</th>
-                  <th className="px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {payments.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                    <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{p.payment_number}</td>
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
-                      {p.student_name || "Student"}
-                    </td>
-                    <td className="px-4 py-3 text-slate-500">{new Date(p.payment_date).toLocaleDateString()}</td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
-                        {p.payment_mode}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">
-                      {p.transaction_reference}
-                    </td>
-                    <td className="px-4 py-3 font-bold text-emerald-600 dark:text-emerald-400">
-                      {formatCurrency(p.amount)}
-                    </td>
-                    <td className="px-4 py-3">
-                      {p.receipt_number ? (
-                        <Link
-                          href="/app/finance/receipts"
-                          className="font-mono text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-                        >
-                          {p.receipt_number}
-                        </Link>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                        {p.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      </div>
+
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Realized Collections"
+          value={formatMoney(totalCollected)}
+          description={`${payments.filter((p) => p.status === "SUCCESS").length} verified bank/cash receipts`}
+          icon={<DollarSign className="w-5 h-5 text-emerald-600" />}
+        />
+        <StatCard
+          title="UPI / QR Payments"
+          value={formatMoney(upiCollected)}
+          description="Instant bank-to-bank settlement"
+          icon={<CreditCard className="w-5 h-5 text-teal-600" />}
+        />
+        <StatCard
+          title="NEFT / RTGS / Bank Wire"
+          value={formatMoney(bankWireCollected)}
+          description="Direct treasury account deposits"
+          icon={<Building2 className="w-5 h-5 text-blue-600" />}
+        />
+        <StatCard
+          title="Counter Cash & Cheques"
+          value={formatMoney(cashChequeCollected)}
+          description="Campus cashier counter collection"
+          icon={<FileText className="w-5 h-5 text-amber-600" />}
+        />
+      </div>
+
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-4 rounded-xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Input
+            placeholder="Search Ref, Student, Roll No, Inv..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 text-sm"
+          />
         </div>
-      )}
 
-      {/* Record Payment Modal */}
-      {showPayModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 border border-slate-200 dark:border-slate-800 my-8">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Record Inward Payment</h3>
-              <button
-                onClick={() => setShowPayModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xl font-bold"
-              >
-                ×
-              </button>
-            </div>
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <Filter className="w-3.5 h-3.5" />
+            Mode:
+          </div>
+          <Select
+            value={methodFilter}
+            onChange={(e) => setMethodFilter(e.target.value)}
+            className="text-xs h-9 w-36"
+          >
+            <option value="ALL">All Methods</option>
+            <option value="UPI">UPI</option>
+            <option value="BANK_TRANSFER">Bank Transfer</option>
+            <option value="CARD">Card</option>
+            <option value="CASH">Cash</option>
+            <option value="CHEQUE">Cheque</option>
+            <option value="ONLINE">Online</option>
+          </Select>
 
-            {payError && (
-              <div className="mt-4 rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
-                {payError}
-              </div>
-            )}
+          <Select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="text-xs h-9 w-32"
+          >
+            <option value="ALL">All Status</option>
+            <option value="SUCCESS">Success</option>
+            <option value="PENDING">Pending</option>
+            <option value="FAILED">Failed</option>
+            <option value="REVERSED">Reversed</option>
+          </Select>
+        </div>
+      </div>
 
-            <form onSubmit={handleRecordPayment} className="mt-4 space-y-4">
+      {/* Main DataGrid */}
+      <DataGrid
+        columns={columns}
+        data={filteredPayments}
+        loading={loading}
+        keyExtractor={(row) => row.id}
+        emptyMessage="No payments match the selected criteria."
+      />
+
+      {/* Guided Record Payment Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+              <CreditCard className="w-5 h-5 text-emerald-600" />
+              {isConfirming ? "Confirm Payment Recording" : "Record Student Fee Payment"}
+            </DialogTitle>
+          </DialogHeader>
+
+          {!isConfirming ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setIsConfirming(true);
+              }}
+              className="space-y-4 pt-2"
+            >
+              {/* Step 1: Select Student */}
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Target Student *
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Select Student <span className="text-rose-500">*</span>
                 </label>
-                <select
-                  required
+                <Select
                   value={selectedStudentId}
                   onChange={(e) => handleStudentSelect(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  className="mt-1"
                 >
-                  <option value="">Select Student</option>
-                  {students.map((stu) => (
-                    <option key={stu.id} value={stu.id}>
-                      {stu.first_name} {stu.last_name} ({stu.admission_number})
+                  <option value="">-- Choose Candidate --</option>
+                  {MOCK_STUDENTS.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.firstName} {s.lastName} ({s.rollNumber}) — {s.program.code}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
+              {/* Step 2: Target Unpaid Invoice */}
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Select Invoice to Settle <span className="text-rose-500">*</span>
+                </label>
+                {studentPayableInvoices.length > 0 ? (
+                  <Select
+                    value={selectedInvoiceId}
+                    onChange={(e) => handleInvoiceSelect(e.target.value)}
+                    className="mt-1"
+                  >
+                    {studentPayableInvoices.map((inv) => (
+                      <option key={inv.id} value={inv.id}>
+                        {inv.invoiceNumber} — {inv.program} Sem {inv.semester} (Due: {formatMoney(inv.outstandingAmount)})
+                      </option>
+                    ))}
+                  </Select>
+                ) : (
+                  <div className="mt-1 p-3 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                    {selectedStudentId
+                      ? "This student has no outstanding invoices requiring settlement."
+                      : "Please pick a student to view their billable invoices."}
+                  </div>
+                )}
+              </div>
+
+              {/* Outstanding Summary Callout */}
+              {selectedInvoice && (
+                <div className="bg-emerald-50/70 border border-emerald-200 rounded-lg p-3 text-xs dark:bg-emerald-950/30 dark:border-emerald-800">
+                  <div className="flex justify-between font-semibold text-emerald-900 dark:text-emerald-300">
+                    <span>Invoice Net Payable:</span>
+                    <span>{formatMoney(selectedInvoice.netPayable)}</span>
+                  </div>
+                  <div className="flex justify-between text-emerald-800/80 mt-1 dark:text-emerald-400">
+                    <span>Already Settled:</span>
+                    <span>{formatMoney(selectedInvoice.paidAmount)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-emerald-950 border-t border-emerald-200 pt-1.5 mt-1.5 dark:border-emerald-800 dark:text-white">
+                    <span>Remaining Balance:</span>
+                    <span className="text-emerald-700 dark:text-emerald-400">
+                      {formatMoney(selectedInvoice.outstandingAmount)}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Payment Amount */}
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Payment Amount (₹) <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={selectedInvoice ? selectedInvoice.outstandingAmount : 1000000}
+                  value={paymentAmount || ""}
+                  onChange={(e) => setPaymentAmount(Number(e.target.value))}
+                  placeholder="Enter amount in ₹"
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              {/* Step 4: Mode & Reference */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Payment Amount (₹) *
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Payment Channel <span className="text-rose-500">*</span>
                   </label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    step="0.01"
-                    placeholder="e.g. 50000"
-                    value={paymentAmount}
-                    onChange={(e) => setPaymentAmount(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white font-mono"
-                  />
+                  <Select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                    className="mt-1"
+                  >
+                    <option value="UPI">UPI / QR Transfer</option>
+                    <option value="BANK_TRANSFER">Bank Wire / NEFT / RTGS</option>
+                    <option value="CARD">Debit / Credit Card</option>
+                    <option value="CASH">Counter Cash</option>
+                    <option value="CHEQUE">Cheque / Demand Draft</option>
+                    <option value="ONLINE">Campus Payment Gateway</option>
+                  </Select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Payment Mode *
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Transaction Ref / UTR <span className="text-rose-500">*</span>
                   </label>
-                  <select
-                    value={paymentMode}
-                    onChange={(e) => setPaymentMode(e.target.value as PaymentMode)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="UPI">UPI / QR Code</option>
-                    <option value="BANK_TRANSFER">Bank Transfer (NEFT/RTGS/IMPS)</option>
-                    <option value="CARD">Credit / Debit Card</option>
-                    <option value="CASH">Cash</option>
-                    <option value="CHEQUE">Cheque</option>
-                    <option value="DD">Demand Draft</option>
-                    <option value="ONLINE_GATEWAY">Online Gateway</option>
-                  </select>
+                  <Input
+                    value={referenceNumber}
+                    onChange={(e) => setReferenceNumber(e.target.value)}
+                    placeholder="e.g. UTR-2026-987654"
+                    className="mt-1"
+                    required
+                  />
                 </div>
               </div>
 
+              {/* Extra Details for Bank/Cheque */}
+              {(paymentMethod === "BANK_TRANSFER" || paymentMethod === "CHEQUE") && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Bank Name
+                    </label>
+                    <Input
+                      value={bankName}
+                      onChange={(e) => setBankName(e.target.value)}
+                      placeholder="e.g. State Bank of India"
+                      className="mt-1"
+                    />
+                  </div>
+                  {paymentMethod === "CHEQUE" && (
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Cheque / DD Number
+                      </label>
+                      <Input
+                        value={chequeNumber}
+                        onChange={(e) => setChequeNumber(e.target.value)}
+                        placeholder="e.g. CHQ-445892"
+                        className="mt-1"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Remarks */}
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Transaction Reference ID / UTR / Cheque Number *
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Audit Notes / Cashier Remarks
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. UPI-983748291048 or CHQ-001234"
-                  value={transactionRef}
-                  onChange={(e) => setTransactionRef(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white font-mono"
+                <Input
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Optional audit memo"
+                  className="mt-1"
                 />
               </div>
 
-              {/* Invoice Allocation Breakdown */}
-              <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
-                <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
-                  Allocate to Unsettled Invoices
-                </span>
-
-                {studentInvoices.length === 0 ? (
-                  <p className="mt-2 text-xs text-slate-400">
-                    {selectedStudentId
-                      ? "This student has no outstanding issued invoices."
-                      : "Select a student to view applicable invoices."}
-                  </p>
-                ) : (
-                  <div className="mt-3 space-y-2 max-h-48 overflow-y-auto pr-1">
-                    {studentInvoices.map((inv) => (
-                      <div
-                        key={inv.id}
-                        className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs"
-                      >
-                        <div>
-                          <div className="font-semibold text-slate-900 dark:text-white">{inv.invoice_number}</div>
-                          <div className="text-slate-500">
-                            Due: {inv.due_date} • Outstanding:{" "}
-                            <span className="text-rose-600 font-bold">{formatCurrency(inv.balance_amount)}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-slate-400">₹</span>
-                          <input
-                            type="number"
-                            max={Number(inv.balance_amount)}
-                            placeholder="0"
-                            value={allocations[inv.id] ?? ""}
-                            onChange={(e) => handleAllocationChange(inv.id, Number(e.target.value))}
-                            className="w-24 rounded border border-slate-300 px-2 py-1 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white font-mono"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {totalAllocated > 0 && (
-                  <div className="mt-3 flex justify-between text-xs font-semibold bg-slate-50 p-2.5 rounded-lg dark:bg-slate-800">
-                    <span>Total Allocated:</span>
-                    <span className="text-emerald-600">{formatCurrency(totalAllocated)}</span>
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Accounting Remarks (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Fees collected at campus accounts counter"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
-                <button
+              <DialogFooter className="pt-3">
+                <Button
                   type="button"
-                  onClick={() => setShowPayModal(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
+                  variant="outline"
+                  onClick={() => setModalOpen(false)}
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  disabled={submitting}
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50"
+                  variant="primary"
+                  disabled={!selectedInvoice || paymentAmount <= 0 || !referenceNumber.trim()}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
                 >
-                  {submitting ? "Processing..." : "Confirm & Issue Receipt"}
-                </button>
-              </div>
+                  Proceed to Review
+                </Button>
+              </DialogFooter>
             </form>
-          </div>
-        </div>
-      )}
+          ) : (
+            <div className="space-y-4 pt-2">
+              <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-900 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-200">
+                <p className="font-bold flex items-center gap-1.5 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-amber-600" />
+                  Irreversible Cashier Ledger Action
+                </p>
+                <p className="mt-1 text-slate-600 dark:text-slate-300">
+                  Recording this transaction will immediately credit the invoice balance and automatically generate an immutable student fee receipt voucher.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2 text-xs dark:bg-slate-800/50 dark:border-slate-700">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Student:</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {selectedInvoice?.studentName} ({selectedInvoice?.rollNumber})
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Target Invoice:</span>
+                  <span className="font-mono font-medium text-slate-900 dark:text-white">
+                    {selectedInvoice?.invoiceNumber}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Payment Amount:</span>
+                  <span className="font-bold text-emerald-600 text-sm">
+                    {formatMoney(paymentAmount)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Payment Method:</span>
+                  <span className="font-medium text-slate-900 dark:text-white">{paymentMethod}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Transaction Reference:</span>
+                  <span className="font-mono text-slate-900 dark:text-white">{referenceNumber}</span>
+                </div>
+                {bankName && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Issuing Bank:</span>
+                    <span className="text-slate-900 dark:text-white">{bankName}</span>
+                  </div>
+                )}
+                <div className="flex justify-between border-t border-slate-200 pt-2 font-semibold">
+                  <span className="text-slate-600">Remaining Balance Post Payment:</span>
+                  <span className="text-slate-900 dark:text-white">
+                    {formatMoney(
+                      (selectedInvoice?.outstandingAmount || 0) - paymentAmount
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <DialogFooter className="pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsConfirming(false)}
+                  disabled={submitting}
+                >
+                  Back to Edit
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={handleRecordPayment}
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
+                  {submitting ? "Committing..." : "Confirm & Issue Receipt"}
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

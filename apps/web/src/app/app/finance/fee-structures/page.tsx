@@ -1,562 +1,751 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import {
+  Layers,
+  Plus,
+  Search,
+  Filter,
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  Trash2,
+  Eye,
+  FileCheck2,
+  DollarSign,
+  AlertTriangle,
+  Send,
+  Lock,
+} from "lucide-react";
+import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/stat-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
 import { financeService } from "@/services/finance.service";
-import type { FeeCategory, FeeStructure, FeeStructureStatus } from "@campusos/types";
+import { formatMoney } from "@/services/financial-calculator";
+import { FeeStructure, FeeCategory, FeeStructureStatus } from "@/types/finance";
 
-interface ProgramItem {
-  id: string;
-  name: string;
-  code: string;
-}
+const PROGRAMS = [
+  "B.Tech Computer Science & Engineering",
+  "B.Tech Electronics & Communication",
+  "B.Tech AI & Data Science",
+  "B.Tech Mechanical Engineering",
+  "All Residential Students",
+];
 
-interface AcademicYearItem {
-  id: string;
-  name: string;
-}
-
-interface SemesterItem {
-  id: string;
-  name: string;
-}
+const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export default function FeeStructuresPage() {
   const { hasPermission } = useAuth();
+  const { showToast } = useToast();
+
   const [structures, setStructures] = useState<FeeStructure[]>([]);
   const [categories, setCategories] = useState<FeeCategory[]>([]);
-  const [programs, setPrograms] = useState<ProgramItem[]>([]);
-  const [academicYears, setAcademicYears] = useState<AcademicYearItem[]>([]);
-  const [semesters, setSemesters] = useState<SemesterItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Modal State
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [programFilter, setProgramFilter] = useState<string>("ALL");
 
-  // Form Fields
-  const [name, setName] = useState("");
-  const [programId, setProgramId] = useState("");
-  const [academicYearId, setAcademicYearId] = useState("");
-  const [semesterId, setSemesterId] = useState("");
-  const [quotaType, setQuotaType] = useState("GENERAL");
-  const [feeItems, setFeeItems] = useState<
-    Array<{ category_id: string; name: string; amount: number; is_optional: boolean; sequence: number }>
-  >([{ category_id: "", name: "Tuition Fee", amount: 50000, is_optional: false, sequence: 1 }]);
+  // 6-Step Guided Creation Modal State
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [saving, setSaving] = useState(false);
 
-  const canManage = hasPermission("finance:manage_fee_structures");
+  // Wizard Form Fields
+  const [wizardName, setWizardName] = useState("");
+  const [wizardCode, setWizardCode] = useState("");
+  const [wizardProgram, setWizardProgram] = useState(PROGRAMS[0]);
+  const [wizardAcademicYear, setWizardAcademicYear] = useState("2026-2027");
+  const [wizardSemester, setWizardSemester] = useState(5);
+  const [wizardNotes, setWizardNotes] = useState("");
+  const [wizardComponents, setWizardComponents] = useState<
+    Array<{ id: string; title: string; categoryName: string; amount: number; isMandatory: boolean }>
+  >([
+    { id: "c-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
+    { id: "c-2", title: "Laboratory & Computing Levy", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
+    { id: "c-3", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
+  ]);
 
-  async function loadData() {
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const [structRes, catRes, progRes, ayRes, semRes] = await Promise.all([
-        apiFetch<FeeStructure[]>("/api/v1/finance/fee-structures"),
-        apiFetch<FeeCategory[]>("/api/v1/finance/fee-categories"),
-        apiFetch<ProgramItem[]>("/api/v1/programs").catch(() => ({ data: [] })),
-        apiFetch<AcademicYearItem[]>("/api/v1/academic-years").catch(() => ({ data: [] })),
-        apiFetch<SemesterItem[]>("/api/v1/semesters").catch(() => ({ data: [] })),
+      const [structRes, catRes] = await Promise.all([
+        financeService.getFeeStructures(),
+        financeService.getFeeCategories(),
       ]);
-
       setStructures(structRes.data);
       setCategories(catRes.data);
-      setPrograms(progRes.data || []);
-      setAcademicYears(ayRes.data || []);
-      setSemesters(semRes.data || []);
-
-      if (catRes.data.length > 0 && !feeItems[0].category_id) {
-        setFeeItems([{ category_id: catRes.data[0].id, name: "Tuition Fee", amount: 50000, is_optional: false, sequence: 1 }]);
-      }
-    } catch {
-      const mockRes = await financeService.getFeeStructures();
-      const mapped = (mockRes.data || []).map((fs) => ({
-        id: fs.id,
-        name: fs.name,
-        academic_year_id: "ay-2026-27",
-        program_id: "prog-cse",
-        quota_type: "GENERAL",
-        status: fs.status as FeeStructureStatus,
-        total_amount: fs.totalAnnualFee,
-        program_name: fs.program,
-        academic_year_name: fs.academicYear,
-        items: [
-          { id: "fsi-1", name: "Core Tuition Fee", amount: fs.totalAnnualFee * 0.7, is_optional: false, category_name: "Tuition" },
-          { id: "fsi-2", name: "Advanced Computing Lab", amount: fs.totalAnnualFee * 0.2, is_optional: false, category_name: "Laboratory" },
-          { id: "fsi-3", name: "Library & Digital Journals", amount: fs.totalAnnualFee * 0.1, is_optional: false, category_name: "Library" },
-        ],
-      } as unknown as FeeStructure));
-      setStructures(mapped);
-      setCategories([
-        { id: "cat-1", name: "Tuition", code: "TUI" } as unknown as FeeCategory,
-        { id: "cat-2", name: "Laboratory", code: "LAB" } as unknown as FeeCategory,
-        { id: "cat-3", name: "Library", code: "LIB" } as unknown as FeeCategory,
-      ]);
-      setPrograms([
-        { id: "prog-cse", name: "B.Tech Computer Science & Engineering", code: "BTECH_CSE" },
-        { id: "prog-ece", name: "B.Tech Electronics & Communication", code: "BTECH_ECE" },
-      ]);
-      setAcademicYears([{ id: "ay-2026-27", name: "2026-2027" }]);
-      setSemesters([
-        { id: "sem-5", name: "Semester 5" },
-        { id: "sem-6", name: "Semester 6" },
-      ]);
+    } catch (err: unknown) {
+      showToast({
+        title: "Error Loading Fee Structures",
+        message: err instanceof Error ? err.message : "Unable to retrieve fee structures",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  const handleAddItem = () => {
-    setFeeItems([
-      ...feeItems,
+  const openWizard = () => {
+    setCurrentStep(1);
+    setWizardName("B.Tech Standard Tuition Scheme");
+    setWizardCode(`FS-2026-${Date.now().toString().slice(-4)}`);
+    setWizardProgram(PROGRAMS[0]);
+    setWizardAcademicYear("2026-2027");
+    setWizardSemester(5);
+    setWizardNotes("Draft fee structure created for departmental review.");
+    setWizardComponents([
+      { id: "c-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
+      { id: "c-2", title: "Laboratory & Computing Levy", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
+      { id: "c-3", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
+    ]);
+    setWizardOpen(true);
+  };
+
+  const handleAddComponent = () => {
+    setWizardComponents((prev) => [
+      ...prev,
       {
-        category_id: categories[0]?.id || "",
-        name: "",
-        amount: 0,
-        is_optional: false,
-        sequence: feeItems.length + 1,
+        id: `c-${Date.now()}`,
+        title: "Campus Development & Student Welfare",
+        categoryName: categories[0]?.name || "Development Fee",
+        amount: 5000,
+        isMandatory: true,
       },
     ]);
   };
 
-  const handleRemoveItem = (index: number) => {
-    setFeeItems(feeItems.filter((_, i) => i !== index));
+  const handleRemoveComponent = (idx: number) => {
+    if (wizardComponents.length <= 1) {
+      showToast({ title: "Validation Error", message: "At least one component is required.", type: "error" });
+      return;
+    }
+    setWizardComponents((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const handleItemChange = (index: number, field: string, value: unknown) => {
-    const updated = [...feeItems];
-    updated[index] = { ...updated[index], [field]: value };
-    setFeeItems(updated);
-  };
+  const grossCalculated = useMemo(() => {
+    return wizardComponents.reduce((acc, c) => acc + (c.amount || 0), 0);
+  }, [wizardComponents]);
 
-  const calculateTotal = () => {
-    return feeItems.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
-  };
-
-  const handleCreateStructure = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveDraft = async () => {
     try {
-      setSubmitting(true);
-      setFormError(null);
-
-      if (!name.trim()) throw new Error("Fee structure name is required.");
-      if (!programId) throw new Error("Please select a target program.");
-      if (!academicYearId) throw new Error("Please select an academic year.");
-      if (feeItems.length === 0) throw new Error("At least one fee head item is required.");
-
-      for (const item of feeItems) {
-        if (!item.category_id) throw new Error("Every line item must have a category.");
-        if (!item.name.trim()) throw new Error("Every line item must have a description/name.");
-        if (Number(item.amount) <= 0) throw new Error("Item amount must be greater than zero.");
-      }
-
-      await apiFetch("/api/v1/finance/fee-structures", {
-        method: "POST",
-        body: JSON.stringify({
-          name: name.trim(),
-          program_id: programId,
-          academic_year_id: academicYearId,
-          semester_id: semesterId || undefined,
-          quota_type: quotaType,
-          items: feeItems.map((item, idx) => ({
-            category_id: item.category_id,
-            name: item.name.trim(),
-            amount: Number(item.amount),
-            is_optional: item.is_optional,
-            sequence: idx + 1,
-          })),
-        }),
-      });
-
-      setShowCreateModal(false);
-      setName("");
-      await loadData();
-    } catch {
+      setSaving(true);
       await financeService.createFeeStructure({
-        name: name.trim(),
-        totalAnnualFee: calculateTotal(),
+        code: wizardCode,
+        name: wizardName,
+        program: wizardProgram,
+        academicYear: wizardAcademicYear,
+        semester: wizardSemester,
+        components: wizardComponents,
+        grossTotal: grossCalculated,
+        notes: wizardNotes,
       });
-      setShowCreateModal(false);
-      setName("");
-      await loadData();
+
+      showToast({
+        title: "Draft Saved",
+        message: "Fee Structure saved in DRAFT state. Awaiting formal approval.",
+        type: "success",
+      });
+      setWizardOpen(false);
+      loadData();
+    } catch (err: unknown) {
+      showToast({
+        title: "Save Failed",
+        message: err instanceof Error ? err.message : "Unable to save fee structure",
+        type: "error",
+      });
     } finally {
-      setSubmitting(false);
+      setSaving(false);
     }
   };
 
-  const handleStatusTransition = async (structureId: string, action: "approve" | "activate" | "retire") => {
-    try {
-      await apiFetch(`/api/v1/finance/fee-structures/${structureId}/${action}`, {
-        method: "POST",
-      });
-      await loadData();
-    } catch {
-      const targetStatus: FeeStructureStatus =
-        action === "approve" ? "APPROVED" : action === "activate" ? "ACTIVE" : "RETIRED";
-      setStructures((prev) =>
-        prev.map((s) => (s.id === structureId ? { ...s, status: targetStatus } : s))
-      );
-    }
-  };
+  const filteredStructures = useMemo(() => {
+    return structures.filter((s) => {
+      const matchesSearch =
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.program.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === "ALL" || s.status === statusFilter;
+      const matchesProgram = programFilter === "ALL" || s.program === programFilter;
+      return matchesSearch && matchesStatus && matchesProgram;
+    });
+  }, [structures, searchQuery, statusFilter, programFilter]);
 
-  const formatCurrency = (amount: number | string | undefined) => {
-    const num = typeof amount === "string" ? parseFloat(amount) : (amount ?? 0);
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  };
+  const activeCount = structures.filter((s) => s.status === "ACTIVE").length;
+  const pendingCount = structures.filter((s) => s.status === "PENDING_APPROVAL").length;
+  const totalStudents = structures.reduce((acc, s) => acc + (s.totalStudentsAssigned || 0), 0);
 
-  const getStatusBadge = (status: FeeStructureStatus | string) => {
+  const getStatusBadge = (status: FeeStructureStatus) => {
     switch (status) {
       case "ACTIVE":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300";
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>;
+      case "PENDING_APPROVAL":
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">Pending Approval</span>;
       case "APPROVED":
-        return "bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300";
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Approved</span>;
+      case "DRAFT":
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">Draft</span>;
       case "RETIRED":
-        return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300";
-      default:
-        return "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300";
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">Retired</span>;
     }
   };
 
-  return (
-    <div className="space-y-8">
-      {/* Breadcrumb & Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+  const columns: ColumnDef<FeeStructure>[] = [
+    {
+      id: "code",
+      header: "Scheme Code",
+      accessorKey: "code",
+      sortable: true,
+      cell: (row) => (
+        <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+          {row.code}
+        </span>
+      ),
+    },
+    {
+      id: "name",
+      header: "Structure & Program",
+      accessorKey: "name",
+      sortable: true,
+      cell: (row) => (
         <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
-              Finance Hub
+          <Link
+            href={`/app/finance/fee-structures/${row.id}`}
+            className="font-medium text-slate-200 hover:text-indigo-400 transition-colors"
+          >
+            {row.name}
+          </Link>
+          <p className="text-xs text-slate-400">
+            {row.program} • Semester {row.semester} ({row.academicYear})
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "components",
+      header: "Components",
+      cell: (row) => (
+        <span className="text-xs text-slate-300">
+          {row.components.length} heads
+        </span>
+      ),
+    },
+    {
+      id: "total",
+      header: "Gross Total",
+      accessorKey: "grossTotal",
+      sortable: true,
+      cell: (row) => (
+        <span className="font-mono text-xs font-semibold text-slate-200">
+          {formatMoney(row.grossTotal)}
+        </span>
+      ),
+    },
+    {
+      id: "students",
+      header: "Assigned",
+      cell: (row) => (
+        <span className="text-xs text-slate-300">
+          {row.totalStudentsAssigned || 0} students
+        </span>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorKey: "status",
+      sortable: true,
+      cell: (row) => getStatusBadge(row.status),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: (row) => (
+        <div className="flex items-center gap-2">
+          <Link href={`/app/finance/fee-structures/${row.id}`}>
+            <Button variant="ghost" size="sm" className="h-7 text-xs text-slate-300 hover:text-white">
+              <Eye className="h-3.5 w-3.5 mr-1" />
+              View
+            </Button>
+          </Link>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
+            <Link href="/app/finance" className="hover:text-slate-200 transition-colors">
+              Finance
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Fee Structures</span>
+            <span className="text-slate-200">Fee Structures</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Fee Structures Matrix & Versioning
+          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <Layers className="h-6 w-6 text-indigo-400" />
+            Fee Structures Directory
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Define programmatic fee templates for academic terms, quotas, and tuition slabs.
+          <p className="mt-1 text-xs text-slate-400 max-w-2xl">
+            Configure academic, laboratory, examination, and hostel billing schedules. Structures follow strict approval lifecycles before student fee assignment.
           </p>
         </div>
 
-        {canManage && (
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-emerald-700 transition"
-          >
-            + Create Fee Structure
-          </button>
-        )}
+        <div className="flex items-center gap-3">
+          <Button variant="primary" size="sm" onClick={openWizard} className="gap-1.5 text-xs">
+            <Plus className="h-3.5 w-3.5" />
+            Configure Fee Structure
+          </Button>
+        </div>
       </div>
 
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          <p className="font-semibold">Unable to load Fee Structures</p>
-          <p className="mt-0.5">{error}</p>
-        </div>
-      )}
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <StatCard
+          title="Active Fee Schedules"
+          value={activeCount}
+          description="In-effect for academic billing"
+          icon={<CheckCircle2 className="h-5 w-5 text-emerald-400" />}
+        />
+        <StatCard
+          title="Pending Approval"
+          value={pendingCount}
+          description="Awaiting Senate ratification"
+          icon={<Clock className="h-5 w-5 text-amber-400" />}
+        />
+        <StatCard
+          title="Assigned Students"
+          value={totalStudents}
+          description="Total enrolled billing accounts"
+          icon={<Layers className="h-5 w-5 text-indigo-400" />}
+        />
+      </div>
 
-      {/* Fee Structures Grid */}
-      {loading ? (
-        <div className="text-center py-16 text-slate-500">Loading fee structures...</div>
-      ) : structures.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
-          <p className="text-sm font-medium text-slate-900 dark:text-white">No fee structures configured.</p>
-          <p className="mt-1 text-xs text-slate-500">Create your first fee structure to start assigning student billing obligations.</p>
-          {canManage && (
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="mt-4 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
-            >
-              + Create Template
-            </button>
-          )}
+      {/* Filters Toolbar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+          <Input
+            placeholder="Search code, title, program..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 h-9 text-xs bg-slate-950/60 border-slate-800 text-slate-200"
+          />
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {structures.map((s) => (
-            <div
-              key={s.id}
-              className="rounded-xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-4">
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Select
+            value={programFilter}
+            onChange={(e) => setProgramFilter(e.target.value)}
+            className="h-9 text-xs w-56 bg-slate-950/60 border-slate-800 text-slate-200"
+          >
+            <option value="ALL">All Academic Programs</option>
+            {PROGRAMS.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </Select>
+
+          <Select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="h-9 text-xs w-36 bg-slate-950/60 border-slate-800 text-slate-200"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="ACTIVE">Active</option>
+            <option value="PENDING_APPROVAL">Pending Approval</option>
+            <option value="APPROVED">Approved</option>
+            <option value="DRAFT">Draft</option>
+            <option value="RETIRED">Retired</option>
+          </Select>
+        </div>
+      </div>
+
+      {/* Structures DataGrid */}
+      <DataGrid
+        data={filteredStructures}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        loading={loading}
+        emptyState={
+          <div className="py-12 text-center">
+            <Layers className="mx-auto h-10 w-10 text-slate-600 mb-2" />
+            <p className="text-sm font-semibold text-slate-300">No Fee Structures Found</p>
+            <p className="text-xs text-slate-500 mt-1">Try resetting search criteria or configure a new fee structure.</p>
+          </div>
+        }
+      />
+
+      {/* 6-Step Guided Creation Modal */}
+      <Dialog open={wizardOpen} onOpenChange={setWizardOpen}>
+        <DialogContent className="max-w-2xl bg-slate-900 border-slate-800 text-slate-200">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-white flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Layers className="h-5 w-5 text-indigo-400" />
+                Configure Fee Structure Wizard
+              </span>
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                Step {currentStep} of 6
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Step Indicator Bar */}
+          <div className="grid grid-cols-6 gap-1 py-1">
+            {[1, 2, 3, 4, 5, 6].map((s) => (
+              <div
+                key={s}
+                className={`h-1.5 rounded-full transition-all ${
+                  s === currentStep
+                    ? "bg-indigo-500"
+                    : s < currentStep
+                    ? "bg-emerald-500"
+                    : "bg-slate-800"
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="py-3">
+            {/* Step 1: Program & Academic Period */}
+            {currentStep === 1 && (
+              <div className="space-y-4 animate-fade-in">
+                <h3 className="text-sm font-semibold text-white">Step 1: Program & Academic Context</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Structure Name <span className="text-rose-400">*</span>
+                    </label>
+                    <Input
+                      value={wizardName}
+                      onChange={(e) => setWizardName(e.target.value)}
+                      placeholder="e.g. B.Tech Computer Science Semester 5 Standard Fee Scheme"
+                      className="h-8 text-xs bg-slate-950 border-slate-800"
+                    />
+                  </div>
+
                   <div>
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${getStatusBadge(
-                        s.status
-                      )}`}
-                    >
-                      {s.status} (v{s.version})
-                    </span>
-                    <h2 className="mt-2 text-lg font-bold text-slate-900 dark:text-white">{s.name}</h2>
-                    <p className="text-xs text-slate-500">
-                      Quota: <span className="font-medium text-slate-700 dark:text-slate-300">{s.quota_type}</span>
-                    </p>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Scheme Code <span className="text-rose-400">*</span>
+                    </label>
+                    <Input
+                      value={wizardCode}
+                      onChange={(e) => setWizardCode(e.target.value.toUpperCase())}
+                      className="h-8 text-xs font-mono uppercase bg-slate-950 border-slate-800"
+                    />
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-400">Total Fee</span>
-                    <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                      {formatCurrency(s.total_amount)}
-                    </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Academic Year
+                    </label>
+                    <Select
+                      value={wizardAcademicYear}
+                      onChange={(e) => setWizardAcademicYear(e.target.value)}
+                      className="h-8 text-xs bg-slate-950 border-slate-800"
+                    >
+                      <option value="2026-2027">2026-2027</option>
+                      <option value="2025-2026">2025-2026</option>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Academic Program
+                    </label>
+                    <Select
+                      value={wizardProgram}
+                      onChange={(e) => setWizardProgram(e.target.value)}
+                      className="h-8 text-xs bg-slate-950 border-slate-800"
+                    >
+                      {PROGRAMS.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Semester
+                    </label>
+                    <Select
+                      value={wizardSemester.toString()}
+                      onChange={(e) => setWizardSemester(parseInt(e.target.value, 10))}
+                      className="h-8 text-xs bg-slate-950 border-slate-800"
+                    >
+                      {SEMESTERS.map((sem) => (
+                        <option key={sem} value={sem}>
+                          Semester {sem}
+                        </option>
+                      ))}
+                    </Select>
                   </div>
                 </div>
-
-                {/* Line Items Breakdown */}
-                <div className="mt-5 border-t border-slate-100 pt-4 dark:border-slate-800">
-                  <h4 className="text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Itemized Heads</h4>
-                  <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-                    {s.items?.map((item) => (
-                      <div key={item.id} className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800/50">
-                        <span>
-                          {item.name} {item.is_optional && <span className="text-slate-400">(Optional)</span>}
-                        </span>
-                        <span className="font-mono font-medium">{formatCurrency(item.amount)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              {canManage && (
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-2 dark:border-slate-800">
-                  {s.status === "DRAFT" && (
-                    <button
-                      onClick={() => handleStatusTransition(s.id, "approve")}
-                      className="px-3 py-1.5 text-xs font-medium bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 transition dark:bg-sky-950/60 dark:text-sky-300"
-                    >
-                      Approve
-                    </button>
-                  )}
-                  {s.status === "APPROVED" && (
-                    <button
-                      onClick={() => handleStatusTransition(s.id, "activate")}
-                      className="px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
-                    >
-                      Activate for Billing
-                    </button>
-                  )}
-                  {s.status === "ACTIVE" && (
-                    <button
-                      onClick={() => handleStatusTransition(s.id, "retire")}
-                      className="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition dark:bg-slate-800 dark:text-slate-300"
-                    >
-                      Retire Version
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Create Fee Structure Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 border border-slate-200 dark:border-slate-800 my-8">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Create Fee Structure Template</h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xl font-bold"
-              >
-                ×
-              </button>
-            </div>
-
-            {formError && (
-              <div className="mt-4 rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
-                {formError}
               </div>
             )}
 
-            <form onSubmit={handleCreateStructure} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                  Template Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. B.Tech Computer Science 2026-27 Regular"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Program *
-                  </label>
-                  <select
-                    required
-                    value={programId}
-                    onChange={(e) => setProgramId(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="">Select Program</option>
-                    {programs.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name} ({p.code})
-                      </option>
-                    ))}
-                  </select>
+            {/* Step 2: Select Fee Categories / Items */}
+            {currentStep === 2 && (
+              <div className="space-y-3 animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-white">Step 2: Select Fee Categories & Heads</h3>
+                  <Button variant="outline" size="sm" onClick={handleAddComponent} className="h-7 text-xs gap-1">
+                    <Plus className="h-3 w-3" />
+                    Add Head
+                  </Button>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Academic Year *
-                  </label>
-                  <select
-                    required
-                    value={academicYearId}
-                    onChange={(e) => setAcademicYearId(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="">Select Year</option>
-                    {academicYears.map((ay) => (
-                      <option key={ay.id} value={ay.id}>
-                        {ay.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Semester (Optional)
-                  </label>
-                  <select
-                    value={semesterId}
-                    onChange={(e) => setSemesterId(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="">All Semesters</option>
-                    {semesters.map((sem) => (
-                      <option key={sem.id} value={sem.id}>
-                        {sem.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
-                    Quota Type
-                  </label>
-                  <select
-                    value={quotaType}
-                    onChange={(e) => setQuotaType(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="GENERAL">GENERAL</option>
-                    <option value="MANAGEMENT">MANAGEMENT</option>
-                    <option value="GOVERNMENT">GOVERNMENT</option>
-                    <option value="NRI">NRI</option>
-                    <option value="MERIT">MERIT</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Fee Heads Array */}
-              <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
-                    Fee Line Items
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleAddItem}
-                    className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-                  >
-                    + Add Head
-                  </button>
-                </div>
-
-                <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-                  {feeItems.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <select
-                        value={item.category_id}
-                        onChange={(e) => handleItemChange(idx, "category_id", e.target.value)}
-                        className="w-1/3 rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {wizardComponents.map((comp, idx) => (
+                    <div
+                      key={comp.id}
+                      className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950 border border-slate-800"
+                    >
+                      <span className="font-mono text-xs text-slate-500 w-6">#{idx + 1}</span>
+                      <Input
+                        value={comp.title}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setWizardComponents((prev) =>
+                            prev.map((c, i) => (i === idx ? { ...c, title: val } : c))
+                          );
+                        }}
+                        className="h-8 text-xs flex-1 bg-slate-900 border-slate-800"
+                        placeholder="Component Title"
+                      />
+                      <Select
+                        value={comp.categoryName}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setWizardComponents((prev) =>
+                            prev.map((c, i) => (i === idx ? { ...c, categoryName: val } : c))
+                          );
+                        }}
+                        className="h-8 text-xs w-44 bg-slate-900 border-slate-800"
                       >
-                        {categories.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.name}>
+                            {cat.name}
                           </option>
                         ))}
-                      </select>
-
-                      <input
-                        type="text"
-                        placeholder="Description (e.g. Tuition)"
-                        value={item.name}
-                        onChange={(e) => handleItemChange(idx, "name", e.target.value)}
-                        className="flex-1 rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                      />
-
-                      <input
-                        type="number"
-                        placeholder="Amount"
-                        value={item.amount}
-                        onChange={(e) => handleItemChange(idx, "amount", e.target.value)}
-                        className="w-24 rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white font-mono"
-                      />
-
-                      {feeItems.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveItem(idx)}
-                          className="text-slate-400 hover:text-rose-500 px-1 text-base"
-                        >
-                          ×
-                        </button>
-                      )}
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveComponent(idx)}
+                        className="h-8 w-8 p-0 text-slate-500 hover:text-rose-400"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
 
-                <div className="mt-4 flex items-center justify-between font-bold text-sm bg-slate-50 p-3 rounded-lg dark:bg-slate-800">
-                  <span>Total Calculated Amount</span>
-                  <span className="text-emerald-600 dark:text-emerald-400">{formatCurrency(calculateTotal())}</span>
+            {/* Step 3: Configure Amounts */}
+            {currentStep === 3 && (
+              <div className="space-y-3 animate-fade-in">
+                <h3 className="text-sm font-semibold text-white">Step 3: Configure Component Amounts</h3>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {wizardComponents.map((comp, idx) => (
+                    <div
+                      key={comp.id}
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800"
+                    >
+                      <div>
+                        <p className="text-xs font-semibold text-slate-200">{comp.title}</p>
+                        <p className="text-[11px] text-slate-400">{comp.categoryName}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-slate-400">₹</span>
+                        <Input
+                          type="number"
+                          min="0"
+                          value={comp.amount.toString()}
+                          onChange={(e) => {
+                            const val = parseFloat(e.target.value) || 0;
+                            setWizardComponents((prev) =>
+                              prev.map((c, i) => (i === idx ? { ...c, amount: val } : c))
+                            );
+                          }}
+                          className="h-8 text-xs w-32 font-mono text-right bg-slate-900 border-slate-800"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-slate-800">
+                  <span className="text-xs font-semibold text-slate-400">Gross Total Calculation:</span>
+                  <span className="font-mono text-sm font-bold text-emerald-400">
+                    {formatMoney(grossCalculated)}
+                  </span>
                 </div>
               </div>
+            )}
 
-              {/* Submit Actions */}
-              <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50"
-                >
-                  {submitting ? "Saving..." : "Save Draft Structure"}
-                </button>
+            {/* Step 4: Configure Applicability */}
+            {currentStep === 4 && (
+              <div className="space-y-3 animate-fade-in">
+                <h3 className="text-sm font-semibold text-white">Step 4: Configure Applicability Rules</h3>
+                <p className="text-xs text-slate-400">
+                  Designate mandatory vs optional levies (e.g. hostel accommodation or student bus transit).
+                </p>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {wizardComponents.map((comp, idx) => (
+                    <div
+                      key={comp.id}
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800"
+                    >
+                      <div>
+                        <p className="text-xs font-semibold text-slate-200">{comp.title}</p>
+                        <p className="font-mono text-[11px] text-slate-400">{formatMoney(comp.amount)}</p>
+                      </div>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={comp.isMandatory}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setWizardComponents((prev) =>
+                              prev.map((c, i) => (i === idx ? { ...c, isMandatory: checked } : c))
+                            );
+                          }}
+                          className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className="text-xs font-medium text-slate-300">
+                          {comp.isMandatory ? "Mandatory" : "Optional / Opt-in"}
+                        </span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </form>
+            )}
+
+            {/* Step 5: Notes & Documentation */}
+            {currentStep === 5 && (
+              <div className="space-y-3 animate-fade-in">
+                <h3 className="text-sm font-semibold text-white">Step 5: Governance Notes & Effective Date</h3>
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Administrative Notes & Committee Sanction
+                  </label>
+                  <Textarea
+                    rows={4}
+                    value={wizardNotes}
+                    onChange={(e) => setWizardNotes(e.target.value)}
+                    placeholder="Reference Senate approval minutes, statutory guidelines, or installment policies..."
+                    className="text-xs bg-slate-950 border-slate-800"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 6: Review & Save Draft */}
+            {currentStep === 6 && (
+              <div className="space-y-3 animate-fade-in">
+                <h3 className="text-sm font-semibold text-white">Step 6: Review Scheme Specifications</h3>
+                <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Scheme Code:</span>
+                    <span className="font-mono font-bold text-indigo-400">{wizardCode}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Program:</span>
+                    <span className="text-slate-200">{wizardProgram} (Sem {wizardSemester})</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Academic Year:</span>
+                    <span className="text-slate-200">{wizardAcademicYear}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Billing Heads:</span>
+                    <span className="text-slate-200">{wizardComponents.length} components</span>
+                  </div>
+                  <div className="flex justify-between border-t border-slate-800 pt-2 font-bold text-sm">
+                    <span className="text-white">Gross Scheme Total:</span>
+                    <span className="font-mono text-emerald-400">{formatMoney(grossCalculated)}</span>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>
+                    This structure will be saved in <strong>DRAFT</strong> status. Per institutional governance, it will not be activated or billed to students until formally approved.
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+
+          <DialogFooter className="pt-3 border-t border-slate-800 flex justify-between items-center sm:justify-between">
+            <div>
+              {currentStep > 1 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentStep((s) => s - 1)}
+                  className="gap-1 text-xs"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  Previous
+                </Button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={() => setWizardOpen(false)}>
+                Cancel
+              </Button>
+              {currentStep < 6 ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setCurrentStep((s) => s + 1)}
+                  className="gap-1 text-xs"
+                >
+                  Next Step
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSaveDraft}
+                  disabled={saving}
+                  className="gap-1 text-xs"
+                >
+                  {saving ? "Saving Draft..." : "Save Structure Draft"}
+                </Button>
+              )}
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

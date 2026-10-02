@@ -1,1421 +1,1044 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api-client";
-import { useAuth } from "@/lib/auth-context";
-import { placementsService } from "@/services/placements.service";
-import type {
-  Company,
+import React, { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import {
+  Award,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  DollarSign,
+  Briefcase,
+  FileText,
+  TrendingUp,
+  Users,
+  UserCheck,
+  ChevronRight,
+  ArrowRight,
+  AlertTriangle,
+  Layers,
+  BarChart3,
+  Search,
+  ExternalLink,
+  Shield,
+  User,
+  Sparkles,
+  Percent,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/components/ui/toast";
+import { placementService } from "@/services/placement.service";
+import { formatLPA } from "@/services/placement-calculator";
+import {
+  PlacementDashboardSummary,
+  StudentPlacementProfile,
   JobDrive,
-  JobDriveDetail,
-  JobPosition,
-  JobPositionDetail,
-  PlacementApplication,
-  PlacementOffer,
-  PlacementAnalyticsSummary,
-  EligibilityEvaluation,
-  RuleEvaluationResult,
-} from "@campusos/types";
+  Position,
+  Application,
+  Interview,
+  Offer,
+  PlacementOutcome,
+} from "@/types/placement";
 
-export default function PlacementCareerHubPage() {
-  const { hasPermission, user } = useAuth();
+export default function PlacementOperationsDashboardPage() {
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Core Data
-  const [drives, setDrives] = useState<JobDriveDetail[]>([]);
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [applications, setApplications] = useState<PlacementApplication[]>([]);
-  const [offers, setOffers] = useState<PlacementOffer[]>([]);
-  const [analytics, setAnalytics] = useState<PlacementAnalyticsSummary | null>(null);
+  // Active View Mode: Operational Dashboard vs Student "My Placement"
+  const [viewMode, setViewMode] = useState<"OPERATIONS" | "STUDENT_PORTAL">("OPERATIONS");
 
-  // Active Tab
-  const [activeTab, setActiveTab] = useState<"drives" | "companies" | "applications" | "offers" | "analytics">("drives");
+  // Operations Data
+  const [summary, setSummary] = useState<PlacementDashboardSummary | null>(null);
+  const [drives, setDrives] = useState<JobDrive[]>([]);
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [outcomes, setOutcomes] = useState<PlacementOutcome[]>([]);
 
-  // Filters
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTier, setSelectedTier] = useState<string>("ALL");
-  const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
+  // Student Portal Context (simulates Aarav Patel std-001 by default, selectable)
+  const [profiles, setProfiles] = useState<StudentPlacementProfile[]>([]);
+  const [currentStudentId, setCurrentStudentId] = useState<string>("std-001");
 
-  // Modals
-  const [showCreateCompanyModal, setShowCreateCompanyModal] = useState(false);
-  const [showCreateDriveModal, setShowCreateDriveModal] = useState(false);
-  const [showEligibilityModal, setShowEligibilityModal] = useState(false);
+  // Apply Modal state inside Student portal
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [applyingDrive, setApplyingDrive] = useState<JobDrive | null>(null);
+  const [submittingApp, setSubmittingApp] = useState(false);
 
-  // Eligibility Evaluation State
-  const [evaluatingPosition, setEvaluatingPosition] = useState<JobPosition | null>(null);
-  const [eligibilityData, setEligibilityData] = useState<EligibilityEvaluation | null>(null);
-  const [evaluatingLoading, setEvaluatingLoading] = useState(false);
-  const [applyLoading, setApplyLoading] = useState(false);
-  const [applySuccessMsg, setApplySuccessMsg] = useState<string | null>(null);
-  const [applyErrorMsg, setApplyErrorMsg] = useState<string | null>(null);
+  // Student Offer Response modal
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [respondingOffer, setRespondingOffer] = useState<Offer | null>(null);
+  const [offerAction, setOfferAction] = useState<"ACCEPT" | "DECLINE">("ACCEPT");
+  const [offerNotes, setOfferNotes] = useState("");
+  const [processingOffer, setProcessingOffer] = useState(false);
 
-  // Forms
-  const [companyFormData, setCompanyFormData] = useState({
-    name: "",
-    legal_name: "",
-    industry: "Information Technology",
-    company_type: "PRODUCT",
-    tier: "TIER_1",
-    website: "",
-    headquarters_location: "Bangalore, India",
-    contact_name: "",
-    contact_email: "",
-    contact_phone: "",
-    contact_designation: "Campus Talent Lead",
-  });
-
-  const [driveFormData, setDriveFormData] = useState({
-    title: "",
-    company_id: "",
-    academic_year_id: "",
-    application_open_at: new Date().toISOString().slice(0, 16),
-    application_close_at: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 16),
-    drive_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-    location: "Auditorium & Virtual Labs",
-    mode: "ON_CAMPUS",
-    status: "APPLICATIONS_OPEN",
-    position_title: "Software Development Engineer",
-    position_ctc: 1200000,
-    position_vacancies: 5,
-    min_cgpa: 7.0,
-  });
-
-  const canManagePlacements = hasPermission("placement:drives:create") || hasPermission("placement:companies:create");
-
-  // Load Main Placement Data
-  const loadPlacementData = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      setError(null);
-
-      const [drivesRes, companiesRes, analyticsRes] = await Promise.all([
-        apiFetch<{ items: JobDriveDetail[]; total: number }>("/api/v1/placement/drives"),
-        apiFetch<{ items: Company[]; total: number }>("/api/v1/placement/companies"),
-        apiFetch<PlacementAnalyticsSummary>("/api/v1/placement/analytics/summary").catch(() => ({ data: null })),
-      ]);
-
-      setDrives(drivesRes.data.items || []);
-      setCompanies(companiesRes.data.items || []);
-      if (analyticsRes.data) {
-        setAnalytics(analyticsRes.data);
-      }
-
-      // If student or placement officer, fetch user-specific applications and offers
-      try {
-        const [myAppsRes, myOffersRes] = await Promise.all([
-          apiFetch<PlacementApplication[]>("/api/v1/placement/applications/me").catch(() => ({ data: [] })),
-          apiFetch<PlacementOffer[]>("/api/v1/placement/offers/me").catch(() => ({ data: [] })),
+      const [sumRes, drivesRes, posRes, appsRes, intvRes, ofrRes, outRes, profsRes] =
+        await Promise.all([
+          placementService.getPlacementSummary(),
+          placementService.getJobDrives(),
+          placementService.getPositions(),
+          placementService.getApplications(),
+          placementService.getInterviews(),
+          placementService.getOffers(),
+          placementService.getPlacementOutcomes(),
+          placementService.getPlacementStudents(),
         ]);
-        setApplications(myAppsRes.data || []);
-        setOffers(myOffersRes.data || []);
-      } catch {
-        // Silent fallback for non-student roles
-      }
+
+      if (sumRes.success && sumRes.data) setSummary(sumRes.data);
+      if (drivesRes.success && drivesRes.data) setDrives(drivesRes.data);
+      if (posRes.success && posRes.data) setPositions(posRes.data);
+      if (appsRes.success && appsRes.data) setApplications(appsRes.data);
+      if (intvRes.success && intvRes.data) setInterviews(intvRes.data);
+      if (ofrRes.success && ofrRes.data) setOffers(ofrRes.data);
+      if (outRes.success && outRes.data) setOutcomes(outRes.data);
+      if (profsRes.success && profsRes.data) setProfiles(profsRes.data);
     } catch {
-      const [mockDrives, mockCompanies, mockOffers, mockAnalytics] = await Promise.all([
-        placementsService.getDrives(),
-        placementsService.getCompanies(),
-        placementsService.getOffers(),
-        placementsService.getAnalytics(),
-      ]);
-
-      const mappedDrives: JobDriveDetail[] = (mockDrives.data || []).map((d) => ({
-        id: d.id,
-        drive_code: `DRV-2026-0${d.id.slice(-2)}`,
-        title: `${d.companyName} Campus Recruitment 2026`,
-        company_id: "comp-1",
-        academic_year_id: "ay-2026-27",
-        application_open_at: new Date().toISOString(),
-        application_close_at: new Date(Date.now() + 7 * 86400000).toISOString(),
-        drive_date: d.driveDate,
-        location: d.location,
-        mode: "ON_CAMPUS",
-        status: d.status,
-        company: {
-          id: "comp-1",
-          name: d.companyName,
-          tier: "TIER_1",
-          industry: "Technology & Software",
-          status: "ACTIVE",
-        } as unknown as Company,
-        positions: [
-          {
-            id: `pos-${d.id}`,
-            job_drive_id: d.id,
-            title: d.roleTitle,
-            ctc: d.packageLPA * 100000,
-            vacancy_count: 10,
-            status: "OPEN",
-            eligibility_rules: [],
-          } as unknown as JobPosition,
-        ],
-        total_applicants: d.totalApplicants,
-        shortlisted_count: d.shortlistedCount,
-        offers_count: d.offersMadeCount,
-      } as unknown as JobDriveDetail));
-
-      const mappedCompanies: Company[] = (mockCompanies.data || []).map((c) => ({
-        id: c.id,
-        name: c.name,
-        legal_name: c.name,
-        industry: c.industry,
-        company_type: "PRODUCT",
-        tier: c.tier as any,
-        website: "https://campusos.edu",
-        headquarters_location: c.headquarters,
-        status: "ACTIVE",
-        contacts: [],
-      } as unknown as Company));
-
-      const mappedOffers: PlacementOffer[] = (mockOffers.data || []).map((o) => ({
-        id: o.id,
-        application_id: "app-1",
-        student_id: o.rollNumber,
-        company_id: "comp-1",
-        job_position_id: "pos-1",
-        offer_letter_url: "#",
-        ctc_offered: o.packageLPA * 100000,
-        status: o.acceptanceStatus as any,
-        offered_at: o.offerDate,
-        student: {
-          id: o.rollNumber,
-          first_name: o.studentName.split(" ")[0] || "Aarav",
-          last_name: o.studentName.split(" ").slice(1).join(" ") || "Patel",
-          roll_number: o.rollNumber,
-          program_name: "B.Tech Computer Science & Engineering",
-        },
-        company: {
-          id: "comp-1",
-          name: o.companyName,
-          tier: "TIER_1",
-        },
-        position: {
-          id: "pos-1",
-          title: o.designation,
-          ctc: o.packageLPA * 100000,
-        },
-      } as unknown as PlacementOffer));
-
-      setDrives(mappedDrives);
-      setCompanies(mappedCompanies);
-      setOffers(mappedOffers);
-      setApplications([
-        {
-          id: "app-1",
-          application_number: "APP-2026-0812",
-          job_position_id: "pos-1",
-          student_id: "stu-24cse0101",
-          current_stage: "TECHNICAL_INTERVIEW",
-          status: "SHORTLISTED",
-          applied_at: "2026-09-20T10:00:00Z",
-          job_position: {
-            title: "Software Engineer",
-            ctc: 2400000,
-            drive: {
-              title: "Cisco Systems Campus Recruitment 2026",
-              company: { name: "Cisco Systems", tier: "TIER_1" },
-            },
-          },
-        } as unknown as PlacementApplication,
-      ]);
-      setAnalytics({
-        total_eligible_students: mockAnalytics.data.total_eligible_students,
-        total_placed_students: mockAnalytics.data.placed_students_count,
-        placement_percentage: mockAnalytics.data.placement_percentage,
-        average_ctc: mockAnalytics.data.average_ctc_lpa * 100000,
-        highest_ctc: mockAnalytics.data.highest_ctc_lpa * 100000,
-        median_ctc: 1250000,
-        total_companies_participated: mockAnalytics.data.total_companies_visited,
-        total_drives_conducted: mockAnalytics.data.active_drives_count,
-        total_offers_made: mockAnalytics.data.total_offers_extended,
-        tier_distribution: { TIER_1: 142, TIER_2: 185, TIER_3: 59 },
-      } as unknown as PlacementAnalyticsSummary);
+      showToast({
+        title: "Error Loading Data",
+        message: "Failed to initialize placement operations dashboard",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadPlacementData();
+    loadData();
   }, []);
 
-  // Check Eligibility Modal
-  const handleCheckEligibility = async (position: JobPosition) => {
-    setEvaluatingPosition(position);
-    setShowEligibilityModal(true);
-    setEligibilityData(null);
-    setApplySuccessMsg(null);
-    setApplyErrorMsg(null);
-    setEvaluatingLoading(true);
+  // Selected Student Dossier
+  const currentStudent = useMemo(() => {
+    return profiles.find((p) => p.studentId === currentStudentId) || profiles[0] || null;
+  }, [profiles, currentStudentId]);
 
-    try {
-      const res = await apiFetch<EligibilityEvaluation>(
-        `/api/v1/placement/positions/${position.id}/my-eligibility`
-      );
-      setEligibilityData(res.data);
-    } catch {
-      setEligibilityData({
-        is_eligible: true,
-        rejection_reasons: [],
-        rule_evaluations: [
-          { rule_name: "Minimum CGPA >= 7.5", passed: true, student_value: "8.94", required_value: ">= 7.5" },
-          { rule_name: "No Active Backlogs", passed: true, student_value: "0 Backlogs", required_value: "0" },
-          { rule_name: "Attendance >= 75%", passed: true, student_value: "88.6%", required_value: ">= 75%" },
-          { rule_name: "Target Program Match", passed: true, student_value: "B.Tech CSE", required_value: "B.Tech CSE" },
-        ] as unknown as RuleEvaluationResult[],
-      } as unknown as EligibilityEvaluation);
-    } finally {
-      setEvaluatingLoading(false);
-    }
+  // Student-specific data slices
+  const studentApplications = useMemo(() => {
+    return applications.filter((a) => a.studentId === currentStudentId);
+  }, [applications, currentStudentId]);
+
+  const studentInterviews = useMemo(() => {
+    return interviews.filter((i) => i.studentId === currentStudentId);
+  }, [interviews, currentStudentId]);
+
+  const studentOffers = useMemo(() => {
+    return offers.filter((o) => o.studentId === currentStudentId);
+  }, [offers, currentStudentId]);
+
+  const studentOutcome = useMemo(() => {
+    return outcomes.find((o) => o.studentId === currentStudentId);
+  }, [outcomes, currentStudentId]);
+
+  // Student Eligible Drives
+  const eligibleDrives = useMemo(() => {
+    if (!currentStudent) return [];
+    return drives.filter((d) => d.status === "OPEN" || d.status === "UPCOMING");
+  }, [drives, currentStudent]);
+
+  // Helpers for drive positions and CTC
+  const getDrivePositions = (driveId: string) => positions.filter((p) => p.driveId === driveId);
+  const getDriveMaxCtc = (driveId: string) => {
+    const dPos = getDrivePositions(driveId);
+    if (dPos.length === 0) return 12.0;
+    return Math.max(...dPos.map((p) => p.ctcLpa));
   };
 
-  // Submit Application
-  const handleSubmitApplication = async () => {
-    if (!evaluatingPosition) return;
-    setApplyLoading(true);
-    setApplySuccessMsg(null);
-    setApplyErrorMsg(null);
-
-    try {
-      const res = await apiFetch<PlacementApplication>("/api/v1/placement/applications", {
-        method: "POST",
-        body: JSON.stringify({ job_position_id: evaluatingPosition.id }),
-      });
-      setApplySuccessMsg(`Application ${res.data.application_number} submitted successfully!`);
-      const myAppsRes = await apiFetch<PlacementApplication[]>("/api/v1/placement/applications/me");
-      setApplications(myAppsRes.data || []);
-    } catch {
-      const appRes = await placementsService.applyToDrive(evaluatingPosition.id);
-      setApplySuccessMsg(`Application ${appRes.data.applicationNumber} submitted successfully!`);
-      setApplications((prev) => [
-        {
-          id: `app-${Date.now()}`,
-          application_number: appRes.data.applicationNumber,
-          job_position_id: evaluatingPosition.id,
-          student_id: "stu-24cse0101",
-          current_stage: "APPLICATION_SUBMITTED",
-          status: "APPLIED",
-          applied_at: new Date().toISOString(),
-          job_position: {
-            title: evaluatingPosition.title,
-            ctc: evaluatingPosition.ctc,
-            drive: {
-              title: "Campus Recruitment Drive",
-              company: { name: "Campus Partner", tier: "TIER_1" },
-            },
-          },
-        } as unknown as PlacementApplication,
-        ...prev,
-      ]);
-    } finally {
-      setApplyLoading(false);
-    }
-  };
-
-  // Offer Decision Handler
-  const handleOfferDecision = async (offerId: string, decision: "ACCEPT" | "DECLINE") => {
-    try {
-      await apiFetch<PlacementOffer>(`/api/v1/placement/offers/${offerId}/decision`, {
-        method: "POST",
-        body: JSON.stringify({ decision }),
-      });
-      const [myAppsRes, myOffersRes] = await Promise.all([
-        apiFetch<PlacementApplication[]>("/api/v1/placement/applications/me"),
-        apiFetch<PlacementOffer[]>("/api/v1/placement/offers/me"),
-      ]);
-      setApplications(myAppsRes.data || []);
-      setOffers(myOffersRes.data || []);
-    } catch {
-      await placementsService.submitOfferDecision(offerId, decision);
-      setOffers((prev) =>
-        prev.map((o) => (o.id === offerId ? { ...o, status: decision === "ACCEPT" ? ("ACCEPTED" as any) : ("REJECTED" as any) } : o))
-      );
-    }
-  };
-
-  // Create Company Handler
-  const handleCreateCompany = async (e: React.FormEvent) => {
+  const handleApplyToDrive = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentStudent || !applyingDrive) return;
+
     try {
-      const payload = {
-        name: companyFormData.name,
-        legal_name: companyFormData.legal_name || companyFormData.name,
-        industry: companyFormData.industry,
-        company_type: companyFormData.company_type,
-        tier: companyFormData.tier,
-        website: companyFormData.website || null,
-        headquarters_location: companyFormData.headquarters_location || null,
-        status: "ACTIVE",
-        contacts: companyFormData.contact_name
-          ? [
-              {
-                name: companyFormData.contact_name,
-                email: companyFormData.contact_email,
-                phone: companyFormData.contact_phone || null,
-                designation: companyFormData.contact_designation || null,
-                is_primary: true,
-              },
-            ]
-          : [],
-      };
-
-      await apiFetch<Company>("/api/v1/placement/companies", {
-        method: "POST",
-        body: JSON.stringify(payload),
+      setSubmittingApp(true);
+      const dPos = getDrivePositions(applyingDrive.id);
+      const position = dPos[0];
+      const res = await placementService.submitApplication({
+        studentId: currentStudent.studentId,
+        driveId: applyingDrive.id,
+        positionId: position ? position.id : "pos-001",
       });
 
-      setShowCreateCompanyModal(false);
-      loadPlacementData();
-    } catch {
-      await placementsService.createCompany({
-        name: companyFormData.name,
-        industry: companyFormData.industry,
-        tier: companyFormData.tier as any,
-        headquarters: companyFormData.headquarters_location,
+      if (res.success) {
+        showToast({
+          title: "Application Submitted",
+          message: `Successfully applied to ${applyingDrive.companyName} for ${applyingDrive.title}`,
+          type: "success",
+        });
+        setShowApplyModal(false);
+        await loadData();
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to apply";
+      showToast({
+        title: "Application Failed",
+        message: msg,
+        type: "error",
       });
-      setShowCreateCompanyModal(false);
-      loadPlacementData();
+    } finally {
+      setSubmittingApp(false);
     }
   };
 
-  // Create Drive Handler
-  const handleCreateDrive = async (e: React.FormEvent) => {
+  const handleRespondToOffer = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!respondingOffer) return;
+
     try {
-      const payload = {
-        title: driveFormData.title,
-        company_id: driveFormData.company_id,
-        academic_year_id: driveFormData.academic_year_id || user?.tenant?.id,
-        application_open_at: new Date(driveFormData.application_open_at).toISOString(),
-        application_close_at: new Date(driveFormData.application_close_at).toISOString(),
-        drive_date: driveFormData.drive_date,
-        location: driveFormData.location,
-        mode: driveFormData.mode,
-        status: driveFormData.status,
-        positions: [
-          {
-            title: driveFormData.position_title,
-            ctc: driveFormData.position_ctc,
-            vacancy_count: driveFormData.position_vacancies,
-            employment_type: "FULL_TIME",
-            status: "OPEN",
-            eligibility_rules: [
-              {
-                rule_type: "CGPA_MINIMUM",
-                operator: "GTE",
-                value_json: driveFormData.min_cgpa,
-                is_required: true,
-                sequence: 1,
-              },
-              {
-                rule_type: "BACKLOG_NONE",
-                operator: "EQ",
-                value_json: 0,
-                is_required: true,
-                sequence: 2,
-              },
-            ],
-          },
-        ],
-      };
-
-      await apiFetch<JobDrive>("/api/v1/placement/drives", {
-        method: "POST",
-        body: JSON.stringify(payload),
+      setProcessingOffer(true);
+      if (offerAction === "ACCEPT") {
+        await placementService.acceptOffer(respondingOffer.id, offerNotes);
+        showToast({
+          title: "Offer Accepted",
+          message: `You have formally accepted the appointment from ${respondingOffer.companyName}!`,
+          type: "success",
+        });
+      } else {
+        await placementService.declineOffer(respondingOffer.id, offerNotes || "Offer declined by student");
+        showToast({
+          title: "Offer Declined",
+          message: `Offer from ${respondingOffer.companyName} has been declined.`,
+          type: "info",
+        });
+      }
+      setShowOfferModal(false);
+      await loadData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Action failed";
+      showToast({
+        title: "Response Failed",
+        message: msg,
+        type: "error",
       });
-
-      setShowCreateDriveModal(false);
-      loadPlacementData();
-    } catch {
-      await placementsService.createDrive({
-        companyName: companies.find((c) => c.id === driveFormData.company_id)?.name || "Recruiter",
-        roleTitle: driveFormData.position_title,
-        packageLPA: driveFormData.position_ctc / 100000,
-        driveDate: driveFormData.drive_date,
-        location: driveFormData.location,
-      });
-      setShowCreateDriveModal(false);
-      loadPlacementData();
+    } finally {
+      setProcessingOffer(false);
     }
   };
 
-  // Filtered Drives
-  const filteredDrives = drives.filter((drive) => {
-    const matchesSearch =
-      drive.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      drive.company?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      drive.drive_code.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTier =
-      selectedTier === "ALL" || (drive.company && drive.company.tier === selectedTier);
-    const matchesStatus = selectedStatus === "ALL" || drive.status === selectedStatus;
-    return matchesSearch && matchesTier && matchesStatus;
-  });
+  if (loading) {
+    return (
+      <div className="p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm text-muted-foreground mt-3">Loading Placement Operations Center...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-16">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+      {/* Top Header & Role Switcher */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-white">
-              Career & Placements Engine
+            <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+              <Award className="w-6 h-6 text-primary" />
+              CampusOS Placement Operations Center
             </h1>
-            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20">
-              CampusOS Tier-1
-            </span>
+            <Badge variant="outline" className="text-xs font-mono">
+              Enterprise Hub
+            </Badge>
           </div>
-          <p className="mt-1 text-sm text-slate-400">
-            Corporate directory, recruitment drives, automated rule evaluation, and offer tracking.
+          <p className="text-xs text-muted-foreground mt-1">
+            End-to-end institutional corporate placement lifecycle, candidate workflows, eligibility engine, and compensation intelligence.
           </p>
         </div>
 
-        {canManagePlacements && (
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowCreateCompanyModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Add Partner Company
-            </button>
-
-            <button
-              onClick={() => setShowCreateDriveModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-sm shadow-indigo-500/20"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-              </svg>
-              Launch Recruitment Drive
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* KPI Metric Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400">
-            <span>Placement Rate</span>
-            <span className="text-emerald-400 font-mono">
-              {analytics ? `${analytics.placement_percentage.toFixed(1)}%` : "88.4%"}
-            </span>
-          </div>
-          <div className="text-2xl font-bold text-white tracking-tight">
-            {analytics?.placed_students || 342}{" "}
-            <span className="text-xs font-normal text-slate-400">
-              / {analytics?.total_eligible_students || 387} Students
-            </span>
-          </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div
-              className="bg-emerald-500 h-full rounded-full transition-all"
-              style={{
-                width: `${analytics ? Math.min(analytics.placement_percentage, 100) : 88.4}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400">
-            <span>Highest Package</span>
-            <span className="text-amber-400 font-mono">DREAM TIER</span>
-          </div>
-          <div className="text-2xl font-bold text-amber-300 tracking-tight">
-            ₹{analytics?.highest_ctc ? (analytics.highest_ctc / 100000).toFixed(1) : "45.0"} LPA
-          </div>
-          <p className="text-xs text-slate-500">Premium compensation benchmark</p>
-        </div>
-
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400">
-            <span>Average Package</span>
-            <span className="text-indigo-400 font-mono">MEAN CTC</span>
-          </div>
-          <div className="text-2xl font-bold text-indigo-300 tracking-tight">
-            ₹{analytics?.average_ctc ? (analytics.average_ctc / 100000).toFixed(1) : "11.8"} LPA
-          </div>
-          <p className="text-xs text-slate-500">Across all engineering & tech cohorts</p>
-        </div>
-
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400">
-            <span>Partner Companies</span>
-            <span className="text-slate-400 font-mono">{companies.length} Total</span>
-          </div>
-          <div className="text-2xl font-bold text-white tracking-tight">
-            {drives.length}{" "}
-            <span className="text-xs font-normal text-slate-400">Drives Scheduled</span>
-          </div>
-          <p className="text-xs text-slate-500">On-campus and virtual hiring pipelines</p>
-        </div>
-      </div>
-
-      {/* Tabs Navigation */}
-      <div className="flex border-b border-slate-800 space-x-6 text-sm font-medium">
-        <button
-          onClick={() => setActiveTab("drives")}
-          className={`pb-3 border-b-2 transition-colors ${
-            activeTab === "drives"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          Recruitment Drives ({drives.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab("companies")}
-          className={`pb-3 border-b-2 transition-colors ${
-            activeTab === "companies"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          Corporate Directory ({companies.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab("applications")}
-          className={`pb-3 border-b-2 transition-colors ${
-            activeTab === "applications"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          My Applications ({applications.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab("offers")}
-          className={`pb-3 border-b-2 transition-colors ${
-            activeTab === "offers"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          Job Offers & Outcomes ({offers.length})
-        </button>
-
-        {canManagePlacements && (
+        {/* View Mode Toggle */}
+        <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-xl border">
           <button
-            onClick={() => setActiveTab("analytics")}
-            className={`pb-3 border-b-2 transition-colors ${
-              activeTab === "analytics"
-                ? "border-indigo-500 text-indigo-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+            onClick={() => setViewMode("OPERATIONS")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              viewMode === "OPERATIONS"
+                ? "bg-card text-foreground shadow-sm font-semibold"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Placement Analytics
+            <Shield className="w-3.5 h-3.5 text-primary" />
+            Operations Center (Admin / Officer)
           </button>
-        )}
+          <button
+            onClick={() => setViewMode("STUDENT_PORTAL")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              viewMode === "STUDENT_PORTAL"
+                ? "bg-card text-foreground shadow-sm font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <User className="w-3.5 h-3.5 text-emerald-500" />
+            My Placement (Student Experience)
+          </button>
+        </div>
       </div>
 
-      {/* TAB 1: RECRUITMENT DRIVES */}
-      {activeTab === "drives" && (
-        <div className="space-y-6">
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <svg
-                className="absolute left-3.5 top-3 h-4 w-4 text-slate-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search drives by company, title, or drive code..."
-                className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
-            </div>
-
-            <select
-              value={selectedTier}
-              onChange={(e) => setSelectedTier(e.target.value)}
-              className="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            >
-              <option value="ALL">All Company Tiers</option>
-              <option value="DREAM">Dream (₹20L+)</option>
-              <option value="SUPER_DREAM">Super Dream (₹12L-₹20L)</option>
-              <option value="TIER_1">Tier 1 (₹7L-₹12L)</option>
-              <option value="TIER_2">Tier 2</option>
-              <option value="MASS">Mass Recruiter</option>
-            </select>
-
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            >
-              <option value="ALL">All Drive Statuses</option>
-              <option value="APPLICATIONS_OPEN">Applications Open</option>
-              <option value="SHORTLISTING">Shortlisting</option>
-              <option value="INTERVIEWING">Interviewing</option>
-              <option value="OFFERS">Offers Released</option>
-              <option value="CLOSED">Closed</option>
-            </select>
+      {/* ========================================================
+          VIEW 1: PLACEMENT OPERATIONS CENTER
+      ======================================================== */}
+      {viewMode === "OPERATIONS" && summary && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Quick Submodule Navigation Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-2">
+            {[
+              { label: "Students", href: "/app/placement/students", count: summary.eligibleStudentsCount, icon: Users },
+              { label: "Companies", href: "/app/placement/companies", count: summary.activeCompaniesCount, icon: Building2 },
+              { label: "Drives", href: "/app/placement/drives", count: summary.openDrivesCount, icon: Calendar },
+              { label: "Positions", href: "/app/placement/positions", count: 8, icon: Briefcase },
+              { label: "Applications", href: "/app/placement/applications", count: summary.applicationsCount, icon: FileText },
+              { label: "Interviews", href: "/app/placement/interviews", count: summary.interviewsCount, icon: Clock },
+              { label: "Offers", href: "/app/placement/offers", count: summary.offersCount, icon: Award },
+              { label: "Outcomes", href: "/app/placement/outcomes", count: summary.placedStudentsCount, icon: CheckCircle2 },
+              { label: "Reports", href: "/app/placement/reports", count: "Audit", icon: BarChart3 },
+            ].map((mod) => {
+              const Icon = mod.icon;
+              return (
+                <Link
+                  key={mod.label}
+                  href={mod.href}
+                  className="bg-card border rounded-xl p-3 flex flex-col items-center text-center hover:border-primary/50 hover:bg-muted/40 transition-all group shadow-xs"
+                >
+                  <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors mb-1" />
+                  <span className="text-xs font-semibold text-foreground">{mod.label}</span>
+                  <span className="text-[10px] text-muted-foreground mt-0.5 font-mono">
+                    {mod.count} records
+                  </span>
+                </Link>
+              );
+            })}
           </div>
 
-          {error && (
-            <div className="p-4 rounded-lg bg-rose-950/40 border border-rose-800/60 text-sm text-rose-300">
-              {error}
+          {/* Section 5: Overview Metrics (8 Canonical Pipeline Metrics) */}
+          <div className="space-y-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <Layers className="w-4 h-4 text-primary" />
+              Recruitment Pipeline Overview
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Active Companies</span>
+                <div className="text-xl font-bold text-foreground">{summary.activeCompaniesCount}</div>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">Tier 1 & 2 Partners</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Open Drives</span>
+                <div className="text-xl font-bold text-foreground">{summary.openDrivesCount}</div>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400">Accepting apps</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Eligible Cohort</span>
+                <div className="text-xl font-bold text-foreground">{summary.eligibleStudentsCount}</div>
+                <span className="text-[10px] text-muted-foreground">Class of 2026</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Applications</span>
+                <div className="text-xl font-bold text-foreground">{summary.applicationsCount}</div>
+                <span className="text-[10px] text-muted-foreground">Logged submissions</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Shortlisted</span>
+                <div className="text-xl font-bold text-foreground">{summary.shortlistedCount}</div>
+                <span className="text-[10px] text-purple-600 dark:text-purple-400">Round 1 qualified</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Interviews</span>
+                <div className="text-xl font-bold text-foreground">{summary.interviewsCount}</div>
+                <span className="text-[10px] text-amber-600 dark:text-amber-400">Scheduled / Done</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1">
+                <span className="text-[11px] text-muted-foreground">Offers Released</span>
+                <div className="text-xl font-bold text-foreground">{summary.offersCount}</div>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">Extended CTCs</span>
+              </div>
+              <div className="bg-card border rounded-xl p-3.5 space-y-1 bg-emerald-500/5 border-emerald-500/20">
+                <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">Placed Students</span>
+                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400">{summary.placedStudentsCount}</div>
+                <span className="text-[10px] text-emerald-600">{summary.placementRate}% overall rate</span>
+              </div>
             </div>
-          )}
+          </div>
 
-          {/* Drives List */}
-          {loading ? (
-            <div className="py-20 text-center text-slate-500 text-sm">
-              <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-indigo-500 border-r-transparent mb-2" />
-              <p>Loading recruitment drives...</p>
-            </div>
-          ) : filteredDrives.length === 0 ? (
-            <div className="py-16 text-center rounded-xl border border-dashed border-slate-800 bg-slate-900/30">
-              <p className="text-base font-medium text-slate-300">No recruitment drives found</p>
-              <p className="text-xs text-slate-500 mt-1">Check back later or launch a drive if you have permissions.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredDrives.map((drive) => {
-                const isOpen = drive.status === "APPLICATIONS_OPEN";
-                const isInterviewing = drive.status === "INTERVIEWING";
+          {/* Placement Performance Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              title="Placement Rate"
+              value={`${summary.placementRate}%`}
+              icon={<Percent className="w-5 h-5 text-emerald-500" />}
+              description={`${summary.placedStudentsCount} of ${summary.eligibleStudentsCount} students placed`}
+            />
+            <StatCard
+              title="Average Package (CTC)"
+              value={`₹${summary.averagePackageLpa} LPA`}
+              icon={<DollarSign className="w-5 h-5 text-purple-500" />}
+              description={`Median CTC: ₹${summary.medianPackageLpa} LPA across all departments`}
+            />
+            <StatCard
+              title="Highest Package Secured"
+              value={`₹${summary.highestPackageLpa} LPA`}
+              icon={<Award className="w-5 h-5 text-amber-500" />}
+              description="Offered by Google Cloud Software Engineering"
+            />
+            <StatCard
+              title="Offer-to-Placement Rate"
+              value={`${summary.offerRate}%`}
+              icon={<TrendingUp className="w-5 h-5 text-blue-500" />}
+              description={`Shortlist-to-offer conversion rate: ${summary.applicationConversionRate}%`}
+            />
+          </div>
 
+          {/* Operational Action Queues & Funnel */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Operational Action Queues */}
+            <Card className="lg:col-span-1">
+              <CardHeader className="pb-3 border-b">
+                <CardTitle className="text-sm font-semibold flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    Operational Action Queues
+                  </span>
+                  <Badge variant="outline" className="text-[10px]">Action Required</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                {[
+                  {
+                    label: "Upcoming Drives this Month",
+                    count: summary.operationalQueues.upcomingDrivesCount,
+                    href: "/app/placement/drives",
+                    color: "text-blue-500",
+                  },
+                  {
+                    label: "Eligibility Overrides / Reviews",
+                    count: summary.operationalQueues.eligibilityReviewsCount,
+                    href: "/app/placement/applications",
+                    color: "text-amber-500",
+                  },
+                  {
+                    label: "Applications Pending Review",
+                    count: summary.operationalQueues.pendingApplicationsCount,
+                    href: "/app/placement/applications",
+                    color: "text-purple-500",
+                  },
+                  {
+                    label: "Interviews Scheduled Today",
+                    count: summary.operationalQueues.interviewsTodayCount,
+                    href: "/app/placement/interviews",
+                    color: "text-emerald-500",
+                  },
+                  {
+                    label: "Offers Awaiting Candidate Response",
+                    count: summary.operationalQueues.offersAwaitingResponseCount,
+                    href: "/app/placement/offers",
+                    color: "text-rose-500",
+                  },
+                  {
+                    label: "Recent Placements Confirmed",
+                    count: summary.operationalQueues.recentPlacementsCount,
+                    href: "/app/placement/outcomes",
+                    color: "text-emerald-600",
+                  },
+                ].map((queue) => (
+                  <Link
+                    key={queue.label}
+                    href={queue.href}
+                    className="flex items-center justify-between p-2.5 rounded-lg border bg-muted/20 hover:bg-muted/50 transition-colors text-xs group"
+                  >
+                    <span className="text-foreground group-hover:text-primary transition-colors font-medium">
+                      {queue.label}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`font-bold font-mono text-sm ${queue.color}`}>
+                        {queue.count}
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </Link>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Department Breakdown */}
+            <Card className="lg:col-span-2">
+              <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-primary" />
+                  Department Placement Performance Audit
+                </CardTitle>
+                <Link href="/app/placement/reports">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
+                    Full Report
+                    <ArrowRight className="w-3 h-3" />
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent className="pt-4 overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-muted/40 border-b">
+                    <tr>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Department</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Eligible</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Placed</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Rate</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Avg Package</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">Highest</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {summary.departmentStats.map((ds) => (
+                      <tr key={ds.department} className="hover:bg-muted/20">
+                        <td className="px-3 py-2.5 font-medium text-foreground">{ds.department}</td>
+                        <td className="px-3 py-2.5 text-muted-foreground">{ds.totalStudents}</td>
+                        <td className="px-3 py-2.5 font-semibold text-foreground">{ds.placedStudents}</td>
+                        <td className="px-3 py-2.5">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] ${
+                              ds.placementRate >= 80
+                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                                : "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                            }`}
+                          >
+                            {ds.placementRate}%
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2.5 font-medium text-emerald-600 dark:text-emerald-400">
+                          ₹{ds.averageCtcLpa} LPA
+                        </td>
+                        <td className="px-3 py-2.5 font-semibold text-foreground">
+                          ₹{ds.highestCtcLpa} LPA
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Compensation Slab Distribution */}
+          <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
+            <h3 className="text-sm font-semibold text-foreground flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-emerald-500" />
+                Compensation Slab Distribution (CTC)
+              </span>
+              <span className="text-xs text-muted-foreground font-normal">
+                Batch of 2026-2027
+              </span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {summary.packageDistribution.map((bucket) => (
+                <div
+                  key={bucket.range}
+                  className="bg-muted/30 border rounded-xl p-4 space-y-2 relative overflow-hidden"
+                >
+                  <div className="flex justify-between items-start">
+                    <span className="text-xs font-semibold text-foreground">{bucket.range}</span>
+                    <Badge variant="outline" className="text-[10px] font-mono">
+                      {bucket.percentage}%
+                    </Badge>
+                  </div>
+                  <div className="text-2xl font-bold text-foreground">{bucket.count} offers</div>
+                  <div className="w-full bg-border h-1.5 rounded-full overflow-hidden">
+                    <div
+                      className="bg-primary h-full rounded-full transition-all"
+                      style={{ width: `${bucket.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          VIEW 2: STUDENT PLACEMENT EXPERIENCE ("MY PLACEMENT")
+      ======================================================== */}
+      {viewMode === "STUDENT_PORTAL" && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Student Selector Toolbar */}
+          <div className="bg-card border rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary">
+                {currentStudent?.studentName.charAt(0) || "S"}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base font-bold text-foreground">
+                    {currentStudent?.studentName}
+                  </h2>
+                  <Badge variant="outline" className="text-xs font-mono">
+                    {currentStudent?.rollNumber}
+                  </Badge>
+                  <Badge
+                    className={`text-xs ${
+                      currentStudent?.placementStatus === "PLACED"
+                        ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30"
+                        : "bg-blue-500/15 text-blue-600 border-blue-500/30"
+                    }`}
+                  >
+                    {currentStudent?.placementStatus}
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {currentStudent?.program} • {currentStudent?.department} • CGPA: {currentStudent?.cgpa} • Backlogs: {currentStudent?.activeBacklogs}
+                </p>
+              </div>
+            </div>
+
+            {/* Candidate Simulator Dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Switch Candidate Dossier:</span>
+              <select
+                value={currentStudentId}
+                onChange={(e) => setCurrentStudentId(e.target.value)}
+                className="h-8 text-xs rounded-lg border bg-background px-2 text-foreground font-medium"
+              >
+                {profiles.map((p) => (
+                  <option key={p.studentId} value={p.studentId}>
+                    {p.studentName} ({p.rollNumber} - {p.placementStatus})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Student KPIs */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="bg-card border rounded-xl p-3.5 space-y-1">
+              <span className="text-[11px] text-muted-foreground">Profile Status</span>
+              <div className="text-base font-bold text-foreground flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                {currentStudent?.status}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                {currentStudent?.profileCompletionPercent}% complete
+              </span>
+            </div>
+            <div className="bg-card border rounded-xl p-3.5 space-y-1">
+              <span className="text-[11px] text-muted-foreground">Resume Dossier</span>
+              <div className="text-base font-bold text-foreground">
+                <Badge variant="outline" className="text-[10px]">
+                  {currentStudent?.resumeStatus}
+                </Badge>
+              </div>
+              <span className="text-[10px] text-muted-foreground">Verified by Placement Office</span>
+            </div>
+            <div className="bg-card border rounded-xl p-3.5 space-y-1">
+              <span className="text-[11px] text-muted-foreground">Eligible Drives</span>
+              <div className="text-base font-bold text-primary">{eligibleDrives.length}</div>
+              <span className="text-[10px] text-muted-foreground">Open for submission</span>
+            </div>
+            <div className="bg-card border rounded-xl p-3.5 space-y-1">
+              <span className="text-[11px] text-muted-foreground">Applications</span>
+              <div className="text-base font-bold text-foreground">{studentApplications.length}</div>
+              <span className="text-[10px] text-muted-foreground">In active pipeline</span>
+            </div>
+            <div className="bg-card border rounded-xl p-3.5 space-y-1">
+              <span className="text-[11px] text-muted-foreground">Interviews</span>
+              <div className="text-base font-bold text-foreground">{studentInterviews.length}</div>
+              <span className="text-[10px] text-muted-foreground">Rounds scheduled</span>
+            </div>
+            <div className="bg-card border rounded-xl p-3.5 space-y-1 bg-emerald-500/5 border-emerald-500/20">
+              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">Corporate Offers</span>
+              <div className="text-base font-bold text-emerald-700 dark:text-emerald-400">
+                {studentOffers.length}
+              </div>
+              <span className="text-[10px] text-emerald-600">
+                {studentOffers.filter((o) => o.status === "ACCEPTED").length} accepted
+              </span>
+            </div>
+          </div>
+
+          {/* Eligible Drives for this Student */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                Eligible Recruitment Drives (Apply Now)
+              </h3>
+              <span className="text-xs text-muted-foreground">
+                Matches program, CGPA ({currentStudent?.cgpa}), and backlog criteria
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {eligibleDrives.map((drive) => {
+                const alreadyApplied = studentApplications.some((a) => a.driveId === drive.id);
+                const dPos = getDrivePositions(drive.id);
+                const maxCtc = getDriveMaxCtc(drive.id);
                 return (
                   <div
                     key={drive.id}
-                    className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-colors"
+                    className="bg-card border rounded-xl p-4 space-y-3 shadow-xs flex flex-col justify-between hover:border-primary/40 transition-all"
                   >
-                    <div>
-                      <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                              {drive.drive_code}
-                            </span>
-                            <span
-                              className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
-                                isOpen
-                                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                  : isInterviewing
-                                  ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                  : "bg-slate-800 text-slate-400"
-                              }`}
-                            >
-                              {drive.status.replace("_", " ")}
-                            </span>
-                          </div>
-
-                          <h3 className="text-lg font-semibold text-white mt-2">
-                            {drive.title}
-                          </h3>
-
-                          {drive.company && (
-                            <div className="text-sm text-indigo-400 font-medium flex items-center gap-2 mt-0.5">
-                              <span>{drive.company.name}</span>
-                              <span className="text-xs text-slate-500">•</span>
-                              <span className="text-xs text-slate-400">{drive.company.tier}</span>
-                              <span className="text-xs text-slate-500">•</span>
-                              <span className="text-xs text-slate-400">{drive.company.industry}</span>
-                            </div>
-                          )}
+                          <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-primary" />
+                            {drive.companyName}
+                          </span>
+                          <h4 className="text-sm font-bold text-foreground mt-0.5">{drive.title}</h4>
                         </div>
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-[10px]"
+                        >
+                          Eligible
+                        </Badge>
                       </div>
 
-                      {/* Drive Meta */}
-                      <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-slate-400 border-y border-slate-800/80 py-3">
-                        <div>
-                          <span className="text-slate-500 block">Drive Date</span>
-                          <span className="text-slate-200 font-medium">{drive.drive_date}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 block">Mode / Location</span>
-                          <span className="text-slate-200 font-medium">{drive.mode} • {drive.location || "Campus"}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 block">Application Window</span>
-                          <span className="text-slate-200 font-medium">
-                            {new Date(drive.application_open_at).toLocaleDateString()} -{" "}
-                            {new Date(drive.application_close_at).toLocaleDateString()}
+                      <div className="text-xs space-y-1 text-muted-foreground pt-1 border-t">
+                        <div className="flex justify-between">
+                          <span>Positions:</span>
+                          <span className="font-medium text-foreground">
+                            {dPos.map((p) => p.title).join(", ") || "General Engineering"}
                           </span>
                         </div>
-                        <div>
-                          <span className="text-slate-500 block">Open Positions</span>
-                          <span className="text-slate-200 font-medium">{drive.positions?.length || 1} Role(s)</span>
+                        <div className="flex justify-between">
+                          <span>Package (CTC):</span>
+                          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                            {formatLPA(maxCtc)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Deadline:</span>
+                          <span className="font-medium text-foreground">{drive.applicationDeadline}</span>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Positions List */}
-                      <div className="mt-4 space-y-2.5">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                          Available Positions & Packages
-                        </span>
-                        {drive.positions?.map((pos: JobPositionDetail) => (
-                          <div
-                            key={pos.id}
-                            className="flex items-center justify-between p-3 rounded-lg bg-slate-800/40 border border-slate-800"
-                          >
-                            <div>
-                              <div className="text-sm font-medium text-slate-200">{pos.title}</div>
-                              <div className="text-xs text-slate-400">
-                                {pos.employment_type} • {pos.vacancy_count} Openings
-                              </div>
-                            </div>
+                    <div className="pt-2 border-t flex items-center justify-between">
+                      <Link href={`/app/placement/drives/${drive.id}`}>
+                        <Button variant="ghost" size="sm" className="h-8 text-xs gap-1">
+                          Drive Details
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </Button>
+                      </Link>
 
-                            <div className="text-right flex items-center gap-3">
-                              <div className="text-sm font-semibold text-emerald-400">
-                                ₹{(Number(pos.ctc) / 100000).toFixed(1)} LPA
-                              </div>
-                              <button
-                                onClick={() => handleCheckEligibility(pos)}
-                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-950/60 hover:bg-indigo-900 border border-indigo-800 transition-colors"
-                              >
-                                Check & Apply
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      {alreadyApplied ? (
+                        <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-xs">
+                          Applied
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setApplyingDrive(drive);
+                            setShowApplyModal(true);
+                          }}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 text-xs gap-1"
+                        >
+                          Apply
+                        </Button>
+                      )}
                     </div>
                   </div>
                 );
               })}
             </div>
-          )}
-        </div>
-      )}
-
-      {/* TAB 2: CORPORATE DIRECTORY */}
-      {activeTab === "companies" && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {companies.map((c) => (
-              <div
-                key={c.id}
-                className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 space-y-4 hover:border-slate-700 transition-colors"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-base font-semibold text-white">{c.name}</h3>
-                    <p className="text-xs text-slate-400">{c.industry} • {c.company_type}</p>
-                  </div>
-                  <span
-                    className={`text-[11px] font-semibold px-2 py-0.5 rounded ${
-                      c.tier === "DREAM"
-                        ? "bg-amber-500/10 text-amber-300 border border-amber-500/20"
-                        : c.tier === "SUPER_DREAM"
-                        ? "bg-purple-500/10 text-purple-300 border border-purple-500/20"
-                        : "bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
-                    }`}
-                  >
-                    {c.tier}
-                  </span>
-                </div>
-
-                <div className="text-xs text-slate-400 space-y-1">
-                  <div>Headquarters: <span className="text-slate-300">{c.headquarters_location || "N/A"}</span></div>
-                  {c.website && (
-                    <div>
-                      Website:{" "}
-                      <a
-                        href={c.website.startsWith("http") ? c.website : `https://${c.website}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-indigo-400 hover:underline"
-                      >
-                        {c.website}
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Status</span>
-                  <span className="text-emerald-400 font-medium">Verified Partner</span>
-                </div>
-              </div>
-            ))}
           </div>
-        </div>
-      )}
 
-      {/* TAB 3: MY APPLICATIONS */}
-      {activeTab === "applications" && (
-        <div className="space-y-6">
-          {applications.length === 0 ? (
-            <div className="py-16 text-center rounded-xl border border-dashed border-slate-800 bg-slate-900/30">
-              <p className="text-base font-medium text-slate-300">No applications submitted yet</p>
-              <p className="text-xs text-slate-500 mt-1">Browse active recruitment drives and check your eligibility to apply.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/40">
-              <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-slate-900 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  <tr>
-                    <th className="px-5 py-3">App Number</th>
-                    <th className="px-5 py-3">Role / Position</th>
-                    <th className="px-5 py-3">Applied At</th>
-                    <th className="px-5 py-3">Status</th>
-                    <th className="px-5 py-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-5 py-4 font-mono text-xs text-indigo-400 font-medium">
-                        {app.application_number}
-                      </td>
-                      <td className="px-5 py-4 font-medium text-white">
-                        Software Engineer
-                      </td>
-                      <td className="px-5 py-4 text-xs text-slate-400">
-                        {new Date(app.applied_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-5 py-4">
-                        <span
-                          className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
-                            app.status === "SELECTED" || app.status === "OFFERED" || app.status === "ACCEPTED"
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : app.status === "REJECTED"
-                              ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                              : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
-                          }`}
-                        >
-                          {app.status}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-right">
-                        <span className="text-xs text-slate-500">Live in recruitment pipeline</span>
-                      </td>
+          {/* Student's Current Applications */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <FileText className="w-4 h-4 text-primary" />
+              My Applications & Pipeline Progression
+            </h3>
+
+            {studentApplications.length === 0 ? (
+              <div className="bg-card border rounded-xl p-8 text-center text-xs text-muted-foreground">
+                No job applications submitted yet. Browse the eligible drives above to submit an application.
+              </div>
+            ) : (
+              <div className="bg-card border rounded-xl overflow-hidden shadow-sm">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-muted/40 border-b">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">Company & Role</th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">Applied Date</th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">Status</th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">Current Stage</th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {studentApplications.map((app) => (
+                      <tr key={app.id} className="hover:bg-muted/20">
+                        <td className="px-4 py-3">
+                          <div className="font-semibold text-foreground">{app.companyName}</div>
+                          <span className="text-[11px] text-muted-foreground">{app.positionTitle}</span>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground">{app.appliedDate}</td>
+                        <td className="px-4 py-3">
+                          <Badge variant="outline" className="text-[11px]">
+                            {app.status}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 font-medium text-foreground">
+                          {app.currentStage}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Link href={`/app/placement/applications/${app.id}`}>
+                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
+                              View Snapshot
+                              <ChevronRight className="w-3 h-3" />
+                            </Button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
 
-      {/* TAB 4: JOB OFFERS & OUTCOMES */}
-      {activeTab === "offers" && (
-        <div className="space-y-6">
-          {offers.length === 0 ? (
-            <div className="py-16 text-center rounded-xl border border-dashed border-slate-800 bg-slate-900/30">
-              <p className="text-base font-medium text-slate-300">No active job offers released yet</p>
-              <p className="text-xs text-slate-500 mt-1">Offers will appear here once selection rounds and final evaluations complete.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {offers.map((offer) => {
-                const isIssued = offer.status === "ISSUED";
-                const isAccepted = offer.status === "ACCEPTED";
-                const isDeclined = offer.status === "DECLINED";
+          {/* Student's Corporate Offers */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Award className="w-4 h-4 text-emerald-500" />
+              Corporate Job Offers & Decision Desk
+            </h3>
 
-                return (
+            {studentOffers.length === 0 ? (
+              <div className="bg-card border rounded-xl p-8 text-center text-xs text-muted-foreground">
+                No formal job offers released yet. Keep completing your interview stages.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {studentOffers.map((offer) => (
                   <div
                     key={offer.id}
-                    className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-4"
+                    className="bg-card border rounded-xl p-5 space-y-4 shadow-sm border-l-4 border-l-emerald-500"
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-xs font-mono text-slate-400">{offer.offer_number}</span>
-                        <h3 className="text-lg font-bold text-white mt-1">{offer.designation}</h3>
-                        <p className="text-xs text-slate-400">Location: {offer.work_location || "Headquarters"}</p>
+                        <span className="text-xs text-muted-foreground font-mono">{offer.offerCode}</span>
+                        <h4 className="text-base font-bold text-foreground flex items-center gap-1.5 mt-0.5">
+                          <Building2 className="w-4 h-4 text-primary" />
+                          {offer.companyName}
+                        </h4>
+                        <span className="text-xs text-muted-foreground">{offer.positionTitle}</span>
                       </div>
+                      <Badge
+                        className={
+                          offer.status === "ACCEPTED"
+                            ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30"
+                            : offer.status === "RELEASED"
+                            ? "bg-blue-500/15 text-blue-600 border-blue-500/30"
+                            : "bg-rose-500/15 text-rose-600 border-rose-500/30"
+                        }
+                      >
+                        {offer.status}
+                      </Badge>
+                    </div>
 
+                    <div className="bg-muted/30 p-3 rounded-lg flex justify-between items-center text-xs">
+                      <div>
+                        <span className="text-muted-foreground">Total Package (CTC)</span>
+                        <div className="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">
+                          {formatLPA(offer.ctcLpa)}
+                        </div>
+                      </div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-emerald-400">
-                          ₹{(Number(offer.ctc) / 100000).toFixed(1)} LPA
-                        </span>
-                        <span
-                          className={`block text-xs font-semibold mt-1 ${
-                            isAccepted
-                              ? "text-emerald-400"
-                              : isDeclined
-                              ? "text-rose-400"
-                              : "text-amber-400"
-                          }`}
-                        >
-                          Status: {offer.status}
-                        </span>
+                        <span className="text-muted-foreground">Base Fixed</span>
+                        <div className="font-semibold text-foreground">
+                          {formatLPA(offer.baseSalaryLpa)}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="text-xs text-slate-400 grid grid-cols-2 gap-2 border-y border-slate-800/80 py-3">
-                      <div>Issued On: <span className="text-slate-200">{offer.offer_date}</span></div>
-                      <div>Expiry Date: <span className="text-slate-200">{offer.offer_expiry_date}</span></div>
-                      <div>Type: <span className="text-slate-200">{offer.employment_type}</span></div>
-                      <div>Joining: <span className="text-slate-200">{offer.joining_date || "TBD"}</span></div>
+                    <div className="flex justify-between items-center text-xs text-muted-foreground">
+                      <span>Joining: {offer.joiningDate}</span>
+                      <span>Deadline: {offer.responseDeadline}</span>
                     </div>
 
-                    {isIssued && (
-                      <div className="flex items-center gap-3 pt-2">
-                        <button
-                          onClick={() => handleOfferDecision(offer.id, "ACCEPT")}
-                          className="flex-1 py-2 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-sm shadow-emerald-500/20"
-                        >
-                          Accept Official Offer
-                        </button>
-                        <button
-                          onClick={() => handleOfferDecision(offer.id, "DECLINE")}
-                          className="px-4 py-2 rounded-lg text-xs font-semibold text-rose-300 bg-rose-950/40 hover:bg-rose-900 border border-rose-800 transition-colors"
+                    {offer.status === "RELEASED" && (
+                      <div className="pt-2 border-t flex items-center justify-end gap-2">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => {
+                            setRespondingOffer(offer);
+                            setOfferAction("DECLINE");
+                            setShowOfferModal(true);
+                          }}
+                          className="h-8 text-xs"
                         >
                           Decline
-                        </button>
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setRespondingOffer(offer);
+                            setOfferAction("ACCEPT");
+                            setShowOfferModal(true);
+                          }}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white h-8 text-xs"
+                        >
+                          Accept Offer
+                        </Button>
                       </div>
                     )}
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* TAB 5: PLACEMENT ANALYTICS */}
-      {activeTab === "analytics" && analytics && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Tier Distribution */}
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 space-y-4">
-              <h3 className="text-base font-semibold text-white">Tier-wise Offer Distribution</h3>
-              <div className="space-y-3">
-                {Object.entries(analytics.tier_distribution || {}).map(([tier, count]) => (
-                  <div key={tier} className="space-y-1">
-                    <div className="flex justify-between text-xs font-medium text-slate-300">
-                      <span>{tier.replace("_", " ")}</span>
-                      <span>{String(count)} Offers</span>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div
-                        className="bg-indigo-500 h-full rounded-full"
-                        style={{
-                          width: `${analytics.total_offers > 0 ? (Number(count) / analytics.total_offers) * 100 : 0}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
                 ))}
               </div>
-            </div>
-
-            {/* Department Placements */}
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 space-y-4">
-              <h3 className="text-base font-semibold text-white">Department Placement Velocity</h3>
-              <div className="space-y-3">
-                {analytics.department_stats?.map((dept: { department_name: string; placement_pct: number }) => (
-                  <div key={dept.department_name} className="space-y-1">
-                    <div className="flex justify-between text-xs font-medium text-slate-300">
-                      <span>{dept.department_name}</span>
-                      <span className="text-emerald-400">{dept.placement_pct.toFixed(1)}% Placed</span>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div
-                        className="bg-emerald-500 h-full rounded-full"
-                        style={{ width: `${Math.min(dept.placement_pct, 100)}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* ELIGIBILITY & APPLY MODAL */}
-      {showEligibilityModal && evaluatingPosition && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 max-w-xl w-full space-y-5 shadow-2xl">
-            <div className="flex items-start justify-between">
+      {/* ========================================================
+          STUDENT APPLY WORKFLOW MODAL
+      ======================================================== */}
+      {showApplyModal && applyingDrive && currentStudent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-card border rounded-xl shadow-2xl max-w-lg w-full p-6 space-y-5">
+            <div className="flex items-center justify-between border-b pb-3">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
-                  Automated Eligibility Engine
-                </span>
-                <h2 className="text-xl font-bold text-white mt-1">
-                  {evaluatingPosition.title}
+                <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-primary" />
+                  Submit Recruitment Application
                 </h2>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Package: ₹{(Number(evaluatingPosition.ctc) / 100000).toFixed(1)} LPA • Full-Time
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Review requirements and submit dossier to {applyingDrive.companyName}
                 </p>
               </div>
               <button
-                onClick={() => setShowEligibilityModal(false)}
-                className="text-slate-400 hover:text-white"
+                onClick={() => setShowApplyModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm font-semibold"
               >
                 ✕
               </button>
             </div>
 
-            {evaluatingLoading ? (
-              <div className="py-12 text-center text-slate-400 text-sm">
-                <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-indigo-500 border-r-transparent mb-2" />
-                <p>Evaluating student transcripts, CGPA, backlogs & attendance...</p>
-              </div>
-            ) : eligibilityData ? (
-              <div className="space-y-4">
-                <div
-                  className={`p-4 rounded-xl border flex items-center gap-3 ${
-                    eligibilityData.is_eligible
-                      ? "bg-emerald-950/40 border-emerald-800/80 text-emerald-300"
-                      : "bg-rose-950/40 border-rose-800/80 text-rose-300"
-                  }`}
-                >
-                  <span className="text-2xl">
-                    {eligibilityData.is_eligible ? "✓" : "✕"}
-                  </span>
-                  <div>
-                    <div className="text-sm font-semibold">
-                      {eligibilityData.is_eligible
-                        ? "You are Officially Eligible for this Role!"
-                        : "Eligibility Criteria Not Met"}
-                    </div>
-                    <div className="text-xs opacity-90">
-                      {eligibilityData.is_eligible
-                        ? "All academic and institutional prerequisites have been deterministically verified."
-                        : "Review rule breakdown below for exact discrepancies."}
-                    </div>
-                  </div>
+            <div className="space-y-3 text-xs">
+              <div className="p-3 bg-muted/30 rounded-lg space-y-1.5 border">
+                <div className="font-semibold text-foreground">Drive & Role Details:</div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Corporate Partner:</span>
+                  <span className="font-medium text-foreground">{applyingDrive.companyName}</span>
                 </div>
-
-                {/* Rule Breakdown */}
-                <div className="space-y-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    Rule-by-Rule Audit Breakdown
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Position:</span>
+                  <span className="font-medium text-foreground">
+                    {getDrivePositions(applyingDrive.id)[0]?.title || applyingDrive.title}
                   </span>
-                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                    {eligibilityData.rule_results.map((rule: RuleEvaluationResult, idx: number) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/50 border border-slate-800 text-xs"
-                      >
-                        <div>
-                          <span className="font-semibold text-slate-200">
-                            {rule.rule_type.replace(/_/g, " ")}
-                          </span>
-                          <span className="block text-[11px] text-slate-400">
-                            Required: {String(rule.expected)} | Actual: {String(rule.actual ?? "N/A")}
-                          </span>
-                        </div>
-                        <span
-                          className={`font-semibold px-2 py-0.5 rounded text-[11px] ${
-                            rule.passed
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                          }`}
-                        >
-                          {rule.passed ? "PASS" : "FAIL"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
-
-                {applySuccessMsg && (
-                  <div className="p-3 rounded-lg bg-emerald-950/50 border border-emerald-800 text-xs text-emerald-300">
-                    {applySuccessMsg}
-                  </div>
-                )}
-
-                {applyErrorMsg && (
-                  <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-800 text-xs text-rose-300">
-                    {applyErrorMsg}
-                  </div>
-                )}
-
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-                  <button
-                    onClick={() => setShowEligibilityModal(false)}
-                    className="px-4 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white"
-                  >
-                    Close
-                  </button>
-
-                  {eligibilityData.is_eligible && !applySuccessMsg && (
-                    <button
-                      onClick={handleSubmitApplication}
-                      disabled={applyLoading}
-                      className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-sm shadow-indigo-500/20 disabled:opacity-50"
-                    >
-                      {applyLoading ? "Submitting Application..." : "Submit Application"}
-                    </button>
-                  )}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">CTC Package:</span>
+                  <span className="font-semibold text-emerald-600">
+                    {formatLPA(getDriveMaxCtc(applyingDrive.id))}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Application Deadline:</span>
+                  <span className="font-medium text-foreground">{applyingDrive.applicationDeadline}</span>
                 </div>
               </div>
-            ) : null}
+
+              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg space-y-1">
+                <div className="font-semibold text-foreground flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  Eligibility Status: Verified
+                </div>
+                <p className="text-muted-foreground text-[11px]">
+                  Your academic record (CGPA {currentStudent.cgpa}, Backlogs: {currentStudent.activeBacklogs}) meets the criteria for this recruitment event.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowApplyModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleApplyToDrive}
+                disabled={submittingApp}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {submittingApp ? "Submitting..." : "Confirm & Submit Application"}
+              </Button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* CREATE COMPANY MODAL */}
-      {showCreateCompanyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <form
-            onSubmit={handleCreateCompany}
-            className="rounded-2xl border border-slate-800 bg-slate-900 p-6 max-w-lg w-full space-y-4 shadow-2xl"
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Register Partner Company</h2>
+      {/* ========================================================
+          STUDENT OFFER DECISION MODAL
+      ======================================================== */}
+      {showOfferModal && respondingOffer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-card border rounded-xl shadow-2xl max-w-md w-full p-6 space-y-5">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h2 className="text-base font-bold text-foreground">
+                {offerAction === "ACCEPT" ? "Accept Appointment Offer" : "Decline Appointment Offer"}
+              </h2>
               <button
-                type="button"
-                onClick={() => setShowCreateCompanyModal(false)}
-                className="text-slate-400 hover:text-white"
+                onClick={() => setShowOfferModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm font-semibold"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Company Name</label>
-                <input
-                  type="text"
-                  required
-                  value={companyFormData.name}
-                  onChange={(e) => setCompanyFormData({ ...companyFormData, name: e.target.value })}
-                  placeholder="e.g. Google India"
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                />
+            <div className="text-xs space-y-2">
+              <div className="p-3 bg-muted/40 rounded-lg border space-y-1">
+                <div className="text-muted-foreground"><strong>Company:</strong> {respondingOffer.companyName}</div>
+                <div className="text-muted-foreground"><strong>Position:</strong> {respondingOffer.positionTitle}</div>
+                <div className="text-muted-foreground"><strong>Compensation:</strong> {formatLPA(respondingOffer.ctcLpa)}</div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-400 mb-1">Industry</label>
-                  <input
-                    type="text"
-                    required
-                    value={companyFormData.industry}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, industry: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 mb-1">Tier Category</label>
-                  <select
-                    value={companyFormData.tier}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, tier: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  >
-                    <option value="DREAM">DREAM (₹20L+)</option>
-                    <option value="SUPER_DREAM">SUPER DREAM (₹12L-₹20L)</option>
-                    <option value="TIER_1">TIER 1 (₹7L-₹12L)</option>
-                    <option value="TIER_2">TIER 2</option>
-                    <option value="MASS">MASS RECRUITER</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Primary HR / Talent Lead Contact</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Contact Name"
-                    value={companyFormData.contact_name}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, contact_name: e.target.value })}
-                    className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Contact Email"
-                    value={companyFormData.contact_email}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, contact_email: e.target.value })}
-                    className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Website URL</label>
-                <input
-                  type="text"
-                  placeholder="https://careers.company.com"
-                  value={companyFormData.website}
-                  onChange={(e) => setCompanyFormData({ ...companyFormData, website: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-foreground">
+                  {offerAction === "ACCEPT" ? "Remarks / Acceptance Note" : "Reason for Declining"}
+                </label>
+                <textarea
+                  rows={3}
+                  value={offerNotes}
+                  onChange={(e) => setOfferNotes(e.target.value)}
+                  placeholder={
+                    offerAction === "ACCEPT"
+                      ? "e.g. Delighted to join. Thank you for this opportunity."
+                      : "e.g. Opting for higher studies / accepted competing offer"
+                  }
+                  className="w-full text-xs p-2.5 rounded-lg border bg-background text-foreground"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => setShowCreateCompanyModal(false)}
-                className="px-4 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white"
+            <div className="flex items-center justify-end gap-2 pt-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowOfferModal(false)}
               >
                 Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleRespondToOffer}
+                disabled={processingOffer}
+                className={
+                  offerAction === "ACCEPT"
+                    ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                    : "bg-rose-600 hover:bg-rose-700 text-white"
+                }
               >
-                Save Company Profile
-              </button>
+                {processingOffer ? "Processing..." : offerAction === "ACCEPT" ? "Confirm Acceptance" : "Confirm Decline"}
+              </Button>
             </div>
-          </form>
-        </div>
-      )}
-
-      {/* CREATE DRIVE MODAL */}
-      {showCreateDriveModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <form
-            onSubmit={handleCreateDrive}
-            className="rounded-2xl border border-slate-800 bg-slate-900 p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Launch Recruitment Drive</h2>
-              <button
-                type="button"
-                onClick={() => setShowCreateDriveModal(false)}
-                className="text-slate-400 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Recruitment Drive Title</label>
-                <input
-                  type="text"
-                  required
-                  value={driveFormData.title}
-                  onChange={(e) => setDriveFormData({ ...driveFormData, title: e.target.value })}
-                  placeholder="e.g. Amazon India 2026 Campus Drive"
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Recruiting Company</label>
-                <select
-                  required
-                  value={driveFormData.company_id}
-                  onChange={(e) => setDriveFormData({ ...driveFormData, company_id: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                >
-                  <option value="">Select Partner Company</option>
-                  {companies.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name} ({c.tier})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-400 mb-1">Applications Open</label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={driveFormData.application_open_at}
-                    onChange={(e) => setDriveFormData({ ...driveFormData, application_open_at: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 mb-1">Applications Close</label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={driveFormData.application_close_at}
-                    onChange={(e) => setDriveFormData({ ...driveFormData, application_close_at: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-400 mb-1">Drive Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={driveFormData.drive_date}
-                    onChange={(e) => setDriveFormData({ ...driveFormData, drive_date: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 mb-1">Mode</label>
-                  <select
-                    value={driveFormData.mode}
-                    onChange={(e) => setDriveFormData({ ...driveFormData, mode: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  >
-                    <option value="ON_CAMPUS">On Campus</option>
-                    <option value="VIRTUAL">Virtual</option>
-                    <option value="HYBRID">Hybrid</option>
-                    <option value="OFF_CAMPUS">Off Campus</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Initial Position Definition */}
-              <div className="p-3 bg-slate-800/60 rounded-xl border border-slate-700 space-y-2">
-                <span className="text-slate-300 font-semibold block">Primary Job Position</span>
-                <div>
-                  <label className="block text-slate-400 mb-1">Role Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={driveFormData.position_title}
-                    onChange={(e) => setDriveFormData({ ...driveFormData, position_title: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-400 mb-1">CTC (INR per annum)</label>
-                    <input
-                      type="number"
-                      required
-                      value={driveFormData.position_ctc}
-                      onChange={(e) => setDriveFormData({ ...driveFormData, position_ctc: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 mb-1">Min CGPA Cutoff</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      required
-                      value={driveFormData.min_cgpa}
-                      onChange={(e) => setDriveFormData({ ...driveFormData, min_cgpa: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => setShowCreateDriveModal(false)}
-                className="px-4 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
-              >
-                Publish Recruitment Drive
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
       )}
     </div>

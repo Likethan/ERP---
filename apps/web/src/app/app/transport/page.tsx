@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { infrastructureService } from "@/services/infrastructure.service";
 import {
@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/toast";
 import {
   Bus,
@@ -21,11 +21,9 @@ import {
   Phone,
   Shield,
   Search,
-  Plus,
   Ticket,
   Users,
   Navigation,
-  CheckCircle2,
 } from "lucide-react";
 
 export default function TransportManagementPage() {
@@ -48,7 +46,7 @@ export default function TransportManagementPage() {
     stopName: "Koramangala 4th Block",
   });
 
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [rtRes, vhRes] = await Promise.all([
@@ -66,11 +64,11 @@ export default function TransportManagementPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [toast]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const totalCommuters = routes.reduce((acc, r) => acc + r.allocatedStudents, 0);
   const totalFleetCapacity = routes.reduce((acc, r) => acc + r.capacity, 0);
@@ -245,8 +243,13 @@ export default function TransportManagementPage() {
           </div>
 
           {/* Routes Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredRoutes.map((rt) => {
+          {loading ? (
+            <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+              <TableSkeleton rows={4} cols={4} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredRoutes.map((rt) => {
               const isFull = rt.allocatedStudents >= rt.capacity;
               return (
                 <div
@@ -338,13 +341,17 @@ export default function TransportManagementPage() {
               );
             })}
           </div>
+          )}
         </div>
       )}
 
       {/* Tab: Fleet Vehicles */}
       {activeTab === "fleet" && (
         <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+          {loading ? (
+            <TableSkeleton rows={4} cols={6} />
+          ) : (
+            <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
               <tr>
                 <th className="px-4 py-3">Registration Plate</th>
@@ -378,6 +385,7 @@ export default function TransportManagementPage() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
       )}
 

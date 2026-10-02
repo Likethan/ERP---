@@ -2,384 +2,362 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
-import type { AttendancePolicy } from "@campusos/types";
+import { attendanceService } from "@/services/attendance.service";
+import { AttendancePolicy } from "@/types/attendance";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
+import {
+  Sliders,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldAlert,
+  Clock,
+  Plus,
+  ArrowLeft,
+  FileCheck2,
+  Save,
+} from "lucide-react";
 
 export default function AttendancePoliciesPage() {
   const { hasPermission } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const { showToast } = useToast();
 
+  const [loading, setLoading] = useState(true);
   const [policies, setPolicies] = useState<AttendancePolicy[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [policyForm, setPolicyForm] = useState({
-    name: "Institutional Baseline Attendance Policy",
-    minimum_percentage: 75.0,
-    warning_threshold_percentage: 80.0,
-    critical_threshold_percentage: 65.0,
-    condonation_percentage: 65.0,
-    late_grace_minutes: 10,
-    late_weight: 0.5,
-    excused_counts_as_present: true,
-    on_leave_counts_as_present: true,
-    exclude_excused_from_total: false,
-    effective_from: new Date().toISOString().split("T")[0],
-    effective_to: "",
+  const [formData, setFormData] = useState({
+    name: "New Departmental Regulation Policy",
+    departmentId: "dept-cse",
+    departmentName: "Computer Science & Engineering",
+    academicYear: "2026-2027",
+    minimumPercentage: 75,
+    warningThreshold: 80,
+    criticalThreshold: 65,
+    includeExcusedInTotal: true,
+    lateArrivalWeight: 0.5,
+    requireApprovalForCorrections: true,
+    maxLeaveDaysConsecutive: 5,
+    status: "ACTIVE" as const,
   });
 
-  async function loadPolicies() {
+  const loadPolicies = async () => {
     try {
       setLoading(true);
-      setError(null);
-
-      const res = await apiFetch<AttendancePolicy[]>("/api/v1/attendance/policies");
-      setPolicies(res.data || []);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load attendance policies.");
+      const res = await attendanceService.getPolicies();
+      if (res.success) {
+        setPolicies(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to load policies", err);
+      showToast({ type: "error", title: "Load Error", message: "Failed to load attendance policies." });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadPolicies();
   }, []);
 
-  async function handleSavePolicy(e: React.FormEvent) {
+  const handleCreatePolicy = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setError(null);
-      setSuccessMsg(null);
-
-      await apiFetch("/api/v1/attendance/policies", {
-        method: "POST",
-        body: JSON.stringify({
-          ...policyForm,
-          effective_to: policyForm.effective_to || undefined,
-        }),
-      });
-
-      setSuccessMsg("Attendance policy configured and versioned successfully.");
-      setModalOpen(false);
-      await loadPolicies();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save attendance policy.");
+      setSaving(true);
+      const res = await attendanceService.createPolicy(formData);
+      if (res.success) {
+        showToast({
+          type: "success",
+          title: "Policy Created",
+          message: `Policy "${res.data.name}" configured and active.`,
+        });
+        setModalOpen(false);
+        await loadPolicies();
+      }
+    } catch (err) {
+      console.error("Failed to create policy", err);
+      showToast({ type: "error", title: "Creation Failed", message: "Could not create policy." });
+    } finally {
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/app/attendance"
-              className="text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-            >
-              &larr; Attendance Engine
-            </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <Link href="/app/attendance">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
+                Regulations Engine
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">Institutional Governance</span>
+            </div>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Attendance Rules & Policies
+            </h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Configure minimum attendance thresholds, late penalty weighting, medical excuse inclusions, and condonation rules.
+            </p>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Institutional Attendance Policies
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Define eligibility thresholds, condonation boundaries, late weighting, and leave treatment rules.
+        </div>
+
+        <Button variant="primary" className="gap-2" onClick={() => setModalOpen(true)}>
+          <Plus className="h-4 w-4" />
+          Add Policy Scheme
+        </Button>
+      </div>
+
+      {/* Policy Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {policies.map((policy) => (
+          <div
+            key={policy.id}
+            className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900"
+          >
+            <div>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <Badge variant={policy.status === "ACTIVE" ? "success" : "secondary"}>
+                    {policy.status}
+                  </Badge>
+                  <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-white">
+                    {policy.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {policy.departmentName} • AY {policy.academicYear}
+                  </p>
+                </div>
+              </div>
+
+              {/* Threshold Indicators */}
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-lg bg-emerald-50 p-2 dark:bg-emerald-950/40">
+                  <div className="text-lg font-bold text-emerald-700 dark:text-emerald-300">
+                    {policy.minimumPercentage}%
+                  </div>
+                  <div className="text-[10px] text-emerald-600 font-medium">Min Required</div>
+                </div>
+
+                <div className="rounded-lg bg-amber-50 p-2 dark:bg-amber-950/40">
+                  <div className="text-lg font-bold text-amber-700 dark:text-amber-300">
+                    {policy.warningThreshold}%
+                  </div>
+                  <div className="text-[10px] text-amber-600 font-medium">Warning Threshold</div>
+                </div>
+
+                <div className="rounded-lg bg-rose-50 p-2 dark:bg-rose-950/40">
+                  <div className="text-lg font-bold text-rose-700 dark:text-rose-300">
+                    {policy.criticalThreshold}%
+                  </div>
+                  <div className="text-[10px] text-rose-600 font-medium">Critical Debar</div>
+                </div>
+              </div>
+
+              {/* Feature Checklist */}
+              <div className="mt-4 space-y-2 text-xs border-t border-slate-100 pt-3 dark:border-slate-800">
+                <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                  <span>Late Arrival Weight</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {policy.lateArrivalWeight === 1 ? "1.0x (Full)" : policy.lateArrivalWeight === 0.5 ? "0.5x (Half Present)" : "0.0x (Absent)"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                  <span>Include Approved Excused</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {policy.includeExcusedInTotal ? "Yes (Counted Present)" : "No"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                  <span>Correction HOD Sign-off</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {policy.requireApprovalForCorrections ? "Mandatory" : "Direct"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                  <span>Max Consecutive Leave</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    {policy.maxLeaveDaysConsecutive} Days
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+              <Button size="sm" variant="outline" className="text-xs">
+                Configure Thresholds
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Add Policy Modal */}
+      <Dialog
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Configure New Attendance Policy"
+      >
+        <form onSubmit={handleCreatePolicy} className="space-y-4 text-xs">
+          <p className="text-slate-500">
+            Define compliance thresholds and penalty weighting for university degree conferral eligibility.
           </p>
-        </div>
 
-        <div className="flex items-center gap-2.5">
-          {hasPermission("attendance_policy:create") && (
-            <button
+          <div>
+            <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Policy Scheme Name
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Department
+              </label>
+              <select
+                value={formData.departmentName}
+                onChange={(e) => setFormData({ ...formData, departmentName: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Electronics & Communication Engineering">Electronics & Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="All Departments">All Departments (Institutional)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Academic Year
+              </label>
+              <input
+                type="text"
+                value={formData.academicYear}
+                onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Min Required (%)
+              </label>
+              <input
+                type="number"
+                min="50"
+                max="100"
+                value={formData.minimumPercentage}
+                onChange={(e) => setFormData({ ...formData, minimumPercentage: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Warning (%)
+              </label>
+              <input
+                type="number"
+                min="50"
+                max="100"
+                value={formData.warningThreshold}
+                onChange={(e) => setFormData({ ...formData, warningThreshold: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Critical Shortage (%)
+              </label>
+              <input
+                type="number"
+                min="40"
+                max="100"
+                value={formData.criticalThreshold}
+                onChange={(e) => setFormData({ ...formData, criticalThreshold: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Late Arrival Weight
+              </label>
+              <select
+                value={formData.lateArrivalWeight}
+                onChange={(e) => setFormData({ ...formData, lateArrivalWeight: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value={0.5}>0.5x — Half Attendance</option>
+                <option value={1.0}>1.0x — Full Attendance</option>
+                <option value={0.0}>0.0x — Marked Absent</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Max Consecutive Leaves
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="30"
+                value={formData.maxLeaveDaysConsecutive}
+                onChange={(e) => setFormData({ ...formData, maxLeaveDaysConsecutive: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-2">
+            <input
+              type="checkbox"
+              id="includeExcused"
+              checked={formData.includeExcusedInTotal}
+              onChange={(e) => setFormData({ ...formData, includeExcusedInTotal: e.target.checked })}
+              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label htmlFor="includeExcused" className="text-slate-700 dark:text-slate-300 font-medium">
+              Count approved Medical / On-Duty leaves as Present in percentage calculations
+            </label>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button
               type="button"
-              onClick={() => setModalOpen(true)}
-              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition"
+              variant="outline"
+              onClick={() => setModalOpen(false)}
             >
-              + Define Policy
-            </button>
-          )}
-        </div>
-      </div>
-
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          {error}
-        </div>
-      )}
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-          {successMsg}
-        </div>
-      )}
-
-      {/* Policy Concept Info Banner */}
-      <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-xs text-blue-900 dark:border-blue-900/40 dark:bg-blue-950/20 dark:text-blue-300">
-        <span className="font-bold">Hierarchical Resolution Engine: </span>
-        Policies resolve via Course Offering &rarr; Semester &rarr; Program &rarr; Department &rarr; Institution Baseline.
-        Attendance percentages are dynamically calculated without permanently modifying historical session data.
-      </div>
-
-      {/* Policies Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        {loading ? (
-          <div className="py-12 text-center text-sm text-slate-400">Loading attendance policies...</div>
-        ) : policies.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              No attendance policies configured.
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Create an institutional baseline policy defining the 75% minimum threshold.
-            </p>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={saving}>
+              {saving ? "Saving..." : "Save Policy"}
+            </Button>
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-400 border-b border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
-                <tr>
-                  <th className="px-4 py-3">Policy Name</th>
-                  <th className="px-4 py-3">Min %</th>
-                  <th className="px-4 py-3">Warning %</th>
-                  <th className="px-4 py-3">Critical %</th>
-                  <th className="px-4 py-3">Late Penalty</th>
-                  <th className="px-4 py-3">Leave Treatment</th>
-                  <th className="px-4 py-3">Effective Range</th>
-                  <th className="px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {policies.map((pol) => (
-                  <tr key={pol.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="font-semibold text-slate-900 dark:text-white">
-                        {pol.name}
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        {pol.course_offering_id
-                          ? "Course Offering Scope"
-                          : pol.program_id
-                          ? "Program Scope"
-                          : "Institutional Baseline"}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap font-bold text-slate-900 dark:text-white">
-                      {pol.minimum_percentage}%
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-amber-500 font-semibold">
-                      {pol.warning_threshold_percentage}%
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-rose-600 dark:text-rose-400 font-semibold">
-                      {pol.critical_threshold_percentage}%
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {pol.late_weight * 100}% credit ({pol.late_grace_minutes}m grace)
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {pol.on_leave_counts_as_present ? "Counts as Present" : "Excluded from Denominator"}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
-                      {pol.effective_from || "Always"} &rarr; {pol.effective_to || "Present"}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          pol.is_active
-                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                        }`}
-                      >
-                        {pol.is_active ? "Active" : "Archived"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Modal: Define Policy */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Configure Attendance Policy
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Rules versioning ensures historical calculation reproducibility without retroactive distortion.
-            </p>
-
-            <form onSubmit={handleSavePolicy} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Policy Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={policyForm.name}
-                  onChange={(e) => setPolicyForm({ ...policyForm, name: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Min % *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="1"
-                    max="100"
-                    required
-                    value={policyForm.minimum_percentage}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        minimum_percentage: parseFloat(e.target.value) || 75.0,
-                      })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Warning % *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="1"
-                    max="100"
-                    required
-                    value={policyForm.warning_threshold_percentage}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        warning_threshold_percentage: parseFloat(e.target.value) || 80.0,
-                      })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Critical % *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="1"
-                    max="100"
-                    required
-                    value={policyForm.critical_threshold_percentage}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        critical_threshold_percentage: parseFloat(e.target.value) || 65.0,
-                      })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Late Grace (Mins)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="60"
-                    value={policyForm.late_grace_minutes}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        late_grace_minutes: parseInt(e.target.value) || 0,
-                      })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Late Session Weight (0 - 1.0)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="1.0"
-                    value={policyForm.late_weight}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        late_weight: parseFloat(e.target.value) || 0.5,
-                      })
-                    }
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={policyForm.on_leave_counts_as_present}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        on_leave_counts_as_present: e.target.checked,
-                      })
-                    }
-                    className="rounded text-indigo-600"
-                  />
-                  <span>Approved Leave counts as Present session in calculation</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={policyForm.excused_counts_as_present}
-                    onChange={(e) =>
-                      setPolicyForm({
-                        ...policyForm,
-                        excused_counts_as_present: e.target.checked,
-                      })
-                    }
-                    className="rounded text-indigo-600"
-                  />
-                  <span>Excused Absence counts as Present session in calculation</span>
-                </label>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                >
-                  Save Policy
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </Dialog>
     </div>
   );
 }

@@ -1,627 +1,505 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
+import { academicsService } from "@/services/academics.service";
+import {
+  MasterTimeSlot,
+  ScheduledTimetableEntry,
+  TimetableConflict,
+  DayOfWeek,
+  CourseOfferingDetail,
+} from "@/types/academics";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { StatCard } from "@/components/ui/stat-card";
+import { Dialog } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
-import type {
-  TimetableSectionGrid,
-  AcademicYear,
-  Semester,
-  Section,
-  CourseOffering,
-  Classroom,
-  TimeSlot,
-  Faculty,
-} from "@campusos/types";
+import {
+  Calendar,
+  Clock,
+  Users,
+  Building,
+  Plus,
+  Trash2,
+  Edit2,
+  AlertTriangle,
+  CheckCircle2,
+  GraduationCap,
+  Sparkles,
+  BookOpen,
+  Eye,
+  Filter,
+} from "lucide-react";
 
-const DAYS_MAP = [
-  { id: 1, name: "Monday" },
-  { id: 2, name: "Tuesday" },
-  { id: 3, name: "Wednesday" },
-  { id: 4, name: "Thursday" },
-  { id: 5, name: "Friday" },
-  { id: 6, name: "Saturday" },
+const DAYS_OF_WEEK: DayOfWeek[] = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
 ];
 
-export default function TimetablePage() {
-  const { hasPermission } = useAuth();
-  const canManageTimetable = hasPermission("academics:timetable:manage");
+export default function MasterTimetableManagementPage() {
+  const { showToast } = useToast();
+  const { activePersona } = useAuth();
 
-  // Selection states
-  const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
-  const [semesters, setSemesters] = useState<Semester[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
-  const [selectedYearId, setSelectedYearId] = useState("");
-  const [selectedSemId, setSelectedSemId] = useState("");
-  const [selectedSectionId, setSelectedSectionId] = useState("");
+  const [timeSlots, setTimeSlots] = useState<MasterTimeSlot[]>([]);
+  const [scheduledEntries, setScheduledEntries] = useState<ScheduledTimetableEntry[]>([]);
+  const [conflicts, setConflicts] = useState<TimetableConflict[]>([]);
+  const [offerings, setOfferings] = useState<CourseOfferingDetail[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Grid Data
-  const [gridData, setGridData] = useState<TimetableSectionGrid | null>(null);
-  const [loadingGrid, setLoadingGrid] = useState(false);
-  const [gridError, setGridError] = useState<string | null>(null);
+  // View Mode: 'week' | 'day' | 'section' | 'faculty' | 'room'
+  const [viewMode, setViewMode] = useState<"week" | "day" | "section" | "faculty" | "room">("week");
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek>("MONDAY");
+  const [selectedSection, setSelectedSection] = useState("A");
+  const [selectedFaculty, setSelectedFaculty] = useState("Dr. V. Ramanathan");
+  const [selectedRoom, setSelectedRoom] = useState("Room A-204");
 
-  // Catalogs for scheduling
-  const [offerings, setOfferings] = useState<CourseOffering[]>([]);
-  const [rooms, setRooms] = useState<Classroom[]>([]);
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-  const [facultyList, setFacultyList] = useState<Faculty[]>([]);
+  // Create / Edit Timetable Entry Modal
+  const [entryModalOpen, setEntryModalOpen] = useState(false);
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [formDay, setFormDay] = useState<DayOfWeek>("MONDAY");
+  const [formTimeSlotId, setFormTimeSlotId] = useState("ts-1");
+  const [formOfferingId, setFormOfferingId] = useState("");
+  const [formRoomNumber, setFormRoomNumber] = useState("Room A-204");
+  const [formBuilding, setFormBuilding] = useState("Turing Block");
+  const [formEntryType, setFormEntryType] = useState<"THEORY" | "LAB" | "TUTORIAL">("THEORY");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Schedule Slot Modal
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [schedOfferingId, setSchedOfferingId] = useState("");
-  const [schedDay, setSchedDay] = useState<number>(1);
-  const [schedSlotId, setSchedSlotId] = useState("");
-  const [schedFacultyId, setSchedFacultyId] = useState("");
-  const [schedRoomId, setSchedRoomId] = useState("");
-  const [scheduling, setScheduling] = useState(false);
-  const [schedError, setSchedError] = useState<string | null>(null);
+  // Delete confirmation
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
-  // Quick Room / Slot Creation Modals
-  const [showRoomModal, setShowRoomModal] = useState(false);
-  const [newBuilding, setNewBuilding] = useState("");
-  const [newRoomNumber, setNewRoomNumber] = useState("");
-  const [newCapacity, setNewCapacity] = useState<number>(60);
-  const [newRoomType, setNewRoomType] = useState("CLASSROOM");
-  const [creatingRoom, setCreatingRoom] = useState(false);
-  const [roomError, setRoomError] = useState<string | null>(null);
-
-  const [showSlotModal, setShowSlotModal] = useState(false);
-  const [newSlotName, setNewSlotName] = useState("");
-  const [newSlotNumber, setNewSlotNumber] = useState<number>(1);
-  const [newStartTime, setNewStartTime] = useState("08:30");
-  const [newEndTime, setNewEndTime] = useState("09:20");
-  const [newSlotType, setNewSlotType] = useState("LECTURE");
-  const [creatingSlot, setCreatingSlot] = useState(false);
-  const [slotError, setSlotError] = useState<string | null>(null);
-
-  // Initial Load of Academic Structure
-  useEffect(() => {
-    const loadAcademicStructure = async () => {
-      try {
-        const [yrsRes, semsRes, secsRes, roomsRes, slotsRes, facRes] = await Promise.all([
-          apiFetch<AcademicYear[]>("/api/v1/academic-structure/academic-years"),
-          apiFetch<Semester[]>("/api/v1/academic-structure/semesters"),
-          apiFetch<Section[]>("/api/v1/academic-structure/sections"),
-          apiFetch<Classroom[]>("/api/v1/academics/rooms"),
-          apiFetch<TimeSlot[]>("/api/v1/academics/time-slots"),
-          apiFetch<Faculty[]>("/api/v1/people/faculty").catch(() => ({ data: [] as Faculty[] })),
-        ]);
-
-        setAcademicYears(yrsRes.data || []);
-        setSemesters(semsRes.data || []);
-        setSections(secsRes.data || []);
-        setRooms(roomsRes.data || []);
-        setTimeSlots(slotsRes.data || []);
-        setFacultyList(facRes.data || []);
-
-        const currentYear = yrsRes.data?.find((y) => y.is_current) || yrsRes.data?.[0];
-        if (currentYear) setSelectedYearId(currentYear.id);
-        if (semsRes.data?.length) setSelectedSemId(semsRes.data[0].id);
-        if (secsRes.data?.length) setSelectedSectionId(secsRes.data[0].id);
-      } catch {
-        // Mock academic structure fallback
-        const mockYears = [{ id: "ay-2026", name: "2026-2027", is_current: true, code: "AY2627" }] as unknown as AcademicYear[];
-        const mockSems = [{ id: "sem-5", number: 5, academic_year_id: "ay-2026", status: "ACTIVE" }] as unknown as Semester[];
-        const mockSecs = [{ id: "sec-a", name: "Section A (5th Sem CSE)", semester_id: "sem-5", capacity: 70 }] as unknown as Section[];
-        const mockRooms = [
-          { id: "rm-302", room_number: "Hall 302", building_name: "Academic Block A", capacity: 80, room_type: "LECTURE_HALL", is_active: true },
-          { id: "rm-304", room_number: "Hall 304", building_name: "Academic Block A", capacity: 80, room_type: "LECTURE_HALL", is_active: true },
-        ] as unknown as Classroom[];
-        const mockSlots = [
-          { id: "ts-1", slot_index: 1, start_time: "09:30:00", end_time: "10:30:00", is_break: false },
-          { id: "ts-2", slot_index: 2, start_time: "10:30:00", end_time: "11:30:00", is_break: false },
-          { id: "ts-3", slot_index: 3, start_time: "11:45:00", end_time: "12:45:00", is_break: false },
-          { id: "ts-4", slot_index: 4, start_time: "13:30:00", end_time: "14:30:00", is_break: false },
-        ] as unknown as TimeSlot[];
-        const mockFac = [
-          { id: "fac-1", first_name: "Dr. Rajesh", last_name: "Sharma", email: "rajesh.sharma@campusos.edu" },
-          { id: "fac-2", first_name: "Dr. K. S.", last_name: "Anand", email: "hod.cse@campusos.edu" },
-        ] as unknown as Faculty[];
-
-        setAcademicYears(mockYears);
-        setSemesters(mockSems);
-        setSections(mockSecs);
-        setRooms(mockRooms);
-        setTimeSlots(mockSlots);
-        setFacultyList(mockFac);
-
-        setSelectedYearId("ay-2026");
-        setSelectedSemId("sem-5");
-        setSelectedSectionId("sec-a");
-      }
-    };
-
-    loadAcademicStructure();
-  }, []);
-
-  // Fetch Section Grid
-  const loadTimetableGrid = useCallback(async () => {
-    if (!selectedSectionId || !selectedYearId || !selectedSemId) return;
-
+  const loadData = useCallback(async () => {
     try {
-      setLoadingGrid(true);
-      setGridError(null);
-
-      const [gridRes, offRes] = await Promise.all([
-        apiFetch<TimetableSectionGrid>(
-          `/api/v1/academics/timetable/grid?section_id=${selectedSectionId}&academic_year_id=${selectedYearId}&semester_id=${selectedSemId}`
-        ),
-        apiFetch<CourseOffering[]>(
-          `/api/v1/academics/course-offerings?section_id=${selectedSectionId}&academic_year_id=${selectedYearId}&semester_id=${selectedSemId}`
-        ),
+      setLoading(true);
+      const [slotsRes, entriesRes, confRes, offRes] = await Promise.all([
+        academicsService.getMasterTimeSlots(),
+        academicsService.getScheduledTimetable(),
+        academicsService.getTimetableConflicts(),
+        academicsService.getCourseOfferingDetails(),
       ]);
-
-      setGridData(gridRes.data);
-      setOfferings(offRes.data || []);
-      if (offRes.data?.length && !schedOfferingId) {
-        setSchedOfferingId(offRes.data[0].id);
+      setTimeSlots(slotsRes.data);
+      setScheduledEntries(entriesRes.data);
+      setConflicts(confRes.data);
+      setOfferings(offRes.data);
+      if (offRes.data.length > 0 && !formOfferingId) {
+        setFormOfferingId(offRes.data[0].id);
       }
-    } catch {
-      // Mock timetable grid
-      const mockGrid: TimetableSectionGrid = {
-        section_id: selectedSectionId,
-        section_name: "Section A (5th Sem CSE)",
-        days: [
-          {
-            day_of_week: 1,
-            slots: [
-              {
-                time_slot_id: "ts-1",
-                start_time: "09:30:00",
-                end_time: "10:30:00",
-                entry: {
-                  id: "entry-1",
-                  course_offering_id: "off-1",
-                  subject_code: "CS301",
-                  subject_name: "Data Structures & Algorithms",
-                  faculty_name: "Dr. Rajesh Sharma",
-                  classroom_name: "Hall 302",
-                  room_number: "Hall 302",
-                },
-              },
-              {
-                time_slot_id: "ts-2",
-                start_time: "10:30:00",
-                end_time: "11:30:00",
-                entry: {
-                  id: "entry-2",
-                  course_offering_id: "off-2",
-                  subject_code: "CS302",
-                  subject_name: "Database Management Systems",
-                  faculty_name: "Dr. K. S. Anand",
-                  classroom_name: "Hall 302",
-                  room_number: "Hall 302",
-                },
-              },
-            ],
-          },
-          {
-            day_of_week: 2,
-            slots: [
-              {
-                time_slot_id: "ts-1",
-                start_time: "09:30:00",
-                end_time: "10:30:00",
-                entry: {
-                  id: "entry-3",
-                  course_offering_id: "off-3",
-                  subject_code: "CS303",
-                  subject_name: "Operating Systems & Concurrency",
-                  faculty_name: "Prof. Meenakshi Sundaram",
-                  classroom_name: "Hall 302",
-                  room_number: "Hall 302",
-                },
-              },
-            ],
-          },
-        ],
-      } as unknown as TimetableSectionGrid;
-
-      setGridData(mockGrid);
+    } catch (err) {
+      console.error("Failed to load timetable data:", err);
+      showToast({ title: "Failed to load timetable", type: "error" });
     } finally {
-      setLoadingGrid(false);
+      setLoading(false);
     }
-  }, [selectedSectionId, selectedYearId, selectedSemId, schedOfferingId]);
+  }, [showToast, formOfferingId]);
 
   useEffect(() => {
-    if (selectedSectionId && selectedYearId && selectedSemId) {
-      loadTimetableGrid();
-    }
-  }, [selectedSectionId, selectedYearId, selectedSemId, loadTimetableGrid]);
+    loadData();
+  }, [loadData]);
 
-  // Open Schedule Modal with preselected day and slot
-  const handleOpenSchedule = (dayNumber: number, slotId: string) => {
-    setSchedDay(dayNumber);
-    setSchedSlotId(slotId);
-    setSchedError(null);
-    if (offerings.length > 0 && !schedOfferingId) {
-      setSchedOfferingId(offerings[0].id);
+  // Distinct lists for filters
+  const distinctSections = useMemo(() => {
+    return Array.from(new Set(scheduledEntries.map((e) => e.section)));
+  }, [scheduledEntries]);
+
+  const distinctFaculty = useMemo(() => {
+    return Array.from(new Set(scheduledEntries.map((e) => e.facultyName)));
+  }, [scheduledEntries]);
+
+  const distinctRooms = useMemo(() => {
+    return Array.from(new Set(scheduledEntries.map((e) => e.roomNumber)));
+  }, [scheduledEntries]);
+
+  // Active entries filtered by viewMode
+  const visibleEntries = useMemo(() => {
+    if (viewMode === "day") {
+      return scheduledEntries.filter((e) => e.day === selectedDay);
     }
-    setShowScheduleModal(true);
+    if (viewMode === "section") {
+      return scheduledEntries.filter((e) => e.section === selectedSection);
+    }
+    if (viewMode === "faculty") {
+      return scheduledEntries.filter((e) => e.facultyName === selectedFaculty);
+    }
+    if (viewMode === "room") {
+      return scheduledEntries.filter((e) => e.roomNumber === selectedRoom);
+    }
+    // Week view shows for current selected section
+    return scheduledEntries.filter((e) => e.section === selectedSection);
+  }, [scheduledEntries, viewMode, selectedDay, selectedSection, selectedFaculty, selectedRoom]);
+
+  // Check if an entry has an active conflict
+  const isConflicting = (entryId: string) => {
+    return conflicts.some((c) => c.conflictingEntryIds.includes(entryId));
   };
 
-  // Create Timetable Slot
-  const handleCreateTimetableEntry = async (e: React.FormEvent) => {
+  // Open Create Modal
+  const openCreateModal = (day?: DayOfWeek, timeSlotId?: string) => {
+    setEditingEntryId(null);
+    if (day) setFormDay(day);
+    if (timeSlotId) setFormTimeSlotId(timeSlotId);
+    setEntryModalOpen(true);
+  };
+
+  // Open Edit Modal
+  const openEditModal = (entry: ScheduledTimetableEntry) => {
+    setEditingEntryId(entry.id);
+    setFormDay(entry.day);
+    setFormTimeSlotId(entry.timeSlotId);
+    setFormOfferingId(entry.courseOfferingId);
+    setFormRoomNumber(entry.roomNumber);
+    setFormBuilding(entry.building);
+    setFormEntryType(entry.entryType as any);
+    setEntryModalOpen(true);
+  };
+
+  // Submit Entry Form
+  const handleSubmitEntry = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!schedOfferingId || !schedSlotId || !selectedSectionId || !selectedYearId || !selectedSemId) {
-      setSchedError("Please select course offering and time slot.");
-      return;
-    }
+    const offObj = offerings.find((o) => o.id === formOfferingId);
+    const slotObj = timeSlots.find((s) => s.id === formTimeSlotId);
+    if (!offObj || !slotObj) return;
+
+    const primaryFac = offObj.facultyAssignments[0];
+    const facId = primaryFac ? primaryFac.facultyId : "fac-default";
+    const facName = primaryFac ? primaryFac.facultyName : "Unassigned";
 
     try {
-      setScheduling(true);
-      setSchedError(null);
-
-      await apiFetch("/api/v1/academics/timetable", {
-        method: "POST",
-        body: JSON.stringify({
-          course_offering_id: schedOfferingId,
-          section_id: selectedSectionId,
-          academic_year_id: selectedYearId,
-          semester_id: selectedSemId,
-          time_slot_id: schedSlotId,
-          day_of_week: Number(schedDay),
-          faculty_id: schedFacultyId || null,
-          room_id: schedRoomId || null,
-        }),
-      });
-
-      setShowScheduleModal(false);
-      loadTimetableGrid();
-    } catch (err: unknown) {
-      setSchedError(err instanceof Error ? err.message : "Failed to schedule class slot.");
+      setIsSubmitting(true);
+      if (editingEntryId) {
+        await academicsService.updateTimetableEntry(editingEntryId, {
+          day: formDay,
+          timeSlotId: formTimeSlotId,
+          startTime: slotObj.startTime,
+          endTime: slotObj.endTime,
+          roomNumber: formRoomNumber,
+          building: formBuilding,
+          entryType: formEntryType,
+        });
+        showToast({ title: "Timetable Slot Updated", type: "success" });
+      } else {
+        await academicsService.createTimetableEntry({
+          courseOfferingId: offObj.id,
+          subjectCode: offObj.subjectCode,
+          subjectName: offObj.subjectName,
+          facultyId: facId,
+          facultyName: facName,
+          department: offObj.department,
+          semester: offObj.semester,
+          section: offObj.section,
+          roomNumber: formRoomNumber,
+          building: formBuilding,
+          day: formDay,
+          timeSlotId: formTimeSlotId,
+          startTime: slotObj.startTime,
+          endTime: slotObj.endTime,
+          entryType: formEntryType,
+        });
+        showToast({ title: "Timetable Slot Scheduled", type: "success" });
+      }
+      setEntryModalOpen(false);
+      loadData();
+    } catch (err: any) {
+      showToast({ title: "Operation failed", message: err.message, type: "error" });
     } finally {
-      setScheduling(false);
+      setIsSubmitting(false);
     }
   };
 
-  // Delete Timetable Entry
-  const handleDeleteEntry = async (entryId: string, subjectCode: string) => {
-    if (!confirm(`Are you sure you want to remove the scheduled slot for ${subjectCode}?`)) return;
-
+  // Delete Entry
+  const handleDeleteEntry = async (id: string) => {
     try {
-      await apiFetch(`/api/v1/academics/timetable/${entryId}`, {
-        method: "DELETE",
-      });
-      loadTimetableGrid();
-    } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to delete slot.");
+      await academicsService.deleteTimetableEntry(id);
+      showToast({ title: "Period Removed from Timetable", type: "info" });
+      setDeleteConfirmId(null);
+      loadData();
+    } catch (err: any) {
+      showToast({ title: "Failed to delete slot", message: err.message, type: "error" });
     }
   };
 
-  // Quick Create Classroom
-  const handleCreateRoom = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newBuilding.trim() || !newRoomNumber.trim()) {
-      setRoomError("Please enter building and room number.");
-      return;
-    }
-
-    try {
-      setCreatingRoom(true);
-      setRoomError(null);
-
-      const res = await apiFetch<Classroom>("/api/v1/academics/rooms", {
-        method: "POST",
-        body: JSON.stringify({
-          building: newBuilding.trim(),
-          room_number: newRoomNumber.trim(),
-          capacity: Number(newCapacity),
-          room_type: newRoomType,
-          is_active: true,
-        }),
-      });
-
-      setRooms((prev) => [...prev, res.data]);
-      setShowRoomModal(false);
-      setNewBuilding("");
-      setNewRoomNumber("");
-    } catch (err: unknown) {
-      setRoomError(err instanceof Error ? err.message : "Failed to create room.");
-    } finally {
-      setCreatingRoom(false);
-    }
-  };
-
-  // Quick Create Time Slot
-  const handleCreateSlot = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newSlotName.trim()) {
-      setSlotError("Please enter slot name.");
-      return;
-    }
-
-    try {
-      setCreatingSlot(true);
-      setSlotError(null);
-
-      const res = await apiFetch<TimeSlot>("/api/v1/academics/time-slots", {
-        method: "POST",
-        body: JSON.stringify({
-          name: newSlotName.trim(),
-          slot_number: Number(newSlotNumber),
-          start_time: newStartTime,
-          end_time: newEndTime,
-          slot_type: newSlotType,
-          is_active: true,
-        }),
-      });
-
-      setTimeSlots((prev) => [...prev, res.data].sort((a, b) => a.slot_number - b.slot_number));
-      setShowSlotModal(false);
-      setNewSlotName("");
-      setNewSlotNumber((prev) => prev + 1);
-      // Reload grid so new slot column appears
-      loadTimetableGrid();
-    } catch (err: unknown) {
-      setSlotError(err instanceof Error ? err.message : "Failed to create time slot.");
-    } finally {
-      setCreatingSlot(false);
-    }
-  };
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
+        <div className="grid grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
+          ))}
+        </div>
+        <TableSkeleton rows={6} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <nav className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app" className="hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
-            <span>/</span>
-            <Link href="/app/academics" className="hover:text-blue-600 transition-colors">
+          <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
+            <Link href="/app/academics" className="hover:text-white transition-colors">
               Academics
             </Link>
             <span>/</span>
-            <span className="text-slate-800 font-medium">Timetable Engine</span>
-          </nav>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Academic Timetable Engine
+            <span className="text-white">Master Timetable</span>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Master Timetable & Collision Engine
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Deterministic weekly schedules with automated multi-dimensional clash prevention (Section, Faculty, Room).
+          <p className="mt-1 text-xs text-slate-400">
+            Weekly section schedules, faculty contact allocations, classroom double-booking audits, and conflict detection.
           </p>
         </div>
 
-        {canManageTimetable && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowRoomModal(true)}
-              className="px-3 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-sm transition-colors"
-            >
-              + Add Room
-            </button>
-            <button
-              onClick={() => setShowSlotModal(true)}
-              className="px-3 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-sm transition-colors"
-            >
-              + Add Time Slot
-            </button>
-            <button
-              onClick={() => {
-                if (gridData?.time_slots?.length) {
-                  handleOpenSchedule(1, gridData.time_slots[0].id);
-                } else if (timeSlots.length) {
-                  handleOpenSchedule(1, timeSlots[0].id);
-                } else {
-                  alert("Please add at least one Time Slot first.");
-                }
-              }}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Schedule Slot
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Selectors Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Academic Year */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-              Academic Year
-            </label>
-            <select
-              value={selectedYearId}
-              onChange={(e) => setSelectedYearId(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              {academicYears.map((ay) => (
-                <option key={ay.id} value={ay.id}>
-                  {ay.name} {ay.is_current ? "(Current)" : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Semester */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-              Semester
-            </label>
-            <select
-              value={selectedSemId}
-              onChange={(e) => setSelectedSemId(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              {semesters.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} (Term {s.semester_number})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Section */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-              Class Section
-            </label>
-            <select
-              value={selectedSectionId}
-              onChange={(e) => setSelectedSectionId(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">Select Section...</option>
-              {sections.map((sec) => (
-                <option key={sec.id} value={sec.id}>
-                  Section {sec.name} (Cap: {sec.capacity})
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="primary"
+            size="sm"
+            leftIcon={<Plus className="h-4 w-4" />}
+            onClick={() => openCreateModal()}
+          >
+            Schedule Period
+          </Button>
         </div>
       </div>
 
-      {/* Global Error Banner */}
-      {gridError && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-700 flex items-start gap-3">
-          <svg className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <p className="font-semibold">Timetable Notice</p>
-            <p>{gridError}</p>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Weekly Scheduled Periods"
+          value={scheduledEntries.length}
+          description="Active teaching periods"
+          variant="indigo"
+          icon={<Calendar className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Detected Conflicts"
+          value={conflicts.length}
+          description={conflicts.length === 0 ? "0 collisions found" : "Requires schedule adjustment"}
+          variant={conflicts.length > 0 ? "amber" : "emerald"}
+          icon={<AlertTriangle className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Active Classrooms"
+          value={distinctRooms.length}
+          description="Lecture halls & laboratories"
+          variant="sky"
+          icon={<Building className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Faculty Teaching Load"
+          value={`${distinctFaculty.length} Instructors`}
+          description="Active teaching roster"
+          variant="emerald"
+          icon={<GraduationCap className="h-4 w-4" />}
+        />
+      </div>
+
+      {/* Conflict Notice Banner */}
+      {conflicts.length > 0 && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
+          <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs">
+            <AlertTriangle className="h-4 w-4" />
+            Timetable Collision Detected ({conflicts.length})
+          </div>
+          <div className="space-y-1">
+            {conflicts.map((c) => (
+              <div key={c.id} className="text-xs text-amber-200/90 flex items-start gap-2">
+                <span className="font-mono font-bold text-amber-400">[{c.conflictType.replace("_", " ")}]</span>
+                <span>{c.description}</span>
+                <span className="font-mono text-slate-400">({c.day} • {c.timeSlot})</span>
+              </div>
+            ))}
+          </div>
+          <div className="text-[10px] text-amber-400/80 pt-1">
+            * Note: Frontend collision detection acts as an operational convenience; academic council policy remains authoritative.
           </div>
         </div>
       )}
 
+      {/* View Switcher Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
+          {[
+            { id: "week", label: "Week View" },
+            { id: "day", label: "Day View" },
+            { id: "section", label: "Section View" },
+            { id: "faculty", label: "Faculty Schedule" },
+            { id: "room", label: "Room Utilization" },
+          ].map((mode) => (
+            <button
+              key={mode.id}
+              onClick={() => setViewMode(mode.id as any)}
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                viewMode === mode.id
+                  ? "bg-indigo-600 text-white font-semibold"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              }`}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+
+        {/* View Specific Selectors */}
+        <div className="flex items-center gap-2">
+          {viewMode === "day" && (
+            <select
+              value={selectedDay}
+              onChange={(e) => setSelectedDay(e.target.value as DayOfWeek)}
+              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              {DAYS_OF_WEEK.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {(viewMode === "week" || viewMode === "section") && (
+            <select
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              {["A", "B", "C"].map((sec) => (
+                <option key={sec} value={sec}>
+                  Section {sec}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {viewMode === "faculty" && (
+            <select
+              value={selectedFaculty}
+              onChange={(e) => setSelectedFaculty(e.target.value)}
+              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              {distinctFaculty.map((fac) => (
+                <option key={fac} value={fac}>
+                  {fac}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {viewMode === "room" && (
+            <select
+              value={selectedRoom}
+              onChange={(e) => setSelectedRoom(e.target.value)}
+              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              {distinctRooms.map((rm) => (
+                <option key={rm} value={rm}>
+                  {rm}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
+
       {/* Timetable Weekly Matrix Grid */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        {loadingGrid ? (
-          <div className="p-16 text-center text-slate-500">
-            <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-3" />
-            <p className="text-sm">Generating weekly timetable grid...</p>
-          </div>
-        ) : !selectedSectionId ? (
-          <div className="p-16 text-center text-slate-400">
-            <svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <h3 className="text-sm font-semibold text-slate-700">No Section Selected</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              Please choose a class section from the dropdown above to view or configure its weekly schedule matrix.
-            </p>
-          </div>
-        ) : gridData?.time_slots?.length === 0 ? (
-          <div className="p-16 text-center">
-            <div className="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-3 text-amber-500">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 className="text-sm font-semibold text-slate-900">No Time Slots Configured</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-              Institutions require configured instructional periods before building timetables. Create your first period slot to activate the grid.
-            </p>
-            {canManageTimetable && (
-              <button
-                onClick={() => setShowSlotModal(true)}
-                className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm"
-              >
-                Configure First Period Slot
-              </button>
-            )}
-          </div>
-        ) : (
+      {viewMode === "week" && (
+        <Card className="overflow-hidden">
+          <CardHeader className="py-3 px-4 bg-slate-900/80 border-b border-slate-800 flex flex-row items-center justify-between">
+            <CardTitle className="text-xs">
+              Weekly Master Timetable (Section {selectedSection} • Semester 5)
+            </CardTitle>
+            <span className="text-[11px] font-mono text-slate-400">
+              Odd Semester AY 2026-2027
+            </span>
+          </CardHeader>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-xs">
+            <table className="w-full text-xs text-slate-200 border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="p-3 w-28 font-bold text-slate-700 border-r border-slate-200 uppercase tracking-wider text-[11px]">
-                    Day / Period
-                  </th>
-                  {gridData?.time_slots.map((slot) => (
-                    <th key={slot.id} className="p-3 min-w-[150px] border-r border-slate-200 last:border-r-0">
-                      <div className="font-bold text-slate-800">{slot.name}</div>
-                      <div className="text-[11px] text-slate-400 font-mono mt-0.5 font-normal">
-                        {slot.start_time} - {slot.end_time}
+                <tr className="bg-slate-950/80 border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase">
+                  <th className="p-3 w-28 text-left border-r border-slate-800">Day / Slot</th>
+                  {timeSlots.map((ts) => (
+                    <th key={ts.id} className="p-2.5 text-center min-w-[130px] border-r border-slate-800 last:border-r-0">
+                      <div>{ts.label}</div>
+                      <div className="text-[10px] text-slate-500 font-mono font-normal">
+                        {ts.startTime} - {ts.endTime}
                       </div>
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
-                {gridData?.days.map((day) => (
-                  <tr key={day.day_number} className="hover:bg-slate-50/50 transition-colors">
-                    {/* Day Column */}
-                    <td className="p-3 font-semibold text-slate-800 bg-slate-50/80 border-r border-slate-200 align-top">
-                      <div className="text-sm font-bold">{day.day_name}</div>
-                      <div className="text-[10px] text-slate-400 font-normal mt-0.5">
-                        Day {day.day_number}
-                      </div>
+              <tbody className="divide-y divide-slate-800">
+                {DAYS_OF_WEEK.map((day) => (
+                  <tr key={day} className="hover:bg-slate-900/30">
+                    <td className="p-3 font-semibold text-white bg-slate-900/40 border-r border-slate-800 font-mono text-xs">
+                      {day}
                     </td>
+                    {timeSlots.map((ts) => {
+                      const entry = scheduledEntries.find(
+                        (e) => e.day === day && e.timeSlotId === ts.id && e.section === selectedSection
+                      );
+                      const hasConflict = entry ? isConflicting(entry.id) : false;
 
-                    {/* Time Slot Columns */}
-                    {gridData.time_slots.map((slot) => {
-                      const cell = day.slots[slot.id];
                       return (
                         <td
-                          key={slot.id}
-                          className="p-2.5 border-r border-slate-200 last:border-r-0 align-top h-28"
+                          key={ts.id}
+                          className="p-1.5 border-r border-slate-800 last:border-r-0 align-top"
                         >
-                          {cell ? (
-                            <div className="h-full p-2.5 bg-blue-50/70 border border-blue-200 rounded-lg flex flex-col justify-between group hover:border-blue-300 transition-colors shadow-xs">
-                              <div>
-                                <div className="flex items-center justify-between gap-1 mb-1">
-                                  <span className="font-mono text-[11px] font-bold text-blue-900 bg-blue-100/80 px-1.5 py-0.5 rounded border border-blue-200">
-                                    {cell.subject_code}
-                                  </span>
-                                  {canManageTimetable && (
-                                    <button
-                                      onClick={() => handleDeleteEntry(cell.entry_id, cell.subject_code)}
-                                      title="Remove scheduled class"
-                                      className="text-slate-400 hover:text-rose-600 transition-colors p-0.5 rounded"
-                                    >
-                                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                      </svg>
-                                    </button>
-                                  )}
-                                </div>
-                                <div className="font-semibold text-slate-800 line-clamp-2 leading-tight">
-                                  {cell.subject_name}
-                                </div>
+                          {entry ? (
+                            <div
+                              className={`p-2.5 rounded-lg border text-xs space-y-1 relative group transition-all ${
+                                hasConflict
+                                  ? "border-red-500/80 bg-red-500/10 ring-1 ring-red-500/40"
+                                  : entry.entryType === "LAB"
+                                  ? "border-emerald-500/40 bg-emerald-500/10"
+                                  : "border-indigo-500/40 bg-indigo-500/10"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-mono font-bold text-white">{entry.subjectCode}</span>
+                                <Badge variant={entry.entryType === "LAB" ? "success" : "info"} className="text-[9px] px-1 py-0">
+                                  {entry.entryType}
+                                </Badge>
+                              </div>
+                              <div className="text-[11px] text-slate-300 line-clamp-1">{entry.subjectName}</div>
+                              <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-800/60">
+                                <span>{entry.roomNumber}</span>
+                                <span className="text-indigo-300 font-sans">{entry.facultyName}</span>
                               </div>
 
-                              <div className="pt-2 border-t border-blue-100/70 space-y-0.5 text-[11px]">
-                                {cell.faculty_name && (
-                                  <div className="text-slate-600 truncate flex items-center gap-1">
-                                    <span className="text-slate-400">👤</span>
-                                    <span>{cell.faculty_name}</span>
-                                  </div>
-                                )}
-                                {cell.room_name && (
-                                  <div className="text-slate-500 font-mono text-[10px] truncate flex items-center gap-1">
-                                    <span className="text-slate-400">📍</span>
-                                    <span>{cell.room_name}</span>
-                                  </div>
-                                )}
+                              {/* Hover actions */}
+                              <div className="absolute top-1 right-1 hidden group-hover:flex items-center gap-1 bg-slate-900/90 rounded p-0.5 border border-slate-700">
+                                <button
+                                  onClick={() => openEditModal(entry)}
+                                  className="p-1 text-slate-300 hover:text-indigo-400"
+                                  title="Edit slot"
+                                >
+                                  <Edit2 className="h-3 w-3" />
+                                </button>
+                                <button
+                                  onClick={() => setDeleteConfirmId(entry.id)}
+                                  className="p-1 text-slate-300 hover:text-red-400"
+                                  title="Delete slot"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
                               </div>
                             </div>
                           ) : (
-                            <div className="h-full border border-dashed border-slate-200 rounded-lg flex items-center justify-center p-2 group hover:border-blue-300 transition-colors">
-                              {canManageTimetable && (
-                                <button
-                                  onClick={() => handleOpenSchedule(day.day_number, slot.id)}
-                                  className="w-full h-full text-slate-300 hover:text-blue-600 flex flex-col items-center justify-center gap-1 transition-colors"
-                                >
-                                  <svg className="w-4 h-4 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                  </svg>
-                                  <span className="text-[10px] font-medium opacity-0 group-hover:opacity-100">
-                                    Schedule
-                                  </span>
-                                </button>
-                              )}
-                            </div>
+                            <button
+                              onClick={() => openCreateModal(day, ts.id)}
+                              className="w-full h-16 rounded border border-dashed border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/20 text-slate-600 hover:text-indigo-400 flex items-center justify-center transition-all group"
+                              title="Assign Period"
+                            >
+                              <Plus className="h-4 w-4 opacity-40 group-hover:opacity-100" />
+                            </button>
                           )}
                         </td>
                       );
@@ -631,386 +509,245 @@ export default function TimetablePage() {
               </tbody>
             </table>
           </div>
-        )}
-      </div>
-
-      {/* SCHEDULE SLOT MODAL */}
-      {showScheduleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <h2 className="text-base font-bold text-slate-900">Schedule Timetable Class Slot</h2>
-              <button
-                onClick={() => setShowScheduleModal(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateTimetableEntry} className="p-6 space-y-4">
-              {schedError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs leading-relaxed">
-                  <div className="font-bold mb-0.5">Scheduling Conflict / Validation Error</div>
-                  <div>{schedError}</div>
-                </div>
-              )}
-
-              {/* Course Offering */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Course Offering *
-                </label>
-                <select
-                  value={schedOfferingId}
-                  onChange={(e) => {
-                    const offId = e.target.value;
-                    setSchedOfferingId(offId);
-                  }}
-                  required
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                >
-                  <option value="">Select Offering for this Section</option>
-                  {offerings.map((o) => (
-                    <option key={o.id} value={o.id}>
-                      [{o.subject_code}] {o.subject_name} ({o.primary_faculty_name || "Unassigned"})
-                    </option>
-                  ))}
-                </select>
-                {offerings.length === 0 && (
-                  <p className="text-xs text-amber-600 mt-1">
-                    No active course offerings found for this section. Please create an offering first under Course Offerings.
-                  </p>
-                )}
-              </div>
-
-              {/* Day & Time Slot */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Day of Week *
-                  </label>
-                  <select
-                    value={schedDay}
-                    onChange={(e) => setSchedDay(Number(e.target.value))}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  >
-                    {DAYS_MAP.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Time Period Slot *
-                  </label>
-                  <select
-                    value={schedSlotId}
-                    onChange={(e) => setSchedSlotId(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  >
-                    <option value="">Select Period Slot</option>
-                    {(gridData?.time_slots || timeSlots).map((slot) => (
-                      <option key={slot.id} value={slot.id}>
-                        {slot.name} ({slot.start_time} - {slot.end_time})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Faculty & Classroom */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Assigned Instructor
-                  </label>
-                  <select
-                    value={schedFacultyId}
-                    onChange={(e) => setSchedFacultyId(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  >
-                    <option value="">Default (From Course)</option>
-                    {facultyList.map((f) => (
-                      <option key={f.id} value={f.id}>
-                        {f.first_name} {f.last_name} ({f.employee_code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Classroom / Room
-                  </label>
-                  <select
-                    value={schedRoomId}
-                    onChange={(e) => setSchedRoomId(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  >
-                    <option value="">Unassigned Location</option>
-                    {rooms.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.building} - {r.room_number} (Cap: {r.capacity})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowScheduleModal(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={scheduling || offerings.length === 0}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
-                >
-                  {scheduling ? "Verifying & Scheduling..." : "Confirm Schedule"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        </Card>
       )}
 
-      {/* QUICK ADD ROOM MODAL */}
-      {showRoomModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <h2 className="text-base font-bold text-slate-900">Add Academic Room / Lab</h2>
-              <button
-                onClick={() => setShowRoomModal(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+      {/* List / Card Layout for Day, Section, Faculty, Room views */}
+      {viewMode !== "week" && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>
+                {viewMode === "day" && `${selectedDay} Schedule`}
+                {viewMode === "section" && `Section ${selectedSection} Schedule`}
+                {viewMode === "faculty" && `${selectedFaculty} Workload & Timetable`}
+                {viewMode === "room" && `${selectedRoom} Utilization Timeline`}
+              </CardTitle>
+              <CardDescription>
+                {visibleEntries.length} scheduled periods mapped
+              </CardDescription>
             </div>
-
-            <form onSubmit={handleCreateRoom} className="p-6 space-y-4">
-              {roomError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs">
-                  {roomError}
-                </div>
-              )}
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Building / Wing *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Science Block, Academic Wing B"
-                  value={newBuilding}
-                  onChange={(e) => setNewBuilding(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="h-3.5 w-3.5" />}
+              onClick={() => openCreateModal()}
+            >
+              Add Entry
+            </Button>
+          </CardHeader>
+          <CardContent className="p-0">
+            {visibleEntries.length === 0 ? (
+              <div className="p-12 text-center text-xs text-slate-400">
+                No scheduled periods found for this filter.
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Room Number / Identifier *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 101, LH-3, LAB-A"
-                  value={newRoomNumber}
-                  onChange={(e) => setNewRoomNumber(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left text-slate-300">
+                  <thead className="bg-slate-950/60 text-[11px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="px-5 py-3">Day & Time</th>
+                      <th className="px-4 py-3">Subject & Code</th>
+                      <th className="px-4 py-3">Section</th>
+                      <th className="px-4 py-3">Instructor</th>
+                      <th className="px-4 py-3">Classroom</th>
+                      <th className="px-4 py-3">Type</th>
+                      <th className="px-4 py-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {visibleEntries.map((slot) => {
+                      const hasConflict = isConflicting(slot.id);
+                      return (
+                        <tr key={slot.id} className="hover:bg-slate-800/40 transition-colors">
+                          <td className="px-5 py-3.5 font-medium text-white">
+                            <div>{slot.day}</div>
+                            <div className="text-[11px] text-indigo-400 font-mono">
+                              {slot.startTime} – {slot.endTime}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="font-mono font-semibold text-white">{slot.subjectCode}</span>
+                            <span className="block text-[11px] text-slate-400">{slot.subjectName}</span>
+                          </td>
+                          <td className="px-4 py-3.5 font-mono text-slate-300">
+                            Sem {slot.semester} • Sec {slot.section}
+                          </td>
+                          <td className="px-4 py-3.5 text-slate-200">{slot.facultyName}</td>
+                          <td className="px-4 py-3.5 text-slate-200">
+                            <div>{slot.roomNumber}</div>
+                            <div className="text-[10px] text-slate-500">{slot.building}</div>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <Badge variant={slot.entryType === "LAB" ? "success" : "info"}>
+                              {slot.entryType}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3.5 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                onClick={() => openEditModal(slot)}
+                                className="p-1 text-slate-400 hover:text-indigo-400 transition-colors"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => setDeleteConfirmId(slot.id)}
+                                className="p-1 text-slate-400 hover:text-red-400 transition-colors"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Seating Capacity
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="1000"
-                    value={newCapacity}
-                    onChange={(e) => setNewCapacity(Number(e.target.value))}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Room Type
-                  </label>
-                  <select
-                    value={newRoomType}
-                    onChange={(e) => setNewRoomType(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  >
-                    <option value="CLASSROOM">CLASSROOM</option>
-                    <option value="LAB">LAB</option>
-                    <option value="SEMINAR_HALL">SEMINAR_HALL</option>
-                    <option value="AUDITORIUM">AUDITORIUM</option>
-                    <option value="WORKSHOP">WORKSHOP</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowRoomModal(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={creatingRoom}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
-                >
-                  {creatingRoom ? "Creating Room..." : "Create Room"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
-      {/* QUICK ADD TIME SLOT MODAL */}
-      {showSlotModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <h2 className="text-base font-bold text-slate-900">Add Instructional Time Slot</h2>
-              <button
-                onClick={() => setShowSlotModal(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+      {/* Schedule Entry Modal */}
+      <Dialog
+        open={entryModalOpen}
+        onClose={() => setEntryModalOpen(false)}
+        title={editingEntryId ? "Edit Timetable Period" : "Schedule New Period in Master Timetable"}
+      >
+        <form onSubmit={handleSubmitEntry} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1">Day of Week</label>
+              <select
+                value={formDay}
+                onChange={(e) => setFormDay(e.target.value as DayOfWeek)}
+                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                {DAYS_OF_WEEK.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <form onSubmit={handleCreateSlot} className="p-6 space-y-4">
-              {slotError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs">
-                  {slotError}
-                </div>
-              )}
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1">Time Slot Period</label>
+              <select
+                value={formTimeSlotId}
+                onChange={(e) => setFormTimeSlotId(e.target.value)}
+                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+              >
+                {timeSlots.map((ts) => (
+                  <option key={ts.id} value={ts.id}>
+                    {ts.label} ({ts.startTime} - {ts.endTime})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Slot Name *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Period 1, Slot A"
-                    value={newSlotName}
-                    onChange={(e) => setNewSlotName(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Course Offering <span className="text-red-400">*</span>
+            </label>
+            <select
+              value={formOfferingId}
+              onChange={(e) => setFormOfferingId(e.target.value)}
+              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              {offerings.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.subjectCode} - {o.subjectName} (Sem {o.semester} Sec {o.section})
+                </option>
+              ))}
+            </select>
+          </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Period Number *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="20"
-                    value={newSlotNumber}
-                    onChange={(e) => setNewSlotNumber(Number(e.target.value))}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1">Classroom / Lab</label>
+              <Input
+                value={formRoomNumber}
+                onChange={(e) => setFormRoomNumber(e.target.value)}
+                placeholder="e.g. Room A-204"
+              />
+            </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Start Time *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="08:30"
-                    value={newStartTime}
-                    onChange={(e) => setNewStartTime(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                  />
-                </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1">Building</label>
+              <Input
+                value={formBuilding}
+                onChange={(e) => setFormBuilding(e.target.value)}
+                placeholder="e.g. Turing Block"
+              />
+            </div>
+          </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    End Time *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="09:20"
-                    value={newEndTime}
-                    onChange={(e) => setNewEndTime(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                  />
-                </div>
-              </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Period Session Type</label>
+            <select
+              value={formEntryType}
+              onChange={(e) => setFormEntryType(e.target.value as any)}
+              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            >
+              <option value="THEORY">Theory Lecture</option>
+              <option value="LAB">Laboratory Session</option>
+              <option value="TUTORIAL">Tutorial Period</option>
+            </select>
+          </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Slot Type
-                </label>
-                <select
-                  value={newSlotType}
-                  onChange={(e) => setNewSlotType(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                >
-                  <option value="LECTURE">LECTURE</option>
-                  <option value="LAB">LAB</option>
-                  <option value="BREAK">BREAK</option>
-                </select>
-              </div>
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setEntryModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              isLoading={isSubmitting}
+            >
+              {editingEntryId ? "Save Changes" : "Confirm Schedule"}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
 
-              <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowSlotModal(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={creatingSlot}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
-                >
-                  {creatingSlot ? "Saving Slot..." : "Save Time Slot"}
-                </button>
-              </div>
-            </form>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={Boolean(deleteConfirmId)}
+        onClose={() => setDeleteConfirmId(null)}
+        title="Confirm Removal from Timetable"
+      >
+        <div className="space-y-3 text-xs text-slate-300">
+          <p>
+            Are you sure you want to remove this scheduled period from the master timetable?
+          </p>
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeleteConfirmId(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => deleteConfirmId && handleDeleteEntry(deleteConfirmId)}
+            >
+              Delete Period
+            </Button>
           </div>
         </div>
-      )}
+      </Dialog>
     </div>
   );
 }

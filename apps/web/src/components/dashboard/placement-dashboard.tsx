@@ -11,8 +11,6 @@ import { CompanyProfileItem, JobDriveItem, PlacementOfferItem } from "@/mocks/pl
 import {
   Briefcase,
   Building,
-  GraduationCap,
-  Users,
   ArrowRight,
   TrendingUp,
   Award,

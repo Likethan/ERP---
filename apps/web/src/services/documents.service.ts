@@ -1,4 +1,5 @@
 import { ApiResponse } from "@campusos/types";
+import { PersonDocument } from "@/types/people";
 import {
   DocumentVaultItem,
   DocumentRequestItem,
@@ -77,6 +78,35 @@ class DocumentsService {
     };
     this.certificates.unshift(newCert);
     return { success: true, data: newCert };
+  }
+
+  // ==========================================
+  // Student Document Vault Operations
+  // ==========================================
+
+  async getStudentDocuments(studentId: string) {
+    const { studentsService } = await import("./students.service");
+    return studentsService.getDocuments(studentId);
+  }
+
+  async uploadStudentDocument(studentId: string, data: Partial<PersonDocument>) {
+    const { studentsService } = await import("./students.service");
+    return studentsService.uploadDocument(studentId, data);
+  }
+
+  async verifyDocument(studentId: string, documentId: string, verifierName?: string) {
+    const { studentsService } = await import("./students.service");
+    return studentsService.verifyDocument(studentId, documentId, verifierName);
+  }
+
+  async rejectDocument(studentId: string, documentId: string, reason: string) {
+    const { studentsService } = await import("./students.service");
+    return studentsService.rejectDocument(studentId, documentId, reason);
+  }
+
+  async deleteDocument(studentId: string, documentId: string) {
+    const { studentsService } = await import("./students.service");
+    return studentsService.deleteDocument(studentId, documentId);
   }
 }
 

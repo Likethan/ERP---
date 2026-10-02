@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/navigation/sidebar";
 import { Topbar } from "@/components/navigation/topbar";
 import { ToastProvider } from "@/components/ui/toast";
@@ -11,8 +12,15 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const { user, isLoading } = useAuth();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [isLoading, user, router]);
 
   if (isLoading) {
     return (

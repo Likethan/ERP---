@@ -2,854 +2,567 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
-import type {
-  Assessment,
-  CourseOffering,
-  ExamTerm,
-  CourseAssessmentStructure,
-} from "@campusos/types";
+import { examinationsService } from "@/services/examinations.service";
 import {
-  BookOpen,
+  Assessment,
+  AssessmentType,
+  AssessmentStatus,
+  AssessmentComponent,
+} from "@/types/examinations";
+import { calculateAssessmentTotal } from "@/services/grading-calculator";
+import { DataGrid } from "@/components/data-grid/data-grid";
+import { ColumnDef } from "@/components/data-grid/data-grid.types";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
+import {
+  FileText,
   Plus,
-  CheckCircle2,
-  AlertTriangle,
+  Trash2,
   Lock,
   ArrowRight,
+  Filter,
+  CheckCircle2,
+  AlertTriangle,
   Layers,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
 
 export default function AssessmentConfigurationPage() {
   const { hasPermission } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const { showToast } = useToast();
 
-  // Aux state
-  const [courseOfferings, setCourseOfferings] = useState<CourseOffering[]>([]);
-  const [examTerms, setExamTerms] = useState<ExamTerm[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [selectedDept, setSelectedDept] = useState<string>("ALL");
+  const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
+  const [selectedType, setSelectedType] = useState<string>("ALL");
 
-  // Selection & Filters
-  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
-  const [filterType, setFilterType] = useState<string>("");
-  const [filterStatus, setFilterStatus] = useState<string>("");
-
-  // Loaded structure
-  const [structure, setStructure] = useState<CourseAssessmentStructure | null>(null);
-  const [allAssessments, setAllAssessments] = useState<Assessment[]>([]);
-
-  // Modal State
+  // Create Modal State
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [finalizeId, setFinalizeId] = useState<string | null>(null);
-  const [finalizing, setFinalizing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Form State
-  const [formData, setFormData] = useState({
-    course_offering_id: "",
-    exam_term_id: "",
-    title: "",
-    assessment_type: "INTERNAL",
-    sequence: 1,
-    max_marks: 50,
-    passing_marks: 20,
-    weightage_percent: 20,
-    description: "",
-  });
+  const [name, setName] = useState("");
+  const [courseOfferingId, setCourseOfferingId] = useState("co-cs301-a");
+  const [courseCode, setCourseCode] = useState("CS301");
+  const [courseName, setCourseName] = useState("Data Structures & Algorithms");
+  const [section, setSection] = useState("A");
+  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [facultyName, setFacultyName] = useState("Dr. Ramesh Sundaram");
+  const [semester, setSemester] = useState<number>(5);
+  const [assessmentType, setAssessmentType] = useState<AssessmentType>("INTERNAL");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
-  // Load initial course offerings & exam terms
+  // Assessment Components builder
+  const [components, setComponents] = useState<AssessmentComponent[]>([
+    { id: "c-1", name: "Assignment 1", type: "ASSIGNMENT", maxMarks: 20, passingMarks: 8, weightage: 10, sequence: 1 },
+    { id: "c-2", name: "Quiz 1", type: "QUIZ", maxMarks: 20, passingMarks: 8, weightage: 10, sequence: 2 },
+    { id: "c-3", name: "Mid-Term Written Test", type: "MIDTERM", maxMarks: 60, passingMarks: 24, weightage: 20, sequence: 3 },
+  ]);
+
+  const loadAssessments = async () => {
+    try {
+      setLoading(true);
+      const res = await examinationsService.getAssessments({
+        department: selectedDept !== "ALL" ? selectedDept : undefined,
+        status: selectedStatus !== "ALL" ? selectedStatus : undefined,
+        type: selectedType !== "ALL" ? selectedType : undefined,
+      });
+      setAssessments(res.data);
+    } catch {
+      showToast({ title: "Error", message: "Failed to load assessments", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    async function loadInitial() {
-      try {
-        setError(null);
+    loadAssessments();
+  }, [selectedDept, selectedStatus, selectedType]);
 
-        const [coursesRes, termsRes] = await Promise.all([
-          apiFetch<CourseOffering[]>("/api/v1/academics/course-offerings"),
-          apiFetch<ExamTerm[]>("/api/v1/examinations/terms"),
-        ]);
+  const { totalMaxMarks, totalWeightage, isValidWeightage } = useMemo(() => {
+    return calculateAssessmentTotal(components);
+  }, [components]);
 
-        const courses = coursesRes.data || [];
-        setCourseOfferings(courses);
-        setExamTerms(termsRes.data || []);
+  const handleAddComponent = () => {
+    const nextSeq = components.length + 1;
+    setComponents([
+      ...components,
+      {
+        id: `c-${Date.now()}`,
+        name: `Component ${nextSeq}`,
+        type: "ASSIGNMENT",
+        maxMarks: 20,
+        passingMarks: 8,
+        weightage: 10,
+        sequence: nextSeq,
+      },
+    ]);
+  };
 
-        if (courses.length > 0) {
-          const firstId = courses[0].id;
-          setSelectedCourseId(firstId);
-          setFormData((prev) => ({ ...prev, course_offering_id: firstId }));
+  const handleRemoveComponent = (id: string) => {
+    if (components.length <= 1) {
+      showToast({ title: "Validation", message: "Assessment requires at least 1 component", type: "error" });
+      return;
+    }
+    setComponents(components.filter((c) => c.id !== id));
+  };
+
+  const handleUpdateComponent = (
+    id: string,
+    field: keyof AssessmentComponent,
+    val: string | number
+  ) => {
+    setComponents(
+      components.map((c) => {
+        if (c.id === id) {
+          return { ...c, [field]: val };
         }
-      } catch {
-        const mockCourses = [
-          {
-            id: "off-cs301",
-            course_code: "CS301",
-            course_name: "Data Structures & Algorithms",
-            faculty_name: "Dr. Rajesh Sharma",
-            section_name: "Sec A",
-          } as unknown as CourseOffering,
-          {
-            id: "off-cs302",
-            course_code: "CS302",
-            course_name: "Database Management Systems",
-            faculty_name: "Dr. K. S. Anand",
-            section_name: "Sec A",
-          } as unknown as CourseOffering,
-          {
-            id: "off-cs303",
-            course_code: "CS303",
-            course_name: "Operating Systems & Concurrency",
-            faculty_name: "Prof. Meenakshi Sundaram",
-            section_name: "Sec A",
-          } as unknown as CourseOffering,
-        ];
-        setCourseOfferings(mockCourses);
-        setSelectedCourseId(mockCourses[0].id);
-        setFormData((prev) => ({ ...prev, course_offering_id: mockCourses[0].id }));
-        setExamTerms([
-          { id: "term-odd-2026", name: "Odd Semester 2026-27", is_active: true } as unknown as ExamTerm,
-        ]);
-      }
-    }
-    loadInitial();
-  }, []);
+        return c;
+      })
+    );
+  };
 
-  // Whenever selected course changes, load its assessment structure
-  useEffect(() => {
-    if (!selectedCourseId) {
-      setStructure(null);
-      return;
-    }
-
-    async function loadCourseStructure() {
-      try {
-        setError(null);
-        const res = await apiFetch<CourseAssessmentStructure>(
-          `/api/v1/examinations/assessments/structure/${selectedCourseId}`
-        );
-        setStructure(res.data);
-        setFormData((prev) => ({
-          ...prev,
-          course_offering_id: selectedCourseId,
-          sequence: (res.data?.assessments?.length || 0) + 1,
-        }));
-      } catch {
-        const fallbackStructure: CourseAssessmentStructure = {
-          course_offering_id: selectedCourseId,
-          course_code: "CS301",
-          course_name: "Data Structures & Algorithms",
-          total_weightage_allocated: 100,
-          is_complete: true,
-          assessments: [
-            {
-              id: "asm-ia1-2026",
-              course_offering_id: selectedCourseId,
-              title: "Continuous Internal Assessment 1",
-              assessment_type: "INTERNAL",
-              sequence: 1,
-              max_marks: 50,
-              passing_marks: 20,
-              weightage_percent: 20,
-              status: "FINALIZED",
-            } as unknown as Assessment,
-            {
-              id: "asm-ia2-2026",
-              course_offering_id: selectedCourseId,
-              title: "Continuous Internal Assessment 2",
-              assessment_type: "INTERNAL",
-              sequence: 2,
-              max_marks: 50,
-              passing_marks: 20,
-              weightage_percent: 20,
-              status: "OPEN",
-            } as unknown as Assessment,
-            {
-              id: "asm-mid-2026",
-              course_offering_id: selectedCourseId,
-              title: "Mid-Term Evaluation",
-              assessment_type: "MID_TERM",
-              sequence: 3,
-              max_marks: 100,
-              passing_marks: 40,
-              weightage_percent: 30,
-              status: "DRAFT",
-            } as unknown as Assessment,
-            {
-              id: "asm-ese-2026",
-              course_offering_id: selectedCourseId,
-              title: "End-Semester Examination",
-              assessment_type: "END_SEM",
-              sequence: 4,
-              max_marks: 100,
-              passing_marks: 40,
-              weightage_percent: 30,
-              status: "DRAFT",
-            } as unknown as Assessment,
-          ],
-        } as unknown as CourseAssessmentStructure;
-
-        setStructure(fallbackStructure);
-        setFormData((prev) => ({
-          ...prev,
-          course_offering_id: selectedCourseId,
-          sequence: fallbackStructure.assessments.length + 1,
-        }));
-      }
-    }
-
-    loadCourseStructure();
-  }, [selectedCourseId]);
-
-  // Filtered assessments
-  const displayedAssessments = useMemo(() => {
-    const list = structure?.assessments || allAssessments;
-    return list.filter((a) => {
-      if (filterType && a.assessment_type !== filterType) return false;
-      if (filterStatus && a.status !== filterStatus) return false;
-      return true;
-    });
-  }, [structure, allAssessments, filterType, filterStatus]);
-
-  // Selected course details
-  const selectedCourse = useMemo(
-    () => courseOfferings.find((c) => c.id === selectedCourseId),
-    [courseOfferings, selectedCourseId]
-  );
-
-  const totalWeightage = structure?.total_weightage_percent ?? displayedAssessments.reduce((sum, a) => sum + a.weightage_percent, 0);
-
-  // Submit create assessment component
-  async function handleCreateAssessment(e: React.FormEvent) {
+  const handleCreateAssessment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.course_offering_id) {
-      setError("Please select a valid course offering.");
+    if (!name.trim()) {
+      showToast({ title: "Validation Error", message: "Assessment title is required.", type: "error" });
       return;
     }
 
-    if (formData.passing_marks > formData.max_marks) {
-      setError("Passing marks cannot exceed maximum marks.");
+    if (totalMaxMarks <= 0) {
+      showToast({ title: "Validation Error", message: "Total marks must be greater than zero.", type: "error" });
       return;
     }
 
     try {
-      setCreating(true);
-      setError(null);
-
-      await apiFetch<Assessment>("/api/v1/examinations/assessments", {
-        method: "POST",
-        body: JSON.stringify({
-          course_offering_id: formData.course_offering_id,
-          exam_term_id: formData.exam_term_id || null,
-          title: formData.title.trim(),
-          assessment_type: formData.assessment_type,
-          sequence: Number(formData.sequence),
-          max_marks: Number(formData.max_marks),
-          passing_marks: Number(formData.passing_marks),
-          weightage_percent: Number(formData.weightage_percent),
-          description: formData.description.trim() || null,
-        }),
+      setSaving(true);
+      await examinationsService.createAssessment({
+        name,
+        type: assessmentType,
+        courseOfferingId,
+        courseCode,
+        courseName,
+        section,
+        department,
+        facultyName,
+        semester,
+        maxMarks: totalMaxMarks,
+        passingMarks: Math.round(totalMaxMarks * 0.4),
+        weightage: totalWeightage,
+        date,
+        components,
       });
 
-      setSuccessMsg(`Assessment component "${formData.title}" created successfully.`);
+      showToast({ title: "Success", message: "Assessment scheme configured successfully.", type: "success" });
       setCreateModalOpen(false);
-
-      // Reset form title and reload structure
-      setFormData((prev) => ({
-        ...prev,
-        title: "",
-        sequence: prev.sequence + 1,
-        description: "",
-      }));
-
-      // Reload
-      const res = await apiFetch<CourseAssessmentStructure>(
-        `/api/v1/examinations/assessments/structure/${formData.course_offering_id}`
-      );
-      setStructure(res.data);
-    } catch {
-      const newAsm: Assessment = {
-        id: `asm-${Date.now()}`,
-        course_offering_id: formData.course_offering_id,
-        exam_term_id: formData.exam_term_id || "term-odd-2026",
-        title: formData.title.trim(),
-        assessment_type: formData.assessment_type as any,
-        sequence: Number(formData.sequence),
-        max_marks: Number(formData.max_marks),
-        passing_marks: Number(formData.passing_marks),
-        weightage_percent: Number(formData.weightage_percent),
-        status: "DRAFT" as any,
-      } as unknown as Assessment;
-
-      setStructure((prev) =>
-        prev
-          ? {
-              ...prev,
-              assessments: [...prev.assessments, newAsm],
-            }
-          : null
-      );
-      setSuccessMsg(`Assessment component "${formData.title}" created successfully.`);
-      setCreateModalOpen(false);
-      setFormData((prev) => ({
-        ...prev,
-        title: "",
-        sequence: prev.sequence + 1,
-        description: "",
-      }));
-    } finally {
-      setCreating(false);
-    }
-  }
-
-  // Handle finalize assessment
-  async function handleFinalize(assessmentId: string) {
-    try {
-      setFinalizing(true);
-      setError(null);
-
-      await apiFetch(`/api/v1/examinations/assessments/${assessmentId}/finalize`, {
-        method: "POST",
+      setName("");
+      loadAssessments();
+    } catch (err: unknown) {
+      showToast({
+        title: "Error",
+        message: err instanceof Error ? err.message : "Failed to create assessment",
+        type: "error",
       });
-
-      setSuccessMsg("Assessment finalized and locked successfully.");
-      setFinalizeId(null);
-
-      if (selectedCourseId) {
-        const res = await apiFetch<CourseAssessmentStructure>(
-          `/api/v1/examinations/assessments/structure/${selectedCourseId}`
-        );
-        setStructure(res.data);
-      }
-    } catch {
-      setStructure((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          assessments: prev.assessments.map((a) =>
-            a.id === assessmentId ? { ...a, status: "FINALIZED" as any } : a
-          ),
-        };
-      });
-      setSuccessMsg("Assessment finalized and locked successfully.");
-      setFinalizeId(null);
     } finally {
-      setFinalizing(false);
+      setSaving(false);
     }
-  }
+  };
+
+  const columns: ColumnDef<Assessment>[] = useMemo(
+    () => [
+      {
+        id: "name",
+        header: "Assessment Name",
+        cell: (row) => (
+          <div>
+            <Link
+              href={`/app/examinations/assessments/${row.id}`}
+              className="font-semibold text-slate-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400"
+            >
+              {row.name}
+            </Link>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-500">
+              <span className="font-mono font-medium text-slate-600 dark:text-slate-300">
+                {row.courseCode}
+              </span>
+              <span>•</span>
+              <span>Sec {row.section}</span>
+              <span>•</span>
+              <span>{row.facultyName}</span>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "type",
+        header: "Type",
+        cell: (row) => (
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            {row.type}
+          </span>
+        ),
+      },
+      {
+        id: "marks",
+        header: "Score Matrix",
+        cell: (row) => (
+          <div className="text-xs">
+            <span className="font-semibold text-slate-900 dark:text-white">
+              Max: {row.maxMarks}
+            </span>
+            <span className="text-slate-400 ml-1.5">(Pass: {row.passingMarks})</span>
+            <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
+              Weightage: {row.weightage}%
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "components",
+        header: "Sub-Components",
+        cell: (row) => (
+          <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <Layers className="h-3.5 w-3.5 text-slate-400" />
+            <span>{row.components?.length || 1} component(s)</span>
+          </div>
+        ),
+      },
+      {
+        id: "completion",
+        header: "Marks Roster",
+        cell: (row) => {
+          const pct = Math.round(((row.totalEntered || 0) / (row.totalEnrolled || 1)) * 100);
+          return (
+            <div className="w-28 space-y-1">
+              <div className="flex justify-between text-[11px] text-slate-500">
+                <span>{row.totalEntered} of {row.totalEnrolled}</span>
+                <span className="font-medium">{pct}%</span>
+              </div>
+              <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${
+                    pct === 100 ? "bg-emerald-500" : pct > 0 ? "bg-amber-500" : "bg-slate-300"
+                  }`}
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: "status",
+        header: "Status",
+        cell: (row) => {
+          const isDone = row.isFinalized || row.status === "FINALIZED";
+          return (
+            <span
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${
+                isDone
+                  ? "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300"
+                  : row.status === "OPEN"
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                  : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
+              }`}
+            >
+              {isDone && <Lock className="h-3 w-3" />}
+              {row.status}
+            </span>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: (row) => (
+          <div className="flex items-center gap-2">
+            <Link href={`/app/examinations/assessments/${row.id}`}>
+              <Button size="sm" variant="outline" className="h-7 text-xs gap-1">
+                Details
+                <ArrowRight className="h-3 w-3" />
+              </Button>
+            </Link>
+            <Link href={`/app/examinations/marks?course_offering_id=${row.courseOfferingId}&assessment_id=${row.id}`}>
+              <Button size="sm" variant="primary" className="h-7 text-xs">
+                Marks
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/app/examinations"
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-            >
-              Examination Hub
-            </Link>
-            <span className="text-slate-400 text-xs">/</span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Assessments</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+              Course Offerings
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Continuous Assessment Schemes</span>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <BookOpen className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-            Assessment Configuration
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Assessment Schemes & Components
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Define multi-component assessment structures, sequence, passing benchmarks, and weightage distribution.
+            Define multi-component evaluation frameworks (quizzes, assignments, mid-terms, and end-semesters) with weighted aggregates.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {hasPermission("assessments:create") && (
-            <button
-              onClick={() => {
-                setFormData((prev) => ({
-                  ...prev,
-                  course_offering_id: selectedCourseId,
-                  sequence: (structure?.assessments?.length || 0) + 1,
-                }));
-                setCreateModalOpen(true);
-              }}
-              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition"
-            >
-              <Plus className="h-4 w-4" />
-              New Component
-            </button>
-          )}
-        </div>
+        <Button variant="primary" className="gap-2" onClick={() => setCreateModalOpen(true)}>
+          <Plus className="h-4 w-4" />
+          Configure Assessment
+        </Button>
       </div>
 
-      {/* Alerts */}
-      {error && (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 flex items-start justify-between">
-          <div>
-            <p className="font-semibold">Operation Error</p>
-            <p className="mt-0.5">{error}</p>
-          </div>
-          <button
-            onClick={() => setError(null)}
-            className="text-rose-600 hover:text-rose-800 dark:text-rose-400 text-xs font-semibold"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
-
-      {successMsg && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300 flex items-start justify-between">
-          <p className="font-medium">{successMsg}</p>
-          <button
-            onClick={() => setSuccessMsg(null)}
-            className="text-emerald-700 hover:text-emerald-900 text-xs font-semibold"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
-
-      {/* Course Offering Selector & Filter Bar */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-1">
-            <label className="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Course Offering
-            </label>
-            <select
-              value={selectedCourseId}
-              onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-            >
-              {courseOfferings.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.subject_code ? `${c.subject_code} - ` : ""}
-                  {c.subject_name || "Unnamed Course"} ({c.section_name || "Section A"})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Filter By Type
-            </label>
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-            >
-              <option value="">All Assessment Types</option>
-              <option value="INTERNAL">Internal Assessment</option>
-              <option value="MIDTERM">Midterm</option>
-              <option value="ASSIGNMENT">Assignment</option>
-              <option value="QUIZ">Quiz</option>
-              <option value="LAB">Lab / Practical</option>
-              <option value="MODEL_EXAM">Model Exam</option>
-              <option value="END_SEMESTER">End Semester Examination</option>
-              <option value="PROJECT">Project Evaluation</option>
-              <option value="VIVA">Viva Voce</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Filter By Status
-            </label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-            >
-              <option value="">All Statuses</option>
-              <option value="CONFIGURED">Configured (Open for Entry)</option>
-              <option value="FINALIZED">Finalized (Marks Locked)</option>
-              <option value="DRAFT">Draft</option>
-            </select>
-          </div>
+      {/* Filter Bar */}
+      <div className="flex flex-wrap items-center gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+          <Filter className="h-3.5 w-3.5" />
+          Filters:
         </div>
 
-        {/* Weightage Audit Card */}
-        {selectedCourse && (
-          <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-800/80">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <select
+          value={selectedDept}
+          onChange={(e) => setSelectedDept(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        >
+          <option value="ALL">All Departments</option>
+          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+          <option value="Electronics & Communication">Electronics & Communication</option>
+        </select>
+
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        >
+          <option value="ALL">All Types</option>
+          <option value="INTERNAL">Internal Continuous</option>
+          <option value="MIDTERM">Midterm</option>
+          <option value="END_SEMESTER">End Semester</option>
+          <option value="LABORATORY">Laboratory</option>
+        </select>
+
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        >
+          <option value="ALL">All Statuses</option>
+          <option value="OPEN">Open for Marks</option>
+          <option value="SCHEDULED">Scheduled</option>
+          <option value="FINALIZED">Finalized / Locked</option>
+        </select>
+      </div>
+
+      {/* Enterprise DataGrid */}
+      <DataGrid<Assessment>
+        data={assessments}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        loading={loading}
+        searchPlaceholder="Search assessments by name, course code, title, or faculty..."
+        emptyTitle="No assessment schemes configured"
+        emptyDescription="Create a new assessment scheme for your course offering."
+      />
+
+      {/* Assessment Creation & Component Builder Modal */}
+      <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)}>
+        <form onSubmit={handleCreateAssessment} className="p-6 space-y-5 max-w-2xl">
+          <div className="border-b border-slate-200 pb-3 dark:border-slate-800">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-indigo-600" />
+              Configure Assessment Scheme
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Associate an evaluation scheme with a course offering and construct its components.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="sm:col-span-2">
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Assessment Scheme Title *
+              </label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. CS301 Continuous Internal Assessment (CIA)"
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Course Offering *
+              </label>
+              <select
+                value={courseOfferingId}
+                onChange={(e) => {
+                  setCourseOfferingId(e.target.value);
+                  if (e.target.value === "co-cs301-a") {
+                    setCourseCode("CS301");
+                    setCourseName("Data Structures & Algorithms");
+                    setFacultyName("Dr. Ramesh Sundaram");
+                  } else if (e.target.value === "co-cs302-a") {
+                    setCourseCode("CS302");
+                    setCourseName("Database Management Systems");
+                    setFacultyName("Dr. Anita Roy");
+                  } else {
+                    setCourseCode("CS303");
+                    setCourseName("Operating Systems & Concurrency");
+                    setFacultyName("Prof. Meenakshi Sundaram");
+                  }
+                }}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="co-cs301-a">CS301 - Data Structures (Section A)</option>
+                <option value="co-cs302-a">CS302 - Database Systems (Section A)</option>
+                <option value="co-cs303-a">CS303 - Operating Systems (Section A)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Assessment Category *
+              </label>
+              <select
+                value={assessmentType}
+                onChange={(e) => setAssessmentType(e.target.value as AssessmentType)}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="INTERNAL">Internal Continuous (Theory)</option>
+                <option value="MIDTERM">Midterm Examination</option>
+                <option value="END_SEMESTER">End Semester University Exam</option>
+                <option value="LABORATORY">Practical / Lab Exam</option>
+                <option value="PROJECT">Project / Dissertation</option>
+                <option value="VIVA">Oral VIVA Voce</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Target Evaluation Date
+              </label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Faculty Instructor
+              </label>
+              <input
+                type="text"
+                disabled
+                value={facultyName}
+                className="w-full rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-500 dark:border-slate-800 dark:bg-slate-900"
+              />
+            </div>
+          </div>
+
+          {/* Assessment Components Builder */}
+          <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                    {selectedCourse.subject_code ? `${selectedCourse.subject_code}: ` : ""}
-                    {selectedCourse.subject_name}
-                  </span>
-                  <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
-                    {selectedCourse.subject_credits ?? 3} Credits
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Academic Year: {selectedCourse.academic_year_name || "Active"} | Semester:{" "}
-                  {selectedCourse.semester_name || "Active"} | Section: {selectedCourse.section_name || "A"}
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                  Assessment Components
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Total Weightage: {totalWeightage}% • Total Marks: {totalMaxMarks}
                 </p>
               </div>
+              <Button type="button" size="sm" variant="outline" onClick={handleAddComponent} className="h-7 text-xs gap-1">
+                <Plus className="h-3 w-3" />
+                Add Component
+              </Button>
+            </div>
 
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Total Weightage
-                  </span>
-                  <div className="text-lg font-bold">
-                    <span
-                      className={
-                        totalWeightage === 100
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : totalWeightage > 100
-                          ? "text-rose-600 dark:text-rose-400"
-                          : "text-amber-600 dark:text-amber-400"
-                      }
-                    >
-                      {totalWeightage}%
-                    </span>
-                    <span className="text-xs text-slate-400 font-normal"> / 100%</span>
+            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              {components.map((c, idx) => (
+                <div
+                  key={c.id}
+                  className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 text-xs"
+                >
+                  <span className="font-mono text-slate-400 w-4">{idx + 1}.</span>
+                  <input
+                    type="text"
+                    value={c.name}
+                    onChange={(e) => handleUpdateComponent(c.id, "name", e.target.value)}
+                    placeholder="Component Name"
+                    className="flex-1 rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
+                  />
+                  <div className="w-20">
+                    <input
+                      type="number"
+                      min={1}
+                      value={c.maxMarks}
+                      onChange={(e) => handleUpdateComponent(c.id, "maxMarks", Number(e.target.value))}
+                      placeholder="Max"
+                      title="Maximum Marks"
+                      className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
+                    />
                   </div>
-                </div>
-
-                <div className="w-32 bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className={`h-2.5 rounded-full transition-all duration-500 ${
-                      totalWeightage === 100
-                        ? "bg-emerald-500"
-                        : totalWeightage > 100
-                        ? "bg-rose-500"
-                        : "bg-amber-500"
-                    }`}
-                    style={{ width: `${Math.min(totalWeightage, 100)}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {totalWeightage < 100 && (
-              <p className="mt-2 text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                <AlertTriangle className="h-3.5 w-3.5" />
-                Assessment weightage totals {totalWeightage}%. Configure remaining {100 - totalWeightage}% to complete grading structure.
-              </p>
-            )}
-            {totalWeightage === 100 && (
-              <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Cumulative weightage is mathematically sound (100.0%). Ready for authoritative marks evaluation.
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Assessment Components List */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden dark:border-slate-800 dark:bg-slate-900">
-        <div className="p-5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Layers className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-              Configured Assessment Components
-            </h2>
-            <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
-              {displayedAssessments.length}
-            </span>
-          </div>
-        </div>
-
-        {displayedAssessments.length === 0 ? (
-          <div className="p-12 text-center">
-            <BookOpen className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-600" />
-            <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-white">
-              No assessments configured
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              No assessment components have been created for this course offering yet.
-            </p>
-            {hasPermission("assessments:create") && (
-              <button
-                onClick={() => setCreateModalOpen(true)}
-                className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-              >
-                <Plus className="h-4 w-4" />
-                Add First Assessment Component
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50/75 dark:bg-slate-800/50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200/80 dark:border-slate-800">
-                <tr>
-                  <th className="py-3 px-4">Seq</th>
-                  <th className="py-3 px-4">Title & Type</th>
-                  <th className="py-3 px-4">Max Marks</th>
-                  <th className="py-3 px-4">Passing</th>
-                  <th className="py-3 px-4">Weightage</th>
-                  <th className="py-3 px-4">Marks Progress</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {displayedAssessments.map((a) => (
-                  <tr key={a.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                    <td className="py-3.5 px-4 font-mono text-xs text-slate-400">{a.sequence}</td>
-                    <td className="py-3.5 px-4">
-                      <div className="font-medium text-slate-900 dark:text-white">{a.title}</div>
-                      <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                        <span className="capitalize">{a.assessment_type.toLowerCase().replace("_", " ")}</span>
-                        {a.exam_term_name && <span>• {a.exam_term_name}</span>}
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4 font-mono font-medium text-slate-800 dark:text-slate-200">
-                      {a.max_marks}
-                    </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-400">
-                      {a.passing_marks}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
-                        {a.weightage_percent}%
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                        {a.total_marks_entered} / {a.total_enrolled} entered
-                      </div>
-                      <div className="w-24 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-1 overflow-hidden">
-                        <div
-                          className="bg-indigo-500 h-1.5 rounded-full"
-                          style={{
-                            width: `${
-                              a.total_enrolled > 0
-                                ? Math.round((a.total_marks_entered / a.total_enrolled) * 100)
-                                : 0
-                            }%`,
-                          }}
-                        />
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4">
-                      {a.is_finalized ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                          <Lock className="h-3 w-3" />
-                          Finalized
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
-                          Open for Marks
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/app/examinations/marks?assessment_id=${a.id}&course_offering_id=${selectedCourseId}`}
-                          className="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 inline-flex items-center gap-1"
-                        >
-                          Roster & Marks
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </Link>
-
-                        {!a.is_finalized && hasPermission("assessments:finalize") && (
-                          <button
-                            onClick={() => setFinalizeId(a.id)}
-                            className="text-xs px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition"
-                            title="Lock marks and mark component as finalized"
-                          >
-                            Finalize
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Modal: Create Assessment Component */}
-      {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              Create Assessment Component
-            </h2>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Configure weightage and passing threshold for this evaluation milestone.
-            </p>
-
-            <form onSubmit={handleCreateAssessment} className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Component Title *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Internal Assessment 1"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Assessment Type *
-                  </label>
-                  <select
-                    value={formData.assessment_type}
-                    onChange={(e) => setFormData({ ...formData, assessment_type: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                  <div className="w-20">
+                    <input
+                      type="number"
+                      min={0}
+                      value={c.passingMarks}
+                      onChange={(e) => handleUpdateComponent(c.id, "passingMarks", Number(e.target.value))}
+                      placeholder="Pass"
+                      title="Passing Marks"
+                      className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
+                    />
+                  </div>
+                  <div className="w-20">
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={c.weightage}
+                      onChange={(e) => handleUpdateComponent(c.id, "weightage", Number(e.target.value))}
+                      placeholder="Weight%"
+                      title="Weightage Percent"
+                      className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveComponent(c.id)}
+                    className="text-slate-400 hover:text-rose-600 p-1"
                   >
-                    <option value="INTERNAL">Internal Assessment</option>
-                    <option value="MIDTERM">Midterm</option>
-                    <option value="ASSIGNMENT">Assignment</option>
-                    <option value="QUIZ">Quiz</option>
-                    <option value="LAB">Lab / Practical</option>
-                    <option value="MODEL_EXAM">Model Exam</option>
-                    <option value="END_SEMESTER">End Semester Exam</option>
-                    <option value="PROJECT">Project Evaluation</option>
-                    <option value="VIVA">Viva Voce</option>
-                  </select>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
                 </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Exam Term (Optional)
-                  </label>
-                  <select
-                    value={formData.exam_term_id}
-                    onChange={(e) => setFormData({ ...formData, exam_term_id: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                  >
-                    <option value="">No Associated Term</option>
-                    {examTerms.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Max Marks *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="500"
-                    required
-                    value={formData.max_marks}
-                    onChange={(e) => setFormData({ ...formData, max_marks: Number(e.target.value) })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Passing Marks *
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    max={formData.max_marks}
-                    required
-                    value={formData.passing_marks}
-                    onChange={(e) => setFormData({ ...formData, passing_marks: Number(e.target.value) })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Weightage (%) *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="100"
-                    required
-                    value={formData.weightage_percent}
-                    onChange={(e) =>
-                      setFormData({ ...formData, weightage_percent: Number(e.target.value) })
-                    }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Description / Remarks
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Optional evaluation criteria or syllabus modules covered..."
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setCreateModalOpen(false)}
-                  className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={creating}
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
-                >
-                  {creating ? "Creating..." : "Save Component"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Confirm Finalize Assessment */}
-      {finalizeId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex items-center gap-3 text-amber-600 dark:text-amber-400">
-              <Lock className="h-6 w-6" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Finalize Assessment Component?
-              </h3>
-            </div>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Finalizing this assessment will lock all student marks. Once locked, ordinary faculty cannot edit scores directly without initiating a formal, audited correction request.
-            </p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setFinalizeId(null)}
-                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={finalizing}
-                onClick={() => handleFinalize(finalizeId)}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
-              >
-                {finalizing ? "Locking..." : "Confirm & Lock Marks"}
-              </button>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <Button type="button" variant="outline" onClick={() => setCreateModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={saving}>
+              {saving ? "Saving..." : "Save Assessment Scheme"}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </div>
   );
 }

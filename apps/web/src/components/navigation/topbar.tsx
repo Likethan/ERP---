@@ -6,8 +6,7 @@ import { RoleSwitcher } from "./role-switcher";
 import { CommandPalette } from "./command-palette";
 import { NotificationDrawer } from "./notification-drawer";
 import { useAuth } from "@/lib/auth-context";
-import { Search, Bell, Menu, Shield, LogOut, ExternalLink } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search, Bell, Menu, Shield, LogOut } from "lucide-react";
 
 interface TopbarProps {
   onToggleSidebar?: () => void;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import type { Department, Program } from "@campusos/types";
 import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
@@ -28,7 +28,7 @@ export default function ProgramsPage() {
 
   const canManage = hasPermission("core:programs:manage");
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -48,14 +48,14 @@ export default function ProgramsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDeptId, search]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       loadData();
     }, 250);
     return () => clearTimeout(timer);
-  }, [search, selectedDeptId]);
+  }, [loadData]);
 
   const handleCreateProgram = async (e: React.FormEvent) => {
     e.preventDefault();

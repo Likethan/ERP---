@@ -7,21 +7,18 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { financeService } from "@/services/finance.service";
-import { InvoiceItem, PaymentTransactionItem } from "@/mocks/finance.mock";
+import { Invoice, Payment } from "@/types/finance";
 import {
   DollarSign,
   CreditCard,
   Receipt,
   Gift,
   ArrowRight,
-  TrendingUp,
-  AlertCircle,
-  Plus,
 } from "lucide-react";
 
 export function AccountsDashboard() {
-  const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
-  const [payments, setPayments] = useState<PaymentTransactionItem[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
 
   useEffect(() => {
     financeService.getInvoices().then((res) => setInvoices(res.data));
@@ -109,7 +106,7 @@ export function AccountsDashboard() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {payments.map((p) => (
+            {payments.slice(0, 5).map((p) => (
               <div
                 key={p.id}
                 className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
@@ -119,7 +116,7 @@ export function AccountsDashboard() {
                     {p.studentName} ({p.rollNumber})
                   </div>
                   <div className="text-[11px] text-slate-400 font-mono mt-0.5">
-                    {p.receiptNumber} • {p.paymentMode}
+                    {p.receiptNumber} • {p.paymentMethod}
                   </div>
                 </div>
                 <div className="text-right">
@@ -147,7 +144,7 @@ export function AccountsDashboard() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {invoices.map((inv) => (
+            {invoices.slice(0, 5).map((inv) => (
               <div
                 key={inv.id}
                 className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
@@ -163,11 +160,11 @@ export function AccountsDashboard() {
                 <div className="text-right flex items-center gap-3">
                   <div>
                     <div className="font-mono font-bold text-white">
-                      ₹{inv.totalAmount.toLocaleString()}
+                      ₹{inv.netPayable.toLocaleString()}
                     </div>
-                    {inv.balanceAmount > 0 && (
+                    {inv.outstandingAmount > 0 && (
                       <div className="text-[10px] text-red-400 font-mono font-medium">
-                        Due: ₹{inv.balanceAmount.toLocaleString()}
+                        Due: ₹{inv.outstandingAmount.toLocaleString()}
                       </div>
                     )}
                   </div>
