@@ -10,6 +10,7 @@ export * from "./placements.service";
 export * from "./placement.service";
 export * from "./placement-calculator";
 export * from "./campus.service";
+export * from "./campus-calculator";
 export * from "./infrastructure.service";
 export * from "./documents.service";
 export * from "./intelligence.service";

@@ -184,7 +184,7 @@ export async function runPlacementModuleTests(): Promise<{
       name: "Stripe India",
       industry: "Financial Technology",
       companyType: "PRODUCT",
-      tier: "TIER_1",
+      tier: "TIER_1_SUPER_DREAM",
       website: "https://stripe.com",
       headquarters: "Bengaluru, Karnataka",
       contacts: [
@@ -287,6 +287,7 @@ export async function runPlacementModuleTests(): Promise<{
 
     // Complete interview with 4-dimension evaluation
     const completeRes = await placementService.completeInterview(newIntvRes.data.id, {
+      technicalRating: 5,
       technicalSkillsRating: 5,
       communicationRating: 4,
       problemSolvingRating: 5,

@@ -22,7 +22,7 @@ import {
   MOCK_CANONICAL_SCHOLARSHIPS,
   MOCK_CANONICAL_REFUNDS,
 } from "@/mocks/finance.mock";
-import { MOCK_EVENTS } from "@/mocks/campus.mock";
+import { MOCK_EVENTS, MOCK_CLUBS, MOCK_ANNOUNCEMENTS, MOCK_VENUES } from "@/mocks/campus.mock";
 import { MOCK_DOCUMENTS } from "@/mocks/documents.mock";
 import { MOCK_CANONICAL_SESSIONS } from "@/mocks/attendance.mock";
 import {
@@ -30,6 +30,18 @@ import {
   MOCK_CANONICAL_ASSESSMENTS,
   MOCK_CANONICAL_EXAM_SCHEDULES,
 } from "@/mocks/examinations.mock";
+import {
+  MOCK_HOSTELS,
+  MOCK_HOSTEL_ROOMS,
+  MOCK_HOSTEL_ALLOCATIONS,
+  MOCK_HOSTEL_COMPLAINTS,
+  MOCK_TRANSPORT_ROUTES,
+  MOCK_TRANSPORT_STOPS,
+  MOCK_TRANSPORT_VEHICLES,
+  MOCK_TRANSPORT_DRIVERS,
+  MOCK_FACILITIES,
+  MOCK_MAINTENANCE_REQUESTS,
+} from "@/mocks/infrastructure.mock";
 
 class SearchService {
   async search(query: string): Promise<ApiResponse<GlobalSearchResultItem[]>> {
@@ -560,15 +572,115 @@ class SearchService {
       }
     });
 
-    // Search Events
+    // Search Campus Navigation
+    if ("campus".includes(q) || "campus hub".includes(q) || "student engagement".includes(q)) {
+      results.push({
+        id: "nav-campus-hub",
+        title: "Campus Operations & Engagement Hub",
+        subtitle: "Events, clubs directory, institutional communication, and calendar",
+        category: "Campus",
+        href: "/app/campus",
+      });
+    }
+    if ("events".includes(q) || "hackathon".includes(q) || "workshop".includes(q)) {
+      results.push({
+        id: "nav-campus-events",
+        title: "Campus Events Management",
+        subtitle: "Browse university events, hackathons, symposiums, and registrations",
+        category: "Campus",
+        href: "/app/campus/events",
+      });
+    }
+    if ("clubs".includes(q) || "societies".includes(q) || "organizations".includes(q)) {
+      results.push({
+        id: "nav-campus-clubs",
+        title: "Clubs & Student Organizations",
+        subtitle: "Explore student societies, leadership rosters, and memberships",
+        category: "Campus",
+        href: "/app/campus/clubs",
+      });
+    }
+    if ("announcements".includes(q) || "notices".includes(q) || "circulars".includes(q)) {
+      results.push({
+        id: "nav-campus-announcements",
+        title: "Campus Announcements & Dispatches",
+        subtitle: "Official circulars, exam notices, and institutional advisories",
+        category: "Campus",
+        href: "/app/campus/announcements",
+      });
+    }
+
+    // Search Campus Events
     MOCK_EVENTS.forEach((e) => {
-      if (e.title.toLowerCase().includes(q) || e.venue.toLowerCase().includes(q)) {
+      if (
+        e.title.toLowerCase().includes(q) ||
+        e.venue.toLowerCase().includes(q) ||
+        e.category.toLowerCase().includes(q) ||
+        e.organizer.toLowerCase().includes(q)
+      ) {
         results.push({
           id: e.id,
           title: e.title,
-          subtitle: `${e.venue} • Starts: ${e.startDate}`,
+          subtitle: `${e.category} • ${e.venue} • Starts: ${e.startDate}`,
           category: "Event",
-          href: `/app/events/${e.id}`,
+          href: `/app/campus/events/${e.id}`,
+          badge: e.status,
+        });
+      }
+    });
+
+    // Search Campus Clubs
+    MOCK_CLUBS.forEach((c) => {
+      if (
+        c.name.toLowerCase().includes(q) ||
+        c.code.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        c.studentLead.toLowerCase().includes(q) ||
+        c.facultyCoordinator.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: c.id,
+          title: `${c.code} — ${c.name}`,
+          subtitle: `${c.category} • Lead: ${c.studentLead} • ${c.membersCount} members`,
+          category: "Club",
+          href: `/app/campus/clubs/${c.id}`,
+          badge: c.status,
+        });
+      }
+    });
+
+    // Search Announcements
+    MOCK_ANNOUNCEMENTS.forEach((a) => {
+      if (
+        a.title.toLowerCase().includes(q) ||
+        a.content.toLowerCase().includes(q) ||
+        a.publisher.toLowerCase().includes(q) ||
+        a.category.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: a.id,
+          title: a.title,
+          subtitle: `${a.category} • By ${a.publisher} • Published: ${a.publishDate}`,
+          category: "Announcement",
+          href: `/app/campus/announcements/${a.id}`,
+          badge: a.priority,
+        });
+      }
+    });
+
+    // Search Venues
+    MOCK_VENUES.forEach((v) => {
+      if (
+        v.name.toLowerCase().includes(q) ||
+        v.building.toLowerCase().includes(q) ||
+        v.roomNumber.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: v.id,
+          title: v.name,
+          subtitle: `${v.building} (${v.roomNumber}) • Capacity: ${v.capacity}`,
+          category: "Infrastructure",
+          href: `/app/campus/events`,
         });
       }
     });
@@ -586,9 +698,148 @@ class SearchService {
       }
     });
 
+    // Search Infrastructure — Hostels
+    MOCK_HOSTELS.forEach((h) => {
+      if (h.name.toLowerCase().includes(q) || h.code.toLowerCase().includes(q) || h.wardenName.toLowerCase().includes(q)) {
+        results.push({
+          id: h.id,
+          title: h.name,
+          subtitle: `${h.code} • ${h.type} Hostel • Warden: ${h.wardenName}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/hostel/${h.id}`,
+          badge: h.status,
+        });
+      }
+    });
+
+    // Search Rooms
+    MOCK_HOSTEL_ROOMS.forEach((r) => {
+      if (r.roomNumber.toLowerCase().includes(q) || r.hostelName.toLowerCase().includes(q)) {
+        results.push({
+          id: r.id,
+          title: `Room ${r.roomNumber} (${r.hostelName})`,
+          subtitle: `${r.blockName} • Floor ${r.floor} • ${r.roomType}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/hostel/rooms/${r.id}`,
+          badge: r.status,
+        });
+      }
+    });
+
+    // Search Hostel Allocations
+    MOCK_HOSTEL_ALLOCATIONS.forEach((a) => {
+      if (a.studentName.toLowerCase().includes(q) || a.registerNumber.toLowerCase().includes(q) || a.roomNumber.toLowerCase().includes(q)) {
+        results.push({
+          id: a.id,
+          title: `${a.studentName} (${a.registerNumber})`,
+          subtitle: `${a.hostelName} • Room ${a.roomNumber} ${a.bedNumber}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/hostel/allocations/${a.id}`,
+          badge: a.status,
+        });
+      }
+    });
+
+    // Search Hostel Complaints
+    MOCK_HOSTEL_COMPLAINTS.forEach((c) => {
+      if (c.title.toLowerCase().includes(q) || c.ticketNumber.toLowerCase().includes(q) || c.studentName.toLowerCase().includes(q)) {
+        results.push({
+          id: c.id,
+          title: `${c.ticketNumber} — ${c.title}`,
+          subtitle: `${c.category} • ${c.hostelName} Room ${c.roomNumber} • ${c.priority}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/hostel/complaints/${c.id}`,
+          badge: c.status,
+        });
+      }
+    });
+
+    // Search Transport Routes
+    MOCK_TRANSPORT_ROUTES.forEach((rt) => {
+      if (rt.name.toLowerCase().includes(q) || rt.routeCode.toLowerCase().includes(q) || rt.startPoint.toLowerCase().includes(q) || rt.endPoint.toLowerCase().includes(q)) {
+        results.push({
+          id: rt.id,
+          title: `${rt.routeCode}: ${rt.name}`,
+          subtitle: `${rt.stopsCount} Stops • ${rt.allocatedStudents}/${rt.capacity} Students • Vehicle: ${rt.vehicleNumber || "Unassigned"}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/transport/routes/${rt.id}`,
+          badge: rt.status,
+        });
+      }
+    });
+
+    // Search Transport Stops
+    MOCK_TRANSPORT_STOPS.forEach((st) => {
+      if (st.name.toLowerCase().includes(q) || st.code.toLowerCase().includes(q) || st.routeCode.toLowerCase().includes(q)) {
+        results.push({
+          id: st.id,
+          title: `${st.name} (${st.code})`,
+          subtitle: `Route ${st.routeCode} • Pickup: ${st.pickupTime} • ${st.studentCount} Students`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/transport/stops/${st.id}`,
+        });
+      }
+    });
+
+    // Search Transport Vehicles
+    MOCK_TRANSPORT_VEHICLES.forEach((v) => {
+      if (v.registrationNumber.toLowerCase().includes(q) || v.vehicleNumber.toLowerCase().includes(q) || v.makeModel.toLowerCase().includes(q)) {
+        results.push({
+          id: v.id,
+          title: `${v.vehicleNumber} — ${v.registrationNumber}`,
+          subtitle: `${v.makeModel} • Capacity: ${v.capacity} • ${v.fuelType}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/transport/vehicles/${v.id}`,
+          badge: v.status,
+        });
+      }
+    });
+
+    // Search Transport Drivers
+    MOCK_TRANSPORT_DRIVERS.forEach((d) => {
+      if (d.name.toLowerCase().includes(q) || d.employeeId.toLowerCase().includes(q) || d.licenseNumber.toLowerCase().includes(q)) {
+        results.push({
+          id: d.id,
+          title: `${d.name} (${d.employeeId})`,
+          subtitle: `Driver • ${d.licenseType} • Route: ${d.assignedRouteCode || "Standby"}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/transport/drivers/${d.id}`,
+          badge: d.status,
+        });
+      }
+    });
+
+    // Search Facilities
+    MOCK_FACILITIES.forEach((f) => {
+      if (f.name.toLowerCase().includes(q) || f.code.toLowerCase().includes(q) || f.building.toLowerCase().includes(q)) {
+        results.push({
+          id: f.id,
+          title: f.name,
+          subtitle: `${f.code} • ${f.building} • Capacity: ${f.capacity}`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/facilities/${f.id}`,
+          badge: f.status,
+        });
+      }
+    });
+
+    // Search Maintenance Requests
+    MOCK_MAINTENANCE_REQUESTS.forEach((m) => {
+      if (m.title.toLowerCase().includes(q) || m.workOrderNumber.toLowerCase().includes(q) || m.assetOrFacilityName.toLowerCase().includes(q)) {
+        results.push({
+          id: m.id,
+          title: `${m.workOrderNumber}: ${m.title}`,
+          subtitle: `${m.category} • ${m.assetOrFacilityName} (${m.location})`,
+          category: "Infrastructure",
+          href: `/app/infrastructure/maintenance/${m.id}`,
+          badge: m.status,
+        });
+      }
+    });
+
     return {
       success: true,
-      data: results.slice(0, 15),
+      data: results.slice(0, 20),
     };
   }
 }

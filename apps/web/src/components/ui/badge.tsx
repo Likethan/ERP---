@@ -7,8 +7,10 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
     | "success"
     | "warning"
     | "destructive"
+    | "danger"
     | "info"
     | "secondary"
+    | "neutral"
     | "outline";
   dot?: boolean;
 }
@@ -37,6 +39,10 @@ export function Badge({
       badge: "bg-red-950/70 text-red-400 border-red-800/80",
       dot: "bg-red-400",
     },
+    danger: {
+      badge: "bg-red-950/70 text-red-400 border-red-800/80",
+      dot: "bg-red-400",
+    },
     info: {
       badge: "bg-sky-950/70 text-sky-400 border-sky-800/80",
       dot: "bg-sky-400",
@@ -44,6 +50,10 @@ export function Badge({
     secondary: {
       badge: "bg-indigo-950/70 text-indigo-400 border-indigo-800/80",
       dot: "bg-indigo-400",
+    },
+    neutral: {
+      badge: "bg-slate-800 text-slate-300 border-slate-700/60",
+      dot: "bg-slate-400",
     },
     outline: {
       badge: "bg-transparent text-slate-400 border-slate-700",

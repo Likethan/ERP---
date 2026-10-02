@@ -7,6 +7,7 @@ export interface StatCardProps {
   title?: string;
   value: string | number;
   description?: string;
+  subtitle?: string;
   change?: {
     value: string;
     trend: "up" | "down" | "neutral";
@@ -22,6 +23,7 @@ export function StatCard({
   title,
   value,
   description,
+  subtitle,
   change,
   icon,
   variant = "default",
@@ -30,6 +32,7 @@ export function StatCard({
 }: StatCardProps) {
   const displayLabel = label || title || "";
   const displayVariant = (variant !== "default" ? variant : (color as StatCardProps["variant"])) || "default";
+  const displayDesc = description || subtitle;
 
   const iconBgs: Record<string, string> = {
     default: "bg-slate-800 text-slate-300 border-slate-700/60",
@@ -84,9 +87,9 @@ export function StatCard({
         )}
       </div>
 
-      {description && (
+      {displayDesc && (
         <p className="mt-1 text-xs text-slate-400 leading-relaxed font-normal">
-          {description}
+          {displayDesc}
         </p>
       )}
     </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { ChevronDown, ShieldCheck, UserCheck, GraduationCap, Building, Briefcase, Landmark } from "lucide-react";
+import { ChevronDown, ShieldCheck, UserCheck, GraduationCap, Building, Briefcase, Landmark, BedDouble, Bus, Wrench } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function RoleSwitcher({ className }: { className?: string }) {
@@ -23,6 +23,12 @@ export function RoleSwitcher({ className }: { className?: string }) {
         return <Landmark className="h-4 w-4 text-emerald-400" />;
       case "PLACEMENT_OFFICER":
         return <Briefcase className="h-4 w-4 text-purple-400" />;
+      case "WARDEN":
+        return <BedDouble className="h-4 w-4 text-teal-400" />;
+      case "TRANSPORT_OFFICER":
+        return <Bus className="h-4 w-4 text-orange-400" />;
+      case "FACILITY_OFFICER":
+        return <Wrench className="h-4 w-4 text-yellow-400" />;
       default:
         return <UserCheck className="h-4 w-4 text-slate-400" />;
     }

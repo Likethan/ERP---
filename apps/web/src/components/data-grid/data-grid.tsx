@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 export function DataGrid<T>({
   data,
   columns,
-  keyExtractor,
+  keyExtractor = (item: any) => item?.id ?? item?._id ?? String(Math.random()),
   loading = false,
   error = null,
   onRetry,

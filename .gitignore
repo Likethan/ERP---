@@ -36,6 +36,7 @@ htmlcov/
 .dmypy.json
 dmypy.json
 .pyre/
+*.tsbuildinfo
 
 # Environment Variables & Local Secrets
 .env

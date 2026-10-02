@@ -33,7 +33,7 @@ export interface BulkAction<T> {
 export interface DataGridProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
-  keyExtractor: (item: T) => string;
+  keyExtractor?: (item: T) => string;
   loading?: boolean;
   error?: string | null;
   onRetry?: () => void;

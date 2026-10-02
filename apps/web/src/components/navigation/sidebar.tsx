@@ -35,6 +35,13 @@ import {
   Award,
   Globe,
   BarChart3,
+  Bell,
+  Wrench,
+  DoorOpen,
+  AlertCircle,
+  Compass,
+  MapPin,
+  Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -345,24 +352,44 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       title: "CAMPUS ENGAGEMENT",
       items: [
         {
-          label: "Events",
-          href: "/app/events",
+          label: "Campus Hub",
+          href: "/app/campus",
+          icon: <LayoutDashboard className="h-4 w-4" />,
+        },
+        {
+          label: "Events & Fests",
+          href: "/app/campus/events",
           icon: <PartyPopper className="h-4 w-4" />,
         },
         {
+          label: "Registrations",
+          href: "/app/campus/registrations",
+          icon: <FileCheck2 className="h-4 w-4" />,
+        },
+        {
+          label: "Event Attendance",
+          href: "/app/campus/attendance",
+          icon: <CheckSquare className="h-4 w-4" />,
+        },
+        {
           label: "Clubs & Orgs",
-          href: "/app/clubs",
+          href: "/app/campus/clubs",
           icon: <Building2 className="h-4 w-4" />,
         },
         {
           label: "Announcements",
-          href: "/app/announcements",
+          href: "/app/campus/announcements",
           icon: <FileText className="h-4 w-4" />,
         },
         {
           label: "Notifications",
-          href: "/app/notifications",
-          icon: <Calendar className="h-4 w-4" />,
+          href: "/app/campus/notifications",
+          icon: <Bell className="h-4 w-4" />,
+        },
+        {
+          label: "Preferences",
+          href: "/app/campus/preferences",
+          icon: <RotateCcw className="h-4 w-4" />,
         },
       ],
     },
@@ -370,14 +397,94 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       title: "INFRASTRUCTURE",
       items: [
         {
-          label: "Residential Hostel",
-          href: "/app/hostel",
-          icon: <BedDouble className="h-4 w-4" />,
+          label: "Infrastructure Overview",
+          href: "/app/infrastructure",
+          icon: <LayoutDashboard className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN", "TRANSPORT_OFFICER", "FACILITY_OFFICER"],
         },
         {
-          label: "Campus Transport",
-          href: "/app/transport",
+          label: "Hostel",
+          href: "/app/infrastructure/hostel",
+          icon: <BedDouble className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN"],
+        },
+        {
+          label: "Rooms & Beds",
+          href: "/app/infrastructure/hostel/rooms",
+          icon: <DoorOpen className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN"],
+        },
+        {
+          label: "Allocations",
+          href: "/app/infrastructure/hostel/allocations",
+          icon: <UserCheck className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN"],
+        },
+        {
+          label: "Hostel Leaves",
+          href: "/app/infrastructure/hostel/leaves",
+          icon: <FileCheck2 className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN", "STUDENT"],
+        },
+        {
+          label: "Complaints",
+          href: "/app/infrastructure/hostel/complaints",
+          icon: <AlertCircle className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN", "STUDENT"],
+        },
+        {
+          label: "Transport",
+          href: "/app/infrastructure/transport",
           icon: <Bus className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Routes",
+          href: "/app/infrastructure/transport/routes",
+          icon: <Compass className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Stops",
+          href: "/app/infrastructure/transport/stops",
+          icon: <MapPin className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Vehicles",
+          href: "/app/infrastructure/transport/vehicles",
+          icon: <Truck className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Drivers",
+          href: "/app/infrastructure/transport/drivers",
+          icon: <Users className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Transport Allocations",
+          href: "/app/infrastructure/transport/allocations",
+          icon: <CreditCard className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "TRANSPORT_OFFICER"],
+        },
+        {
+          label: "Facilities",
+          href: "/app/infrastructure/facilities",
+          icon: <Building2 className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "FACILITY_OFFICER"],
+        },
+        {
+          label: "Maintenance",
+          href: "/app/infrastructure/maintenance",
+          icon: <Wrench className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "FACILITY_OFFICER", "WARDEN", "STUDENT"],
+        },
+        {
+          label: "Infrastructure Reports",
+          href: "/app/infrastructure/reports",
+          icon: <BarChart3 className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN", "TRANSPORT_OFFICER", "FACILITY_OFFICER"],
         },
       ],
     },
@@ -467,52 +574,63 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
       {/* Navigation Sections */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {NAV_SECTIONS.map((section) => (
-          <div key={section.title} className="space-y-1">
-            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-              {section.title}
-            </div>
-            {section.items.map((item) => {
-              const isActive =
-                item.href === "/app/dashboard"
-                  ? pathname === "/app/dashboard"
-                  : pathname.startsWith(item.href);
+        {NAV_SECTIONS.map((section) => {
+          const userRole = user?.roles?.[0]?.name || "SUPER_ADMIN";
+          const visibleItems = section.items.filter((item) => {
+            if (!item.roles || item.roles.includes("*")) return true;
+            if (userRole === "SUPER_ADMIN" || userRole === "ADMIN") return true;
+            return item.roles.includes(userRole);
+          });
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onCloseMobile}
-                  className={cn(
-                    "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-colors group",
-                    isActive
-                      ? "bg-indigo-600 text-white shadow-sm font-semibold"
-                      : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
-                  )}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span
-                      className={cn(
-                        "transition-colors",
-                        isActive
-                          ? "text-white"
-                          : "text-slate-500 group-hover:text-slate-300"
-                      )}
-                    >
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className="rounded-full bg-slate-800 px-1.5 py-0.2 text-[9px] font-mono text-slate-400">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        ))}
+          if (visibleItems.length === 0) return null;
+
+          return (
+            <div key={section.title} className="space-y-1">
+              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                {section.title}
+              </div>
+              {visibleItems.map((item) => {
+                const isActive =
+                  item.href === "/app/dashboard"
+                    ? pathname === "/app/dashboard"
+                    : pathname.startsWith(item.href);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onCloseMobile}
+                    className={cn(
+                      "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-colors group",
+                      isActive
+                        ? "bg-indigo-600 text-white shadow-sm font-semibold"
+                        : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className={cn(
+                          "transition-colors",
+                          isActive
+                            ? "text-white"
+                            : "text-slate-500 group-hover:text-slate-300"
+                        )}
+                      >
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </div>
+                    {item.badge && (
+                      <span className="rounded-full bg-slate-800 px-1.5 py-0.2 text-[9px] font-mono text-slate-400">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
       </nav>
 
       {/* Tenant Context Footer */}

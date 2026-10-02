@@ -18,6 +18,9 @@ export enum UserRole {
   STUDENT = "STUDENT",
   PARENT = "PARENT",
   STAFF = "STAFF",
+  WARDEN = "WARDEN",
+  TRANSPORT_OFFICER = "TRANSPORT_OFFICER",
+  FACILITY_OFFICER = "FACILITY_OFFICER",
 }
 
 /**
@@ -48,13 +51,14 @@ export interface TenantContext {
 }
 
 /**
- * Standard API Envelope for all successful REST responses
+ * Standard API Envelope for REST responses
  */
 export interface ApiResponse<T> {
-  success: true;
+  success: boolean;
   data: T;
+  error?: string | { code?: string; message: string; details?: unknown };
   meta?: {
-    timestamp: string;
+    timestamp?: string;
     requestId?: string;
     [key: string]: unknown;
   };
@@ -235,6 +239,8 @@ export interface AuthenticatedUser {
   email: string;
   first_name: string;
   last_name: string;
+  name?: string;
+  role?: string;
   status: "INVITED" | "ACTIVE" | "SUSPENDED" | "LOCKED" | "DISABLED";
   roles: Array<{
     id: UUID;
@@ -2035,6 +2041,653 @@ export interface PlacementAnalyticsSummary {
     highest_ctc: number;
   }>;
 }
+
+// ============================================================================
+// INFRASTRUCTURE MANAGEMENT DOMAIN TYPES
+// ============================================================================
+
+export enum HostelStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  UNDER_MAINTENANCE = "UNDER_MAINTENANCE",
+  CLOSED = "CLOSED",
+}
+
+export enum HostelType {
+  BOYS = "BOYS",
+  GIRLS = "GIRLS",
+  MIXED = "MIXED",
+  STAFF = "STAFF",
+  GUEST = "GUEST",
+}
+
+export enum RoomType {
+  SINGLE = "SINGLE",
+  DOUBLE = "DOUBLE",
+  TRIPLE = "TRIPLE",
+  FOUR_SHARING = "FOUR_SHARING",
+  DORMITORY = "DORMITORY",
+}
+
+export enum RoomStatus {
+  AVAILABLE = "AVAILABLE",
+  PARTIALLY_OCCUPIED = "PARTIALLY_OCCUPIED",
+  FULL = "FULL",
+  MAINTENANCE = "MAINTENANCE",
+  BLOCKED = "BLOCKED",
+}
+
+export enum BedStatus {
+  AVAILABLE = "AVAILABLE",
+  ALLOCATED = "ALLOCATED",
+  MAINTENANCE = "MAINTENANCE",
+  BLOCKED = "BLOCKED",
+}
+
+export enum AllocationStatus {
+  PENDING = "PENDING",
+  ALLOCATED = "ALLOCATED",
+  TRANSFER_REQUESTED = "TRANSFER_REQUESTED",
+  TRANSFERRED = "TRANSFERRED",
+  VACATED = "VACATED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum LeaveStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
+}
+
+export enum ComplaintCategory {
+  ELECTRICAL = "ELECTRICAL",
+  PLUMBING = "PLUMBING",
+  CLEANING = "CLEANING",
+  FURNITURE = "FURNITURE",
+  ROOM = "ROOM",
+  WIFI = "WIFI",
+  SAFETY = "SAFETY",
+  WATER = "WATER",
+  FOOD = "FOOD",
+  OTHER = "OTHER",
+}
+
+export enum ComplaintStatus {
+  OPEN = "OPEN",
+  ASSIGNED = "ASSIGNED",
+  IN_PROGRESS = "IN_PROGRESS",
+  RESOLVED = "RESOLVED",
+  CLOSED = "CLOSED",
+  REJECTED = "REJECTED",
+}
+
+export enum ComplaintPriority {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+  CRITICAL = "CRITICAL",
+}
+
+export enum RouteStatus {
+  DRAFT = "DRAFT",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  SUSPENDED = "SUSPENDED",
+}
+
+export enum StopStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  TEMPORARILY_CLOSED = "TEMPORARILY_CLOSED",
+}
+
+export enum VehicleType {
+  BUS = "BUS",
+  MINI_BUS = "MINI_BUS",
+  VAN = "VAN",
+  CAR = "CAR",
+  OTHER = "OTHER",
+}
+
+export enum VehicleStatus {
+  ACTIVE = "ACTIVE",
+  AVAILABLE = "AVAILABLE",
+  MAINTENANCE = "MAINTENANCE",
+  INACTIVE = "INACTIVE",
+  RETIRED = "RETIRED",
+}
+
+export enum DriverStatus {
+  ACTIVE = "ACTIVE",
+  ON_LEAVE = "ON_LEAVE",
+  SUSPENDED = "SUSPENDED",
+  INACTIVE = "INACTIVE",
+}
+
+export enum TransportAllocationStatus {
+  PENDING = "PENDING",
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+  CANCELLED = "CANCELLED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum FacilityStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  UNDER_MAINTENANCE = "UNDER_MAINTENANCE",
+  CLOSED = "CLOSED",
+  RESERVED = "RESERVED",
+}
+
+export enum FacilityType {
+  ACADEMIC_BLOCK = "ACADEMIC_BLOCK",
+  CLASSROOM_BLOCK = "CLASSROOM_BLOCK",
+  LABORATORY = "LABORATORY",
+  LIBRARY = "LIBRARY",
+  AUDITORIUM = "AUDITORIUM",
+  SEMINAR_HALL = "SEMINAR_HALL",
+  SPORTS_FACILITY = "SPORTS_FACILITY",
+  SPORTS_COMPLEX = "SPORTS_COMPLEX",
+  CAFETERIA = "CAFETERIA",
+  ADMINISTRATIVE_OFFICE = "ADMINISTRATIVE_OFFICE",
+  ADMINISTRATIVE = "ADMINISTRATIVE",
+  HOSTEL = "HOSTEL",
+  PARKING_AREA = "PARKING_AREA",
+}
+
+export enum MaintenanceStatus {
+  REQUESTED = "REQUESTED",
+  ASSIGNED = "ASSIGNED",
+  IN_PROGRESS = "IN_PROGRESS",
+  ON_HOLD = "ON_HOLD",
+  RESOLVED = "RESOLVED",
+  CLOSED = "CLOSED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum MaintenancePriority {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+  CRITICAL = "CRITICAL",
+}
+
+// ----------------------------------------------------------------------------
+// Entity Interfaces
+// ----------------------------------------------------------------------------
+
+export interface HostelBed {
+  id: UUID;
+  roomId: UUID;
+  bedNumber: string;
+  status: BedStatus;
+  studentId?: UUID | null;
+  studentName?: string | null;
+  studentRollNumber?: string | null;
+  allocatedAt?: string | null;
+}
+
+export interface HostelRoom {
+  id: UUID;
+  hostelId: UUID;
+  hostelName: string;
+  blockId: string;
+  blockName: string;
+  floor: number;
+  roomNumber: string;
+  roomType: RoomType;
+  capacity: number;
+  occupied: number;
+  available: number;
+  gender: "MALE" | "FEMALE" | "ANY";
+  status: RoomStatus;
+  beds?: HostelBed[];
+}
+
+export interface HostelFloor {
+  floorNumber: number;
+  name: string;
+  totalRooms: number;
+  rooms?: HostelRoom[];
+}
+
+export interface HostelBlock {
+  id: string;
+  name: string;
+  hostelId: UUID;
+  floorsCount: number;
+  roomsCount: number;
+  totalBeds: number;
+  occupiedBeds: number;
+  floors?: HostelFloor[];
+}
+
+export interface Hostel {
+  id: UUID;
+  name: string;
+  code: string;
+  campusId: UUID;
+  campusName: string;
+  type: HostelType;
+  gender: "BOYS" | "GIRLS" | "MIXED";
+  wardenId?: UUID | null;
+  wardenName: string;
+  wardenPhone: string;
+  wardenEmail: string;
+  totalBlocks: number;
+  totalRooms: number;
+  totalBeds: number;
+  occupiedBeds: number;
+  availableBeds: number;
+  occupancyPercentage: number;
+  status: HostelStatus;
+  blocks?: HostelBlock[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AllocationHistoryEntry {
+  id: UUID;
+  action: string;
+  description: string;
+  timestamp: string;
+  performedBy: string;
+}
+
+export interface HostelAllocation {
+  id: UUID;
+  studentId: UUID;
+  studentName: string;
+  registerNumber: string;
+  programId?: string;
+  programCode: string;
+  programName: string;
+  departmentCode: string;
+  year: number;
+  semester: number;
+  hostelId: UUID;
+  hostelName: string;
+  blockId: string;
+  blockName: string;
+  floor: number;
+  roomId: UUID;
+  roomNumber: string;
+  bedId: UUID;
+  bedNumber: string;
+  allocatedDate: string;
+  expectedEndDate?: string | null;
+  vacatedDate?: string | null;
+  status: AllocationStatus;
+  financeRefId?: string | null;
+  remarks?: string | null;
+  history?: AllocationHistoryEntry[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HostelLeave {
+  id: UUID;
+  studentId: UUID;
+  studentName: string;
+  registerNumber: string;
+  hostelId: UUID;
+  hostelName: string;
+  roomNumber: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  destination: string;
+  emergencyContact: {
+    name: string;
+    relationship: string;
+    phone: string;
+  };
+  approvalStatus: LeaveStatus;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  remarks?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HostelComplaint {
+  id: UUID;
+  ticketNumber: string;
+  studentId: UUID;
+  studentName: string;
+  registerNumber: string;
+  hostelId: UUID;
+  hostelName: string;
+  roomNumber: string;
+  category: ComplaintCategory;
+  priority: ComplaintPriority;
+  title: string;
+  description: string;
+  status: ComplaintStatus;
+  assignedStaffId?: UUID | null;
+  assignedStaffName?: string | null;
+  slaTargetHours: number;
+  slaBreached: boolean;
+  resolutionNotes?: string | null;
+  resolvedAt?: string | null;
+  closedAt?: string | null;
+  attachments?: Array<{ name: string; url: string; size: string }>;
+  activityTimeline?: Array<{
+    id: UUID;
+    action: string;
+    status: ComplaintStatus;
+    timestamp: string;
+    actor: string;
+    notes?: string;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TransportStop {
+  id: UUID;
+  routeId: UUID;
+  routeName: string;
+  routeCode: string;
+  name: string;
+  code: string;
+  sequence: number;
+  pickupTime: string;
+  dropTime: string;
+  landmark?: string;
+  studentCount: number;
+  status: StopStatus;
+}
+
+export interface VehicleServiceRecord {
+  id: UUID;
+  serviceDate: string;
+  serviceType: string;
+  mileageKm: number;
+  costInr: number;
+  nextServiceDate: string;
+  vendorName: string;
+  status: "COMPLETED" | "SCHEDULED" | "OVERDUE";
+  notes?: string;
+}
+
+export interface TransportVehicle {
+  id: UUID;
+  registrationNumber: string;
+  vehicleNumber: string;
+  type: VehicleType;
+  makeModel: string;
+  make?: string;
+  model?: string;
+  capacity: number;
+  currentRouteId?: UUID | null;
+  currentRouteCode?: string | null;
+  currentRouteName?: string | null;
+  assignedDriverId?: UUID | null;
+  assignedDriverName?: string | null;
+  fuelType: "DIESEL" | "EV" | "CNG" | "PETROL";
+  insurancePolicyNumber: string;
+  insuranceValidUntil: string;
+  insuranceExpiry?: string;
+  fitnessCertificateValidUntil: string;
+  fitnessExpiry?: string;
+  pollutionCertificateValidUntil: string;
+  lastServiceDate: string;
+  nextServiceDate: string;
+  status: VehicleStatus;
+  services?: VehicleServiceRecord[];
+  documents?: Array<{ id: string; title: string; category: string; expiryDate?: string }>;
+}
+
+export interface TransportDriver {
+  id: UUID;
+  staffId?: UUID;
+  name: string;
+  employeeId: string;
+  phone: string;
+  email?: string;
+  emergencyContact?: string;
+  licenseNumber: string;
+  licenseType: string;
+  licenseExpiry: string;
+  licenseStatus: "VALID" | "EXPIRING_SOON" | "EXPIRED";
+  assignedVehicleId?: UUID | null;
+  assignedVehicleNumber?: string | null;
+  assignedRouteId?: UUID | null;
+  assignedRouteCode?: string | null;
+  assignedRouteName?: string | null;
+  experienceYears: number;
+  joiningDate: string;
+  status: DriverStatus;
+  assignmentsHistory?: Array<{
+    vehicleNumber: string;
+    routeCode: string;
+    startDate: string;
+    endDate?: string | null;
+  }>;
+}
+
+export interface TransportRoute {
+  id: UUID;
+  routeCode: string;
+  name: string;
+  campusId: UUID;
+  campusName: string;
+  startPoint: string;
+  endPoint: string;
+  stopsCount: number;
+  stops?: TransportStop[];
+  vehicleId?: UUID | null;
+  vehicleNumber?: string | null;
+  driverId?: UUID | null;
+  driverName?: string | null;
+  driverPhone?: string | null;
+  capacity: number;
+  allocatedStudents: number;
+  utilizationPercentage: number;
+  morningDeparture: string;
+  morningStartTime?: string;
+  eveningReturn: string;
+  eveningReturnTime?: string;
+  status: RouteStatus;
+}
+
+export interface TransportAllocation {
+  id: UUID;
+  studentId: UUID;
+  studentName: string;
+  registerNumber: string;
+  programCode: string;
+  departmentCode: string;
+  routeId: UUID;
+  routeCode: string;
+  routeName: string;
+  stopId: UUID;
+  stopName: string;
+  vehicleId: UUID;
+  vehicleNumber: string;
+  academicYear: string;
+  semester: number;
+  allocatedDate: string;
+  status: TransportAllocationStatus;
+  seatNumber?: string | null;
+  feeStatus?: "PAID" | "PENDING" | "WAIVED" | string | null;
+  financeFeeRefId?: string | null;
+  createdAt: string;
+}
+
+export interface FacilityEquipment {
+  id: UUID;
+  name: string;
+  code: string;
+  quantity: number;
+  condition: "EXCELLENT" | "GOOD" | "FAIR" | "NEEDS_REPAIR";
+  lastInspectedDate: string;
+}
+
+export interface Facility {
+  id: UUID;
+  name: string;
+  code: string;
+  campusId: UUID;
+  campusName: string;
+  building: string;
+  floor: number | string;
+  type: FacilityType;
+  capacity: number;
+  status: FacilityStatus;
+  managerName: string;
+  managerEmail: string;
+  managerPhone: string;
+  departmentCode?: string | null;
+  connectedEventsCount?: number;
+  activeWorkOrdersCount?: number;
+  equipment?: FacilityEquipment[];
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MaintenanceHistoryEntry {
+  id: UUID;
+  fromStatus: MaintenanceStatus;
+  toStatus: MaintenanceStatus;
+  timestamp: string;
+  changedBy: string;
+  notes?: string;
+}
+
+export interface MaintenanceRequest {
+  id: UUID;
+  workOrderNumber: string;
+  assetOrFacilityId: string;
+  assetOrFacilityName: string;
+  category: "ELECTRICAL" | "PLUMBING" | "CIVIL" | "HVAC" | "IT_EQUIPMENT" | "CARPENTRY" | "TRANSPORT_VEHICLE" | "OTHER";
+  sourceType: "HOSTEL" | "ROOM" | "FACILITY" | "VEHICLE" | "EQUIPMENT" | "CAMPUS";
+  location: string;
+  reportedBy: {
+    userId: string;
+    name: string;
+    role: string;
+    phone?: string;
+  };
+  assignedTo?: {
+    staffId: string;
+    name: string;
+    department: string;
+    phone: string;
+  } | null;
+  priority: MaintenancePriority;
+  title: string;
+  description: string;
+  estimatedCostInr: number;
+  actualCostInr?: number | null;
+  status: MaintenanceStatus;
+  slaTargetHours: number;
+  isSlaBreached: boolean;
+  resolutionSummary?: string | null;
+  resolvedAt?: string | null;
+  closedAt?: string | null;
+  history?: MaintenanceHistoryEntry[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InfrastructureDashboardSummary {
+  totalHostels: number;
+  totalBeds: number;
+  occupiedBeds: number;
+  availableBeds: number;
+  hostelOccupancyPercentage: number;
+  activeTransportRoutes: number;
+  activeVehicles: number;
+  studentsUsingTransport: number;
+  openComplaints: number;
+  openMaintenanceRequests: number;
+  criticalMaintenance: number;
+  facilitiesRequiringAttention: number;
+}
+
+export interface InfrastructureReportData {
+  hostelSummary: {
+    totalHostels: number;
+    totalBeds: number;
+    occupiedBeds: number;
+    availableBeds: number;
+    hostelWiseStats: Array<{
+      hostelName: string;
+      code: string;
+      totalBeds: number;
+      occupiedBeds: number;
+      occupancyPercentage: number;
+    }>;
+    programWiseAllocations: Array<{
+      programCode: string;
+      studentCount: number;
+      percentage: number;
+    }>;
+    monthlyLeaveTrends: Array<{
+      month: string;
+      leaveRequests: number;
+      approved: number;
+    }>;
+    complaintDistribution: Array<{
+      category: string;
+      count: number;
+      resolvedRate: number;
+    }>;
+  };
+  transportSummary: {
+    routeUtilization: Array<{
+      routeCode: string;
+      routeName: string;
+      capacity: number;
+      allocated: number;
+      utilizationPercentage: number;
+    }>;
+    vehicleFleetStatus: Array<{
+      status: string;
+      count: number;
+    }>;
+    stopWiseStudentDistribution: Array<{
+      stopName: string;
+      routeCode: string;
+      studentCount: number;
+    }>;
+  };
+  facilitiesSummary: {
+    totalFacilities: number;
+    facilitiesByType: Array<{
+      type: string;
+      count: number;
+    }>;
+    facilityMaintenanceFrequency: Array<{
+      facilityName: string;
+      maintenanceCount: number;
+      openCount: number;
+    }>;
+  };
+  maintenanceSummary: {
+    openRequests: number;
+    inProgressRequests: number;
+    resolvedRequests: number;
+    criticalRequests: number;
+    averageResolutionHours: number;
+    totalMaintenanceCostInr: number;
+    priorityDistribution: Array<{
+      priority: string;
+      count: number;
+    }>;
+    categoryDistribution: Array<{
+      category: string;
+      count: number;
+    }>;
+  };
+}
+
 
 
 

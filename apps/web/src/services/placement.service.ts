@@ -666,7 +666,7 @@ class PlacementService {
     this.interviews[idx].timeline.push({
       id: `itl-${Date.now()}`,
       action: "Evaluation Submitted & Interview Completed",
-      actor: evaluation.evaluatedBy,
+      actor: evaluation.evaluatedBy || "Interviewer",
       timestamp: new Date().toISOString(),
       details: `Recommendation: ${evaluation.overallRecommendation}`,
     });

@@ -68,8 +68,8 @@ export interface StudentPlacementProfile {
   placementStatus: PlacementStatus;
   placedCompany?: string;
   placedPackageLpa?: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   timeline: AuditEntry[];
 }
 
@@ -313,13 +313,16 @@ export type InterviewStatus =
 
 export interface InterviewEvaluation {
   technicalRating: number; // 1 to 5
+  technicalSkillsRating?: number;
   communicationRating: number; // 1 to 5
   problemSolvingRating: number; // 1 to 5
   roleFitRating: number; // 1 to 5
   overallRecommendation: "STRONG_HIRE" | "HIRE" | "BORDERLINE" | "NO_HIRE";
+  strengths?: string;
+  areasOfImprovement?: string;
+  evaluatedBy?: string;
+  evaluatedAt?: string;
   notes?: string;
-  evaluatedBy: string;
-  evaluatedAt: string;
 }
 
 export interface Interview {

@@ -5,6 +5,9 @@
 
 export * from "@campusos/types";
 export * from "./people";
+export * from "./campus";
+export * from "./infrastructure";
+export type { EventCategory, EventStatus, NotificationItem } from "./campus";
 import {
   GuardianRecord,
   PersonDocument,
@@ -27,7 +30,10 @@ export type RoleName =
   | "PLACEMENT_OFFICER"
   | "STUDENT"
   | "PARENT"
-  | "STAFF";
+  | "STAFF"
+  | "WARDEN"
+  | "TRANSPORT_OFFICER"
+  | "FACILITY_OFFICER";
 
 export interface DemoPersona {
   id: string;
@@ -233,7 +239,33 @@ export interface GlobalSearchResultItem {
   id: string;
   title: string;
   subtitle: string;
-  category: "Student" | "Faculty" | "Staff" | "Course" | "Curriculum" | "Offering" | "Attendance" | "Examination" | "Assessment" | "Drive" | "Placement" | "Company" | "Offer" | "Application" | "Interview" | "Invoice" | "Finance" | "Payment" | "Receipt" | "Scholarship" | "Document" | "Event";
+  category:
+    | "Student"
+    | "Faculty"
+    | "Staff"
+    | "Course"
+    | "Curriculum"
+    | "Offering"
+    | "Attendance"
+    | "Examination"
+    | "Assessment"
+    | "Drive"
+    | "Placement"
+    | "Company"
+    | "Offer"
+    | "Application"
+    | "Interview"
+    | "Invoice"
+    | "Finance"
+    | "Payment"
+    | "Receipt"
+    | "Scholarship"
+    | "Document"
+    | "Event"
+    | "Campus"
+    | "Club"
+    | "Announcement"
+    | "Infrastructure";
   href: string;
   badge?: string;
 }
