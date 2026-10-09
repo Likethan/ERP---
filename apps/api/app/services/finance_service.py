@@ -851,6 +851,30 @@ class FinanceService:
         )
         db.add(receipt)
 
+        # Atomically emit domain event in active transaction
+        try:
+            from app.core.events import OutboxService
+            first_inv = allocated_invoices[0].id if allocated_invoices else None
+            await OutboxService.publish_event(
+                db=db,
+                tenant_id=tenant_id,
+                event_type="finance.payment.confirmed",
+                aggregate_type="Payment",
+                aggregate_id=payment.id,
+                payload={
+                    "payment_id": str(payment.id),
+                    "invoice_id": str(first_inv) if first_inv else None,
+                    "student_id": str(data.student_id),
+                    "amount": float(payment_amount),
+                    "payment_method": data.payment_method,
+                    "transaction_ref": payment.transaction_reference,
+                },
+                actor_id=current_user_id,
+                producer="FINANCE_MODULE",
+            )
+        except Exception:
+            pass
+
         await db.commit()
         await db.refresh(payment)
 

@@ -1,3 +1,5 @@
+name: campusos
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -12,7 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U campusos_user -d campusos_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-campusos_user} -d ${POSTGRES_DB:-campusos_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -49,6 +51,60 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: campusos-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: development
+      DEBUG: "true"
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-campusos_user}:${POSTGRES_PASSWORD:-campusos_password}@postgres:5432/${POSTGRES_DB:-campusos_db}
+      REDIS_URL: redis://redis:6379/0
+      STORAGE_ENDPOINT: minio:9000
+      STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER:-campusos_admin}
+      STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-campusos_minio_secret}
+      STORAGE_BUCKET_NAME: campusos-documents
+      SECRET_KEY: ${SECRET_KEY:-campusos_insecure_development_secret_key_minimum_32_chars_long}
+      CORS_ORIGINS: '["http://localhost:3000","http://127.0.0.1:3000"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health/live\")' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: campusos-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 volumes:
   pgdata:

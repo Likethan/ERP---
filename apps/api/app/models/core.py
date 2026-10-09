@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -6,11 +6,14 @@ from uuid import UUID
 from sqlalchemy import (
     Boolean,
     Date,
+    DateTime,
     ForeignKey,
+    Index,
     Numeric,
     String,
     Text,
     UniqueConstraint,
+    func,
 )
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -27,8 +30,15 @@ class Institution(BaseModel):
     __tablename__ = "core_institutions"
 
     code: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
+    slug: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True, index=True)
     legal_name: Mapped[str] = mapped_column(String(255), nullable=False)
     short_name: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(32), default="ACTIVE", nullable=False, index=True
+    )  # ACTIVE, TRIAL, SUSPENDED, ARCHIVED
+    plan: Mapped[str] = mapped_column(
+        String(32), default="ENTERPRISE", nullable=False
+    )  # FREE, STARTER, PROFESSIONAL, ENTERPRISE
     website: Mapped[str | None] = mapped_column(String(255), nullable=True)
     contact_email: Mapped[str] = mapped_column(String(255), nullable=False)
     contact_phone: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -41,11 +51,66 @@ class Institution(BaseModel):
         String(64), nullable=False, default="Asia/Kolkata"
     )
     currency_code: Mapped[str] = mapped_column(String(8), nullable=False, default="INR")
+    locale: Mapped[str] = mapped_column(String(32), default="en-IN", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    suspended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+
+    @property
+    def name(self) -> str:
+        return self.short_name or self.legal_name
+
+    @property
+    def timezone(self) -> str:
+        return self.default_timezone
+
+    @property
+    def currency(self) -> str:
+        return self.currency_code
 
     # Relationships
     campuses: Mapped[list["Campus"]] = relationship(back_populates="institution")
     departments: Mapped[list["Department"]] = relationship(back_populates="institution")
+    memberships: Mapped[list["TenantMembership"]] = relationship(back_populates="institution")
+
+
+# Canonical alias for Institution in Multi-Tenant architecture
+Tenant = Institution
+
+
+class TenantMembership(BaseModel):
+    """User membership and authorization scope within a specific institution tenant."""
+
+    __tablename__ = "core_tenant_memberships"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "user_id", name="uq_tenant_memberships_tenant_user"),
+        Index("idx_tenant_membership_status", "tenant_id", "status"),
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("core_institutions.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    user_id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("people_users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    status: Mapped[str] = mapped_column(
+        String(32), default="ACTIVE", nullable=False
+    )  # ACTIVE, INVITED, SUSPENDED, REMOVED
+    role_scope: Mapped[str] = mapped_column(
+        String(64), default="TENANT_MEMBER", nullable=False
+    )
+    joined_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+    institution: Mapped["Institution"] = relationship(back_populates="memberships")
+
 
 
 class Campus(TenantScopedModel):

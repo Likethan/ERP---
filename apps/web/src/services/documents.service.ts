@@ -1,95 +1,181 @@
 import { ApiResponse } from "@campusos/types";
-import { PersonDocument } from "@/types/people";
 import {
-  DocumentVaultItem,
-  DocumentRequestItem,
-  IssuedCertificateItem,
-  MOCK_DOCUMENTS,
-  MOCK_DOCUMENT_REQUESTS,
-  MOCK_ISSUED_CERTIFICATES,
-} from "@/mocks/documents.mock";
+  DocumentItem,
+  DocumentStatus,
+  DocumentCategoryCode,
+  DocumentOwnerType,
+  ConfidentialityLevel,
+  VerificationPriority,
+} from "@campusos/types";
+import { MOCK_DOCUMENTS } from "@/mocks/documents.mock";
+import { DocumentFilterState } from "@/types/documents";
 
 class DocumentsService {
-  private documents: DocumentVaultItem[] = [...MOCK_DOCUMENTS];
-  private requests: DocumentRequestItem[] = [...MOCK_DOCUMENT_REQUESTS];
-  private certificates: IssuedCertificateItem[] = [...MOCK_ISSUED_CERTIFICATES];
+  private documents: DocumentItem[] = [...MOCK_DOCUMENTS];
 
-  async getDocuments(category?: string): Promise<ApiResponse<DocumentVaultItem[]>> {
+  async listDocuments(filters?: DocumentFilterState): Promise<ApiResponse<DocumentItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.documents];
-    if (category) {
-      items = items.filter((d) => d.category === category);
+
+    if (filters) {
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        items = items.filter(
+          (d) =>
+            d.name.toLowerCase().includes(q) ||
+            d.documentType.toLowerCase().includes(q) ||
+            d.ownerName.toLowerCase().includes(q) ||
+            (d.ownerRollNumber && d.ownerRollNumber.toLowerCase().includes(q)) ||
+            (d.documentNumber && d.documentNumber.toLowerCase().includes(q))
+        );
+      }
+      if (filters.category && filters.category !== "ALL") {
+        items = items.filter((d) => d.category === filters.category);
+      }
+      if (filters.status && filters.status !== "ALL") {
+        items = items.filter((d) => d.status === filters.status);
+      }
+      if (filters.ownerType && filters.ownerType !== "ALL") {
+        items = items.filter((d) => d.ownerType === filters.ownerType);
+      }
+      if (filters.department && filters.department !== "ALL") {
+        items = items.filter((d) => d.ownerDepartment === filters.department);
+      }
+      if (filters.program && filters.program !== "ALL") {
+        items = items.filter((d) => d.program === filters.program);
+      }
+      if (filters.priority && filters.priority !== "ALL") {
+        items = items.filter((d) => d.priority === filters.priority);
+      }
+      if (filters.reviewerId && filters.reviewerId !== "ALL") {
+        items = items.filter((d) => d.assignedReviewerId === filters.reviewerId);
+      }
     }
+
     return { success: true, data: items };
   }
 
-  async getRequests(): Promise<ApiResponse<DocumentRequestItem[]>> {
+  async getDocumentById(id: string): Promise<ApiResponse<DocumentItem | null>> {
+    await new Promise((r) => setTimeout(r, 30));
+    const doc = this.documents.find((d) => d.id === id) || null;
+    return { success: true, data: doc };
+  }
+
+  async getDocumentsByOwner(ownerId: string): Promise<ApiResponse<DocumentItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
-    return { success: true, data: this.requests };
+    const items = this.documents.filter((d) => d.ownerId === ownerId);
+    return { success: true, data: items };
   }
 
-  async submitRequest(data: Partial<DocumentRequestItem>): Promise<ApiResponse<DocumentRequestItem>> {
-    await new Promise((r) => setTimeout(r, 90));
-    const newReq: DocumentRequestItem = {
-      id: `dreq-${Date.now()}`,
-      studentName: data.studentName || "Aarav Patel",
-      rollNumber: data.rollNumber || "24CSE0101",
-      program: data.program || "B.Tech CSE",
-      certificateType: data.certificateType || "BONAFIDE",
-      purpose: data.purpose || "Official documentation",
-      requestedDate: new Date().toISOString().split("T")[0],
-      status: "PENDING_APPROVAL",
-    };
-    this.requests.unshift(newReq);
-    return { success: true, data: newReq };
-  }
-
-  async getIssuedCertificates(): Promise<ApiResponse<IssuedCertificateItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
-    return { success: true, data: this.certificates };
-  }
-
-  async verifyCertificate(certCode: string): Promise<ApiResponse<IssuedCertificateItem | null>> {
+  async uploadDocument(data: Partial<DocumentItem>): Promise<ApiResponse<DocumentItem>> {
     await new Promise((r) => setTimeout(r, 80));
-    const cert = this.certificates.find(
-      (c) =>
-        c.certificateNumber.toLowerCase().includes(certCode.toLowerCase()) ||
-        c.qrVerificationUrl.toLowerCase().includes(certCode.toLowerCase())
-    ) || null;
-    return { success: true, data: cert };
-  }
-
-  async approveRequest(id: string): Promise<ApiResponse<IssuedCertificateItem>> {
-    await new Promise((r) => setTimeout(r, 90));
-    const req = this.requests.find((r) => r.id === id);
-    if (req) {
-      req.status = "ISSUED";
-    }
-    const newCert: IssuedCertificateItem = {
-      id: `cert-${Date.now()}`,
-      certificateNumber: `CERT-2026-0${this.certificates.length + 881}`,
-      certificateType: `${req ? req.certificateType : "BONAFIDE"} Certificate`,
-      studentName: req ? req.studentName : "Aarav Patel",
-      rollNumber: req ? req.rollNumber : "24CSE0101",
-      issueDate: new Date().toISOString().split("T")[0],
-      qrVerificationUrl: `https://verify.campusos.edu/cert/2026-${Date.now().toString().slice(-6)}`,
-      digitalSignatureHash: `sha256:0x${Date.now().toString(16)}fa98bc`,
-      status: "VALID",
+    const newDoc: DocumentItem = {
+      id: `doc-${Date.now()}`,
+      name: data.name || "Uploaded Document",
+      category: data.category || DocumentCategoryCode.OTHER,
+      documentType: data.documentType || "Standard Document",
+      ownerType: data.ownerType || DocumentOwnerType.STUDENT,
+      ownerId: data.ownerId || "stu-001",
+      ownerName: data.ownerName || "Aarav Patel",
+      ownerRollNumber: data.ownerRollNumber || "24CSE0101",
+      ownerDepartment: data.ownerDepartment || "Computer Science & Engineering",
+      program: data.program || "B.Tech Computer Science & Engineering",
+      status: DocumentStatus.UPLOADED,
+      uploadedAt: new Date().toISOString(),
+      confidentiality: data.confidentiality || ConfidentialityLevel.INTERNAL,
+      fileSize: data.fileSize || "1.2 MB",
+      fileType: data.fileType || "application/pdf",
+      documentNumber: data.documentNumber,
+      issuingAuthority: data.issuingAuthority,
+      issueDate: data.issueDate,
+      expiryDate: data.expiryDate,
+      priority: data.priority || VerificationPriority.NORMAL,
+      activityTimeline: [
+        {
+          id: `act-${Date.now()}`,
+          action: "Document Uploaded",
+          description: `Document submitted by ${data.ownerName || "student"}`,
+          performedBy: data.ownerName || "Aarav Patel",
+          role: String(data.ownerType || "STUDENT"),
+          timestamp: new Date().toISOString(),
+        },
+      ],
+      relatedRecord: data.relatedRecord,
     };
-    this.certificates.unshift(newCert);
-    return { success: true, data: newCert };
+
+    this.documents.unshift(newDoc);
+    return { success: true, data: newDoc };
   }
 
-  // ==========================================
-  // Student Document Vault Operations
-  // ==========================================
+  async updateDocumentMetadata(
+    id: string,
+    metadata: Partial<DocumentItem>
+  ): Promise<ApiResponse<DocumentItem>> {
+    await new Promise((r) => setTimeout(r, 50));
+    const doc = this.documents.find((d) => d.id === id);
+    if (!doc) {
+      throw new Error(`Document with ID ${id} not found`);
+    }
+
+    Object.assign(doc, metadata);
+    doc.activityTimeline.unshift({
+      id: `act-${Date.now()}`,
+      action: "Metadata Updated",
+      description: "Document details or validity metadata edited",
+      performedBy: "Dr. Arvind Swaminathan (Registrar)",
+      role: "REGISTRAR",
+      timestamp: new Date().toISOString(),
+    });
+
+    return { success: true, data: doc };
+  }
+
+  async submitForVerification(id: string): Promise<ApiResponse<DocumentItem>> {
+    await new Promise((r) => setTimeout(r, 50));
+    const doc = this.documents.find((d) => d.id === id);
+    if (!doc) {
+      throw new Error(`Document with ID ${id} not found`);
+    }
+
+    doc.status = DocumentStatus.UNDER_REVIEW;
+    doc.activityTimeline.unshift({
+      id: `act-${Date.now()}`,
+      action: "Submitted for Verification",
+      description: "Moved to institutional review desk",
+      performedBy: doc.ownerName,
+      role: doc.ownerType,
+      timestamp: new Date().toISOString(),
+    });
+
+    return { success: true, data: doc };
+  }
+
+  async deleteDocument(studentIdOrDocId: string, documentId?: string): Promise<ApiResponse<boolean>> {
+    await new Promise((r) => setTimeout(r, 50));
+    if (documentId) {
+      const { studentsService } = await import("./students.service");
+      return studentsService.deleteDocument(studentIdOrDocId, documentId);
+    }
+    const index = this.documents.findIndex((d) => d.id === studentIdOrDocId);
+    if (index !== -1) {
+      this.documents.splice(index, 1);
+      return { success: true, data: true };
+    }
+    return { success: false, data: false, error: "Document not found" };
+  }
+
+  // Backwards compatibility methods for legacy caller components
+  async getDocuments(category?: string) {
+    const filter = category ? { category } : undefined;
+    return this.listDocuments(filter);
+  }
 
   async getStudentDocuments(studentId: string) {
     const { studentsService } = await import("./students.service");
     return studentsService.getDocuments(studentId);
   }
 
-  async uploadStudentDocument(studentId: string, data: Partial<PersonDocument>) {
+  async uploadStudentDocument(studentId: string, data: any) {
     const { studentsService } = await import("./students.service");
     return studentsService.uploadDocument(studentId, data);
   }
@@ -102,11 +188,6 @@ class DocumentsService {
   async rejectDocument(studentId: string, documentId: string, reason: string) {
     const { studentsService } = await import("./students.service");
     return studentsService.rejectDocument(studentId, documentId, reason);
-  }
-
-  async deleteDocument(studentId: string, documentId: string) {
-    const { studentsService } = await import("./students.service");
-    return studentsService.deleteDocument(studentId, documentId);
   }
 }
 

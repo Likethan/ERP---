@@ -15,11 +15,16 @@ from sqlalchemy.orm import selectinload
 from app.core.exceptions import NotFoundException, ValidationException
 from app.models.audit import AuditLog
 from app.models.campus import Notification, NotificationDelivery, NotificationPreference
+from app.models.notification import UserNotificationProfile
 from app.models.people import User
 from app.schemas.campus import (
     NotificationPreferenceItem,
     NotificationPreferenceUpdate,
     NotificationResponse,
+)
+from app.schemas.notification import (
+    NotificationPreferencesDetailResponse,
+    NotificationPreferencesDetailUpdate,
 )
 
 # Notification categories subject to user preferences
@@ -331,6 +336,24 @@ class NotificationService:
         return (await db.execute(stmt)).scalar() or 0
 
     @classmethod
+    async def get_notification_by_id(
+        cls, db: AsyncSession, tenant_id: UUID, user_id: UUID, notification_id: UUID
+    ) -> Notification:
+        """Fetch single notification ensuring recipient matches current user."""
+        stmt = select(Notification).where(
+            and_(
+                Notification.id == notification_id,
+                Notification.tenant_id == tenant_id,
+                Notification.recipient_user_id == user_id,
+            )
+        )
+        res = await db.execute(stmt)
+        notification = res.scalar_one_or_none()
+        if not notification:
+            raise NotFoundException("Notification", notification_id)
+        return notification
+
+    @classmethod
     async def mark_as_read(
         cls, db: AsyncSession, tenant_id: UUID, user_id: UUID, notification_id: UUID
     ) -> Notification:
@@ -494,3 +517,114 @@ class NotificationService:
 
         await db.commit()
         return await cls.get_user_preferences(db, tenant_id, user_id)
+
+    @classmethod
+    async def get_user_preference_details(
+        cls, db: AsyncSession, tenant_id: UUID, user_id: UUID
+    ) -> NotificationPreferencesDetailResponse:
+        """Fetch full preference details including categories, quiet hours, and digests."""
+        category_prefs = await cls.get_user_preferences(db, tenant_id, user_id)
+
+        # Fetch or default UserNotificationProfile
+        prof_stmt = select(UserNotificationProfile).where(
+            and_(
+                UserNotificationProfile.tenant_id == tenant_id,
+                UserNotificationProfile.user_id == user_id,
+            )
+        )
+        profile = (await db.execute(prof_stmt)).scalar_one_or_none()
+
+        channels_enabled = {
+            "IN_APP": profile.in_app_enabled if profile else True,
+            "EMAIL": profile.email_enabled if profile else True,
+            "SMS": profile.sms_enabled if profile else True,
+            "PUSH": profile.push_enabled if profile else True,
+        }
+
+        return NotificationPreferencesDetailResponse(
+            user_id=user_id,
+            preferences=category_prefs,
+            quiet_hours_enabled=profile.quiet_hours_enabled if profile else False,
+            quiet_hours_start=profile.quiet_hours_start if profile else "22:00",
+            quiet_hours_end=profile.quiet_hours_end if profile else "07:00",
+            timezone=profile.timezone if profile else "Asia/Kolkata",
+            locale=profile.locale if profile else "en",
+            digest_enabled=profile.digest_enabled if profile else False,
+            digest_frequency=profile.digest_frequency if profile else "DAILY",
+            channels_enabled=channels_enabled,
+        )
+
+    @classmethod
+    async def update_user_preference_details(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        user_id: UUID,
+        data: NotificationPreferencesDetailUpdate,
+    ) -> NotificationPreferencesDetailResponse:
+        """Update full preference details including quiet hours and category toggles."""
+        now = datetime.now(UTC)
+
+        # 1. Update category preferences if provided
+        if data.preferences:
+            update_dto = NotificationPreferenceUpdate(preferences=data.preferences)
+            await cls.update_user_preferences(db, tenant_id, user_id, update_dto)
+
+        # 2. Update UserNotificationProfile
+        prof_stmt = select(UserNotificationProfile).where(
+            and_(
+                UserNotificationProfile.tenant_id == tenant_id,
+                UserNotificationProfile.user_id == user_id,
+            )
+        )
+        profile = (await db.execute(prof_stmt)).scalar_one_or_none()
+
+        if not profile:
+            profile = UserNotificationProfile(
+                id=uuid4(),
+                tenant_id=tenant_id,
+                user_id=user_id,
+                quiet_hours_enabled=data.quiet_hours_enabled if data.quiet_hours_enabled is not None else False,
+                quiet_hours_start=data.quiet_hours_start or "22:00",
+                quiet_hours_end=data.quiet_hours_end or "07:00",
+                timezone=data.timezone or "Asia/Kolkata",
+                locale=data.locale or "en",
+                digest_enabled=data.digest_enabled if data.digest_enabled is not None else False,
+                digest_frequency=data.digest_frequency or "DAILY",
+                in_app_enabled=data.channels_enabled.get("IN_APP", True) if data.channels_enabled else True,
+                email_enabled=data.channels_enabled.get("EMAIL", True) if data.channels_enabled else True,
+                sms_enabled=data.channels_enabled.get("SMS", True) if data.channels_enabled else True,
+                push_enabled=data.channels_enabled.get("PUSH", True) if data.channels_enabled else True,
+                created_at=now,
+                updated_at=now,
+            )
+            db.add(profile)
+        else:
+            if data.quiet_hours_enabled is not None:
+                profile.quiet_hours_enabled = data.quiet_hours_enabled
+            if data.quiet_hours_start is not None:
+                profile.quiet_hours_start = data.quiet_hours_start
+            if data.quiet_hours_end is not None:
+                profile.quiet_hours_end = data.quiet_hours_end
+            if data.timezone is not None:
+                profile.timezone = data.timezone
+            if data.locale is not None:
+                profile.locale = data.locale
+            if data.digest_enabled is not None:
+                profile.digest_enabled = data.digest_enabled
+            if data.digest_frequency is not None:
+                profile.digest_frequency = data.digest_frequency
+            if data.channels_enabled:
+                if "IN_APP" in data.channels_enabled:
+                    profile.in_app_enabled = data.channels_enabled["IN_APP"]
+                if "EMAIL" in data.channels_enabled:
+                    profile.email_enabled = data.channels_enabled["EMAIL"]
+                if "SMS" in data.channels_enabled:
+                    profile.sms_enabled = data.channels_enabled["SMS"]
+                if "PUSH" in data.channels_enabled:
+                    profile.push_enabled = data.channels_enabled["PUSH"]
+            profile.updated_at = now
+
+        await db.commit()
+        return await cls.get_user_preference_details(db, tenant_id, user_id)
+

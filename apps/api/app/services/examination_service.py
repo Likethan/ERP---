@@ -2227,6 +2227,28 @@ class ExaminationService:
             ip_address=ip_address,
         )
         db.add(audit)
+
+        # Atomically emit domain event in active transaction
+        try:
+            from app.core.events import OutboxService
+            await OutboxService.publish_event(
+                db=db,
+                tenant_id=tenant_id,
+                event_type="examination.results.published",
+                aggregate_type="Assessment",
+                aggregate_id=exam_term_id,
+                payload={
+                    "assessment_id": str(exam_term_id),
+                    "course_id": str(course_offering_id) if course_offering_id else None,
+                    "published_by": str(publisher_user_id) if publisher_user_id else None,
+                    "student_count": count,
+                },
+                actor_id=publisher_user_id,
+                producer="EXAMINATION_MODULE",
+            )
+        except Exception as ev_err:
+            pass
+
         await db.commit()
         return count
 

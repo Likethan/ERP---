@@ -23,7 +23,13 @@ import {
   MOCK_CANONICAL_REFUNDS,
 } from "@/mocks/finance.mock";
 import { MOCK_EVENTS, MOCK_CLUBS, MOCK_ANNOUNCEMENTS, MOCK_VENUES } from "@/mocks/campus.mock";
-import { MOCK_DOCUMENTS } from "@/mocks/documents.mock";
+import {
+  MOCK_DOCUMENTS,
+  MOCK_DOCUMENT_CATEGORIES,
+  MOCK_CERTIFICATE_REQUESTS,
+  MOCK_ISSUED_CERTIFICATES,
+  MOCK_INSTITUTIONAL_RECORDS,
+} from "@/mocks/documents.mock";
 import { MOCK_CANONICAL_SESSIONS } from "@/mocks/attendance.mock";
 import {
   MOCK_EXAMINATIONS,
@@ -42,6 +48,11 @@ import {
   MOCK_FACILITIES,
   MOCK_MAINTENANCE_REQUESTS,
 } from "@/mocks/infrastructure.mock";
+import {
+  MOCK_INSIGHTS,
+  MOCK_ALERTS,
+  MOCK_AI_TOOLS,
+} from "@/mocks/intelligence-dataset.mock";
 
 class SearchService {
   async search(query: string): Promise<ApiResponse<GlobalSearchResultItem[]>> {
@@ -837,9 +848,169 @@ class SearchService {
       }
     });
 
+    // Search Documents
+    MOCK_DOCUMENTS.forEach((doc) => {
+      if (
+        doc.name.toLowerCase().includes(q) ||
+        doc.ownerName.toLowerCase().includes(q) ||
+        (doc.ownerRollNumber && doc.ownerRollNumber.toLowerCase().includes(q)) ||
+        (doc.documentNumber && doc.documentNumber.toLowerCase().includes(q)) ||
+        doc.category.toLowerCase().includes(q) ||
+        doc.documentType.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: doc.id,
+          title: doc.name,
+          subtitle: `${doc.ownerName} • ${doc.category} • ${doc.documentType}`,
+          category: "Documents" as any,
+          href: `/app/documents/${doc.id}`,
+          badge: doc.status,
+        });
+      }
+    });
+
+    // Search Document Categories
+    MOCK_DOCUMENT_CATEGORIES.forEach((cat) => {
+      if (cat.name.toLowerCase().includes(q) || cat.code.toLowerCase().includes(q) || cat.description.toLowerCase().includes(q)) {
+        results.push({
+          id: cat.id,
+          title: `Category: ${cat.name} (${cat.code})`,
+          subtitle: `${cat.applicableRoles.join(", ")} • ${cat.applicableDocumentTypes.length} Document Types`,
+          category: "Documents" as any,
+          href: `/app/documents/categories/${cat.id}`,
+        });
+      }
+    });
+
+    // Search Certificate Requests
+    MOCK_CERTIFICATE_REQUESTS.forEach((req) => {
+      if (
+        req.requestId.toLowerCase().includes(q) ||
+        req.studentName.toLowerCase().includes(q) ||
+        req.rollNumber.toLowerCase().includes(q) ||
+        req.templateName.toLowerCase().includes(q) ||
+        req.purpose.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: req.id,
+          title: `Cert Request: ${req.requestId} (${req.studentName})`,
+          subtitle: `${req.templateName} • ${req.purpose}`,
+          category: "Documents" as any,
+          href: `/app/documents/certificates/requests/${req.id}`,
+          badge: req.status,
+        });
+      }
+    });
+
+    // Search Issued Certificates
+    MOCK_ISSUED_CERTIFICATES.forEach((cert) => {
+      if (
+        cert.certificateNumber.toLowerCase().includes(q) ||
+        cert.recipientName.toLowerCase().includes(q) ||
+        cert.recipientRollNumber.toLowerCase().includes(q) ||
+        cert.certificateType.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: cert.id,
+          title: `Credential: ${cert.certificateNumber}`,
+          subtitle: `${cert.recipientName} (${cert.recipientRollNumber}) • ${cert.certificateType}`,
+          category: "Documents" as any,
+          href: `/app/documents/certificates`,
+          badge: cert.status,
+        });
+      }
+    });
+
+    // Search Institutional Records
+    MOCK_INSTITUTIONAL_RECORDS.forEach((rec) => {
+      if (
+        rec.recordName.toLowerCase().includes(q) ||
+        rec.code.toLowerCase().includes(q) ||
+        rec.category.toLowerCase().includes(q) ||
+        rec.ownerDepartment.toLowerCase().includes(q) ||
+        (rec.referenceNumber && rec.referenceNumber.toLowerCase().includes(q))
+      ) {
+        results.push({
+          id: rec.id,
+          title: `Institutional Record: ${rec.recordName}`,
+          subtitle: `${rec.code} • ${rec.category} • ${rec.ownerDepartment}`,
+          category: "Documents" as any,
+          href: `/app/documents/institutional-records/${rec.id}`,
+          badge: rec.confidentiality,
+        });
+      }
+    });
+
+    // Search Intelligence Insights
+    MOCK_INSIGHTS.forEach((ins) => {
+      if (
+        ins.title.toLowerCase().includes(q) ||
+        ins.summary.toLowerCase().includes(q) ||
+        ins.domain.toLowerCase().includes(q) ||
+        ins.recommendedAction.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: ins.id,
+          title: `AI Insight: ${ins.title}`,
+          subtitle: `${ins.domain} • ${ins.summary.slice(0, 75)}...`,
+          category: "Intelligence",
+          href: `/app/intelligence/insights/${ins.id}`,
+          badge: ins.priority,
+        });
+      }
+    });
+
+    // Search Operational Alerts
+    MOCK_ALERTS.forEach((alt) => {
+      if (
+        alt.title.toLowerCase().includes(q) ||
+        alt.reason.toLowerCase().includes(q) ||
+        alt.sourceDomain.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: alt.id,
+          title: `Alert: ${alt.title}`,
+          subtitle: `${alt.sourceDomain} • ${alt.reason.slice(0, 75)}...`,
+          category: "Intelligence",
+          href: `/app/intelligence/alerts/${alt.id}`,
+          badge: alt.severity,
+        });
+      }
+    });
+
+    // Search AI Tools
+    MOCK_AI_TOOLS.forEach((tool) => {
+      if (
+        tool.name.toLowerCase().includes(q) ||
+        tool.description.toLowerCase().includes(q) ||
+        tool.domain.toLowerCase().includes(q)
+      ) {
+        results.push({
+          id: tool.name,
+          title: `AI Tool: ${tool.name}`,
+          subtitle: `${tool.domain} • ${tool.description.slice(0, 70)}...`,
+          category: "AI Assistant",
+          href: `/app/intelligence/activity`,
+          badge: tool.status,
+        });
+      }
+    });
+
+    // Shortcut: Launch AI Assistant query
+    if (q.length >= 4) {
+      results.push({
+        id: `ask-ai-${Date.now()}`,
+        title: `Ask CampusOS Assistant: "${query}"`,
+        subtitle: "Synthesize instant cross-domain analysis with citations",
+        category: "AI Assistant",
+        href: `/app/intelligence/assistant?q=${encodeURIComponent(query)}`,
+        badge: "AI Query",
+      });
+    }
+
     return {
       success: true,
-      data: results.slice(0, 20),
+      data: results.slice(0, 25),
     };
   }
 }

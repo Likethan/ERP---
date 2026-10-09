@@ -1,9 +1,9 @@
 # CampusOS Route Inventory & Status Audit
 
 **Audit Date:** October 2026  
-**Total Routes Audited:** 51  
+**Total Routes Audited:** 67  
 **Build Target:** Next.js 15.5.26 (App Router)  
-**Overall Status:** **100% OPERATIONAL (51/51 WORKING)**
+**Overall Status:** **100% OPERATIONAL (67/67 WORKING)**
 
 ---
 
@@ -58,10 +58,34 @@
 | 45 | `/app/clubs/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Club detail: executive board, budget, organized events |
 | 46 | `/app/events` | Static | ACTIVE | YES | YES | YES | YES | NO | Institutional calendar, symposiums, technical fests |
 | 47 | `/app/events/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Event details, venue booking, registration management |
-| 48 | `/app/documents` | Static | ACTIVE | YES | YES | YES | YES | NO | Digital repository: Bonafide certificates, grade cards, letters |
-| 49 | `/app/intelligence` | Static | ACTIVE | YES | YES | YES | YES | NO | Campus analytics, student retention, faculty workload charts |
-| 50 | `/app/ai` | Static | ACTIVE | YES | YES | YES | YES | NO | CampusCopilot conversational assistant & NL query executor |
-| 51 | `/app/notifications` | Static | ACTIVE | YES | YES | YES | YES | NO | Notification center with priority filters and read receipts |
+| 48 | `/app/documents` | Static | ACTIVE | YES | YES | YES | YES | NO | Enterprise document operations dashboard: 8 KPIs, expiry radar, verification SLAs |
+| 49 | `/app/documents/my-documents` | Static | ACTIVE | YES | YES | YES | YES | NO | Personal document vault: Table/Card view, filters, upload CTA |
+| 50 | `/app/documents/all` | Static | ACTIVE | YES | YES | YES | YES | NO | Institutional master document directory with DataGrid |
+| 51 | `/app/documents/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Document 360 view: Metadata, preview surface, timeline, verification |
+| 52 | `/app/documents/upload` | Static | ACTIVE | YES | YES | YES | YES | NO | 6-step document upload wizard with simulated progress |
+| 53 | `/app/documents/verification` | Static | ACTIVE | YES | YES | YES | YES | NO | Administrative verification queue with priority filters |
+| 54 | `/app/documents/verification/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Verification workspace: Document preview, checklist, verify/reject actions |
+| 55 | `/app/documents/categories` | Static | ACTIVE | YES | YES | YES | YES | NO | Taxonomy catalog: 11 canonical document categories |
+| 56 | `/app/documents/categories/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Category detail: Document types, requirements, usage metrics |
+| 57 | `/app/documents/certificates` | Static | ACTIVE | YES | YES | YES | YES | NO | Certificate center: Catalog, issuance pipeline, public verification lookup |
+| 58 | `/app/documents/certificates/templates` | Static | ACTIVE | YES | YES | YES | YES | NO | Certificate templates management |
+| 59 | `/app/documents/certificates/templates/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Template detail: Field tokens, versioning, ceremonial preview |
+| 60 | `/app/documents/certificates/requests` | Static | ACTIVE | YES | YES | YES | YES | NO | Certificate requests processing queue |
+| 61 | `/app/documents/certificates/requests/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Certificate request detail: Validation checks, approval/issue flow |
+| 62 | `/app/documents/institutional-records` | Static | ACTIVE | YES | YES | YES | YES | NO | Institutional statutory records, accreditations, policies |
+| 63 | `/app/documents/institutional-records/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Institutional record detail: Confidentiality, department, validity |
+| 64 | `/app/documents/reports` | Static | ACTIVE | YES | YES | YES | YES | NO | Compliance telemetry, SLA reports, category & expiry breakdowns |
+| 65 | `/app/intelligence` | Static | ACTIVE | YES | YES | YES | YES | NO | Executive intelligence dashboard: 8 KPIs, domain health, alerts, activity |
+| 66 | `/app/intelligence/assistant` | Static | ACTIVE | YES | YES | YES | YES | NO | Enterprise AI Assistant console: 3-panel layout, query composer, explainability |
+| 67 | `/app/intelligence/insights` | Static | ACTIVE | YES | YES | YES | YES | NO | Centralized insight feed: 9 domain filters, priority ranking, lifecycle actions |
+| 68 | `/app/intelligence/insights/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Insight 360 detail: Evidence metrics, affected entities, provenance, actions |
+| 69 | `/app/intelligence/analytics` | Static | ACTIVE | YES | YES | YES | YES | NO | Cross-domain analytics workspace: Visual trends & custom query builder |
+| 70 | `/app/intelligence/alerts` | Static | ACTIVE | YES | YES | YES | YES | NO | Critical alert triage center: 4 severities, root causes, acknowledge/resolve |
+| 71 | `/app/intelligence/alerts/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Alert 360 detail: Timeline, affected cohort, mitigation steps, resolution |
+| 72 | `/app/intelligence/saved` | Static | ACTIVE | YES | YES | YES | YES | NO | Saved insights repository: Bookmarked queries, analytical views, reports |
+| 73 | `/app/intelligence/activity` | Static | ACTIVE | YES | YES | YES | YES | NO | AI Tool registry (14 tools) & Operational audit ledger with latency logs |
+| 74 | `/app/intelligence/students/[id]` | Dynamic | ACTIVE | YES | YES | YES | YES | NO | Contextual Student Intelligence 360: 6-domain risk radar & metrics |
+| 75 | `/app/notifications` | Static | ACTIVE | YES | YES | YES | YES | NO | Notification center with priority filters and read receipts |
 
 ---
 
@@ -75,10 +99,19 @@ Every dynamic route (`[id]`) utilizes appropriate Next.js Client Component param
 - `/app/announcements/[id]`
 - `/app/attendance/sessions/[id]`
 - `/app/attendance/students/[id]`
+- `/app/documents/[id]`
+- `/app/documents/categories/[id]`
+- `/app/documents/certificates/templates/[id]`
+- `/app/documents/certificates/requests/[id]`
+- `/app/documents/institutional-records/[id]`
+- `/app/intelligence/insights/[id]`
+- `/app/intelligence/alerts/[id]`
+- `/app/intelligence/students/[id]`
 
 ---
 
 ## 3. Route Quality Verification
-- **All 51 routes load without runtime errors.**
-- **All 51 routes participate in the application shell** with active sidebar indicator, breadcrumbs, search indexing, and role switching.
+- **All 75 routes load without runtime errors.**
+- **All 75 routes participate in the application shell** with active sidebar indicator, breadcrumbs, search indexing, and role switching.
 - **Empty & Loading states:** Standardized across routes using `Skeleton`, `TableSkeleton`, and empty state cards.
+

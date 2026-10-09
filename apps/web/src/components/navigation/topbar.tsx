@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { RoleSwitcher } from "./role-switcher";
 import { CommandPalette } from "./command-palette";
 import { NotificationDrawer } from "./notification-drawer";
 import { useAuth } from "@/lib/auth-context";
-import { Search, Bell, Menu, Shield, LogOut } from "lucide-react";
+import { Search, Bell, Menu, Shield, LogOut, Sparkles } from "lucide-react";
 
 interface TopbarProps {
   onToggleSidebar?: () => void;
@@ -60,6 +61,16 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
 
           {/* Role Switcher */}
           <RoleSwitcher />
+
+          {/* AI Assistant Quick Trigger */}
+          <Link
+            href="/app/intelligence/assistant"
+            className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
+            title="CampusOS AI Assistant"
+            aria-label="Open AI Assistant"
+          >
+            <Sparkles className="h-4 w-4 text-blue-400 hover:text-blue-300" />
+          </Link>
 
           {/* Notifications Bell */}
           <button

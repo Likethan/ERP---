@@ -20,6 +20,7 @@ from sqlalchemy import (
     UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, BaseModel, TenantScopedModel
@@ -484,9 +485,21 @@ class Notification(TenantScopedModel):
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Compatibility alias for user_id
-    @property
+    @hybrid_property
     def user_id(self) -> UUID:
         return self.recipient_user_id
+
+    @user_id.setter
+    def user_id(self, val: UUID) -> None:
+        self.recipient_user_id = val
+
+    @hybrid_property
+    def notification_type(self) -> str:
+        return self.type
+
+    @notification_type.setter
+    def notification_type(self, val: str) -> None:
+        self.type = val
 
     recipient = relationship("User", foreign_keys=[recipient_user_id])
     announcement = relationship("CampusAnnouncement", foreign_keys=[announcement_id])
@@ -502,24 +515,63 @@ class NotificationDelivery(TenantScopedModel):
     __table_args__ = (
         Index("ix_campus_deliveries_notification_channel", "notification_id", "channel"),
         Index("ix_campus_deliveries_tenant_status", "tenant_id", "status"),
+        Index("ix_campus_deliveries_tenant_scheduled", "tenant_id", "status", "scheduled_at"),
+        Index("ix_campus_deliveries_idempotency", "tenant_id", "idempotency_key"),
+        Index("ix_campus_deliveries_event", "tenant_id", "event_id"),
     )
 
-    notification_id: Mapped[UUID] = mapped_column(
+    notification_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("campus_notifications.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
+    )
+    event_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("notification_events.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    recipient_user_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("people_users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    template_version_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("notification_template_versions.id", ondelete="SET NULL"),
+        nullable=True,
     )
     channel: Mapped[str] = mapped_column(
         String(16), default="IN_APP", nullable=False
     )  # IN_APP, EMAIL, PUSH, SMS
     status: Mapped[str] = mapped_column(
-        String(32), default="DELIVERED", nullable=False
-    )  # PENDING, QUEUED, SENT, DELIVERED, FAILED, READ
+        String(32), default="PENDING", nullable=False
+    )  # PENDING, SCHEDULED, PROCESSING, SUBMITTED, DELIVERED, RETRY_WAIT, FAILED, SUPPRESSED, CANCELLED, READ
+    provider: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    provider_message_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    attempt_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    last_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failure_classification: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    correlation_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    suppression_reason: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    rendered_subject: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    rendered_body: Mapped[str | None] = mapped_column(Text, nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_json: Mapped[dict | list | None] = mapped_column(JSONType, nullable=True)
 
-    notification: Mapped["Notification"] = relationship(back_populates="deliveries")
+    notification: Mapped["Notification | None"] = relationship(back_populates="deliveries")
+    recipient = relationship("User", foreign_keys=[recipient_user_id])
+    template_version = relationship("NotificationTemplateVersion", foreign_keys=[template_version_id])
+    event = relationship("NotificationEvent", foreign_keys=[event_id])
+    attempts: Mapped[list["NotificationDeliveryAttempt"]] = relationship(
+        "NotificationDeliveryAttempt",
+        back_populates="delivery",
+        cascade="all, delete-orphan",
+        order_by="NotificationDeliveryAttempt.attempt_number",
+        lazy="selectin",
+    )
 
 
 class NotificationPreference(TenantScopedModel):

@@ -146,22 +146,25 @@ export async function runInfrastructureModuleTests(): Promise<{
     const testRoom = roomsRes.data[0];
 
     // Bed Allocation Lifecycle
-    const availableBed = testRoom.beds.find((b) => b.status === BedStatus.AVAILABLE);
+    const availableBed = testRoom.beds?.find((b: any) => b.status === BedStatus.AVAILABLE);
     if (availableBed) {
-      const allocBedRes = await hostelRoomsService.allocateBed(
+      const allocBedRes = await hostelRoomsService.updateBedStatus(
         testRoom.id,
         availableBed.id,
-        "stu-test-infra-01",
-        "Kiran Kumar",
-        "22CS101"
+        BedStatus.ALLOCATED,
+        {
+          studentId: "stu-test-infra-01",
+          studentName: "Kiran Kumar",
+          studentRollNumber: "22CS101",
+        }
       );
       assert(allocBedRes.success === true, "3. Bed allocation successful");
-      assert(allocBedRes.data?.beds.find((b) => b.id === availableBed.id)?.status === BedStatus.OCCUPIED, "3. Allocated bed status set to OCCUPIED");
+      assert(allocBedRes.data?.beds?.find((b: any) => b.id === availableBed.id)?.status === BedStatus.ALLOCATED, "3. Allocated bed status set to ALLOCATED");
 
       // Deallocate
-      const deallocRes = await hostelRoomsService.deallocateBed(testRoom.id, availableBed.id);
+      const deallocRes = await hostelRoomsService.updateBedStatus(testRoom.id, availableBed.id, BedStatus.AVAILABLE);
       assert(deallocRes.success === true, "3. Bed deallocation successful");
-      assert(deallocRes.data?.beds.find((b) => b.id === availableBed.id)?.status === BedStatus.AVAILABLE, "3. Bed status restored to AVAILABLE");
+      assert(deallocRes.data?.beds?.find((b: any) => b.id === availableBed.id)?.status === BedStatus.AVAILABLE, "3. Bed status restored to AVAILABLE");
     }
 
     // ==========================================
@@ -212,7 +215,12 @@ export async function runInfrastructureModuleTests(): Promise<{
     assert(newComp.data.status === ComplaintStatus.OPEN, "5. Initial complaint status is OPEN");
 
     // Assign technician
-    const assignComp = await hostelComplaintsService.assignComplaint(newComp.data.id, "Ramesh Kumar (Plumber)", "Warden Desk");
+    const assignComp = await hostelComplaintsService.assignComplaint(
+      newComp.data.id,
+      "stf-plumb-01",
+      "Ramesh Kumar (Plumber)",
+      "Warden Desk"
+    );
     assert(assignComp.success === true && assignComp.data?.status === ComplaintStatus.ASSIGNED, "5. Assigning technician sets status to ASSIGNED");
 
     // Resolve complaint

@@ -26,9 +26,12 @@ class InstitutionResponse(BaseModel):
 
     id: UUID
     code: str
+    slug: str | None = None
     legal_name: str
     short_name: str
-    website: str | None
+    status: str = "ACTIVE"
+    plan: str = "ENTERPRISE"
+    website: str | None = None
     contact_email: str
     contact_phone: str
     address_line1: str
@@ -38,9 +41,50 @@ class InstitutionResponse(BaseModel):
     country: str
     default_timezone: str
     currency_code: str
+    locale: str = "en-IN"
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    suspended_at: datetime | None = None
+    deleted_at: datetime | None = None
+
+
+# Platform Tenant Management Schemas
+class TenantCreateRequest(BaseModel):
+    code: str = Field(..., min_length=2, max_length=32)
+    slug: str | None = Field(None, min_length=2, max_length=64)
+    legal_name: str = Field(..., min_length=2, max_length=255)
+    short_name: str = Field(..., min_length=2, max_length=64)
+    plan: str = Field("ENTERPRISE", max_length=32)
+    contact_email: str = Field(..., max_length=255)
+    contact_phone: str = Field(..., max_length=32)
+    address_line1: str = Field(..., max_length=255)
+    city: str = Field(..., max_length=100)
+    state: str = Field(..., max_length=100)
+    postal_code: str = Field(..., max_length=32)
+    country: str = Field("India", max_length=100)
+    default_timezone: str = Field("Asia/Kolkata", max_length=64)
+    currency_code: str = Field("INR", max_length=8)
+    locale: str = Field("en-IN", max_length=32)
+
+
+class TenantStatusUpdateRequest(BaseModel):
+    status: str = Field(..., description="Target status: ACTIVE, TRIAL, SUSPENDED, or ARCHIVED")
+    reason: str | None = None
+
+
+TenantResponse = InstitutionResponse
+
+
+class TenantMembershipResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    tenant_id: UUID
+    user_id: UUID
+    status: str
+    role_scope: str
+    joined_at: datetime
 
 
 # --- Campus ---

@@ -803,90 +803,10 @@ async def publish_announcement(
     return ApiResponse(data=AnnouncementResponse.model_validate(ann))
 
 
+
 # =============================================================================
 # 9. NOTIFICATION CENTER & PREFERENCES
+# Handled comprehensively by dedicated Step 26 Enterprise Notification Engine
+# in app.api.v1.notifications
 # =============================================================================
-@router.get("/notifications", response_model=ApiResponse[NotificationListResponse])
-async def list_notifications(
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-    unread_only: bool = Query(False),
-    notification_type: str | None = Query(None, alias="type"),
-    source_module: str | None = Query(None),
-    page: int = Query(1, ge=1),
-    limit: int = Query(20, ge=1, le=100),
-) -> ApiResponse[NotificationListResponse]:
-    """Get authenticated user's notification inbox."""
-    res = await NotificationService.get_user_notifications(
-        db,
-        tenant.tenant_id,
-        current_user.id,
-        unread_only=unread_only,
-        notification_type=notification_type,
-        source_module=source_module,
-        page=page,
-        limit=limit,
-    )
-    return ApiResponse(data=NotificationListResponse(**res))
 
-
-@router.get("/notifications/unread-count", response_model=ApiResponse[UnreadCountResponse])
-async def get_notification_unread_count(
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[UnreadCountResponse]:
-    """Get count of unread notifications for badge display."""
-    count = await NotificationService.get_unread_count(db, tenant.tenant_id, current_user.id)
-    return ApiResponse(data=UnreadCountResponse(unread_count=count))
-
-
-@router.patch("/notifications/{notification_id}/read", response_model=ApiResponse[NotificationResponse])
-async def mark_notification_read(
-    notification_id: UUID,
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[NotificationResponse]:
-    """Mark a notification as read."""
-    notif = await NotificationService.mark_as_read(
-        db, tenant.tenant_id, current_user.id, notification_id
-    )
-    return ApiResponse(data=NotificationResponse.model_validate(notif))
-
-
-@router.post("/notifications/read-all", response_model=ApiResponse[dict])
-async def mark_all_notifications_read(
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[dict]:
-    """Mark all inbox notifications as read."""
-    count = await NotificationService.mark_all_as_read(db, tenant.tenant_id, current_user.id)
-    return ApiResponse(data={"message": f"Marked {count} notifications as read."})
-
-
-@router.get("/notifications/preferences", response_model=ApiResponse[list[NotificationPreferenceItem]])
-async def get_notification_preferences(
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[list[NotificationPreferenceItem]]:
-    """Get current user's notification channel preferences."""
-    prefs = await NotificationService.get_user_preferences(db, tenant.tenant_id, current_user.id)
-    return ApiResponse(data=prefs)
-
-
-@router.put("/notifications/preferences", response_model=ApiResponse[list[NotificationPreferenceItem]])
-async def update_notification_preferences(
-    payload: NotificationPreferenceUpdate,
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[list[NotificationPreferenceItem]]:
-    """Update current user's notification channel preferences."""
-    prefs = await NotificationService.update_user_preferences(
-        db, tenant.tenant_id, current_user.id, payload
-    )
-    return ApiResponse(data=prefs)

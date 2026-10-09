@@ -21,7 +21,7 @@ from app.core.security import get_password_hash
 from app.core.seeds import seed_system_permissions_and_roles
 from app.main import app
 from app.models.base import Base
-from app.models.core import Institution
+from app.models.core import Institution, TenantMembership
 from app.models.people import Role, User, UserRoleAssignment
 
 
@@ -109,14 +109,20 @@ async def tenant_a(db_session: AsyncSession) -> Institution:
     inst = Institution(
         id=uuid.uuid4(),
         code=f"INST-A-{uid}",
+        slug=f"apex-tech-{uid}",
         legal_name=f"Apex Institute of Technology {uid}",
         short_name="Apex Tech",
+        status="ACTIVE",
+        plan="ENTERPRISE",
         contact_email=f"admin_{uid}@apextech.edu",
         contact_phone="+919876543210",
         address_line1="123 Tech Campus Way",
         city="Coimbatore",
         state="Tamil Nadu",
         postal_code="641001",
+        default_timezone="Asia/Kolkata",
+        currency_code="INR",
+        locale="en-IN",
         is_active=True,
     )
     db_session.add(inst)
@@ -132,14 +138,20 @@ async def tenant_b(db_session: AsyncSession) -> Institution:
     inst = Institution(
         id=uuid.uuid4(),
         code=f"INST-B-{uid}",
+        slug=f"beacon-uni-{uid}",
         legal_name=f"Beacon University {uid}",
         short_name="Beacon Uni",
+        status="ACTIVE",
+        plan="ENTERPRISE",
         contact_email=f"admin_{uid}@beaconuni.edu",
         contact_phone="+919876543211",
         address_line1="456 Knowledge Park",
         city="Chennai",
         state="Tamil Nadu",
         postal_code="600001",
+        default_timezone="Asia/Kolkata",
+        currency_code="INR",
+        locale="en-IN",
         is_active=True,
     )
     db_session.add(inst)
@@ -213,6 +225,132 @@ async def faculty_user(db_session: AsyncSession, tenant_a: Institution) -> User:
         )
         db_session.add(assignment)
 
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+async def tenant_admin_a(db_session: AsyncSession, tenant_a: Institution) -> User:
+    """Create an INSTITUTION_ADMIN for Tenant A."""
+    uid = uuid.uuid4().hex[:6]
+    user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=f"admin_{uid}@apextech.edu",
+        phone_number="+919876543201",
+        password_hash=get_password_hash("AdminPass123!"),
+        status="ACTIVE",
+        first_name="Admin",
+        last_name="Alpha",
+    )
+    db_session.add(user)
+    await db_session.flush()
+
+    mem = TenantMembership(
+        id=uuid.uuid4(),
+        tenant_id=tenant_a.id,
+        user_id=user.id,
+        status="ACTIVE",
+        role_scope="INSTITUTION_ADMIN",
+    )
+    db_session.add(mem)
+
+    role_res = await db_session.execute(select(Role).where(Role.name == "INSTITUTION_ADMIN"))
+    role = role_res.scalar_one_or_none()
+    if role:
+        db_session.add(
+            UserRoleAssignment(
+                id=uuid.uuid4(),
+                tenant_id=tenant_a.id,
+                user_id=user.id,
+                role_id=role.id,
+            )
+        )
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+async def tenant_admin_b(db_session: AsyncSession, tenant_b: Institution) -> User:
+    """Create an INSTITUTION_ADMIN for Tenant B."""
+    uid = uuid.uuid4().hex[:6]
+    user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_b.id,
+        email=f"admin_{uid}@beaconuni.edu",
+        phone_number="+919876543202",
+        password_hash=get_password_hash("AdminPass123!"),
+        status="ACTIVE",
+        first_name="Admin",
+        last_name="Bravo",
+    )
+    db_session.add(user)
+    await db_session.flush()
+
+    mem = TenantMembership(
+        id=uuid.uuid4(),
+        tenant_id=tenant_b.id,
+        user_id=user.id,
+        status="ACTIVE",
+        role_scope="INSTITUTION_ADMIN",
+    )
+    db_session.add(mem)
+
+    role_res = await db_session.execute(select(Role).where(Role.name == "INSTITUTION_ADMIN"))
+    role = role_res.scalar_one_or_none()
+    if role:
+        db_session.add(
+            UserRoleAssignment(
+                id=uuid.uuid4(),
+                tenant_id=tenant_b.id,
+                user_id=user.id,
+                role_id=role.id,
+            )
+        )
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+async def user_b(db_session: AsyncSession, tenant_b: Institution) -> User:
+    """Create a standard user belonging to Tenant B."""
+    uid = uuid.uuid4().hex[:6]
+    user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_b.id,
+        email=f"user_{uid}@beaconuni.edu",
+        phone_number="+919876543203",
+        password_hash=get_password_hash("UserPass123!"),
+        status="ACTIVE",
+        first_name="Bob",
+        last_name="Bravo",
+    )
+    db_session.add(user)
+    await db_session.flush()
+
+    mem = TenantMembership(
+        id=uuid.uuid4(),
+        tenant_id=tenant_b.id,
+        user_id=user.id,
+        status="ACTIVE",
+        role_scope="STUDENT",
+    )
+    db_session.add(mem)
+
+    role_res = await db_session.execute(select(Role).where(Role.name == "STUDENT"))
+    role = role_res.scalar_one_or_none()
+    if role:
+        db_session.add(
+            UserRoleAssignment(
+                id=uuid.uuid4(),
+                tenant_id=tenant_b.id,
+                user_id=user.id,
+                role_id=role.id,
+            )
+        )
     await db_session.commit()
     await db_session.refresh(user)
     return user

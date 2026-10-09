@@ -2688,9 +2688,1358 @@ export interface InfrastructureReportData {
   };
 }
 
+// ============================================================================
+// MODULE 9: DOCUMENTS & DIGITAL RECORDS DOMAIN TYPES
+// ============================================================================
 
+export enum DocumentStatus {
+  REQUIRED = "REQUIRED",
+  MISSING = "MISSING",
+  UPLOADED = "UPLOADED",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  VERIFIED = "VERIFIED",
+  REJECTED = "REJECTED",
+  EXPIRED = "EXPIRED",
+  ARCHIVED = "ARCHIVED",
+  REVOKED = "REVOKED",
+}
 
+export enum DocumentCategoryCode {
+  IDENTITY = "IDENTITY",
+  ACADEMIC = "ACADEMIC",
+  ADMISSION = "ADMISSION",
+  FINANCIAL = "FINANCIAL",
+  PLACEMENT = "PLACEMENT",
+  HOSTEL = "HOSTEL",
+  TRANSPORT = "TRANSPORT",
+  MEDICAL = "MEDICAL",
+  ADMINISTRATIVE = "ADMINISTRATIVE",
+  CERTIFICATE = "CERTIFICATE",
+  OTHER = "OTHER",
+}
 
+export enum CertificateType {
+  BONAFIDE = "BONAFIDE",
+  COURSE_COMPLETION = "COURSE_COMPLETION",
+  TRANSFER = "TRANSFER",
+  CONDUCT = "CONDUCT",
+  CHARACTER = "CHARACTER",
+  ATTENDANCE = "ATTENDANCE",
+  INTERNSHIP = "INTERNSHIP",
+  PLACEMENT = "PLACEMENT",
+  PARTICIPATION = "PARTICIPATION",
+  OTHER = "OTHER",
+}
 
+export enum CertificateTemplateStatus {
+  DRAFT = "DRAFT",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  ARCHIVED = "ARCHIVED",
+}
 
+export enum CertificateRequestStatus {
+  DRAFT = "DRAFT",
+  SUBMITTED = "SUBMITTED",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  ISSUED = "ISSUED",
+  CANCELLED = "CANCELLED",
+}
 
+export enum IssuedCertificateStatus {
+  ISSUED = "ISSUED",
+  REVOKED = "REVOKED",
+}
+
+export enum InstitutionalRecordStatus {
+  ACTIVE = "ACTIVE",
+  EXPIRED = "EXPIRED",
+  ARCHIVED = "ARCHIVED",
+  REVOKED = "REVOKED",
+}
+
+export enum ConfidentialityLevel {
+  PUBLIC = "PUBLIC",
+  INTERNAL = "INTERNAL",
+  CONFIDENTIAL = "CONFIDENTIAL",
+  RESTRICTED = "RESTRICTED",
+}
+
+export enum DocumentOwnerType {
+  STUDENT = "STUDENT",
+  FACULTY = "FACULTY",
+  STAFF = "STAFF",
+  INSTITUTION = "INSTITUTION",
+  DEPARTMENT = "DEPARTMENT",
+}
+
+export enum DocumentExpiryStatus {
+  EXPIRED = "EXPIRED",
+  EXPIRING_7_DAYS = "EXPIRING_7_DAYS",
+  EXPIRING_30_DAYS = "EXPIRING_30_DAYS",
+  EXPIRING_90_DAYS = "EXPIRING_90_DAYS",
+  VALID = "VALID",
+  NO_EXPIRY = "NO_EXPIRY",
+}
+
+export enum VerificationPriority {
+  LOW = "LOW",
+  NORMAL = "NORMAL",
+  HIGH = "HIGH",
+  URGENT = "URGENT",
+}
+
+export interface VerificationChecklistItem {
+  id: string;
+  label: string;
+  checked: boolean;
+  required: boolean;
+  notes?: string;
+}
+
+export interface DocumentTimelineItem {
+  id: string;
+  action: string;
+  description: string;
+  performedBy: string;
+  role?: string;
+  timestamp: string;
+  notes?: string;
+}
+
+export interface DocumentMetadata {
+  documentNumber?: string;
+  issuingAuthority?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  placeOfIssue?: string;
+  verifiedBy?: string;
+  rejectionReason?: string;
+  notes?: string;
+  tags?: string[];
+}
+
+export interface DocumentItem {
+  id: string;
+  name: string;
+  category: DocumentCategoryCode;
+  documentType: string;
+  ownerType: DocumentOwnerType;
+  ownerId: string;
+  ownerName: string;
+  ownerRollNumber?: string;
+  ownerDepartment?: string;
+  program?: string;
+  academicYear?: string;
+  semester?: number;
+  status: DocumentStatus;
+  uploadedAt: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
+  rejectionReason?: string;
+  expiryDate?: string;
+  issueDate?: string;
+  documentNumber?: string;
+  issuingAuthority?: string;
+  confidentiality: ConfidentialityLevel;
+  fileSize: string;
+  fileType: string;
+  fileUrl?: string;
+  priority?: VerificationPriority;
+  assignedReviewerId?: string;
+  assignedReviewerName?: string;
+  verificationChecklist?: VerificationChecklistItem[];
+  activityTimeline: DocumentTimelineItem[];
+  relatedRecord?: {
+    entityType: "STUDENT" | "FACULTY" | "STAFF" | "PROGRAM" | "DEPARTMENT" | "ADMISSION" | "PLACEMENT" | "HOSTEL" | "TRANSPORT" | "FINANCE" | "CAMPUS";
+    entityId: string;
+    label: string;
+  };
+}
+
+export interface DocumentCategoryAuditItem {
+  id: string;
+  action: string;
+  performedBy: string;
+  timestamp: string;
+  details?: string;
+}
+
+export interface DocumentCategory {
+  id: string;
+  name: string;
+  code: DocumentCategoryCode;
+  description: string;
+  required: boolean;
+  applicableRoles: string[];
+  applicablePrograms?: string[];
+  applicableDocumentTypes: string[];
+  verificationRequired: boolean;
+  expiryRequired: boolean;
+  isActive: boolean;
+  totalDocuments?: number;
+  verifiedDocuments?: number;
+  pendingDocuments?: number;
+  rejectedDocuments?: number;
+  auditHistory?: DocumentCategoryAuditItem[];
+}
+
+export interface CertificateTemplateField {
+  id: string;
+  name: string;
+  label: string;
+  type: "TEXT" | "NUMBER" | "DATE" | "SYSTEM_VARIABLE";
+  required: boolean;
+  systemVariableMapping?: string;
+  defaultValue?: string;
+}
+
+export interface CertificateTemplateVersion {
+  version: string;
+  publishedAt: string;
+  publishedBy: string;
+  changelog: string;
+}
+
+export interface CertificateTemplateAuditItem {
+  id: string;
+  action: string;
+  performedBy: string;
+  timestamp: string;
+  notes?: string;
+}
+
+export interface CertificateTemplate {
+  id: string;
+  templateName: string;
+  certificateType: CertificateType;
+  description: string;
+  applicableAudience: ("STUDENT" | "FACULTY" | "STAFF" | "ALL")[];
+  status: CertificateTemplateStatus;
+  version: string;
+  fields: CertificateTemplateField[];
+  createdDate: string;
+  lastUpdated: string;
+  usageCount: number;
+  versionHistory: CertificateTemplateVersion[];
+  activity: CertificateTemplateAuditItem[];
+}
+
+export interface CertificateValidationCheck {
+  id: string;
+  title: string;
+  passed: boolean;
+  details: string;
+}
+
+export interface CertificateRequestTimelineItem {
+  id: string;
+  status: CertificateRequestStatus;
+  title: string;
+  performedBy: string;
+  timestamp: string;
+  notes?: string;
+}
+
+export interface CertificateRequest {
+  id: string;
+  requestId: string;
+  studentId: string;
+  studentName: string;
+  rollNumber: string;
+  program: string;
+  department: string;
+  certificateType: CertificateType;
+  templateId: string;
+  templateName: string;
+  purpose: string;
+  requestedDate: string;
+  requiredByDate?: string;
+  status: CertificateRequestStatus;
+  reviewerId?: string;
+  reviewerName?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
+  issuedCertificateId?: string;
+  issuedDate?: string;
+  financeReferenceId?: string;
+  validationChecks: CertificateValidationCheck[];
+  timeline: CertificateRequestTimelineItem[];
+}
+
+export interface IssuedCertificate {
+  id: string;
+  certificateNumber: string;
+  certificateType: CertificateType;
+  recipientId: string;
+  recipientName: string;
+  recipientRollNumber: string;
+  recipientProgram: string;
+  recipientDepartment: string;
+  templateId: string;
+  templateVersion: string;
+  issuingAuthority: string;
+  issueDate: string;
+  status: IssuedCertificateStatus;
+  qrVerificationUrl: string;
+  digitalSignatureHash: string;
+  revokedDate?: string;
+  revocationReason?: string;
+  downloadUrl?: string;
+}
+
+export interface InstitutionalRecordAuditItem {
+  id: string;
+  action: string;
+  performedBy: string;
+  timestamp: string;
+  details?: string;
+}
+
+export interface InstitutionalRecord {
+  id: string;
+  recordName: string;
+  code: string;
+  category: string;
+  ownerDepartment: string;
+  confidentiality: ConfidentialityLevel;
+  status: InstitutionalRecordStatus;
+  createdDate: string;
+  validUntil?: string;
+  issuingAuthority?: string;
+  referenceNumber?: string;
+  description?: string;
+  fileType?: string;
+  fileSize?: string;
+  relatedDocumentIds?: string[];
+  relatedDocuments?: {
+    id: string;
+    name: string;
+    fileType: string;
+    fileSize: string;
+  }[];
+  activity: InstitutionalRecordAuditItem[];
+}
+
+export interface DocumentsDashboardSummary {
+  totalDocuments: number;
+  verifiedDocuments: number;
+  pendingVerification: number;
+  rejectedDocuments: number;
+  missingDocuments: number;
+  expiringDocuments: number;
+  certificateRequests: number;
+  pendingCertificateRequests: number;
+  verificationRate: number;
+  rejectionRate: number;
+  averageVerificationHours: number;
+  documentsUploadedThisMonth: number;
+  certificatesIssuedThisMonth: number;
+  categoryDistribution: {
+    category: string;
+    count: number;
+    percentage: number;
+  }[];
+  expiryBreakdown: {
+    expired: number;
+    expiring7Days: number;
+    expiring30Days: number;
+    expiring90Days: number;
+    valid: number;
+    noExpiry: number;
+  };
+}
+
+// ============================================================================
+// 10. INTELLIGENCE & AI ASSISTANT DOMAIN TYPES
+// ============================================================================
+
+export enum AIMessageRole {
+  USER = "USER",
+  ASSISTANT = "ASSISTANT",
+  SYSTEM = "SYSTEM",
+  TOOL = "TOOL",
+}
+
+export enum AIMessageStatus {
+  QUEUED = "QUEUED",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
+export enum AIResponseBlockType {
+  TEXT = "TEXT",
+  METRIC = "METRIC",
+  TABLE = "TABLE",
+  CHART = "CHART",
+  LIST = "LIST",
+  TIMELINE = "TIMELINE",
+  INSIGHT = "INSIGHT",
+  WARNING = "WARNING",
+  RECOMMENDATION = "RECOMMENDATION",
+  SOURCE = "SOURCE",
+  ACTION = "ACTION",
+}
+
+export enum IntelligenceDomain {
+  ALL = "ALL",
+  ACADEMICS = "ACADEMICS",
+  ATTENDANCE = "ATTENDANCE",
+  EXAMINATIONS = "EXAMINATIONS",
+  FINANCE = "FINANCE",
+  PLACEMENT = "PLACEMENT",
+  CAMPUS = "CAMPUS",
+  INFRASTRUCTURE = "INFRASTRUCTURE",
+  DOCUMENTS = "DOCUMENTS",
+  PEOPLE = "PEOPLE",
+}
+
+export enum InsightType {
+  ACADEMIC = "ACADEMIC",
+  ATTENDANCE = "ATTENDANCE",
+  EXAMINATION = "EXAMINATION",
+  FINANCE = "FINANCE",
+  PLACEMENT = "PLACEMENT",
+  CAMPUS = "CAMPUS",
+  INFRASTRUCTURE = "INFRASTRUCTURE",
+  DOCUMENT = "DOCUMENT",
+  STUDENT = "STUDENT",
+}
+
+export enum InsightPriority {
+  INFO = "INFO",
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+  CRITICAL = "CRITICAL",
+}
+
+export enum InsightStatus {
+  NEW = "NEW",
+  REVIEWED = "REVIEWED",
+  DISMISSED = "DISMISSED",
+  ACTIONED = "ACTIONED",
+}
+
+export enum AlertType {
+  ATTENDANCE = "ATTENDANCE",
+  ACADEMIC = "ACADEMIC",
+  EXAMINATION = "EXAMINATION",
+  FINANCE = "FINANCE",
+  PLACEMENT = "PLACEMENT",
+  INFRASTRUCTURE = "INFRASTRUCTURE",
+  DOCUMENT = "DOCUMENT",
+  SYSTEM = "SYSTEM",
+}
+
+export enum AlertSeverity {
+  INFO = "INFO",
+  WARNING = "WARNING",
+  HIGH = "HIGH",
+  CRITICAL = "CRITICAL",
+}
+
+export enum AlertStatus {
+  OPEN = "OPEN",
+  ACKNOWLEDGED = "ACKNOWLEDGED",
+  RESOLVED = "RESOLVED",
+  DISMISSED = "DISMISSED",
+}
+
+export enum AIActivityStatus {
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum AIToolPermission {
+  ALL = "ALL",
+  STUDENT = "STUDENT",
+  FACULTY = "FACULTY",
+  HOD = "HOD",
+  ACCOUNTS = "ACCOUNTS",
+  PLACEMENT_OFFICER = "PLACEMENT_OFFICER",
+  ADMIN = "ADMIN",
+}
+
+export interface AIResponseBlock {
+  type: AIResponseBlockType;
+  title?: string;
+  content?: string;
+  metrics?: {
+    label: string;
+    value: string | number;
+    change?: string;
+    trend?: "up" | "down" | "neutral";
+  }[];
+  table?: {
+    headers: string[];
+    rows: (string | number)[][];
+  };
+  chart?: {
+    type: "bar" | "line" | "pie" | "donut";
+    labels: string[];
+    datasets: {
+      name: string;
+      data: number[];
+      color?: string;
+    }[];
+  };
+  list?: string[];
+  timeline?: {
+    time: string;
+    title: string;
+    description?: string;
+  }[];
+  actions?: {
+    label: string;
+    href?: string;
+    actionId?: string;
+    variant?: "primary" | "secondary" | "danger";
+  }[];
+}
+
+export interface AISource {
+  name: string;
+  domain: IntelligenceDomain | string;
+  href: string;
+  description: string;
+}
+
+export interface AIExplainability {
+  dataSources: string[];
+  filtersApplied: string[];
+  timePeriod: string;
+  calculationUsed: string;
+  threshold?: string;
+  result: string;
+}
+
+export interface AIMessage {
+  id: string;
+  conversationId: string;
+  role: AIMessageRole;
+  status: AIMessageStatus;
+  content: string;
+  timestamp: string;
+  blocks?: AIResponseBlock[];
+  sources?: AISource[];
+  suggestedActions?: {
+    label: string;
+    href: string;
+  }[];
+  explainability?: AIExplainability;
+}
+
+export interface AIConversation {
+  id: string;
+  title: string;
+  domain: IntelligenceDomain;
+  isPinned: boolean;
+  isArchived: boolean;
+  isSaved: boolean;
+  createdAt: string;
+  updatedAt: string;
+  messageCount: number;
+  lastMessageSnippet: string;
+}
+
+export interface AIQueryContext {
+  studentId?: string;
+  departmentId?: string;
+  programId?: string;
+  semester?: number;
+  courseId?: string;
+  eventId?: string;
+  hostelId?: string;
+  routeId?: string;
+  documentId?: string;
+  role?: string;
+  userName?: string;
+}
+
+export interface AIQuery {
+  query: string;
+  domain?: IntelligenceDomain;
+  context?: AIQueryContext;
+  conversationId?: string;
+}
+
+export interface AIResponse {
+  id: string;
+  query: string;
+  reply: string;
+  blocks: AIResponseBlock[];
+  sources: AISource[];
+  explainability: AIExplainability;
+  suggestedActions: {
+    label: string;
+    href: string;
+  }[];
+  executionTimeMs: number;
+  toolName?: string;
+}
+
+export interface AITool {
+  name: string;
+  domain: IntelligenceDomain;
+  description: string;
+  permissionRequirement: AIToolPermission;
+  status: "ACTIVE" | "MAINTENANCE" | "DEPRECATED";
+  lastUsed: string;
+  executionCount: number;
+  parameters?: {
+    name: string;
+    type: string;
+    required: boolean;
+    description: string;
+  }[];
+}
+
+export interface AIToolExecution {
+  id: string;
+  toolName: string;
+  timestamp: string;
+  user: string;
+  role: string;
+  durationMs: number;
+  status: "SUCCESS" | "FAILED";
+  inputParameters: Record<string, any>;
+  recordsReturned: number;
+}
+
+export interface Insight {
+  id: string;
+  title: string;
+  type: InsightType;
+  domain: IntelligenceDomain;
+  priority: InsightPriority;
+  status: InsightStatus;
+  summary: string;
+  affectedRecordCount: number;
+  affectedRecords?: {
+    id: string;
+    name: string;
+    type: string;
+    href: string;
+  }[];
+  detectedAt: string;
+  recommendedAction: string;
+  recommendedActionHref?: string;
+  evidence?: {
+    metric: string;
+    value: string;
+    baseline?: string;
+  }[];
+  methodology?: string;
+  relatedDomainHref?: string;
+  isSaved?: boolean;
+  activityTimeline?: {
+    action: string;
+    actor: string;
+    timestamp: string;
+    notes?: string;
+  }[];
+}
+
+export interface Alert {
+  id: string;
+  title: string;
+  type: AlertType;
+  domain: IntelligenceDomain;
+  severity: AlertSeverity;
+  status: AlertStatus;
+  detectedAt: string;
+  affectedCount: number;
+  affectedRecords?: {
+    id: string;
+    name: string;
+    type: string;
+    href: string;
+  }[];
+  sourceDomain: string;
+  reason: string;
+  recommendedAction: string;
+  recommendedActionHref?: string;
+  acknowledgedAt?: string | null;
+  acknowledgedBy?: string | null;
+  resolvedAt?: string | null;
+  resolvedBy?: string | null;
+  activityTimeline?: {
+    action: string;
+    actor: string;
+    timestamp: string;
+    notes?: string;
+  }[];
+}
+
+export interface SavedInsight {
+  id: string;
+  title: string;
+  type: "AI_RESPONSE" | "INSIGHT" | "ANALYTICS_VIEW" | "REPORT";
+  domain: IntelligenceDomain;
+  savedAt: string;
+  ownerName: string;
+  ownerRole: string;
+  lastAccessedAt: string;
+  contentSnippet: string;
+  href: string;
+}
+
+export interface AnalyticsQuery {
+  domain: IntelligenceDomain;
+  metric: string;
+  dimension: string;
+  timeRange: string;
+  filters?: Record<string, string | number>;
+}
+
+export interface AnalyticsResult {
+  query: AnalyticsQuery;
+  title: string;
+  summary: string;
+  chartType: "bar" | "line" | "pie" | "donut" | "table";
+  labels: string[];
+  datasets: {
+    name: string;
+    data: number[];
+    color?: string;
+  }[];
+  tableData?: {
+    headers: string[];
+    rows: (string | number)[][];
+  };
+}
+
+export interface AIActivity {
+  id: string;
+  timestamp: string;
+  userName: string;
+  userRole: string;
+  query: string;
+  domain: IntelligenceDomain;
+  toolsInvoked: string[];
+  resultSummary: string;
+  durationMs: number;
+  status: AIActivityStatus;
+  dataSources: string[];
+  contextSummary?: string;
+}
+
+export interface IntelligenceOverviewSummary {
+  activeInsights: number;
+  criticalAlerts: number;
+  studentsRequiringAttention: number;
+  attendanceRiskCases: number;
+  academicRiskCases: number;
+  financeRiskCases: number;
+  placementOpportunities: number;
+  infrastructureIssues: number;
+  totalQueriesRun: number;
+  averageQueryDurationMs: number;
+  domainSummaries: Record<
+    string,
+    {
+      healthScore: number;
+      status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL";
+      summary: string;
+      activeAlerts: number;
+      primaryMetric: string;
+    }
+  >;
+}
+
+export interface StudentIntelligenceProfile {
+  studentId: string;
+  studentName: string;
+  rollNumber: string;
+  department: string;
+  program: string;
+  semester: number;
+  attendanceRisk: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  attendancePercentage: number;
+  academicTrend: "IMPROVING" | "STABLE" | "DECLINING";
+  cgpa: number;
+  failedSubjectsCount: number;
+  financeStatus: "CLEAR" | "PENDING" | "OVERDUE";
+  outstandingBalance: number;
+  placementReadiness: "NOT_ELIGIBLE" | "PREPARING" | "READY" | "PLACED";
+  documentCompletionRate: number;
+  missingDocumentsCount: number;
+  campusEngagement: "LOW" | "MODERATE" | "HIGH" | "VERY_HIGH";
+  clubMemberships: number;
+  eventParticipations: number;
+  recommendedActions: string[];
+}
+
+export interface DepartmentHealthSummary {
+  departmentId: string;
+  departmentName: string;
+  studentCount: number;
+  facultyCount: number;
+  avgAttendance: number;
+  avgCgpa: number;
+  placementRate: number;
+  feeCollectionRate: number;
+  campusEngagementScore: number;
+  documentCompletionRate: number;
+  openComplaintsCount: number;
+  status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL";
+}
+
+export interface CampusHealthMetric {
+  domain: IntelligenceDomain;
+  label: string;
+  currentValue: string | number;
+  targetValue: string | number;
+  trend: "up" | "down" | "neutral";
+  trendDescription: string;
+  alertCount: number;
+  healthScore: number;
+  status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL";
+}
+
+/**
+ * Workflow and Automation Engine Types
+ */
+export type WorkflowStatus = "DRAFT" | "ACTIVE" | "PAUSED" | "ARCHIVED";
+export type WorkflowTriggerType = "SCHEDULE" | "EVENT" | "MANUAL";
+export type ExecutionStatus = "QUEUED" | "RUNNING" | "WAITING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
+export type ExecutionStepStatus = "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED" | "SKIPPED";
+
+export interface WorkflowTriggerDefinition {
+  trigger_type: WorkflowTriggerType;
+  event_type?: string | null;
+  cron_expression?: string | null;
+  interval_seconds?: number | null;
+  schedule_time?: string | null;
+  days_of_week?: number[] | null;
+  config?: Record<string, unknown>;
+}
+
+export interface WorkflowStepDefinition {
+  id: string;
+  name: string;
+  step_type: "CONDITION" | "ACTION" | "NOTIFICATION" | "WAIT";
+  condition?: Record<string, unknown> | null;
+  action_type?: string | null;
+  parameters?: Record<string, unknown>;
+  next_step_id?: string | null;
+  on_failure_step_id?: string | null;
+}
+
+export interface WorkflowVersion {
+  id: UUID;
+  workflow_id: UUID;
+  version: number;
+  is_active: boolean;
+  change_summary?: string | null;
+  trigger_definition: WorkflowTriggerDefinition;
+  steps_definition: WorkflowStepDefinition[];
+  created_at: string;
+}
+
+export interface Workflow {
+  id: UUID;
+  tenant_id: UUID;
+  name: string;
+  description?: string | null;
+  domain: string;
+  status: WorkflowStatus;
+  is_system: boolean;
+  active_version: number;
+  current_version_id?: UUID | null;
+  created_by?: UUID | null;
+  updated_by?: UUID | null;
+  created_at: string;
+  updated_at: string;
+  versions?: WorkflowVersion[];
+}
+
+export interface WorkflowExecutionStep {
+  id: UUID;
+  step_id: string;
+  step_type: string;
+  action_type?: string | null;
+  status: ExecutionStepStatus;
+  started_at: string;
+  completed_at?: string | null;
+  attempt_count: number;
+  input_data?: Record<string, unknown> | null;
+  output_data?: Record<string, unknown> | null;
+  error_message?: string | null;
+}
+
+export interface WorkflowExecution {
+  id: UUID;
+  tenant_id: UUID;
+  workflow_id: UUID;
+  workflow_version_id: UUID;
+  trigger_type: WorkflowTriggerType;
+  trigger_reference?: string | null;
+  idempotency_key?: string | null;
+  status: ExecutionStatus;
+  started_at: string;
+  completed_at?: string | null;
+  attempt_count: number;
+  max_retries: number;
+  correlation_id?: string | null;
+  error_code?: string | null;
+  error_message?: string | null;
+  steps?: WorkflowExecutionStep[];
+}
+
+export interface WorkflowOperationalMetrics {
+  active_workflows: number;
+  paused_workflows: number;
+  draft_workflows: number;
+  archived_workflows: number;
+  executions_today: number;
+  successful_executions: number;
+  failed_executions: number;
+  dead_letter_count: number;
+  queue_depth: number;
+}
+
+// ============================================================================
+// Step 18 — Enterprise Reporting & Analytics Types
+// ============================================================================
+
+export type ReportStatus = "DRAFT" | "ACTIVE" | "ARCHIVED";
+export type ReportVisibility = "PRIVATE" | "ROLE" | "TENANT" | "SYSTEM";
+export type ReportExecutionStatus = "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "EXPIRED";
+export type ReportExportFormat = "CSV" | "XLSX" | "PDF" | "JSON";
+
+export interface FilterCondition {
+  field: string;
+  operator: string;
+  value?: unknown;
+}
+
+export interface DateRangeFilter {
+  preset?: string | null;
+  start_date?: string | null;
+  end_date?: string | null;
+}
+
+export interface AcademicPeriodFilter {
+  academic_year_id?: UUID | null;
+  semester_id?: UUID | null;
+  department_id?: UUID | null;
+  program_id?: UUID | null;
+}
+
+export interface QuerySpecification {
+  dataset: string;
+  dimensions?: string[];
+  measures: string[];
+  filters?: FilterCondition[];
+  date_range?: DateRangeFilter | null;
+  academic_period?: AcademicPeriodFilter | null;
+  sort_by?: string | null;
+  sort_desc?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface ReportVersion {
+  id: UUID;
+  version_number: number;
+  change_summary?: string | null;
+  query_spec_json: QuerySpecification;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ReportDefinition {
+  id: UUID;
+  tenant_id?: UUID | null;
+  name: string;
+  code: string;
+  description?: string | null;
+  domain: string;
+  category: string;
+  status: ReportStatus;
+  visibility: ReportVisibility;
+  is_system: boolean;
+  allowed_roles: string[];
+  active_version: number;
+  active_version_id?: UUID | null;
+  created_at: string;
+  updated_at: string;
+  versions?: ReportVersion[];
+}
+
+export interface ReportExecution {
+  id: UUID;
+  tenant_id: UUID;
+  report_id?: UUID | null;
+  report_version_id?: UUID | null;
+  requested_by_user_id?: UUID | null;
+  status: ReportExecutionStatus;
+  row_count: number;
+  execution_time_ms: number;
+  error_code?: string | null;
+  error_message?: string | null;
+  correlation_id: string;
+  is_snapshot: boolean;
+  started_at?: string | null;
+  completed_at?: string | null;
+  created_at: string;
+}
+
+export interface ReportExport {
+  id: UUID;
+  tenant_id: UUID;
+  execution_id: UUID;
+  export_format: ReportExportFormat;
+  storage_key: string;
+  filename: string;
+  mime_type: string;
+  file_size_bytes: number;
+  download_count: number;
+  expires_at: string;
+  created_at: string;
+  download_url?: string | null;
+}
+
+export interface SavedReport {
+  id: UUID;
+  tenant_id: UUID;
+  user_id: UUID;
+  report_id?: UUID | null;
+  name: string;
+  description?: string | null;
+  query_spec_json: QuerySpecification;
+  is_favorite: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChartSeries {
+  name: string;
+  data: (number | string)[];
+  color?: string | null;
+}
+
+export interface AnalyticsTableData {
+  headers: string[];
+  rows: (number | string)[][];
+  total_rows?: number;
+}
+
+export interface SourceProvenance {
+  dataset: string;
+  measures: string[];
+  dimensions: string[];
+  reporting_period: string;
+  generated_at: string;
+  data_as_of: string;
+  tenant_id: string;
+}
+
+export interface AnalyticsQueryResult {
+  query: QuerySpecification;
+  title: string;
+  summary: string;
+  chart_type: string;
+  labels: string[];
+  datasets: ChartSeries[];
+  table_data: AnalyticsTableData;
+  provenance: SourceProvenance;
+  cached?: boolean;
+}
+
+/**
+ * ============================================================================
+ * Step 19: Enterprise Data Governance, Privacy & Compliance Layer Types
+ * ============================================================================
+ */
+
+export enum DataClassificationLevel {
+  PUBLIC = "PUBLIC",
+  INTERNAL = "INTERNAL",
+  CONFIDENTIAL = "CONFIDENTIAL",
+  RESTRICTED = "RESTRICTED",
+  SENSITIVE = "SENSITIVE",
+}
+
+export enum MaskingStrategy {
+  NONE = "NONE",
+  FULL_MASK = "FULL_MASK",
+  PARTIAL_MASK = "PARTIAL_MASK",
+  EMAIL_MASK = "EMAIL_MASK",
+  PHONE_MASK = "PHONE_MASK",
+  IDENTIFIER_MASK = "IDENTIFIER_MASK",
+  REDACT = "REDACT",
+  HASH = "HASH",
+}
+
+export enum GovernancePolicyCategory {
+  DATA_CLASSIFICATION = "DATA_CLASSIFICATION",
+  RETENTION = "RETENTION",
+  ACCESS = "ACCESS",
+  EXPORT = "EXPORT",
+  PRIVACY = "PRIVACY",
+  ARCHIVAL = "ARCHIVAL",
+  DELETION = "DELETION",
+  DOCUMENT = "DOCUMENT",
+  REPORTING = "REPORTING",
+  AI = "AI",
+}
+
+export enum GovernancePolicyStatus {
+  DRAFT = "DRAFT",
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+  RETIRED = "RETIRED",
+}
+
+export enum RetentionAction {
+  RETAIN = "RETAIN",
+  ARCHIVE = "ARCHIVE",
+  ANONYMIZE = "ANONYMIZE",
+  DELETE = "DELETE",
+  REVIEW = "REVIEW",
+}
+
+export enum RetentionUnit {
+  DAYS = "DAYS",
+  MONTHS = "MONTHS",
+  YEARS = "YEARS",
+}
+
+export enum RetentionTriggerEvent {
+  CREATION = "CREATION",
+  COMPLETION = "COMPLETION",
+  GRADUATION = "GRADUATION",
+  EXPIRATION = "EXPIRATION",
+  DEACTIVATION = "DEACTIVATION",
+}
+
+export enum HoldStatus {
+  ACTIVE = "ACTIVE",
+  RELEASED = "RELEASED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum PrivacyRequestType {
+  ACCESS = "ACCESS",
+  EXPORT = "EXPORT",
+  CORRECTION = "CORRECTION",
+  RESTRICTION = "RESTRICTION",
+  DELETION = "DELETION",
+  REVIEW = "REVIEW",
+}
+
+export enum PrivacyRequestStatus {
+  SUBMITTED = "SUBMITTED",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  IDENTITY_VERIFICATION_REQUIRED = "IDENTITY_VERIFICATION_REQUIRED",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  PARTIALLY_COMPLETED = "PARTIALLY_COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum AccessReviewStatus {
+  OPEN = "OPEN",
+  IN_REVIEW = "IN_REVIEW",
+  COMPLETED = "COMPLETED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum AccessReviewDecisionType {
+  PENDING = "PENDING",
+  RETAIN = "RETAIN",
+  REVOKE = "REVOKE",
+  MODIFY = "MODIFY",
+  ESCALATE = "ESCALATE",
+}
+
+export interface ClassificationTier {
+  level: DataClassificationLevel;
+  name: string;
+  description: string;
+  sensitivity_rank: number;
+  export_requires_approval: boolean;
+  requires_masking_in_logs: boolean;
+  ai_visibility_allowed: boolean;
+}
+
+export interface SensitiveFieldInfo {
+  entity: string;
+  field: string;
+  classification: DataClassificationLevel;
+  masking_strategy: MaskingStrategy;
+  export_allowed: boolean;
+  log_visibility: boolean;
+  ai_visibility: boolean;
+  allowed_roles: string[];
+}
+
+export interface GovernancePolicyModel {
+  id: UUID;
+  tenant_id: UUID;
+  name: string;
+  code: string;
+  category: GovernancePolicyCategory;
+  description?: string | null;
+  status: GovernancePolicyStatus;
+  is_system_default: boolean;
+  active_version_id?: UUID | null;
+  created_by_user_id?: UUID | null;
+  updated_by_user_id?: UUID | null;
+  created_at: string;
+  updated_at: string;
+  active_version?: GovernancePolicyVersionModel | null;
+}
+
+export interface GovernancePolicyVersionModel {
+  id: UUID;
+  tenant_id: UUID;
+  policy_id: UUID;
+  version_number: number;
+  status: GovernancePolicyStatus;
+  rules_json: Record<string, unknown> | unknown[];
+  change_summary?: string | null;
+  effective_from: string;
+  effective_until?: string | null;
+  created_by_user_id?: UUID | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RetentionPolicyModel {
+  id: UUID;
+  tenant_id: UUID;
+  policy_id?: UUID | null;
+  name: string;
+  resource_type: string;
+  retention_period: number;
+  retention_unit: RetentionUnit;
+  trigger_event: RetentionTriggerEvent;
+  action: RetentionAction;
+  archive_after_days?: number | null;
+  delete_after_days?: number | null;
+  legal_hold_behavior: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RetentionDecisionResult {
+  resource_id: UUID;
+  resource_type: string;
+  policy_id?: UUID | null;
+  decision: RetentionAction | "NONE";
+  eligible_at?: string | null;
+  is_blocked: boolean;
+  blocked_reason?: string | null;
+  active_holds: string[];
+  dependency_blocks: string[];
+}
+
+export interface GovernanceHoldModel {
+  id: UUID;
+  tenant_id: UUID;
+  name: string;
+  case_reference?: string | null;
+  target_entity_type: string;
+  target_entity_id?: UUID | null;
+  reason: string;
+  status: HoldStatus;
+  expires_at?: string | null;
+  created_by_user_id?: UUID | null;
+  released_by_user_id?: UUID | null;
+  released_at?: string | null;
+  release_reason?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PrivacyRequestModel {
+  id: UUID;
+  tenant_id: UUID;
+  request_number: string;
+  request_type: PrivacyRequestType;
+  status: PrivacyRequestStatus;
+  data_subject_type: string;
+  data_subject_id: UUID;
+  requested_by_user_id: UUID;
+  reviewed_by_user_id?: UUID | null;
+  description?: string | null;
+  evidence_notes?: string | null;
+  rejection_reason?: string | null;
+  target_domains: string[];
+  export_storage_key?: string | null;
+  export_expires_at?: string | null;
+  completed_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PrivacyRequestActionModel {
+  id: UUID;
+  tenant_id: UUID;
+  request_id: UUID;
+  action_type: string;
+  domain: string;
+  entity_type: string;
+  entity_id?: UUID | null;
+  status: string;
+  blocked_reason?: string | null;
+  performed_by_user_id?: UUID | null;
+  performed_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccessReviewModel {
+  id: UUID;
+  tenant_id: UUID;
+  title: string;
+  description?: string | null;
+  review_type: string;
+  status: AccessReviewStatus;
+  due_date: string;
+  reviewer_user_id?: UUID | null;
+  completed_at?: string | null;
+  total_items?: number;
+  decided_items?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccessReviewItemModel {
+  id: UUID;
+  tenant_id: UUID;
+  review_id: UUID;
+  user_id: UUID;
+  role_id?: UUID | null;
+  permission_name?: string | null;
+  decision: AccessReviewDecisionType;
+  decision_notes?: string | null;
+  decided_by_user_id?: UUID | null;
+  decided_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GovernanceSummaryMetrics {
+  active_policies_count: number;
+  active_holds_count: number;
+  open_privacy_requests_count: number;
+  open_access_reviews_count: number;
+  records_approaching_retention_count: number;
+  blocked_deletions_count: number;
+  sensitive_fields_registered_count: number;
+  classification_tiers_count: number;
+}

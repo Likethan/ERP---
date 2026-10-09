@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# Dependencies & Build artifacts
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Testing & Coverage
+coverage/
+*.tsbuildinfo
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

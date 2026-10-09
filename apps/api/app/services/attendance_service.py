@@ -572,6 +572,28 @@ class AttendanceService:
             ip_address=ip_address,
         )
         db.add(audit)
+
+        # Atomically emit domain event in active transaction
+        try:
+            from app.core.events import OutboxService
+            await OutboxService.publish_event(
+                db=db,
+                tenant_id=tenant_id,
+                event_type="attendance.session.finalized",
+                aggregate_type="AttendanceSession",
+                aggregate_id=session.id,
+                payload={
+                    "session_id": str(session.id),
+                    "course_id": str(session.course_offering_id),
+                    "section_id": str(session.section_id) if session.section_id else None,
+                    "date": session.date.isoformat() if session.date else None,
+                },
+                actor_id=user_id,
+                producer="ATTENDANCE_MODULE",
+            )
+        except Exception as ev_err:
+            pass
+
         await db.commit()
 
         return await cls.get_session_response(db, tenant_id, session.id)

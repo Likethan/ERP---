@@ -10,7 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db_session
-from app.core.exceptions import PermissionDeniedException
+from app.core.exceptions import (
+    PermissionDeniedException,
+    TenantArchivedException,
+    TenantSuspendedException,
+)
 from app.core.security import (
     ACCESS_TOKEN_COOKIE_NAME,
     AccountDisabledException,
@@ -23,7 +27,7 @@ from app.core.tenant import (
     get_current_tenant_context,
     set_current_tenant_context,
 )
-from app.models.core import Institution
+from app.models.core import Institution, TenantMembership
 from app.models.people import Role, RolePermission, User, UserRoleAssignment
 
 
@@ -74,20 +78,57 @@ async def get_current_user(
     if user is None:
         raise AuthenticationException("User account associated with this token does not exist.")
 
-    # Resolve tenant context
+    # Flatten user roles and permissions
+    user_roles_list = tuple(sorted(ur.role.name for ur in user.roles if ur.role and ur.role.name))
+    user_perms_list = tuple(sorted(resolve_user_permissions(user)))
+    is_super_admin = "SUPER_ADMIN" in user_roles_list or "*" in user_perms_list
+
+    # Resolve tenant context securely from token or primary membership
     token_tenant_id_str = payload.get("tenant_id")
     tenant_id = UUID(token_tenant_id_str) if token_tenant_id_str else user.primary_tenant_id
 
     if tenant_id:
+        # Validate that user actually holds authoritative membership for this tenant
+        has_membership = (user.primary_tenant_id == tenant_id) or is_super_admin
+        if not has_membership:
+            mem_stmt = select(TenantMembership).where(
+                TenantMembership.tenant_id == tenant_id,
+                TenantMembership.user_id == user.id,
+                TenantMembership.status == "ACTIVE",
+            )
+            mem_res = await db.execute(mem_stmt)
+            if mem_res.scalar_one_or_none() is not None:
+                has_membership = True
+
+        if not has_membership:
+            raise AuthenticationException("User does not have authorized membership in the requested tenant.")
+
         tenant_stmt = select(Institution).where(Institution.id == tenant_id)
         tenant_res = await db.execute(tenant_stmt)
         institution = tenant_res.scalar_one_or_none()
         if institution:
+            # Enforce tenant lifecycle status for non-superadmins
+            tenant_status = (institution.status or "ACTIVE").upper()
+            if not is_super_admin:
+                if tenant_status == "SUSPENDED":
+                    raise TenantSuspendedException(institution.id)
+                if tenant_status == "ARCHIVED" or not institution.is_active:
+                    raise TenantArchivedException(institution.id)
+
             tenant_ctx = TenantContext(
                 tenant_id=institution.id,
                 code=institution.code,
                 name=institution.legal_name,
                 is_active=institution.is_active,
+                user_id=user.id,
+                roles=user_roles_list,
+                permissions=user_perms_list,
+                tenant_status=tenant_status,
+                slug=institution.slug,
+                plan=institution.plan or "ENTERPRISE",
+                timezone=institution.default_timezone or "Asia/Kolkata",
+                currency=institution.currency_code or "INR",
+                locale=institution.locale or "en-IN",
             )
             set_current_tenant_context(tenant_ctx)
             request.state.tenant = tenant_ctx
@@ -131,7 +172,8 @@ def require_permission(permission_code: str) -> Callable:
     ) -> User:
         user_permissions = resolve_user_permissions(user)
         # SUPER_ADMIN wildcard check or exact permission
-        if "*" in user_permissions or permission_code in user_permissions:
+        alt_perm = permission_code.replace(".", ":") if "." in permission_code else permission_code.replace(":", ".")
+        if "*" in user_permissions or permission_code in user_permissions or alt_perm in user_permissions:
             return user
 
         # Check if user has SUPER_ADMIN role directly
@@ -168,4 +210,15 @@ async def get_tenant_context(
 ) -> TenantContext:
     """Retrieve verified tenant context after active user authentication."""
     return get_current_tenant_context()
+
+
+async def require_platform_admin(
+    user: Annotated[User, Depends(get_current_active_user)],
+) -> User:
+    """Ensure authenticated user has Platform Super Admin rights for global/SaaS ops."""
+    user_roles = {ur.role.name for ur in user.roles if ur.role and ur.role.name}
+    user_perms = resolve_user_permissions(user)
+    if "SUPER_ADMIN" in user_roles or "*" in user_perms or "platform:tenants:manage" in user_perms or "platform.tenants.manage" in user_perms:
+        return user
+    raise PermissionDeniedException("platform:tenants:manage")
 

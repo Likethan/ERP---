@@ -7,6 +7,7 @@ export * from "@campusos/types";
 export * from "./people";
 export * from "./campus";
 export * from "./infrastructure";
+export type { DocumentCategory } from "@campusos/types";
 export type { EventCategory, EventStatus, NotificationItem } from "./campus";
 import {
   GuardianRecord,
@@ -261,11 +262,15 @@ export interface GlobalSearchResultItem {
     | "Receipt"
     | "Scholarship"
     | "Document"
+    | "Documents"
+    | "Certificate"
     | "Event"
     | "Campus"
     | "Club"
     | "Announcement"
-    | "Infrastructure";
+    | "Infrastructure"
+    | "Intelligence"
+    | "AI Assistant";
   href: string;
   badge?: string;
 }

@@ -13,6 +13,28 @@ class TenantContext:
     code: str
     name: str
     is_active: bool = True
+    user_id: UUID | None = None
+    roles: tuple[str, ...] = ()
+    permissions: tuple[str, ...] = ()
+    tenant_status: str = "ACTIVE"
+    slug: str | None = None
+    plan: str = "ENTERPRISE"
+    timezone: str = "Asia/Kolkata"
+    currency: str = "INR"
+    locale: str = "en-IN"
+
+    @property
+    def is_operational(self) -> bool:
+        """Check if tenant is in normal operating mode (ACTIVE or TRIAL)."""
+        return self.is_active and self.tenant_status in ("ACTIVE", "TRIAL")
+
+    @property
+    def is_suspended(self) -> bool:
+        return self.tenant_status == "SUSPENDED"
+
+    @property
+    def is_archived(self) -> bool:
+        return self.tenant_status == "ARCHIVED" or not self.is_active
 
 
 _current_tenant_context: ContextVar[TenantContext | None] = ContextVar(

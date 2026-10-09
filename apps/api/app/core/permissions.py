@@ -216,6 +216,434 @@ INFRASTRUCTURE_TRANSPORT_MANAGE: Final[str] = "infrastructure:transport:manage"
 DOCUMENTS_MANAGE: Final[str] = "documents:manage"
 AUDIT_LOGS_READ: Final[str] = "audit:logs:read"
 
+# --- Documents & Digital Records Domain Permissions ---
+DOCUMENTS_READ: Final[str] = "documents:read"
+DOCUMENTS_CREATE: Final[str] = "documents:create"
+DOCUMENTS_UPDATE: Final[str] = "documents:update"
+DOCUMENTS_VERIFY: Final[str] = "documents:verify"
+DOCUMENTS_REJECT: Final[str] = "documents:reject"
+DOCUMENTS_ARCHIVE: Final[str] = "documents:archive"
+DOCUMENTS_DELETE: Final[str] = "documents:delete"
+
+DOCUMENT_CATEGORIES_READ: Final[str] = "document_categories:read"
+DOCUMENT_CATEGORIES_MANAGE: Final[str] = "document_categories:manage"
+
+DOCUMENT_REQUIREMENTS_READ: Final[str] = "document_requirements:read"
+DOCUMENT_REQUIREMENTS_MANAGE: Final[str] = "document_requirements:manage"
+
+CERTIFICATE_TEMPLATES_READ: Final[str] = "certificate_templates:read"
+CERTIFICATE_TEMPLATES_MANAGE: Final[str] = "certificate_templates:manage"
+
+CERTIFICATE_REQUESTS_CREATE: Final[str] = "certificate_requests:create"
+CERTIFICATE_REQUESTS_READ: Final[str] = "certificate_requests:read"
+CERTIFICATE_REQUESTS_REVIEW: Final[str] = "certificate_requests:review"
+CERTIFICATE_REQUESTS_APPROVE: Final[str] = "certificate_requests:approve"
+CERTIFICATE_REQUESTS_ISSUE: Final[str] = "certificate_requests:issue"
+CERTIFICATE_REQUESTS_REVOKE: Final[str] = "certificate_requests:revoke"
+CERTIFICATE_REQUESTS_CANCEL: Final[str] = "certificate_requests:cancel"
+
+CERTIFICATES_READ: Final[str] = "certificates:read"
+CERTIFICATES_VERIFY: Final[str] = "certificates:verify"
+CERTIFICATES_REVOKE: Final[str] = "certificates:revoke"
+
+INSTITUTIONAL_RECORDS_READ: Final[str] = "institutional_records:read"
+INSTITUTIONAL_RECORDS_MANAGE: Final[str] = "institutional_records:manage"
+
+# Dot notation aliases
+DOCUMENTS_READ_DOT: Final[str] = "documents.read"
+DOCUMENTS_CREATE_DOT: Final[str] = "documents.create"
+DOCUMENTS_UPDATE_DOT: Final[str] = "documents.update"
+DOCUMENTS_VERIFY_DOT: Final[str] = "documents.verify"
+DOCUMENTS_REJECT_DOT: Final[str] = "documents.reject"
+DOCUMENTS_ARCHIVE_DOT: Final[str] = "documents.archive"
+DOCUMENT_CATEGORIES_MANAGE_DOT: Final[str] = "document_categories.manage"
+DOCUMENT_REQUIREMENTS_MANAGE_DOT: Final[str] = "document_requirements.manage"
+CERTIFICATE_TEMPLATES_READ_DOT: Final[str] = "certificate_templates.read"
+CERTIFICATE_TEMPLATES_MANAGE_DOT: Final[str] = "certificate_templates.manage"
+CERTIFICATE_REQUESTS_CREATE_DOT: Final[str] = "certificate_requests.create"
+CERTIFICATE_REQUESTS_READ_DOT: Final[str] = "certificate_requests.read"
+CERTIFICATE_REQUESTS_REVIEW_DOT: Final[str] = "certificate_requests.review"
+CERTIFICATE_REQUESTS_APPROVE_DOT: Final[str] = "certificate_requests.approve"
+CERTIFICATE_REQUESTS_ISSUE_DOT: Final[str] = "certificate_requests.issue"
+CERTIFICATE_REQUESTS_REVOKE_DOT: Final[str] = "certificate_requests.revoke"
+INSTITUTIONAL_RECORDS_READ_DOT: Final[str] = "institutional_records.read"
+INSTITUTIONAL_RECORDS_MANAGE_DOT: Final[str] = "institutional_records.manage"
+
+# Intelligence & AI Permissions
+INTELLIGENCE_READ: Final[str] = "intelligence:read"
+INTELLIGENCE_QUERY: Final[str] = "intelligence:query"
+INTELLIGENCE_INSIGHTS_READ: Final[str] = "intelligence_insights:read"
+INTELLIGENCE_ALERTS_READ: Final[str] = "intelligence_alerts:read"
+INTELLIGENCE_ALERTS_MANAGE: Final[str] = "intelligence_alerts:manage"
+INTELLIGENCE_ANALYTICS_READ: Final[str] = "intelligence_analytics:read"
+INTELLIGENCE_SAVED_MANAGE: Final[str] = "intelligence_saved:manage"
+INTELLIGENCE_ACTIVITY_READ: Final[str] = "intelligence_activity:read"
+INTELLIGENCE_TOOLS_READ: Final[str] = "intelligence_tools:read"
+INTELLIGENCE_GOVERNANCE_READ: Final[str] = "intelligence_governance:read"
+INTELLIGENCE_GOVERNANCE_MANAGE: Final[str] = "intelligence_governance:manage"
+INTELLIGENCE_PREDICT: Final[str] = "intelligence:predict"
+INTELLIGENCE_RECOMMEND: Final[str] = "intelligence:recommend"
+INTELLIGENCE_EVALUATE: Final[str] = "intelligence:evaluate"
+
+# Intelligence dot aliases
+INTELLIGENCE_READ_DOT: Final[str] = "intelligence.read"
+INTELLIGENCE_QUERY_DOT: Final[str] = "intelligence.query"
+INTELLIGENCE_INSIGHTS_READ_DOT: Final[str] = "intelligence.insights.read"
+INTELLIGENCE_ALERTS_READ_DOT: Final[str] = "intelligence.alerts.read"
+INTELLIGENCE_ALERTS_MANAGE_DOT: Final[str] = "intelligence.alerts.manage"
+INTELLIGENCE_ANALYTICS_READ_DOT: Final[str] = "intelligence.analytics.read"
+INTELLIGENCE_SAVED_MANAGE_DOT: Final[str] = "intelligence.saved.manage"
+INTELLIGENCE_ACTIVITY_READ_DOT: Final[str] = "intelligence.activity.read"
+INTELLIGENCE_TOOLS_READ_DOT: Final[str] = "intelligence.tools.read"
+INTELLIGENCE_GOVERNANCE_READ_DOT: Final[str] = "intelligence.governance.read"
+INTELLIGENCE_GOVERNANCE_MANAGE_DOT: Final[str] = "intelligence.governance.manage"
+INTELLIGENCE_PREDICT_DOT: Final[str] = "intelligence.predict"
+INTELLIGENCE_RECOMMEND_DOT: Final[str] = "intelligence.recommend"
+INTELLIGENCE_EVALUATE_DOT: Final[str] = "intelligence.evaluate"
+
+
+# --- Workflows & Automation Domain Permissions ---
+WORKFLOWS_READ: Final[str] = "workflows:read"
+WORKFLOWS_CREATE: Final[str] = "workflows:create"
+WORKFLOWS_UPDATE: Final[str] = "workflows:update"
+WORKFLOWS_ACTIVATE: Final[str] = "workflows:activate"
+WORKFLOWS_PAUSE: Final[str] = "workflows:pause"
+WORKFLOWS_ARCHIVE: Final[str] = "workflows:archive"
+WORKFLOWS_EXECUTE: Final[str] = "workflows:execute"
+WORKFLOWS_RETRY: Final[str] = "workflows:retry"
+WORKFLOWS_CANCEL: Final[str] = "workflows:cancel"
+WORKFLOW_EXECUTIONS_READ: Final[str] = "workflow_executions:read"
+WORKFLOW_ACTIONS_MANAGE: Final[str] = "workflow_actions:manage"
+
+# Workflow dot notation aliases
+WORKFLOWS_READ_DOT: Final[str] = "workflows.read"
+WORKFLOWS_CREATE_DOT: Final[str] = "workflows.create"
+WORKFLOWS_UPDATE_DOT: Final[str] = "workflows.update"
+WORKFLOWS_ACTIVATE_DOT: Final[str] = "workflows.activate"
+WORKFLOWS_PAUSE_DOT: Final[str] = "workflows.pause"
+WORKFLOWS_ARCHIVE_DOT: Final[str] = "workflows.archive"
+WORKFLOWS_EXECUTE_DOT: Final[str] = "workflows.execute"
+WORKFLOWS_RETRY_DOT: Final[str] = "workflows.retry"
+WORKFLOWS_CANCEL_DOT: Final[str] = "workflows.cancel"
+WORKFLOW_EXECUTIONS_READ_DOT: Final[str] = "workflow_executions.read"
+WORKFLOW_ACTIONS_MANAGE_DOT: Final[str] = "workflow_actions.manage"
+
+# --- Reporting & Analytics Domain Permissions ---
+REPORTS_READ: Final[str] = "reports:read"
+REPORTS_CREATE: Final[str] = "reports:create"
+REPORTS_UPDATE: Final[str] = "reports:update"
+REPORTS_EXECUTE: Final[str] = "reports:execute"
+REPORTS_EXPORT: Final[str] = "reports:export"
+REPORTS_SCHEDULE: Final[str] = "reports:schedule"
+REPORTS_SHARE: Final[str] = "reports:share"
+REPORTS_DELETE: Final[str] = "reports:delete"
+
+ANALYTICS_READ: Final[str] = "analytics:read"
+ANALYTICS_QUERY: Final[str] = "analytics:query"
+ANALYTICS_EXPORT: Final[str] = "analytics:export"
+ANALYTICS_MANAGE: Final[str] = "analytics:manage"
+ANALYTICS_RECONCILE: Final[str] = "analytics:reconcile"
+ANALYTICS_BACKFILL: Final[str] = "analytics:backfill"
+
+# Reporting & Analytics dot notation aliases
+REPORTS_READ_DOT: Final[str] = "reports.read"
+REPORTS_CREATE_DOT: Final[str] = "reports.create"
+REPORTS_UPDATE_DOT: Final[str] = "reports.update"
+REPORTS_EXECUTE_DOT: Final[str] = "reports.execute"
+REPORTS_EXPORT_DOT: Final[str] = "reports.export"
+REPORTS_SCHEDULE_DOT: Final[str] = "reports.schedule"
+REPORTS_SHARE_DOT: Final[str] = "reports.share"
+REPORTS_DELETE_DOT: Final[str] = "reports.delete"
+
+ANALYTICS_READ_DOT: Final[str] = "analytics.read"
+ANALYTICS_QUERY_DOT: Final[str] = "analytics.query"
+ANALYTICS_EXPORT_DOT: Final[str] = "analytics.export"
+ANALYTICS_MANAGE_DOT: Final[str] = "analytics.manage"
+ANALYTICS_RECONCILE_DOT: Final[str] = "analytics.reconcile"
+ANALYTICS_BACKFILL_DOT: Final[str] = "analytics.backfill"
+
+# --- Data Governance, Privacy & Compliance Domain Permissions ---
+GOVERNANCE_READ: Final[str] = "governance:read"
+GOVERNANCE_MANAGE: Final[str] = "governance:manage"
+GOVERNANCE_POLICIES_READ: Final[str] = "governance:policies:read"
+GOVERNANCE_POLICIES_MANAGE: Final[str] = "governance:policies:manage"
+GOVERNANCE_RETENTION_READ: Final[str] = "governance:retention:read"
+GOVERNANCE_RETENTION_MANAGE: Final[str] = "governance:retention:manage"
+GOVERNANCE_RETENTION_EXECUTE: Final[str] = "governance:retention:execute"
+GOVERNANCE_HOLDS_READ: Final[str] = "governance:holds:read"
+GOVERNANCE_HOLDS_MANAGE: Final[str] = "governance:holds:manage"
+GOVERNANCE_PRIVACY_READ: Final[str] = "governance:privacy:read"
+GOVERNANCE_PRIVACY_CREATE: Final[str] = "governance:privacy:create"
+GOVERNANCE_PRIVACY_REVIEW: Final[str] = "governance:privacy:review"
+GOVERNANCE_PRIVACY_EXECUTE: Final[str] = "governance:privacy:execute"
+GOVERNANCE_ACCESS_REVIEWS_READ: Final[str] = "governance:access_reviews:read"
+GOVERNANCE_ACCESS_REVIEWS_MANAGE: Final[str] = "governance:access_reviews:manage"
+GOVERNANCE_CLASSIFICATION_READ: Final[str] = "governance:classification:read"
+GOVERNANCE_CLASSIFICATION_MANAGE: Final[str] = "governance:classification:manage"
+GOVERNANCE_EXPORT_APPROVE: Final[str] = "governance:export:approve"
+GOVERNANCE_EXPORT_MANAGE: Final[str] = "governance:export:manage"
+
+# Dot notation aliases
+GOVERNANCE_READ_DOT: Final[str] = "governance.read"
+GOVERNANCE_MANAGE_DOT: Final[str] = "governance.manage"
+GOVERNANCE_POLICIES_READ_DOT: Final[str] = "governance.policies.read"
+GOVERNANCE_POLICIES_MANAGE_DOT: Final[str] = "governance.policies.manage"
+GOVERNANCE_RETENTION_READ_DOT: Final[str] = "governance.retention.read"
+GOVERNANCE_RETENTION_MANAGE_DOT: Final[str] = "governance.retention.manage"
+GOVERNANCE_RETENTION_EXECUTE_DOT: Final[str] = "governance.retention.execute"
+GOVERNANCE_HOLDS_READ_DOT: Final[str] = "governance.holds.read"
+GOVERNANCE_HOLDS_MANAGE_DOT: Final[str] = "governance.holds.manage"
+GOVERNANCE_PRIVACY_READ_DOT: Final[str] = "governance.privacy.read"
+GOVERNANCE_PRIVACY_CREATE_DOT: Final[str] = "governance.privacy.create"
+GOVERNANCE_PRIVACY_REVIEW_DOT: Final[str] = "governance.privacy.review"
+GOVERNANCE_PRIVACY_EXECUTE_DOT: Final[str] = "governance.privacy.execute"
+GOVERNANCE_ACCESS_REVIEWS_READ_DOT: Final[str] = "governance.access_reviews.read"
+GOVERNANCE_ACCESS_REVIEWS_MANAGE_DOT: Final[str] = "governance.access_reviews.manage"
+GOVERNANCE_CLASSIFICATION_READ_DOT: Final[str] = "governance.classification.read"
+GOVERNANCE_CLASSIFICATION_MANAGE_DOT: Final[str] = "governance.classification.manage"
+GOVERNANCE_EXPORT_APPROVE_DOT: Final[str] = "governance.export.approve"
+# --- Enterprise Integration & Interoperability Domain Permissions ---
+INTEGRATIONS_READ: Final[str] = "integrations:read"
+INTEGRATIONS_MANAGE: Final[str] = "integrations:manage"
+INTEGRATIONS_CONNECTORS_READ: Final[str] = "integrations:connectors:read"
+INTEGRATIONS_CONNECTORS_MANAGE: Final[str] = "integrations:connectors:manage"
+INTEGRATIONS_CONNECTORS_TEST: Final[str] = "integrations:connectors:test"
+INTEGRATIONS_WEBHOOKS_READ: Final[str] = "integrations:webhooks:read"
+INTEGRATIONS_WEBHOOKS_MANAGE: Final[str] = "integrations:webhooks:manage"
+INTEGRATIONS_SYNC_READ: Final[str] = "integrations:sync:read"
+INTEGRATIONS_SYNC_MANAGE: Final[str] = "integrations:sync:manage"
+INTEGRATIONS_SYNC_EXECUTE: Final[str] = "integrations:sync:execute"
+INTEGRATIONS_LOGS_READ: Final[str] = "integrations:logs:read"
+INTEGRATIONS_HEALTH_READ: Final[str] = "integrations:health:read"
+INTEGRATIONS_CREDENTIALS_MANAGE: Final[str] = "integrations:credentials:manage"
+INTEGRATIONS_DELIVERIES_RETRY: Final[str] = "integrations:deliveries:retry"
+
+# Dot notation aliases
+INTEGRATIONS_READ_DOT: Final[str] = "integrations.read"
+INTEGRATIONS_MANAGE_DOT: Final[str] = "integrations.manage"
+INTEGRATIONS_CONNECTORS_READ_DOT: Final[str] = "integrations.connectors.read"
+INTEGRATIONS_CONNECTORS_MANAGE_DOT: Final[str] = "integrations.connectors.manage"
+INTEGRATIONS_CONNECTORS_TEST_DOT: Final[str] = "integrations.connectors.test"
+INTEGRATIONS_WEBHOOKS_READ_DOT: Final[str] = "integrations.webhooks.read"
+INTEGRATIONS_WEBHOOKS_MANAGE_DOT: Final[str] = "integrations.webhooks.manage"
+INTEGRATIONS_SYNC_READ_DOT: Final[str] = "integrations.sync.read"
+INTEGRATIONS_SYNC_MANAGE_DOT: Final[str] = "integrations.sync.manage"
+INTEGRATIONS_SYNC_EXECUTE_DOT: Final[str] = "integrations.sync.execute"
+INTEGRATIONS_LOGS_READ_DOT: Final[str] = "integrations.logs.read"
+INTEGRATIONS_HEALTH_READ_DOT: Final[str] = "integrations.health.read"
+INTEGRATIONS_CREDENTIALS_MANAGE_DOT: Final[str] = "integrations.credentials.manage"
+INTEGRATIONS_DELIVERIES_RETRY_DOT: Final[str] = "integrations.deliveries.retry"
+
+# --- Enterprise API Platform & Developer Portal Domain Permissions (Step 21) ---
+API_PLATFORM_READ: Final[str] = "api:platform:read"
+API_PLATFORM_MANAGE: Final[str] = "api:platform:manage"
+API_APPLICATIONS_CREATE: Final[str] = "api:applications:create"
+API_APPLICATIONS_READ: Final[str] = "api:applications:read"
+API_APPLICATIONS_MANAGE: Final[str] = "api:applications:manage"
+API_APPLICATIONS_APPROVE: Final[str] = "api:applications:approve"
+API_CREDENTIALS_CREATE: Final[str] = "api:credentials:create"
+API_CREDENTIALS_ROTATE: Final[str] = "api:credentials:rotate"
+API_CREDENTIALS_REVOKE: Final[str] = "api:credentials:revoke"
+API_SCOPES_MANAGE: Final[str] = "api:scopes:manage"
+API_CATALOG_READ: Final[str] = "api:catalog:read"
+API_CATALOG_MANAGE: Final[str] = "api:catalog:manage"
+API_ANALYTICS_READ: Final[str] = "api:analytics:read"
+
+# Dot notation aliases
+API_PLATFORM_READ_DOT: Final[str] = "api.platform.read"
+API_PLATFORM_MANAGE_DOT: Final[str] = "api.platform.manage"
+API_APPLICATIONS_CREATE_DOT: Final[str] = "api.applications.create"
+API_APPLICATIONS_READ_DOT: Final[str] = "api.applications.read"
+API_APPLICATIONS_MANAGE_DOT: Final[str] = "api.applications.manage"
+API_APPLICATIONS_APPROVE_DOT: Final[str] = "api.applications.approve"
+API_CREDENTIALS_CREATE_DOT: Final[str] = "api.credentials.create"
+API_CREDENTIALS_ROTATE_DOT: Final[str] = "api.credentials.rotate"
+API_CREDENTIALS_REVOKE_DOT: Final[str] = "api.credentials.revoke"
+API_SCOPES_MANAGE_DOT: Final[str] = "api.scopes.manage"
+API_CATALOG_READ_DOT: Final[str] = "api.catalog.read"
+API_CATALOG_MANAGE_DOT: Final[str] = "api.catalog.manage"
+API_ANALYTICS_READ_DOT: Final[str] = "api.analytics.read"
+
+# --- Enterprise Identity, SSO, Session & Access Federation (Step 22) ---
+IDENTITY_READ: Final[str] = "identity:read"
+IDENTITY_MANAGE: Final[str] = "identity:manage"
+IDENTITY_PROVIDERS_READ: Final[str] = "identity:providers:read"
+IDENTITY_PROVIDERS_MANAGE: Final[str] = "identity:providers:manage"
+IDENTITY_PROVIDERS_TEST: Final[str] = "identity:providers:test"
+IDENTITY_SESSIONS_READ: Final[str] = "identity:sessions:read"
+IDENTITY_SESSIONS_REVOKE: Final[str] = "identity:sessions:revoke"
+IDENTITY_EXTERNAL_LINKS_READ: Final[str] = "identity:external_links:read"
+IDENTITY_EXTERNAL_LINKS_MANAGE: Final[str] = "identity:external_links:manage"
+IDENTITY_MFA_MANAGE: Final[str] = "identity:mfa:manage"
+IDENTITY_POLICIES_READ: Final[str] = "identity:policies:read"
+IDENTITY_POLICIES_MANAGE: Final[str] = "identity:policies:manage"
+IDENTITY_SECURITY_EVENTS_READ: Final[str] = "identity:security_events:read"
+
+# Dot notation aliases
+IDENTITY_READ_DOT: Final[str] = "identity.read"
+IDENTITY_MANAGE_DOT: Final[str] = "identity.manage"
+IDENTITY_PROVIDERS_READ_DOT: Final[str] = "identity.providers.read"
+IDENTITY_PROVIDERS_MANAGE_DOT: Final[str] = "identity.providers.manage"
+IDENTITY_PROVIDERS_TEST_DOT: Final[str] = "identity.providers.test"
+IDENTITY_SESSIONS_READ_DOT: Final[str] = "identity.sessions.read"
+IDENTITY_SESSIONS_REVOKE_DOT: Final[str] = "identity.sessions.revoke"
+IDENTITY_EXTERNAL_LINKS_READ_DOT: Final[str] = "identity.external_links.read"
+IDENTITY_EXTERNAL_LINKS_MANAGE_DOT: Final[str] = "identity.external_links.manage"
+IDENTITY_MFA_MANAGE_DOT: Final[str] = "identity.mfa.manage"
+IDENTITY_POLICIES_READ_DOT: Final[str] = "identity.policies.read"
+IDENTITY_POLICIES_MANAGE_DOT: Final[str] = "identity.policies.manage"
+IDENTITY_SECURITY_EVENTS_READ_DOT: Final[str] = "identity.security_events.read"
+
+# --- Enterprise Administration, Configuration & Policy Management (Step 23) ---
+CONFIGURATION_READ: Final[str] = "configuration:read"
+CONFIGURATION_CREATE: Final[str] = "configuration:create"
+CONFIGURATION_UPDATE: Final[str] = "configuration:update"
+CONFIGURATION_DELETE: Final[str] = "configuration:delete"
+CONFIGURATION_APPROVE: Final[str] = "configuration:approve"
+CONFIGURATION_ROLLBACK: Final[str] = "configuration:rollback"
+CONFIGURATION_PREVIEW: Final[str] = "configuration:preview"
+
+POLICY_READ: Final[str] = "policy:read"
+POLICY_MANAGE: Final[str] = "policy:manage"
+
+FEATURE_FLAG_READ: Final[str] = "feature_flag:read"
+FEATURE_FLAG_MANAGE: Final[str] = "feature_flag:manage"
+
+MODULE_READ: Final[str] = "module:read"
+MODULE_MANAGE: Final[str] = "module:manage"
+
+SEQUENCE_READ: Final[str] = "sequence:read"
+SEQUENCE_MANAGE: Final[str] = "sequence:manage"
+
+# --- Enterprise Master Data Management & Data Quality (Step 24) ---
+MASTER_DATA_READ: Final[str] = "master_data:read"
+MASTER_DATA_VALIDATE: Final[str] = "master_data:validate"
+MASTER_DATA_CORRECT: Final[str] = "master_data:correct"
+MASTER_DATA_MERGE: Final[str] = "master_data:merge"
+MASTER_DATA_APPROVE: Final[str] = "master_data:approve"
+MASTER_DATA_REFERENCE_MANAGE: Final[str] = "master_data:reference_manage"
+MASTER_DATA_QUALITY_MANAGE: Final[str] = "master_data:quality_manage"
+MASTER_DATA_DEFINITION_MANAGE: Final[str] = "master_data:definition_manage"
+
+# Dot notation aliases
+CONFIGURATION_READ_DOT: Final[str] = "configuration.read"
+CONFIGURATION_CREATE_DOT: Final[str] = "configuration.create"
+CONFIGURATION_UPDATE_DOT: Final[str] = "configuration.update"
+CONFIGURATION_DELETE_DOT: Final[str] = "configuration.delete"
+CONFIGURATION_APPROVE_DOT: Final[str] = "configuration.approve"
+CONFIGURATION_ROLLBACK_DOT: Final[str] = "configuration.rollback"
+CONFIGURATION_PREVIEW_DOT: Final[str] = "configuration.preview"
+
+POLICY_READ_DOT: Final[str] = "policy.read"
+POLICY_MANAGE_DOT: Final[str] = "policy.manage"
+
+FEATURE_FLAG_READ_DOT: Final[str] = "feature_flag.read"
+FEATURE_FLAG_MANAGE_DOT: Final[str] = "feature_flag.manage"
+
+MODULE_READ_DOT: Final[str] = "module.read"
+MODULE_MANAGE_DOT: Final[str] = "module.manage"
+
+SEQUENCE_READ_DOT: Final[str] = "sequence.read"
+SEQUENCE_MANAGE_DOT: Final[str] = "sequence.manage"
+
+MASTER_DATA_READ_DOT: Final[str] = "master_data.read"
+MASTER_DATA_VALIDATE_DOT: Final[str] = "master_data.validate"
+MASTER_DATA_CORRECT_DOT: Final[str] = "master_data.correct"
+MASTER_DATA_MERGE_DOT: Final[str] = "master_data.merge"
+MASTER_DATA_APPROVE_DOT: Final[str] = "master_data.approve"
+MASTER_DATA_REFERENCE_MANAGE_DOT: Final[str] = "master_data.reference.manage"
+MASTER_DATA_QUALITY_MANAGE_DOT: Final[str] = "master_data.quality.manage"
+MASTER_DATA_DEFINITION_MANAGE_DOT: Final[str] = "master_data.definition.manage"
+
+# --- Enterprise Case Management & HITL Operations (Step 25) ---
+CASES_READ: Final[str] = "cases:read"
+CASES_CREATE: Final[str] = "cases:create"
+CASES_UPDATE: Final[str] = "cases:update"
+CASES_RESOLVE: Final[str] = "cases:resolve"
+CASES_CLOSE: Final[str] = "cases:close"
+CASES_REOPEN: Final[str] = "cases:reopen"
+CASES_ASSIGN: Final[str] = "cases:assign"
+CASES_COMMENT: Final[str] = "cases:comment"
+
+TASKS_READ: Final[str] = "tasks:read"
+TASKS_CLAIM: Final[str] = "tasks:claim"
+TASKS_RELEASE: Final[str] = "tasks:release"
+TASKS_COMPLETE: Final[str] = "tasks:complete"
+TASKS_REASSIGN: Final[str] = "tasks:reassign"
+TASKS_DELEGATE: Final[str] = "tasks:delegate"
+TASKS_ESCALATE: Final[str] = "tasks:escalate"
+
+QUEUES_READ: Final[str] = "queues:read"
+QUEUES_MANAGE: Final[str] = "queues:manage"
+
+SLA_POLICIES_READ: Final[str] = "sla_policies:read"
+SLA_POLICIES_MANAGE: Final[str] = "sla_policies:manage"
+
+WORKFLOWS_TRANSITION: Final[str] = "workflows:transition"
+
+# Dot notation aliases
+CASES_READ_DOT: Final[str] = "cases.read"
+CASES_CREATE_DOT: Final[str] = "cases.create"
+CASES_UPDATE_DOT: Final[str] = "cases.update"
+CASES_RESOLVE_DOT: Final[str] = "cases.resolve"
+CASES_CLOSE_DOT: Final[str] = "cases.close"
+CASES_REOPEN_DOT: Final[str] = "cases.reopen"
+CASES_ASSIGN_DOT: Final[str] = "cases.assign"
+CASES_COMMENT_DOT: Final[str] = "cases.comment"
+
+TASKS_READ_DOT: Final[str] = "tasks.read"
+TASKS_CLAIM_DOT: Final[str] = "tasks.claim"
+TASKS_RELEASE_DOT: Final[str] = "tasks.release"
+TASKS_COMPLETE_DOT: Final[str] = "tasks.complete"
+TASKS_REASSIGN_DOT: Final[str] = "tasks.reassign"
+TASKS_DELEGATE_DOT: Final[str] = "tasks.delegate"
+TASKS_ESCALATE_DOT: Final[str] = "tasks.escalate"
+
+QUEUES_READ_DOT: Final[str] = "queues.read"
+QUEUES_MANAGE_DOT: Final[str] = "queues.manage"
+
+SLA_POLICIES_READ_DOT: Final[str] = "sla_policies.read"
+SLA_POLICIES_MANAGE_DOT: Final[str] = "sla_policies.manage"
+
+WORKFLOWS_TRANSITION_DOT: Final[str] = "workflows.transition"
+
+# --- Enterprise Notification, Communication & Delivery Orchestration (Step 26) ---
+NOTIFICATIONS_READ: Final[str] = "notifications:read"
+NOTIFICATIONS_MANAGE_PREFERENCES: Final[str] = "notifications:preferences:manage"
+NOTIFICATION_TEMPLATES_READ: Final[str] = "notifications:templates:read"
+NOTIFICATION_TEMPLATES_MANAGE: Final[str] = "notifications:templates:manage"
+NOTIFICATION_RULES_MANAGE: Final[str] = "notifications:rules:manage"
+NOTIFICATION_DELIVERIES_READ: Final[str] = "notifications:deliveries:read"
+NOTIFICATION_DELIVERIES_RETRY: Final[str] = "notifications:deliveries:retry"
+NOTIFICATION_DELIVERIES_CANCEL: Final[str] = "notifications:deliveries:cancel"
+NOTIFICATION_ANALYTICS_READ: Final[str] = "notifications:analytics:read"
+NOTIFICATION_PROVIDERS_MANAGE: Final[str] = "notifications:providers:manage"
+
+# Dot notation aliases
+NOTIFICATIONS_READ_DOT: Final[str] = "notification.read"
+NOTIFICATIONS_MANAGE_PREFERENCES_DOT: Final[str] = "notification.manage_preferences"
+NOTIFICATION_TEMPLATES_READ_DOT: Final[str] = "notification_template.read"
+NOTIFICATION_TEMPLATES_MANAGE_DOT: Final[str] = "notification_template.manage"
+NOTIFICATION_RULES_MANAGE_DOT: Final[str] = "notification_rule.manage"
+NOTIFICATION_DELIVERIES_READ_DOT: Final[str] = "notification_delivery.read"
+NOTIFICATION_DELIVERIES_RETRY_DOT: Final[str] = "notification_delivery.retry"
+NOTIFICATION_DELIVERIES_CANCEL_DOT: Final[str] = "notification_delivery.cancel"
+NOTIFICATION_ANALYTICS_READ_DOT: Final[str] = "notification_analytics.read"
+NOTIFICATION_PROVIDERS_MANAGE_DOT: Final[str] = "notification_provider.manage"
+
+# --- Enterprise Domain Events, Outbox & Reliability Backbone (Step 27) ---
+DOMAIN_EVENTS_READ: Final[str] = "events:domain:read"
+DOMAIN_EVENTS_RETRY: Final[str] = "events:domain:retry"
+DOMAIN_EVENTS_REPLAY: Final[str] = "events:domain:replay"
+DOMAIN_EVENTS_CONSUMERS_MANAGE: Final[str] = "events:domain:consumers:manage"
+DOMAIN_EVENTS_METRICS_READ: Final[str] = "events:domain:metrics:read"
+
+DOMAIN_EVENTS_READ_DOT: Final[str] = "events.domain.read"
+DOMAIN_EVENTS_RETRY_DOT: Final[str] = "events.domain.retry"
+DOMAIN_EVENTS_REPLAY_DOT: Final[str] = "events.domain.replay"
+DOMAIN_EVENTS_CONSUMERS_MANAGE_DOT: Final[str] = "events.domain.consumers.manage"
+DOMAIN_EVENTS_METRICS_READ_DOT: Final[str] = "events.domain.metrics.read"
+
 
 # Comprehensive Registry
 ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
@@ -273,7 +701,9 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(ATTENDANCE_UPDATE, "attendance", "Update marked attendance"),
     PermissionDefinition(ATTENDANCE_LOCK, "attendance", "Lock attendance session"),
     PermissionDefinition(ATTENDANCE_CORRECT, "attendance", "Request attendance correction"),
-    PermissionDefinition(ATTENDANCE_APPROVE_CORRECTION, "attendance", "Approve attendance correction"),
+    PermissionDefinition(
+        ATTENDANCE_APPROVE_CORRECTION, "attendance", "Approve attendance correction"
+    ),
     PermissionDefinition(LEAVE_READ, "attendance", "View leave requests"),
     PermissionDefinition(LEAVE_CREATE, "attendance", "Submit leave request"),
     PermissionDefinition(LEAVE_APPROVE, "attendance", "Approve student leave"),
@@ -289,11 +719,17 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(EXAMINATION_RESULTS_PUBLISH, "examination", "Publish official results"),
     PermissionDefinition(EXAMINATION_RESULTS_READ_SELF, "examination", "View personal grade cards"),
     PermissionDefinition(EXAMINATIONS_READ, "examination", "View examinations and cycles"),
-    PermissionDefinition(EXAMINATIONS_CREATE, "examination", "Create examination cycle and schedules"),
-    PermissionDefinition(EXAMINATIONS_UPDATE, "examination", "Update examination schedule and terms"),
+    PermissionDefinition(
+        EXAMINATIONS_CREATE, "examination", "Create examination cycle and schedules"
+    ),
+    PermissionDefinition(
+        EXAMINATIONS_UPDATE, "examination", "Update examination schedule and terms"
+    ),
     PermissionDefinition(ASSESSMENTS_READ, "examination", "View course assessments and components"),
     PermissionDefinition(ASSESSMENTS_CREATE, "examination", "Create course assessments"),
-    PermissionDefinition(ASSESSMENTS_UPDATE, "examination", "Update course assessments and weightage"),
+    PermissionDefinition(
+        ASSESSMENTS_UPDATE, "examination", "Update course assessments and weightage"
+    ),
     PermissionDefinition(ASSESSMENTS_FINALIZE, "examination", "Finalize assessment component"),
     PermissionDefinition(MARKS_READ, "examination", "View entered assessment marks"),
     PermissionDefinition(MARKS_ENTER, "examination", "Enter raw student assessment marks"),
@@ -306,8 +742,12 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(GRADE_SCALES_READ, "examination", "View institutional grading scales"),
     PermissionDefinition(GRADE_SCALES_MANAGE, "examination", "Configure grading scale bands"),
     PermissionDefinition(ELIGIBILITY_READ, "examination", "View student examination eligibility"),
-    PermissionDefinition(ELIGIBILITY_EVALUATE, "examination", "Evaluate student examination eligibility"),
-    PermissionDefinition(ELIGIBILITY_OVERRIDE, "examination", "Override examination eligibility restrictions"),
+    PermissionDefinition(
+        ELIGIBILITY_EVALUATE, "examination", "Evaluate student examination eligibility"
+    ),
+    PermissionDefinition(
+        ELIGIBILITY_OVERRIDE, "examination", "Override examination eligibility restrictions"
+    ),
     PermissionDefinition(FINANCE_STRUCTURES_MANAGE, "finance", "Configure fee structures"),
     PermissionDefinition(FINANCE_INVOICES_READ, "finance", "View student invoices and ledgers"),
     PermissionDefinition(FINANCE_INVOICES_CREATE, "finance", "Generate student billing invoices"),
@@ -317,43 +757,83 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(FINANCE_REPORTS_READ, "finance", "Access financial billing analytics"),
     # Step 8 Granular Suite
     PermissionDefinition(FINANCE_READ, "finance", "View institutional billing and financial state"),
-    PermissionDefinition(FINANCE_MANAGE_FEE_STRUCTURES, "finance", "Author, approve and activate fee structures"),
+    PermissionDefinition(
+        FINANCE_MANAGE_FEE_STRUCTURES, "finance", "Author, approve and activate fee structures"
+    ),
     PermissionDefinition(INVOICES_READ, "finance", "View student fee invoices and billing lines"),
-    PermissionDefinition(INVOICES_CREATE, "finance", "Generate student invoices from fee assignments"),
+    PermissionDefinition(
+        INVOICES_CREATE, "finance", "Generate student invoices from fee assignments"
+    ),
     PermissionDefinition(INVOICES_ISSUE, "finance", "Issue draft invoices and commit balances"),
-    PermissionDefinition(INVOICES_CANCEL, "finance", "Cancel issued invoices without balance corruption"),
+    PermissionDefinition(
+        INVOICES_CANCEL, "finance", "Cancel issued invoices without balance corruption"
+    ),
     PermissionDefinition(PAYMENTS_READ, "finance", "Inspect payment transaction records"),
     PermissionDefinition(PAYMENTS_CREATE, "finance", "Record inward student payments"),
     PermissionDefinition(PAYMENTS_CONFIRM, "finance", "Confirm and verify payment transactions"),
     PermissionDefinition(RECEIPTS_READ, "finance", "View and download payment receipts"),
     PermissionDefinition(RECEIPTS_ISSUE, "finance", "Generate and issue official payment receipts"),
-    PermissionDefinition(SCHOLARSHIPS_READ, "finance", "View student scholarships, discounts and concessions"),
-    PermissionDefinition(SCHOLARSHIPS_CREATE, "finance", "Apply scholarship or fee waiver to student"),
-    PermissionDefinition(SCHOLARSHIPS_APPROVE, "finance", "Approve or reject student scholarship grants"),
+    PermissionDefinition(
+        SCHOLARSHIPS_READ, "finance", "View student scholarships, discounts and concessions"
+    ),
+    PermissionDefinition(
+        SCHOLARSHIPS_CREATE, "finance", "Apply scholarship or fee waiver to student"
+    ),
+    PermissionDefinition(
+        SCHOLARSHIPS_APPROVE, "finance", "Approve or reject student scholarship grants"
+    ),
     PermissionDefinition(ADJUSTMENTS_CREATE, "finance", "Create debit/credit adjustment requests"),
-    PermissionDefinition(ADJUSTMENTS_APPROVE, "finance", "Approve financial adjustments on invoices"),
+    PermissionDefinition(
+        ADJUSTMENTS_APPROVE, "finance", "Approve financial adjustments on invoices"
+    ),
     PermissionDefinition(REFUNDS_CREATE, "finance", "Request fee refund for paid transactions"),
     PermissionDefinition(REFUNDS_APPROVE, "finance", "Authorize fee refund disbursements"),
     PermissionDefinition(REFUNDS_PROCESS, "finance", "Process and disburse approved refunds"),
     # Placement
-    PermissionDefinition(PLACEMENT_COMPANIES_READ, "placement", "View recruiting companies directory"),
-    PermissionDefinition(PLACEMENT_COMPANIES_MANAGE, "placement", "Manage recruiting directory and contacts"),
+    PermissionDefinition(
+        PLACEMENT_COMPANIES_READ, "placement", "View recruiting companies directory"
+    ),
+    PermissionDefinition(
+        PLACEMENT_COMPANIES_MANAGE, "placement", "Manage recruiting directory and contacts"
+    ),
     PermissionDefinition(PLACEMENT_DRIVES_READ, "placement", "View campus placement drives"),
     PermissionDefinition(PLACEMENT_DRIVES_MANAGE, "placement", "Schedule and manage job drives"),
-    PermissionDefinition(PLACEMENT_POSITIONS_MANAGE, "placement", "Create and manage job positions and eligibility rules"),
-    PermissionDefinition(PLACEMENT_ELIGIBILITY_EVALUATE, "placement", "Run automated eligibility evaluations for students"),
+    PermissionDefinition(
+        PLACEMENT_POSITIONS_MANAGE,
+        "placement",
+        "Create and manage job positions and eligibility rules",
+    ),
+    PermissionDefinition(
+        PLACEMENT_ELIGIBILITY_EVALUATE,
+        "placement",
+        "Run automated eligibility evaluations for students",
+    ),
     PermissionDefinition(PLACEMENT_APPLY_SELF, "placement", "Apply for placement positions"),
     PermissionDefinition(PLACEMENT_APPLICATIONS_READ, "placement", "View placement applications"),
-    PermissionDefinition(PLACEMENT_APPLICATIONS_REVIEW, "placement", "Review and shortlist applicant applications"),
-    PermissionDefinition(PLACEMENT_INTERVIEWS_MANAGE, "placement", "Schedule interview rounds and slots"),
-    PermissionDefinition(PLACEMENT_INTERVIEWS_EVALUATE, "placement", "Submit interview evaluations and ratings"),
+    PermissionDefinition(
+        PLACEMENT_APPLICATIONS_REVIEW, "placement", "Review and shortlist applicant applications"
+    ),
+    PermissionDefinition(
+        PLACEMENT_INTERVIEWS_MANAGE, "placement", "Schedule interview rounds and slots"
+    ),
+    PermissionDefinition(
+        PLACEMENT_INTERVIEWS_EVALUATE, "placement", "Submit interview evaluations and ratings"
+    ),
     PermissionDefinition(PLACEMENT_OFFERS_READ, "placement", "View extended placement offers"),
     PermissionDefinition(PLACEMENT_OFFERS_MANAGE, "placement", "Log and issue job offers"),
-    PermissionDefinition(PLACEMENT_OFFERS_RESPOND, "placement", "Accept or decline personal placement offers"),
-    PermissionDefinition(PLACEMENT_OUTCOMES_MANAGE, "placement", "Record institutional placement outcomes"),
-    PermissionDefinition(PLACEMENT_ANALYTICS_READ, "placement", "Access placement statistics and CTC analytics"),
+    PermissionDefinition(
+        PLACEMENT_OFFERS_RESPOND, "placement", "Accept or decline personal placement offers"
+    ),
+    PermissionDefinition(
+        PLACEMENT_OUTCOMES_MANAGE, "placement", "Record institutional placement outcomes"
+    ),
+    PermissionDefinition(
+        PLACEMENT_ANALYTICS_READ, "placement", "Access placement statistics and CTC analytics"
+    ),
     PermissionDefinition(PLACEMENT_PROFILE_READ, "placement", "View student placement profile"),
-    PermissionDefinition(PLACEMENT_PROFILE_UPDATE, "placement", "Update student placement profile and resume"),
+    PermissionDefinition(
+        PLACEMENT_PROFILE_UPDATE, "placement", "Update student placement profile and resume"
+    ),
     # Logistics & Audit
     PermissionDefinition(CAMPUS_EVENTS_MANAGE, "campus", "Create and govern campus events"),
     PermissionDefinition(CAMPUS_ANNOUNCEMENTS_MANAGE, "campus", "Broadcast campus announcements"),
@@ -367,31 +847,462 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(EVENTS_UPDATE, "events", "Update event details and capacity"),
     PermissionDefinition(EVENTS_PUBLISH, "events", "Publish events and open registrations"),
     PermissionDefinition(EVENTS_CANCEL, "events", "Cancel or archive campus events"),
-    PermissionDefinition(EVENTS_MANAGE_ATTENDANCE, "events", "Record and supervise event check-in and attendance"),
-    PermissionDefinition(EVENTS_MANAGE_REGISTRATIONS, "events", "Manage and review event participant registrations"),
+    PermissionDefinition(
+        EVENTS_MANAGE_ATTENDANCE, "events", "Record and supervise event check-in and attendance"
+    ),
+    PermissionDefinition(
+        EVENTS_MANAGE_REGISTRATIONS, "events", "Manage and review event participant registrations"
+    ),
     PermissionDefinition(EVENTS_SELF_REGISTER, "events", "Register self for open campus events"),
-    PermissionDefinition(EVENTS_SELF_MANAGE_REGISTRATION, "events", "View and cancel personal event registrations"),
+    PermissionDefinition(
+        EVENTS_SELF_MANAGE_REGISTRATION, "events", "View and cancel personal event registrations"
+    ),
     # Campus Clubs
     PermissionDefinition(CLUBS_READ, "clubs", "View campus student clubs and organizations"),
     PermissionDefinition(CLUBS_CREATE, "clubs", "Found or propose new student clubs"),
     PermissionDefinition(CLUBS_UPDATE, "clubs", "Update club information and metadata"),
     PermissionDefinition(CLUBS_APPROVE, "clubs", "Approve proposed student clubs"),
-    PermissionDefinition(CLUBS_MANAGE_MEMBERSHIPS, "clubs", "Review and manage club membership rosters and roles"),
+    PermissionDefinition(
+        CLUBS_MANAGE_MEMBERSHIPS, "clubs", "Review and manage club membership rosters and roles"
+    ),
     PermissionDefinition(CLUBS_SELF_READ, "clubs", "View club directory and activities"),
-    PermissionDefinition(CLUBS_SELF_REQUEST_MEMBERSHIP, "clubs", "Submit membership requests to student clubs"),
-    PermissionDefinition(CLUBS_SELF_MANAGE_MEMBERSHIP, "clubs", "Manage personal club membership and resignation"),
+    PermissionDefinition(
+        CLUBS_SELF_REQUEST_MEMBERSHIP, "clubs", "Submit membership requests to student clubs"
+    ),
+    PermissionDefinition(
+        CLUBS_SELF_MANAGE_MEMBERSHIP, "clubs", "Manage personal club membership and resignation"
+    ),
     # Campus Announcements
-    PermissionDefinition(ANNOUNCEMENTS_READ, "announcements", "Read institutional and targeted announcements"),
-    PermissionDefinition(ANNOUNCEMENTS_CREATE, "announcements", "Draft and author campus announcements"),
-    PermissionDefinition(ANNOUNCEMENTS_UPDATE, "announcements", "Update draft and scheduled announcements"),
-    PermissionDefinition(ANNOUNCEMENTS_PUBLISH, "announcements", "Broadcast announcements to target audiences"),
-    PermissionDefinition(ANNOUNCEMENTS_ARCHIVE, "announcements", "Archive or expire outdated announcements"),
+    PermissionDefinition(
+        ANNOUNCEMENTS_READ, "announcements", "Read institutional and targeted announcements"
+    ),
+    PermissionDefinition(
+        ANNOUNCEMENTS_CREATE, "announcements", "Draft and author campus announcements"
+    ),
+    PermissionDefinition(
+        ANNOUNCEMENTS_UPDATE, "announcements", "Update draft and scheduled announcements"
+    ),
+    PermissionDefinition(
+        ANNOUNCEMENTS_PUBLISH, "announcements", "Broadcast announcements to target audiences"
+    ),
+    PermissionDefinition(
+        ANNOUNCEMENTS_ARCHIVE, "announcements", "Archive or expire outdated announcements"
+    ),
     # Notifications
-    PermissionDefinition(NOTIFICATIONS_READ, "notifications", "Read system and institutional notifications"),
-    PermissionDefinition(NOTIFICATIONS_MANAGE, "notifications", "Administer notification delivery channels and dispatch"),
-    PermissionDefinition(NOTIFICATIONS_MANAGE_PREFERENCES, "notifications", "Manage user notification channel preferences"),
-    PermissionDefinition(NOTIFICATIONS_SELF_READ, "notifications", "Read personal notification inbox"),
-    PermissionDefinition(NOTIFICATIONS_SELF_MANAGE_PREFERENCES, "notifications", "Configure personal notification preferences"),
+    PermissionDefinition(
+        NOTIFICATIONS_READ, "notifications", "Read system and institutional notifications"
+    ),
+    PermissionDefinition(
+        NOTIFICATIONS_MANAGE,
+        "notifications",
+        "Administer notification delivery channels and dispatch",
+    ),
+    PermissionDefinition(
+        NOTIFICATIONS_MANAGE_PREFERENCES,
+        "notifications",
+        "Manage user notification channel preferences",
+    ),
+    PermissionDefinition(
+        NOTIFICATIONS_SELF_READ, "notifications", "Read personal notification inbox"
+    ),
+    PermissionDefinition(
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        "notifications",
+        "Configure personal notification preferences",
+    ),
+    # Documents & Digital Records
+    PermissionDefinition(DOCUMENTS_READ, "documents", "View and access permitted documents"),
+    PermissionDefinition(DOCUMENTS_CREATE, "documents", "Upload and submit digital documents"),
+    PermissionDefinition(DOCUMENTS_UPDATE, "documents", "Update document metadata and attributes"),
+    PermissionDefinition(
+        DOCUMENTS_VERIFY, "documents", "Verify and authenticate submitted documents"
+    ),
+    PermissionDefinition(
+        DOCUMENTS_REJECT, "documents", "Reject non-compliant document submissions"
+    ),
+    PermissionDefinition(
+        DOCUMENTS_ARCHIVE, "documents", "Archive historical or outdated documents"
+    ),
+    PermissionDefinition(
+        DOCUMENTS_DELETE, "documents", "Delete or soft-delete permitted documents"
+    ),
+    PermissionDefinition(DOCUMENT_CATEGORIES_READ, "documents", "View document categories"),
+    PermissionDefinition(
+        DOCUMENT_CATEGORIES_MANAGE, "documents", "Configure institutional document categories"
+    ),
+    PermissionDefinition(DOCUMENT_REQUIREMENTS_READ, "documents", "View document requirements"),
+    PermissionDefinition(
+        DOCUMENT_REQUIREMENTS_MANAGE, "documents", "Configure program/dept document requirements"
+    ),
+    PermissionDefinition(
+        CERTIFICATE_TEMPLATES_READ, "documents", "View certificate layout templates"
+    ),
+    PermissionDefinition(
+        CERTIFICATE_TEMPLATES_MANAGE, "documents", "Author and manage certificate templates"
+    ),
+    PermissionDefinition(
+        CERTIFICATE_REQUESTS_CREATE, "documents", "Apply for institutional certificates"
+    ),
+    PermissionDefinition(CERTIFICATE_REQUESTS_READ, "documents", "View certificate requests"),
+    PermissionDefinition(
+        CERTIFICATE_REQUESTS_REVIEW, "documents", "Review pending certificate applications"
+    ),
+    PermissionDefinition(
+        CERTIFICATE_REQUESTS_APPROVE, "documents", "Approve validated certificate requests"
+    ),
+    PermissionDefinition(
+        CERTIFICATE_REQUESTS_ISSUE, "documents", "Issue and digitally sign certificates"
+    ),
+    PermissionDefinition(CERTIFICATE_REQUESTS_REVOKE, "documents", "Revoke issued certificates"),
+    PermissionDefinition(
+        CERTIFICATE_REQUESTS_CANCEL, "documents", "Cancel pending certificate applications"
+    ),
+    PermissionDefinition(CERTIFICATES_READ, "documents", "View issued certificates"),
+    PermissionDefinition(
+        CERTIFICATES_VERIFY, "documents", "Verify cryptographic certificate authenticity"
+    ),
+    PermissionDefinition(CERTIFICATES_REVOKE, "documents", "Revoke valid credentials with cause"),
+    PermissionDefinition(
+        INSTITUTIONAL_RECORDS_READ, "documents", "Read institutional governance records"
+    ),
+    PermissionDefinition(
+        INSTITUTIONAL_RECORDS_MANAGE,
+        "documents",
+        "Manage institutional policies, accreditations, circulars",
+    ),
+    # Intelligence & AI
+    PermissionDefinition(
+        INTELLIGENCE_READ, "intelligence", "Access institutional intelligence module"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_QUERY, "intelligence", "Submit natural language queries to AI orchestrator"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_INSIGHTS_READ, "intelligence", "View automated institutional insights"
+    ),
+    PermissionDefinition(INTELLIGENCE_ALERTS_READ, "intelligence", "View operational risk alerts"),
+    PermissionDefinition(
+        INTELLIGENCE_ALERTS_MANAGE, "intelligence", "Acknowledge and resolve operational alerts"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_ANALYTICS_READ, "intelligence", "Run structured cross-domain analytics queries"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_SAVED_MANAGE, "intelligence", "Pin and manage saved intelligence views"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_ACTIVITY_READ, "intelligence", "Inspect AI audit telemetry and tool activity"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_TOOLS_READ, "intelligence", "Inspect registered AI tool capabilities"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_GOVERNANCE_READ, "intelligence", "View institutional AI governance policies"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_GOVERNANCE_MANAGE, "intelligence", "Manage AI governance policies and budgets"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_PREDICT, "intelligence", "Request predictive risk and support indicators"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_RECOMMEND, "intelligence", "Access and action AI-assisted recommendations"
+    ),
+    PermissionDefinition(
+        INTELLIGENCE_EVALUATE, "intelligence", "Run and inspect automated AI evaluation suites"
+    ),
+
+    # Workflows & Automation
+    PermissionDefinition(WORKFLOWS_READ, "workflows", "View institutional workflows"),
+    PermissionDefinition(WORKFLOWS_CREATE, "workflows", "Create new workflow definitions"),
+    PermissionDefinition(WORKFLOWS_UPDATE, "workflows", "Modify workflow configurations"),
+    PermissionDefinition(WORKFLOWS_ACTIVATE, "workflows", "Activate and publish workflows"),
+    PermissionDefinition(WORKFLOWS_PAUSE, "workflows", "Pause active workflow runs"),
+    PermissionDefinition(WORKFLOWS_ARCHIVE, "workflows", "Archive workflow definitions"),
+    PermissionDefinition(WORKFLOWS_EXECUTE, "workflows", "Manually trigger workflow executions"),
+    PermissionDefinition(WORKFLOWS_RETRY, "workflows", "Retry failed workflow executions"),
+    PermissionDefinition(WORKFLOWS_CANCEL, "workflows", "Cancel active workflow executions"),
+    PermissionDefinition(WORKFLOW_EXECUTIONS_READ, "workflows", "View execution history and logs"),
+    PermissionDefinition(
+        WORKFLOW_ACTIONS_MANAGE, "workflows", "Configure workflow actions and integrations"
+    ),
+    # Reporting & Analytics
+    PermissionDefinition(REPORTS_READ, "reporting", "View institutional reports and definitions"),
+    PermissionDefinition(REPORTS_CREATE, "reporting", "Create new report definitions"),
+    PermissionDefinition(REPORTS_UPDATE, "reporting", "Modify report specifications"),
+    PermissionDefinition(REPORTS_EXECUTE, "reporting", "Execute reports and generate datasets"),
+    PermissionDefinition(REPORTS_EXPORT, "reporting", "Export reports to CSV/XLSX/PDF"),
+    PermissionDefinition(REPORTS_SCHEDULE, "reporting", "Schedule recurring report delivery"),
+    PermissionDefinition(REPORTS_SHARE, "reporting", "Share saved reports across roles"),
+    PermissionDefinition(REPORTS_DELETE, "reporting", "Archive or delete reports"),
+    PermissionDefinition(ANALYTICS_READ, "analytics", "Access institutional analytics metrics"),
+    PermissionDefinition(ANALYTICS_QUERY, "analytics", "Run ad-hoc aggregated analytics queries"),
+    PermissionDefinition(ANALYTICS_EXPORT, "analytics", "Export analytics chart and summary data"),
+    PermissionDefinition(ANALYTICS_MANAGE, "analytics", "Configure and backfill analytics rollups"),
+    PermissionDefinition(ANALYTICS_RECONCILE, "analytics", "Execute and inspect data quality reconciliation"),
+    PermissionDefinition(ANALYTICS_BACKFILL, "analytics", "Trigger historical metric backfills"),
+    # Data Governance, Privacy & Compliance
+    PermissionDefinition(
+        GOVERNANCE_READ, "governance", "View institutional governance policies and status"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_MANAGE, "governance", "Configure institutional governance and compliance"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_POLICIES_READ, "governance", "View governance and retention policies"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_POLICIES_MANAGE, "governance", "Create and update governance policies"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_RETENTION_READ, "governance", "Inspect retention schedules and evaluations"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_RETENTION_MANAGE, "governance", "Configure retention schedules and rules"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_RETENTION_EXECUTE, "governance", "Execute retention and archival actions"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_HOLDS_READ, "governance", "View legal and administrative holds"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_HOLDS_MANAGE, "governance", "Place and release legal/governance holds"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_PRIVACY_READ, "governance", "View privacy and data subject requests"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_PRIVACY_CREATE, "governance", "Submit privacy or data subject requests"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_PRIVACY_REVIEW, "governance", "Review and approve/reject privacy requests"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_PRIVACY_EXECUTE,
+        "governance",
+        "Execute privacy fulfillment, export, and deletion",
+    ),
+    PermissionDefinition(
+        GOVERNANCE_ACCESS_REVIEWS_READ, "governance", "View access review campaigns"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_ACCESS_REVIEWS_MANAGE, "governance", "Manage and conduct access reviews"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_CLASSIFICATION_READ, "governance", "View data classification standards"
+    ),
+    PermissionDefinition(
+        GOVERNANCE_CLASSIFICATION_MANAGE, "governance", "Configure data classification schemes"
+    ),
+    PermissionDefinition(GOVERNANCE_EXPORT_APPROVE, "governance", "Approve sensitive data exports"),
+    PermissionDefinition(
+        GOVERNANCE_EXPORT_MANAGE, "governance", "Manage data export governance controls"
+    ),
+    # Enterprise Integration & Interoperability
+    PermissionDefinition(
+        INTEGRATIONS_READ, "integrations", "View institutional integrations and connectors"
+    ),
+    PermissionDefinition(INTEGRATIONS_MANAGE, "integrations", "Manage institutional integrations"),
+    PermissionDefinition(
+        INTEGRATIONS_CONNECTORS_READ, "integrations", "View connector configurations"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_CONNECTORS_MANAGE, "integrations", "Create and modify external connectors"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_CONNECTORS_TEST, "integrations", "Execute test probes on external connectors"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_WEBHOOKS_READ, "integrations", "View webhook subscriptions and deliveries"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_WEBHOOKS_MANAGE, "integrations", "Create and modify webhook subscriptions"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_SYNC_READ, "integrations", "View sync configurations and run history"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_SYNC_MANAGE, "integrations", "Configure data synchronization specifications"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_SYNC_EXECUTE, "integrations", "Trigger data synchronization runs"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_LOGS_READ, "integrations", "Inspect integration telemetry logs"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_HEALTH_READ, "integrations", "View integration health status"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_CREDENTIALS_MANAGE, "integrations", "Manage encrypted integration credentials"
+    ),
+    PermissionDefinition(
+        INTEGRATIONS_DELIVERIES_RETRY, "integrations", "Retry failed webhook deliveries"
+    ),
+    # Enterprise API Platform & Developer Portal
+    PermissionDefinition(
+        API_PLATFORM_READ, "api_platform", "Inspect platform API registry and gateway metrics"
+    ),
+    PermissionDefinition(
+        API_PLATFORM_MANAGE, "api_platform", "Manage platform API gateways and configuration"
+    ),
+    PermissionDefinition(
+        API_APPLICATIONS_CREATE, "api_platform", "Register new developer applications"
+    ),
+    PermissionDefinition(API_APPLICATIONS_READ, "api_platform", "View developer applications"),
+    PermissionDefinition(
+        API_APPLICATIONS_MANAGE, "api_platform", "Update or archive developer applications"
+    ),
+    PermissionDefinition(
+        API_APPLICATIONS_APPROVE, "api_platform", "Review and approve developer applications"
+    ),
+    PermissionDefinition(API_CREDENTIALS_CREATE, "api_platform", "Issue API keys and credentials"),
+    PermissionDefinition(API_CREDENTIALS_ROTATE, "api_platform", "Trigger credential rotation"),
+    PermissionDefinition(API_CREDENTIALS_REVOKE, "api_platform", "Revoke API credentials"),
+    PermissionDefinition(
+        API_SCOPES_MANAGE, "api_platform", "Manage application capability scope grants"
+    ),
+    PermissionDefinition(
+        API_CATALOG_READ, "api_platform", "View API product catalog and operations"
+    ),
+    PermissionDefinition(
+        API_CATALOG_MANAGE, "api_platform", "Publish and deprecate API catalog items"
+    ),
+    PermissionDefinition(
+        API_ANALYTICS_READ, "api_platform", "Access API usage telemetry and quota analytics"
+    ),
+    # Enterprise Identity, SSO, Session & Access Federation (Step 22)
+    PermissionDefinition(
+        IDENTITY_READ, "identity", "View institutional identity and federation settings"
+    ),
+    PermissionDefinition(IDENTITY_MANAGE, "identity", "Manage identity configuration and security"),
+    PermissionDefinition(
+        IDENTITY_PROVIDERS_READ, "identity", "View identity provider integrations"
+    ),
+    PermissionDefinition(
+        IDENTITY_PROVIDERS_MANAGE, "identity", "Configure and update identity providers"
+    ),
+    PermissionDefinition(
+        IDENTITY_PROVIDERS_TEST, "identity", "Test identity provider connectivity"
+    ),
+    PermissionDefinition(
+        IDENTITY_SESSIONS_READ, "identity", "View user sessions and device activity"
+    ),
+    PermissionDefinition(IDENTITY_SESSIONS_REVOKE, "identity", "Revoke user sessions"),
+    PermissionDefinition(IDENTITY_EXTERNAL_LINKS_READ, "identity", "View federated account links"),
+    PermissionDefinition(
+        IDENTITY_EXTERNAL_LINKS_MANAGE, "identity", "Manage federated account linking"
+    ),
+    PermissionDefinition(IDENTITY_MFA_MANAGE, "identity", "Configure multi-factor authentication"),
+    PermissionDefinition(
+        IDENTITY_POLICIES_READ, "identity", "View tenant identity and security policies"
+    ),
+    PermissionDefinition(
+        IDENTITY_POLICIES_MANAGE, "identity", "Update tenant identity and security policies"
+    ),
+    PermissionDefinition(
+        IDENTITY_SECURITY_EVENTS_READ, "identity", "Inspect authentication and security events"
+    ),
+    # Enterprise Administration, Configuration & Policy Management (Step 23)
+    PermissionDefinition(
+        CONFIGURATION_READ, "configuration", "View system and tenant configuration parameters"
+    ),
+    PermissionDefinition(
+        CONFIGURATION_CREATE, "configuration", "Define new configuration parameters"
+    ),
+    PermissionDefinition(
+        CONFIGURATION_UPDATE, "configuration", "Modify configuration values and overrides"
+    ),
+    PermissionDefinition(CONFIGURATION_DELETE, "configuration", "Remove configuration overrides"),
+    PermissionDefinition(
+        CONFIGURATION_APPROVE, "configuration", "Approve pending configuration changes"
+    ),
+    PermissionDefinition(
+        CONFIGURATION_ROLLBACK, "configuration", "Rollback configuration to historical version"
+    ),
+    PermissionDefinition(
+        CONFIGURATION_PREVIEW, "configuration", "Preview effective configuration and impact"
+    ),
+    PermissionDefinition(POLICY_READ, "configuration", "View business policies and rules"),
+    PermissionDefinition(POLICY_MANAGE, "configuration", "Create and update business policies"),
+    PermissionDefinition(FEATURE_FLAG_READ, "configuration", "Inspect tenant feature flags"),
+    PermissionDefinition(FEATURE_FLAG_MANAGE, "configuration", "Toggle and manage feature flags"),
+    PermissionDefinition(
+        MODULE_READ, "configuration", "View module enablement and maintenance status"
+    ),
+    PermissionDefinition(
+        MODULE_MANAGE, "configuration", "Enable, disable or set maintenance mode for modules"
+    ),
+    PermissionDefinition(SEQUENCE_READ, "configuration", "View numbering sequences and formats"),
+    PermissionDefinition(
+        SEQUENCE_MANAGE, "configuration", "Configure numbering sequences and reset rules"
+    ),
+    # Enterprise Master Data Management & Data Quality (Step 24)
+    PermissionDefinition(
+        MASTER_DATA_READ, "master_data", "View governed master data records and lineage"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_VALIDATE, "master_data", "Evaluate data quality rules against master records"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_CORRECT, "master_data", "Propose and review master data correction requests"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_MERGE, "master_data", "Execute controlled master data duplicate merges"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_APPROVE, "master_data", "Approve master data merges and critical corrections"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_REFERENCE_MANAGE, "master_data", "Manage controlled reference data values"
+    ),
+    PermissionDefinition(
+        MASTER_DATA_QUALITY_MANAGE,
+        "master_data",
+        "Manage quality rules, weights and issue stewardship",
+    ),
+    PermissionDefinition(
+        MASTER_DATA_DEFINITION_MANAGE,
+        "master_data",
+        "Configure master data entity governance definitions",
+    ),
+    # Enterprise Case Management & HITL Operations (Step 25)
+    PermissionDefinition(CASES_READ, "cases", "View operational cases and timelines"),
+    PermissionDefinition(CASES_CREATE, "cases", "Create new operational cases"),
+    PermissionDefinition(CASES_UPDATE, "cases", "Update operational case details and priorities"),
+    PermissionDefinition(CASES_RESOLVE, "cases", "Resolve operational cases"),
+    PermissionDefinition(CASES_CLOSE, "cases", "Close operational cases"),
+    PermissionDefinition(CASES_REOPEN, "cases", "Reopen resolved or closed cases"),
+    PermissionDefinition(CASES_ASSIGN, "cases", "Assign and route cases to queues or owners"),
+    PermissionDefinition(CASES_COMMENT, "cases", "Post operational notes and comments on cases"),
+    PermissionDefinition(TASKS_READ, "tasks", "View human operational tasks and queues"),
+    PermissionDefinition(TASKS_CLAIM, "tasks", "Claim available human tasks from work queues"),
+    PermissionDefinition(TASKS_RELEASE, "tasks", "Release claimed human tasks back to queues"),
+    PermissionDefinition(TASKS_COMPLETE, "tasks", "Complete human tasks and record explicit decisions"),
+    PermissionDefinition(TASKS_REASSIGN, "tasks", "Reassign human tasks to other operators"),
+    PermissionDefinition(TASKS_DELEGATE, "tasks", "Delegate human task authority temporarily"),
+    PermissionDefinition(TASKS_ESCALATE, "tasks", "Escalate overdue or blocked human tasks"),
+    PermissionDefinition(QUEUES_READ, "queues", "View operational work queues and memberships"),
+    PermissionDefinition(QUEUES_MANAGE, "queues", "Configure operational work queues and routing"),
+    PermissionDefinition(SLA_POLICIES_READ, "sla_policies", "View operational SLA policies and targets"),
+    PermissionDefinition(SLA_POLICIES_MANAGE, "sla_policies", "Configure operational SLA policies and escalation"),
+    PermissionDefinition(WORKFLOWS_TRANSITION, "workflows", "Execute manual or HITL workflow state transitions"),
+    # Notifications (Step 26)
+    PermissionDefinition(NOTIFICATION_TEMPLATES_READ, "notifications", "View notification templates and schemas"),
+    PermissionDefinition(NOTIFICATION_TEMPLATES_MANAGE, "notifications", "Author and publish notification templates"),
+    PermissionDefinition(NOTIFICATION_RULES_MANAGE, "notifications", "Configure notification dispatch rules and policies"),
+    PermissionDefinition(NOTIFICATION_DELIVERIES_READ, "notifications", "View delivery logs, attempts, and status"),
+    PermissionDefinition(NOTIFICATION_DELIVERIES_RETRY, "notifications", "Trigger manual retries of failed deliveries"),
+    PermissionDefinition(NOTIFICATION_DELIVERIES_CANCEL, "notifications", "Cancel pending and scheduled deliveries"),
+    PermissionDefinition(NOTIFICATION_ANALYTICS_READ, "notifications", "View delivery analytics, throughput, and success rates"),
+    PermissionDefinition(NOTIFICATION_PROVIDERS_MANAGE, "notifications", "Manage notification providers and check channel health"),
+    # Domain Events & Reliability Backbone (Step 27)
+    PermissionDefinition(DOMAIN_EVENTS_READ, "events", "View transactional outbox events and payloads"),
+    PermissionDefinition(DOMAIN_EVENTS_RETRY, "events", "Trigger manual retries of failed outbox events"),
+    PermissionDefinition(DOMAIN_EVENTS_REPLAY, "events", "Execute audited replay of domain events to consumers"),
+    PermissionDefinition(DOMAIN_EVENTS_CONSUMERS_MANAGE, "events", "Manage and inspect event consumers and checkpoints"),
+    PermissionDefinition(DOMAIN_EVENTS_METRICS_READ, "events", "View event processing latency and throughput metrics"),
 ]
 
 
@@ -518,6 +1429,233 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         NOTIFICATIONS_MANAGE_PREFERENCES,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        DOCUMENTS_READ,
+        DOCUMENTS_CREATE,
+        DOCUMENTS_UPDATE,
+        DOCUMENTS_VERIFY,
+        DOCUMENTS_REJECT,
+        DOCUMENTS_ARCHIVE,
+        DOCUMENTS_DELETE,
+        DOCUMENT_CATEGORIES_READ,
+        DOCUMENT_CATEGORIES_MANAGE,
+        DOCUMENT_REQUIREMENTS_READ,
+        DOCUMENT_REQUIREMENTS_MANAGE,
+        CERTIFICATE_TEMPLATES_READ,
+        CERTIFICATE_TEMPLATES_MANAGE,
+        CERTIFICATE_REQUESTS_CREATE,
+        CERTIFICATE_REQUESTS_READ,
+        CERTIFICATE_REQUESTS_REVIEW,
+        CERTIFICATE_REQUESTS_APPROVE,
+        CERTIFICATE_REQUESTS_ISSUE,
+        CERTIFICATE_REQUESTS_REVOKE,
+        CERTIFICATE_REQUESTS_CANCEL,
+        CERTIFICATES_READ,
+        CERTIFICATES_VERIFY,
+        CERTIFICATES_REVOKE,
+        INSTITUTIONAL_RECORDS_READ,
+        INSTITUTIONAL_RECORDS_MANAGE,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ALERTS_MANAGE,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        INTELLIGENCE_ACTIVITY_READ,
+        INTELLIGENCE_TOOLS_READ,
+        INTELLIGENCE_GOVERNANCE_READ,
+        INTELLIGENCE_GOVERNANCE_MANAGE,
+        INTELLIGENCE_PREDICT,
+        INTELLIGENCE_RECOMMEND,
+        INTELLIGENCE_EVALUATE,
+        WORKFLOWS_READ,
+        WORKFLOWS_CREATE,
+        WORKFLOWS_UPDATE,
+        WORKFLOWS_ACTIVATE,
+        WORKFLOWS_PAUSE,
+        WORKFLOWS_ARCHIVE,
+        WORKFLOWS_EXECUTE,
+        WORKFLOWS_RETRY,
+        WORKFLOWS_CANCEL,
+        WORKFLOW_EXECUTIONS_READ,
+        WORKFLOW_ACTIONS_MANAGE,
+        REPORTS_READ,
+        REPORTS_CREATE,
+        REPORTS_UPDATE,
+        REPORTS_EXECUTE,
+        REPORTS_EXPORT,
+        REPORTS_SCHEDULE,
+        REPORTS_SHARE,
+        REPORTS_DELETE,
+        ANALYTICS_READ,
+        ANALYTICS_QUERY,
+        ANALYTICS_EXPORT,
+        ANALYTICS_MANAGE,
+        ANALYTICS_RECONCILE,
+        ANALYTICS_BACKFILL,
+        GOVERNANCE_READ,
+        GOVERNANCE_MANAGE,
+        GOVERNANCE_POLICIES_READ,
+        GOVERNANCE_POLICIES_MANAGE,
+        GOVERNANCE_RETENTION_READ,
+        GOVERNANCE_RETENTION_MANAGE,
+        GOVERNANCE_RETENTION_EXECUTE,
+        GOVERNANCE_HOLDS_READ,
+        GOVERNANCE_HOLDS_MANAGE,
+        GOVERNANCE_PRIVACY_READ,
+        GOVERNANCE_PRIVACY_CREATE,
+        GOVERNANCE_PRIVACY_REVIEW,
+        GOVERNANCE_PRIVACY_EXECUTE,
+        GOVERNANCE_ACCESS_REVIEWS_READ,
+        GOVERNANCE_ACCESS_REVIEWS_MANAGE,
+        GOVERNANCE_CLASSIFICATION_READ,
+        GOVERNANCE_CLASSIFICATION_MANAGE,
+        GOVERNANCE_EXPORT_APPROVE,
+        GOVERNANCE_EXPORT_MANAGE,
+        INTEGRATIONS_READ,
+        INTEGRATIONS_MANAGE,
+        INTEGRATIONS_CONNECTORS_READ,
+        INTEGRATIONS_CONNECTORS_MANAGE,
+        INTEGRATIONS_CONNECTORS_TEST,
+        INTEGRATIONS_WEBHOOKS_READ,
+        INTEGRATIONS_WEBHOOKS_MANAGE,
+        INTEGRATIONS_SYNC_READ,
+        INTEGRATIONS_SYNC_MANAGE,
+        INTEGRATIONS_SYNC_EXECUTE,
+        INTEGRATIONS_LOGS_READ,
+        INTEGRATIONS_HEALTH_READ,
+        INTEGRATIONS_CREDENTIALS_MANAGE,
+        INTEGRATIONS_DELIVERIES_RETRY,
+        API_PLATFORM_READ,
+        API_PLATFORM_MANAGE,
+        API_APPLICATIONS_CREATE,
+        API_APPLICATIONS_READ,
+        API_APPLICATIONS_MANAGE,
+        API_APPLICATIONS_APPROVE,
+        API_CREDENTIALS_CREATE,
+        API_CREDENTIALS_ROTATE,
+        API_CREDENTIALS_REVOKE,
+        API_SCOPES_MANAGE,
+        API_CATALOG_READ,
+        API_CATALOG_MANAGE,
+        API_ANALYTICS_READ,
+        IDENTITY_READ,
+        IDENTITY_MANAGE,
+        IDENTITY_PROVIDERS_READ,
+        IDENTITY_PROVIDERS_MANAGE,
+        IDENTITY_PROVIDERS_TEST,
+        IDENTITY_SESSIONS_READ,
+        IDENTITY_SESSIONS_REVOKE,
+        IDENTITY_EXTERNAL_LINKS_READ,
+        IDENTITY_EXTERNAL_LINKS_MANAGE,
+        IDENTITY_MFA_MANAGE,
+        IDENTITY_POLICIES_READ,
+        IDENTITY_POLICIES_MANAGE,
+        IDENTITY_SECURITY_EVENTS_READ,
+        CONFIGURATION_READ,
+        CONFIGURATION_CREATE,
+        CONFIGURATION_UPDATE,
+        CONFIGURATION_DELETE,
+        CONFIGURATION_APPROVE,
+        CONFIGURATION_ROLLBACK,
+        CONFIGURATION_PREVIEW,
+        POLICY_READ,
+        POLICY_MANAGE,
+        FEATURE_FLAG_READ,
+        FEATURE_FLAG_MANAGE,
+        MODULE_READ,
+        MODULE_MANAGE,
+        SEQUENCE_READ,
+        SEQUENCE_MANAGE,
+        MASTER_DATA_READ,
+        MASTER_DATA_VALIDATE,
+        MASTER_DATA_CORRECT,
+        MASTER_DATA_MERGE,
+        MASTER_DATA_APPROVE,
+        MASTER_DATA_REFERENCE_MANAGE,
+        MASTER_DATA_QUALITY_MANAGE,
+        MASTER_DATA_DEFINITION_MANAGE,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_RESOLVE,
+        CASES_CLOSE,
+        CASES_REOPEN,
+        CASES_ASSIGN,
+        CASES_COMMENT,
+        TASKS_READ,
+        TASKS_CLAIM,
+        TASKS_RELEASE,
+        TASKS_COMPLETE,
+        TASKS_REASSIGN,
+        TASKS_DELEGATE,
+        TASKS_ESCALATE,
+        QUEUES_READ,
+        QUEUES_MANAGE,
+        SLA_POLICIES_READ,
+        SLA_POLICIES_MANAGE,
+        WORKFLOWS_TRANSITION,
+        NOTIFICATION_TEMPLATES_READ,
+        NOTIFICATION_TEMPLATES_MANAGE,
+        NOTIFICATION_RULES_MANAGE,
+        NOTIFICATION_DELIVERIES_READ,
+        NOTIFICATION_DELIVERIES_RETRY,
+        NOTIFICATION_DELIVERIES_CANCEL,
+        NOTIFICATION_ANALYTICS_READ,
+        NOTIFICATION_PROVIDERS_MANAGE,
+        DOMAIN_EVENTS_READ,
+        DOMAIN_EVENTS_RETRY,
+        DOMAIN_EVENTS_REPLAY,
+        DOMAIN_EVENTS_CONSUMERS_MANAGE,
+        DOMAIN_EVENTS_METRICS_READ,
+        ANALYTICS_MANAGE,
+        ANALYTICS_RECONCILE,
+        ANALYTICS_BACKFILL,
+    ],
+    "DOCUMENT_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_DEPARTMENTS_READ,
+        CORE_PROGRAMS_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_FACULTY_READ,
+        PEOPLE_STAFF_READ,
+        DOCUMENTS_READ,
+        DOCUMENTS_CREATE,
+        DOCUMENTS_UPDATE,
+        DOCUMENTS_VERIFY,
+        DOCUMENTS_REJECT,
+        DOCUMENTS_ARCHIVE,
+        DOCUMENTS_DELETE,
+        DOCUMENTS_MANAGE,
+        DOCUMENT_CATEGORIES_READ,
+        DOCUMENT_CATEGORIES_MANAGE,
+        DOCUMENT_REQUIREMENTS_READ,
+        DOCUMENT_REQUIREMENTS_MANAGE,
+        CERTIFICATE_TEMPLATES_READ,
+        CERTIFICATE_TEMPLATES_MANAGE,
+        CERTIFICATE_REQUESTS_READ,
+        CERTIFICATE_REQUESTS_REVIEW,
+        CERTIFICATE_REQUESTS_APPROVE,
+        CERTIFICATE_REQUESTS_ISSUE,
+        CERTIFICATE_REQUESTS_REVOKE,
+        CERTIFICATES_READ,
+        CERTIFICATES_VERIFY,
+        CERTIFICATES_REVOKE,
+        INSTITUTIONAL_RECORDS_READ,
+        INSTITUTIONAL_RECORDS_MANAGE,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        INTELLIGENCE_ACTIVITY_READ,
+        INTELLIGENCE_TOOLS_READ,
+        INTELLIGENCE_GOVERNANCE_READ,
+        INTELLIGENCE_GOVERNANCE_MANAGE,
+        INTELLIGENCE_PREDICT,
+        INTELLIGENCE_RECOMMEND,
+        INTELLIGENCE_EVALUATE,
     ],
     "PRINCIPAL": [
         CORE_INSTITUTION_READ,
@@ -589,6 +1727,21 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         NOTIFICATIONS_MANAGE,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        WORKFLOWS_READ,
+        WORKFLOWS_EXECUTE,
+        WORKFLOW_EXECUTIONS_READ,
+        ANALYTICS_READ,
+        ANALYTICS_QUERY,
+        ANALYTICS_EXPORT,
+        ANALYTICS_MANAGE,
+        ANALYTICS_RECONCILE,
+        ANALYTICS_BACKFILL,
+        ANALYTICS_READ_DOT,
+        ANALYTICS_QUERY_DOT,
+        ANALYTICS_EXPORT_DOT,
+        ANALYTICS_MANAGE_DOT,
+        ANALYTICS_RECONCILE_DOT,
+        ANALYTICS_BACKFILL_DOT,
     ],
     "HOD": [
         CORE_INSTITUTION_READ,
@@ -670,6 +1823,36 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         NOTIFICATIONS_MANAGE,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        DOCUMENTS_READ,
+        DOCUMENTS_VERIFY,
+        DOCUMENTS_REJECT,
+        CERTIFICATE_TEMPLATES_READ,
+        CERTIFICATE_REQUESTS_READ,
+        CERTIFICATE_REQUESTS_APPROVE,
+        CERTIFICATES_READ,
+        INSTITUTIONAL_RECORDS_READ,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ALERTS_MANAGE,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        INTELLIGENCE_ACTIVITY_READ,
+        WORKFLOWS_READ,
+        WORKFLOW_EXECUTIONS_READ,
+        ANALYTICS_READ,
+        ANALYTICS_QUERY,
+        ANALYTICS_EXPORT,
+        ANALYTICS_MANAGE,
+        ANALYTICS_RECONCILE,
+        ANALYTICS_BACKFILL,
+        ANALYTICS_READ_DOT,
+        ANALYTICS_QUERY_DOT,
+        ANALYTICS_EXPORT_DOT,
+        ANALYTICS_MANAGE_DOT,
+        ANALYTICS_RECONCILE_DOT,
+        ANALYTICS_BACKFILL_DOT,
     ],
     "FACULTY": [
         CORE_INSTITUTION_READ,
@@ -717,6 +1900,23 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANNOUNCEMENTS_CREATE,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        DOCUMENTS_READ,
+        DOCUMENTS_CREATE,
+        CERTIFICATES_READ,
+        INSTITUTIONAL_RECORDS_READ,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+        TASKS_READ,
+        TASKS_CLAIM,
+        TASKS_COMPLETE,
     ],
     "ACCOUNTS": [
         CORE_INSTITUTION_READ,
@@ -746,6 +1946,12 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         REFUNDS_CREATE,
         REFUNDS_APPROVE,
         REFUNDS_PROCESS,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
     ],
     "PLACEMENT_OFFICER": [
         CORE_INSTITUTION_READ,
@@ -766,6 +1972,12 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         PLACEMENT_ANALYTICS_READ,
         PLACEMENT_PROFILE_READ,
         PLACEMENT_PROFILE_UPDATE,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_ANALYTICS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
     ],
     "STUDENT": [
         CORE_INSTITUTION_READ,
@@ -811,6 +2023,22 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANNOUNCEMENTS_READ,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        DOCUMENTS_READ,
+        DOCUMENTS_CREATE,
+        CERTIFICATE_REQUESTS_CREATE,
+        CERTIFICATE_REQUESTS_READ,
+        CERTIFICATE_REQUESTS_CANCEL,
+        CERTIFICATES_READ,
+        INSTITUTIONAL_RECORDS_READ,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        GOVERNANCE_PRIVACY_CREATE,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_COMMENT,
     ],
     "PARENT": [
         CORE_INSTITUTION_READ,
@@ -838,5 +2066,21 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANNOUNCEMENTS_READ,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        DOCUMENTS_READ,
+        DOCUMENTS_CREATE,
+        CERTIFICATES_READ,
+        INSTITUTIONAL_RECORDS_READ,
+        INTELLIGENCE_READ,
+        INTELLIGENCE_QUERY,
+        INTELLIGENCE_INSIGHTS_READ,
+        INTELLIGENCE_ALERTS_READ,
+        INTELLIGENCE_SAVED_MANAGE,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+        TASKS_READ,
+        TASKS_CLAIM,
+        TASKS_COMPLETE,
     ],
 }

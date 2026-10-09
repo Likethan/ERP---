@@ -64,6 +64,8 @@ class HealthResponse(BaseModel):
     service: str = "campusos-api"
     version: str = "0.1.0"
     environment: str = "development"
+    checks: dict[str, str] = Field(default_factory=dict)
     timestamp: str = Field(
         default_factory=lambda: datetime.now(UTC).isoformat()
     )
+

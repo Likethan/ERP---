@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Drawer } from "@/components/ui/drawer";
 import { campusService } from "@/services/campus.service";
 import { NotificationItem } from "@/types/campus";
-import { Bell, CheckCheck, ExternalLink, Calendar, DollarSign, Briefcase, GraduationCap, ShieldCheck } from "lucide-react";
+import { Bell, CheckCheck, ExternalLink, Calendar, DollarSign, Briefcase, GraduationCap, ShieldCheck, FileText, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -56,6 +56,11 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
       case "SECURITY":
       case "SYSTEM":
         return <ShieldCheck className="h-4 w-4 text-rose-400" />;
+      case "DOCUMENTS":
+      case "DOCUMENT":
+        return <FileText className="h-4 w-4 text-blue-400" />;
+      case "CERTIFICATE":
+        return <Award className="h-4 w-4 text-amber-400" />;
       default:
         return <Bell className="h-4 w-4 text-slate-400" />;
     }

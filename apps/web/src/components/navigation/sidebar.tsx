@@ -42,6 +42,9 @@ import {
   Compass,
   MapPin,
   Truck,
+  Bookmark,
+  Activity,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -489,12 +492,65 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       ],
     },
     {
-      title: "DOCUMENTS",
+      title: "DOCUMENTS & DIGITAL RECORDS",
       items: [
         {
-          label: "Document Vault",
+          label: "Operations Dashboard",
           href: "/app/documents",
+          icon: <LayoutDashboard className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "WARDEN", "ACCOUNTS", "PLACEMENT_OFFICER", "TRANSPORT_OFFICER", "FACILITY_OFFICER"],
+        },
+        {
+          label: "My Documents",
+          href: "/app/documents/my-documents",
           icon: <FileText className="h-4 w-4" />,
+        },
+        {
+          label: "All Documents",
+          href: "/app/documents/all",
+          icon: <Layers className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
+        },
+        {
+          label: "Verification Queue",
+          href: "/app/documents/verification",
+          icon: <ShieldCheck className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
+        },
+        {
+          label: "Categories",
+          href: "/app/documents/categories",
+          icon: <Layers className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
+        },
+        {
+          label: "Certificate Center",
+          href: "/app/documents/certificates",
+          icon: <Award className="h-4 w-4" />,
+        },
+        {
+          label: "Certificate Templates",
+          href: "/app/documents/certificates/templates",
+          icon: <FileCheck2 className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
+        },
+        {
+          label: "Certificate Requests",
+          href: "/app/documents/certificates/requests",
+          icon: <FileText className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD", "STUDENT"],
+        },
+        {
+          label: "Institutional Records",
+          href: "/app/documents/institutional-records",
+          icon: <Building className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
+        },
+        {
+          label: "Document Reports",
+          href: "/app/documents/reports",
+          icon: <BarChart3 className="h-4 w-4" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
         },
       ],
     },
@@ -502,14 +558,40 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       title: "INTELLIGENCE",
       items: [
         {
-          label: "Campus Intelligence",
+          label: "Overview",
           href: "/app/intelligence",
-          icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
+          icon: <Sparkles className="h-4 w-4 text-blue-500" />,
         },
         {
           label: "AI Assistant",
-          href: "/app/ai",
-          icon: <Bot className="h-4 w-4 text-indigo-400" />,
+          href: "/app/intelligence/assistant",
+          icon: <Bot className="h-4 w-4 text-indigo-500" />,
+        },
+        {
+          label: "Insights",
+          href: "/app/intelligence/insights",
+          icon: <Sparkles className="h-4 w-4 text-amber-500" />,
+        },
+        {
+          label: "Analytics",
+          href: "/app/intelligence/analytics",
+          icon: <BarChart3 className="h-4 w-4 text-emerald-500" />,
+        },
+        {
+          label: "Alerts",
+          href: "/app/intelligence/alerts",
+          icon: <AlertTriangle className="h-4 w-4 text-rose-500" />,
+        },
+        {
+          label: "Saved Insights",
+          href: "/app/intelligence/saved",
+          icon: <Bookmark className="h-4 w-4 text-purple-500" />,
+        },
+        {
+          label: "AI Activity & Tools",
+          href: "/app/intelligence/activity",
+          icon: <Activity className="h-4 w-4 text-slate-500" />,
+          roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
         },
       ],
     },

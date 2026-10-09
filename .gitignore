@@ -40,17 +40,24 @@ dmypy.json
 
 # Environment Variables & Local Secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.*.example
 *.env
 !*.env.example
+
+# Backups & Database Dumps
+backups/
+*.dump
+*.dump.sha256
+*.dump.meta.json
 
 # Database & Local Storage
 *.sqlite3
 *.db
 local_storage/
+storage/
+apps/api/storage/
 pgdata/
 redisdata/
 miniodata/

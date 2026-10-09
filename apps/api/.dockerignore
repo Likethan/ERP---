@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Testing & Coverage
+tests/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Linters
+.ruff_cache/
+.mypy_cache/
+
+# Local data & storage
+storage/documents/*
+!storage/documents/.keep
+*.sqlite3
+*.db
