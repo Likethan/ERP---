@@ -45,6 +45,7 @@ import {
   Bookmark,
   Activity,
   AlertTriangle,
+  FlaskConical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -143,6 +144,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           label: "Timetable",
           href: "/app/academics/timetable",
           icon: <Calendar className="h-4 w-4" />,
+        },
+        {
+          label: "Library & Learning",
+          href: "/app/library",
+          icon: <BookOpen className="h-4 w-4" />,
         },
       ],
     },
@@ -552,6 +558,11 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           icon: <BarChart3 className="h-4 w-4" />,
           roles: ["SUPER_ADMIN", "ADMIN", "PRINCIPAL", "HOD"],
         },
+        {
+          label: "Knowledge & Policies",
+          href: "/app/knowledge",
+          icon: <BookOpen className="h-4 w-4" />,
+        },
       ],
     },
     {
@@ -617,6 +628,16 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
           label: "Security & IAM",
           href: "/app/security",
           icon: <ShieldCheck className="h-4 w-4" />,
+        },
+        {
+          label: "Accreditation & IQAC",
+          href: "/app/accreditation",
+          icon: <Award className="h-4 w-4 text-amber-400" />,
+        },
+        {
+          label: "Research & Grants",
+          href: "/app/research",
+          icon: <FlaskConical className="h-4 w-4 text-emerald-400" />,
         },
       ],
     },

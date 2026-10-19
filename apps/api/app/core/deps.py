@@ -110,9 +110,15 @@ async def get_current_user(
             # Enforce tenant lifecycle status for non-superadmins
             tenant_status = (institution.status or "ACTIVE").upper()
             if not is_super_admin:
-                if tenant_status == "SUSPENDED":
+                if tenant_status in ("SUSPENDED", "PROVISIONING"):
                     raise TenantSuspendedException(institution.id)
-                if tenant_status == "ARCHIVED" or not institution.is_active:
+                if tenant_status in (
+                    "ARCHIVED",
+                    "DEACTIVATED",
+                    "DEACTIVATION_PENDING",
+                    "DELETION_PENDING",
+                    "DELETED",
+                ) or not institution.is_active:
                     raise TenantArchivedException(institution.id)
 
             tenant_ctx = TenantContext(
@@ -218,7 +224,36 @@ async def require_platform_admin(
     """Ensure authenticated user has Platform Super Admin rights for global/SaaS ops."""
     user_roles = {ur.role.name for ur in user.roles if ur.role and ur.role.name}
     user_perms = resolve_user_permissions(user)
-    if "SUPER_ADMIN" in user_roles or "*" in user_perms or "platform:tenants:manage" in user_perms or "platform.tenants.manage" in user_perms:
+    if (
+        "SUPER_ADMIN" in user_roles
+        or "PLATFORM_OPERATOR" in user_roles
+        or "*" in user_perms
+        or "platform:tenants:manage" in user_perms
+        or "platform.tenants.manage" in user_perms
+    ):
         return user
     raise PermissionDeniedException("platform:tenants:manage")
+
+
+def require_platform_permission(permission_code: str) -> Callable:
+    """Dependency factory enforcing atomic platform-level permission checks."""
+
+    async def _platform_perm_dep(
+        user: Annotated[User, Depends(get_current_active_user)],
+    ) -> User:
+        user_roles = {ur.role.name for ur in user.roles if ur.role and ur.role.name}
+        user_perms = resolve_user_permissions(user)
+        alt_perm = permission_code.replace(".", ":") if "." in permission_code else permission_code.replace(":", ".")
+        if (
+            "SUPER_ADMIN" in user_roles
+            or "PLATFORM_OPERATOR" in user_roles
+            or "*" in user_perms
+            or permission_code in user_perms
+            or alt_perm in user_perms
+            or "platform:tenants:manage" in user_perms
+        ):
+            return user
+        raise PermissionDeniedException(permission_code)
+
+    return _platform_perm_dep
 

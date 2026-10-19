@@ -59,6 +59,7 @@ local_storage/
 storage/
 apps/api/storage/
 pgdata/
+.pgdata/
 redisdata/
 miniodata/
 

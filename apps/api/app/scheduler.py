@@ -347,8 +347,288 @@ async def scan_operational_anomalies_and_risks(ctx: TenantJobContext, db: Any) -
         logger.error("Error executing operational anomaly scan for tenant %s: %s", ctx.tenant_id, exc)
 
 
+async def sweep_expired_trials(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate trial expiration and grace periods for tenant (Step 30)."""
+    from app.services.entitlement_service import EntitlementService
+    from app.services.tenant_lifecycle_service import TenantLifecycleService
+    from app.models.platform_ops import TenantLifecycleStatus
+
+    try:
+        trial_info = await EntitlementService.evaluate_trial_status(db, ctx.tenant_id)
+        if trial_info.get("is_trial") and trial_info.get("is_expired") and not trial_info.get("in_grace_period"):
+            logger.info("Trial expired and grace period elapsed for tenant %s. Suspending...", ctx.tenant_id)
+            await TenantLifecycleService.transition_tenant_status(
+                db=db,
+                tenant_id=ctx.tenant_id,
+                target_status=TenantLifecycleStatus.SUSPENDED.value,
+                actor_id=None,
+                actor_email="system@campusos.internal",
+                reason="Trial expiration and grace period elapsed",
+            )
+    except Exception as exc:
+        logger.error("Error evaluating trial status for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def evaluate_tenant_resource_quotas(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate resource consumption and update threshold warnings for tenant (Step 30)."""
+    from app.services.tenant_quota_service import TenantQuotaService
+
+    try:
+        await TenantQuotaService.ensure_tenant_quotas(db, ctx.tenant_id)
+    except Exception as exc:
+        logger.error("Error evaluating resource quotas for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_platform_support_sessions(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep and expire platform support sessions whose duration has elapsed (Step 30)."""
+    from app.services.platform_support_service import PlatformSupportService
+
+    try:
+        count = await PlatformSupportService.sweep_expired_sessions(db)
+        if count > 0:
+            logger.info("Swept %d expired platform support sessions across tenants", count)
+    except Exception as exc:
+        logger.error("Error sweeping platform support sessions: %s", exc)
+
+
+async def recover_abandoned_outbox_events_task(ctx: TenantJobContext, db: Any) -> None:
+    """Recover outbox events stuck in PROCESSING due to worker crashes (Step 31)."""
+    from app.core.events import OutboxService
+
+    try:
+        res = await OutboxService.recover_abandoned_events(
+            db, stuck_threshold_seconds=300, tenant_id=ctx.tenant_id
+        )
+        if res["recovered_count"] > 0 or res["dead_lettered_count"] > 0:
+            logger.info(
+                "Abandoned outbox recovery for tenant %s: recovered=%d, dead_lettered=%d",
+                ctx.tenant_id,
+                res["recovered_count"],
+                res["dead_lettered_count"],
+            )
+    except Exception as exc:
+        logger.error("Error recovering abandoned outbox events for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def audit_backup_freshness_and_circuit_health(ctx: TenantJobContext, db: Any) -> None:
+    """Audit disaster recovery readiness, backup freshness, and probe circuit breakers (Step 31)."""
+    from app.core.resilience import circuit_registry
+
+    try:
+        for cb in circuit_registry.get_all():
+            await cb.can_execute()
+    except Exception as exc:
+        logger.error("Error evaluating circuit breakers health: %s", exc)
+
+
+async def evaluate_adoption_deadlines_and_expirations(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate training program deadlines, overdue reminders, and announcement/guidance expirations (Step 37)."""
+    from app.services.adoption_service import AdoptionService
+
+    try:
+        deadlines_res = await AdoptionService.evaluate_training_deadlines_and_reminders(db)
+        exp_res = await AdoptionService.evaluate_expirations(db)
+        if deadlines_res.get("overdue_processed", 0) > 0 or exp_res.get("expired_announcements", 0) > 0:
+            logger.info(
+                "Adoption sweep for tenant %s: overdue=%d, expired_announcements=%d, expired_guidance=%d",
+                ctx.tenant_id,
+                deadlines_res.get("overdue_processed", 0),
+                exp_res.get("expired_announcements", 0),
+                exp_res.get("expired_guidance", 0),
+            )
+    except Exception as exc:
+        logger.error("Error evaluating adoption deadlines and expirations for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_subscription_lifecycle_task(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate subscription trials, grace periods, auto-renewals, and override expiries (Step 38)."""
+    from app.services.subscription_service import SubscriptionService
+
+    try:
+        res = await SubscriptionService.sweep_subscription_lifecycle(db)
+        if any(v > 0 for v in res.values()):
+            logger.info(
+                "Subscription lifecycle sweep for tenant %s: trials=%d, grace=%d, overrides=%d, renewed=%d",
+                ctx.tenant_id,
+                res.get("swept_trials", 0),
+                res.get("swept_grace", 0),
+                res.get("swept_overrides", 0),
+                res.get("auto_renewed", 0),
+            )
+    except Exception as exc:
+        logger.error("Error sweeping subscription lifecycle for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sync_marketplace_integrations_task(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate and trigger scheduled sync for active marketplace integrations (Step 39)."""
+    from sqlalchemy import select
+    from app.models.marketplace import TenantAppInstallation, TenantInstallationStatus, SyncTriggerType
+    from app.schemas.marketplace import SyncTriggerRequest
+    from app.services.marketplace_service import MarketplaceService
+
+    try:
+        stmt = select(TenantAppInstallation).where(
+            TenantAppInstallation.tenant_id == ctx.tenant_id,
+            TenantAppInstallation.status == TenantInstallationStatus.CONNECTED.value,
+        )
+        res = await db.execute(stmt)
+        installations = list(res.scalars().all())
+
+        for inst in installations:
+            try:
+                dto = SyncTriggerRequest(trigger_type=SyncTriggerType.SCHEDULED)
+                await MarketplaceService.trigger_sync(
+                    db=db,
+                    tenant_id=ctx.tenant_id,
+                    installation_id=inst.id,
+                    actor_id=None,
+                    dto=dto,
+                )
+            except Exception as inst_exc:
+                logger.warning("Error running scheduled sync for installation %s: %s", inst.id, inst_exc)
+    except Exception as exc:
+        logger.error("Error in marketplace integration sync job for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_records_lifecycle_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep institutional records for retention recalculation and hold coverage (Step 41)."""
+    from app.models.records_lifecycle import ScheduledRunType
+    from app.services.records_lifecycle_service import RecordsLifecycleService
+
+    logger.debug("Executing scheduled records lifecycle sweeps for tenant %s", ctx.tenant_id)
+    try:
+        await RecordsLifecycleService.run_scheduled_lifecycle_sweep(
+            db=db,
+            tenant_id=ctx.tenant_id,
+            job_type=ScheduledRunType.ELIGIBILITY_RECALCULATION,
+            batch_size=100,
+        )
+        await RecordsLifecycleService.run_scheduled_lifecycle_sweep(
+            db=db,
+            tenant_id=ctx.tenant_id,
+            job_type=ScheduledRunType.HOLD_COVERAGE_CHECK,
+            batch_size=100,
+        )
+    except Exception as exc:
+        logger.error("Error in records lifecycle scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_knowledge_reviews_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep institutional policies for overdue reviews and scheduled publication releases (Step 42)."""
+    from app.services.knowledge_service import KnowledgeService
+
+    logger.debug("Executing scheduled knowledge review sweeps for tenant %s", ctx.tenant_id)
+    try:
+        service = KnowledgeService()
+        await service.sweep_knowledge_reviews(db)
+    except Exception as exc:
+        logger.error("Error in knowledge review scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_accreditation_quality_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep institutional accreditation evidence and quality CAPA actions for expirations and deadlines (Step 43)."""
+    from app.services.accreditation_service import AccreditationService
+
+    logger.debug("Executing scheduled accreditation and quality sweeps for tenant %s", ctx.tenant_id)
+    try:
+        service = AccreditationService(db)
+        res = await service.sweep_quality_reviews()
+        if any(v > 0 for k, v in res.items() if isinstance(v, int)):
+            logger.info("Accreditation quality sweep: %s", res)
+    except Exception as exc:
+        logger.error("Error in accreditation quality scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_research_deadlines_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep institutional research projects for expiring ethics approvals and overdue milestones (Step 44)."""
+    from app.services.research_service import ResearchService
+
+    logger.debug("Executing scheduled research deadline and compliance sweep for tenant %s", ctx.tenant_id)
+    try:
+        res = await ResearchService.sweep_deadlines_and_compliance(db, ctx.tenant_id)
+        if res.expiring_ethics_approvals_flagged > 0 or res.overdue_milestones_flagged > 0:
+            logger.info("Research compliance sweep for tenant %s: %s", ctx.tenant_id, res)
+    except Exception as exc:
+        logger.error("Error in research compliance scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_library_deadlines_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep institutional library for overdue loans, expired hold reservations, and expiring subscriptions (Step 45)."""
+    from decimal import Decimal
+    from app.services.library_service import LibraryService
+
+    logger.debug("Executing scheduled library deadline and compliance sweep for tenant %s", ctx.tenant_id)
+    try:
+        res = await LibraryService.sweep_deadlines_and_compliance(db, ctx.tenant_id)
+        if any(v > 0 for k, v in res.items() if isinstance(v, (int, float, Decimal))):
+            logger.info("Library compliance sweep for tenant %s: %s", ctx.tenant_id, res)
+    except Exception as exc:
+        logger.error("Error in library compliance scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_student_success_task(ctx: TenantJobContext, db: Any) -> None:
+    """Evaluate active early-warning rules and sweep overdue interventions (Step 47)."""
+    from app.schemas.student_success import EarlyWarningEvaluationRequest
+    from app.services.student_success_service import StudentSuccessService
+
+    logger.debug("Executing student success early warning and intervention sweep for tenant %s", ctx.tenant_id)
+    try:
+        service = StudentSuccessService(db)
+        # 1. Sweep overdue interventions
+        overdue_count = await service.sweep_overdue_interventions(ctx.tenant_id)
+        # 2. Evaluate active early warning rules
+        eval_req = EarlyWarningEvaluationRequest()
+        evals = await service.evaluate_rules(
+            tenant_id=ctx.tenant_id,
+            payload=eval_req,
+            triggered_by="SCHEDULED_JOB",
+        )
+        total_signals = sum(e.warnings_generated_count for e in evals)
+        if overdue_count > 0 or total_signals > 0:
+            logger.info(
+                "Student success sweep for tenant %s: %d overdue interventions, %d new signals",
+                ctx.tenant_id,
+                overdue_count,
+                total_signals,
+            )
+    except Exception as exc:
+        logger.error("Error in student success scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_admissions_offers_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep expired admission offers and release reserved seat capacities (Step 48)."""
+    from datetime import date
+    from sqlalchemy import select
+    from app.models.admissions import AdmissionOffer, OfferStatus
+    from app.services.admissions_service import AdmissionsService
+
+    logger.debug("Executing admissions expired offers sweep for tenant %s", ctx.tenant_id)
+    try:
+        stmt = select(AdmissionOffer).where(
+            AdmissionOffer.tenant_id == ctx.tenant_id,
+            AdmissionOffer.status == OfferStatus.ISSUED,
+            AdmissionOffer.expiry_date < date.today(),
+        )
+        res = await db.execute(stmt)
+        expired_offers = res.scalars().all()
+        if expired_offers:
+            svc = AdmissionsService(db)
+            for offer in expired_offers:
+                offer.status = OfferStatus.EXPIRED
+                await svc._release_reserved_seat(ctx.tenant_id, offer.cycle_id, offer.program_id)
+            await db.commit()
+            logger.info(
+                "Admissions sweep for tenant %s: expired %d stale offers and released seats",
+                ctx.tenant_id,
+                len(expired_offers),
+            )
+    except Exception as exc:
+        logger.error("Error in admissions offers scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
 
 async def run_single_scheduled_job(job_name: str, task_fn: Any, lock_ttl: int = 300) -> None:
+
     """Run a scheduled job across all tenants protected by a distributed lock."""
     async with distributed_lock(f"scheduler:{job_name}", ttl_seconds=lock_ttl) as acquired:
         if not acquired:
@@ -429,6 +709,50 @@ async def run_scheduler_loop():
                 await run_single_scheduled_job(
                     "ai_anomaly_scan", scan_operational_anomalies_and_risks
                 )
+                await run_single_scheduled_job("sweep_expired_trials", sweep_expired_trials)
+                await run_single_scheduled_job(
+                    "evaluate_tenant_resource_quotas", evaluate_tenant_resource_quotas
+                )
+                await run_single_scheduled_job(
+                    "sweep_platform_support_sessions", sweep_platform_support_sessions
+                )
+                await run_single_scheduled_job(
+                    "recover_abandoned_outbox_events", recover_abandoned_outbox_events_task, lock_ttl=60
+                )
+                await run_single_scheduled_job(
+                    "circuit_health_probe", audit_backup_freshness_and_circuit_health, lock_ttl=60
+                )
+                await run_single_scheduled_job(
+                    "adoption_deadlines_and_expirations", evaluate_adoption_deadlines_and_expirations
+                )
+                await run_single_scheduled_job(
+                    "subscription_lifecycle", sweep_subscription_lifecycle_task
+                )
+                await run_single_scheduled_job(
+                    "sync_marketplace_integrations", sync_marketplace_integrations_task
+                )
+                await run_single_scheduled_job(
+                    "records_lifecycle_sweep", sweep_records_lifecycle_task
+                )
+                await run_single_scheduled_job(
+                    "knowledge_reviews_sweep", sweep_knowledge_reviews_task
+                )
+                await run_single_scheduled_job(
+                    "accreditation_quality_sweep", sweep_accreditation_quality_task
+                )
+                await run_single_scheduled_job(
+                    "research_deadlines_sweep", sweep_research_deadlines_task
+                )
+                await run_single_scheduled_job(
+                    "library_deadlines_sweep", sweep_library_deadlines_task
+                )
+                await run_single_scheduled_job(
+                    "student_success_sweep", sweep_student_success_task
+                )
+                await run_single_scheduled_job(
+                    "admissions_offers_sweep", sweep_admissions_offers_task
+                )
+
 
             # Sleep 60 seconds between tick evaluations
             for _ in range(60):

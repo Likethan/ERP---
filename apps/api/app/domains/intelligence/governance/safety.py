@@ -15,8 +15,14 @@ class PromptGuard:
 
     # Malicious injection patterns
     INJECTION_PATTERNS = [
-        re.compile(r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions?", re.IGNORECASE),
-        re.compile(r"disregard\s+(all\s+)?(previous|prior|system)\s+prompts?", re.IGNORECASE),
+        re.compile(
+            r"ignore\s+(all\s+)?(previous\s+|prior\s+|above\s+|system\s+)*instructions?",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"disregard\s+(all\s+)?(previous\s+|prior\s+|system\s+)*prompts?",
+            re.IGNORECASE,
+        ),
         re.compile(
             r"you\s+are\s+now\s+in\s+(developer|unrestricted|god|dan)\s+mode", re.IGNORECASE
         ),

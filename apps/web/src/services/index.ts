@@ -37,5 +37,6 @@ export * from "./ai.service";
 export * from "./staff.service";
 export * from "./people.service";
 export * from "./guardians.service";
+export * from "./organization.service";
 
 

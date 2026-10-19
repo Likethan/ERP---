@@ -112,7 +112,7 @@ class PayloadSizeLimitMiddleware(BaseHTTPMiddleware):
 
 
 class RateLimiterMiddleware(BaseHTTPMiddleware):
-    """Enforces route and client-specific rate limiting."""
+    """Enforces route, client, and multi-tenant fairness rate limiting."""
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         path = request.url.path
@@ -129,23 +129,54 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         if forwarded:
             client_ip = forwarded.split(",")[0].strip()
 
-        # In testing environments, bypass rate limiter unless explicitly enabled for a security test
+        # In testing environments, bypass rate limiter unless explicitly enabled for a security/load test
         if client_ip in ("testclient", "testserver", "127.0.0.1") and settings.ENVIRONMENT != "production":
             if not getattr(rate_limiter, "enabled_for_tests", False) and request.headers.get("X-Enable-Rate-Limit") != "true":
                 return await call_next(request)
+
+        # Authenticated tenant context extraction from cryptographic token (server-side verified only)
+        tenant_id = None
+        user_id = None
+        auth_header = request.headers.get("Authorization")
+        token_str = None
+        if auth_header and auth_header.startswith("Bearer "):
+            token_str = auth_header[7:].strip()
+        elif "access_token" in request.cookies:
+            token_str = request.cookies.get("access_token")
+
+        if token_str:
+            try:
+                from app.core.security import decode_token
+
+                payload = decode_token(token_str, expected_type="access")
+                tenant_id = payload.get("tenant_id")
+                user_id = payload.get("sub")
+            except Exception:
+                pass
 
         # Check rate limiter
         allowed, retry_after, category = rate_limiter.check_request(
             path=path,
             client_ip=client_ip,
+            tenant_id=tenant_id,
+            user_id=user_id,
         )
-
 
         if not allowed:
             req_id = getattr(request.state, "request_id", str(uuid4()))
+            if category == "tenant_quota":
+                code = "TENANT_QUOTA_EXCEEDED"
+                msg = (
+                    f"Institutional request rate quota exceeded ({settings.TENANT_RATE_LIMIT_PER_MINUTE} req/min). "
+                    f"Please retry after {retry_after} seconds."
+                )
+            else:
+                code = "RATE_LIMIT_EXCEEDED"
+                msg = f"Too many requests to {category} endpoint. Please retry after {retry_after} seconds."
+
             envelope = ApiErrorEnvelope(
-                code="RATE_LIMIT_EXCEEDED",
-                message=f"Too many requests to {category} endpoint. Please retry after {retry_after} seconds.",
+                code=code,
+                message=msg,
                 request_id=req_id,
                 details=[
                     ApiErrorDetail(
@@ -168,18 +199,46 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
 
 
 class TimingAndMetricsMiddleware(BaseHTTPMiddleware):
-    """Tracks latency and HTTP operational metrics."""
+    """Tracks latency, normalized route templates, payload sizes, and HTTP operational metrics."""
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         start_time = time.perf_counter()
-        response = await call_next(request)
-        duration = time.perf_counter() - start_time
+        req_content_length = request.headers.get("content-length")
+        req_bytes = int(req_content_length) if req_content_length and req_content_length.isdigit() else 0
 
-        # Record metrics
-        metrics.record_http_request(
-            method=request.method,
-            path=request.url.path,
-            status_code=response.status_code,
-            duration_seconds=duration,
-        )
-        return response
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        response = None
+        try:
+            response = await call_next(request)
+            status_code = response.status_code
+            return response
+        except Exception:
+            raise
+        finally:
+            duration = time.perf_counter() - start_time
+            route = request.scope.get("route")
+            route_template = route.path if route and hasattr(route, "path") else None
+
+            resp_bytes = 0
+            if response is not None:
+                resp_content_length = response.headers.get("content-length")
+                if resp_content_length and resp_content_length.isdigit():
+                    resp_bytes = int(resp_content_length)
+
+            tenant_ctx = getattr(request.state, "tenant", None)
+            tenant_id = getattr(tenant_ctx, "tenant_id", None)
+
+            try:
+                metrics.record_http_request(
+                    method=request.method,
+                    path=request.url.path,
+                    status_code=status_code,
+                    duration_seconds=duration,
+                    route_template=route_template,
+                    request_size_bytes=req_bytes,
+                    response_size_bytes=resp_bytes,
+                    tenant_id=tenant_id,
+                )
+            except Exception:
+                pass  # Metrics recording failure must never break business requests
+

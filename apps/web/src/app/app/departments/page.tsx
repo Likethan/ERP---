@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { Campus, Department } from "@campusos/types";
-import { apiFetch } from "@/lib/api-client";
+import { organizationService } from "@/services/organization.service";
 import { useAuth } from "@/lib/auth-context";
 
 export default function DepartmentsPage() {
@@ -21,17 +21,17 @@ export default function DepartmentsPage() {
   const [campusId, setCampusId] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
 
   const canManage = hasPermission("core:departments:manage");
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const queryParams = search ? `?search=${encodeURIComponent(search)}` : "";
       const [deptRes, campRes] = await Promise.all([
-        apiFetch<Department[]>(`/api/v1/departments${queryParams}`),
-        apiFetch<Campus[]>("/api/v1/campuses"),
+        organizationService.listDepartments(undefined, search),
+        organizationService.listCampuses(),
       ]);
       setDepartments(deptRes.data);
       setCampuses(campRes.data);
@@ -40,28 +40,25 @@ export default function DepartmentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      loadData();
+      void loadData();
     }, 250);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [loadData]);
 
   const handleCreateDepartment = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
     setSubmitting(true);
     try {
-      await apiFetch<Department>("/api/v1/departments", {
-        method: "POST",
-        body: JSON.stringify({
-          code: code.trim().toUpperCase(),
-          name: name.trim(),
-          department_type: deptType,
-          campus_id: campusId || undefined,
-        }),
+      await organizationService.createDepartment({
+        code: code.trim().toUpperCase(),
+        name: name.trim(),
+        department_type: deptType,
+        campus_id: campusId || undefined,
       });
       setShowCreate(false);
       setCode("");
@@ -70,6 +67,28 @@ export default function DepartmentsPage() {
       await loadData();
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : "Failed to create department");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleUpdateDepartment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editingDepartment) return;
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      await organizationService.updateDepartment(editingDepartment.id, {
+        name: name.trim(),
+        department_type: deptType,
+        campus_id: campusId || null,
+        is_active: editingDepartment.is_active,
+      });
+      setEditingDepartment(null);
+      setShowCreate(false);
+      await loadData();
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : "Failed to update department");
     } finally {
       setSubmitting(false);
     }
@@ -87,7 +106,7 @@ export default function DepartmentsPage() {
         </div>
         {canManage && (
           <button
-            onClick={() => setShowCreate(true)}
+            onClick={() => { setEditingDepartment(null); setFormError(null); setCode(""); setName(""); setCampusId(""); setShowCreate(true); }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-indigo-500 transition-colors shadow-sm self-start sm:self-auto"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -152,6 +171,7 @@ export default function DepartmentsPage() {
                 <th className="px-5 py-3 font-semibold">Classification</th>
                 <th className="px-5 py-3 font-semibold">Head of Department (HOD)</th>
                 <th className="px-5 py-3 font-semibold">Status</th>
+                {canManage && <th className="px-5 py-3 font-semibold text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
@@ -172,10 +192,11 @@ export default function DepartmentsPage() {
                     )}
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
-                      Active
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${d.is_active ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-800 text-slate-400"}`}>
+                      {d.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
+                  {canManage && <td className="px-5 py-3.5 text-right"><button onClick={() => { setFormError(null); setEditingDepartment(d); setCode(d.code); setName(d.name); setDeptType(d.department_type); setCampusId(d.campus_id || ""); setShowCreate(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800">Edit</button></td>}
                 </tr>
               ))}
             </tbody>
@@ -188,8 +209,8 @@ export default function DepartmentsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-semibold text-white">Create Academic Department</h3>
-              <button onClick={() => setShowCreate(false)} className="text-slate-400 hover:text-white">
+              <h3 className="text-base font-semibold text-white">{editingDepartment ? "Edit Academic Department" : "Create Academic Department"}</h3>
+              <button onClick={() => { setShowCreate(false); setEditingDepartment(null); }} className="text-slate-400 hover:text-white">
                 ✕
               </button>
             </div>
@@ -200,7 +221,7 @@ export default function DepartmentsPage() {
               </div>
             )}
 
-            <form onSubmit={handleCreateDepartment} className="space-y-3.5 text-xs">
+            <form onSubmit={editingDepartment ? handleUpdateDepartment : handleCreateDepartment} className="space-y-3.5 text-xs">
               <div>
                 <label className="block text-slate-300 font-medium mb-1">Department Code</label>
                 <input
@@ -209,6 +230,7 @@ export default function DepartmentsPage() {
                   placeholder="e.g. CSE, ECE, MECH, AIDS"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
+                  disabled={Boolean(editingDepartment)}
                   className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
                 />
               </div>
@@ -256,10 +278,12 @@ export default function DepartmentsPage() {
                 </div>
               )}
 
+              {editingDepartment && <label className="flex items-center gap-2 text-slate-300"><input type="checkbox" checked={editingDepartment.is_active} onChange={(e) => setEditingDepartment({ ...editingDepartment, is_active: e.target.checked })} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Department is active</label>}
+
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
                 <button
                   type="button"
-                  onClick={() => setShowCreate(false)}
+                  onClick={() => { setShowCreate(false); setEditingDepartment(null); }}
                   className="rounded-lg px-3 py-2 text-slate-300 hover:bg-slate-800 transition-colors"
                 >
                   Cancel
@@ -269,7 +293,7 @@ export default function DepartmentsPage() {
                   disabled={submitting}
                   className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 transition-colors disabled:opacity-50"
                 >
-                  {submitting ? "Creating..." : "Save Department"}
+                  {submitting ? "Saving..." : editingDepartment ? "Save changes" : "Create Department"}
                 </button>
               </div>
             </form>

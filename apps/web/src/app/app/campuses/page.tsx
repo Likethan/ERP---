@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { Campus, Institution } from "@campusos/types";
-import { apiFetch } from "@/lib/api-client";
+import { organizationService } from "@/services/organization.service";
 import { useAuth } from "@/lib/auth-context";
 
 export default function CampusesPage() {
@@ -20,16 +20,17 @@ export default function CampusesPage() {
   const [campusAddress, setCampusAddress] = useState("");
   const [submittingCampus, setSubmittingCampus] = useState(false);
   const [campusError, setCampusError] = useState<string | null>(null);
+  const [editingCampus, setEditingCampus] = useState<Campus | null>(null);
 
   const canManage = hasPermission("core:campuses:manage");
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const [instRes, campRes] = await Promise.all([
-        apiFetch<Institution>("/api/v1/institutions"),
-        apiFetch<Campus[]>("/api/v1/campuses"),
+        organizationService.getInstitution(),
+        organizationService.listCampuses(),
       ]);
       setInstitution(instRes.data);
       setCampuses(campRes.data);
@@ -38,27 +39,34 @@ export default function CampusesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    void loadData();
+  }, [loadData]);
 
   const handleCreateCampus = async (e: React.FormEvent) => {
     e.preventDefault();
     setCampusError(null);
     setSubmittingCampus(true);
     try {
-      await apiFetch<Campus>("/api/v1/campuses", {
-        method: "POST",
-        body: JSON.stringify({
+      if (editingCampus) {
+        await organizationService.updateCampus(editingCampus.id, {
+          name: campusName.trim(),
+          city: campusCity.trim(),
+          address: campusAddress.trim(),
+          is_active: editingCampus.is_active,
+        });
+      } else {
+        await organizationService.createCampus({
           code: campusCode.trim().toUpperCase(),
           name: campusName.trim(),
           city: campusCity.trim(),
           address: campusAddress.trim(),
-        }),
-      });
+        });
+      }
       setShowAddCampus(false);
+      setEditingCampus(null);
       setCampusCode("");
       setCampusName("");
       setCampusCity("");
@@ -83,7 +91,9 @@ export default function CampusesPage() {
         </div>
         {canManage && (
           <button
-            onClick={() => {
+              onClick={() => {
+                setEditingCampus(null);
+                setCampusCode(""); setCampusName(""); setCampusCity(""); setCampusAddress("");
               setCampusError(null);
               setShowAddCampus(true);
             }}
@@ -172,7 +182,7 @@ export default function CampusesPage() {
 
               <div className="pt-4 mt-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
                 <span>Campus ID: {c.id.substring(0, 8)}...</span>
-                <span>Configured</span>
+                {canManage && <button onClick={() => { setEditingCampus(c); setCampusCode(c.code); setCampusName(c.name); setCampusCity(c.city); setCampusAddress(c.address || ""); setCampusError(null); setShowAddCampus(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800">Edit</button>}
               </div>
             </div>
           ))}
@@ -184,8 +194,8 @@ export default function CampusesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h2 className="text-lg font-bold text-white">Add Campus Location</h2>
-              <button onClick={() => setShowAddCampus(false)} className="text-slate-400 hover:text-white">
+              <h2 className="text-lg font-bold text-white">{editingCampus ? "Edit Campus Location" : "Add Campus Location"}</h2>
+              <button onClick={() => { setShowAddCampus(false); setEditingCampus(null); }} className="text-slate-400 hover:text-white">
                 ✕
               </button>
             </div>
@@ -206,6 +216,7 @@ export default function CampusesPage() {
                     placeholder="MAIN"
                     value={campusCode}
                     onChange={(e) => setCampusCode(e.target.value)}
+                    disabled={Boolean(editingCampus)}
                     className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono uppercase focus:outline-none focus:border-blue-500 text-sm"
                   />
                 </div>
@@ -241,9 +252,12 @@ export default function CampusesPage() {
                   placeholder="Street address, postal code, landmarks..."
                   value={campusAddress}
                   onChange={(e) => setCampusAddress(e.target.value)}
+                  required
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm"
                 />
               </div>
+
+              {editingCampus && <label className="flex items-center gap-2 text-xs text-slate-300"><input type="checkbox" checked={editingCampus.is_active} onChange={(e) => setEditingCampus({ ...editingCampus, is_active: e.target.checked })} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Campus is operational</label>}
 
               <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
@@ -255,10 +269,10 @@ export default function CampusesPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submittingCampus}
+                    disabled={submittingCampus}
                   className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:opacity-50"
                 >
-                  {submittingCampus ? "Saving..." : "Create Campus"}
+                  {submittingCampus ? "Saving..." : editingCampus ? "Save changes" : "Create Campus"}
                 </button>
               </div>
             </form>

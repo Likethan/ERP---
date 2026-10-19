@@ -14,6 +14,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { DataGrid, ColumnDef, BulkAction } from "@/components/data-grid";
+import { useDebounce } from "@/lib/use-debounce";
 import {
   Users,
   GraduationCap,
@@ -31,6 +32,7 @@ export default function StudentsDirectoryPage() {
 
   // Search & Filter state
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [selectedDept, setSelectedDept] = useState("ALL");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedSemester, setSelectedSemester] = useState("ALL");
@@ -63,7 +65,7 @@ export default function StudentsDirectoryPage() {
     setLoading(true);
     try {
       const res = await studentsService.list({
-        search,
+        search: debouncedSearch.trim() || undefined,
         department: selectedDept !== "ALL" ? selectedDept : undefined,
         status: selectedStatus !== "ALL" ? selectedStatus : undefined,
         semester: selectedSemester !== "ALL" ? Number(selectedSemester) : undefined,
@@ -85,7 +87,7 @@ export default function StudentsDirectoryPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, selectedDept, selectedStatus, selectedSemester, selectedGender, currentPage, pageSize, showToast]);
+  }, [debouncedSearch, selectedDept, selectedStatus, selectedSemester, selectedGender, currentPage, pageSize, showToast]);
 
   useEffect(() => {
     loadData();

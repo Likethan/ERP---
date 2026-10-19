@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import type { Department, Program } from "@campusos/types";
-import { apiFetch } from "@/lib/api-client";
+import { organizationService } from "@/services/organization.service";
 import { useAuth } from "@/lib/auth-context";
 
 export default function ProgramsPage() {
@@ -25,6 +25,8 @@ export default function ProgramsPage() {
   const [requiredCredits, setRequiredCredits] = useState(160);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [editingProgram, setEditingProgram] = useState<Program | null>(null);
+  const [editIsActive, setEditIsActive] = useState(true);
 
   const canManage = hasPermission("core:programs:manage");
 
@@ -32,14 +34,9 @@ export default function ProgramsPage() {
     try {
       setLoading(true);
       setError(null);
-      const params = new URLSearchParams();
-      if (selectedDeptId) params.append("department_id", selectedDeptId);
-      if (search) params.append("search", search);
-
-      const qs = params.toString() ? `?${params.toString()}` : "";
       const [progRes, deptRes] = await Promise.all([
-        apiFetch<Program[]>(`/api/v1/programs${qs}`),
-        apiFetch<Department[]>("/api/v1/departments"),
+        organizationService.listPrograms(selectedDeptId || undefined, search),
+        organizationService.listDepartments(),
       ]);
       setPrograms(progRes.data);
       setDepartments(deptRes.data);
@@ -62,9 +59,17 @@ export default function ProgramsPage() {
     setFormError(null);
     setSubmitting(true);
     try {
-      await apiFetch<Program>("/api/v1/programs", {
-        method: "POST",
-        body: JSON.stringify({
+      if (editingProgram) {
+        await organizationService.updateProgram(editingProgram.id, {
+          name: name.trim(),
+          degree_level: degreeLevel,
+          duration_years: parseFloat(durationYears),
+          total_semesters: Number(totalSemesters),
+          required_credits: Number(requiredCredits),
+          is_active: editIsActive,
+        });
+      } else {
+        await organizationService.createProgram({
           department_id: deptId,
           code: code.trim().toUpperCase(),
           name: name.trim(),
@@ -72,9 +77,10 @@ export default function ProgramsPage() {
           duration_years: parseFloat(durationYears),
           total_semesters: Number(totalSemesters),
           required_credits: Number(requiredCredits),
-        }),
-      });
+        });
+      }
       setShowCreate(false);
+      setEditingProgram(null);
       setCode("");
       setName("");
       setDeptId("");
@@ -98,7 +104,7 @@ export default function ProgramsPage() {
         </div>
         {canManage && (
           <button
-            onClick={() => setShowCreate(true)}
+            onClick={() => { setEditingProgram(null); setFormError(null); setCode(""); setName(""); setDeptId(""); setShowCreate(true); }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-indigo-500 transition-colors shadow-sm self-start sm:self-auto"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -178,6 +184,7 @@ export default function ProgramsPage() {
                 <th className="px-5 py-3 font-semibold">Duration</th>
                 <th className="px-5 py-3 font-semibold">Credits</th>
                 <th className="px-5 py-3 font-semibold">Status</th>
+                {canManage && <th className="px-5 py-3 font-semibold text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
@@ -195,9 +202,10 @@ export default function ProgramsPage() {
                   <td className="px-5 py-3.5 text-slate-300">{p.required_credits}</td>
                   <td className="px-5 py-3.5">
                     <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
-                      Active
+                      {p.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
+                  {canManage && <td className="px-5 py-3.5 text-right"><button onClick={() => { setEditingProgram(p); setFormError(null); setDeptId(p.department_id); setCode(p.code); setName(p.name); setDegreeLevel(p.degree_level); setDurationYears(String(p.duration_years)); setTotalSemesters(p.total_semesters); setRequiredCredits(p.required_credits); setEditIsActive(p.is_active); setShowCreate(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800">Edit</button></td>}
                 </tr>
               ))}
             </tbody>
@@ -210,8 +218,8 @@ export default function ProgramsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-semibold text-white">Create Degree Program</h3>
-              <button onClick={() => setShowCreate(false)} className="text-slate-400 hover:text-white">
+              <h3 className="text-base font-semibold text-white">{editingProgram ? "Edit Degree Program" : "Create Degree Program"}</h3>
+              <button onClick={() => { setShowCreate(false); setEditingProgram(null); }} className="text-slate-400 hover:text-white">
                 ✕
               </button>
             </div>
@@ -229,6 +237,7 @@ export default function ProgramsPage() {
                   required
                   value={deptId}
                   onChange={(e) => setDeptId(e.target.value)}
+                  disabled={Boolean(editingProgram)}
                   className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
                 >
                   <option value="">Select Offering Department...</option>
@@ -249,6 +258,7 @@ export default function ProgramsPage() {
                     placeholder="e.g. BE-CSE, BTECH-AIDS"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
+                    disabled={Boolean(editingProgram)}
                     className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
                   />
                 </div>
@@ -266,6 +276,8 @@ export default function ProgramsPage() {
                   </select>
                 </div>
               </div>
+
+              {editingProgram && <label className="flex items-center gap-2 text-slate-300"><input type="checkbox" checked={editIsActive} onChange={(e) => setEditIsActive(e.target.checked)} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Program is active</label>}
 
               <div>
                 <label className="block text-slate-300 font-medium mb-1">Program Full Name</label>
@@ -322,7 +334,7 @@ export default function ProgramsPage() {
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
                 <button
                   type="button"
-                  onClick={() => setShowCreate(false)}
+                  onClick={() => { setShowCreate(false); setEditingProgram(null); }}
                   className="rounded-lg px-3 py-2 text-slate-300 hover:bg-slate-800 transition-colors"
                 >
                   Cancel
@@ -332,7 +344,7 @@ export default function ProgramsPage() {
                   disabled={submitting}
                   className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 transition-colors disabled:opacity-50"
                 >
-                  {submitting ? "Saving..." : "Create Program"}
+                  {submitting ? "Saving..." : editingProgram ? "Save changes" : "Create Program"}
                 </button>
               </div>
             </form>

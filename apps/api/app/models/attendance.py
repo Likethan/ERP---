@@ -107,6 +107,7 @@ class AttendanceSession(TenantScopedModel):
         Index("ix_att_session_faculty_date", "tenant_id", "faculty_id", "session_date"),
         Index("ix_att_session_section_date", "tenant_id", "section_id", "session_date"),
         Index("ix_att_session_status", "tenant_id", "status"),
+        Index("idx_perf_att_session_search", "tenant_id", "session_date", "status"),
     )
 
     course_offering_id: Mapped[UUID] = mapped_column(
@@ -189,6 +190,7 @@ class AttendanceRecord(TenantScopedModel):
         UniqueConstraint("session_id", "student_id", name="uq_attendance_record_student"),
         Index("ix_att_rec_student_status", "tenant_id", "student_id", "status"),
         Index("ix_att_rec_session", "session_id"),
+        Index("idx_perf_att_rec_student_date", "tenant_id", "student_id", "created_at"),
     )
 
     session_id: Mapped[UUID] = mapped_column(

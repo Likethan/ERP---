@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type {
   AcademicYear,
   Semester,
@@ -9,7 +9,7 @@ import type {
   Section,
   Program,
 } from "@campusos/types";
-import { apiFetch } from "@/lib/api-client";
+import { organizationService } from "@/services/organization.service";
 import { useAuth } from "@/lib/auth-context";
 
 type ActiveTab = "years" | "semesters" | "regulations" | "batches" | "sections";
@@ -70,19 +70,26 @@ export default function AcademicStructurePage() {
   const canManageYears = hasPermission("core:academic_years:manage");
   const canManagePrograms = hasPermission("core:programs:manage");
   const canManageSections = hasPermission("core:sections:manage");
-  const canManageAny = canManageYears || canManagePrograms || canManageSections;
+  const canManageRegulations = hasPermission("core:regulations:manage");
+  const canManageTab = activeTab === "years" || activeTab === "semesters"
+    ? canManageYears
+    : activeTab === "regulations"
+      ? canManageRegulations
+      : activeTab === "batches"
+        ? canManagePrograms
+        : canManageSections;
 
-  const loadAll = async () => {
+  const loadAll = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const [yRes, sRes, rRes, bRes, secRes, pRes] = await Promise.all([
-        apiFetch<AcademicYear[]>("/api/v1/academic-structure/academic-years"),
-        apiFetch<Semester[]>("/api/v1/academic-structure/semesters"),
-        apiFetch<Regulation[]>("/api/v1/academic-structure/regulations"),
-        apiFetch<Batch[]>("/api/v1/academic-structure/batches"),
-        apiFetch<Section[]>("/api/v1/academic-structure/sections"),
-        apiFetch<Program[]>("/api/v1/programs"),
+        organizationService.listAcademicYears(),
+        organizationService.listSemesters(),
+        organizationService.listRegulations(),
+        organizationService.listBatches(),
+        organizationService.listSections(),
+        organizationService.listPrograms(),
       ]);
 
       setYears(yRes.data);
@@ -92,23 +99,23 @@ export default function AcademicStructurePage() {
       setSections(secRes.data);
       setPrograms(pRes.data);
 
-      if (yRes.data.length > 0 && !selectedYearId) {
+      if (yRes.data.length > 0) {
         const curr = yRes.data.find((y) => y.is_current) || yRes.data[0];
-        setSelectedYearId(curr.id);
+        setSelectedYearId((current) => current || curr.id);
       }
-      if (pRes.data.length > 0 && !selectedProgramId) {
-        setSelectedProgramId(pRes.data[0].id);
+      if (pRes.data.length > 0) {
+        setSelectedProgramId((current) => current || pRes.data[0].id);
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load academic structure");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadAll();
-  }, []);
+    void loadAll();
+  }, [loadAll]);
 
   const handleOpenModal = () => {
     setFormError(null);
@@ -130,63 +137,48 @@ export default function AcademicStructurePage() {
 
     try {
       if (activeTab === "years") {
-        await apiFetch<AcademicYear>("/api/v1/academic-structure/academic-years", {
-          method: "POST",
-          body: JSON.stringify({
-            name: yearName.trim(),
-            start_date: yearStart,
-            end_date: yearEnd,
-            is_current: yearIsCurrent,
-          }),
+        await organizationService.createAcademicYear({
+          name: yearName.trim(),
+          start_date: yearStart,
+          end_date: yearEnd,
+          is_current: yearIsCurrent,
         });
         setYearName("");
       } else if (activeTab === "semesters") {
-        await apiFetch<Semester>("/api/v1/academic-structure/semesters", {
-          method: "POST",
-          body: JSON.stringify({
-            academic_year_id: semYearId,
-            name: semName.trim(),
-            semester_number: Number(semNumber),
-            term_type: semTermType,
-            start_date: semStart,
-            end_date: semEnd,
-          }),
+        await organizationService.createSemester({
+          academic_year_id: semYearId,
+          name: semName.trim(),
+          semester_number: Number(semNumber),
+          term_type: semTermType,
+          start_date: semStart,
+          end_date: semEnd,
         });
         setSemName("");
       } else if (activeTab === "regulations") {
-        await apiFetch<Regulation>("/api/v1/academic-structure/regulations", {
-          method: "POST",
-          body: JSON.stringify({
-            code: regCode.trim().toUpperCase(),
-            title: regTitle.trim(),
-            effective_year: Number(regYear),
-            description: regDesc.trim() || undefined,
-          }),
+        await organizationService.createRegulation({
+          code: regCode.trim().toUpperCase(),
+          title: regTitle.trim(),
+          effective_year: Number(regYear),
+          description: regDesc.trim() || undefined,
         });
         setRegCode("");
         setRegTitle("");
       } else if (activeTab === "batches") {
-        await apiFetch<Batch>("/api/v1/academic-structure/batches", {
-          method: "POST",
-          body: JSON.stringify({
-            program_id: batchProgId,
-            regulation_id: batchRegId,
-            name: batchName.trim(),
-            admission_year: Number(batchAdmYear),
-            graduation_year: Number(batchGradYear),
-          }),
+        await organizationService.createBatch({
+          program_id: batchProgId,
+          regulation_id: batchRegId,
+          name: batchName.trim(),
+          admission_year: Number(batchAdmYear),
+          graduation_year: Number(batchGradYear),
         });
         setBatchName("");
       } else if (activeTab === "sections") {
-        await apiFetch<Section>("/api/v1/academic-structure/sections", {
-          method: "POST",
-          body: JSON.stringify({
-            program_id: secProgId,
-            batch_id: secBatchId,
-            semester_id: secSemId,
-            name: secName.trim().toUpperCase(),
-            capacity: Number(secCapacity),
-          }),
+        await organizationService.createSection({
+          program_id: secProgId,
+          batch_id: secBatchId,
+          semester_id: secSemId,
+          name: secName.trim().toUpperCase(),
+          capacity: Number(secCapacity),
         });
         setSecName("");
       }
@@ -210,7 +202,7 @@ export default function AcademicStructurePage() {
             Configure Academic Years, Semesters, Curriculum Regulations, Student Batches, and Class Sections.
           </p>
         </div>
-        {canManageAny && (
+        {canManageTab && (
           <button
             onClick={handleOpenModal}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-colors self-start sm:self-auto"
@@ -234,7 +226,7 @@ export default function AcademicStructurePage() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as ActiveTab)}
+            onClick={() => { setActiveTab(tab.id as ActiveTab); setFormError(null); }}
             className={`pb-3 px-1 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
               activeTab === tab.id
                 ? "border-blue-500 text-blue-400 font-semibold"
@@ -350,6 +342,7 @@ export default function AcademicStructurePage() {
                       <th className="px-6 py-3 font-semibold">Number</th>
                       <th className="px-6 py-3 font-semibold">Start Date</th>
                       <th className="px-6 py-3 font-semibold">End Date</th>
+                      <th className="px-6 py-3 font-semibold">Status</th>
                       <th className="px-6 py-3 font-semibold text-right">Sections</th>
                     </tr>
                   </thead>
@@ -369,6 +362,7 @@ export default function AcademicStructurePage() {
                             <td className="px-6 py-4 text-slate-400">Sem {s.semester_number}</td>
                             <td className="px-6 py-4 text-slate-400">{s.start_date}</td>
                             <td className="px-6 py-4 text-slate-400">{s.end_date}</td>
+                            <td className="px-6 py-4"><span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>{s.is_active ? "Active" : "Inactive"}</span></td>
                             <td className="px-6 py-4 text-right font-medium text-slate-300">{secCount} sections</td>
                           </tr>
                         );
@@ -406,8 +400,8 @@ export default function AcademicStructurePage() {
                         <td className="px-6 py-4 text-slate-400">{r.effective_year}</td>
                         <td className="px-6 py-4 text-slate-400 text-xs max-w-xs truncate">{r.description || "—"}</td>
                         <td className="px-6 py-4 text-right">
-                          <span className="px-2 py-0.5 text-xs rounded-full font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800">
-                            Active
+                          <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${r.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>
+                            {r.is_active ? "Active" : "Inactive"}
                           </span>
                         </td>
                       </tr>
@@ -465,8 +459,8 @@ export default function AcademicStructurePage() {
                             <td className="px-6 py-4 text-slate-400">{b.admission_year}</td>
                             <td className="px-6 py-4 text-slate-400">{b.graduation_year}</td>
                             <td className="px-6 py-4 text-right">
-                              <span className="px-2 py-0.5 text-xs rounded-full font-medium bg-blue-950/80 text-blue-300 border border-blue-800">
-                                Active Cohort
+                              <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${b.is_active ? "bg-blue-950/80 text-blue-300 border-blue-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>
+                                {b.is_active ? "Active Cohort" : "Inactive"}
                               </span>
                             </td>
                           </tr>
@@ -513,6 +507,7 @@ export default function AcademicStructurePage() {
                       <th className="px-6 py-3 font-semibold">Batch</th>
                       <th className="px-6 py-3 font-semibold">Semester</th>
                       <th className="px-6 py-3 font-semibold text-right">Student Capacity</th>
+                      <th className="px-6 py-3 font-semibold text-right">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
@@ -534,6 +529,7 @@ export default function AcademicStructurePage() {
                             <td className="px-6 py-4 text-slate-400">{bth?.name || s.batch_id}</td>
                             <td className="px-6 py-4 text-slate-400">{sem?.name || s.semester_id}</td>
                             <td className="px-6 py-4 text-right font-mono text-slate-300">{s.capacity} seats</td>
+                            <td className="px-6 py-4 text-right"><span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>{s.is_active ? "Active" : "Inactive"}</span></td>
                           </tr>
                         );
                       })}

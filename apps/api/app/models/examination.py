@@ -270,6 +270,7 @@ class StudentAssessmentMark(TenantScopedModel):
         UniqueConstraint("tenant_id", "assessment_id", "student_id", name="uq_assessment_student_mark"),
         Index("ix_marks_tenant_assessment", "tenant_id", "assessment_id"),
         Index("ix_marks_tenant_student", "tenant_id", "student_id"),
+        Index("idx_perf_marks_tenant_assess_status", "tenant_id", "assessment_id", "status"),
     )
 
     assessment_id: Mapped[UUID] = mapped_column(

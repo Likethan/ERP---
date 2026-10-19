@@ -8,6 +8,7 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
@@ -56,6 +57,10 @@ class User(BaseModel):
     def tenant_id(self) -> UUID | None:
         """Convenience alias for primary_tenant_id."""
         return self.primary_tenant_id
+
+    @tenant_id.setter
+    def tenant_id(self, value: UUID | None) -> None:
+        self.primary_tenant_id = value
 
     # Relationships to profiles
     student_profile: Mapped["StudentProfile | None"] = relationship(
@@ -177,6 +182,10 @@ class StudentProfile(TenantScopedModel):
     __table_args__ = (
         UniqueConstraint("tenant_id", "admission_number", name="uq_students_tenant_admission"),
         UniqueConstraint("tenant_id", "registration_number", name="uq_students_tenant_reg"),
+        Index("idx_perf_students_tenant_prog_status", "tenant_id", "program_id", "status"),
+        Index("idx_perf_students_tenant_batch", "tenant_id", "batch_id"),
+        Index("idx_perf_students_tenant_roll", "tenant_id", "roll_number"),
+        Index("idx_perf_students_tenant_created", "tenant_id", "status", "created_at"),
     )
 
     user_id: Mapped[UUID] = mapped_column(

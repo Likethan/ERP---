@@ -1,0 +1,1841 @@
+{
+  "tool": "CampusOS Enterprise a11y Auditor (WCAG 2.1 AA)",
+  "status": "PASS",
+  "compliance_rate": "80.39%",
+  "metrics": {
+    "files_scanned": 161,
+    "elements_inspected": 1545,
+    "passes": 1242,
+    "warnings": 303,
+    "violations": 0
+  },
+  "findings": [
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academic-structure/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/course-offerings/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/course-offerings/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/course-offerings/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/course-offerings/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/curricula/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/enrollments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/enrollments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/subjects/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/subjects/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/subjects/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/subjects/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/timetable/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/academics/timetable/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/corrections/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/corrections/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/courses/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/policies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/reports/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/attendance/reports/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/reports/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/attendance/sessions/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/attendance/students/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/campus/announcements/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/announcements/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/attendance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/clubs/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/campus/events/create/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/all/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/categories/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/certificates/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/certificates/requests/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/certificates/requests/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/certificates/templates/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/institutional-records/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/my-documents/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/upload/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/documents/verification/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/assessments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/marks/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/marks/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/publications/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/schedules/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/schedules/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/schedules/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/examinations/schedules/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/faculty/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/assignments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/assignments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/assignments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-categories/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-categories/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-structures/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-structures/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-structures/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-structures/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/fee-structures/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/invoices/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/invoices/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/invoices/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/payments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/payments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/payments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/payments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/payments/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/refunds/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/refunds/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/refunds/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/refunds/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/finance/scholarships/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/facilities/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/allocations/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/complaints/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/complaints/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/leaves/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/rooms/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/rooms/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/hostel/rooms/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/maintenance/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/allocations/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/drivers/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/drivers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/drivers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/routes/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/routes/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/stops/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/stops/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/infrastructure/transport/vehicles/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/intelligence/alerts/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/intelligence/assistant/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/intelligence/assistant/page.tsx",
+      "rule": "A11Y-04",
+      "severity": "WARNING",
+      "message": "Page contains <h2> headings without an introductory <h1> element."
+    },
+    {
+      "file": "src/app/app/intelligence/insights/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/intelligence/students/[id]/page.tsx",
+      "rule": "A11Y-02",
+      "severity": "WARNING",
+      "message": "Button lacks discernible text content, aria-label, or screen-reader text."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/companies/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/drives/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/interviews/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/offers/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/outcomes/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/outcomes/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/outcomes/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/outcomes/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/placement/positions/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/programs/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/programs/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/programs/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/staff/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/new/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/new/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/new/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/new/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
+    {
+      "file": "src/app/app/students/[id]/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    }
+  ],
+  "rules_checked": [
+    "A11Y-01: Image tags require valid alt descriptions",
+    "A11Y-02: Buttons require accessible text or aria-label",
+    "A11Y-03: Form inputs require associated labels or aria-label",
+    "A11Y-04: Pages require structured heading hierarchy",
+    "A11Y-05: Page layouts require semantic landmark elements",
+    "A11Y-06: Interactive elements must not disable tab focus",
+    "A11Y-07: CSS design tokens define accessible theme contrast"
+  ]
+}

@@ -644,9 +644,284 @@ DOMAIN_EVENTS_REPLAY_DOT: Final[str] = "events.domain.replay"
 DOMAIN_EVENTS_CONSUMERS_MANAGE_DOT: Final[str] = "events.domain.consumers.manage"
 DOMAIN_EVENTS_METRICS_READ_DOT: Final[str] = "events.domain.metrics.read"
 
+# --- Enterprise Platform Administration & SaaS Operations (Step 30) ---
+PLATFORM_TENANTS_READ: Final[str] = "platform:tenants:read"
+PLATFORM_TENANTS_MANAGE: Final[str] = "platform:tenants:manage"
+PLATFORM_LIFECYCLE_MANAGE: Final[str] = "platform:lifecycle:manage"
+PLATFORM_PROVISION_MANAGE: Final[str] = "platform:provision:manage"
+PLATFORM_ENTITLEMENTS_MANAGE: Final[str] = "platform:entitlements:manage"
+PLATFORM_QUOTAS_MANAGE: Final[str] = "platform:quotas:manage"
+PLATFORM_SUPPORT_ACCESS: Final[str] = "platform:support:access"
+PLATFORM_DELETION_MANAGE: Final[str] = "platform:deletion:manage"
+PLATFORM_OPS_HEALTH_READ: Final[str] = "platform:ops:health:read"
+
+# --- Enterprise Reliability Engineering & Disaster Recovery (Step 31) ---
+PLATFORM_RELIABILITY_READ: Final[str] = "platform:reliability:read"
+PLATFORM_RELIABILITY_MANAGE: Final[str] = "platform:reliability:manage"
+PLATFORM_BACKUP_TRIGGER: Final[str] = "platform:backup:trigger"
+PLATFORM_RESTORE_VERIFY: Final[str] = "platform:restore:verify"
+
+PLATFORM_TENANTS_READ_DOT: Final[str] = "platform.tenants.read"
+PLATFORM_TENANTS_MANAGE_DOT: Final[str] = "platform.tenants.manage"
+PLATFORM_LIFECYCLE_MANAGE_DOT: Final[str] = "platform.lifecycle.manage"
+PLATFORM_PROVISION_MANAGE_DOT: Final[str] = "platform.provision.manage"
+PLATFORM_ENTITLEMENTS_MANAGE_DOT: Final[str] = "platform.entitlements.manage"
+PLATFORM_QUOTAS_MANAGE_DOT: Final[str] = "platform.quotas.manage"
+PLATFORM_SUPPORT_ACCESS_DOT: Final[str] = "platform.support.access"
+PLATFORM_DELETION_MANAGE_DOT: Final[str] = "platform.deletion.manage"
+PLATFORM_OPS_HEALTH_READ_DOT: Final[str] = "platform.ops.health.read"
+
+PLATFORM_RELIABILITY_READ_DOT: Final[str] = "platform.reliability.read"
+PLATFORM_RELIABILITY_MANAGE_DOT: Final[str] = "platform.reliability.manage"
+PLATFORM_BACKUP_TRIGGER_DOT: Final[str] = "platform.backup.trigger"
+PLATFORM_RESTORE_VERIFY_DOT: Final[str] = "platform.restore.verify"
+
+# --- Enterprise Security Operations, Threat Detection & Incident Response (Step 33) ---
+SECURITY_INCIDENTS_READ: Final[str] = "security:incidents:read"
+SECURITY_INCIDENTS_MANAGE: Final[str] = "security:incidents:manage"
+SECURITY_ACTIONS_PROPOSE: Final[str] = "security:actions:propose"
+SECURITY_ACTIONS_APPROVE: Final[str] = "security:actions:approve"
+SECURITY_ACTIONS_EXECUTE: Final[str] = "security:actions:execute"
+SECURITY_RULES_MANAGE: Final[str] = "security:rules:manage"
+SECURITY_PLATFORM_READ: Final[str] = "security:platform:read"
+
+SECURITY_INCIDENTS_READ_DOT: Final[str] = "security.incidents.read"
+SECURITY_INCIDENTS_MANAGE_DOT: Final[str] = "security.incidents.manage"
+SECURITY_ACTIONS_PROPOSE_DOT: Final[str] = "security.actions.propose"
+SECURITY_ACTIONS_APPROVE_DOT: Final[str] = "security.actions.approve"
+SECURITY_ACTIONS_EXECUTE_DOT: Final[str] = "security.actions.execute"
+SECURITY_RULES_MANAGE_DOT: Final[str] = "security.rules.manage"
+SECURITY_PLATFORM_READ_DOT: Final[str] = "security.platform.read"
+
+# --- Enterprise Data Import, Migration, Reconciliation & Interoperability (Step 40) ---
+DATA_IMPORT_READ: Final[str] = "data:import:read"
+DATA_IMPORT_CREATE: Final[str] = "data:import:create"
+DATA_IMPORT_MANAGE: Final[str] = "data:import:manage"
+DATA_IMPORT_APPROVE: Final[str] = "data:import:approve"
+DATA_IMPORT_EXECUTE: Final[str] = "data:import:execute"
+DATA_IMPORT_CANCEL: Final[str] = "data:import:cancel"
+DATA_IMPORT_RECONCILE: Final[str] = "data:import:reconcile"
+DATA_IMPORT_DOWNLOAD: Final[str] = "data:import:download"
+
+DATA_IMPORT_READ_DOT: Final[str] = "data.import.read"
+DATA_IMPORT_CREATE_DOT: Final[str] = "data.import.create"
+DATA_IMPORT_MANAGE_DOT: Final[str] = "data.import.manage"
+DATA_IMPORT_APPROVE_DOT: Final[str] = "data.import.approve"
+DATA_IMPORT_EXECUTE_DOT: Final[str] = "data.import.execute"
+DATA_IMPORT_CANCEL_DOT: Final[str] = "data.import.cancel"
+DATA_IMPORT_RECONCILE_DOT: Final[str] = "data.import.reconcile"
+DATA_IMPORT_DOWNLOAD_DOT: Final[str] = "data.import.download"
+
+# --- Enterprise Records Lifecycle, Retention, Archival & Legal Hold Management (Step 41) ---
+RECORDS_READ: Final[str] = "records:read"
+RECORDS_CREATE: Final[str] = "records:create"
+RECORDS_MANAGE: Final[str] = "records:manage"
+RECORDS_POLICY_MANAGE: Final[str] = "records:policy:manage"
+RECORDS_POLICY_PUBLISH: Final[str] = "records:policy:publish"
+RECORDS_ARCHIVE_EXECUTE: Final[str] = "records:archive:execute"
+RECORDS_ARCHIVE_RETRIEVE: Final[str] = "records:archive:retrieve"
+RECORDS_HOLD_CREATE: Final[str] = "records:hold:create"
+RECORDS_HOLD_MANAGE: Final[str] = "records:hold:manage"
+RECORDS_HOLD_RELEASE: Final[str] = "records:hold:release"
+RECORDS_DISPOSITION_REQUEST: Final[str] = "records:disposition:request"
+RECORDS_DISPOSITION_APPROVE: Final[str] = "records:disposition:approve"
+RECORDS_DISPOSITION_EXECUTE: Final[str] = "records:disposition:execute"
+
+RECORDS_READ_DOT: Final[str] = "records.read"
+RECORDS_CREATE_DOT: Final[str] = "records.create"
+RECORDS_MANAGE_DOT: Final[str] = "records.manage"
+RECORDS_POLICY_MANAGE_DOT: Final[str] = "records.policy.manage"
+RECORDS_POLICY_PUBLISH_DOT: Final[str] = "records.policy.publish"
+RECORDS_ARCHIVE_EXECUTE_DOT: Final[str] = "records.archive.execute"
+RECORDS_ARCHIVE_RETRIEVE_DOT: Final[str] = "records.archive.retrieve"
+RECORDS_HOLD_CREATE_DOT: Final[str] = "records.hold.create"
+RECORDS_HOLD_MANAGE_DOT: Final[str] = "records.hold.manage"
+RECORDS_HOLD_RELEASE_DOT: Final[str] = "records.hold.release"
+RECORDS_DISPOSITION_REQUEST_DOT: Final[str] = "records.disposition.request"
+RECORDS_DISPOSITION_APPROVE_DOT: Final[str] = "records.disposition.approve"
+RECORDS_DISPOSITION_EXECUTE_DOT: Final[str] = "records.disposition.execute"
+
+# --- Enterprise Institutional Knowledge Base, Policy Library & Controlled Knowledge (Step 42) ---
+KNOWLEDGE_READ: Final[str] = "knowledge:read"
+KNOWLEDGE_CREATE: Final[str] = "knowledge:create"
+KNOWLEDGE_MANAGE: Final[str] = "knowledge:manage"
+KNOWLEDGE_REVIEW: Final[str] = "knowledge:review"
+KNOWLEDGE_APPROVE: Final[str] = "knowledge:approve"
+KNOWLEDGE_PUBLISH: Final[str] = "knowledge:publish"
+KNOWLEDGE_RETIRE: Final[str] = "knowledge:retire"
+KNOWLEDGE_ACKNOWLEDGE: Final[str] = "knowledge:acknowledge"
+KNOWLEDGE_ATTESTATION_READ: Final[str] = "knowledge:attestation:read"
+
+KNOWLEDGE_READ_DOT: Final[str] = "knowledge.read"
+KNOWLEDGE_CREATE_DOT: Final[str] = "knowledge.create"
+KNOWLEDGE_MANAGE_DOT: Final[str] = "knowledge.manage"
+KNOWLEDGE_REVIEW_DOT: Final[str] = "knowledge.review"
+KNOWLEDGE_APPROVE_DOT: Final[str] = "knowledge.approve"
+KNOWLEDGE_PUBLISH_DOT: Final[str] = "knowledge.publish"
+KNOWLEDGE_RETIRE_DOT: Final[str] = "knowledge.retire"
+KNOWLEDGE_ACKNOWLEDGE_DOT: Final[str] = "knowledge.acknowledge"
+KNOWLEDGE_ATTESTATION_READ_DOT: Final[str] = "knowledge.attestation.read"
+
+# --- Enterprise Institutional Accreditation, Quality Assurance & Continuous Improvement (Step 43) ---
+ACCREDITATION_READ: Final[str] = "accreditation:read"
+ACCREDITATION_FRAMEWORK_MANAGE: Final[str] = "accreditation:framework:manage"
+ACCREDITATION_CRITERIA_MANAGE: Final[str] = "accreditation:criteria:manage"
+ACCREDITATION_ASSESS: Final[str] = "accreditation:assess"
+ACCREDITATION_APPROVE: Final[str] = "accreditation:approve"
+ACCREDITATION_EVIDENCE_MANAGE: Final[str] = "accreditation:evidence:manage"
+ACCREDITATION_EVIDENCE_VERIFY: Final[str] = "accreditation:evidence:verify"
+ACCREDITATION_INDICATOR_MANAGE: Final[str] = "accreditation:indicator:manage"
+ACCREDITATION_AUDIT_MANAGE: Final[str] = "accreditation:audit:manage"
+ACCREDITATION_CAPA_MANAGE: Final[str] = "accreditation:capa:manage"
+ACCREDITATION_IMPROVEMENT_MANAGE: Final[str] = "accreditation:improvement:manage"
+ACCREDITATION_REPORT_EXPORT: Final[str] = "accreditation:report:export"
+
+ACCREDITATION_READ_DOT: Final[str] = "accreditation.read"
+ACCREDITATION_FRAMEWORK_MANAGE_DOT: Final[str] = "accreditation.framework.manage"
+ACCREDITATION_CRITERIA_MANAGE_DOT: Final[str] = "accreditation.criteria.manage"
+ACCREDITATION_ASSESS_DOT: Final[str] = "accreditation.assess"
+ACCREDITATION_APPROVE_DOT: Final[str] = "accreditation.approve"
+ACCREDITATION_EVIDENCE_MANAGE_DOT: Final[str] = "accreditation.evidence.manage"
+ACCREDITATION_EVIDENCE_VERIFY_DOT: Final[str] = "accreditation.evidence.verify"
+ACCREDITATION_INDICATOR_MANAGE_DOT: Final[str] = "accreditation.indicator.manage"
+ACCREDITATION_AUDIT_MANAGE_DOT: Final[str] = "accreditation.audit.manage"
+ACCREDITATION_CAPA_MANAGE_DOT: Final[str] = "accreditation.capa.manage"
+ACCREDITATION_IMPROVEMENT_MANAGE_DOT: Final[str] = "accreditation.improvement.manage"
+ACCREDITATION_REPORT_EXPORT_DOT: Final[str] = "accreditation.report.export"
+
+# --- Enterprise Institutional Research, Innovation, Grants & Intellectual Property Management (Step 44) ---
+RESEARCH_PROJECTS_READ: Final[str] = "research:projects:read"
+RESEARCH_PROJECTS_MANAGE: Final[str] = "research:projects:manage"
+RESEARCH_PROJECTS_TRANSITION: Final[str] = "research:projects:transition"
+RESEARCH_GRANTS_APPLY: Final[str] = "research:grants:apply"
+RESEARCH_GRANTS_APPROVE: Final[str] = "research:grants:approve"
+RESEARCH_AWARDS_MANAGE: Final[str] = "research:awards:manage"
+RESEARCH_BUDGETS_MANAGE: Final[str] = "research:budgets:manage"
+RESEARCH_ETHICS_REVIEW: Final[str] = "research:ethics:review"
+RESEARCH_OUTPUTS_MANAGE: Final[str] = "research:outputs:manage"
+RESEARCH_OUTPUTS_VERIFY: Final[str] = "research:outputs:verify"
+RESEARCH_IP_MANAGE: Final[str] = "research:ip:manage"
+RESEARCH_IP_CONFIDENTIAL_READ: Final[str] = "research:ip:confidential:read"
+RESEARCH_ANALYTICS_READ: Final[str] = "research:analytics:read"
+
+RESEARCH_PROJECTS_READ_DOT: Final[str] = "research.projects.read"
+RESEARCH_PROJECTS_MANAGE_DOT: Final[str] = "research.projects.manage"
+RESEARCH_PROJECTS_TRANSITION_DOT: Final[str] = "research.projects.transition"
+RESEARCH_GRANTS_APPLY_DOT: Final[str] = "research.grants.apply"
+RESEARCH_GRANTS_APPROVE_DOT: Final[str] = "research.grants.approve"
+RESEARCH_AWARDS_MANAGE_DOT: Final[str] = "research.awards.manage"
+RESEARCH_BUDGETS_MANAGE_DOT: Final[str] = "research.budgets.manage"
+RESEARCH_ETHICS_REVIEW_DOT: Final[str] = "research.ethics.review"
+RESEARCH_OUTPUTS_MANAGE_DOT: Final[str] = "research.outputs.manage"
+RESEARCH_OUTPUTS_VERIFY_DOT: Final[str] = "research.outputs.verify"
+RESEARCH_IP_MANAGE_DOT: Final[str] = "research.ip.manage"
+RESEARCH_IP_CONFIDENTIAL_READ_DOT: Final[str] = "research.ip.confidential.read"
+RESEARCH_ANALYTICS_READ_DOT: Final[str] = "research.analytics.read"
+
+# --- Enterprise Institutional Library, Learning Resources & Knowledge Access Management (Step 45) ---
+LIBRARY_BRANCHES_READ: Final[str] = "library:branches:read"
+LIBRARY_BRANCHES_MANAGE: Final[str] = "library:branches:manage"
+LIBRARY_CATALOG_READ: Final[str] = "library:catalog:read"
+LIBRARY_CATALOG_MANAGE: Final[str] = "library:catalog:manage"
+LIBRARY_COPIES_MANAGE: Final[str] = "library:copies:manage"
+LIBRARY_MEMBERS_READ: Final[str] = "library:members:read"
+LIBRARY_MEMBERS_MANAGE: Final[str] = "library:members:manage"
+LIBRARY_CIRCULATION_ISSUE: Final[str] = "library:circulation:issue"
+LIBRARY_CIRCULATION_RETURN: Final[str] = "library:circulation:return"
+LIBRARY_CIRCULATION_RENEW: Final[str] = "library:circulation:renew"
+LIBRARY_RESERVATIONS_MANAGE: Final[str] = "library:reservations:manage"
+LIBRARY_FINES_MANAGE: Final[str] = "library:fines:manage"
+LIBRARY_FINES_WAIVE: Final[str] = "library:fines:waive"
+LIBRARY_ACQUISITIONS_REQUEST: Final[str] = "library:acquisitions:request"
+LIBRARY_ACQUISITIONS_MANAGE: Final[str] = "library:acquisitions:manage"
+LIBRARY_SUBSCRIPTIONS_MANAGE: Final[str] = "library:subscriptions:manage"
+LIBRARY_DIGITAL_ACCESS: Final[str] = "library:digital:access"
+LIBRARY_AUDIT_MANAGE: Final[str] = "library:audit:manage"
+LIBRARY_ANALYTICS_READ: Final[str] = "library:analytics:read"
+
+LIBRARY_BRANCHES_READ_DOT: Final[str] = "library.branches.read"
+LIBRARY_BRANCHES_MANAGE_DOT: Final[str] = "library.branches.manage"
+LIBRARY_CATALOG_READ_DOT: Final[str] = "library.catalog.read"
+LIBRARY_CATALOG_MANAGE_DOT: Final[str] = "library.catalog.manage"
+LIBRARY_COPIES_MANAGE_DOT: Final[str] = "library.copies.manage"
+LIBRARY_MEMBERS_READ_DOT: Final[str] = "library.members.read"
+LIBRARY_MEMBERS_MANAGE_DOT: Final[str] = "library.members.manage"
+LIBRARY_CIRCULATION_ISSUE_DOT: Final[str] = "library.circulation.issue"
+LIBRARY_CIRCULATION_RETURN_DOT: Final[str] = "library.circulation.return"
+LIBRARY_CIRCULATION_RENEW_DOT: Final[str] = "library.circulation.renew"
+LIBRARY_RESERVATIONS_MANAGE_DOT: Final[str] = "library.reservations.manage"
+LIBRARY_FINES_MANAGE_DOT: Final[str] = "library.fines.manage"
+LIBRARY_FINES_WAIVE_DOT: Final[str] = "library.fines.waive"
+LIBRARY_ACQUISITIONS_REQUEST_DOT: Final[str] = "library.acquisitions.request"
+LIBRARY_ACQUISITIONS_MANAGE_DOT: Final[str] = "library.acquisitions.manage"
+LIBRARY_SUBSCRIPTIONS_MANAGE_DOT: Final[str] = "library.subscriptions.manage"
+LIBRARY_DIGITAL_ACCESS_DOT: Final[str] = "library.digital.access"
+LIBRARY_AUDIT_MANAGE_DOT: Final[str] = "library.audit.manage"
+LIBRARY_ANALYTICS_READ_DOT: Final[str] = "library.analytics.read"
+
+# --- Step 47: Student Success, Academic Advising, Early-Warning & Intervention Management ---
+STUDENT_SUCCESS_CASE_READ: Final[str] = "student_success:cases:read"
+STUDENT_SUCCESS_CASE_MANAGE: Final[str] = "student_success:cases:manage"
+STUDENT_SUCCESS_ADVISING_READ: Final[str] = "student_success:advising:read"
+STUDENT_SUCCESS_ADVISING_MANAGE: Final[str] = "student_success:advising:manage"
+STUDENT_SUCCESS_EARLY_WARNING_READ: Final[str] = "student_success:early_warning:read"
+STUDENT_SUCCESS_EARLY_WARNING_MANAGE: Final[str] = "student_success:early_warning:manage"
+STUDENT_SUCCESS_INTERVENTION_READ: Final[str] = "student_success:interventions:read"
+STUDENT_SUCCESS_INTERVENTION_MANAGE: Final[str] = "student_success:interventions:manage"
+STUDENT_SUCCESS_APPOINTMENT_MANAGE: Final[str] = "student_success:appointments:manage"
+STUDENT_SUCCESS_REPORTS_READ: Final[str] = "student_success:reports:read"
+STUDENT_SUCCESS_STUDENT_SELF_READ: Final[str] = "student_success:student_self:read"
+
+STUDENT_SUCCESS_CASE_READ_DOT: Final[str] = "student_success.cases.read"
+STUDENT_SUCCESS_CASE_MANAGE_DOT: Final[str] = "student_success.cases.manage"
+STUDENT_SUCCESS_ADVISING_READ_DOT: Final[str] = "student_success.advising.read"
+STUDENT_SUCCESS_ADVISING_MANAGE_DOT: Final[str] = "student_success.advising.manage"
+STUDENT_SUCCESS_EARLY_WARNING_READ_DOT: Final[str] = "student_success.early_warning.read"
+STUDENT_SUCCESS_EARLY_WARNING_MANAGE_DOT: Final[str] = "student_success.early_warning.manage"
+STUDENT_SUCCESS_INTERVENTION_READ_DOT: Final[str] = "student_success.interventions.read"
+STUDENT_SUCCESS_INTERVENTION_MANAGE_DOT: Final[str] = "student_success.interventions.manage"
+STUDENT_SUCCESS_APPOINTMENT_MANAGE_DOT: Final[str] = "student_success.appointments.manage"
+STUDENT_SUCCESS_REPORTS_READ_DOT: Final[str] = "student_success.reports.read"
+STUDENT_SUCCESS_STUDENT_SELF_READ_DOT: Final[str] = "student_success.student_self.read"
+
+# --- Step 48: Student Admissions, Enrollment & Onboarding Orchestration ---
+ADMISSIONS_CYCLE_READ: Final[str] = "admissions:cycles:read"
+ADMISSIONS_CYCLE_MANAGE: Final[str] = "admissions:cycles:manage"
+ADMISSIONS_APPLICANT_READ: Final[str] = "admissions:applicants:read"
+ADMISSIONS_APPLICANT_MANAGE: Final[str] = "admissions:applicants:manage"
+ADMISSIONS_APPLICATION_READ: Final[str] = "admissions:applications:read"
+ADMISSIONS_APPLICATION_MANAGE: Final[str] = "admissions:applications:manage"
+ADMISSIONS_DOCUMENT_VERIFY: Final[str] = "admissions:documents:verify"
+ADMISSIONS_ELIGIBILITY_EVALUATE: Final[str] = "admissions:eligibility:evaluate"
+ADMISSIONS_REVIEW_MANAGE: Final[str] = "admissions:reviews:manage"
+ADMISSIONS_SELECTION_MANAGE: Final[str] = "admissions:selection:manage"
+ADMISSIONS_OFFERS_MANAGE: Final[str] = "admissions:offers:manage"
+ADMISSIONS_ENROLLMENT_ORCHESTRATE: Final[str] = "admissions:enrollment:orchestrate"
+ADMISSIONS_ONBOARDING_MANAGE: Final[str] = "admissions:onboarding:manage"
+ADMISSIONS_REPORTS_READ: Final[str] = "admissions:reports:read"
+ADMISSIONS_APPLICANT_SELF: Final[str] = "admissions:applicant_self:manage"
+
+ADMISSIONS_CYCLE_READ_DOT: Final[str] = "admissions.cycles.read"
+ADMISSIONS_CYCLE_MANAGE_DOT: Final[str] = "admissions.cycles.manage"
+ADMISSIONS_APPLICANT_READ_DOT: Final[str] = "admissions.applicants.read"
+ADMISSIONS_APPLICANT_MANAGE_DOT: Final[str] = "admissions.applicants.manage"
+ADMISSIONS_APPLICATION_READ_DOT: Final[str] = "admissions.applications.read"
+ADMISSIONS_APPLICATION_MANAGE_DOT: Final[str] = "admissions.applications.manage"
+ADMISSIONS_DOCUMENT_VERIFY_DOT: Final[str] = "admissions.documents.verify"
+ADMISSIONS_ELIGIBILITY_EVALUATE_DOT: Final[str] = "admissions.eligibility.evaluate"
+ADMISSIONS_REVIEW_MANAGE_DOT: Final[str] = "admissions.reviews.manage"
+ADMISSIONS_SELECTION_MANAGE_DOT: Final[str] = "admissions.selection.manage"
+ADMISSIONS_OFFERS_MANAGE_DOT: Final[str] = "admissions.offers.manage"
+ADMISSIONS_ENROLLMENT_ORCHESTRATE_DOT: Final[str] = "admissions.enrollment.orchestrate"
+ADMISSIONS_ONBOARDING_MANAGE_DOT: Final[str] = "admissions.onboarding.manage"
+ADMISSIONS_REPORTS_READ_DOT: Final[str] = "admissions.reports.read"
+ADMISSIONS_APPLICANT_SELF_DOT: Final[str] = "admissions.applicant_self.manage"
+
+
 
 # Comprehensive Registry
 ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
+
     # Core
     PermissionDefinition(CORE_INSTITUTION_READ, "core", "Read institutional metadata"),
     PermissionDefinition(CORE_INSTITUTION_MANAGE, "core", "Configure institution settings"),
@@ -1303,6 +1578,128 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(DOMAIN_EVENTS_REPLAY, "events", "Execute audited replay of domain events to consumers"),
     PermissionDefinition(DOMAIN_EVENTS_CONSUMERS_MANAGE, "events", "Manage and inspect event consumers and checkpoints"),
     PermissionDefinition(DOMAIN_EVENTS_METRICS_READ, "events", "View event processing latency and throughput metrics"),
+    # Enterprise Platform Administration & SaaS Operations (Step 30)
+    PermissionDefinition(PLATFORM_TENANTS_READ, "platform", "View multi-tenant SaaS directory and tenant metadata"),
+    PermissionDefinition(PLATFORM_TENANTS_MANAGE, "platform", "Provision, configure, and administer SaaS tenants"),
+    PermissionDefinition(PLATFORM_LIFECYCLE_MANAGE, "platform", "Execute and govern tenant lifecycle state transitions"),
+    PermissionDefinition(PLATFORM_PROVISION_MANAGE, "platform", "Coordinate and retry automated institution onboarding"),
+    PermissionDefinition(PLATFORM_ENTITLEMENTS_MANAGE, "platform", "Manage subscription plans and feature entitlements"),
+    PermissionDefinition(PLATFORM_QUOTAS_MANAGE, "platform", "Configure and govern tenant resource limits and quotas"),
+    PermissionDefinition(PLATFORM_SUPPORT_ACCESS, "platform", "Request, access, and revoke scoped institution support sessions"),
+    PermissionDefinition(PLATFORM_DELETION_MANAGE, "platform", "Evaluate deletion eligibility and schedule tenant decommissioning"),
+    PermissionDefinition(PLATFORM_OPS_HEALTH_READ, "platform", "Access internal platform infrastructure health and operational telemetry"),
+    # Enterprise Reliability Engineering & Disaster Recovery (Step 31)
+    PermissionDefinition(PLATFORM_RELIABILITY_READ, "platform", "View disaster recovery posture, backups, and resilience telemetry"),
+    PermissionDefinition(PLATFORM_RELIABILITY_MANAGE, "platform", "Administer platform resilience policies and circuit breakers"),
+    PermissionDefinition(PLATFORM_BACKUP_TRIGGER, "platform", "Trigger and prune cryptographic database backups"),
+    PermissionDefinition(PLATFORM_RESTORE_VERIFY, "platform", "Execute automated restore verification in isolated sandboxes"),
+    # Enterprise Security Operations, Threat Detection & Incident Response (Step 33)
+    PermissionDefinition(SECURITY_INCIDENTS_READ, "security", "View security incidents and detections"),
+    PermissionDefinition(SECURITY_INCIDENTS_MANAGE, "security", "Triage, assign, and manage security incidents"),
+    PermissionDefinition(SECURITY_ACTIONS_PROPOSE, "security", "Propose automated or manual containment actions"),
+    PermissionDefinition(SECURITY_ACTIONS_APPROVE, "security", "Approve high-impact containment and response actions"),
+    PermissionDefinition(SECURITY_ACTIONS_EXECUTE, "security", "Execute authorized containment and response actions"),
+    PermissionDefinition(SECURITY_RULES_MANAGE, "security", "Configure threat detection rules, thresholds, and exclusions"),
+    PermissionDefinition(SECURITY_PLATFORM_READ, "security", "View platform-wide and cross-tenant security operations telemetry"),
+    # Enterprise Records Lifecycle, Retention, Archival & Legal Hold Management (Step 41)
+    PermissionDefinition(RECORDS_READ, "records", "View registered institutional records and retention state"),
+    PermissionDefinition(RECORDS_CREATE, "records", "Index and register domain records into lifecycle engine"),
+    PermissionDefinition(RECORDS_MANAGE, "records", "Manage record lifecycle states and transitions"),
+    PermissionDefinition(RECORDS_POLICY_MANAGE, "records", "Author and configure institutional retention schedules"),
+    PermissionDefinition(RECORDS_POLICY_PUBLISH, "records", "Publish and activate versioned retention policies"),
+    PermissionDefinition(RECORDS_ARCHIVE_EXECUTE, "records", "Execute cold storage archival with cryptographic manifests"),
+    PermissionDefinition(RECORDS_ARCHIVE_RETRIEVE, "records", "Retrieve and audit archived record content"),
+    PermissionDefinition(RECORDS_HOLD_CREATE, "records", "Place administrative and legal holds on records"),
+    PermissionDefinition(RECORDS_HOLD_MANAGE, "records", "Manage legal holds and custodian rosters"),
+    PermissionDefinition(RECORDS_HOLD_RELEASE, "records", "Release active legal holds and trigger eligibility re-evaluation"),
+    PermissionDefinition(RECORDS_DISPOSITION_REQUEST, "records", "Request and preview record disposition batches"),
+    PermissionDefinition(RECORDS_DISPOSITION_APPROVE, "records", "Formally authorize record disposition execution"),
+    PermissionDefinition(RECORDS_DISPOSITION_EXECUTE, "records", "Execute approved disposition and issue certificates"),
+    # Institutional Knowledge Base (Step 42)
+    PermissionDefinition(KNOWLEDGE_READ, "knowledge", "Search and view published institutional policies and knowledge"),
+    PermissionDefinition(KNOWLEDGE_CREATE, "knowledge", "Author draft institutional knowledge items and SOPs"),
+    PermissionDefinition(KNOWLEDGE_MANAGE, "knowledge", "Manage knowledge categories, scopes, and lifecycle settings"),
+    PermissionDefinition(KNOWLEDGE_REVIEW, "knowledge", "Review knowledge drafts and provide editorial feedback"),
+    PermissionDefinition(KNOWLEDGE_APPROVE, "knowledge", "Approve knowledge items for publication"),
+    PermissionDefinition(KNOWLEDGE_PUBLISH, "knowledge", "Publish or schedule institutional policies and handbooks"),
+    PermissionDefinition(KNOWLEDGE_RETIRE, "knowledge", "Retire or supersede obsolete knowledge items"),
+    PermissionDefinition(KNOWLEDGE_ACKNOWLEDGE, "knowledge", "Acknowledge and submit policy attestations"),
+    PermissionDefinition(KNOWLEDGE_ATTESTATION_READ, "knowledge", "View institutional policy attestation compliance reports"),
+    # Institutional Accreditation & Quality Assurance (Step 43)
+    PermissionDefinition(ACCREDITATION_READ, "accreditation", "View accreditation frameworks, criteria, assessments, and readiness reports"),
+    PermissionDefinition(ACCREDITATION_FRAMEWORK_MANAGE, "accreditation", "Configure accreditation frameworks, cycles, and version snapshots"),
+    PermissionDefinition(ACCREDITATION_CRITERIA_MANAGE, "accreditation", "Manage framework criteria, subcriteria, weights, and guidelines"),
+    PermissionDefinition(ACCREDITATION_ASSESS, "accreditation", "Draft and submit criterion assessments and scores"),
+    PermissionDefinition(ACCREDITATION_APPROVE, "accreditation", "Conduct independent review and approval of assessments"),
+    PermissionDefinition(ACCREDITATION_EVIDENCE_MANAGE, "accreditation", "Attach, categorize, and manage supporting evidence links"),
+    PermissionDefinition(ACCREDITATION_EVIDENCE_VERIFY, "accreditation", "Verify evidence validity, integrity, and compliance"),
+    PermissionDefinition(ACCREDITATION_INDICATOR_MANAGE, "accreditation", "Configure quality indicators, benchmarks, and data sources"),
+    PermissionDefinition(ACCREDITATION_AUDIT_MANAGE, "accreditation", "Plan, schedule, execute, and finalize internal quality audits"),
+    PermissionDefinition(ACCREDITATION_CAPA_MANAGE, "accreditation", "Manage findings, corrective actions (CAPA), and verify closure"),
+    PermissionDefinition(ACCREDITATION_IMPROVEMENT_MANAGE, "accreditation", "Define and monitor continuous quality improvement (CQI) plans"),
+    PermissionDefinition(ACCREDITATION_REPORT_EXPORT, "accreditation", "Generate and export authorized accreditation compliance reports"),
+    # Enterprise Institutional Research, Innovation, Grants & Intellectual Property Management (Step 44)
+    PermissionDefinition(RESEARCH_PROJECTS_READ, "research", "View research projects, teams, milestones, and registry"),
+    PermissionDefinition(RESEARCH_PROJECTS_MANAGE, "research", "Create and manage research projects and memberships"),
+    PermissionDefinition(RESEARCH_PROJECTS_TRANSITION, "research", "Authorize lifecycle status transitions for research projects"),
+    PermissionDefinition(RESEARCH_GRANTS_APPLY, "research", "Draft and submit research grant applications"),
+    PermissionDefinition(RESEARCH_GRANTS_APPROVE, "research", "Conduct internal institutional review and approve grant applications"),
+    PermissionDefinition(RESEARCH_AWARDS_MANAGE, "research", "Register grant awards and disbursements"),
+    PermissionDefinition(RESEARCH_BUDGETS_MANAGE, "research", "Manage project budget categories, revisions, and expenditure monitoring"),
+    PermissionDefinition(RESEARCH_ETHICS_REVIEW, "research", "Review and decide on research ethics, biosafety, and compliance requests"),
+    PermissionDefinition(RESEARCH_OUTPUTS_MANAGE, "research", "Register publications, datasets, and intellectual outputs"),
+    PermissionDefinition(RESEARCH_OUTPUTS_VERIFY, "research", "Verify academic outputs and external citation metadata"),
+    PermissionDefinition(RESEARCH_IP_MANAGE, "research", "Manage intellectual property, invention disclosures, and patent milestones"),
+    PermissionDefinition(RESEARCH_IP_CONFIDENTIAL_READ, "research", "Access confidential IP disclosures and trade secret records"),
+    PermissionDefinition(RESEARCH_ANALYTICS_READ, "research", "Access institutional research analytics, reports, and performance trends"),
+    # Enterprise Institutional Library, Learning Resources & Knowledge Access Management (Step 45)
+    PermissionDefinition(LIBRARY_BRANCHES_READ, "library", "View institutional library branches, hours, and policies"),
+    PermissionDefinition(LIBRARY_BRANCHES_MANAGE, "library", "Manage library branches, locations, and schedules"),
+    PermissionDefinition(LIBRARY_CATALOG_READ, "library", "Search and browse bibliographic catalog items"),
+    PermissionDefinition(LIBRARY_CATALOG_MANAGE, "library", "Create, update, and withdraw catalog records"),
+    PermissionDefinition(LIBRARY_COPIES_MANAGE, "library", "Manage physical inventory copies, barcodes, and shelf locations"),
+    PermissionDefinition(LIBRARY_MEMBERS_READ, "library", "View library patron membership profiles and borrowing history"),
+    PermissionDefinition(LIBRARY_MEMBERS_MANAGE, "library", "Manage library memberships, privileges, and suspensions"),
+    PermissionDefinition(LIBRARY_CIRCULATION_ISSUE, "library", "Issue and checkout library materials to members"),
+    PermissionDefinition(LIBRARY_CIRCULATION_RETURN, "library", "Process check-in and return of borrowed resources"),
+    PermissionDefinition(LIBRARY_CIRCULATION_RENEW, "library", "Process loan renewals and due date extensions"),
+    PermissionDefinition(LIBRARY_RESERVATIONS_MANAGE, "library", "Place, manage, and allocate resource hold reservations"),
+    PermissionDefinition(LIBRARY_FINES_MANAGE, "library", "Assess, review, and post overdue and damage fines to finance"),
+    PermissionDefinition(LIBRARY_FINES_WAIVE, "library", "Authorize waivers and adjustments for assessed library fines"),
+    PermissionDefinition(LIBRARY_ACQUISITIONS_REQUEST, "library", "Submit resource recommendation and acquisition requests"),
+    PermissionDefinition(LIBRARY_ACQUISITIONS_MANAGE, "library", "Approve purchase requests, track orders, and accession copies"),
+    PermissionDefinition(LIBRARY_SUBSCRIPTIONS_MANAGE, "library", "Manage periodicals, serials, and database subscriptions"),
+    PermissionDefinition(LIBRARY_DIGITAL_ACCESS, "library", "Access and download electronic resources and institutional documents"),
+    PermissionDefinition(LIBRARY_AUDIT_MANAGE, "library", "Conduct physical inventory verification and reconcile stock discrepancies"),
+    PermissionDefinition(LIBRARY_ANALYTICS_READ, "library", "View library circulation metrics, popular items, and collection reports"),
+    # Student Success, Academic Advising, Early-Warning & Intervention Management (Step 47)
+    PermissionDefinition(STUDENT_SUCCESS_CASE_READ, "student_success", "View student-success cases, history, and notes"),
+    PermissionDefinition(STUDENT_SUCCESS_CASE_MANAGE, "student_success", "Create, update, assign, escalate, and close success cases"),
+    PermissionDefinition(STUDENT_SUCCESS_ADVISING_READ, "student_success", "View advisor profiles, assignments, and advising plans"),
+    PermissionDefinition(STUDENT_SUCCESS_ADVISING_MANAGE, "student_success", "Manage advisor assignments, plans, and caseload capacities"),
+    PermissionDefinition(STUDENT_SUCCESS_EARLY_WARNING_READ, "student_success", "View early-warning rules, evaluations, and risk signals"),
+    PermissionDefinition(STUDENT_SUCCESS_EARLY_WARNING_MANAGE, "student_success", "Configure rules, execute evaluations, and triage signals"),
+    PermissionDefinition(STUDENT_SUCCESS_INTERVENTION_READ, "student_success", "View student intervention plans and progress milestones"),
+    PermissionDefinition(STUDENT_SUCCESS_INTERVENTION_MANAGE, "student_success", "Create, track, update, and close intervention plans"),
+    PermissionDefinition(STUDENT_SUCCESS_APPOINTMENT_MANAGE, "student_success", "Schedule, reschedule, complete, or cancel appointments"),
+    PermissionDefinition(STUDENT_SUCCESS_REPORTS_READ, "student_success", "Access aggregate student-success analytics and caseload metrics"),
+    PermissionDefinition(STUDENT_SUCCESS_STUDENT_SELF_READ, "student_success", "Student self-service access to permitted advising plans and appointments"),
+    # Student Admissions, Enrollment & Onboarding Orchestration (Step 48)
+    PermissionDefinition(ADMISSIONS_CYCLE_READ, "admissions", "View admission cycles, application deadlines, and seat capacities"),
+    PermissionDefinition(ADMISSIONS_CYCLE_MANAGE, "admissions", "Configure, publish, suspend, or archive admission cycles"),
+    PermissionDefinition(ADMISSIONS_APPLICANT_READ, "admissions", "View applicant profiles, contact information, and verification status"),
+    PermissionDefinition(ADMISSIONS_APPLICANT_MANAGE, "admissions", "Manage applicant profiles, verification, and duplicate merging"),
+    PermissionDefinition(ADMISSIONS_APPLICATION_READ, "admissions", "View admission applications, program preferences, and scores"),
+    PermissionDefinition(ADMISSIONS_APPLICATION_MANAGE, "admissions", "Process applications, status transitions, withdrawals, and reopening"),
+    PermissionDefinition(ADMISSIONS_DOCUMENT_VERIFY, "admissions", "Review and verify uploaded applicant evidence and certificates"),
+    PermissionDefinition(ADMISSIONS_ELIGIBILITY_EVALUATE, "admissions", "Configure eligibility rules and execute evaluation checks"),
+    PermissionDefinition(ADMISSIONS_REVIEW_MANAGE, "admissions", "Assign reviewers, record application review scores and decisions"),
+    PermissionDefinition(ADMISSIONS_SELECTION_MANAGE, "admissions", "Generate merit lists, seat allocations, and publish selection rounds"),
+    PermissionDefinition(ADMISSIONS_OFFERS_MANAGE, "admissions", "Issue, accept, decline, expire, or revoke admission offers"),
+    PermissionDefinition(ADMISSIONS_ENROLLMENT_ORCHESTRATE, "admissions", "Execute idempotent enrollment and student record creation"),
+    PermissionDefinition(ADMISSIONS_ONBOARDING_MANAGE, "admissions", "Coordinate post-enrollment student onboarding checklists and tasks"),
+    PermissionDefinition(ADMISSIONS_REPORTS_READ, "admissions", "View admissions funnel analytics, conversion rates, and seat utilization"),
+    PermissionDefinition(ADMISSIONS_APPLICANT_SELF, "admissions", "Applicant self-service portal to submit applications and view offers"),
 ]
 
 
@@ -1310,6 +1707,98 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
 DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
     "SUPER_ADMIN": [p.code for p in ALL_PERMISSIONS],
     "INSTITUTION_ADMIN": [
+        ADMISSIONS_CYCLE_READ,
+        ADMISSIONS_CYCLE_MANAGE,
+        ADMISSIONS_APPLICANT_READ,
+        ADMISSIONS_APPLICANT_MANAGE,
+        ADMISSIONS_APPLICATION_READ,
+        ADMISSIONS_APPLICATION_MANAGE,
+        ADMISSIONS_DOCUMENT_VERIFY,
+        ADMISSIONS_ELIGIBILITY_EVALUATE,
+        ADMISSIONS_REVIEW_MANAGE,
+        ADMISSIONS_SELECTION_MANAGE,
+        ADMISSIONS_OFFERS_MANAGE,
+        ADMISSIONS_ENROLLMENT_ORCHESTRATE,
+        ADMISSIONS_ONBOARDING_MANAGE,
+        ADMISSIONS_REPORTS_READ,
+
+        STUDENT_SUCCESS_CASE_READ,
+        STUDENT_SUCCESS_CASE_MANAGE,
+        STUDENT_SUCCESS_ADVISING_READ,
+        STUDENT_SUCCESS_ADVISING_MANAGE,
+        STUDENT_SUCCESS_EARLY_WARNING_READ,
+        STUDENT_SUCCESS_EARLY_WARNING_MANAGE,
+        STUDENT_SUCCESS_INTERVENTION_READ,
+        STUDENT_SUCCESS_INTERVENTION_MANAGE,
+        STUDENT_SUCCESS_APPOINTMENT_MANAGE,
+        STUDENT_SUCCESS_REPORTS_READ,
+
+        LIBRARY_BRANCHES_READ,
+        LIBRARY_BRANCHES_MANAGE,
+        LIBRARY_CATALOG_READ,
+        LIBRARY_CATALOG_MANAGE,
+        LIBRARY_COPIES_MANAGE,
+        LIBRARY_MEMBERS_READ,
+        LIBRARY_MEMBERS_MANAGE,
+        LIBRARY_CIRCULATION_ISSUE,
+        LIBRARY_CIRCULATION_RETURN,
+        LIBRARY_CIRCULATION_RENEW,
+        LIBRARY_RESERVATIONS_MANAGE,
+        LIBRARY_FINES_MANAGE,
+        LIBRARY_FINES_WAIVE,
+        LIBRARY_ACQUISITIONS_REQUEST,
+        LIBRARY_ACQUISITIONS_MANAGE,
+        LIBRARY_SUBSCRIPTIONS_MANAGE,
+        LIBRARY_DIGITAL_ACCESS,
+        LIBRARY_AUDIT_MANAGE,
+        LIBRARY_ANALYTICS_READ,
+        RESEARCH_PROJECTS_READ,
+        RESEARCH_PROJECTS_MANAGE,
+        RESEARCH_PROJECTS_TRANSITION,
+        RESEARCH_GRANTS_APPLY,
+        RESEARCH_GRANTS_APPROVE,
+        RESEARCH_AWARDS_MANAGE,
+        RESEARCH_BUDGETS_MANAGE,
+        RESEARCH_ETHICS_REVIEW,
+        RESEARCH_OUTPUTS_MANAGE,
+        RESEARCH_OUTPUTS_VERIFY,
+        RESEARCH_IP_MANAGE,
+        RESEARCH_IP_CONFIDENTIAL_READ,
+        RESEARCH_ANALYTICS_READ,
+        ACCREDITATION_READ,
+        ACCREDITATION_FRAMEWORK_MANAGE,
+        ACCREDITATION_CRITERIA_MANAGE,
+        ACCREDITATION_ASSESS,
+        ACCREDITATION_APPROVE,
+        ACCREDITATION_EVIDENCE_MANAGE,
+        ACCREDITATION_EVIDENCE_VERIFY,
+        ACCREDITATION_INDICATOR_MANAGE,
+        ACCREDITATION_AUDIT_MANAGE,
+        ACCREDITATION_CAPA_MANAGE,
+        ACCREDITATION_IMPROVEMENT_MANAGE,
+        ACCREDITATION_REPORT_EXPORT,
+        KNOWLEDGE_READ,
+        KNOWLEDGE_CREATE,
+        KNOWLEDGE_MANAGE,
+        KNOWLEDGE_REVIEW,
+        KNOWLEDGE_APPROVE,
+        KNOWLEDGE_PUBLISH,
+        KNOWLEDGE_RETIRE,
+        KNOWLEDGE_ACKNOWLEDGE,
+        KNOWLEDGE_ATTESTATION_READ,
+        RECORDS_READ,
+        RECORDS_CREATE,
+        RECORDS_MANAGE,
+        RECORDS_POLICY_MANAGE,
+        RECORDS_POLICY_PUBLISH,
+        RECORDS_ARCHIVE_EXECUTE,
+        RECORDS_ARCHIVE_RETRIEVE,
+        RECORDS_HOLD_CREATE,
+        RECORDS_HOLD_MANAGE,
+        RECORDS_HOLD_RELEASE,
+        RECORDS_DISPOSITION_REQUEST,
+        RECORDS_DISPOSITION_APPROVE,
+        RECORDS_DISPOSITION_EXECUTE,
         CORE_INSTITUTION_READ,
         CORE_INSTITUTION_MANAGE,
         CORE_CAMPUSES_READ,
@@ -1611,6 +2100,12 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANALYTICS_MANAGE,
         ANALYTICS_RECONCILE,
         ANALYTICS_BACKFILL,
+        SECURITY_INCIDENTS_READ,
+        SECURITY_INCIDENTS_MANAGE,
+        SECURITY_ACTIONS_PROPOSE,
+        SECURITY_ACTIONS_APPROVE,
+        SECURITY_ACTIONS_EXECUTE,
+        SECURITY_RULES_MANAGE,
     ],
     "DOCUMENT_OFFICER": [
         CORE_INSTITUTION_READ,
@@ -1855,6 +2350,16 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANALYTICS_BACKFILL_DOT,
     ],
     "FACULTY": [
+        LIBRARY_BRANCHES_READ,
+        LIBRARY_CATALOG_READ,
+        LIBRARY_CIRCULATION_RENEW,
+        LIBRARY_RESERVATIONS_MANAGE,
+        LIBRARY_ACQUISITIONS_REQUEST,
+        LIBRARY_DIGITAL_ACCESS,
+        RESEARCH_PROJECTS_READ,
+        RESEARCH_PROJECTS_MANAGE,
+        RESEARCH_GRANTS_APPLY,
+        RESEARCH_OUTPUTS_MANAGE,
         CORE_INSTITUTION_READ,
         CORE_DEPARTMENTS_READ,
         CORE_PROGRAMS_READ,
@@ -1980,6 +2485,13 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         INTELLIGENCE_SAVED_MANAGE,
     ],
     "STUDENT": [
+        STUDENT_SUCCESS_STUDENT_SELF_READ,
+        LIBRARY_BRANCHES_READ,
+        LIBRARY_CATALOG_READ,
+        LIBRARY_CIRCULATION_RENEW,
+        LIBRARY_RESERVATIONS_MANAGE,
+        LIBRARY_DIGITAL_ACCESS,
+        RESEARCH_PROJECTS_READ,
         CORE_INSTITUTION_READ,
         CORE_DEPARTMENTS_READ,
         CORE_PROGRAMS_READ,
@@ -2082,5 +2594,35 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         TASKS_READ,
         TASKS_CLAIM,
         TASKS_COMPLETE,
+    ],
+    "PLATFORM_OPERATOR": [
+        PLATFORM_TENANTS_READ,
+        PLATFORM_TENANTS_MANAGE,
+        PLATFORM_LIFECYCLE_MANAGE,
+        PLATFORM_PROVISION_MANAGE,
+        PLATFORM_ENTITLEMENTS_MANAGE,
+        PLATFORM_QUOTAS_MANAGE,
+        PLATFORM_SUPPORT_ACCESS,
+        PLATFORM_DELETION_MANAGE,
+        PLATFORM_OPS_HEALTH_READ,
+        PLATFORM_RELIABILITY_READ,
+        PLATFORM_RELIABILITY_MANAGE,
+        PLATFORM_BACKUP_TRIGGER,
+        PLATFORM_RESTORE_VERIFY,
+        SECURITY_INCIDENTS_READ,
+        SECURITY_INCIDENTS_MANAGE,
+        SECURITY_ACTIONS_PROPOSE,
+        SECURITY_ACTIONS_APPROVE,
+        SECURITY_ACTIONS_EXECUTE,
+        SECURITY_RULES_MANAGE,
+        SECURITY_PLATFORM_READ,
+    ],
+    "PLATFORM_SUPPORT": [
+        PLATFORM_TENANTS_READ,
+        PLATFORM_SUPPORT_ACCESS,
+        PLATFORM_OPS_HEALTH_READ,
+        PLATFORM_RELIABILITY_READ,
+        SECURITY_INCIDENTS_READ,
+        SECURITY_PLATFORM_READ,
     ],
 }

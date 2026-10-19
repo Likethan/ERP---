@@ -15,87 +15,132 @@ export class ApiClientError extends Error {
   }
 }
 
+const inFlightRequests = new Map<string, Promise<unknown>>();
+
 /**
- * Type-safe HTTP client for CampusOS Backend API
+ * Type-safe HTTP client for CampusOS Backend API with in-flight GET request deduplication.
  */
 export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
+  const method = (options.method || "GET").toUpperCase();
   const url = `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 
-  const headers = new Headers(options.headers);
-  if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    let errorData: ApiErrorResponse;
-    try {
-      errorData = await response.json();
-    } catch {
-      errorData = {
-        success: false,
-        error: {
-          code: "HTTP_ERROR",
-          message:
-            response.statusText ||
-            `Request failed with status ${response.status}`,
-          timestamp: new Date().toISOString(),
-        },
-      };
+  // Deduplicate concurrent identical in-flight GET requests
+  if (method === "GET" && !options.body) {
+    const existing = inFlightRequests.get(url);
+    if (existing) {
+      return existing as Promise<ApiResponse<T>>;
     }
-    throw new ApiClientError(response.status, errorData);
   }
 
-  return response.json();
+  const execute = async (): Promise<ApiResponse<T>> => {
+    const headers = new Headers(options.headers);
+    if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorData: ApiErrorResponse;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = {
+          success: false,
+          error: {
+            code: "HTTP_ERROR",
+            message:
+              response.statusText ||
+              `Request failed with status ${response.status}`,
+            timestamp: new Date().toISOString(),
+          },
+        };
+      }
+      throw new ApiClientError(response.status, errorData);
+    }
+
+    return response.json();
+  };
+
+  if (method === "GET" && !options.body) {
+    const promise = execute().finally(() => {
+      inFlightRequests.delete(url);
+    });
+    inFlightRequests.set(url, promise);
+    return promise;
+  }
+
+  return execute();
 }
 
 /**
- * Type-safe HTTP client for paginated endpoints
+ * Type-safe HTTP client for paginated endpoints with in-flight GET request deduplication.
  */
 export async function apiFetchPaginated<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<PaginatedResponse<T>> {
+  const method = (options.method || "GET").toUpperCase();
   const url = `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 
-  const headers = new Headers(options.headers);
-  if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    let errorData: ApiErrorResponse;
-    try {
-      errorData = await response.json();
-    } catch {
-      errorData = {
-        success: false,
-        error: {
-          code: "HTTP_ERROR",
-          message:
-            response.statusText ||
-            `Request failed with status ${response.status}`,
-          timestamp: new Date().toISOString(),
-        },
-      };
+  // Deduplicate concurrent identical in-flight GET requests
+  if (method === "GET" && !options.body) {
+    const existing = inFlightRequests.get(url);
+    if (existing) {
+      return existing as Promise<PaginatedResponse<T>>;
     }
-    throw new ApiClientError(response.status, errorData);
   }
 
-  return response.json();
+  const execute = async (): Promise<PaginatedResponse<T>> => {
+    const headers = new Headers(options.headers);
+    if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorData: ApiErrorResponse;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = {
+          success: false,
+          error: {
+            code: "HTTP_ERROR",
+            message:
+              response.statusText ||
+              `Request failed with status ${response.status}`,
+            timestamp: new Date().toISOString(),
+          },
+        };
+      }
+      throw new ApiClientError(response.status, errorData);
+    }
+
+    return response.json();
+  };
+
+  if (method === "GET" && !options.body) {
+    const promise = execute().finally(() => {
+      inFlightRequests.delete(url);
+    });
+    inFlightRequests.set(url, promise);
+    return promise;
+  }
+
+  return execute();
 }
+
 

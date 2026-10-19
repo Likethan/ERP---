@@ -18,7 +18,7 @@ from enum import StrEnum
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, delete, select, update
+from sqlalchemy import and_, delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import NotFoundException, ValidationException
@@ -66,6 +66,10 @@ class DomainEventType(StrEnum):
     CASE_ESCALATED = "CASE_ESCALATED"
     CASE_COMPLETED = "CASE_COMPLETED"
     NOTIFICATION_DELIVERY_FAILED = "NOTIFICATION_DELIVERY_FAILED"
+    # Step 30: Enterprise Platform Operations
+    TENANT_LIFECYCLE_TRANSITIONED = "TENANT_LIFECYCLE_TRANSITIONED"
+    TENANT_PROVISIONING_COMPLETED = "TENANT_PROVISIONING_COMPLETED"
+    TENANT_QUOTA_THRESHOLD_WARNING = "TENANT_QUOTA_THRESHOLD_WARNING"
 
 
 @dataclass(frozen=True)
@@ -343,6 +347,37 @@ EVENT_REGISTRY: dict[DomainEventType, EventDefinition] = {
         ),
         registered_consumers=["WorkflowEventConsumer", "AuditTrailConsumer"],
     ),
+    # Step 30: Enterprise Platform Operations
+    DomainEventType.TENANT_LIFECYCLE_TRANSITIONED: EventDefinition(
+        event_type=DomainEventType.TENANT_LIFECYCLE_TRANSITIONED,
+        aggregate_type="Institution",
+        description="Emitted when a tenant lifecycle status transitions.",
+        source_module="platform_ops",
+        allowed_payload_keys=frozenset(
+            {"tenant_id", "tenant_code", "old_status", "new_status", "reason", "actor_id"}
+        ),
+        registered_consumers=["AuditTrailConsumer"],
+    ),
+    DomainEventType.TENANT_PROVISIONING_COMPLETED: EventDefinition(
+        event_type=DomainEventType.TENANT_PROVISIONING_COMPLETED,
+        aggregate_type="Institution",
+        description="Emitted when multi-stage tenant provisioning is completed.",
+        source_module="platform_ops",
+        allowed_payload_keys=frozenset(
+            {"tenant_id", "code", "plan", "status"}
+        ),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.TENANT_QUOTA_THRESHOLD_WARNING: EventDefinition(
+        event_type=DomainEventType.TENANT_QUOTA_THRESHOLD_WARNING,
+        aggregate_type="TenantResourceQuotaUsage",
+        description="Emitted when a tenant resource usage reaches warning threshold.",
+        source_module="platform_ops",
+        allowed_payload_keys=frozenset(
+            {"tenant_id", "resource_type", "current_usage", "soft_limit", "hard_limit", "unit"}
+        ),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
 }
 
 # Standard dot-notation aliases mapping to canonical DomainEventType
@@ -356,6 +391,10 @@ EVENT_ALIAS_MAP: dict[str, DomainEventType] = {
     "document.certificate.issued": DomainEventType.CERTIFICATE_ISSUED,
     "workflow.case.completed": DomainEventType.CASE_COMPLETED,
     "notification.delivery.failed": DomainEventType.NOTIFICATION_DELIVERY_FAILED,
+    # Step 30 Platform Operations
+    "tenant.lifecycle.transitioned": DomainEventType.TENANT_LIFECYCLE_TRANSITIONED,
+    "tenant.provisioning.completed": DomainEventType.TENANT_PROVISIONING_COMPLETED,
+    "tenant.quota.threshold_warning": DomainEventType.TENANT_QUOTA_THRESHOLD_WARNING,
     # Backwards-compatible aliases
     "attendance.low_threshold": DomainEventType.ATTENDANCE_THRESHOLD_REACHED,
     "examination.result.published": DomainEventType.EXAM_RESULT_PUBLISHED,
@@ -427,6 +466,38 @@ class DomainEventEnvelope:
             producer=getattr(event, "producer", "CAMPUSOS_CORE") or "CAMPUSOS_CORE",
             payload=event.payload or {},
             metadata=getattr(event, "metadata_json", None) or {},
+        )
+
+    @classmethod
+    def create(
+        cls,
+        event_type: str,
+        tenant_id: UUID | None = None,
+        aggregate_type: str = "",
+        aggregate_id: UUID | str = "",
+        payload: dict[str, Any] | None = None,
+        schema_version: str = "1.0",
+        correlation_id: str | None = None,
+        causation_id: str | None = None,
+        actor_id: UUID | None = None,
+        actor_context: dict[str, Any] | None = None,
+        producer: str = "CAMPUSOS_PLATFORM_OPS",
+        metadata: dict[str, Any] | None = None,
+    ) -> "DomainEventEnvelope":
+        return cls(
+            event_id=uuid4(),
+            event_type=event_type,
+            schema_version=schema_version,
+            tenant_id=tenant_id,
+            aggregate_type=aggregate_type,
+            aggregate_id=aggregate_id,
+            payload=payload or {},
+            correlation_id=correlation_id or str(uuid4()),
+            causation_id=causation_id,
+            actor_id=actor_id,
+            actor_context=actor_context or {},
+            producer=producer,
+            metadata=metadata or {},
         )
 
 
@@ -554,8 +625,8 @@ class OutboxService:
             status=OutboxEventStatus.PENDING,
             attempt_count=0,
             max_attempts=5,
-            correlation_id=correlation_id or str(uuid4()),
-            causation_id=causation_id,
+            correlation_id=str(correlation_id) if correlation_id else str(uuid4()),
+            causation_id=str(causation_id) if causation_id else None,
             actor_id=actor_id,
             actor_context=actor_context or {},
             producer=producer,
@@ -567,6 +638,25 @@ class OutboxService:
         # We deliberately do NOT call db.commit() here so this event
         # commits atomically with the business transaction.
         return outbox_event
+
+    @classmethod
+    async def create_event(cls, db: AsyncSession, envelope: "DomainEventEnvelope") -> OutboxEvent:
+        """Publish an envelope directly into the transactional outbox."""
+        return await cls.publish_event(
+            db=db,
+            tenant_id=envelope.tenant_id or uuid4(),
+            event_type=envelope.event_type,
+            aggregate_type=envelope.aggregate_type,
+            aggregate_id=envelope.aggregate_id,
+            payload=envelope.payload,
+            schema_version=envelope.schema_version,
+            correlation_id=envelope.correlation_id,
+            causation_id=envelope.causation_id,
+            actor_id=envelope.actor_id,
+            actor_context=envelope.actor_context,
+            producer=envelope.producer,
+            metadata_json=envelope.metadata,
+        )
 
     @classmethod
     async def fetch_pending_events(
@@ -822,3 +912,117 @@ class OutboxService:
         res = await db.execute(stmt)
         await db.commit()
         return res.rowcount or 0
+
+    @classmethod
+    async def recover_abandoned_events(
+        cls,
+        db: AsyncSession,
+        stuck_threshold_seconds: int = 300,
+        tenant_id: UUID | None = None,
+    ) -> dict[str, int]:
+        """Recover events stuck in PROCESSING due to worker termination or crashes (Step 31).
+
+        Resets events to PENDING if stuck longer than threshold, or dead-letters if attempt_count
+        exceeds max_attempts.
+        """
+        now = datetime.now(UTC)
+        cutoff = now - timedelta(seconds=stuck_threshold_seconds)
+
+        conditions = [
+            OutboxEvent.status == OutboxEventStatus.PROCESSING,
+            OutboxEvent.updated_at <= cutoff,
+        ]
+        if tenant_id:
+            conditions.append(OutboxEvent.tenant_id == tenant_id)
+
+        stmt = select(OutboxEvent).where(and_(*conditions))
+        res = await db.execute(stmt)
+        stuck_events = list(res.scalars().all())
+
+        recovered_count = 0
+        dead_lettered_count = 0
+
+        for ev in stuck_events:
+            if ev.attempt_count >= ev.max_attempts:
+                ev.status = OutboxEventStatus.DEAD_LETTER
+                ev.last_error = f"Abandoned in PROCESSING after worker crash. Max attempts ({ev.max_attempts}) reached."
+                dead_lettered_count += 1
+                dlq_entry = EventDeadLetter(
+                    id=uuid4(),
+                    tenant_id=ev.tenant_id,
+                    event_id=ev.id,
+                    event_type=ev.event_type,
+                    consumer_name="WorkerRecoverySubsystem",
+                    failure_reason="Abandoned processing event exceeded max attempts",
+                    error_details_json={
+                        "stuck_threshold_seconds": stuck_threshold_seconds,
+                        "attempt_count": ev.attempt_count,
+                    },
+                    attempt_count=ev.attempt_count,
+                    first_failed_at=now,
+                    last_failed_at=now,
+                    is_resolved=False,
+                )
+                db.add(dlq_entry)
+            else:
+                ev.status = OutboxEventStatus.PENDING
+                ev.available_at = now
+                recovered_count += 1
+
+        if stuck_events:
+            await db.commit()
+            logger.info(
+                "Recovered %d abandoned outbox events (stuck > %ds), %d dead-lettered.",
+                recovered_count,
+                stuck_threshold_seconds,
+                dead_lettered_count,
+            )
+
+        return {
+            "recovered_count": recovered_count,
+            "dead_lettered_count": dead_lettered_count,
+        }
+
+    @classmethod
+    async def get_backlog_metrics(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID | None = None,
+    ) -> dict[str, Any]:
+        """Inspect queue processing delay, backlog size, and health against reliability objectives (Step 31)."""
+        now = datetime.now(UTC)
+
+        pending_cond = [OutboxEvent.status == OutboxEventStatus.PENDING]
+        if tenant_id:
+            pending_cond.append(OutboxEvent.tenant_id == tenant_id)
+        pending_count = (await db.execute(select(func.count(OutboxEvent.id)).where(and_(*pending_cond)))).scalar() or 0
+
+        proc_cond = [OutboxEvent.status == OutboxEventStatus.PROCESSING]
+        if tenant_id:
+            proc_cond.append(OutboxEvent.tenant_id == tenant_id)
+        proc_count = (await db.execute(select(func.count(OutboxEvent.id)).where(and_(*proc_cond)))).scalar() or 0
+
+        dl_cond = [OutboxEvent.status == OutboxEventStatus.DEAD_LETTER]
+        if tenant_id:
+            dl_cond.append(OutboxEvent.tenant_id == tenant_id)
+        dl_count = (await db.execute(select(func.count(OutboxEvent.id)).where(and_(*dl_cond)))).scalar() or 0
+
+        oldest_stmt = select(OutboxEvent.created_at).where(and_(*pending_cond)).order_by(OutboxEvent.created_at.asc()).limit(1)
+        oldest_created_at = (await db.execute(oldest_stmt)).scalar()
+
+        oldest_age_seconds = 0.0
+        if oldest_created_at:
+            if oldest_created_at.tzinfo is None:
+                oldest_created_at = oldest_created_at.replace(tzinfo=UTC)
+            oldest_age_seconds = max(0.0, (now - oldest_created_at).total_seconds())
+
+        is_healthy = oldest_age_seconds <= 300.0 and proc_count < 1000
+
+        return {
+            "pending_count": pending_count,
+            "processing_count": proc_count,
+            "dead_letter_count": dl_count,
+            "oldest_event_age_seconds": round(oldest_age_seconds, 2),
+            "is_healthy": is_healthy,
+        }
+

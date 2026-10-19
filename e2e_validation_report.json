@@ -1,0 +1,26 @@
+{
+  "suite": "CampusOS E2E Browser Validation",
+  "spec_file": "apps/web/e2e/critical-journeys.spec.ts",
+  "spec_exists": true,
+  "node_installed": true,
+  "npm_installed": true,
+  "npx_installed": true,
+  "web_server_active": false,
+  "api_server_active": false,
+  "status": "BLOCKED",
+  "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev').",
+  "journeys_tested": [
+    "Journey 01: User Login, Session Persistence, and Logout",
+    "Journey 02: Unauthorized Navigation Redirects to Login",
+    "Journey 03: Institution Dashboard & Key Metric Summaries",
+    "Journey 04: Academic Structure & Department Listing",
+    "Journey 05: Student Administration & Search",
+    "Journey 06: Attendance Tracking & Date Selection",
+    "Journey 07: Examination Management & Scheduling",
+    "Journey 08: Finance & Fee Invoices Overview",
+    "Journey 09: Placement Drives & Student Eligibility",
+    "Journey 10: Document Management & Permissions",
+    "Journey 11: System Notifications & Alerts Feed",
+    "Journey 12: Security Operations & Administrative Health"
+  ]
+}

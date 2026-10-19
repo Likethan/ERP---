@@ -55,17 +55,18 @@ async def verify_restored_database(async_db_url: str) -> dict[str, int]:
     table_counts = {}
 
     critical_tables = [
-        "institutions",
-        "users",
-        "roles",
-        "departments",
-        "programs",
-        "courses",
-        "students",
-        "faculty",
-        "documents",
-        "invoices",
-        "audit_logs",
+        "core_institutions",
+        "people_users",
+        "people_roles",
+        "core_campuses",
+        "core_departments",
+        "academic_programs",
+        "academic_courses",
+        "people_student_profiles",
+        "people_faculty_profiles",
+        "documents_records",
+        "finance_invoices",
+        "intelligence_audit_logs",
     ]
 
     async with engine.connect() as conn:
@@ -79,10 +80,10 @@ async def verify_restored_database(async_db_url: str) -> dict[str, int]:
                 table_counts[tbl] = -1
                 print(f"    - Table '{tbl}': table not present or unmigrated")
 
-        # Multi-Tenant Isolation Check: Verify no student belongs to an invalid institution
+        # Multi-Tenant Isolation Check: Verify zero orphan students without valid institution
         try:
             res = await conn.execute(
-                text("SELECT count(*) FROM students WHERE institution_id NOT IN (SELECT id FROM institutions)")
+                text("SELECT count(*) FROM people_student_profiles WHERE tenant_id NOT IN (SELECT id FROM core_institutions)")
             )
             orphan_students = res.scalar() or 0
             if orphan_students > 0:

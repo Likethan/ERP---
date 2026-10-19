@@ -141,7 +141,60 @@ jobs:
           pytest tests/ -v
 
   # ----------------------------------------------------------------------------
-  # 4. Frontend Production Build Verification
+  # 4. Enterprise Quality Engineering & Release Certification
+  # ----------------------------------------------------------------------------
+  release-certification:
+    name: Enterprise Quality & Release Gates
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, backend-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r apps/api/requirements-dev.txt
+
+      - name: Run Step 34 Cross-Domain Quality Test Suites
+        run: |
+          cd apps/api
+          pytest tests/test_enterprise_quality_workflows.py tests/test_enterprise_database_migrations.py tests/test_enterprise_api_contracts.py tests/test_enterprise_failure_injection.py tests/test_enterprise_ai_safety_eval.py -v
+
+      - name: Run Static Accessibility Audit (WCAG 2.1 AA)
+        run: python scripts/accessibility_audit.py
+
+      - name: Validate E2E Browser Environment Prerequisites
+        run: python scripts/e2e_browser_validation.py
+
+      - name: Generate Release Certification Report
+        run: python scripts/release_certification.py
+
+      - name: Upload Release Certification Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: campusos-release-certification-evidence
+          path: |
+            release_readiness_report.json
+            release_readiness_report.md
+            accessibility_report.json
+            e2e_validation_report.json
+          retention-days: 14
+
+  # ----------------------------------------------------------------------------
+  # 5. Frontend Production Build Verification
   # ----------------------------------------------------------------------------
   frontend-build:
     name: Frontend Production Build
@@ -165,12 +218,12 @@ jobs:
         run: npm run build --workspace=apps/web
 
   # ----------------------------------------------------------------------------
-  # 5. Docker Production Image Build Verification
+  # 6. Docker Production Image Build Verification
   # ----------------------------------------------------------------------------
   docker-build-verification:
     name: Docker Image Build Gates
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, backend-tests, frontend-build]
+    needs: [lint-and-typecheck, backend-tests, release-certification, frontend-build]
     steps:
       - uses: actions/checkout@v4
 

@@ -37,15 +37,31 @@ from app.api.v1.integrations import router as integrations_router
 from app.api.v1.intelligence import router as intelligence_router
 from app.api.v1.master_data import router as master_data_router
 from app.api.v1.notifications import router as notifications_router
+from app.api.v1.onboarding import router as onboarding_router
 from app.api.v1.placement import router as placement_router
 from app.api.v1.platform import router as platform_router
+from app.api.v1.reliability import router as reliability_router
 from app.api.v1.programs import router as programs_router
 from app.api.v1.reports import reports_router
+from app.api.v1.security_ops import router as security_ops_router
 from app.api.v1.staff import router as staff_router
 from app.api.v1.students import router as students_router
+from app.api.v1.support import router as support_router
+from app.api.v1.adoption import router as adoption_router
+from app.api.v1.marketplace import router as marketplace_router
+from app.api.v1.subscription import router as subscription_router
+from app.api.v1.data_import import router as data_import_router
+from app.api.v1.records_lifecycle import records_lifecycle_router
+from app.api.v1.knowledge import knowledge_router
+from app.api.v1.accreditation import accreditation_router
+from app.api.v1.research import research_router
+from app.api.v1.library import library_router
+from app.api.v1.student_success import student_success_router
+from app.api.v1.admissions import router as admissions_router
 from app.api.v1.workflows import router as workflows_router
 from app.identity.routers import identity_router
 from app.platform_api import platform_api_router
+
 
 api_v1_router = APIRouter()
 
@@ -53,6 +69,8 @@ api_v1_router = APIRouter()
 api_v1_router.include_router(health_router, prefix="", tags=["System"])
 api_v1_router.include_router(auth_router)
 api_v1_router.include_router(platform_router)
+api_v1_router.include_router(onboarding_router)
+api_v1_router.include_router(reliability_router)
 
 # Core Organization & Academic Structure
 api_v1_router.include_router(institutions_router)
@@ -131,3 +149,47 @@ api_v1_router.include_router(events_router)
 
 # Enterprise Data Platform, Real-Time Analytics & Business Intelligence Engine (Step 28)
 api_v1_router.include_router(analytics_router)
+
+# Enterprise Security Operations, Threat Detection & Incident Response (Step 33)
+api_v1_router.include_router(security_ops_router)
+
+# Enterprise Customer Support, Service Desk & SLA Management (Step 36)
+api_v1_router.include_router(support_router)
+
+# Enterprise Product Adoption, Training, Guidance & Change Management (Step 37)
+api_v1_router.include_router(adoption_router)
+
+# Enterprise Customer Success, Subscription Lifecycle & SaaS Entitlements (Step 38)
+api_v1_router.include_router(subscription_router)
+
+# Enterprise Marketplace, App Integrations & Extensibility Ecosystem (Step 39)
+api_v1_router.include_router(marketplace_router)
+
+# Enterprise Data Import, Migration, Reconciliation & Interoperability Operations (Step 40)
+api_v1_router.include_router(data_import_router)
+
+# Enterprise Records Lifecycle, Retention, Archival & Legal Hold Management (Step 41)
+api_v1_router.include_router(records_lifecycle_router)
+
+# Enterprise Institutional Knowledge Base, Policy Library & Controlled Knowledge (Step 42)
+api_v1_router.include_router(knowledge_router)
+
+# Enterprise Institutional Accreditation, Quality Assurance & Continuous Improvement (Step 43)
+api_v1_router.include_router(accreditation_router)
+
+# Enterprise Institutional Research, Innovation, Grants & Intellectual Property Management (Step 44)
+api_v1_router.include_router(research_router)
+
+# Enterprise Library, Learning Resources & Knowledge Access Management (Step 45)
+api_v1_router.include_router(library_router)
+
+# Enterprise Student Success, Academic Advising, Early-Warning & Intervention Management (Step 47)
+api_v1_router.include_router(student_success_router)
+
+# Enterprise Student Admissions, Enrollment & Onboarding Orchestration (Step 48)
+api_v1_router.include_router(admissions_router)
+
+
+
+
+

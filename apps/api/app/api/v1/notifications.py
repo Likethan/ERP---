@@ -127,6 +127,39 @@ async def get_user_unread_count(
     return ApiResponse(data=UnreadCountResponse(unread_count=count))
 
 
+# =============================================================================
+# 2. USER NOTIFICATION PREFERENCES & QUIET HOURS
+# =============================================================================
+@router.get("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
+@router.get("/notifications/preferences", response_model=ApiResponse[Any])
+async def get_notification_preferences(
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+) -> ApiResponse[Any]:
+    """Load user's notification channel preferences, quiet hours schedule, and digest settings."""
+    detail = await NotificationService.get_user_preference_details(
+        db, tenant.tenant_id, current_user.id
+    )
+    return ApiResponse(data=detail)
+
+
+@router.patch("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
+@router.put("/notifications/preferences", response_model=ApiResponse[Any])
+@router.post("/notifications/preferences", response_model=ApiResponse[Any])
+async def update_notification_preferences(
+    payload: NotificationPreferencesDetailUpdate,
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+) -> ApiResponse[Any]:
+    """Update notification preferences, quiet hours, and channel settings."""
+    updated = await NotificationService.update_user_preference_details(
+        db, tenant.tenant_id, current_user.id, payload
+    )
+    return ApiResponse(data=updated)
+
+
 @router.get("/notifications/{notification_id}", response_model=ApiResponse[NotificationResponse])
 async def get_notification_item(
     notification_id: UUID,
@@ -164,39 +197,6 @@ async def mark_all_notifications_read(
     """Mark all inbox notifications as read for current user."""
     count = await NotificationService.mark_all_as_read(db, tenant.tenant_id, current_user.id)
     return ApiResponse(data={"message": f"Marked {count} notifications as read."})
-
-
-# =============================================================================
-# 2. USER NOTIFICATION PREFERENCES & QUIET HOURS
-# =============================================================================
-@router.get("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
-@router.get("/notifications/preferences", response_model=ApiResponse[Any])
-async def get_notification_preferences(
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[Any]:
-    """Load user's notification channel preferences, quiet hours schedule, and digest settings."""
-    detail = await NotificationService.get_user_preference_details(
-        db, tenant.tenant_id, current_user.id
-    )
-    return ApiResponse(data=detail)
-
-
-@router.patch("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
-@router.put("/notifications/preferences", response_model=ApiResponse[Any])
-@router.post("/notifications/preferences", response_model=ApiResponse[Any])
-async def update_notification_preferences(
-    payload: NotificationPreferencesDetailUpdate,
-    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
-    current_user: Annotated[User, Depends(get_current_active_user)],
-    db: Annotated[AsyncSession, Depends(get_db_session)],
-) -> ApiResponse[Any]:
-    """Update notification preferences, quiet hours, and channel settings."""
-    updated = await NotificationService.update_user_preference_details(
-        db, tenant.tenant_id, current_user.id, payload
-    )
-    return ApiResponse(data=updated)
 
 
 # =============================================================================

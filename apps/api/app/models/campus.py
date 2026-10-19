@@ -450,6 +450,7 @@ class Notification(TenantScopedModel):
         Index("ix_campus_notif_tenant_user_read", "tenant_id", "recipient_user_id", "is_read"),
         Index("ix_campus_notif_tenant_user_created", "tenant_id", "recipient_user_id", "created_at"),
         Index("ix_campus_notif_dedup", "deduplication_key"),
+        Index("idx_perf_notif_tenant_recipient_unread", "tenant_id", "recipient_user_id", "is_read", "created_at"),
     )
 
     recipient_user_id: Mapped[UUID] = mapped_column(

@@ -174,6 +174,10 @@ async def get_report_versions(
 # 2. REPORT EXECUTION & SNAPSHOTS
 # =============================================================================
 
+from app.core.config import settings
+from app.core.exceptions import CampusOSException
+from app.core.rate_limiter import rate_limiter
+
 @reports_router.post(
     "/reports/{report_id}/execute",
     response_model=ApiResponse[dict[str, Any]],
@@ -188,21 +192,33 @@ async def execute_report(
     bypass_cache: bool = Query(False, description="Force fresh recalculation"),
     is_snapshot: bool = Query(False, description="Persist result as immutable audit snapshot"),
 ):
-    result, execution = await ReportingService.execute_report(
-        db=db,
-        tenant_id=tenant_ctx.tenant_id,
-        report_id=report_id,
-        user=current_user,
-        version_number=version,
-        bypass_cache=bypass_cache,
-        is_snapshot=is_snapshot,
-    )
-    return ApiResponse(
-        data={
-            "execution": ReportExecutionRead.model_validate(execution),
-            "result": result.model_dump(),
-        }
-    )
+    if not rate_limiter.acquire_report_slot(tenant_ctx.tenant_id):
+        raise CampusOSException(
+            code="CONCURRENT_REPORTS_EXCEEDED",
+            message=(
+                f"Tenant has reached the maximum limit of {settings.TENANT_CONCURRENT_REPORTS_LIMIT} "
+                "concurrent report executions. Please retry once active reports complete."
+            ),
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        )
+    try:
+        result, execution = await ReportingService.execute_report(
+            db=db,
+            tenant_id=tenant_ctx.tenant_id,
+            report_id=report_id,
+            user=current_user,
+            version_number=version,
+            bypass_cache=bypass_cache,
+            is_snapshot=is_snapshot,
+        )
+        return ApiResponse(
+            data={
+                "execution": ReportExecutionRead.model_validate(execution),
+                "result": result.model_dump(),
+            }
+        )
+    finally:
+        rate_limiter.release_report_slot(tenant_ctx.tenant_id)
 
 
 @reports_router.get(

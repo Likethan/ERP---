@@ -15,14 +15,14 @@ from app.core.security_events import security_events
 
 
 class SlidingWindowRateLimiter:
-    """In-memory sliding window rate limiter with per-route tiering."""
+    """In-memory sliding window rate limiter with per-route tiering and tenant fairness."""
 
     def __init__(self):
         self._lock = threading.Lock()
         self._requests: dict[str, list[float]] = defaultdict(list)
+        self._active_reports: dict[str, int] = defaultdict(int)
         self.enabled = settings.RATE_LIMIT_ENABLED
         self.enabled_for_tests = False
-
 
     def is_allowed(
         self,
@@ -57,6 +57,41 @@ class SlidingWindowRateLimiter:
             self._requests[key] = timestamps
             return True, 0
 
+    def check_tenant_quota(self, tenant_id: Any) -> tuple[bool, int]:
+        """Check aggregate tenant-wide request quota to prevent noisy-neighbor degradation."""
+        if not self.enabled or not tenant_id:
+            return True, 0
+
+        key = f"rl:tenant_quota:{tenant_id}"
+        limit = settings.TENANT_RATE_LIMIT_PER_MINUTE
+        return self.is_allowed(key, limit, endpoint_category="tenant_quota")
+
+    def acquire_report_slot(self, tenant_id: Any) -> bool:
+        """Acquire a concurrent report execution slot for the tenant.
+
+        Returns:
+            True if slot acquired, False if concurrent report limit reached.
+        """
+        if not self.enabled or not tenant_id:
+            return True
+
+        with self._lock:
+            current = self._active_reports[str(tenant_id)]
+            if current >= settings.TENANT_CONCURRENT_REPORTS_LIMIT:
+                return False
+            self._active_reports[str(tenant_id)] = current + 1
+            return True
+
+    def release_report_slot(self, tenant_id: Any) -> None:
+        """Release a concurrent report execution slot for the tenant."""
+        if not tenant_id:
+            return
+
+        with self._lock:
+            current = self._active_reports[str(tenant_id)]
+            if current > 0:
+                self._active_reports[str(tenant_id)] = current - 1
+
     def check_request(
         self,
         path: str,
@@ -64,12 +99,36 @@ class SlidingWindowRateLimiter:
         tenant_id: Any = None,
         user_id: Any = None,
     ) -> tuple[bool, int, str]:
-        """Determine rate limit policy based on route sensitivity and client identity."""
+        """Determine rate limit policy based on route sensitivity, tenant quota, and client identity."""
         if not self.enabled:
             return True, 0, "general"
 
-        # Determine route category & limit
         normalized_path = path.lower()
+
+        # 1. Multi-Tenant Fair-Share Check (Noisy Neighbor Protection)
+        # Attendance and examination operations are protected mission-critical paths.
+        is_mission_critical = (
+            "/attendance" in normalized_path or "/examination" in normalized_path
+        )
+        if tenant_id and not is_mission_critical:
+            tenant_allowed, retry_after = self.check_tenant_quota(tenant_id)
+            if not tenant_allowed:
+                security_events.record_event(
+                    event_type="SECURITY_RATE_LIMIT",
+                    severity="HIGH",
+                    tenant_id=tenant_id,
+                    user_id=user_id,
+                    ip_address=client_ip,
+                    details={
+                        "path": path,
+                        "category": "tenant_quota",
+                        "limit_per_minute": settings.TENANT_RATE_LIMIT_PER_MINUTE,
+                        "retry_after_seconds": retry_after,
+                    },
+                )
+                return False, retry_after, "tenant_quota"
+
+        # 2. Determine route category & limit
         if "/auth/login" in normalized_path or "/auth/forgot-password" in normalized_path:
             category = "auth"
             limit = settings.RATE_LIMIT_AUTH_PER_MINUTE
@@ -113,6 +172,8 @@ class SlidingWindowRateLimiter:
         """Reset rate limiter state (useful in test suites)."""
         with self._lock:
             self._requests.clear()
+            self._active_reports.clear()
 
 
 rate_limiter = SlidingWindowRateLimiter()
+

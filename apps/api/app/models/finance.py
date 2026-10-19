@@ -7,6 +7,7 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
@@ -184,6 +185,8 @@ class Invoice(TenantScopedModel):
     __tablename__ = "finance_invoices"
     __table_args__ = (
         UniqueConstraint("tenant_id", "invoice_number", name="uq_invoices_tenant_number"),
+        Index("idx_perf_invoices_tenant_student_status", "tenant_id", "student_id", "status"),
+        Index("idx_perf_invoices_tenant_due", "tenant_id", "status", "due_date"),
     )
 
     student_id: Mapped[UUID] = mapped_column(
@@ -262,6 +265,8 @@ class PaymentTransaction(TenantScopedModel):
     __tablename__ = "finance_payments"
     __table_args__ = (
         UniqueConstraint("tenant_id", "payment_number", name="uq_payments_tenant_number"),
+        Index("idx_perf_payments_tenant_student_date", "tenant_id", "student_id", "payment_date"),
+        Index("idx_perf_payments_tenant_status_date", "tenant_id", "status", "payment_date"),
     )
 
     student_id: Mapped[UUID] = mapped_column(
