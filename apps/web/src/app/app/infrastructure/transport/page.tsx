@@ -2,10 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { transportService, TransportDashboardData } from "@/services/transport.service";
+import {
+  transportService,
+  TransportDashboardData,
+} from "@/services/transport.service";
 import { transportRoutesService } from "@/services/transport-routes.service";
 import { transportVehiclesService } from "@/services/transport-vehicles.service";
-import { TransportRoute, TransportVehicle, RouteStatus, VehicleStatus } from "@campusos/types";
+import {
+  TransportRoute,
+  TransportVehicle,
+  RouteStatus,
+  VehicleStatus,
+} from "@campusos/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,6 +30,9 @@ import {
   AlertTriangle,
   Clock,
   Car,
+  Radio,
+  ShieldAlert,
+  Navigation,
 } from "lucide-react";
 
 export default function TransportDashboardPage() {
@@ -41,7 +52,8 @@ export default function TransportDashboardPage() {
         ]);
         if (dashRes.success && dashRes.data) setData(dashRes.data);
         if (routesRes.success && routesRes.data) setRoutes(routesRes.data);
-        if (vehiclesRes.success && vehiclesRes.data) setVehicles(vehiclesRes.data);
+        if (vehiclesRes.success && vehiclesRes.data)
+          setVehicles(vehiclesRes.data);
       } finally {
         setLoading(false);
       }
@@ -140,20 +152,45 @@ export default function TransportDashboardPage() {
             Transport Management
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Real-time route operations, fleet scheduling, student allocations, and vehicle fitness.
+            Real-time route operations, fleet scheduling, student allocations,
+            and vehicle fitness.
           </p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-3">
+          <Link href="/app/infrastructure/transport/trips">
+            <Button
+              variant="outline"
+              className="border-slate-800 text-slate-300 hover:text-white gap-2"
+            >
+              <Navigation className="w-4 h-4 text-cyan-400" />
+              Trips & Dispatch
+            </Button>
+          </Link>
+          <Link href="/app/infrastructure/transport/tracking">
+            <Button
+              variant="outline"
+              className="border-slate-800 text-slate-300 hover:text-white gap-2"
+            >
+              <Radio className="w-4 h-4 text-emerald-400" />
+              Live Telematics
+            </Button>
+          </Link>
           <Link href="/app/infrastructure/transport/routes">
-            <Button variant="outline" className="border-slate-800 text-slate-300 hover:text-white gap-2">
+            <Button
+              variant="outline"
+              className="border-slate-800 text-slate-300 hover:text-white gap-2"
+            >
               <Compass className="w-4 h-4 text-blue-400" />
               Routes
             </Button>
           </Link>
           <Link href="/app/infrastructure/transport/vehicles">
-            <Button variant="outline" className="border-slate-800 text-slate-300 hover:text-white gap-2">
+            <Button
+              variant="outline"
+              className="border-slate-800 text-slate-300 hover:text-white gap-2"
+            >
               <Bus className="w-4 h-4 text-emerald-400" />
               Vehicles
             </Button>
@@ -183,8 +220,12 @@ export default function TransportDashboardPage() {
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all" />
               </div>
-              <div className="text-2xl font-bold text-white tracking-tight">{card.value}</div>
-              <div className="text-xs font-medium text-slate-300 mt-0.5">{card.title}</div>
+              <div className="text-2xl font-bold text-white tracking-tight">
+                {card.value}
+              </div>
+              <div className="text-xs font-medium text-slate-300 mt-0.5">
+                {card.title}
+              </div>
               <div className="text-[11px] text-slate-500 mt-1">{card.sub}</div>
             </Link>
           );
@@ -216,7 +257,12 @@ export default function TransportDashboardPage() {
 
             <div className="space-y-4">
               {routes.map((route) => {
-                const util = route.capacity > 0 ? Math.round((route.allocatedStudents / route.capacity) * 100) : 0;
+                const util =
+                  route.capacity > 0
+                    ? Math.round(
+                        (route.allocatedStudents / route.capacity) * 100,
+                      )
+                    : 0;
                 return (
                   <div
                     key={route.id}
@@ -236,7 +282,10 @@ export default function TransportDashboardPage() {
                       </div>
                       <div className="flex items-center gap-3 text-xs">
                         <span className="text-slate-400">
-                          Vehicle: <strong className="text-white">{route.vehicleNumber || "Unassigned"}</strong>
+                          Vehicle:{" "}
+                          <strong className="text-white">
+                            {route.vehicleNumber || "Unassigned"}
+                          </strong>
                         </span>
                         <Badge
                           variant="outline"
@@ -252,9 +301,12 @@ export default function TransportDashboardPage() {
                     </div>
 
                     <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5">
-                      <span>{route.startPoint} → {route.endPoint}</span>
+                      <span>
+                        {route.startPoint} → {route.endPoint}
+                      </span>
                       <span className="font-mono">
-                        {route.allocatedStudents} / {route.capacity} seats ({util}%)
+                        {route.allocatedStudents} / {route.capacity} seats (
+                        {util}%)
                       </span>
                     </div>
 
@@ -265,8 +317,8 @@ export default function TransportDashboardPage() {
                           util >= 90
                             ? "bg-red-500"
                             : util >= 75
-                            ? "bg-amber-500"
-                            : "bg-blue-500"
+                              ? "bg-amber-500"
+                              : "bg-blue-500"
                         }`}
                         style={{ width: `${Math.min(util, 100)}%` }}
                       />
@@ -279,6 +331,51 @@ export default function TransportDashboardPage() {
 
           {/* Quick Submodule Navigator */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Link
+              href="/app/infrastructure/transport/trips"
+              className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-slate-700 group transition-all"
+            >
+              <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
+                <Navigation className="w-5 h-5 text-cyan-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white group-hover:text-cyan-300">
+                Trip Dispatch
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Scheduling, pre-trip checklists, passenger manifests & boarding.
+              </p>
+            </Link>
+
+            <Link
+              href="/app/infrastructure/transport/tracking"
+              className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-slate-700 group transition-all"
+            >
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3">
+                <Radio className="w-5 h-5 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white group-hover:text-emerald-300">
+                Fleet Telematics
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Truthful GPS telemetry boundaries, AIS-140 tracking & modem health.
+              </p>
+            </Link>
+
+            <Link
+              href="/app/infrastructure/transport/incidents"
+              className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-slate-700 group transition-all"
+            >
+              <div className="w-9 h-9 rounded-xl bg-rose-500/10 flex items-center justify-center mb-3">
+                <ShieldAlert className="w-5 h-5 text-rose-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white group-hover:text-rose-300">
+                Safety & Incidents
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Breakdown logs, emergency protocols & service disruption audits.
+              </p>
+            </Link>
+
             <Link
               href="/app/infrastructure/transport/stops"
               className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-slate-700 group transition-all"
@@ -298,10 +395,10 @@ export default function TransportDashboardPage() {
               href="/app/infrastructure/transport/drivers"
               className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-slate-700 group transition-all"
             >
-              <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
-                <Users className="w-5 h-5 text-cyan-400" />
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center mb-3">
+                <Users className="w-5 h-5 text-blue-400" />
               </div>
-              <h3 className="text-sm font-semibold text-white group-hover:text-cyan-300">
+              <h3 className="text-sm font-semibold text-white group-hover:text-blue-300">
                 Driver Crew
               </h3>
               <p className="text-xs text-slate-400 mt-1">
@@ -351,28 +448,33 @@ export default function TransportDashboardPage() {
                   className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/60 hover:border-slate-700 block transition-all"
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-xs font-bold text-white">{v.registrationNumber}</span>
+                    <span className="font-mono text-xs font-bold text-white">
+                      {v.registrationNumber}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
                         v.status === VehicleStatus.ACTIVE
                           ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                           : v.status === VehicleStatus.MAINTENANCE
-                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                          : "bg-slate-800 text-slate-400 border-slate-700"
+                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                            : "bg-slate-800 text-slate-400 border-slate-700"
                       }
                     >
                       {v.status}
                     </Badge>
                   </div>
                   <div className="flex justify-between text-xs text-slate-400">
-                    <span>{v.make} {v.model} ({v.type})</span>
+                    <span>
+                      {v.make} {v.model} ({v.type})
+                    </span>
                     <span>Cap: {v.capacity} seats</span>
                   </div>
                   {v.fitnessExpiry && (
                     <div className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-600" />
-                      Fitness valid till: {new Date(v.fitnessExpiry).toLocaleDateString("en-IN")}
+                      Fitness valid till:{" "}
+                      {new Date(v.fitnessExpiry).toLocaleDateString("en-IN")}
                     </div>
                   )}
                 </Link>
@@ -387,10 +489,16 @@ export default function TransportDashboardPage() {
               Upcoming Service Audits
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              2 buses (KA-01-EQ-4421, KA-01-EQ-9872) are due for mandatory RTO roadworthiness inspection within 30 days. Maintain logbook records.
+              2 buses (KA-01-EQ-4421, KA-01-EQ-9872) are due for mandatory RTO
+              roadworthiness inspection within 30 days. Maintain logbook
+              records.
             </p>
             <Link href="/app/infrastructure/transport/vehicles">
-              <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10 text-xs w-full">
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10 text-xs w-full"
+              >
                 Review Fleet Compliance
               </Button>
             </Link>

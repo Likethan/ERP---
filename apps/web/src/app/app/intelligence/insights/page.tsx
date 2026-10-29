@@ -18,7 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { aiInsightsService } from "@/services/ai-insights.service";
-import { Insight, IntelligenceDomain, InsightPriority, InsightStatus } from "@campusos/types";
+import {
+  Insight,
+  IntelligenceDomain,
+  InsightPriority,
+  InsightStatus,
+} from "@campusos/types";
 import { InsightCard } from "@/components/intelligence/insight-card";
 
 export default function InsightsFeedPage() {
@@ -57,7 +62,9 @@ export default function InsightsFeedPage() {
     const res = await aiInsightsService.toggleSaveInsight(id);
     if (res.success && res.data) {
       setInsights((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, isSaved: res.data!.isSaved } : i))
+        prev.map((i) =>
+          i.id === id ? { ...i, isSaved: res.data!.isSaved } : i,
+        ),
       );
       toast({
         title: res.data.isSaved ? "Insight Saved" : "Insight Unsaved",
@@ -70,7 +77,9 @@ export default function InsightsFeedPage() {
     const res = await aiInsightsService.dismissInsight(id);
     if (res.success && res.data) {
       setInsights((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, status: InsightStatus.DISMISSED } : i))
+        prev.map((i) =>
+          i.id === id ? { ...i, status: InsightStatus.DISMISSED } : i,
+        ),
       );
       toast({ title: "Insight Dismissed", variant: "neutral" });
     }
@@ -92,7 +101,8 @@ export default function InsightsFeedPage() {
             Intelligence Insights
           </h1>
           <p className="text-sm text-slate-500">
-            Automated institutional observations and prioritized operational recommendations.
+            Automated institutional observations and prioritized operational
+            recommendations.
           </p>
         </div>
 
@@ -104,7 +114,10 @@ export default function InsightsFeedPage() {
             </Button>
           </Link>
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Ask AI Assistant
             </Button>
@@ -175,7 +188,10 @@ export default function InsightsFeedPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-44 rounded-xl bg-slate-100 animate-pulse" />
+            <div
+              key={i}
+              className="h-44 rounded-xl bg-slate-100 animate-pulse"
+            />
           ))
         ) : insights.length === 0 ? (
           <div className="col-span-full p-12 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500">

@@ -35,15 +35,19 @@ export default function CampusRegistrationsPage() {
   const { user, hasRole } = useAuth();
   const isStudent = hasRole("STUDENT");
 
-  const [registrations, setRegistrations] = useState<EventRegistrationItem[]>([]);
+  const [registrations, setRegistrations] = useState<EventRegistrationItem[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [activeTab, setActiveTab] = useState<"all" | "my_registrations">(
-    isStudent ? "my_registrations" : "all"
+    isStudent ? "my_registrations" : "all",
   );
-  const [mySubTab, setMySubTab] = useState<"upcoming" | "completed" | "cancelled">("upcoming");
+  const [mySubTab, setMySubTab] = useState<
+    "upcoming" | "completed" | "cancelled"
+  >("upcoming");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -81,7 +85,7 @@ export default function CampusRegistrationsPage() {
       const res = await campusService.cancelRegistration(
         cancelRegId,
         cancelReason,
-        `${user?.first_name || "User"} (${user?.email})`
+        `${user?.first_name || "User"} (${user?.email})`,
       );
       if (res.success) {
         setFeedback("Registration successfully cancelled.");
@@ -96,17 +100,24 @@ export default function CampusRegistrationsPage() {
 
   // Student Registrations Filter
   const myRegistrations = useMemo(() => {
-    return registrations.filter((r) => r.studentId === user?.id || r.email === user?.email);
+    return registrations.filter(
+      (r) => r.studentId === user?.id || r.email === user?.email,
+    );
   }, [registrations, user]);
 
   const filteredMyRegistrations = useMemo(() => {
     if (mySubTab === "upcoming") {
       return myRegistrations.filter(
-        (r) => r.status === "CONFIRMED" || r.status === "REGISTERED" || r.status === "WAITLISTED"
+        (r) =>
+          r.status === "CONFIRMED" ||
+          r.status === "REGISTERED" ||
+          r.status === "WAITLISTED",
       );
     }
     if (mySubTab === "completed") {
-      return myRegistrations.filter((r) => r.status === "ATTENDED" || r.status === "ABSENT");
+      return myRegistrations.filter(
+        (r) => r.status === "ATTENDED" || r.status === "ABSENT",
+      );
     }
     return myRegistrations.filter((r) => r.status === "CANCELLED");
   }, [myRegistrations, mySubTab]);
@@ -175,7 +186,11 @@ export default function CampusRegistrationsPage() {
       header: "Registration Date",
       accessorFn: (row: EventRegistrationItem) => row.registrationDate,
       sortable: true,
-      cell: (row) => <span className="text-xs font-mono text-slate-400">{row.registrationDate}</span>,
+      cell: (row) => (
+        <span className="text-xs font-mono text-slate-400">
+          {row.registrationDate}
+        </span>
+      ),
     },
     {
       id: "status",
@@ -193,7 +208,9 @@ export default function CampusRegistrationsPage() {
         };
 
         return (
-          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${colors[row.status]}`}>
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${colors[row.status]}`}
+          >
             {row.status}
           </span>
         );
@@ -202,18 +219,20 @@ export default function CampusRegistrationsPage() {
     {
       id: "attendance",
       header: "Attendance",
-      accessorFn: (row: EventRegistrationItem) => row.attendanceStatus || (row.attendanceMarked ? "MARKED" : "PENDING"),
+      accessorFn: (row: EventRegistrationItem) =>
+        row.attendanceStatus || (row.attendanceMarked ? "MARKED" : "PENDING"),
       cell: (row) => (
         <span
           className={`text-xs font-bold ${
             row.attendanceStatus === "PRESENT" || row.status === "ATTENDED"
               ? "text-emerald-400"
               : row.attendanceStatus === "ABSENT" || row.status === "ABSENT"
-              ? "text-rose-400"
-              : "text-slate-500"
+                ? "text-rose-400"
+                : "text-slate-500"
           }`}
         >
-          {row.attendanceStatus || (row.attendanceMarked ? "MARKED" : "PENDING")}
+          {row.attendanceStatus ||
+            (row.attendanceMarked ? "MARKED" : "PENDING")}
         </span>
       ),
     },
@@ -248,18 +267,24 @@ export default function CampusRegistrationsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Event Registrations</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Event Registrations
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <Ticket className="h-6 w-6 text-indigo-400" />
             Event Registration Ledger
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Participant tracking, hall entry tickets, and cohort attendance cross-referencing.
+            Participant tracking, hall entry tickets, and cohort attendance
+            cross-referencing.
           </p>
         </div>
 
@@ -275,7 +300,10 @@ export default function CampusRegistrationsPage() {
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -332,12 +360,19 @@ export default function CampusRegistrationsPage() {
           {filteredMyRegistrations.length === 0 ? (
             <div className="p-8 text-center rounded-2xl border border-slate-800 bg-slate-900/40 space-y-3">
               <Ticket className="h-8 w-8 text-slate-600 mx-auto" />
-              <div className="text-sm font-semibold text-white">No registrations in this category</div>
+              <div className="text-sm font-semibold text-white">
+                No registrations in this category
+              </div>
               <p className="text-xs text-slate-400">
-                Discover upcoming hackathons, tech bootcamps, and fests from the catalog.
+                Discover upcoming hackathons, tech bootcamps, and fests from the
+                catalog.
               </p>
               <Link href="/app/campus/events">
-                <Button variant="primary" size="sm" className="mt-2 bg-indigo-600 hover:bg-indigo-500">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="mt-2 bg-indigo-600 hover:bg-indigo-500"
+                >
                   Discover Campus Events
                 </Button>
               </Link>
@@ -366,7 +401,9 @@ export default function CampusRegistrationsPage() {
                     <div className="space-y-1 text-xs text-slate-400 pt-2 border-t border-slate-800/80">
                       <div className="flex items-center gap-1.5">
                         <Calendar className="h-3.5 w-3.5 text-slate-500" />
-                        <span>{reg.eventDate} ({reg.eventTime})</span>
+                        <span>
+                          {reg.eventDate} ({reg.eventTime})
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <MapPin className="h-3.5 w-3.5 text-slate-500" />
@@ -375,8 +412,12 @@ export default function CampusRegistrationsPage() {
                     </div>
 
                     <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between font-mono text-xs">
-                      <span className="text-slate-500 text-[10px]">PASS TICKET:</span>
-                      <span className="font-bold text-indigo-400">{reg.ticketCode}</span>
+                      <span className="text-slate-500 text-[10px]">
+                        PASS TICKET:
+                      </span>
+                      <span className="font-bold text-indigo-400">
+                        {reg.ticketCode}
+                      </span>
                     </div>
                   </div>
 
@@ -388,14 +429,15 @@ export default function CampusRegistrationsPage() {
                       View Details →
                     </Link>
 
-                    {reg.status !== "CANCELLED" && reg.status !== "ATTENDED" && (
-                      <button
-                        onClick={() => setCancelRegId(reg.id)}
-                        className="text-xs text-rose-400 hover:text-rose-300 font-medium"
-                      >
-                        Cancel Pass
-                      </button>
-                    )}
+                    {reg.status !== "CANCELLED" &&
+                      reg.status !== "ATTENDED" && (
+                        <button
+                          onClick={() => setCancelRegId(reg.id)}
+                          className="text-xs text-rose-400 hover:text-rose-300 font-medium"
+                        >
+                          Cancel Pass
+                        </button>
+                      )}
                   </div>
                 </div>
               ))}
@@ -435,7 +477,10 @@ export default function CampusRegistrationsPage() {
             </div>
 
             <div className="text-xs text-slate-400 font-mono">
-              Total Records: <strong className="text-white">{filteredAllRegistrations.length}</strong>
+              Total Records:{" "}
+              <strong className="text-white">
+                {filteredAllRegistrations.length}
+              </strong>
             </div>
           </div>
 
@@ -465,7 +510,8 @@ export default function CampusRegistrationsPage() {
       >
         <div className="space-y-4">
           <p className="text-xs text-slate-300">
-            Are you sure you want to cancel this registration? Your entry ticket code will be invalidated.
+            Are you sure you want to cancel this registration? Your entry ticket
+            code will be invalidated.
           </p>
           <textarea
             value={cancelReason}
@@ -475,7 +521,11 @@ export default function CampusRegistrationsPage() {
             className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white"
           />
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" size="sm" onClick={() => setCancelRegId(null)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCancelRegId(null)}
+            >
               Keep Registration
             </Button>
             <Button

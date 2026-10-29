@@ -10,7 +10,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 # -----------------------------------------------------------------------------
 # 1. Adoption Journey & Step Schemas
 # -----------------------------------------------------------------------------

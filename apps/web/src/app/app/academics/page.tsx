@@ -8,7 +8,13 @@ import {
   CourseOfferingDetail,
   TimetableConflict,
 } from "@/types/academics";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,7 +41,9 @@ import {
 
 export default function AcademicsHubPage() {
   const { activePersona } = useAuth();
-  const [summary, setSummary] = useState<AcademicOperationsSummary | null>(null);
+  const [summary, setSummary] = useState<AcademicOperationsSummary | null>(
+    null,
+  );
   const [offerings, setOfferings] = useState<CourseOfferingDetail[]>([]);
   const [conflicts, setConflicts] = useState<TimetableConflict[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +75,10 @@ export default function AcademicsHubPage() {
         <div className="h-20 bg-slate-900/60 rounded-xl animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-slate-900/60 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-28 bg-slate-900/60 rounded-xl animate-pulse"
+            />
           ))}
         </div>
         <TableSkeleton rows={5} />
@@ -82,24 +93,36 @@ export default function AcademicsHubPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20 mb-2">
             <BookOpen className="h-3 w-3" />
-            Academic Operations Hub • Academic Year {summary.activeAcademicYear} (Semester {summary.currentSemester})
+            Academic Operations Hub • Academic Year {
+              summary.activeAcademicYear
+            }{" "}
+            (Semester {summary.currentSemester})
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white">
             Academic Management & Governance
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Regulated CBCS curricula schemes, syllabus course offerings, faculty allocations, student enrollments, and timetables.
+            Regulated CBCS curricula schemes, syllabus course offerings, faculty
+            allocations, student enrollments, and timetables.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <Link href="/app/academics/subjects">
-            <Button variant="outline" size="sm" leftIcon={<BookOpen className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<BookOpen className="h-3.5 w-3.5" />}
+            >
               Subjects Catalog
             </Button>
           </Link>
           <Link href="/app/academics/timetable">
-            <Button variant="primary" size="sm" leftIcon={<Calendar className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Calendar className="h-3.5 w-3.5" />}
+            >
               Master Timetable
             </Button>
           </Link>
@@ -113,17 +136,23 @@ export default function AcademicsHubPage() {
             <div className="flex items-center gap-2">
               <Building2 className="h-4 w-4 text-indigo-400" />
               <span className="text-slate-400">Departments:</span>
-              <span className="font-semibold text-white">{summary.totalDepartments}</span>
+              <span className="font-semibold text-white">
+                {summary.totalDepartments}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-sky-400" />
               <span className="text-slate-400">Programs:</span>
-              <span className="font-semibold text-white">{summary.totalPrograms}</span>
+              <span className="font-semibold text-white">
+                {summary.totalPrograms}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-emerald-400" />
               <span className="text-slate-400">Active Sections:</span>
-              <span className="font-semibold text-white">{summary.totalSections}</span>
+              <span className="font-semibold text-white">
+                {summary.totalSections}
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -145,22 +174,32 @@ export default function AcademicsHubPage() {
                 Academic Operations Attention Required
               </h4>
               <p className="text-xs text-amber-200/80 mt-0.5">
-                {conflicts.length > 0 && `${conflicts.length} timetable collision/conflict detected in the active schedule. `}
-                {summary.unassignedOfferingsCount > 0 && `${summary.unassignedOfferingsCount} course offering(s) currently lack faculty instructor assignment.`}
+                {conflicts.length > 0 &&
+                  `${conflicts.length} timetable collision/conflict detected in the active schedule. `}
+                {summary.unassignedOfferingsCount > 0 &&
+                  `${summary.unassignedOfferingsCount} course offering(s) currently lack faculty instructor assignment.`}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {conflicts.length > 0 && (
               <Link href="/app/academics/timetable">
-                <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs"
+                >
                   Review Conflicts
                 </Button>
               </Link>
             )}
             {summary.unassignedOfferingsCount > 0 && (
               <Link href="/app/academics/course-offerings">
-                <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs"
+                >
                   Assign Faculty
                 </Button>
               </Link>
@@ -251,7 +290,8 @@ export default function AcademicsHubPage() {
             Course Enrollments
           </h3>
           <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-            Student course registrations, elective selection, and bulk enrollment.
+            Student course registrations, elective selection, and bulk
+            enrollment.
           </p>
         </Link>
 
@@ -264,7 +304,8 @@ export default function AcademicsHubPage() {
             Master Timetable
           </h3>
           <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-            Weekly slots, section schedules, faculty allocations, and conflict check.
+            Weekly slots, section schedules, faculty allocations, and conflict
+            check.
           </p>
         </Link>
       </div>
@@ -273,13 +314,20 @@ export default function AcademicsHubPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Active Course Offerings ({summary.activeAcademicYear})</CardTitle>
+            <CardTitle>
+              Active Course Offerings ({summary.activeAcademicYear})
+            </CardTitle>
             <CardDescription>
-              Sections running with faculty lead assignments, room mappings, and live student enrollment.
+              Sections running with faculty lead assignments, room mappings, and
+              live student enrollment.
             </CardDescription>
           </div>
           <Link href="/app/academics/course-offerings">
-            <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-slate-400 hover:text-white"
+            >
               All Offerings <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Link>
@@ -300,16 +348,31 @@ export default function AcademicsHubPage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {offerings.slice(0, 6).map((off) => {
-                  const primaryFac = off.facultyAssignments.find((f) => f.role === "PRIMARY_INSTRUCTOR") || off.facultyAssignments[0];
+                  const primaryFac =
+                    off.facultyAssignments.find(
+                      (f) => f.role === "PRIMARY_INSTRUCTOR",
+                    ) || off.facultyAssignments[0];
                   return (
-                    <tr key={off.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={off.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="px-5 py-3.5 font-medium text-white">
-                        <Link href={`/app/academics/course-offerings/${off.id}`} className="hover:text-indigo-400 transition-colors">
-                          <div className="font-semibold">{off.subjectCode} — {off.subjectName}</div>
-                          <div className="text-[11px] text-slate-400 font-normal">{off.credits} Credits • {off.type}</div>
+                        <Link
+                          href={`/app/academics/course-offerings/${off.id}`}
+                          className="hover:text-indigo-400 transition-colors"
+                        >
+                          <div className="font-semibold">
+                            {off.subjectCode} — {off.subjectName}
+                          </div>
+                          <div className="text-[11px] text-slate-400 font-normal">
+                            {off.credits} Credits • {off.type}
+                          </div>
                         </Link>
                       </td>
-                      <td className="px-4 py-3.5 text-slate-300">{off.department}</td>
+                      <td className="px-4 py-3.5 text-slate-300">
+                        {off.department}
+                      </td>
                       <td className="px-4 py-3.5">
                         <span className="rounded bg-slate-800 px-2 py-0.5 font-mono text-slate-300 border border-slate-700">
                           Sem {off.semester} • Sec {off.section}
@@ -318,35 +381,57 @@ export default function AcademicsHubPage() {
                       <td className="px-4 py-3.5 text-slate-200">
                         {primaryFac ? (
                           <div>
-                            <span className="font-medium">{primaryFac.facultyName}</span>
-                            <span className="block text-[10px] text-slate-400">{primaryFac.role.replace("_", " ")}</span>
+                            <span className="font-medium">
+                              {primaryFac.facultyName}
+                            </span>
+                            <span className="block text-[10px] text-slate-400">
+                              {primaryFac.role.replace("_", " ")}
+                            </span>
                           </div>
                         ) : (
-                          <span className="text-amber-400 font-medium italic">Unassigned</span>
+                          <span className="text-amber-400 font-medium italic">
+                            Unassigned
+                          </span>
                         )}
                       </td>
                       <td className="px-4 py-3.5 font-mono">
                         <div className="flex items-center gap-2">
-                          <span>{off.enrolledCount} / {off.maxCapacity}</span>
+                          <span>
+                            {off.enrolledCount} / {off.maxCapacity}
+                          </span>
                           <div className="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
                             <div
                               className="bg-indigo-500 h-1.5 rounded-full"
-                              style={{ width: `${Math.min(100, (off.enrolledCount / off.maxCapacity) * 100)}%` }}
+                              style={{
+                                width: `${Math.min(100, (off.enrolledCount / off.maxCapacity) * 100)}%`,
+                              }}
                             />
                           </div>
                         </div>
                       </td>
                       <td className="px-4 py-3.5">
                         <Badge
-                          variant={off.status === "ACTIVE" ? "success" : off.status === "OPEN" ? "info" : "warning"}
+                          variant={
+                            off.status === "ACTIVE"
+                              ? "success"
+                              : off.status === "OPEN"
+                                ? "info"
+                                : "warning"
+                          }
                           dot
                         >
                           {off.status}
                         </Badge>
                       </td>
                       <td className="px-4 py-3.5 text-right">
-                        <Link href={`/app/academics/course-offerings/${off.id}`}>
-                          <Button variant="ghost" size="sm" className="h-7 text-xs text-indigo-400 hover:text-indigo-300">
+                        <Link
+                          href={`/app/academics/course-offerings/${off.id}`}
+                        >
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs text-indigo-400 hover:text-indigo-300"
+                          >
                             Details
                           </Button>
                         </Link>

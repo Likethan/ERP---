@@ -66,7 +66,8 @@ export default function DocumentCategoriesPage() {
             Document Categories
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Institutional categories, role applicability, mandatory verification constraints, and expiry rules.
+            Institutional categories, role applicability, mandatory verification
+            constraints, and expiry rules.
           </p>
         </div>
 
@@ -95,7 +96,9 @@ export default function DocumentCategoriesPage() {
 
       {/* Grid of Categories */}
       {loading ? (
-        <div className="py-20 text-center text-xs text-slate-500">Loading document categories...</div>
+        <div className="py-20 text-center text-xs text-slate-500">
+          Loading document categories...
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredCategories.map((cat) => (
@@ -120,9 +123,13 @@ export default function DocumentCategoriesPage() {
                 </div>
 
                 <h3 className="text-base font-semibold text-slate-100 hover:text-blue-400 transition">
-                  <Link href={`/app/documents/categories/${cat.id}`}>{cat.name}</Link>
+                  <Link href={`/app/documents/categories/${cat.id}`}>
+                    {cat.name}
+                  </Link>
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 line-clamp-2">{cat.description}</p>
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  {cat.description}
+                </p>
 
                 {/* Applicable Roles */}
                 <div className="mt-4 pt-3 border-t border-slate-800/80 space-y-2 text-xs">
@@ -145,7 +152,8 @@ export default function DocumentCategoriesPage() {
                   <div className="flex items-center justify-between pt-1">
                     <span className="flex items-center gap-1 text-[11px] text-slate-400">
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      Verification: {cat.verificationRequired ? "Required" : "Exempt"}
+                      Verification:{" "}
+                      {cat.verificationRequired ? "Required" : "Exempt"}
                     </span>
                     <span className="flex items-center gap-1 text-[11px] text-slate-400">
                       <Clock className="w-3.5 h-3.5 text-amber-400" />

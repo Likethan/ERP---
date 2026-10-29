@@ -29,7 +29,7 @@ class AiAlertsService {
         (a) =>
           a.title.toLowerCase().includes(q) ||
           a.reason.toLowerCase().includes(q) ||
-          a.sourceDomain.toLowerCase().includes(q)
+          a.sourceDomain.toLowerCase().includes(q),
       );
     }
 
@@ -42,7 +42,10 @@ class AiAlertsService {
     return { success: Boolean(alert), data: alert };
   }
 
-  async acknowledgeAlert(id: string, actor: string): Promise<ApiResponse<Alert | null>> {
+  async acknowledgeAlert(
+    id: string,
+    actor: string,
+  ): Promise<ApiResponse<Alert | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
     if (!alert) return { success: false, data: null };
@@ -65,7 +68,7 @@ class AiAlertsService {
   async resolveAlert(
     id: string,
     actor: string,
-    notes = "Action completed"
+    notes = "Action completed",
   ): Promise<ApiResponse<Alert | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
@@ -86,7 +89,10 @@ class AiAlertsService {
     return { success: true, data: alert };
   }
 
-  async dismissAlert(id: string, actor: string): Promise<ApiResponse<Alert | null>> {
+  async dismissAlert(
+    id: string,
+    actor: string,
+  ): Promise<ApiResponse<Alert | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
     if (!alert) return { success: false, data: null };

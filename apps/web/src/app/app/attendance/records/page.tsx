@@ -44,7 +44,11 @@ export default function AttendanceRecordsPage() {
       }
     } catch (err) {
       console.error("Failed to load records", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load attendance records ledger." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load attendance records ledger.",
+      });
     } finally {
       setLoading(false);
     }
@@ -95,7 +99,9 @@ export default function AttendanceRecordsPage() {
             <div className="text-xs text-slate-500 truncate max-w-[180px]">
               {row.courseName}
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">{row.section}</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">
+              {row.section}
+            </div>
           </div>
         ),
         sortable: true,
@@ -115,7 +121,11 @@ export default function AttendanceRecordsPage() {
               {row.markedBy}
             </div>
             <div className="text-[11px] text-slate-500">
-              {new Date(row.markedAt).toLocaleDateString()} at {new Date(row.markedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              {new Date(row.markedAt).toLocaleDateString()} at{" "}
+              {new Date(row.markedAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </div>
           </div>
         ),
@@ -135,7 +145,11 @@ export default function AttendanceRecordsPage() {
         cell: (row) => (
           <div className="flex items-center gap-2">
             <Link href={`/app/attendance/students/${row.studentId}`}>
-              <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-indigo-600 hover:text-indigo-700">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 px-2 text-xs text-indigo-600 hover:text-indigo-700"
+              >
                 Student 360°
               </Button>
             </Link>
@@ -143,7 +157,7 @@ export default function AttendanceRecordsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -155,13 +169,16 @@ export default function AttendanceRecordsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
               Master Ledger
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Attendance Records</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Attendance Records
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Comprehensive Attendance Records
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Immutable institutional record of individual student attendance across all class offerings and sections.
+            Immutable institutional record of individual student attendance
+            across all class offerings and sections.
           </p>
         </div>
       </div>
@@ -209,7 +226,9 @@ export default function AttendanceRecordsPage() {
           <option value="Sec B">Section B</option>
         </select>
 
-        {(statusFilter !== "ALL" || courseFilter !== "ALL" || sectionFilter !== "ALL") && (
+        {(statusFilter !== "ALL" ||
+          courseFilter !== "ALL" ||
+          sectionFilter !== "ALL") && (
           <Button
             size="sm"
             variant="ghost"

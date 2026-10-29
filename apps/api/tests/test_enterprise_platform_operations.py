@@ -23,8 +23,8 @@ Validates all 20 required operational capabilities:
 20. Regression testing against existing ERP and administrative modules.
 """
 
-from datetime import UTC, datetime, timedelta
 import uuid
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from httpx import AsyncClient
@@ -47,30 +47,17 @@ from app.models.governance import GovernanceHold, HoldStatus
 from app.models.people import Role, User
 from app.models.platform_ops import (
     PlatformPlanTier,
-    PlatformSupportSession,
-    TenantEntitlement,
     TenantLifecycleStatus,
     TenantLifecycleTransition,
-    TenantProvisioningOperation,
     TenantProvisioningStage,
-    TenantProvisioningStatus,
-    TenantResourceQuotaUsage,
     TenantResourceType,
 )
 from app.schemas.platform_ops import (
-    PlatformSupportSessionCreateRequest,
-    TenantDeletionExecuteRequest,
-    TenantEntitlementUpdateRequest,
-    TenantLifecycleTransitionRequest,
     TenantOnboardRequest,
     TenantQuotaOverrideRequest,
 )
 from app.services.entitlement_service import EntitlementService
-from app.services.platform_health_service import PlatformHealthService
 from app.services.platform_support_service import PlatformSupportService
-from app.services.tenant_governance_lifecycle_service import (
-    TenantGovernanceLifecycleService,
-)
 from app.services.tenant_lifecycle_service import TenantLifecycleService
 from app.services.tenant_provisioning_service import TenantProvisioningService
 from app.services.tenant_quota_service import TenantQuotaService
@@ -599,8 +586,8 @@ async def test_scheduled_lifecycle_maintenance_jobs(
     tenant_a: Institution,
 ):
     """Test 15: Background lifecycle scheduled tasks execute idempotently."""
-    from app.scheduler import evaluate_tenant_resource_quotas, sweep_expired_trials
     from app.core.jobs import TenantJobContext
+    from app.scheduler import evaluate_tenant_resource_quotas, sweep_expired_trials
 
     ctx = TenantJobContext(
         tenant_id=tenant_a.id,

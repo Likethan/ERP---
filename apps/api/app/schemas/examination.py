@@ -7,7 +7,6 @@ marks rosters, grade scales, and published results.
 
 from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field

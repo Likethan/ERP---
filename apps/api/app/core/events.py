@@ -56,6 +56,40 @@ class DomainEventType(StrEnum):
     PLACEMENT_OFFER_ACCEPTED = "PLACEMENT_OFFER_ACCEPTED"
     EVENT_REGISTERED = "EVENT_REGISTERED"
     HOSTEL_ALLOCATION_CREATED = "HOSTEL_ALLOCATION_CREATED"
+    HOSTEL_APPLICATION_SUBMITTED = "HOSTEL_APPLICATION_SUBMITTED"
+    HOSTEL_APPLICATION_APPROVED = "HOSTEL_APPLICATION_APPROVED"
+    HOSTEL_RESIDENT_CHECKED_IN = "HOSTEL_RESIDENT_CHECKED_IN"
+    HOSTEL_RESIDENT_CHECKED_OUT = "HOSTEL_RESIDENT_CHECKED_OUT"
+    HOSTEL_OUTING_OVERDUE = "HOSTEL_OUTING_OVERDUE"
+    HOSTEL_INCIDENT_REPORTED = "HOSTEL_INCIDENT_REPORTED"
+    HOSTEL_SERVICE_REQUEST_CREATED = "HOSTEL_SERVICE_REQUEST_CREATED"
+    # Step 55: Enterprise Transport, Fleet, Routes & Student Mobility Management
+    TRANSPORT_APPLICATION_SUBMITTED = "TRANSPORT_APPLICATION_SUBMITTED"
+    TRANSPORT_APPLICATION_APPROVED = "TRANSPORT_APPLICATION_APPROVED"
+    TRANSPORT_ALLOCATION_CONFIRMED = "TRANSPORT_ALLOCATION_CONFIRMED"
+    TRANSPORT_ALLOCATION_CANCELLED = "TRANSPORT_ALLOCATION_CANCELLED"
+    TRANSPORT_TRIP_DISPATCHED = "TRANSPORT_TRIP_DISPATCHED"
+    TRANSPORT_TRIP_COMPLETED = "TRANSPORT_TRIP_COMPLETED"
+    TRANSPORT_TRIP_CANCELLED = "TRANSPORT_TRIP_CANCELLED"
+    TRANSPORT_TRIP_DELAYED = "TRANSPORT_TRIP_DELAYED"
+    TRANSPORT_BOARDING_RECORDED = "TRANSPORT_BOARDING_RECORDED"
+    TRANSPORT_INCIDENT_REPORTED = "TRANSPORT_INCIDENT_REPORTED"
+    TRANSPORT_COMPLIANCE_EXPIRING = "TRANSPORT_COMPLIANCE_EXPIRING"
+    TRANSPORT_VEHICLE_MAINTENANCE_REQUIRED = "TRANSPORT_VEHICLE_MAINTENANCE_REQUIRED"
+    # Step 57: Enterprise Sports, Athletics, Recreation & Student Fitness Management
+    SPORTS_FACILITY_BOOKED = "SPORTS_FACILITY_BOOKED"
+    SPORTS_FACILITY_MAINTENANCE_CLOSED = "SPORTS_FACILITY_MAINTENANCE_CLOSED"
+    SPORTS_PARTICIPANT_REGISTERED = "SPORTS_PARTICIPANT_REGISTERED"
+    SPORTS_TEAM_CREATED = "SPORTS_TEAM_CREATED"
+    SPORTS_TEAM_ROSTER_UPDATED = "SPORTS_TEAM_ROSTER_UPDATED"
+    SPORTS_TRAINING_SCHEDULED = "SPORTS_TRAINING_SCHEDULED"
+    SPORTS_COMPETITION_ANNOUNCED = "SPORTS_COMPETITION_ANNOUNCED"
+    SPORTS_COMPETITION_REGISTERED = "SPORTS_COMPETITION_REGISTERED"
+    SPORTS_FIXTURE_SCHEDULED = "SPORTS_FIXTURE_SCHEDULED"
+    SPORTS_MATCH_RESULT_RECORDED = "SPORTS_MATCH_RESULT_RECORDED"
+    SPORTS_MATCH_RESULT_VERIFIED = "SPORTS_MATCH_RESULT_VERIFIED"
+    SPORTS_EQUIPMENT_CHECKED_OUT = "SPORTS_EQUIPMENT_CHECKED_OUT"
+    SPORTS_EQUIPMENT_RETURNED = "SPORTS_EQUIPMENT_RETURNED"
     FINANCE_PAYMENT_FAILED = "FINANCE_PAYMENT_FAILED"
     PLACEMENT_INTERVIEW_SCHEDULED = "PLACEMENT_INTERVIEW_SCHEDULED"
     DOCUMENTS_VERIFICATION_COMPLETED = "DOCUMENTS_VERIFICATION_COMPLETED"
@@ -70,6 +104,34 @@ class DomainEventType(StrEnum):
     TENANT_LIFECYCLE_TRANSITIONED = "TENANT_LIFECYCLE_TRANSITIONED"
     TENANT_PROVISIONING_COMPLETED = "TENANT_PROVISIONING_COMPLETED"
     TENANT_QUOTA_THRESHOLD_WARNING = "TENANT_QUOTA_THRESHOLD_WARNING"
+    # Step 59: Enterprise Student Counselling, Mentoring & Personal Development
+    STUDENT_MENTOR_ASSIGNED = "STUDENT_MENTOR_ASSIGNED"
+    STUDENT_MENTOR_REASSIGNED = "STUDENT_MENTOR_REASSIGNED"
+    MENTORING_SESSION_SCHEDULED = "MENTORING_SESSION_SCHEDULED"
+    MENTORING_SESSION_COMPLETED = "MENTORING_SESSION_COMPLETED"
+    COUNSELLING_APPOINTMENT_REQUESTED = "COUNSELLING_APPOINTMENT_REQUESTED"
+    COUNSELLING_APPOINTMENT_CONFIRMED = "COUNSELLING_APPOINTMENT_CONFIRMED"
+    COUNSELLING_APPOINTMENT_RESCHEDULED = "COUNSELLING_APPOINTMENT_RESCHEDULED"
+    COUNSELLING_APPOINTMENT_CANCELLED = "COUNSELLING_APPOINTMENT_CANCELLED"
+    DEVELOPMENT_PLAN_CREATED = "DEVELOPMENT_PLAN_CREATED"
+    DEVELOPMENT_GOAL_COMPLETED = "DEVELOPMENT_GOAL_COMPLETED"
+    SUPPORT_REFERRAL_DISPATCHED = "SUPPORT_REFERRAL_DISPATCHED"
+    SUPPORT_REFERRAL_STATUS_UPDATED = "SUPPORT_REFERRAL_STATUS_UPDATED"
+    SUPPORT_FOLLOWUP_REMINDER = "SUPPORT_FOLLOWUP_REMINDER"
+    # Step 60: Enterprise International Relations, Student Exchange & Global Mobility
+    INTERNATIONAL_PARTNER_REGISTERED = "INTERNATIONAL_PARTNER_REGISTERED"
+    AGREEMENT_STATUS_CHANGED = "AGREEMENT_STATUS_CHANGED"
+    AGREEMENT_EXPIRY_WARNING = "AGREEMENT_EXPIRY_WARNING"
+    MOBILITY_PROGRAM_PUBLISHED = "MOBILITY_PROGRAM_PUBLISHED"
+    MOBILITY_APPLICATION_SUBMITTED = "MOBILITY_APPLICATION_SUBMITTED"
+    MOBILITY_APPLICATION_REVIEWED = "MOBILITY_APPLICATION_REVIEWED"
+    MOBILITY_APPLICATION_NOMINATED = "MOBILITY_APPLICATION_NOMINATED"
+    MOBILITY_PARTNER_DECISION_RECORDED = "MOBILITY_PARTNER_DECISION_RECORDED"
+    INBOUND_STUDENT_CHECKED_IN = "INBOUND_STUDENT_CHECKED_IN"
+    FACULTY_MOBILITY_APPROVED = "FACULTY_MOBILITY_APPROVED"
+    CREDIT_TRANSFER_APPROVED = "CREDIT_TRANSFER_APPROVED"
+    MOBILITY_DOCUMENT_VERIFIED = "MOBILITY_DOCUMENT_VERIFIED"
+    MOBILITY_FUNDING_APPROVED = "MOBILITY_FUNDING_APPROVED"
 
 
 @dataclass(frozen=True)
@@ -243,10 +305,268 @@ EVENT_REGISTRY: dict[DomainEventType, EventDefinition] = {
         event_type=DomainEventType.HOSTEL_ALLOCATION_CREATED,
         aggregate_type="HostelAllocation",
         description="Emitted when a student is allocated a room or bed in a hostel.",
-        source_module="infrastructure",
+        source_module="residential",
         allowed_payload_keys=frozenset(
             {"allocation_id", "student_id", "hostel_id", "room_id", "bed_number"}
         ),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_APPLICATION_SUBMITTED: EventDefinition(
+        event_type=DomainEventType.HOSTEL_APPLICATION_SUBMITTED,
+        aggregate_type="HostelApplication",
+        description="Emitted when a student submits an accommodation application.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"application_id", "student_id", "cycle_id", "application_number"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_APPLICATION_APPROVED: EventDefinition(
+        event_type=DomainEventType.HOSTEL_APPLICATION_APPROVED,
+        aggregate_type="HostelApplication",
+        description="Emitted when an accommodation application is approved.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"application_id", "student_id", "cycle_id", "reviewer_user_id"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_RESIDENT_CHECKED_IN: EventDefinition(
+        event_type=DomainEventType.HOSTEL_RESIDENT_CHECKED_IN,
+        aggregate_type="HostelResident",
+        description="Emitted when a resident physically completes check-in and inventory handover.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"resident_id", "student_id", "hostel_id", "bed_id", "check_in_time"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_RESIDENT_CHECKED_OUT: EventDefinition(
+        event_type=DomainEventType.HOSTEL_RESIDENT_CHECKED_OUT,
+        aggregate_type="HostelResident",
+        description="Emitted when a resident checks out and releases their room/bed.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"resident_id", "student_id", "hostel_id", "bed_id", "check_out_time", "checkout_reason"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_OUTING_OVERDUE: EventDefinition(
+        event_type=DomainEventType.HOSTEL_OUTING_OVERDUE,
+        aggregate_type="HostelLeavePass",
+        description="Emitted when a residential student fails to return from an outing by curfew/expected time.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"pass_id", "student_id", "hostel_id", "expected_return_time"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_INCIDENT_REPORTED: EventDefinition(
+        event_type=DomainEventType.HOSTEL_INCIDENT_REPORTED,
+        aggregate_type="HostelIncident",
+        description="Emitted when a residential disciplinary or safety incident is recorded.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"incident_id", "hostel_id", "severity", "incident_type"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.HOSTEL_SERVICE_REQUEST_CREATED: EventDefinition(
+        event_type=DomainEventType.HOSTEL_SERVICE_REQUEST_CREATED,
+        aggregate_type="HostelComplaint",
+        description="Emitted when a student submits a hostel repair or service request ticket.",
+        source_module="residential",
+        allowed_payload_keys=frozenset({"complaint_id", "student_id", "hostel_id", "room_id", "category", "priority"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    # Step 55 Transport Domain Events
+    DomainEventType.TRANSPORT_APPLICATION_SUBMITTED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_APPLICATION_SUBMITTED,
+        aggregate_type="TransportApplication",
+        description="Emitted when a student submits a transport service subscription application.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"application_id", "student_id", "preferred_route_id", "preferred_stop_id", "service_type"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_APPLICATION_APPROVED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_APPLICATION_APPROVED,
+        aggregate_type="TransportApplication",
+        description="Emitted when an authorized officer approves a student transport application.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"application_id", "student_id", "reviewer_user_id"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_ALLOCATION_CONFIRMED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_ALLOCATION_CONFIRMED,
+        aggregate_type="TransportAllocation",
+        description="Emitted when a seat allocation or transport pass is issued to a passenger.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"allocation_id", "student_id", "route_id", "stop_id", "vehicle_id", "pass_number"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_ALLOCATION_CANCELLED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_ALLOCATION_CANCELLED,
+        aggregate_type="TransportAllocation",
+        description="Emitted when a transport pass is cancelled or revoked.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"allocation_id", "student_id", "route_id", "cancellation_reason"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_TRIP_DISPATCHED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_TRIP_DISPATCHED,
+        aggregate_type="TransportTrip",
+        description="Emitted when a scheduled transport trip passes pre-trip check and departs depot.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"trip_id", "route_id", "vehicle_id", "driver_id", "trip_date", "service_window"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_TRIP_COMPLETED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_TRIP_COMPLETED,
+        aggregate_type="TransportTrip",
+        description="Emitted when a transit trip successfully completes its itinerary.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"trip_id", "route_id", "actual_end_time", "end_odometer_km"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_TRIP_CANCELLED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_TRIP_CANCELLED,
+        aggregate_type="TransportTrip",
+        description="Emitted when a scheduled transit trip is cancelled.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"trip_id", "route_id", "cancellation_reason"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_TRIP_DELAYED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_TRIP_DELAYED,
+        aggregate_type="TransportTrip",
+        description="Emitted when a transit trip experiences delay or service disruption.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"trip_id", "route_id", "delay_minutes", "disruption_notes"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_BOARDING_RECORDED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_BOARDING_RECORDED,
+        aggregate_type="TransportBoardingRecord",
+        description="Emitted when student boarding or drop-off is scanned and verified.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"record_id", "trip_id", "student_id", "stop_id", "boarding_status", "verification_method"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_INCIDENT_REPORTED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_INCIDENT_REPORTED,
+        aggregate_type="TransportIncident",
+        description="Emitted when an in-transit breakdown, collision, or passenger incident is logged.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"incident_id", "incident_number", "trip_id", "severity", "incident_type"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_COMPLIANCE_EXPIRING: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_COMPLIANCE_EXPIRING,
+        aggregate_type="TransportVehicle",
+        description="Emitted when a vehicle's fitness, insurance, or permit is approaching expiration.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"vehicle_id", "registration_number", "document_type", "expiry_date"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.TRANSPORT_VEHICLE_MAINTENANCE_REQUIRED: EventDefinition(
+        event_type=DomainEventType.TRANSPORT_VEHICLE_MAINTENANCE_REQUIRED,
+        aggregate_type="TransportVehicle",
+        description="Emitted when a vehicle fails pre-trip safety checks or reports defects.",
+        source_module="transport",
+        allowed_payload_keys=frozenset({"vehicle_id", "registration_number", "defect_notes", "work_order_id"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    # Step 57 Sports & Athletics Domain Events
+    DomainEventType.SPORTS_FACILITY_BOOKED: EventDefinition(
+        event_type=DomainEventType.SPORTS_FACILITY_BOOKED,
+        aggregate_type="FacilityBooking",
+        description="Emitted when a campus sports facility, ground, or court is reserved.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"booking_id", "facility_id", "booking_date", "start_time", "end_time", "booking_type"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_FACILITY_MAINTENANCE_CLOSED: EventDefinition(
+        event_type=DomainEventType.SPORTS_FACILITY_MAINTENANCE_CLOSED,
+        aggregate_type="SportsFacility",
+        description="Emitted when a facility or court is placed under maintenance closure.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"facility_id", "facility_code", "maintenance_notes"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_PARTICIPANT_REGISTERED: EventDefinition(
+        event_type=DomainEventType.SPORTS_PARTICIPANT_REGISTERED,
+        aggregate_type="SportsParticipant",
+        description="Emitted when a student or staff member registers as a sports participant.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"participant_id", "student_id", "primary_sport", "clearance_status"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_TEAM_CREATED: EventDefinition(
+        event_type=DomainEventType.SPORTS_TEAM_CREATED,
+        aggregate_type="SportsTeam",
+        description="Emitted when a new institutional sports team is created.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"team_id", "team_name", "sport", "division"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_TEAM_ROSTER_UPDATED: EventDefinition(
+        event_type=DomainEventType.SPORTS_TEAM_ROSTER_UPDATED,
+        aggregate_type="TeamMembership",
+        description="Emitted when an athlete is added, transferred, or updated on a team roster.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"membership_id", "team_id", "participant_id", "role", "jersey_number"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_TRAINING_SCHEDULED: EventDefinition(
+        event_type=DomainEventType.SPORTS_TRAINING_SCHEDULED,
+        aggregate_type="TrainingSession",
+        description="Emitted when a training session or fitness clinic is scheduled.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"session_id", "program_id", "facility_id", "session_date"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_COMPETITION_ANNOUNCED: EventDefinition(
+        event_type=DomainEventType.SPORTS_COMPETITION_ANNOUNCED,
+        aggregate_type="Competition",
+        description="Emitted when a tournament or sports meet opens for participant registrations.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"competition_id", "competition_name", "sport", "format", "registration_deadline"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_COMPETITION_REGISTERED: EventDefinition(
+        event_type=DomainEventType.SPORTS_COMPETITION_REGISTERED,
+        aggregate_type="CompetitionRegistration",
+        description="Emitted when a team or individual registers for a tournament.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"registration_id", "competition_id", "team_id", "registration_number"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_FIXTURE_SCHEDULED: EventDefinition(
+        event_type=DomainEventType.SPORTS_FIXTURE_SCHEDULED,
+        aggregate_type="MatchFixture",
+        description="Emitted when tournament match fixtures are generated and scheduled.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"match_id", "competition_id", "match_number", "facility_id", "match_date"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_MATCH_RESULT_RECORDED: EventDefinition(
+        event_type=DomainEventType.SPORTS_MATCH_RESULT_RECORDED,
+        aggregate_type="MatchResult",
+        description="Emitted when match scores are entered and saved.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"result_id", "match_id", "home_score", "away_score", "outcome"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_MATCH_RESULT_VERIFIED: EventDefinition(
+        event_type=DomainEventType.SPORTS_MATCH_RESULT_VERIFIED,
+        aggregate_type="MatchResult",
+        description="Emitted when match results are verified and standings are updated.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"result_id", "match_id", "verified_by_user_id", "outcome"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_EQUIPMENT_CHECKED_OUT: EventDefinition(
+        event_type=DomainEventType.SPORTS_EQUIPMENT_CHECKED_OUT,
+        aggregate_type="EquipmentAssignment",
+        description="Emitted when sports equipment or gear is checked out.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"assignment_id", "item_name", "quantity", "due_date"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SPORTS_EQUIPMENT_RETURNED: EventDefinition(
+        event_type=DomainEventType.SPORTS_EQUIPMENT_RETURNED,
+        aggregate_type="EquipmentAssignment",
+        description="Emitted when sports equipment is returned and condition inspected.",
+        source_module="sports",
+        allowed_payload_keys=frozenset({"assignment_id", "item_name", "condition_on_return", "status"}),
         registered_consumers=["NotificationEventConsumer"],
     ),
     DomainEventType.FINANCE_PAYMENT_FAILED: EventDefinition(
@@ -377,6 +697,216 @@ EVENT_REGISTRY: dict[DomainEventType, EventDefinition] = {
             {"tenant_id", "resource_type", "current_usage", "soft_limit", "hard_limit", "unit"}
         ),
         registered_consumers=["NotificationEventConsumer"],
+    ),
+    # Step 59: Student Counselling, Mentoring & Personal Development
+    DomainEventType.STUDENT_MENTOR_ASSIGNED: EventDefinition(
+        event_type=DomainEventType.STUDENT_MENTOR_ASSIGNED,
+        aggregate_type="MentorAssignment",
+        description="Emitted when a faculty mentor is assigned to a student.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"assignment_id", "student_id", "mentor_user_id", "academic_year"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.STUDENT_MENTOR_REASSIGNED: EventDefinition(
+        event_type=DomainEventType.STUDENT_MENTOR_REASSIGNED,
+        aggregate_type="MentorAssignment",
+        description="Emitted when a student's faculty mentor is reassigned.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"assignment_id", "student_id", "old_mentor_id", "new_mentor_id", "reason"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MENTORING_SESSION_SCHEDULED: EventDefinition(
+        event_type=DomainEventType.MENTORING_SESSION_SCHEDULED,
+        aggregate_type="MentoringSession",
+        description="Emitted when a mentoring session is scheduled.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"session_id", "mentor_user_id", "session_date", "start_time", "session_type"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.MENTORING_SESSION_COMPLETED: EventDefinition(
+        event_type=DomainEventType.MENTORING_SESSION_COMPLETED,
+        aggregate_type="MentoringSession",
+        description="Emitted when a mentoring session is completed.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"session_id", "mentor_user_id", "session_date", "follow_up_date"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.COUNSELLING_APPOINTMENT_REQUESTED: EventDefinition(
+        event_type=DomainEventType.COUNSELLING_APPOINTMENT_REQUESTED,
+        aggregate_type="CounsellingAppointment",
+        description="Emitted when a counselling appointment is requested.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"appointment_id", "student_id", "appointment_date", "category"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.COUNSELLING_APPOINTMENT_CONFIRMED: EventDefinition(
+        event_type=DomainEventType.COUNSELLING_APPOINTMENT_CONFIRMED,
+        aggregate_type="CounsellingAppointment",
+        description="Emitted when a counselling appointment is confirmed.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"appointment_id", "student_id", "counsellor_user_id", "appointment_date", "start_time"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.COUNSELLING_APPOINTMENT_RESCHEDULED: EventDefinition(
+        event_type=DomainEventType.COUNSELLING_APPOINTMENT_RESCHEDULED,
+        aggregate_type="CounsellingAppointment",
+        description="Emitted when a counselling appointment is rescheduled.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"appointment_id", "student_id", "appointment_date", "start_time"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.COUNSELLING_APPOINTMENT_CANCELLED: EventDefinition(
+        event_type=DomainEventType.COUNSELLING_APPOINTMENT_CANCELLED,
+        aggregate_type="CounsellingAppointment",
+        description="Emitted when a counselling appointment is cancelled.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"appointment_id", "student_id", "cancellation_reason"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.DEVELOPMENT_PLAN_CREATED: EventDefinition(
+        event_type=DomainEventType.DEVELOPMENT_PLAN_CREATED,
+        aggregate_type="StudentDevelopmentPlan",
+        description="Emitted when an individual student development plan is initiated.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"plan_id", "student_id", "academic_year"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.DEVELOPMENT_GOAL_COMPLETED: EventDefinition(
+        event_type=DomainEventType.DEVELOPMENT_GOAL_COMPLETED,
+        aggregate_type="DevelopmentGoal",
+        description="Emitted when a development milestone or goal is completed.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"goal_id", "plan_id", "category", "title"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SUPPORT_REFERRAL_DISPATCHED: EventDefinition(
+        event_type=DomainEventType.SUPPORT_REFERRAL_DISPATCHED,
+        aggregate_type="SupportReferral",
+        description="Emitted when a referral is dispatched to an institutional support service.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"referral_id", "referral_code", "student_id", "target_service", "priority"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.SUPPORT_REFERRAL_STATUS_UPDATED: EventDefinition(
+        event_type=DomainEventType.SUPPORT_REFERRAL_STATUS_UPDATED,
+        aggregate_type="SupportReferral",
+        description="Emitted when a support referral status changes.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"referral_id", "status", "assigned_staff_user_id"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.SUPPORT_FOLLOWUP_REMINDER: EventDefinition(
+        event_type=DomainEventType.SUPPORT_FOLLOWUP_REMINDER,
+        aggregate_type="SupportFollowUp",
+        description="Emitted when a support follow-up check is due.",
+        source_module="student_support",
+        allowed_payload_keys=frozenset({"followup_id", "assigned_user_id", "due_date", "title"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    # Step 60: Enterprise International Relations, Student Exchange & Global Mobility
+    DomainEventType.INTERNATIONAL_PARTNER_REGISTERED: EventDefinition(
+        event_type=DomainEventType.INTERNATIONAL_PARTNER_REGISTERED,
+        aggregate_type="InternationalPartner",
+        description="Emitted when a new international partner institution or university is registered.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"partner_id", "institution_name", "country", "category"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.AGREEMENT_STATUS_CHANGED: EventDefinition(
+        event_type=DomainEventType.AGREEMENT_STATUS_CHANGED,
+        aggregate_type="InstitutionalAgreement",
+        description="Emitted when an MoU or international agreement status transitions.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"agreement_id", "agreement_number", "partner_id", "old_status", "new_status"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.AGREEMENT_EXPIRY_WARNING: EventDefinition(
+        event_type=DomainEventType.AGREEMENT_EXPIRY_WARNING,
+        aggregate_type="InstitutionalAgreement",
+        description="Emitted when an agreement is nearing its expiration date.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"agreement_id", "agreement_number", "partner_name", "expiry_date", "days_remaining"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.MOBILITY_PROGRAM_PUBLISHED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_PROGRAM_PUBLISHED,
+        aggregate_type="MobilityProgram",
+        description="Emitted when an exchange or study-abroad program opens for student applications.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"program_id", "program_code", "title", "partner_id", "deadline"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.MOBILITY_APPLICATION_SUBMITTED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_APPLICATION_SUBMITTED,
+        aggregate_type="MobilityApplication",
+        description="Emitted when a student submits an international exchange application.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"application_id", "application_number", "student_id", "program_id"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MOBILITY_APPLICATION_REVIEWED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_APPLICATION_REVIEWED,
+        aggregate_type="MobilityApplication",
+        description="Emitted when a mobility application completes a review stage.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"application_id", "reviewer_id", "stage", "action", "status"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MOBILITY_APPLICATION_NOMINATED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_APPLICATION_NOMINATED,
+        aggregate_type="MobilityApplication",
+        description="Emitted when an approved student is nominated to a partner institution.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"application_id", "partner_id", "nomination_date", "student_id"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MOBILITY_PARTNER_DECISION_RECORDED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_PARTNER_DECISION_RECORDED,
+        aggregate_type="MobilityApplication",
+        description="Emitted when a partner institution's admission decision is recorded.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"application_id", "decision", "partner_id"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.INBOUND_STUDENT_CHECKED_IN: EventDefinition(
+        event_type=DomainEventType.INBOUND_STUDENT_CHECKED_IN,
+        aggregate_type="InboundStudentProfile",
+        description="Emitted when an inbound international exchange student completes arrival check-in.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"inbound_id", "student_name", "partner_id", "host_department_id"}),
+        registered_consumers=["NotificationEventConsumer"],
+    ),
+    DomainEventType.FACULTY_MOBILITY_APPROVED: EventDefinition(
+        event_type=DomainEventType.FACULTY_MOBILITY_APPROVED,
+        aggregate_type="FacultyMobilityRecord",
+        description="Emitted when faculty mobility or visiting scholar request is approved.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"mobility_id", "staff_user_id", "mobility_type", "partner_id"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.CREDIT_TRANSFER_APPROVED: EventDefinition(
+        event_type=DomainEventType.CREDIT_TRANSFER_APPROVED,
+        aggregate_type="StudentCreditTransferRequest",
+        description="Emitted when academic credit transfer is officially authorized by the committee.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"transfer_id", "student_id", "approved_credits", "committee_ref"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MOBILITY_DOCUMENT_VERIFIED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_DOCUMENT_VERIFIED,
+        aggregate_type="MobilityDocument",
+        description="Emitted when a mandatory mobility document or passport reference is verified.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"document_id", "document_type", "status", "verified_by"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
+    ),
+    DomainEventType.MOBILITY_FUNDING_APPROVED: EventDefinition(
+        event_type=DomainEventType.MOBILITY_FUNDING_APPROVED,
+        aggregate_type="MobilityFundingRequest",
+        description="Emitted when a student travel grant or mobility scholarship allocation is approved.",
+        source_module="international",
+        allowed_payload_keys=frozenset({"request_id", "student_id", "approved_amount", "scholarship_id"}),
+        registered_consumers=["NotificationEventConsumer", "AuditTrailConsumer"],
     ),
 }
 
@@ -1025,4 +1555,42 @@ class OutboxService:
             "oldest_event_age_seconds": round(oldest_age_seconds, 2),
             "is_healthy": is_healthy,
         }
+
+
+class EventPublisher:
+    """Convenience helper to record domain events into the transactional outbox."""
+
+    @staticmethod
+    async def publish(
+        db: AsyncSession,
+        tenant_id: UUID,
+        event_type: DomainEventType | str,
+        aggregate_type: str,
+        aggregate_id: str | UUID,
+        payload: dict[str, Any] | None = None,
+        schema_version: str = "1.0",
+        correlation_id: str | None = None,
+        causation_id: str | None = None,
+        actor_id: UUID | None = None,
+        actor_context: dict[str, Any] | None = None,
+        producer: str = "CAMPUSOS_CORE",
+    ) -> OutboxEvent:
+        return await OutboxService.publish_event(
+            db=db,
+            tenant_id=tenant_id,
+            event_type=event_type,
+            aggregate_type=aggregate_type,
+            aggregate_id=aggregate_id,
+            payload=payload,
+            schema_version=schema_version,
+            correlation_id=correlation_id,
+            causation_id=causation_id,
+            actor_id=actor_id,
+            actor_context=actor_context,
+            producer=producer,
+        )
+
+
+event_publisher = EventPublisher()
+
 

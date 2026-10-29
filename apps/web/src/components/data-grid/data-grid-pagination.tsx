@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DataGridPaginationProps {
@@ -30,9 +35,19 @@ export function DataGridPagination({
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-500 dark:text-slate-400">
       <div className="flex items-center gap-3">
         <span>
-          Showing <span className="font-semibold text-slate-900 dark:text-white font-mono">{startRecord}</span> to{" "}
-          <span className="font-semibold text-slate-900 dark:text-white font-mono">{endRecord}</span> of{" "}
-          <span className="font-semibold text-slate-900 dark:text-white font-mono">{totalRecords}</span> records
+          Showing{" "}
+          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+            {startRecord}
+          </span>{" "}
+          to{" "}
+          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+            {endRecord}
+          </span>{" "}
+          of{" "}
+          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+            {totalRecords}
+          </span>{" "}
+          records
         </span>
 
         {onPageSizeChange && (

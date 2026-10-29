@@ -11,8 +11,7 @@ Enforces:
 
 import csv
 import io
-import re
-from typing import Any, BinaryIO, Generator
+from typing import Any
 
 from app.core.exceptions import ValidationException
 

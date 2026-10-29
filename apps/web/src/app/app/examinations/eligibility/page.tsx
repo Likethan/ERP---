@@ -35,8 +35,12 @@ export default function ExamEligibilityPage() {
 
   // Review Modal State
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<ExamEligibility | null>(null);
-  const [actionType, setActionType] = useState<"APPROVE_EXCEPTION" | "REJECT_EXCEPTION" | "FLAG_FOR_REVIEW">("APPROVE_EXCEPTION");
+  const [selectedRecord, setSelectedRecord] = useState<ExamEligibility | null>(
+    null,
+  );
+  const [actionType, setActionType] = useState<
+    "APPROVE_EXCEPTION" | "REJECT_EXCEPTION" | "FLAG_FOR_REVIEW"
+  >("APPROVE_EXCEPTION");
   const [reviewReason, setReviewReason] = useState("");
   const [reviewing, setReviewing] = useState(false);
 
@@ -44,12 +48,19 @@ export default function ExamEligibilityPage() {
     try {
       setLoading(true);
       const res = await examinationsService.getEligibility({
-        status: statusFilter !== "ALL" ? (statusFilter as EligibilityStatus) : undefined,
+        status:
+          statusFilter !== "ALL"
+            ? (statusFilter as EligibilityStatus)
+            : undefined,
         department: selectedDept !== "ALL" ? selectedDept : undefined,
       });
       setEligibilityList(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load eligibility evaluations", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load eligibility evaluations",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -68,16 +79,21 @@ export default function ExamEligibilityPage() {
       await examinationsService.reviewEligibility(
         selectedRecord.id,
         actionType,
-        reviewReason || "HOD Academic Council discretionary review."
+        reviewReason || "HOD Academic Council discretionary review.",
       );
-      showToast({ title: "Updated", message: "Eligibility evaluation successfully updated.", type: "success" });
+      showToast({
+        title: "Updated",
+        message: "Eligibility evaluation successfully updated.",
+        type: "success",
+      });
       setReviewModalOpen(false);
       setReviewReason("");
       loadEligibility();
     } catch (err: unknown) {
       showToast({
         title: "Error",
-        message: err instanceof Error ? err.message : "Failed to review eligibility",
+        message:
+          err instanceof Error ? err.message : "Failed to review eligibility",
         type: "error",
       });
     } finally {
@@ -85,9 +101,15 @@ export default function ExamEligibilityPage() {
     }
   };
 
-  const eligibleCount = eligibilityList.filter((e) => e.eligibilityStatus === "ELIGIBLE").length;
-  const ineligibleCount = eligibilityList.filter((e) => e.eligibilityStatus === "INELIGIBLE").length;
-  const condCount = eligibilityList.filter((e) => e.eligibilityStatus === "CONDITIONALLY_ELIGIBLE").length;
+  const eligibleCount = eligibilityList.filter(
+    (e) => e.eligibilityStatus === "ELIGIBLE",
+  ).length;
+  const ineligibleCount = eligibilityList.filter(
+    (e) => e.eligibilityStatus === "INELIGIBLE",
+  ).length;
+  const condCount = eligibilityList.filter(
+    (e) => e.eligibilityStatus === "CONDITIONALLY_ELIGIBLE",
+  ).length;
 
   const columns: ColumnDef<ExamEligibility>[] = useMemo(
     () => [
@@ -132,7 +154,13 @@ export default function ExamEligibilityPage() {
           return (
             <div className="text-xs">
               <div className="flex items-center gap-1.5 font-bold">
-                <span className={isBelow ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}>
+                <span
+                  className={
+                    isBelow
+                      ? "text-rose-600 dark:text-rose-400"
+                      : "text-emerald-600 dark:text-emerald-400"
+                  }
+                >
                   {row.attendancePercentage}%
                 </span>
                 <span className="text-slate-400 font-normal">
@@ -159,11 +187,15 @@ export default function ExamEligibilityPage() {
                   isEligible
                     ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
                     : isCond
-                    ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                    : "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                      ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                      : "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
                 }`}
               >
-                {isEligible ? <CheckCircle2 className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                {isEligible ? (
+                  <CheckCircle2 className="h-3 w-3" />
+                ) : (
+                  <AlertTriangle className="h-3 w-3" />
+                )}
                 {row.eligibilityStatus}
               </span>
               {row.isOverridden && (
@@ -179,8 +211,17 @@ export default function ExamEligibilityPage() {
         id: "reason",
         header: "Audit Rationale",
         cell: (row) => (
-          <div className="text-xs text-slate-500 max-w-xs truncate" title={row.reason || row.overrideReason || "Meets minimum attendance requirement"}>
-            {row.reason || row.overrideReason || "Meets minimum attendance requirement"}
+          <div
+            className="text-xs text-slate-500 max-w-xs truncate"
+            title={
+              row.reason ||
+              row.overrideReason ||
+              "Meets minimum attendance requirement"
+            }
+          >
+            {row.reason ||
+              row.overrideReason ||
+              "Meets minimum attendance requirement"}
           </div>
         ),
       },
@@ -191,10 +232,16 @@ export default function ExamEligibilityPage() {
           <div className="flex items-center gap-2">
             <Button
               size="sm"
-              variant={row.eligibilityStatus === "INELIGIBLE" ? "primary" : "outline"}
+              variant={
+                row.eligibilityStatus === "INELIGIBLE" ? "primary" : "outline"
+              }
               onClick={() => {
                 setSelectedRecord(row);
-                setActionType(row.eligibilityStatus === "INELIGIBLE" ? "APPROVE_EXCEPTION" : "REJECT_EXCEPTION");
+                setActionType(
+                  row.eligibilityStatus === "INELIGIBLE"
+                    ? "APPROVE_EXCEPTION"
+                    : "REJECT_EXCEPTION",
+                );
                 setReviewModalOpen(true);
               }}
               className="h-7 text-xs"
@@ -205,7 +252,7 @@ export default function ExamEligibilityPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -217,13 +264,16 @@ export default function ExamEligibilityPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
               Exam Attendance Gate
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">75% Minimum Bar Rule</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              75% Minimum Bar Rule
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Student Examination Eligibility
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Automated eligibility evaluation consuming attendance service registers with HOD condonation exception workflows.
+            Automated eligibility evaluation consuming attendance service
+            registers with HOD condonation exception workflows.
           </p>
         </div>
 
@@ -288,8 +338,12 @@ export default function ExamEligibilityPage() {
           className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         >
           <option value="ALL">All Departments</option>
-          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-          <option value="Electronics & Communication">Electronics & Communication</option>
+          <option value="Computer Science & Engineering">
+            Computer Science & Engineering
+          </option>
+          <option value="Electronics & Communication">
+            Electronics & Communication
+          </option>
         </select>
       </div>
 
@@ -312,7 +366,8 @@ export default function ExamEligibilityPage() {
               Review Candidate Examination Eligibility
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              Grant formal medical condonation exception or confirm debarment from hall ticket.
+              Grant formal medical condonation exception or confirm debarment
+              from hall ticket.
             </p>
           </div>
 
@@ -333,7 +388,8 @@ export default function ExamEligibilityPage() {
               <div className="flex justify-between">
                 <span className="text-slate-400">Recorded Attendance:</span>
                 <span className="font-bold text-rose-600 dark:text-rose-400">
-                  {selectedRecord.attendancePercentage}% (Min Required: {selectedRecord.minimumRequirement}%)
+                  {selectedRecord.attendancePercentage}% (Min Required:{" "}
+                  {selectedRecord.minimumRequirement}%)
                 </span>
               </div>
             </div>
@@ -349,9 +405,15 @@ export default function ExamEligibilityPage() {
                 onChange={(e) => setActionType(e.target.value as any)}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="APPROVE_EXCEPTION">Grant Condonation Exception (Make Conditionally Eligible)</option>
-                <option value="REJECT_EXCEPTION">Confirm Debarment (Mark Ineligible)</option>
-                <option value="FLAG_FOR_REVIEW">Flag for Academic Council Review</option>
+                <option value="APPROVE_EXCEPTION">
+                  Grant Condonation Exception (Make Conditionally Eligible)
+                </option>
+                <option value="REJECT_EXCEPTION">
+                  Confirm Debarment (Mark Ineligible)
+                </option>
+                <option value="FLAG_FOR_REVIEW">
+                  Flag for Academic Council Review
+                </option>
               </select>
             </div>
 
@@ -371,12 +433,18 @@ export default function ExamEligibilityPage() {
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" onClick={() => setReviewModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setReviewModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button
               type="submit"
-              variant={actionType === "REJECT_EXCEPTION" ? "destructive" : "primary"}
+              variant={
+                actionType === "REJECT_EXCEPTION" ? "destructive" : "primary"
+              }
               disabled={reviewing}
             >
               {reviewing ? "Processing..." : "Confirm Decision"}

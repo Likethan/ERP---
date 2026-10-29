@@ -6,11 +6,11 @@ targeted audience mapping, unified notification inbox, delivery tracking, and us
 """
 
 from datetime import date, datetime
-from uuid import UUID, uuid4
+from typing import TYPE_CHECKING
+from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
-    Date,
     DateTime,
     ForeignKey,
     Index,
@@ -19,11 +19,15 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, TenantScopedModel
+from app.models.base import TenantScopedModel
+
+if TYPE_CHECKING:
+    from app.models.notification import NotificationDeliveryAttempt
 
 # Cross-dialect JSON type for PostgreSQL JSONB and SQLite JSON
 JSONType = JSONB().with_variant(Text, "sqlite")

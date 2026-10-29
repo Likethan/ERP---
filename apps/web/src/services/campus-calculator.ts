@@ -12,7 +12,7 @@ import { ClubMemberItem, NotificationItem } from "@/types/campus";
  */
 export function calculateEventAttendanceRate(
   presentCount: number,
-  registeredCount: number
+  registeredCount: number,
 ): number {
   if (!registeredCount || registeredCount <= 0) return 0;
   if (!presentCount || presentCount <= 0) return 0;
@@ -26,7 +26,7 @@ export function calculateEventAttendanceRate(
  */
 export function calculateEventCapacityUsage(
   registeredCount: number,
-  capacity: number
+  capacity: number,
 ): number {
   if (!capacity || capacity <= 0) return 0;
   if (!registeredCount || registeredCount <= 0) return 0;
@@ -39,7 +39,7 @@ export function calculateEventCapacityUsage(
  */
 export function calculateRegistrationRate(
   registeredCount: number,
-  totalAudience: number
+  totalAudience: number,
 ): number {
   if (!totalAudience || totalAudience <= 0) return 0;
   if (!registeredCount || registeredCount <= 0) return 0;
@@ -82,7 +82,7 @@ export function calculateClubMembershipCount(members: ClubMemberItem[]): {
  * Calculates total unread notification count.
  */
 export function calculateUnreadNotificationCount(
-  notifications: NotificationItem[]
+  notifications: NotificationItem[],
 ): number {
   if (!Array.isArray(notifications)) return 0;
   return notifications.filter((n) => n.status === "UNREAD").length;
@@ -131,7 +131,7 @@ export function calculateAudienceSize(target: {
  */
 export function calculateDeliveryRate(
   deliveredCount: number,
-  totalAudience: number
+  totalAudience: number,
 ): number {
   if (!totalAudience || totalAudience <= 0) return 0;
   if (!deliveredCount || deliveredCount <= 0) return 0;

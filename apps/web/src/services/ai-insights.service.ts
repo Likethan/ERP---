@@ -38,7 +38,7 @@ class AiInsightsService {
         (i) =>
           i.title.toLowerCase().includes(q) ||
           i.summary.toLowerCase().includes(q) ||
-          i.recommendedAction.toLowerCase().includes(q)
+          i.recommendedAction.toLowerCase().includes(q),
       );
     }
 
@@ -63,7 +63,7 @@ class AiInsightsService {
   async updateInsightStatus(
     id: string,
     status: InsightStatus,
-    actor = "User"
+    actor = "User",
   ): Promise<ApiResponse<Insight | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const insight = this.insights.find((i) => i.id === id);
@@ -80,15 +80,24 @@ class AiInsightsService {
     return { success: true, data: insight };
   }
 
-  async dismissInsight(id: string, actor = "User"): Promise<ApiResponse<Insight | null>> {
+  async dismissInsight(
+    id: string,
+    actor = "User",
+  ): Promise<ApiResponse<Insight | null>> {
     return this.updateInsightStatus(id, InsightStatus.DISMISSED, actor);
   }
 
-  async markInsightReviewed(id: string, actor = "User"): Promise<ApiResponse<Insight | null>> {
+  async markInsightReviewed(
+    id: string,
+    actor = "User",
+  ): Promise<ApiResponse<Insight | null>> {
     return this.updateInsightStatus(id, InsightStatus.REVIEWED, actor);
   }
 
-  async markInsightActioned(id: string, actor = "User"): Promise<ApiResponse<Insight | null>> {
+  async markInsightActioned(
+    id: string,
+    actor = "User",
+  ): Promise<ApiResponse<Insight | null>> {
     return this.updateInsightStatus(id, InsightStatus.ACTIONED, actor);
   }
 }

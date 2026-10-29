@@ -20,14 +20,24 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
 import { financeService } from "@/services/finance.service";
-import { FeeCategory, FeeCategoryType, FeeCategoryStatus } from "@/types/finance";
+import {
+  FeeCategory,
+  FeeCategoryType,
+  FeeCategoryStatus,
+} from "@/types/finance";
 
 const CATEGORY_TYPE_LABELS: Record<string, string> = {
   TUITION: "Tuition & Instruction",
@@ -53,7 +63,9 @@ export default function FeeCategoriesPage() {
 
   // Create / Edit modal state
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<FeeCategory | null>(null);
+  const [editingCategory, setEditingCategory] = useState<FeeCategory | null>(
+    null,
+  );
   const [saving, setSaving] = useState(false);
 
   const [formName, setFormName] = useState("");
@@ -71,7 +83,8 @@ export default function FeeCategoriesPage() {
     } catch (err: unknown) {
       showToast({
         title: "Error Loading Categories",
-        message: err instanceof Error ? err.message : "Failed to load fee categories",
+        message:
+          err instanceof Error ? err.message : "Failed to load fee categories",
         type: "error",
       });
     } finally {
@@ -127,7 +140,11 @@ export default function FeeCategoriesPage() {
           isTaxable: formIsTaxable,
           isRefundable: formIsRefundable,
         });
-        showToast({ title: "Updated", message: "Fee category updated successfully.", type: "success" });
+        showToast({
+          title: "Updated",
+          message: "Fee category updated successfully.",
+          type: "success",
+        });
       } else {
         await financeService.createFeeCategory({
           name: formName.trim(),
@@ -137,7 +154,11 @@ export default function FeeCategoriesPage() {
           isTaxable: formIsTaxable,
           isRefundable: formIsRefundable,
         });
-        showToast({ title: "Created", message: "New fee category registered.", type: "success" });
+        showToast({
+          title: "Created",
+          message: "New fee category registered.",
+          type: "success",
+        });
       }
       setModalOpen(false);
       loadData();
@@ -164,7 +185,10 @@ export default function FeeCategoriesPage() {
     } catch (err: unknown) {
       showToast({
         title: "Toggle Error",
-        message: err instanceof Error ? err.message : "Could not toggle category status",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Could not toggle category status",
         type: "error",
       });
     }
@@ -205,7 +229,9 @@ export default function FeeCategoriesPage() {
       cell: (row) => (
         <div>
           <p className="font-medium text-slate-200">{row.name}</p>
-          <p className="text-xs text-slate-400 line-clamp-1">{row.description}</p>
+          <p className="text-xs text-slate-400 line-clamp-1">
+            {row.description}
+          </p>
         </div>
       ),
     },
@@ -302,7 +328,10 @@ export default function FeeCategoriesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
-            <Link href="/app/finance" className="hover:text-slate-200 transition-colors">
+            <Link
+              href="/app/finance"
+              className="hover:text-slate-200 transition-colors"
+            >
               Finance
             </Link>
             <span>/</span>
@@ -313,12 +342,19 @@ export default function FeeCategoriesPage() {
             Fee Categories & Billing Heads
           </h1>
           <p className="mt-1 text-xs text-slate-400 max-w-2xl">
-            Standard institutional fee classifications for tuition, laboratory, examinations, facilities, hostel accommodation, and statutory levies.
+            Standard institutional fee classifications for tuition, laboratory,
+            examinations, facilities, hostel accommodation, and statutory
+            levies.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="primary" size="sm" onClick={openCreateModal} className="gap-1.5 text-xs">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={openCreateModal}
+            className="gap-1.5 text-xs"
+          >
             <Plus className="h-3.5 w-3.5" />
             New Category
           </Button>
@@ -396,8 +432,12 @@ export default function FeeCategoriesPage() {
         emptyState={
           <div className="py-12 text-center">
             <Tag className="mx-auto h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm font-semibold text-slate-300">No Fee Categories Found</p>
-            <p className="text-xs text-slate-500 mt-1">Try adjusting search query or active filters.</p>
+            <p className="text-sm font-semibold text-slate-300">
+              No Fee Categories Found
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Try adjusting search query or active filters.
+            </p>
           </div>
         }
       />
@@ -408,7 +448,9 @@ export default function FeeCategoriesPage() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
               <Tag className="h-5 w-5 text-indigo-400" />
-              {editingCategory ? "Edit Fee Category" : "Register New Fee Category"}
+              {editingCategory
+                ? "Edit Fee Category"
+                : "Register New Fee Category"}
             </DialogTitle>
           </DialogHeader>
 
@@ -433,7 +475,9 @@ export default function FeeCategoriesPage() {
                 </label>
                 <Select
                   value={formType}
-                  onChange={(e) => setFormType(e.target.value as FeeCategoryType)}
+                  onChange={(e) =>
+                    setFormType(e.target.value as FeeCategoryType)
+                  }
                   className="h-8 text-xs bg-slate-950 border-slate-800"
                 >
                   <option value="TUITION">Tuition Fee</option>
@@ -483,7 +527,9 @@ export default function FeeCategoriesPage() {
                   onChange={(e) => setFormIsRefundable(e.target.checked)}
                   className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500"
                 />
-                <span className="text-xs text-slate-300 font-medium">Refundable on exit</span>
+                <span className="text-xs text-slate-300 font-medium">
+                  Refundable on exit
+                </span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer">
@@ -493,16 +539,32 @@ export default function FeeCategoriesPage() {
                   onChange={(e) => setFormIsTaxable(e.target.checked)}
                   className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500"
                 />
-                <span className="text-xs text-slate-300 font-medium">Subject to GST / Tax</span>
+                <span className="text-xs text-slate-300 font-medium">
+                  Subject to GST / Tax
+                </span>
               </label>
             </div>
 
             <DialogFooter className="pt-4 border-t border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={() => setModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setModalOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" size="sm" disabled={saving}>
-                {saving ? "Saving..." : editingCategory ? "Update Category" : "Create Category"}
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={saving}
+              >
+                {saving
+                  ? "Saving..."
+                  : editingCategory
+                    ? "Update Category"
+                    : "Create Category"}
               </Button>
             </DialogFooter>
           </form>

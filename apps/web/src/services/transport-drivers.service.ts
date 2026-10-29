@@ -11,7 +11,9 @@ import { ApiResponse, TransportDriver, DriverStatus } from "@campusos/types";
 import { MOCK_TRANSPORT_DRIVERS } from "@/mocks/infrastructure.mock";
 
 class TransportDriversService {
-  private drivers: TransportDriver[] = JSON.parse(JSON.stringify(MOCK_TRANSPORT_DRIVERS));
+  private drivers: TransportDriver[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSPORT_DRIVERS),
+  );
 
   async listDrivers(filters?: {
     status?: DriverStatus | string;
@@ -36,25 +38,31 @@ class TransportDriversService {
           d.phone.includes(q) ||
           d.assignedVehicleNumber?.toLowerCase().includes(q) ||
           d.assignedRouteName?.toLowerCase().includes(q) ||
-          d.licenseNumber.toLowerCase().includes(q)
+          d.licenseNumber.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getDriverById(id: string): Promise<ApiResponse<TransportDriver | null>> {
+  async getDriverById(
+    id: string,
+  ): Promise<ApiResponse<TransportDriver | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const driver = this.drivers.find((d) => d.id === id || d.employeeId === id) || null;
+    const driver =
+      this.drivers.find((d) => d.id === id || d.employeeId === id) || null;
     return { success: true, data: driver };
   }
 
-  async createDriver(payload: Partial<TransportDriver>): Promise<ApiResponse<TransportDriver>> {
+  async createDriver(
+    payload: Partial<TransportDriver>,
+  ): Promise<ApiResponse<TransportDriver>> {
     await new Promise((r) => setTimeout(r, 50));
     const newDriver: TransportDriver = {
       id: `drv-${Date.now().toString(36)}`,
       name: payload.name || "New Fleet Driver",
-      employeeId: payload.employeeId || `EMP-TR-${Math.floor(100 + Math.random() * 900)}`,
+      employeeId:
+        payload.employeeId || `EMP-TR-${Math.floor(100 + Math.random() * 900)}`,
       phone: payload.phone || "+91 98455 00000",
       email: payload.email || "driver@campusos.edu",
       licenseNumber: payload.licenseNumber || "KA-04-2020-0019284",
@@ -67,7 +75,8 @@ class TransportDriversService {
       assignedRouteCode: payload.assignedRouteCode || null,
       assignedRouteName: payload.assignedRouteName || null,
       experienceYears: payload.experienceYears || 5,
-      joiningDate: payload.joiningDate || new Date().toISOString().split("T")[0],
+      joiningDate:
+        payload.joiningDate || new Date().toISOString().split("T")[0],
       status: (payload.status as DriverStatus) || DriverStatus.ACTIVE,
     };
 

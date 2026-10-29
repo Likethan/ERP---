@@ -54,7 +54,11 @@ export default function AttendancePoliciesPage() {
       }
     } catch (err) {
       console.error("Failed to load policies", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load attendance policies." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load attendance policies.",
+      });
     } finally {
       setLoading(false);
     }
@@ -80,7 +84,11 @@ export default function AttendancePoliciesPage() {
       }
     } catch (err) {
       console.error("Failed to create policy", err);
-      showToast({ type: "error", title: "Creation Failed", message: "Could not create policy." });
+      showToast({
+        type: "error",
+        title: "Creation Failed",
+        message: "Could not create policy.",
+      });
     } finally {
       setSaving(false);
     }
@@ -101,18 +109,25 @@ export default function AttendancePoliciesPage() {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
                 Regulations Engine
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">Institutional Governance</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Institutional Governance
+              </span>
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               Attendance Rules & Policies
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Configure minimum attendance thresholds, late penalty weighting, medical excuse inclusions, and condonation rules.
+              Configure minimum attendance thresholds, late penalty weighting,
+              medical excuse inclusions, and condonation rules.
             </p>
           </div>
         </div>
 
-        <Button variant="primary" className="gap-2" onClick={() => setModalOpen(true)}>
+        <Button
+          variant="primary"
+          className="gap-2"
+          onClick={() => setModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           Add Policy Scheme
         </Button>
@@ -128,7 +143,11 @@ export default function AttendancePoliciesPage() {
             <div>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <Badge variant={policy.status === "ACTIVE" ? "success" : "secondary"}>
+                  <Badge
+                    variant={
+                      policy.status === "ACTIVE" ? "success" : "secondary"
+                    }
+                  >
                     {policy.status}
                   </Badge>
                   <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-white">
@@ -146,21 +165,27 @@ export default function AttendancePoliciesPage() {
                   <div className="text-lg font-bold text-emerald-700 dark:text-emerald-300">
                     {policy.minimumPercentage}%
                   </div>
-                  <div className="text-[10px] text-emerald-600 font-medium">Min Required</div>
+                  <div className="text-[10px] text-emerald-600 font-medium">
+                    Min Required
+                  </div>
                 </div>
 
                 <div className="rounded-lg bg-amber-50 p-2 dark:bg-amber-950/40">
                   <div className="text-lg font-bold text-amber-700 dark:text-amber-300">
                     {policy.warningThreshold}%
                   </div>
-                  <div className="text-[10px] text-amber-600 font-medium">Warning Threshold</div>
+                  <div className="text-[10px] text-amber-600 font-medium">
+                    Warning Threshold
+                  </div>
                 </div>
 
                 <div className="rounded-lg bg-rose-50 p-2 dark:bg-rose-950/40">
                   <div className="text-lg font-bold text-rose-700 dark:text-rose-300">
                     {policy.criticalThreshold}%
                   </div>
-                  <div className="text-[10px] text-rose-600 font-medium">Critical Debar</div>
+                  <div className="text-[10px] text-rose-600 font-medium">
+                    Critical Debar
+                  </div>
                 </div>
               </div>
 
@@ -169,19 +194,27 @@ export default function AttendancePoliciesPage() {
                 <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
                   <span>Late Arrival Weight</span>
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {policy.lateArrivalWeight === 1 ? "1.0x (Full)" : policy.lateArrivalWeight === 0.5 ? "0.5x (Half Present)" : "0.0x (Absent)"}
+                    {policy.lateArrivalWeight === 1
+                      ? "1.0x (Full)"
+                      : policy.lateArrivalWeight === 0.5
+                        ? "0.5x (Half Present)"
+                        : "0.0x (Absent)"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
                   <span>Include Approved Excused</span>
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {policy.includeExcusedInTotal ? "Yes (Counted Present)" : "No"}
+                    {policy.includeExcusedInTotal
+                      ? "Yes (Counted Present)"
+                      : "No"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
                   <span>Correction HOD Sign-off</span>
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {policy.requireApprovalForCorrections ? "Mandatory" : "Direct"}
+                    {policy.requireApprovalForCorrections
+                      ? "Mandatory"
+                      : "Direct"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
@@ -210,7 +243,8 @@ export default function AttendancePoliciesPage() {
       >
         <form onSubmit={handleCreatePolicy} className="space-y-4 text-xs">
           <p className="text-slate-500">
-            Define compliance thresholds and penalty weighting for university degree conferral eligibility.
+            Define compliance thresholds and penalty weighting for university
+            degree conferral eligibility.
           </p>
 
           <div>
@@ -221,7 +255,9 @@ export default function AttendancePoliciesPage() {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             />
           </div>
@@ -233,13 +269,23 @@ export default function AttendancePoliciesPage() {
               </label>
               <select
                 value={formData.departmentName}
-                onChange={(e) => setFormData({ ...formData, departmentName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, departmentName: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-                <option value="Electronics & Communication Engineering">Electronics & Communication</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="All Departments">All Departments (Institutional)</option>
+                <option value="Computer Science & Engineering">
+                  Computer Science & Engineering
+                </option>
+                <option value="Electronics & Communication Engineering">
+                  Electronics & Communication
+                </option>
+                <option value="Mechanical Engineering">
+                  Mechanical Engineering
+                </option>
+                <option value="All Departments">
+                  All Departments (Institutional)
+                </option>
               </select>
             </div>
 
@@ -250,7 +296,9 @@ export default function AttendancePoliciesPage() {
               <input
                 type="text"
                 value={formData.academicYear}
-                onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, academicYear: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -266,7 +314,12 @@ export default function AttendancePoliciesPage() {
                 min="50"
                 max="100"
                 value={formData.minimumPercentage}
-                onChange={(e) => setFormData({ ...formData, minimumPercentage: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    minimumPercentage: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -280,7 +333,12 @@ export default function AttendancePoliciesPage() {
                 min="50"
                 max="100"
                 value={formData.warningThreshold}
-                onChange={(e) => setFormData({ ...formData, warningThreshold: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    warningThreshold: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -294,7 +352,12 @@ export default function AttendancePoliciesPage() {
                 min="40"
                 max="100"
                 value={formData.criticalThreshold}
-                onChange={(e) => setFormData({ ...formData, criticalThreshold: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    criticalThreshold: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -307,7 +370,12 @@ export default function AttendancePoliciesPage() {
               </label>
               <select
                 value={formData.lateArrivalWeight}
-                onChange={(e) => setFormData({ ...formData, lateArrivalWeight: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    lateArrivalWeight: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value={0.5}>0.5x — Half Attendance</option>
@@ -325,7 +393,12 @@ export default function AttendancePoliciesPage() {
                 min="1"
                 max="30"
                 value={formData.maxLeaveDaysConsecutive}
-                onChange={(e) => setFormData({ ...formData, maxLeaveDaysConsecutive: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    maxLeaveDaysConsecutive: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -336,11 +409,20 @@ export default function AttendancePoliciesPage() {
               type="checkbox"
               id="includeExcused"
               checked={formData.includeExcusedInTotal}
-              onChange={(e) => setFormData({ ...formData, includeExcusedInTotal: e.target.checked })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  includeExcusedInTotal: e.target.checked,
+                })
+              }
               className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <label htmlFor="includeExcused" className="text-slate-700 dark:text-slate-300 font-medium">
-              Count approved Medical / On-Duty leaves as Present in percentage calculations
+            <label
+              htmlFor="includeExcused"
+              className="text-slate-700 dark:text-slate-300 font-medium"
+            >
+              Count approved Medical / On-Duty leaves as Present in percentage
+              calculations
             </label>
           </div>
 

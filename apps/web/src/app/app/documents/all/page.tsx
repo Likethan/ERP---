@@ -9,7 +9,10 @@ import {
   DocumentStatus,
   DocumentOwnerType,
 } from "@campusos/types";
-import { DocumentStatusBadge, ConfidentialityBadge } from "@/components/documents/document-status-badge";
+import {
+  DocumentStatusBadge,
+  ConfidentialityBadge,
+} from "@/components/documents/document-status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -57,16 +60,19 @@ export default function AllDocumentsDirectoryPage() {
   }, []);
 
   const filteredDocs = documents.filter((doc) => {
-    if (categoryFilter !== "ALL" && doc.category !== categoryFilter) return false;
+    if (categoryFilter !== "ALL" && doc.category !== categoryFilter)
+      return false;
     if (statusFilter !== "ALL" && doc.status !== statusFilter) return false;
-    if (ownerTypeFilter !== "ALL" && doc.ownerType !== ownerTypeFilter) return false;
+    if (ownerTypeFilter !== "ALL" && doc.ownerType !== ownerTypeFilter)
+      return false;
 
     if (search.trim()) {
       const q = search.toLowerCase();
       return (
         doc.name.toLowerCase().includes(q) ||
         doc.ownerName.toLowerCase().includes(q) ||
-        (doc.ownerRollNumber && doc.ownerRollNumber.toLowerCase().includes(q)) ||
+        (doc.ownerRollNumber &&
+          doc.ownerRollNumber.toLowerCase().includes(q)) ||
         (doc.documentNumber && doc.documentNumber.toLowerCase().includes(q)) ||
         doc.documentType.toLowerCase().includes(q) ||
         doc.category.toLowerCase().includes(q)
@@ -84,9 +90,12 @@ export default function AllDocumentsDirectoryPage() {
             <Layers className="w-3.5 h-3.5" />
             <span>Master Institutional Repository</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-100">All Campus Documents</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-100">
+            All Campus Documents
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Master register of all verified, under-review, and archived records across students, faculty, and departments.
+            Master register of all verified, under-review, and archived records
+            across students, faculty, and departments.
           </p>
         </div>
 
@@ -95,13 +104,20 @@ export default function AllDocumentsDirectoryPage() {
             variant="outline"
             size="sm"
             className="text-xs gap-1.5"
-            onClick={() => alert(`Exporting ${filteredDocs.length} document records to CSV...`)}
+            onClick={() =>
+              alert(
+                `Exporting ${filteredDocs.length} document records to CSV...`,
+              )
+            }
           >
             <Download className="w-4 h-4" />
             Export CSV
           </Button>
           <Link href="/app/documents/upload">
-            <Button size="sm" className="text-xs gap-1.5 bg-blue-600 hover:bg-blue-700">
+            <Button
+              size="sm"
+              className="text-xs gap-1.5 bg-blue-600 hover:bg-blue-700"
+            >
               <Upload className="w-4 h-4" />
               Upload Record
             </Button>
@@ -171,15 +187,21 @@ export default function AllDocumentsDirectoryPage() {
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         <div className="p-4 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
           <span>
-            Showing <strong className="text-slate-200">{filteredDocs.length}</strong> registered documents
+            Showing{" "}
+            <strong className="text-slate-200">{filteredDocs.length}</strong>{" "}
+            registered documents
           </span>
           <span>Security classification enforced via ACL</span>
         </div>
 
         {loading ? (
-          <div className="py-20 text-center text-xs text-slate-500">Loading master directory...</div>
+          <div className="py-20 text-center text-xs text-slate-500">
+            Loading master directory...
+          </div>
         ) : filteredDocs.length === 0 ? (
-          <div className="py-16 text-center text-xs text-slate-500">No documents matched your criteria.</div>
+          <div className="py-16 text-center text-xs text-slate-500">
+            No documents matched your criteria.
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
@@ -198,7 +220,10 @@ export default function AllDocumentsDirectoryPage() {
                 {filteredDocs.map((doc) => {
                   const expStatus = getDocumentExpiryStatus(doc.expiryDate);
                   return (
-                    <tr key={doc.id} className="hover:bg-slate-800/40 transition">
+                    <tr
+                      key={doc.id}
+                      className="hover:bg-slate-800/40 transition"
+                    >
                       <td className="py-3.5 px-4">
                         <Link
                           href={`/app/documents/${doc.id}`}
@@ -212,14 +237,18 @@ export default function AllDocumentsDirectoryPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-slate-200">{doc.ownerName}</div>
+                        <div className="font-medium text-slate-200">
+                          {doc.ownerName}
+                        </div>
                         <div className="text-[11px] text-slate-400 font-mono">
                           {doc.ownerRollNumber || doc.ownerType}
                         </div>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="font-medium text-blue-400">{doc.category}</span>
+                        <span className="font-medium text-blue-400">
+                          {doc.category}
+                        </span>
                       </td>
 
                       <td className="py-3.5 px-4">
@@ -236,7 +265,11 @@ export default function AllDocumentsDirectoryPage() {
 
                       <td className="py-3.5 px-4 text-right">
                         <Link href={`/app/documents/${doc.id}`}>
-                          <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-xs h-7 gap-1"
+                          >
                             <Eye className="w-3.5 h-3.5" />
                             View 360
                           </Button>

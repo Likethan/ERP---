@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { certificateTemplatesService } from "@/services/certificate-templates.service";
-import { CertificateTemplate, CertificateType, CertificateTemplateStatus } from "@campusos/types";
+import {
+  CertificateTemplate,
+  CertificateType,
+  CertificateTemplateStatus,
+} from "@campusos/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -44,7 +48,8 @@ export default function CertificateTemplatesPage() {
   }, []);
 
   const filteredTemplates = templates.filter((tmpl) => {
-    if (typeFilter !== "ALL" && tmpl.certificateType !== typeFilter) return false;
+    if (typeFilter !== "ALL" && tmpl.certificateType !== typeFilter)
+      return false;
     if (search.trim()) {
       const q = search.toLowerCase();
       return (
@@ -62,7 +67,10 @@ export default function CertificateTemplatesPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">
-            <Link href="/app/documents/certificates" className="hover:underline flex items-center gap-1">
+            <Link
+              href="/app/documents/certificates"
+              className="hover:underline flex items-center gap-1"
+            >
               <ArrowLeft className="w-3.5 h-3.5" />
               Certificate Center
             </Link>
@@ -71,7 +79,8 @@ export default function CertificateTemplatesPage() {
             Certificate Templates
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Standardized institutional certificate formats, custom fields, version control, and audience policies.
+            Standardized institutional certificate formats, custom fields,
+            version control, and audience policies.
           </p>
         </div>
 
@@ -117,9 +126,13 @@ export default function CertificateTemplatesPage() {
 
       {/* Grid of Templates */}
       {loading ? (
-        <div className="py-20 text-center text-xs text-slate-500">Loading templates catalog...</div>
+        <div className="py-20 text-center text-xs text-slate-500">
+          Loading templates catalog...
+        </div>
       ) : filteredTemplates.length === 0 ? (
-        <div className="py-16 text-center text-xs text-slate-500">No templates found matching your criteria.</div>
+        <div className="py-16 text-center text-xs text-slate-500">
+          No templates found matching your criteria.
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredTemplates.map((tmpl) => (
@@ -144,11 +157,15 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 <h3 className="text-base font-semibold text-slate-100 hover:text-blue-400 transition">
-                  <Link href={`/app/documents/certificates/templates/${tmpl.id}`}>
+                  <Link
+                    href={`/app/documents/certificates/templates/${tmpl.id}`}
+                  >
                     {tmpl.templateName}
                   </Link>
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 line-clamp-2">{tmpl.description}</p>
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  {tmpl.description}
+                </p>
 
                 <div className="mt-4 pt-3 border-t border-slate-800/80 space-y-2 text-xs">
                   <div className="flex items-center justify-between text-slate-400">
@@ -184,7 +201,9 @@ export default function CertificateTemplatesPage() {
               </div>
 
               <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{tmpl.usageCount} issuances</span>
+                <span className="text-slate-500">
+                  {tmpl.usageCount} issuances
+                </span>
                 <Link
                   href={`/app/documents/certificates/templates/${tmpl.id}`}
                   className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 font-semibold"

@@ -41,11 +41,36 @@ export default function VerificationWorkspacePage({
   const [checklist, setChecklist] = useState<
     { id: string; label: string; checked: boolean; required: boolean }[]
   >([
-    { id: "c1", label: "Document classification matches stated requirement", checked: true, required: true },
-    { id: "c2", label: "Legal candidate name & registration number authenticated", checked: true, required: true },
-    { id: "c3", label: "Official issuing authority seal / digital stamp legible", checked: false, required: true },
-    { id: "c4", label: "Issue and validity dates compliant with semester regulations", checked: false, required: true },
-    { id: "c5", label: "Zero indications of tampering, cropping, or resolution blur", checked: true, required: true },
+    {
+      id: "c1",
+      label: "Document classification matches stated requirement",
+      checked: true,
+      required: true,
+    },
+    {
+      id: "c2",
+      label: "Legal candidate name & registration number authenticated",
+      checked: true,
+      required: true,
+    },
+    {
+      id: "c3",
+      label: "Official issuing authority seal / digital stamp legible",
+      checked: false,
+      required: true,
+    },
+    {
+      id: "c4",
+      label: "Issue and validity dates compliant with semester regulations",
+      checked: false,
+      required: true,
+    },
+    {
+      id: "c5",
+      label: "Zero indications of tampering, cropping, or resolution blur",
+      checked: true,
+      required: true,
+    },
   ]);
 
   // Reject Modal State
@@ -62,7 +87,10 @@ export default function VerificationWorkspacePage({
         const res = await documentsService.getDocumentById(id);
         if (res.success && res.data) {
           setDocument(res.data);
-          if (res.data.verificationChecklist && res.data.verificationChecklist.length > 0) {
+          if (
+            res.data.verificationChecklist &&
+            res.data.verificationChecklist.length > 0
+          ) {
             setChecklist(res.data.verificationChecklist);
           }
         } else {
@@ -79,7 +107,11 @@ export default function VerificationWorkspacePage({
   }, [id]);
 
   if (loading) {
-    return <div className="py-24 text-center text-xs text-slate-500">Opening verification workspace...</div>;
+    return (
+      <div className="py-24 text-center text-xs text-slate-500">
+        Opening verification workspace...
+      </div>
+    );
   }
 
   if (!document) {
@@ -88,11 +120,15 @@ export default function VerificationWorkspacePage({
 
   const toggleChecklist = (itemIndex: number) => {
     setChecklist((prev) =>
-      prev.map((item, idx) => (idx === itemIndex ? { ...item, checked: !item.checked } : item))
+      prev.map((item, idx) =>
+        idx === itemIndex ? { ...item, checked: !item.checked } : item,
+      ),
     );
   };
 
-  const allMandatoryChecked = checklist.filter((c) => c.required).every((c) => c.checked);
+  const allMandatoryChecked = checklist
+    .filter((c) => c.required)
+    .every((c) => c.checked);
 
   const handleStartReview = async () => {
     try {
@@ -100,7 +136,7 @@ export default function VerificationWorkspacePage({
       const res = await documentVerificationService.startVerification(
         document.id,
         "user-super-admin-01",
-        "Dr. Arvind Swaminathan (Registrar)"
+        "Dr. Arvind Swaminathan (Registrar)",
       );
       if (res.success && res.data) {
         setDocument({ ...res.data });
@@ -118,7 +154,7 @@ export default function VerificationWorkspacePage({
       const res = await documentVerificationService.verifyDocument(
         document.id,
         "Dr. Arvind Swaminathan (Registrar)",
-        "Verified all statutory checklist requirements."
+        "Verified all statutory checklist requirements.",
       );
       if (res.success && res.data) {
         setDocument({ ...res.data });
@@ -142,12 +178,14 @@ export default function VerificationWorkspacePage({
       const res = await documentVerificationService.rejectDocument(
         document.id,
         rejectionReason,
-        "Dr. Arvind Swaminathan (Registrar)"
+        "Dr. Arvind Swaminathan (Registrar)",
       );
       if (res.success && res.data) {
         setDocument({ ...res.data });
         setRejectModalOpen(false);
-        alert("Document rejected. Official reason logged and notice dispatched to candidate.");
+        alert(
+          "Document rejected. Official reason logged and notice dispatched to candidate.",
+        );
       }
     } catch (err) {
       console.error(err);
@@ -167,7 +205,7 @@ export default function VerificationWorkspacePage({
       const res = await documentVerificationService.requestReupload(
         document.id,
         reuploadInstruction,
-        "Dr. Arvind Swaminathan (Registrar)"
+        "Dr. Arvind Swaminathan (Registrar)",
       );
       if (res.success && res.data) {
         setDocument({ ...res.data });
@@ -194,7 +232,9 @@ export default function VerificationWorkspacePage({
         </Link>
         <div className="flex items-center gap-2">
           <DocumentStatusBadge status={document.status} />
-          <span className="text-xs text-slate-500 font-mono">DOC ID: {document.id}</span>
+          <span className="text-xs text-slate-500 font-mono">
+            DOC ID: {document.id}
+          </span>
         </div>
       </div>
 
@@ -205,9 +245,14 @@ export default function VerificationWorkspacePage({
             <ShieldCheck className="w-4 h-4" />
             Verification Workspace
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-100">{document.name}</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-slate-100">
+            {document.name}
+          </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Candidate: <strong className="text-slate-200">{document.ownerName}</strong> ({document.ownerRollNumber || document.ownerType}) • Category: {document.category}
+            Candidate:{" "}
+            <strong className="text-slate-200">{document.ownerName}</strong> (
+            {document.ownerRollNumber || document.ownerType}) • Category:{" "}
+            {document.category}
           </p>
         </div>
 
@@ -283,7 +328,8 @@ export default function VerificationWorkspacePage({
                 Verification Checklist
               </h3>
               <span className="text-[11px] font-mono text-slate-400">
-                {checklist.filter((c) => c.checked).length} / {checklist.length} satisfied
+                {checklist.filter((c) => c.checked).length} / {checklist.length}{" "}
+                satisfied
               </span>
             </div>
 
@@ -319,12 +365,13 @@ export default function VerificationWorkspacePage({
               ))}
             </div>
 
-            {!allMandatoryChecked && document.status !== DocumentStatus.VERIFIED && (
-              <p className="text-[11px] text-amber-400/80 mt-3 italic flex items-center gap-1">
-                <AlertCircle className="w-3.5 h-3.5" />
-                All mandatory checks must be validated before endorsing.
-              </p>
-            )}
+            {!allMandatoryChecked &&
+              document.status !== DocumentStatus.VERIFIED && (
+                <p className="text-[11px] text-amber-400/80 mt-3 italic flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  All mandatory checks must be validated before endorsing.
+                </p>
+              )}
           </div>
 
           {/* Document Key Particulars */}
@@ -334,27 +381,39 @@ export default function VerificationWorkspacePage({
             </h3>
             <div className="grid grid-cols-2 gap-2 text-slate-300">
               <div className="p-2.5 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] text-slate-500 block">DOCUMENT NUMBER</span>
+                <span className="text-[10px] text-slate-500 block">
+                  DOCUMENT NUMBER
+                </span>
                 <span className="font-mono text-slate-200 mt-0.5 block">
                   {document.documentNumber || "Not recorded"}
                 </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] text-slate-500 block">ISSUING AUTHORITY</span>
+                <span className="text-[10px] text-slate-500 block">
+                  ISSUING AUTHORITY
+                </span>
                 <span className="text-slate-200 mt-0.5 block truncate">
                   {document.issuingAuthority || "Not recorded"}
                 </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] text-slate-500 block">ISSUE DATE</span>
-                <span className="text-slate-200 mt-0.5 block">{document.issueDate || "N/A"}</span>
+                <span className="text-[10px] text-slate-500 block">
+                  ISSUE DATE
+                </span>
+                <span className="text-slate-200 mt-0.5 block">
+                  {document.issueDate || "N/A"}
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] text-slate-500 block">EXPIRY DATE</span>
-                <span className="text-slate-200 mt-0.5 block">{document.expiryDate || "Permanent"}</span>
+                <span className="text-[10px] text-slate-500 block">
+                  EXPIRY DATE
+                </span>
+                <span className="text-slate-200 mt-0.5 block">
+                  {document.expiryDate || "Permanent"}
+                </span>
               </div>
             </div>
           </div>
@@ -380,7 +439,9 @@ export default function VerificationWorkspacePage({
       >
         <div className="space-y-4 text-xs">
           <p className="text-slate-300">
-            Please enter an official reason for rejection. This notice will be immediately recorded in the document audit trail and communicated to the candidate.
+            Please enter an official reason for rejection. This notice will be
+            immediately recorded in the document audit trail and communicated to
+            the candidate.
           </p>
 
           <div>
@@ -427,12 +488,14 @@ export default function VerificationWorkspacePage({
       >
         <div className="space-y-4 text-xs">
           <p className="text-slate-300">
-            Notify the candidate to supply a replacement document with corrective guidance.
+            Notify the candidate to supply a replacement document with
+            corrective guidance.
           </p>
 
           <div>
             <label className="block text-slate-400 font-medium mb-1">
-              Instructions for Student / Staff <span className="text-amber-400">*</span>
+              Instructions for Student / Staff{" "}
+              <span className="text-amber-400">*</span>
             </label>
             <Textarea
               rows={3}

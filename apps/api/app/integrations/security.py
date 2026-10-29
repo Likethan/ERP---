@@ -9,17 +9,16 @@ Enforces:
 - Structured failure categorization across all external HTTP operations.
 """
 
-from enum import StrEnum
 import hashlib
 import hmac
 import ipaddress
 import logging
-from math import exp
 import socket
 import time
+import uuid
+from enum import StrEnum
 from typing import Any
 from urllib.parse import urlparse
-import uuid
 
 import httpx
 
@@ -185,7 +184,7 @@ def validate_outbound_url(
 
 def compute_webhook_signature(secret: str, timestamp: int | str, payload_str: str) -> str:
     """Generate SHA-256 HMAC signature for webhook payload: HMAC(secret, timestamp + '.' + payload)."""
-    message = f"{timestamp}.{payload_str}".encode("utf-8")
+    message = f"{timestamp}.{payload_str}".encode()
     sig = hmac.new(secret.encode("utf-8"), message, hashlib.sha256).hexdigest()
     return f"t={timestamp},v1={sig}"
 
@@ -238,7 +237,7 @@ def verify_webhook_signature(
             return False
         expected_sig = hmac.new(
             secret.encode("utf-8"),
-            f"{parsed_timestamp}.{raw_payload}".encode("utf-8"),
+            f"{parsed_timestamp}.{raw_payload}".encode(),
             hashlib.sha256,
         ).hexdigest()
     else:
@@ -345,7 +344,7 @@ class SafeHttpClient:
             req_headers["X-Correlation-ID"] = correlation_id
         if "X-Request-ID" not in req_headers:
             req_headers["X-Request-ID"] = str(uuid.uuid4())
-        req_headers["User-Agent"] = f"CampusOS-Integration/1.0 (+https://campusos.edu)"
+        req_headers["User-Agent"] = "CampusOS-Integration/1.0 (+https://campusos.edu)"
 
         start_time = time.perf_counter()
 

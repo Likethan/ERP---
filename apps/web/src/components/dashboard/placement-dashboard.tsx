@@ -3,11 +3,21 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { placementsService } from "@/services/placements.service";
-import { CompanyProfileItem, JobDriveItem, PlacementOfferItem } from "@/mocks/placements.mock";
+import {
+  CompanyProfileItem,
+  JobDriveItem,
+  PlacementOfferItem,
+} from "@/mocks/placements.mock";
 import {
   Briefcase,
   Building,
@@ -41,13 +51,18 @@ export function PlacementDashboard() {
             Placement & Corporate Recruiting Hub
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Empanelled corporate recruiters, recruitment drives, candidate shortlisting, and verified job offers.
+            Empanelled corporate recruiters, recruitment drives, candidate
+            shortlisting, and verified job offers.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/placement">
-            <Button variant="primary" size="sm" leftIcon={<Plus className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="h-3.5 w-3.5" />}
+            >
               Create Job Drive
             </Button>
           </Link>
@@ -95,10 +110,16 @@ export function PlacementDashboard() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Active Recruitment Drives</CardTitle>
-              <CardDescription>On-campus interview cycles and eligibility criteria.</CardDescription>
+              <CardDescription>
+                On-campus interview cycles and eligibility criteria.
+              </CardDescription>
             </div>
             <Link href="/app/placement">
-              <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-slate-400 hover:text-white"
+              >
                 All Drives <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
             </Link>
@@ -110,16 +131,20 @@ export function PlacementDashboard() {
                 className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/40 text-xs space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-bold text-white text-sm">{d.companyName}</div>
+                  <div className="font-bold text-white text-sm">
+                    {d.companyName}
+                  </div>
                   <Badge variant="success">₹{d.packageLPA} LPA</Badge>
                 </div>
                 <div className="text-slate-300 font-medium">{d.roleTitle}</div>
                 <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/60">
                   <span>
-                    Min CGPA: <strong className="text-slate-200">{d.minimumCGPA}</strong>
+                    Min CGPA:{" "}
+                    <strong className="text-slate-200">{d.minimumCGPA}</strong>
                   </span>
                   <span>
-                    {d.totalApplicants} Applicants • {d.shortlistedCount} Shortlisted
+                    {d.totalApplicants} Applicants • {d.shortlistedCount}{" "}
+                    Shortlisted
                   </span>
                 </div>
               </div>
@@ -132,7 +157,9 @@ export function PlacementDashboard() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Verified Official Offers</CardTitle>
-              <CardDescription>Accepted offers formally lodged in Career Records.</CardDescription>
+              <CardDescription>
+                Accepted offers formally lodged in Career Records.
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">

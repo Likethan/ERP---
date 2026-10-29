@@ -41,7 +41,9 @@ export default function TransportRouteDetailPage({
   const [route, setRoute] = useState<TransportRoute | null>(null);
   const [stops, setStops] = useState<TransportStop[]>([]);
   const [allocations, setAllocations] = useState<TransportAllocation[]>([]);
-  const [activeTab, setActiveTab] = useState<"stops" | "students" | "crew">("stops");
+  const [activeTab, setActiveTab] = useState<"stops" | "students" | "crew">(
+    "stops",
+  );
 
   useEffect(() => {
     async function loadData() {
@@ -76,7 +78,9 @@ export default function TransportRouteDetailPage({
   if (!route) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Transit Route Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Transit Route Not Found
+        </h2>
         <Link href="/app/infrastructure/transport/routes">
           <Button variant="outline" className="border-slate-700">
             Back to Routes
@@ -87,7 +91,9 @@ export default function TransportRouteDetailPage({
   }
 
   const util =
-    route.capacity > 0 ? Math.round((route.allocatedStudents / route.capacity) * 100) : 0;
+    route.capacity > 0
+      ? Math.round((route.allocatedStudents / route.capacity) * 100)
+      : 0;
 
   return (
     <div className="p-6 lg:p-8 space-y-8 max-w-6xl mx-auto">
@@ -130,7 +136,8 @@ export default function TransportRouteDetailPage({
             <p className="text-slate-400 text-sm flex items-center gap-2">
               <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
               <span>
-                {route.startPoint} <strong className="text-white">↔</strong> {route.endPoint}
+                {route.startPoint} <strong className="text-white">↔</strong>{" "}
+                {route.endPoint}
               </span>
             </p>
           </div>
@@ -141,7 +148,11 @@ export default function TransportRouteDetailPage({
               <span className="text-slate-400">Pass Occupancy</span>
               <span
                 className={`font-semibold ${
-                  util >= 90 ? "text-red-400" : util >= 75 ? "text-amber-400" : "text-emerald-400"
+                  util >= 90
+                    ? "text-red-400"
+                    : util >= 75
+                      ? "text-amber-400"
+                      : "text-emerald-400"
                 }`}
               >
                 {util}% Utilized
@@ -153,14 +164,23 @@ export default function TransportRouteDetailPage({
             <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full ${
-                  util >= 90 ? "bg-red-500" : util >= 75 ? "bg-amber-500" : "bg-blue-500"
+                  util >= 90
+                    ? "bg-red-500"
+                    : util >= 75
+                      ? "bg-amber-500"
+                      : "bg-blue-500"
                 }`}
                 style={{ width: `${Math.min(util, 100)}%` }}
               />
             </div>
             <div className="text-[11px] text-slate-500 flex justify-between pt-1">
-              <span>Available: {route.capacity - route.allocatedStudents} seats</span>
-              <span>Morning: {route.morningDeparture || route.morningStartTime || "07:15 AM"}</span>
+              <span>
+                Available: {route.capacity - route.allocatedStudents} seats
+              </span>
+              <span>
+                Morning:{" "}
+                {route.morningDeparture || route.morningStartTime || "07:15 AM"}
+              </span>
             </div>
           </div>
         </div>
@@ -170,7 +190,9 @@ export default function TransportRouteDetailPage({
           <button
             onClick={() => setActiveTab("stops")}
             className={`pb-3 text-sm font-medium transition-colors flex items-center gap-2 relative ${
-              activeTab === "stops" ? "text-blue-400" : "text-slate-400 hover:text-slate-200"
+              activeTab === "stops"
+                ? "text-blue-400"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             <MapPin className="w-4 h-4" />
@@ -182,7 +204,9 @@ export default function TransportRouteDetailPage({
           <button
             onClick={() => setActiveTab("students")}
             className={`pb-3 text-sm font-medium transition-colors flex items-center gap-2 relative ${
-              activeTab === "students" ? "text-blue-400" : "text-slate-400 hover:text-slate-200"
+              activeTab === "students"
+                ? "text-blue-400"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             <Users className="w-4 h-4" />
@@ -194,7 +218,9 @@ export default function TransportRouteDetailPage({
           <button
             onClick={() => setActiveTab("crew")}
             className={`pb-3 text-sm font-medium transition-colors flex items-center gap-2 relative ${
-              activeTab === "crew" ? "text-blue-400" : "text-slate-400 hover:text-slate-200"
+              activeTab === "crew"
+                ? "text-blue-400"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             <Bus className="w-4 h-4" />
@@ -214,7 +240,9 @@ export default function TransportRouteDetailPage({
               <MapPin className="w-4 h-4 text-blue-400" />
               Stops & Boarding Schedule
             </h2>
-            <span className="text-xs text-slate-400">Sequential Corridor Progression</span>
+            <span className="text-xs text-slate-400">
+              Sequential Corridor Progression
+            </span>
           </div>
 
           <div className="relative pl-8 space-y-8 before:absolute before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-800">
@@ -251,15 +279,21 @@ export default function TransportRouteDetailPage({
                         <span className="text-slate-500 block text-[10px] uppercase">
                           Boarding Times
                         </span>
-                        <span className="font-mono text-white">AM: {stop.pickupTime}</span>
+                        <span className="font-mono text-white">
+                          AM: {stop.pickupTime}
+                        </span>
                         <span className="text-slate-400 mx-1">|</span>
-                        <span className="font-mono text-slate-300">PM: {stop.dropTime}</span>
+                        <span className="font-mono text-slate-300">
+                          PM: {stop.dropTime}
+                        </span>
                       </div>
                       <div className="p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-center min-w-[70px]">
                         <span className="block text-sm font-bold text-blue-400">
                           {stop.studentCount}
                         </span>
-                        <span className="text-[10px] text-slate-400">Passes</span>
+                        <span className="text-[10px] text-slate-400">
+                          Passes
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -283,7 +317,11 @@ export default function TransportRouteDetailPage({
               </p>
             </div>
             <Link href="/app/infrastructure/transport/allocations">
-              <Button size="sm" variant="outline" className="border-slate-800 text-xs">
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-slate-800 text-xs"
+              >
                 Manage Passes
               </Button>
             </Link>
@@ -314,9 +352,19 @@ export default function TransportRouteDetailPage({
                       </span>
                     </div>
                     <div className="text-xs text-slate-400 flex items-center gap-2">
-                      <span>Stop: <strong className="text-slate-300">{alloc.stopName}</strong></span>
+                      <span>
+                        Stop:{" "}
+                        <strong className="text-slate-300">
+                          {alloc.stopName}
+                        </strong>
+                      </span>
                       <span>•</span>
-                      <span>Seat: <strong className="text-white">#{alloc.seatNumber || "General"}</strong></span>
+                      <span>
+                        Seat:{" "}
+                        <strong className="text-white">
+                          #{alloc.seatNumber || "General"}
+                        </strong>
+                      </span>
                     </div>
                   </div>
 
@@ -367,7 +415,9 @@ export default function TransportRouteDetailPage({
 
             <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80 space-y-3">
               <div>
-                <span className="text-xs text-slate-500 block mb-0.5">Registration Number</span>
+                <span className="text-xs text-slate-500 block mb-0.5">
+                  Registration Number
+                </span>
                 <span className="font-mono text-base font-bold text-white">
                   {route.vehicleNumber || "Unassigned"}
                 </span>
@@ -375,11 +425,15 @@ export default function TransportRouteDetailPage({
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <span className="text-slate-500 block">Seating Capacity</span>
-                  <span className="font-semibold text-slate-200">{route.capacity} Seats</span>
+                  <span className="font-semibold text-slate-200">
+                    {route.capacity} Seats
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Fleet Type</span>
-                  <span className="font-semibold text-slate-200">Heavy Passenger Bus</span>
+                  <span className="font-semibold text-slate-200">
+                    Heavy Passenger Bus
+                  </span>
                 </div>
               </div>
             </div>
@@ -404,7 +458,9 @@ export default function TransportRouteDetailPage({
 
             <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80 space-y-3">
               <div>
-                <span className="text-xs text-slate-500 block mb-0.5">Driver Full Name</span>
+                <span className="text-xs text-slate-500 block mb-0.5">
+                  Driver Full Name
+                </span>
                 <span className="font-medium text-base text-white">
                   {route.driverName || "Unassigned"}
                 </span>
@@ -419,7 +475,10 @@ export default function TransportRouteDetailPage({
                 </div>
                 <div>
                   <span className="text-slate-500 block">Duty Status</span>
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 mt-0.5">
+                  <Badge
+                    variant="outline"
+                    className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 mt-0.5"
+                  >
                     On Duty
                   </Badge>
                 </div>

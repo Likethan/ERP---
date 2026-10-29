@@ -3,7 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceReportType, AttendanceReportFilter } from "@/types/attendance";
+import {
+  AttendanceReportType,
+  AttendanceReportFilter,
+} from "@/types/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
@@ -24,7 +27,8 @@ import {
 export default function AttendanceReportsPage() {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [reportType, setReportType] = useState<AttendanceReportType>("LOW_ATTENDANCE");
+  const [reportType, setReportType] =
+    useState<AttendanceReportType>("LOW_ATTENDANCE");
   const [department, setDepartment] = useState("ALL");
   const [semester, setSemester] = useState("ALL");
   const [section, setSection] = useState("ALL");
@@ -60,7 +64,11 @@ export default function AttendanceReportsPage() {
       }
     } catch (err) {
       console.error("Failed to generate report", err);
-      showToast({ type: "error", title: "Generation Error", message: "Failed to compile attendance report." });
+      showToast({
+        type: "error",
+        title: "Generation Error",
+        message: "Failed to compile attendance report.",
+      });
     } finally {
       setLoading(false);
     }
@@ -74,18 +82,27 @@ export default function AttendanceReportsPage() {
       [
         headers.join(","),
         ...generatedData.rows.map((row) =>
-          headers.map((h) => `"${String(row[h] || "").replace(/"/g, '""')}"`).join(",")
+          headers
+            .map((h) => `"${String(row[h] || "").replace(/"/g, '""')}"`)
+            .join(","),
         ),
       ].join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${generatedData.title.toLowerCase().replace(/\s+/g, "_")}.csv`);
+    link.setAttribute(
+      "download",
+      `${generatedData.title.toLowerCase().replace(/\s+/g, "_")}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast({ type: "info", title: "Export Started", message: "CSV file downloaded successfully." });
+    showToast({
+      type: "info",
+      title: "Export Started",
+      message: "CSV file downloaded successfully.",
+    });
   };
 
   return (
@@ -103,13 +120,16 @@ export default function AttendanceReportsPage() {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">
                 Institutional Audits
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">Export & Compliance Engine</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Export & Compliance Engine
+              </span>
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               Attendance Reports & Registers
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Compile statutory attendance rosters, low-attendance shortfalls, and hall-ticket debarment audit files.
+              Compile statutory attendance rosters, low-attendance shortfalls,
+              and hall-ticket debarment audit files.
             </p>
           </div>
         </div>
@@ -128,14 +148,22 @@ export default function AttendanceReportsPage() {
             </label>
             <select
               value={reportType}
-              onChange={(e) => setReportType(e.target.value as AttendanceReportType)}
+              onChange={(e) =>
+                setReportType(e.target.value as AttendanceReportType)
+              }
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
-              <option value="LOW_ATTENDANCE">Low Attendance & Shortage Report</option>
+              <option value="LOW_ATTENDANCE">
+                Low Attendance & Shortage Report
+              </option>
               <option value="STUDENT">Student Cohort Aggregate Roster</option>
               <option value="COURSE">Course Offering Attendance Summary</option>
-              <option value="DEPARTMENT">Departmental Compliance Summary</option>
-              <option value="FACULTY_SESSION">Faculty Session Delivery Register</option>
+              <option value="DEPARTMENT">
+                Departmental Compliance Summary
+              </option>
+              <option value="FACULTY_SESSION">
+                Faculty Session Delivery Register
+              </option>
             </select>
           </div>
 
@@ -149,7 +177,9 @@ export default function AttendanceReportsPage() {
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
               <option value="ALL">All Departments</option>
-              <option value="Computer Science">Computer Science & Engineering</option>
+              <option value="Computer Science">
+                Computer Science & Engineering
+              </option>
               <option value="Electronics">Electronics & Communication</option>
               <option value="Mechanical">Mechanical Engineering</option>
             </select>
@@ -234,12 +264,19 @@ export default function AttendanceReportsPage() {
                 {generatedData.title}
               </h3>
               <p className="text-xs text-slate-500">
-                Compiled on {new Date(generatedData.generatedAt).toLocaleString()} • {generatedData.totalRows} Records
+                Compiled on{" "}
+                {new Date(generatedData.generatedAt).toLocaleString()} •{" "}
+                {generatedData.totalRows} Records
               </p>
             </div>
 
             <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" onClick={handleExportCSV} className="gap-1.5 text-xs">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleExportCSV}
+                className="gap-1.5 text-xs"
+              >
                 <Download className="h-3.5 w-3.5" />
                 Export CSV
               </Button>
@@ -259,9 +296,15 @@ export default function AttendanceReportsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {generatedData.rows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={idx}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                  >
                     {Object.values(row).map((val, cIdx) => (
-                      <td key={cIdx} className="py-2.5 px-3 text-slate-800 dark:text-slate-200">
+                      <td
+                        key={cIdx}
+                        className="py-2.5 px-3 text-slate-800 dark:text-slate-200"
+                      >
                         {String(val)}
                       </td>
                     ))}

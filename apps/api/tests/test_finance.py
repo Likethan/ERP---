@@ -1,7 +1,6 @@
 """Comprehensive automated tests for CampusOS Step 8: Finance, Fees & Billing Engine."""
 
 import uuid
-from decimal import Decimal
 from typing import Any
 
 import pytest
@@ -11,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_password_hash
 from app.models.core import Institution
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import Role, User, UserRoleAssignment
 
 
 async def authenticate_user(

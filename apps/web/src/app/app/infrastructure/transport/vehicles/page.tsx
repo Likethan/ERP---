@@ -87,8 +87,13 @@ export default function TransportVehiclesListPage() {
 
   // KPIs
   const totalFleet = vehicles.length;
-  const activeFleet = vehicles.filter((v) => v.status === VehicleStatus.AVAILABLE || v.status === VehicleStatus.ACTIVE).length;
-  const maintenanceFleet = vehicles.filter((v) => v.status === VehicleStatus.MAINTENANCE).length;
+  const activeFleet = vehicles.filter(
+    (v) =>
+      v.status === VehicleStatus.AVAILABLE || v.status === VehicleStatus.ACTIVE,
+  ).length;
+  const maintenanceFleet = vehicles.filter(
+    (v) => v.status === VehicleStatus.MAINTENANCE,
+  ).length;
   const totalSeats = vehicles.reduce((acc, v) => acc + (v.capacity || 0), 0);
 
   const columns: ColumnDef<TransportVehicle>[] = useMemo(
@@ -102,9 +107,13 @@ export default function TransportVehiclesListPage() {
               <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                 {v.registrationNumber}
               </span>
-              <span className="font-mono text-xs text-slate-400">({v.vehicleNumber})</span>
+              <span className="font-mono text-xs text-slate-400">
+                ({v.vehicleNumber})
+              </span>
             </div>
-            <span className="text-xs text-slate-400 block mt-1">{v.makeModel}</span>
+            <span className="text-xs text-slate-400 block mt-1">
+              {v.makeModel}
+            </span>
           </div>
         ),
       },
@@ -114,7 +123,9 @@ export default function TransportVehiclesListPage() {
         cell: (v) => (
           <div className="text-xs">
             <span className="font-semibold text-white">{v.type}</span>
-            <span className="text-slate-400 block mt-0.5">{v.capacity} Seating Capacity</span>
+            <span className="text-slate-400 block mt-0.5">
+              {v.capacity} Seating Capacity
+            </span>
           </div>
         ),
       },
@@ -143,13 +154,17 @@ export default function TransportVehiclesListPage() {
               {fitDate && (
                 <div className="flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                  <span>FC: {new Date(fitDate).toLocaleDateString("en-IN")}</span>
+                  <span>
+                    FC: {new Date(fitDate).toLocaleDateString("en-IN")}
+                  </span>
                 </div>
               )}
               {insDate && (
                 <div className="flex items-center gap-1 text-slate-400">
                   <Clock className="w-3 h-3 text-slate-500" />
-                  <span>Ins: {new Date(insDate).toLocaleDateString("en-IN")}</span>
+                  <span>
+                    Ins: {new Date(insDate).toLocaleDateString("en-IN")}
+                  </span>
                 </div>
               )}
             </div>
@@ -161,7 +176,9 @@ export default function TransportVehiclesListPage() {
         header: "Status",
         accessorKey: "status",
         cell: (v) => {
-          const isAct = v.status === VehicleStatus.ACTIVE || v.status === VehicleStatus.AVAILABLE;
+          const isAct =
+            v.status === VehicleStatus.ACTIVE ||
+            v.status === VehicleStatus.AVAILABLE;
           const isMaint = v.status === VehicleStatus.MAINTENANCE;
           return (
             <Badge
@@ -170,8 +187,8 @@ export default function TransportVehiclesListPage() {
                 isAct
                   ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                   : isMaint
-                  ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                  : "bg-slate-800 text-slate-400 border-slate-700"
+                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                    : "bg-slate-800 text-slate-400 border-slate-700"
               }
             >
               {v.status}
@@ -184,14 +201,18 @@ export default function TransportVehiclesListPage() {
         header: "Actions",
         cell: (v) => (
           <Link href={`/app/infrastructure/transport/vehicles/${v.id}`}>
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+            >
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -215,7 +236,8 @@ export default function TransportVehiclesListPage() {
             Fleet Vehicle Roster
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Manage heavy college buses, minibuses, road fitness certificates, and service logbooks.
+            Manage heavy college buses, minibuses, road fitness certificates,
+            and service logbooks.
           </p>
         </div>
 
@@ -235,16 +257,28 @@ export default function TransportVehiclesListPage() {
           <div className="text-2xl font-bold text-white mt-1">{totalFleet}</div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Operational Buses</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{activeFleet}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Operational Buses
+          </div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {activeFleet}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">In Workshop / Service</div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{maintenanceFleet}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            In Workshop / Service
+          </div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">
+            {maintenanceFleet}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Fleet Passenger Capacity</div>
-          <div className="text-2xl font-bold text-blue-400 mt-1">{totalSeats} seats</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Fleet Passenger Capacity
+          </div>
+          <div className="text-2xl font-bold text-blue-400 mt-1">
+            {totalSeats} seats
+          </div>
         </div>
       </div>
 
@@ -325,7 +359,10 @@ export default function TransportVehiclesListPage() {
                     placeholder="e.g. KA-04-E-9921"
                     value={createForm.registrationNumber}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, registrationNumber: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        registrationNumber: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 uppercase font-mono"
                   />
@@ -340,7 +377,10 @@ export default function TransportVehiclesListPage() {
                     placeholder="e.g. BUS-09"
                     value={createForm.vehicleNumber}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, vehicleNumber: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        vehicleNumber: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 uppercase font-mono"
                   />
@@ -356,7 +396,9 @@ export default function TransportVehiclesListPage() {
                   required
                   placeholder="e.g. Ashok Leyland Viking 52-Seater"
                   value={createForm.makeModel}
-                  onChange={(e) => setCreateForm({ ...createForm, makeModel: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, makeModel: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
@@ -369,7 +411,10 @@ export default function TransportVehiclesListPage() {
                   <select
                     value={createForm.type}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, type: e.target.value as VehicleType })
+                      setCreateForm({
+                        ...createForm,
+                        type: e.target.value as VehicleType,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   >
@@ -389,16 +434,27 @@ export default function TransportVehiclesListPage() {
                     max={100}
                     value={createForm.capacity}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, capacity: parseInt(e.target.value) || 52 })
+                      setCreateForm({
+                        ...createForm,
+                        capacity: parseInt(e.target.value) || 52,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-400 block mb-1">Fuel</label>
+                  <label className="text-xs font-semibold text-slate-400 block mb-1">
+                    Fuel
+                  </label>
                   <select
                     value={createForm.fuelType}
-                    onChange={(e) => setCreateForm({ ...createForm, fuelType: e.target.value as "DIESEL" | "EV" | "CNG" | "PETROL" })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        fuelType: e.target.value as
+                          "DIESEL" | "EV" | "CNG" | "PETROL",
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   >
                     <option value="DIESEL">Diesel</option>
@@ -434,7 +490,10 @@ export default function TransportVehiclesListPage() {
                     type="date"
                     value={createForm.insuranceValidUntil}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, insuranceValidUntil: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        insuranceValidUntil: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   />
@@ -450,7 +509,10 @@ export default function TransportVehiclesListPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   Register Vehicle
                 </Button>
               </div>

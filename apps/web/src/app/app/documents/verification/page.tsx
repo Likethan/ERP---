@@ -58,17 +58,21 @@ export default function VerificationQueuePage() {
   }, []);
 
   const filteredQueue = queue.filter((doc) => {
-    if (categoryFilter !== "ALL" && doc.category !== categoryFilter) return false;
-    if (priorityFilter !== "ALL" && doc.priority !== priorityFilter) return false;
+    if (categoryFilter !== "ALL" && doc.category !== categoryFilter)
+      return false;
+    if (priorityFilter !== "ALL" && doc.priority !== priorityFilter)
+      return false;
     if (statusFilter !== "ALL" && doc.status !== statusFilter) return false;
-    if (ownerTypeFilter !== "ALL" && doc.ownerType !== ownerTypeFilter) return false;
+    if (ownerTypeFilter !== "ALL" && doc.ownerType !== ownerTypeFilter)
+      return false;
 
     if (search.trim()) {
       const q = search.toLowerCase();
       return (
         doc.name.toLowerCase().includes(q) ||
         doc.ownerName.toLowerCase().includes(q) ||
-        (doc.ownerRollNumber && doc.ownerRollNumber.toLowerCase().includes(q)) ||
+        (doc.ownerRollNumber &&
+          doc.ownerRollNumber.toLowerCase().includes(q)) ||
         doc.documentType.toLowerCase().includes(q)
       );
     }
@@ -88,13 +92,19 @@ export default function VerificationQueuePage() {
             Document Verification Queue
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Review uploaded student and staff credentials, verify regulatory authenticity, or request re-uploads.
+            Review uploaded student and staff credentials, verify regulatory
+            authenticity, or request re-uploads.
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
           <Clock className="w-4 h-4 text-amber-400" />
-          <span>Active Review Items: <strong className="text-slate-100 font-mono">{filteredQueue.length}</strong></span>
+          <span>
+            Active Review Items:{" "}
+            <strong className="text-slate-100 font-mono">
+              {filteredQueue.length}
+            </strong>
+          </span>
         </div>
       </div>
 
@@ -147,9 +157,15 @@ export default function VerificationQueuePage() {
             className="bg-slate-950 border-slate-800 text-xs"
           >
             <option value="ALL">All Statuses</option>
-            <option value={DocumentStatus.UPLOADED}>Uploaded (Unassigned)</option>
-            <option value={DocumentStatus.UNDER_REVIEW}>Under Active Review</option>
-            <option value={DocumentStatus.REJECTED}>Rejected / Pending Re-upload</option>
+            <option value={DocumentStatus.UPLOADED}>
+              Uploaded (Unassigned)
+            </option>
+            <option value={DocumentStatus.UNDER_REVIEW}>
+              Under Active Review
+            </option>
+            <option value={DocumentStatus.REJECTED}>
+              Rejected / Pending Re-upload
+            </option>
           </Select>
         </div>
       </div>
@@ -157,7 +173,9 @@ export default function VerificationQueuePage() {
       {/* Verification Queue Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-20 text-center text-xs text-slate-500">Loading verification queue...</div>
+          <div className="py-20 text-center text-xs text-slate-500">
+            Loading verification queue...
+          </div>
         ) : filteredQueue.length === 0 ? (
           <div className="py-16 text-center text-xs text-slate-500">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
@@ -194,14 +212,18 @@ export default function VerificationQueuePage() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="font-medium text-slate-200">{doc.ownerName}</div>
+                      <div className="font-medium text-slate-200">
+                        {doc.ownerName}
+                      </div>
                       <div className="text-[11px] text-slate-400 font-mono">
                         {doc.ownerRollNumber || doc.ownerType}
                       </div>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="font-medium text-blue-400">{doc.category}</span>
+                      <span className="font-medium text-blue-400">
+                        {doc.category}
+                      </span>
                     </td>
 
                     <td className="py-3.5 px-4 text-slate-400">
@@ -214,8 +236,8 @@ export default function VerificationQueuePage() {
                           doc.priority === VerificationPriority.URGENT
                             ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
                             : doc.priority === VerificationPriority.HIGH
-                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                            : "bg-slate-800 text-slate-400"
+                              ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                              : "bg-slate-800 text-slate-400"
                         }`}
                       >
                         {doc.priority || "NORMAL"}
@@ -234,7 +256,10 @@ export default function VerificationQueuePage() {
 
                     <td className="py-3.5 px-4 text-right">
                       <Link href={`/app/documents/verification/${doc.id}`}>
-                        <Button size="sm" className="text-xs h-7 gap-1 bg-blue-600 hover:bg-blue-700">
+                        <Button
+                          size="sm"
+                          className="text-xs h-7 gap-1 bg-blue-600 hover:bg-blue-700"
+                        >
                           <Eye className="w-3.5 h-3.5" />
                           Review Workspace
                         </Button>

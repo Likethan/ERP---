@@ -26,30 +26,25 @@ Validates:
 """
 
 import asyncio
-from datetime import UTC, datetime
-from typing import Any
 import uuid
 
-from httpx import AsyncClient
 import pytest
+from httpx import AsyncClient
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.cache import TenantIsolatedCache, tenant_cache
+from app.core.cache import TenantIsolatedCache
 from app.core.config import Settings, settings
-from app.core.database import engine, get_db_pool_status
-from app.core.exceptions import CampusOSException
+from app.core.database import get_db_pool_status
 from app.core.metrics import MetricsCollector, metrics
 from app.core.query_performance import (
     CursorPaginationHelper,
-    QueryCountProfiler,
     assert_max_queries,
 )
-from app.core.rate_limiter import SlidingWindowRateLimiter, rate_limiter
-from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
+from app.core.rate_limiter import SlidingWindowRateLimiter
+from app.core.security import create_access_token
 from app.models.core import Institution
-from app.models.people import Role, User
-
+from app.models.people import User
 
 # =============================================================================
 # 1. OBSERVABILITY & INSTRUMENTATION TESTS

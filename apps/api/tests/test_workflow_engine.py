@@ -14,7 +14,6 @@ Validates:
 11. REST API Endpoints (CRUD, lifecycle, executions, events/actions registries, telemetry)
 """
 
-from datetime import UTC, datetime
 import uuid
 
 import pytest
@@ -22,24 +21,20 @@ from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.events import DomainEventType, OutboxService, sanitize_event_payload
-from app.core.exceptions import ForbiddenException, NotFoundException, ValidationException
+from app.core.events import DomainEventType, OutboxService
+from app.core.exceptions import NotFoundException, ValidationException
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.core.workflow_actions import (
     ActionExecutor,
-    WorkflowActionType,
     validate_action_definition,
 )
-from app.core.workflow_conditions import ConditionEngine, ConditionOperator
+from app.core.workflow_conditions import ConditionEngine
 from app.models.core import Institution
 from app.models.people import User
 from app.models.workflow import (
     OutboxEvent,
     OutboxEventStatus,
-    WorkflowDeadLetter,
-    WorkflowDefinition,
-    WorkflowExecution,
     WorkflowExecutionStatus,
     WorkflowStatus,
     WorkflowTriggerType,

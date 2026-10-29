@@ -8,12 +8,19 @@
  * POST /api/v1/maintenance/:id/assign
  */
 
-import { ApiResponse, MaintenanceRequest, MaintenanceStatus, MaintenancePriority } from "@campusos/types";
+import {
+  ApiResponse,
+  MaintenanceRequest,
+  MaintenanceStatus,
+  MaintenancePriority,
+} from "@campusos/types";
 import { MOCK_MAINTENANCE_REQUESTS } from "@/mocks/infrastructure.mock";
 import { calculateMaintenanceSLAStatus } from "./infrastructure-calculator";
 
 class MaintenanceService {
-  private requests: MaintenanceRequest[] = JSON.parse(JSON.stringify(MOCK_MAINTENANCE_REQUESTS));
+  private requests: MaintenanceRequest[] = JSON.parse(
+    JSON.stringify(MOCK_MAINTENANCE_REQUESTS),
+  );
 
   async listMaintenanceRequests(filters?: {
     sourceType?: string;
@@ -46,24 +53,37 @@ class MaintenanceService {
           m.assetOrFacilityName.toLowerCase().includes(q) ||
           m.location.toLowerCase().includes(q) ||
           m.assignedTo?.name.toLowerCase().includes(q) ||
-          m.reportedBy.name.toLowerCase().includes(q)
+          m.reportedBy.name.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getMaintenanceRequestById(id: string): Promise<ApiResponse<MaintenanceRequest | null>> {
+  async getMaintenanceRequestById(
+    id: string,
+  ): Promise<ApiResponse<MaintenanceRequest | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const req = this.requests.find((m) => m.id === id || m.workOrderNumber === id) || null;
+    const req =
+      this.requests.find((m) => m.id === id || m.workOrderNumber === id) ||
+      null;
     return { success: true, data: req };
   }
 
   async createMaintenanceRequest(payload: {
     assetOrFacilityId: string;
     assetOrFacilityName: string;
-    category: "ELECTRICAL" | "PLUMBING" | "CIVIL" | "HVAC" | "IT_EQUIPMENT" | "CARPENTRY" | "TRANSPORT_VEHICLE" | "OTHER";
-    sourceType: "HOSTEL" | "ROOM" | "FACILITY" | "VEHICLE" | "EQUIPMENT" | "CAMPUS";
+    category:
+      | "ELECTRICAL"
+      | "PLUMBING"
+      | "CIVIL"
+      | "HVAC"
+      | "IT_EQUIPMENT"
+      | "CARPENTRY"
+      | "TRANSPORT_VEHICLE"
+      | "OTHER";
+    sourceType:
+      "HOSTEL" | "ROOM" | "FACILITY" | "VEHICLE" | "EQUIPMENT" | "CAMPUS";
     location: string;
     reportedBy: {
       userId: string;
@@ -78,7 +98,10 @@ class MaintenanceService {
   }): Promise<ApiResponse<MaintenanceRequest>> {
     await new Promise((r) => setTimeout(r, 60));
 
-    const slaCalc = calculateMaintenanceSLAStatus(new Date().toISOString(), payload.priority);
+    const slaCalc = calculateMaintenanceSLAStatus(
+      new Date().toISOString(),
+      payload.priority,
+    );
 
     const newRequest: MaintenanceRequest = {
       id: `maint-${Date.now().toString(36)}`,
@@ -97,7 +120,8 @@ class MaintenanceService {
           toStatus: MaintenanceStatus.REQUESTED,
           timestamp: new Date().toISOString(),
           changedBy: payload.reportedBy.name,
-          notes: "Work order created and submitted to Estate Engineering queue.",
+          notes:
+            "Work order created and submitted to Estate Engineering queue.",
         },
       ],
       createdAt: new Date().toISOString(),
@@ -116,7 +140,7 @@ class MaintenanceService {
       department: string;
       phone: string;
     },
-    assignedBy: string = "Estate Supervisor"
+    assignedBy: string = "Estate Supervisor",
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((m) => m.id === id);
@@ -148,9 +172,13 @@ class MaintenanceService {
       department: string;
       phone: string;
     },
-    assignedBy?: string
+    assignedBy?: string,
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
-    return this.assignMaintenanceRequest(id, assignedTo, assignedBy || "Estate Supervisor");
+    return this.assignMaintenanceRequest(
+      id,
+      assignedTo,
+      assignedBy || "Estate Supervisor",
+    );
   }
 
   async updateMaintenanceStatus(
@@ -166,7 +194,7 @@ class MaintenanceService {
         },
     changedBy?: string,
     notes?: string,
-    actualCostInr?: number
+    actualCostInr?: number,
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((m) => m.id === id);
@@ -180,7 +208,8 @@ class MaintenanceService {
     if (typeof newStatusOrPayload === "object") {
       targetStatus = newStatusOrPayload.status;
       targetChangedBy = newStatusOrPayload.changedBy || "Staff";
-      targetNotes = newStatusOrPayload.resolutionSummary || newStatusOrPayload.notes;
+      targetNotes =
+        newStatusOrPayload.resolutionSummary || newStatusOrPayload.notes;
       targetCost = newStatusOrPayload.actualCostInr;
     } else {
       targetStatus = newStatusOrPayload;

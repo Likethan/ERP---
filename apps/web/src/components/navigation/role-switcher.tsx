@@ -2,7 +2,18 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { ChevronDown, ShieldCheck, UserCheck, GraduationCap, Building, Briefcase, Landmark, BedDouble, Bus, Wrench } from "lucide-react";
+import {
+  ChevronDown,
+  ShieldCheck,
+  UserCheck,
+  GraduationCap,
+  Building,
+  Briefcase,
+  Landmark,
+  BedDouble,
+  Bus,
+  Wrench,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function RoleSwitcher({ className }: { className?: string }) {
@@ -55,10 +66,7 @@ export function RoleSwitcher({ className }: { className?: string }) {
 
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setOpen(false)}
-          />
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 mt-2 w-72 rounded-xl border border-slate-800 bg-slate-900 p-2 shadow-2xl z-50 animate-scale-in">
             <div className="px-3 py-2 border-b border-slate-800 mb-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -83,10 +91,12 @@ export function RoleSwitcher({ className }: { className?: string }) {
                       "w-full text-left rounded-lg px-3 py-2 text-xs transition-colors flex items-start gap-2.5 cursor-pointer",
                       isCurrent
                         ? "bg-indigo-600/20 text-white border border-indigo-500/30"
-                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                        : "text-slate-300 hover:bg-slate-800 hover:text-white",
                     )}
                   >
-                    <div className="mt-0.5 shrink-0">{getRoleIcon(persona.role)}</div>
+                    <div className="mt-0.5 shrink-0">
+                      {getRoleIcon(persona.role)}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold flex items-center justify-between">
                         <span>{persona.name}</span>

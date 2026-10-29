@@ -50,17 +50,44 @@ export default function AssessmentConfigurationPage() {
   const [courseCode, setCourseCode] = useState("CS301");
   const [courseName, setCourseName] = useState("Data Structures & Algorithms");
   const [section, setSection] = useState("A");
-  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [department, setDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [facultyName, setFacultyName] = useState("Dr. Ramesh Sundaram");
   const [semester, setSemester] = useState<number>(5);
-  const [assessmentType, setAssessmentType] = useState<AssessmentType>("INTERNAL");
+  const [assessmentType, setAssessmentType] =
+    useState<AssessmentType>("INTERNAL");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
   // Assessment Components builder
   const [components, setComponents] = useState<AssessmentComponent[]>([
-    { id: "c-1", name: "Assignment 1", type: "ASSIGNMENT", maxMarks: 20, passingMarks: 8, weightage: 10, sequence: 1 },
-    { id: "c-2", name: "Quiz 1", type: "QUIZ", maxMarks: 20, passingMarks: 8, weightage: 10, sequence: 2 },
-    { id: "c-3", name: "Mid-Term Written Test", type: "MIDTERM", maxMarks: 60, passingMarks: 24, weightage: 20, sequence: 3 },
+    {
+      id: "c-1",
+      name: "Assignment 1",
+      type: "ASSIGNMENT",
+      maxMarks: 20,
+      passingMarks: 8,
+      weightage: 10,
+      sequence: 1,
+    },
+    {
+      id: "c-2",
+      name: "Quiz 1",
+      type: "QUIZ",
+      maxMarks: 20,
+      passingMarks: 8,
+      weightage: 10,
+      sequence: 2,
+    },
+    {
+      id: "c-3",
+      name: "Mid-Term Written Test",
+      type: "MIDTERM",
+      maxMarks: 60,
+      passingMarks: 24,
+      weightage: 20,
+      sequence: 3,
+    },
   ]);
 
   const loadAssessments = async () => {
@@ -73,7 +100,11 @@ export default function AssessmentConfigurationPage() {
       });
       setAssessments(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load assessments", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load assessments",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -105,7 +136,11 @@ export default function AssessmentConfigurationPage() {
 
   const handleRemoveComponent = (id: string) => {
     if (components.length <= 1) {
-      showToast({ title: "Validation", message: "Assessment requires at least 1 component", type: "error" });
+      showToast({
+        title: "Validation",
+        message: "Assessment requires at least 1 component",
+        type: "error",
+      });
       return;
     }
     setComponents(components.filter((c) => c.id !== id));
@@ -114,7 +149,7 @@ export default function AssessmentConfigurationPage() {
   const handleUpdateComponent = (
     id: string,
     field: keyof AssessmentComponent,
-    val: string | number
+    val: string | number,
   ) => {
     setComponents(
       components.map((c) => {
@@ -122,19 +157,27 @@ export default function AssessmentConfigurationPage() {
           return { ...c, [field]: val };
         }
         return c;
-      })
+      }),
     );
   };
 
   const handleCreateAssessment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      showToast({ title: "Validation Error", message: "Assessment title is required.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Assessment title is required.",
+        type: "error",
+      });
       return;
     }
 
     if (totalMaxMarks <= 0) {
-      showToast({ title: "Validation Error", message: "Total marks must be greater than zero.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Total marks must be greater than zero.",
+        type: "error",
+      });
       return;
     }
 
@@ -157,14 +200,19 @@ export default function AssessmentConfigurationPage() {
         components,
       });
 
-      showToast({ title: "Success", message: "Assessment scheme configured successfully.", type: "success" });
+      showToast({
+        title: "Success",
+        message: "Assessment scheme configured successfully.",
+        type: "success",
+      });
       setCreateModalOpen(false);
       setName("");
       loadAssessments();
     } catch (err: unknown) {
       showToast({
         title: "Error",
-        message: err instanceof Error ? err.message : "Failed to create assessment",
+        message:
+          err instanceof Error ? err.message : "Failed to create assessment",
         type: "error",
       });
     } finally {
@@ -214,7 +262,9 @@ export default function AssessmentConfigurationPage() {
             <span className="font-semibold text-slate-900 dark:text-white">
               Max: {row.maxMarks}
             </span>
-            <span className="text-slate-400 ml-1.5">(Pass: {row.passingMarks})</span>
+            <span className="text-slate-400 ml-1.5">
+              (Pass: {row.passingMarks})
+            </span>
             <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
               Weightage: {row.weightage}%
             </div>
@@ -235,17 +285,25 @@ export default function AssessmentConfigurationPage() {
         id: "completion",
         header: "Marks Roster",
         cell: (row) => {
-          const pct = Math.round(((row.totalEntered || 0) / (row.totalEnrolled || 1)) * 100);
+          const pct = Math.round(
+            ((row.totalEntered || 0) / (row.totalEnrolled || 1)) * 100,
+          );
           return (
             <div className="w-28 space-y-1">
               <div className="flex justify-between text-[11px] text-slate-500">
-                <span>{row.totalEntered} of {row.totalEnrolled}</span>
+                <span>
+                  {row.totalEntered} of {row.totalEnrolled}
+                </span>
                 <span className="font-medium">{pct}%</span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                 <div
                   className={`h-full rounded-full ${
-                    pct === 100 ? "bg-emerald-500" : pct > 0 ? "bg-amber-500" : "bg-slate-300"
+                    pct === 100
+                      ? "bg-emerald-500"
+                      : pct > 0
+                        ? "bg-amber-500"
+                        : "bg-slate-300"
                   }`}
                   style={{ width: `${pct}%` }}
                 />
@@ -265,8 +323,8 @@ export default function AssessmentConfigurationPage() {
                 isDone
                   ? "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300"
                   : row.status === "OPEN"
-                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
-                  : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                    : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
               }`}
             >
               {isDone && <Lock className="h-3 w-3" />}
@@ -286,7 +344,9 @@ export default function AssessmentConfigurationPage() {
                 <ArrowRight className="h-3 w-3" />
               </Button>
             </Link>
-            <Link href={`/app/examinations/marks?course_offering_id=${row.courseOfferingId}&assessment_id=${row.id}`}>
+            <Link
+              href={`/app/examinations/marks?course_offering_id=${row.courseOfferingId}&assessment_id=${row.id}`}
+            >
               <Button size="sm" variant="primary" className="h-7 text-xs">
                 Marks
               </Button>
@@ -295,7 +355,7 @@ export default function AssessmentConfigurationPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -307,17 +367,24 @@ export default function AssessmentConfigurationPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
               Course Offerings
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Continuous Assessment Schemes</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Continuous Assessment Schemes
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Assessment Schemes & Components
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Define multi-component evaluation frameworks (quizzes, assignments, mid-terms, and end-semesters) with weighted aggregates.
+            Define multi-component evaluation frameworks (quizzes, assignments,
+            mid-terms, and end-semesters) with weighted aggregates.
           </p>
         </div>
 
-        <Button variant="primary" className="gap-2" onClick={() => setCreateModalOpen(true)}>
+        <Button
+          variant="primary"
+          className="gap-2"
+          onClick={() => setCreateModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           Configure Assessment
         </Button>
@@ -336,8 +403,12 @@ export default function AssessmentConfigurationPage() {
           className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         >
           <option value="ALL">All Departments</option>
-          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-          <option value="Electronics & Communication">Electronics & Communication</option>
+          <option value="Computer Science & Engineering">
+            Computer Science & Engineering
+          </option>
+          <option value="Electronics & Communication">
+            Electronics & Communication
+          </option>
         </select>
 
         <select
@@ -377,14 +448,18 @@ export default function AssessmentConfigurationPage() {
 
       {/* Assessment Creation & Component Builder Modal */}
       <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)}>
-        <form onSubmit={handleCreateAssessment} className="p-6 space-y-5 max-w-2xl">
+        <form
+          onSubmit={handleCreateAssessment}
+          className="p-6 space-y-5 max-w-2xl"
+        >
           <div className="border-b border-slate-200 pb-3 dark:border-slate-800">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-indigo-600" />
               Configure Assessment Scheme
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Associate an evaluation scheme with a course offering and construct its components.
+              Associate an evaluation scheme with a course offering and
+              construct its components.
             </p>
           </div>
 
@@ -427,9 +502,15 @@ export default function AssessmentConfigurationPage() {
                 }}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="co-cs301-a">CS301 - Data Structures (Section A)</option>
-                <option value="co-cs302-a">CS302 - Database Systems (Section A)</option>
-                <option value="co-cs303-a">CS303 - Operating Systems (Section A)</option>
+                <option value="co-cs301-a">
+                  CS301 - Data Structures (Section A)
+                </option>
+                <option value="co-cs302-a">
+                  CS302 - Database Systems (Section A)
+                </option>
+                <option value="co-cs303-a">
+                  CS303 - Operating Systems (Section A)
+                </option>
               </select>
             </div>
 
@@ -439,12 +520,16 @@ export default function AssessmentConfigurationPage() {
               </label>
               <select
                 value={assessmentType}
-                onChange={(e) => setAssessmentType(e.target.value as AssessmentType)}
+                onChange={(e) =>
+                  setAssessmentType(e.target.value as AssessmentType)
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value="INTERNAL">Internal Continuous (Theory)</option>
                 <option value="MIDTERM">Midterm Examination</option>
-                <option value="END_SEMESTER">End Semester University Exam</option>
+                <option value="END_SEMESTER">
+                  End Semester University Exam
+                </option>
                 <option value="LABORATORY">Practical / Lab Exam</option>
                 <option value="PROJECT">Project / Dissertation</option>
                 <option value="VIVA">Oral VIVA Voce</option>
@@ -484,10 +569,17 @@ export default function AssessmentConfigurationPage() {
                   Assessment Components
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Total Weightage: {totalWeightage}% • Total Marks: {totalMaxMarks}
+                  Total Weightage: {totalWeightage}% • Total Marks:{" "}
+                  {totalMaxMarks}
                 </p>
               </div>
-              <Button type="button" size="sm" variant="outline" onClick={handleAddComponent} className="h-7 text-xs gap-1">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={handleAddComponent}
+                className="h-7 text-xs gap-1"
+              >
                 <Plus className="h-3 w-3" />
                 Add Component
               </Button>
@@ -499,11 +591,15 @@ export default function AssessmentConfigurationPage() {
                   key={c.id}
                   className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 text-xs"
                 >
-                  <span className="font-mono text-slate-400 w-4">{idx + 1}.</span>
+                  <span className="font-mono text-slate-400 w-4">
+                    {idx + 1}.
+                  </span>
                   <input
                     type="text"
                     value={c.name}
-                    onChange={(e) => handleUpdateComponent(c.id, "name", e.target.value)}
+                    onChange={(e) =>
+                      handleUpdateComponent(c.id, "name", e.target.value)
+                    }
                     placeholder="Component Name"
                     className="flex-1 rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
                   />
@@ -512,7 +608,13 @@ export default function AssessmentConfigurationPage() {
                       type="number"
                       min={1}
                       value={c.maxMarks}
-                      onChange={(e) => handleUpdateComponent(c.id, "maxMarks", Number(e.target.value))}
+                      onChange={(e) =>
+                        handleUpdateComponent(
+                          c.id,
+                          "maxMarks",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="Max"
                       title="Maximum Marks"
                       className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
@@ -523,7 +625,13 @@ export default function AssessmentConfigurationPage() {
                       type="number"
                       min={0}
                       value={c.passingMarks}
-                      onChange={(e) => handleUpdateComponent(c.id, "passingMarks", Number(e.target.value))}
+                      onChange={(e) =>
+                        handleUpdateComponent(
+                          c.id,
+                          "passingMarks",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="Pass"
                       title="Passing Marks"
                       className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
@@ -535,7 +643,13 @@ export default function AssessmentConfigurationPage() {
                       min={1}
                       max={100}
                       value={c.weightage}
-                      onChange={(e) => handleUpdateComponent(c.id, "weightage", Number(e.target.value))}
+                      onChange={(e) =>
+                        handleUpdateComponent(
+                          c.id,
+                          "weightage",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="Weight%"
                       title="Weightage Percent"
                       className="w-full rounded border border-slate-300 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-xs"
@@ -554,7 +668,11 @@ export default function AssessmentConfigurationPage() {
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={saving}>

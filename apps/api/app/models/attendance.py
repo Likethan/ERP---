@@ -22,7 +22,7 @@ from app.models.base import TenantScopedModel
 
 if TYPE_CHECKING:
     from app.models.academics import Classroom, CourseOffering, TimeSlot, TimetableEntry
-    from app.models.core import AcademicYear, Department, Program, Section, Semester
+    from app.models.core import AcademicYear, Section, Semester
     from app.models.people import FacultyProfile, StudentProfile, User
 
 

@@ -7,10 +7,9 @@ Includes single-flight stampede protection, graceful Redis fallback, and cache m
 """
 
 import asyncio
-from collections.abc import Callable, Coroutine
-from datetime import datetime, timezone
-import json
 import logging
+from collections.abc import Callable, Coroutine
+from datetime import UTC, datetime
 from typing import Any, TypeVar
 from uuid import UUID
 
@@ -55,7 +54,7 @@ class TenantIsolatedCache:
             return None
 
         val, expires_at = record
-        if expires_at is not None and datetime.now(timezone.utc) > expires_at:
+        if expires_at is not None and datetime.now(UTC) > expires_at:
             del self._store[full_key]
             metrics.record_cache_miss(namespace)
             return None
@@ -75,7 +74,7 @@ class TenantIsolatedCache:
         full_key = self.build_key(tenant_id, namespace, key)
         ttl = ttl_seconds if ttl_seconds is not None else settings.CACHE_DEFAULT_TTL_SECONDS
         expires_at = (
-            datetime.fromtimestamp(datetime.now(timezone.utc).timestamp() + ttl, tz=timezone.utc)
+            datetime.fromtimestamp(datetime.now(UTC).timestamp() + ttl, tz=UTC)
             if ttl
             else None
         )

@@ -1,11 +1,11 @@
 """Placement and Career Engine authoritative service layer."""
 
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -14,13 +14,11 @@ from app.core.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from app.models.academics import CourseEnrollment
 from app.models.attendance import AttendanceRecord
-from app.models.audit import AuditLog
-from app.models.core import AcademicYear, Batch, Department, Program, Semester
+from app.models.core import AcademicYear, Program
 from app.models.examination import SemesterExamResult
 from app.models.finance import Invoice
-from app.models.people import StudentProfile, User
+from app.models.people import StudentProfile
 from app.models.placement import (
     ApplicationStatusHistory,
     Company,
@@ -50,14 +48,12 @@ from app.schemas.placement import (
     JobDriveCreate,
     JobDriveUpdate,
     JobPositionCreate,
-    JobPositionUpdate,
     OfferDecisionRequest,
     PlacementAnalyticsSummary,
     PlacementApplicationCreate,
     PlacementOfferCreate,
     PlacementOutcomeCreate,
     RuleEvaluationResult,
-    StudentPlacementProfileCreate,
     StudentPlacementProfileUpdate,
 )
 

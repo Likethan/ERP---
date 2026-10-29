@@ -6,8 +6,8 @@ Includes:
 - run_identity_provider_health_checks: Periodically monitor active OIDC/OAuth IdP endpoints
 """
 
-from datetime import datetime, timezone
 import logging
+from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import delete, select, update
@@ -28,7 +28,7 @@ logger = logging.getLogger("campusos.identity.jobs")
 
 async def cleanup_expired_sessions(db: AsyncSession) -> int:
     """Transition past-expiry sessions from ACTIVE to EXPIRED."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     stmt = (
         update(IdentitySession)
         .where(
@@ -50,7 +50,7 @@ async def cleanup_expired_sessions(db: AsyncSession) -> int:
 
 async def cleanup_expired_challenges(db: AsyncSession) -> int:
     """Delete expired ephemeral MFA challenges and uncompleted link requests."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     # 1. MFA challenges
     mfa_stmt = delete(MfaChallenge).where(MfaChallenge.expires_at <= now)

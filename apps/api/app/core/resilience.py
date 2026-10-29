@@ -11,10 +11,10 @@ Guarantees:
 """
 
 import asyncio
-from collections.abc import Callable
-from datetime import UTC, datetime
 import logging
 import random
+from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Any
 
 from app.models.reliability import ReliabilityCircuitBreakerState

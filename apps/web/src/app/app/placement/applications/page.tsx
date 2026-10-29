@@ -25,7 +25,13 @@ import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
-import { Application, ApplicationStatus, InterviewStage, JobDrive, Position } from "@/types/placement";
+import {
+  Application,
+  ApplicationStatus,
+  InterviewStage,
+  JobDrive,
+  Position,
+} from "@/types/placement";
 
 export default function ApplicationsManagementPage() {
   const { showToast } = useToast();
@@ -55,7 +61,11 @@ export default function ApplicationsManagementPage() {
       setDrives(drivesRes.data);
       setPositions(posRes.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load candidate applications", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load candidate applications",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -67,24 +77,47 @@ export default function ApplicationsManagementPage() {
 
   const handleShortlist = async (appId: string) => {
     try {
-      await placementService.shortlistApplications([appId], "Placement Officer");
-      showToast({ title: "Shortlisted", message: "Candidate advanced to technical rounds", type: "success" });
+      await placementService.shortlistApplications(
+        [appId],
+        "Placement Officer",
+      );
+      showToast({
+        title: "Shortlisted",
+        message: "Candidate advanced to technical rounds",
+        type: "success",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to shortlist application", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to shortlist application",
+        type: "error",
+      });
     }
   };
 
   const handleConfirmReject = async () => {
     if (!rejectModalAppId) return;
     try {
-      await placementService.rejectApplication(rejectModalAppId, rejectReason || "Does not meet candidate criteria", "Placement Officer");
-      showToast({ title: "Application Rejected", message: "Candidate status updated to REJECTED", type: "info" });
+      await placementService.rejectApplication(
+        rejectModalAppId,
+        rejectReason || "Does not meet candidate criteria",
+        "Placement Officer",
+      );
+      showToast({
+        title: "Application Rejected",
+        message: "Candidate status updated to REJECTED",
+        type: "info",
+      });
       setRejectModalAppId(null);
       setRejectReason("");
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to reject application", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to reject application",
+        type: "error",
+      });
     }
   };
 
@@ -152,7 +185,9 @@ export default function ApplicationsManagementPage() {
       header: "Position & Recruiter",
       cell: (item) => (
         <div className="text-xs">
-          <span className="font-semibold text-slate-900 dark:text-white">{item.positionTitle}</span>
+          <span className="font-semibold text-slate-900 dark:text-white">
+            {item.positionTitle}
+          </span>
           <p className="text-slate-500 font-medium">{item.companyName}</p>
         </div>
       ),
@@ -180,7 +215,10 @@ export default function ApplicationsManagementPage() {
       id: "status",
       header: "Status",
       cell: (item) => {
-        const badgeColors: Record<ApplicationStatus, "success" | "warning" | "destructive" | "secondary" | "info"> = {
+        const badgeColors: Record<
+          ApplicationStatus,
+          "success" | "warning" | "destructive" | "secondary" | "info"
+        > = {
           SELECTED: "success",
           SHORTLISTED: "info",
           SUBMITTED: "warning",
@@ -238,7 +276,10 @@ export default function ApplicationsManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
-            <Link href="/app/placement" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/app/placement"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Placement Hub
             </Link>
             <span>/</span>
@@ -248,7 +289,8 @@ export default function ApplicationsManagementPage() {
             Candidate Application Submissions & Shortlisting
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Review applicant qualifications, verify drive eligibility snapshots, manage candidate shortlists, and track recruitment progression.
+            Review applicant qualifications, verify drive eligibility snapshots,
+            manage candidate shortlists, and track recruitment progression.
           </p>
         </div>
       </div>
@@ -339,9 +381,12 @@ export default function ApplicationsManagementPage() {
       {rejectModalAppId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
           <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Reject Application</h3>
+            <h3 className="text-base font-bold text-white">
+              Reject Application
+            </h3>
             <p className="text-xs text-slate-400">
-              Provide justification for candidate rejection. Recorded in audit log.
+              Provide justification for candidate rejection. Recorded in audit
+              log.
             </p>
 
             <textarea
@@ -353,10 +398,19 @@ export default function ApplicationsManagementPage() {
             />
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setRejectModalAppId(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setRejectModalAppId(null)}
+              >
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={handleConfirmReject} className="bg-rose-600 hover:bg-rose-700 text-white">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleConfirmReject}
+                className="bg-rose-600 hover:bg-rose-700 text-white"
+              >
                 Confirm Rejection
               </Button>
             </div>

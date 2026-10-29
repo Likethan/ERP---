@@ -17,11 +17,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db_session
 from app.core.deps import get_tenant_context, require_permission
 from app.core.permissions import (
-    ANALYTICS_EXPORT_DOT,
     ANALYTICS_QUERY_DOT,
     ANALYTICS_READ_DOT,
     REPORTS_CREATE_DOT,
-    REPORTS_DELETE_DOT,
     REPORTS_EXECUTE_DOT,
     REPORTS_EXPORT_DOT,
     REPORTS_READ_DOT,
@@ -178,6 +176,7 @@ from app.core.config import settings
 from app.core.exceptions import CampusOSException
 from app.core.rate_limiter import rate_limiter
 
+
 @reports_router.post(
     "/reports/{report_id}/execute",
     response_model=ApiResponse[dict[str, Any]],
@@ -233,6 +232,7 @@ async def get_execution_status(
     db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     from sqlalchemy import and_, select
+
     from app.core.exceptions import NotFoundException
     from app.models.reporting import ReportExecution
     stmt = select(ReportExecution).where(
@@ -285,6 +285,7 @@ async def create_export(
     export_format: str = Query("CSV", description="Export format: CSV, XLSX, JSON"),
 ):
     from sqlalchemy import and_, select
+
     from app.core.exceptions import NotFoundException
     from app.models.reporting import ReportExecution
     stmt = select(ReportExecution).where(

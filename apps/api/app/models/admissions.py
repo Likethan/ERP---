@@ -21,26 +21,27 @@ Entities:
 - OnboardingTask: Specific onboarding tasks (profile, documents, finance, orientation) with completion tracking.
 """
 
-from datetime import UTC, date, datetime
+from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
     ForeignKey,
     Index,
     Integer,
-    JSON,
     Numeric,
     String,
     Text,
     UniqueConstraint,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import TenantScopedModel

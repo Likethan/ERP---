@@ -26,11 +26,19 @@ export async function runExaminationsModuleTests(): Promise<{
 }> {
   const results: { testName: string; passed: boolean; message?: string }[] = [];
 
-  function assert(condition: unknown, testName: string, failureDetails?: string) {
+  function assert(
+    condition: unknown,
+    testName: string,
+    failureDetails?: string,
+  ) {
     if (Boolean(condition)) {
       results.push({ testName, passed: true });
     } else {
-      results.push({ testName, passed: false, message: failureDetails || "Assertion failed" });
+      results.push({
+        testName,
+        passed: false,
+        message: failureDetails || "Assertion failed",
+      });
     }
   }
 
@@ -39,20 +47,47 @@ export async function runExaminationsModuleTests(): Promise<{
     // 1. Examination Dashboard & Telemetry
     // ==========================================
     const dashboardRes = await examinationsService.getDashboardSummary();
-    assert(dashboardRes.success === true, "1. Examination dashboard metrics return success");
-    assert(dashboardRes.data.activeExaminationsCount >= 1, "1. Active examinations count is valid");
-    assert(dashboardRes.data.upcomingExamsCount >= 1, "1. Upcoming exams schedule count is valid");
-    assert(dashboardRes.data.eligibleStudentsCount > 0, "1. Eligible candidates count is non-zero");
-    assert(dashboardRes.data.ineligibleStudentsCount >= 1, "1. Debarred/Ineligible candidates tracked");
-    assert(dashboardRes.data.resultsAwaitingPublicationCount >= 0, "1. Publication pending batches tracked");
-    assert(dashboardRes.data.gradeDistribution.length >= 5, "1. CBCS grade distribution breakdown provided");
+    assert(
+      dashboardRes.success === true,
+      "1. Examination dashboard metrics return success",
+    );
+    assert(
+      dashboardRes.data.activeExaminationsCount >= 1,
+      "1. Active examinations count is valid",
+    );
+    assert(
+      dashboardRes.data.upcomingExamsCount >= 1,
+      "1. Upcoming exams schedule count is valid",
+    );
+    assert(
+      dashboardRes.data.eligibleStudentsCount > 0,
+      "1. Eligible candidates count is non-zero",
+    );
+    assert(
+      dashboardRes.data.ineligibleStudentsCount >= 1,
+      "1. Debarred/Ineligible candidates tracked",
+    );
+    assert(
+      dashboardRes.data.resultsAwaitingPublicationCount >= 0,
+      "1. Publication pending batches tracked",
+    );
+    assert(
+      dashboardRes.data.gradeDistribution.length >= 5,
+      "1. CBCS grade distribution breakdown provided",
+    );
 
     // ==========================================
     // 2. Assessment Schemes & Components
     // ==========================================
     const assessmentsRes = await examinationsService.getAssessments();
-    assert(assessmentsRes.success === true, "2. Assessment schemes query returns success");
-    assert(assessmentsRes.data.length >= 3, "2. Baseline assessments exist for active courses");
+    assert(
+      assessmentsRes.success === true,
+      "2. Assessment schemes query returns success",
+    );
+    assert(
+      assessmentsRes.data.length >= 3,
+      "2. Baseline assessments exist for active courses",
+    );
 
     const createdAsmRes = await examinationsService.createAssessment({
       name: "Mid-Term Continuous Evaluation",
@@ -91,18 +126,36 @@ export async function runExaminationsModuleTests(): Promise<{
       ],
       date: "2026-10-15",
     });
-    assert(createdAsmRes.success === true, "2. Assessment scheme creation succeeds");
-    assert(Boolean(createdAsmRes.data.components && createdAsmRes.data.components.length === 2), "2. Assessment components properly registered");
+    assert(
+      createdAsmRes.success === true,
+      "2. Assessment scheme creation succeeds",
+    );
+    assert(
+      Boolean(
+        createdAsmRes.data.components &&
+        createdAsmRes.data.components.length === 2,
+      ),
+      "2. Assessment components properly registered",
+    );
 
     // Detail fetch
-    const asmDetail = await examinationsService.getAssessmentById(createdAsmRes.data.id);
-    assert(asmDetail.success === true && asmDetail.data.name === "Mid-Term Continuous Evaluation", "2. Assessment scheme by ID retrieved");
+    const asmDetail = await examinationsService.getAssessmentById(
+      createdAsmRes.data.id,
+    );
+    assert(
+      asmDetail.success === true &&
+        asmDetail.data.name === "Mid-Term Continuous Evaluation",
+      "2. Assessment scheme by ID retrieved",
+    );
 
     // ==========================================
     // 3. Exam Schedules & Conflict Detection
     // ==========================================
     const schedulesRes = await examinationsService.getSchedules();
-    assert(schedulesRes.success === true, "3. Exam schedules list returns success");
+    assert(
+      schedulesRes.success === true,
+      "3. Exam schedules list returns success",
+    );
     assert(schedulesRes.data.length >= 3, "3. Seed exam schedules present");
 
     // Conflict Check: Simulate Room Overlap
@@ -115,21 +168,37 @@ export async function runExaminationsModuleTests(): Promise<{
       section: "B",
       facultyId: "fac-999-other",
     });
-    assert(roomConflictCheck.success === true, "3. Conflict query returns successful response");
-    assert(roomConflictCheck.data.hasConflict === true, "3. Conflict detector catches Room double-booking");
-    assert(roomConflictCheck.data.conflictType === "ROOM_OVERLAP", "3. Room collision conflict type tagged");
+    assert(
+      roomConflictCheck.success === true,
+      "3. Conflict query returns successful response",
+    );
+    assert(
+      roomConflictCheck.data.hasConflict === true,
+      "3. Conflict detector catches Room double-booking",
+    );
+    assert(
+      roomConflictCheck.data.conflictType === "ROOM_OVERLAP",
+      "3. Room collision conflict type tagged",
+    );
 
     // Conflict Check: Simulate Faculty Overlap
-    const facultyConflictCheck = await examinationsService.checkScheduleConflicts({
-      date: existingSchedule.date,
-      startTime: existingSchedule.startTime,
-      endTime: existingSchedule.endTime,
-      room: "Unique Hall X",
-      section: "C",
-      facultyId: existingSchedule.facultyId,
-    });
-    assert(facultyConflictCheck.data.hasConflict === true, "3. Conflict detector catches Faculty invigilation overlap");
-    assert(facultyConflictCheck.data.conflictType === "FACULTY_OVERLAP", "3. Faculty overlap conflict type tagged");
+    const facultyConflictCheck =
+      await examinationsService.checkScheduleConflicts({
+        date: existingSchedule.date,
+        startTime: existingSchedule.startTime,
+        endTime: existingSchedule.endTime,
+        room: "Unique Hall X",
+        section: "C",
+        facultyId: existingSchedule.facultyId,
+      });
+    assert(
+      facultyConflictCheck.data.hasConflict === true,
+      "3. Conflict detector catches Faculty invigilation overlap",
+    );
+    assert(
+      facultyConflictCheck.data.conflictType === "FACULTY_OVERLAP",
+      "3. Faculty overlap conflict type tagged",
+    );
 
     // Create a conflict-free schedule
     const newScheduleRes = await examinationsService.createSchedule({
@@ -149,29 +218,49 @@ export async function runExaminationsModuleTests(): Promise<{
       facultyName: "Dr. Anita Roy",
       status: "SCHEDULED",
     });
-    assert(newScheduleRes.success === true, "3. Conflict-free schedule creation succeeds");
+    assert(
+      newScheduleRes.success === true,
+      "3. Conflict-free schedule creation succeeds",
+    );
 
     // ==========================================
     // 4. Attendance-Derived Eligibility Gate
     // ==========================================
     const eligibilityRes = await examinationsService.getEligibility();
-    assert(eligibilityRes.success === true, "4. Student exam eligibility ledger retrieved");
     assert(
-      eligibilityRes.data.some((e) => e.attendancePercentage < 75 && e.eligibilityStatus === "INELIGIBLE"),
-      "4. Identifies debarred student with <75% attendance"
+      eligibilityRes.success === true,
+      "4. Student exam eligibility ledger retrieved",
+    );
+    assert(
+      eligibilityRes.data.some(
+        (e) =>
+          e.attendancePercentage < 75 && e.eligibilityStatus === "INELIGIBLE",
+      ),
+      "4. Identifies debarred student with <75% attendance",
     );
 
     // HOD Exception Review / Condonation
-    const ineligibleCandidate = eligibilityRes.data.find((e) => e.eligibilityStatus === "INELIGIBLE");
+    const ineligibleCandidate = eligibilityRes.data.find(
+      (e) => e.eligibilityStatus === "INELIGIBLE",
+    );
     if (ineligibleCandidate) {
       const reviewRes = await examinationsService.reviewEligibility(
         ineligibleCandidate.id,
         "APPROVE_EXCEPTION",
-        "Medical condonation approved with hospital certificate verification."
+        "Medical condonation approved with hospital certificate verification.",
       );
-      assert(reviewRes.success === true, "4. HOD eligibility review/condonation succeeds");
-      assert(reviewRes.data.eligibilityStatus === "CONDITIONALLY_ELIGIBLE", "4. Candidate status transitioned to CONDITIONALLY_ELIGIBLE");
-      assert(reviewRes.data.overriddenBy?.includes("HOD"), "4. Audit trail captures reviewing authority");
+      assert(
+        reviewRes.success === true,
+        "4. HOD eligibility review/condonation succeeds",
+      );
+      assert(
+        reviewRes.data.eligibilityStatus === "CONDITIONALLY_ELIGIBLE",
+        "4. Candidate status transitioned to CONDITIONALLY_ELIGIBLE",
+      );
+      assert(
+        reviewRes.data.overriddenBy?.includes("HOD"),
+        "4. Audit trail captures reviewing authority",
+      );
     }
 
     // ==========================================
@@ -179,32 +268,44 @@ export async function runExaminationsModuleTests(): Promise<{
     // ==========================================
     const marksRes = await examinationsService.getMarks("asm-cs301-internal");
     assert(marksRes.success === true, "5. Assessment marks matrix loaded");
-    assert(marksRes.data.length > 0, "5. Enrolled students populated in marks matrix");
+    assert(
+      marksRes.data.length > 0,
+      "5. Enrolled students populated in marks matrix",
+    );
 
     // Enter & Save Draft Marks
     const sampleStudent = marksRes.data[0];
-    const saveDraftRes = await examinationsService.saveMarks("asm-cs301-internal", [
-      {
-        studentId: sampleStudent.studentId,
-        marksObtained: 90,
-        status: "ENTERED",
-        remarks: "Good performance in graph algorithms",
-      },
-    ]);
+    const saveDraftRes = await examinationsService.saveMarks(
+      "asm-cs301-internal",
+      [
+        {
+          studentId: sampleStudent.studentId,
+          marksObtained: 90,
+          status: "ENTERED",
+          remarks: "Good performance in graph algorithms",
+        },
+      ],
+    );
     assert(saveDraftRes.success === true, "5. Marks draft save succeeds");
 
     // Non-Numeric Status (Absent)
     if (marksRes.data.length > 1) {
       const secondStudent = marksRes.data[1];
-      const absentSaveRes = await examinationsService.saveMarks("asm-cs301-internal", [
-        {
-          studentId: secondStudent.studentId,
-          marksObtained: null,
-          status: "ABSENT",
-          remarks: "Medical leave acknowledged",
-        },
-      ]);
-      assert(absentSaveRes.success === true, "5. Marks entry with ABSENT flag processed");
+      const absentSaveRes = await examinationsService.saveMarks(
+        "asm-cs301-internal",
+        [
+          {
+            studentId: secondStudent.studentId,
+            marksObtained: null,
+            status: "ABSENT",
+            remarks: "Medical leave acknowledged",
+          },
+        ],
+      );
+      assert(
+        absentSaveRes.success === true,
+        "5. Marks entry with ABSENT flag processed",
+      );
     }
 
     // Boundary validation test (> maxMarks)
@@ -220,15 +321,25 @@ export async function runExaminationsModuleTests(): Promise<{
     } catch {
       validationBlocked = true;
     }
-    assert(validationBlocked === true, "5. Validation rejects marks exceeding maximum score");
+    assert(
+      validationBlocked === true,
+      "5. Validation rejects marks exceeding maximum score",
+    );
 
     // ==========================================
     // 6. Assessment Marks Finalization Lock
     // ==========================================
     // asm-cs302-internal is pre-finalized in canonical mock
-    const finalizedAsm = await examinationsService.getAssessmentById("asm-cs302-internal");
-    assert(finalizedAsm.success === true, "6. Pre-finalized assessment retrieved");
-    assert(finalizedAsm.data.isFinalized === true, "6. isFinalized flag is true in locked state");
+    const finalizedAsm =
+      await examinationsService.getAssessmentById("asm-cs302-internal");
+    assert(
+      finalizedAsm.success === true,
+      "6. Pre-finalized assessment retrieved",
+    );
+    assert(
+      finalizedAsm.data.isFinalized === true,
+      "6. isFinalized flag is true in locked state",
+    );
 
     // Direct edit attempt on finalized assessment must throw error
     let finalizedBlocked = false;
@@ -243,13 +354,19 @@ export async function runExaminationsModuleTests(): Promise<{
     } catch {
       finalizedBlocked = true;
     }
-    assert(finalizedBlocked === true, "6. Direct edit rejected on finalized assessment");
+    assert(
+      finalizedBlocked === true,
+      "6. Direct edit rejected on finalized assessment",
+    );
 
     // ==========================================
     // 7. Supervised Mark Correction Workflow
     // ==========================================
     const correctionsRes = await examinationsService.getMarkCorrections();
-    assert(correctionsRes.success === true, "7. Mark correction petitions ledger loaded");
+    assert(
+      correctionsRes.success === true,
+      "7. Mark correction petitions ledger loaded",
+    );
 
     // Faculty submits correction request on locked mark
     const targetMark = marksRes.data[0];
@@ -260,34 +377,79 @@ export async function runExaminationsModuleTests(): Promise<{
       reason: "Re-totalling error identified in Question 3b (+5 marks)",
       requestedBy: "Dr. Ramesh Sundaram (Faculty)",
     });
-    assert(petitionRes.success === true, "7. Mark correction petition submitted");
-    assert(petitionRes.data.status === "PENDING", "7. Initial correction status is PENDING");
+    assert(
+      petitionRes.success === true,
+      "7. Mark correction petition submitted",
+    );
+    assert(
+      petitionRes.data.status === "PENDING",
+      "7. Initial correction status is PENDING",
+    );
 
     // HOD approves correction
     const approveRes = await examinationsService.reviewMarkCorrection(
       petitionRes.data.id,
       "APPROVED",
-      "Re-totalling verified against original physical script."
+      "Re-totalling verified against original physical script.",
     );
     assert(approveRes.success === true, "7. HOD approves correction petition");
-    assert(approveRes.data.status === "APPROVED", "7. Correction status transitioned to APPROVED");
+    assert(
+      approveRes.data.status === "APPROVED",
+      "7. Correction status transitioned to APPROVED",
+    );
 
     // Verify underlying mark record was automatically synchronized
-    const updatedMarksRes = await examinationsService.getMarks("asm-cs301-internal");
-    const updatedStudentMark = updatedMarksRes.data.find((m) => m.id === targetMark.id);
-    assert(updatedStudentMark?.marksObtained === 95, "7. Ledger updated to requested mark (95)");
+    const updatedMarksRes =
+      await examinationsService.getMarks("asm-cs301-internal");
+    const updatedStudentMark = updatedMarksRes.data.find(
+      (m) => m.id === targetMark.id,
+    );
+    assert(
+      updatedStudentMark?.marksObtained === 95,
+      "7. Ledger updated to requested mark (95)",
+    );
 
     // ==========================================
     // 8. Grading Calculation Engine
     // ==========================================
     // Component Total
     const totalCalc = calculateAssessmentTotal([
-      { id: "1", name: "Comp 1", type: "INTERNAL", maxMarks: 20, passingMarks: 8, weightage: 20, sequence: 1 },
-      { id: "2", name: "Comp 2", type: "INTERNAL", maxMarks: 30, passingMarks: 12, weightage: 30, sequence: 2 },
-      { id: "3", name: "Comp 3", type: "INTERNAL", maxMarks: 50, passingMarks: 20, weightage: 50, sequence: 3 },
+      {
+        id: "1",
+        name: "Comp 1",
+        type: "INTERNAL",
+        maxMarks: 20,
+        passingMarks: 8,
+        weightage: 20,
+        sequence: 1,
+      },
+      {
+        id: "2",
+        name: "Comp 2",
+        type: "INTERNAL",
+        maxMarks: 30,
+        passingMarks: 12,
+        weightage: 30,
+        sequence: 2,
+      },
+      {
+        id: "3",
+        name: "Comp 3",
+        type: "INTERNAL",
+        maxMarks: 50,
+        passingMarks: 20,
+        weightage: 50,
+        sequence: 3,
+      },
     ]);
-    assert(totalCalc.totalMaxMarks === 100, "8. calculateAssessmentTotal: 20+30+50 = 100");
-    assert(totalCalc.isValidWeightage === true, "8. calculateAssessmentTotal: 20+30+50% = 100% valid weightage");
+    assert(
+      totalCalc.totalMaxMarks === 100,
+      "8. calculateAssessmentTotal: 20+30+50 = 100",
+    );
+    assert(
+      totalCalc.isValidWeightage === true,
+      "8. calculateAssessmentTotal: 20+30+50% = 100% valid weightage",
+    );
 
     // Weighted Marks
     const weighted = calculateWeightedMarks(45, 50, 20); // (45/50) * 20 = 18
@@ -298,21 +460,61 @@ export async function runExaminationsModuleTests(): Promise<{
     assert(percent === 87, "8. calculatePercentage: 87/100 = 87.0%");
 
     // UGC CBCS 10-Point Scale Mapping
-    assert(calculateGrade(92).grade === "A+", "8. CBCS Grade: 92% maps to A+ (10 GP)");
-    assert(calculateGrade(92).gradePoint === 10, "8. CBCS Grade: 92% grade point is 10");
-    assert(calculateGrade(84).grade === "A", "8. CBCS Grade: 84% maps to A (9 GP)");
-    assert(calculateGrade(74).grade === "B+", "8. CBCS Grade: 74% maps to B+ (8 GP)");
-    assert(calculateGrade(64).grade === "B", "8. CBCS Grade: 64% maps to B (7 GP)");
-    assert(calculateGrade(55).grade === "C", "8. CBCS Grade: 55% maps to C (6 GP)");
-    assert(calculateGrade(45).grade === "D", "8. CBCS Grade: 45% maps to D (5 GP)");
-    assert(calculateGrade(37).grade === "E", "8. CBCS Grade: 37% maps to E (4 GP)");
-    assert(calculateGrade(30).grade === "F", "8. CBCS Grade: 30% maps to F (0 GP)");
+    assert(
+      calculateGrade(92).grade === "A+",
+      "8. CBCS Grade: 92% maps to A+ (10 GP)",
+    );
+    assert(
+      calculateGrade(92).gradePoint === 10,
+      "8. CBCS Grade: 92% grade point is 10",
+    );
+    assert(
+      calculateGrade(84).grade === "A",
+      "8. CBCS Grade: 84% maps to A (9 GP)",
+    );
+    assert(
+      calculateGrade(74).grade === "B+",
+      "8. CBCS Grade: 74% maps to B+ (8 GP)",
+    );
+    assert(
+      calculateGrade(64).grade === "B",
+      "8. CBCS Grade: 64% maps to B (7 GP)",
+    );
+    assert(
+      calculateGrade(55).grade === "C",
+      "8. CBCS Grade: 55% maps to C (6 GP)",
+    );
+    assert(
+      calculateGrade(45).grade === "D",
+      "8. CBCS Grade: 45% maps to D (5 GP)",
+    );
+    assert(
+      calculateGrade(37).grade === "E",
+      "8. CBCS Grade: 37% maps to E (4 GP)",
+    );
+    assert(
+      calculateGrade(30).grade === "F",
+      "8. CBCS Grade: 30% maps to F (0 GP)",
+    );
 
     // Result Status
-    assert(calculateResultStatus({ percentage: 85 }) === "PASS", "8. calculateResultStatus: 85% is PASS");
-    assert(calculateResultStatus({ percentage: 35 }) === "FAIL", "8. calculateResultStatus: 35% is FAIL");
-    assert(calculateResultStatus({ percentage: 0, isAbsent: true }) === "ABSENT", "8. calculateResultStatus: ABSENT status preserved");
-    assert(calculateResultStatus({ percentage: 0, isMalpractice: true }) === "WITHHELD", "8. calculateResultStatus: MALPRACTICE maps to WITHHELD");
+    assert(
+      calculateResultStatus({ percentage: 85 }) === "PASS",
+      "8. calculateResultStatus: 85% is PASS",
+    );
+    assert(
+      calculateResultStatus({ percentage: 35 }) === "FAIL",
+      "8. calculateResultStatus: 35% is FAIL",
+    );
+    assert(
+      calculateResultStatus({ percentage: 0, isAbsent: true }) === "ABSENT",
+      "8. calculateResultStatus: ABSENT status preserved",
+    );
+    assert(
+      calculateResultStatus({ percentage: 0, isMalpractice: true }) ===
+        "WITHHELD",
+      "8. calculateResultStatus: MALPRACTICE maps to WITHHELD",
+    );
 
     // Grade Distribution Histogram
     const mockGrades = [
@@ -325,24 +527,46 @@ export async function runExaminationsModuleTests(): Promise<{
       { grade: "F" },
     ];
     const dist = calculateGradeDistribution(mockGrades);
-    assert(dist.find((d) => d.grade === "A")?.count === 2, "8. calculateGradeDistribution: Count of A is 2");
-    assert(dist.find((d) => d.grade === "F")?.count === 1, "8. calculateGradeDistribution: Count of F is 1");
+    assert(
+      dist.find((d) => d.grade === "A")?.count === 2,
+      "8. calculateGradeDistribution: Count of A is 2",
+    );
+    assert(
+      dist.find((d) => d.grade === "F")?.count === 1,
+      "8. calculateGradeDistribution: Count of F is 1",
+    );
 
     // ==========================================
     // 9. Results Management, Finalization & Publication
     // ==========================================
     const resultsList = await examinationsService.getResults();
-    assert(resultsList.success === true, "9. Examination results list query succeeds");
+    assert(
+      resultsList.success === true,
+      "9. Examination results list query succeeds",
+    );
     assert(resultsList.data.length >= 3, "9. Seed course results present");
 
     const sampleResult = resultsList.data[0];
-    const resultDetail = await examinationsService.getResultById(sampleResult.id);
-    assert(resultDetail.success === true, "9. Result 360° detail profile query succeeds");
-    assert(resultDetail.data.assessmentBreakdown.length > 0, "9. Component-level marks breakdown available");
+    const resultDetail = await examinationsService.getResultById(
+      sampleResult.id,
+    );
+    assert(
+      resultDetail.success === true,
+      "9. Result 360° detail profile query succeeds",
+    );
+    assert(
+      resultDetail.data.assessmentBreakdown.length > 0,
+      "9. Component-level marks breakdown available",
+    );
 
     // Finalize Cohort Result
-    const finalizedRes = await examinationsService.finalizeResult(sampleResult.id);
-    assert(finalizedRes.success === true, "9. Course result finalization succeeds");
+    const finalizedRes = await examinationsService.finalizeResult(
+      sampleResult.id,
+    );
+    assert(
+      finalizedRes.success === true,
+      "9. Course result finalization succeeds",
+    );
 
     // Publication Batches
     const pubBatches = await examinationsService.getPublications();
@@ -359,20 +583,34 @@ export async function runExaminationsModuleTests(): Promise<{
       academicYear: "2026-2027",
       resultCount: 68,
     });
-    assert(newBatchRes.success === true, "9. Publication batch created in READY state");
+    assert(
+      newBatchRes.success === true,
+      "9. Publication batch created in READY state",
+    );
 
     // Publish Batch
-    const publishRes = await examinationsService.publishResults(newBatchRes.data.id);
-    assert(publishRes.success === true, "9. Deliberate publication action succeeds");
-    assert(publishRes.data.status === "PUBLISHED", "9. Batch status transitioned to PUBLISHED");
+    const publishRes = await examinationsService.publishResults(
+      newBatchRes.data.id,
+    );
+    assert(
+      publishRes.success === true,
+      "9. Deliberate publication action succeeds",
+    );
+    assert(
+      publishRes.data.status === "PUBLISHED",
+      "9. Batch status transitioned to PUBLISHED",
+    );
 
     // Revocation (with justification)
     const revokeRes = await examinationsService.revokePublication(
       newBatchRes.data.id,
-      "Administrative hold due to moderation committee review."
+      "Administrative hold due to moderation committee review.",
     );
     assert(revokeRes.success === true, "9. Publication revocation succeeds");
-    assert(revokeRes.data.status === "REVOKED", "9. Batch status transitioned to REVOKED");
+    assert(
+      revokeRes.data.status === "REVOKED",
+      "9. Batch status transitioned to REVOKED",
+    );
 
     // ==========================================
     // 10. Multi-Format Examinations Reports
@@ -383,8 +621,14 @@ export async function runExaminationsModuleTests(): Promise<{
       semester: 5,
     });
     assert(reportRes.success === true, "10. Report generation returns success");
-    assert(reportRes.data.rows.length > 0, "10. Report contains populated records");
-    assert(reportRes.data.title.includes("Assessment"), "10. Report metadata has descriptive title");
+    assert(
+      reportRes.data.rows.length > 0,
+      "10. Report contains populated records",
+    );
+    assert(
+      reportRes.data.title.includes("Assessment"),
+      "10. Report metadata has descriptive title",
+    );
 
     // ==========================================
     // 11. Command Palette & Global Search Indexing
@@ -392,14 +636,20 @@ export async function runExaminationsModuleTests(): Promise<{
     const searchRes = await searchService.search("Examination");
     assert(searchRes.success === true, "11. Global search query succeeds");
     assert(
-      searchRes.data.some((r) => r.category === "Examination" || r.title.includes("Examination")),
-      "11. Global search indexes examination operations and entities"
+      searchRes.data.some(
+        (r) => r.category === "Examination" || r.title.includes("Examination"),
+      ),
+      "11. Global search indexes examination operations and entities",
     );
 
-    const assessmentSearch = await searchService.search("Continuous Assessment");
+    const assessmentSearch = await searchService.search(
+      "Continuous Assessment",
+    );
     assert(
-      assessmentSearch.data.some((r) => r.title.includes("Continuous") || r.category === "Examination"),
-      "11. Global search indexes individual assessment schemes"
+      assessmentSearch.data.some(
+        (r) => r.title.includes("Continuous") || r.category === "Examination",
+      ),
+      "11. Global search indexes individual assessment schemes",
     );
 
     // ==========================================
@@ -446,15 +696,33 @@ export async function runExaminationsModuleTests(): Promise<{
       },
     };
 
-    assert(rbacExamMatrix.SUPER_ADMIN.publishResults === true, "12. Admin/COE authorized to publish results");
-    assert(rbacExamMatrix.HOD.approveCorrections === true, "12. HOD authorized to approve mark corrections");
-    assert(rbacExamMatrix.FACULTY.enterMarks === true, "12. Faculty authorized to enter assessment marks");
-    assert(rbacExamMatrix.STUDENT.enterMarks === false, "12. Student strictly prohibited from marks entry");
-    assert(rbacExamMatrix.STUDENT.viewUnpublishedResults === false, "12. Student strictly prohibited from viewing unpublished drafts");
-
+    assert(
+      rbacExamMatrix.SUPER_ADMIN.publishResults === true,
+      "12. Admin/COE authorized to publish results",
+    );
+    assert(
+      rbacExamMatrix.HOD.approveCorrections === true,
+      "12. HOD authorized to approve mark corrections",
+    );
+    assert(
+      rbacExamMatrix.FACULTY.enterMarks === true,
+      "12. Faculty authorized to enter assessment marks",
+    );
+    assert(
+      rbacExamMatrix.STUDENT.enterMarks === false,
+      "12. Student strictly prohibited from marks entry",
+    );
+    assert(
+      rbacExamMatrix.STUDENT.viewUnpublishedResults === false,
+      "12. Student strictly prohibited from viewing unpublished drafts",
+    );
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
-    results.push({ testName: "Exception during test run", passed: false, message: errorMsg });
+    results.push({
+      testName: "Exception during test run",
+      passed: false,
+      message: errorMsg,
+    });
   }
 
   const passed = results.filter((r) => r.passed).length;
@@ -462,14 +730,19 @@ export async function runExaminationsModuleTests(): Promise<{
   return { passed, failed, results };
 }
 
-if (typeof process !== "undefined" && process.argv[1]?.includes("examinations-module.test")) {
+if (
+  typeof process !== "undefined" &&
+  process.argv[1]?.includes("examinations-module.test")
+) {
   runExaminationsModuleTests().then((res) => {
     console.log(`\n==============================================`);
     console.log(`CampusOS Examination & Assessment Module Test Results:`);
     console.log(`Passed: ${res.passed}, Failed: ${res.failed}`);
     console.log(`==============================================`);
     res.results.forEach((r) => {
-      console.log(`${r.passed ? "✔ PASS" : "✖ FAIL"}: ${r.testName}${r.message ? ` (${r.message})` : ""}`);
+      console.log(
+        `${r.passed ? "✔ PASS" : "✖ FAIL"}: ${r.testName}${r.message ? ` (${r.message})` : ""}`,
+      );
     });
     if (res.failed > 0) {
       process.exit(1);

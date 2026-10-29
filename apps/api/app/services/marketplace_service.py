@@ -12,16 +12,13 @@ Centralized domain service managing:
 - Platform-wide integration health observability and audit logging
 """
 
-from datetime import UTC, datetime, timedelta
-import hashlib
-import json
 import logging
 import secrets
-import time
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -31,20 +28,12 @@ from app.core.exceptions import (
     ConflictException,
     EntitlementExceededException,
     NotFoundException,
-    PermissionDeniedException,
     QuotaExceededException,
     ValidationException,
 )
-from app.integrations.connectors import get_connector, list_available_connectors
-from app.integrations.connectors.base import (
-    BaseMarketplaceConnector,
-    ConnectorBatchResult,
-    ConnectorHealthResult,
-    ConnectorPushResult,
-)
+from app.integrations.connectors import get_connector
 from app.integrations.secrets import SecretManager
-from app.models.core import Institution
-from app.models.integration import ConnectorOwnership, CredentialAuthType, IntegrationCredential
+from app.models.integration import ConnectorOwnership, IntegrationCredential
 from app.models.marketplace import (
     ConflictResolutionPolicy,
     ConnectionMethod,
@@ -55,14 +44,11 @@ from app.models.marketplace import (
     MarketplaceAppVersion,
     MarketplacePublicationStatus,
     MarketplaceSyncRun,
-    SyncDirection,
     SyncRunStatus,
-    SyncTriggerType,
     TenantAppInstallation,
     TenantAppInstallationLifecycleHistory,
     TenantInstallationStatus,
 )
-from app.models.people import User
 from app.schemas.marketplace import (
     ConflictResolutionRequest,
     MarketplaceAppCreateRequest,

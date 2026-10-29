@@ -18,7 +18,11 @@ import { IntelligenceDomain } from "@campusos/types";
 interface AIQueryComposerProps {
   onSend: (query: string, domain: IntelligenceDomain, context?: any) => void;
   loading: boolean;
-  presetPrompts?: { label: string; query: string; domain: IntelligenceDomain }[];
+  presetPrompts?: {
+    label: string;
+    query: string;
+    domain: IntelligenceDomain;
+  }[];
   initialQuery?: string;
 }
 
@@ -29,7 +33,9 @@ export function AIQueryComposer({
   initialQuery = "",
 }: AIQueryComposerProps) {
   const [input, setInput] = useState(initialQuery);
-  const [selectedDomain, setSelectedDomain] = useState<IntelligenceDomain>(IntelligenceDomain.ALL);
+  const [selectedDomain, setSelectedDomain] = useState<IntelligenceDomain>(
+    IntelligenceDomain.ALL,
+  );
   const [selectedContext, setSelectedContext] = useState<{
     type: "ALL" | "STUDENT" | "DEPARTMENT" | "COURSE" | "HOSTEL";
     id?: string;
@@ -50,7 +56,11 @@ export function AIQueryComposer({
     const text = input.trim();
     if (!text || loading) return;
 
-    onSend(text, selectedDomain, selectedContext.type !== "ALL" ? selectedContext : undefined);
+    onSend(
+      text,
+      selectedDomain,
+      selectedContext.type !== "ALL" ? selectedContext : undefined,
+    );
     setInput("");
   };
 
@@ -106,7 +116,10 @@ export function AIQueryComposer({
       )}
 
       {/* Query Bar */}
-      <form onSubmit={handleSubmit} className="relative rounded-xl border border-slate-300 bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 transition-all shadow-sm">
+      <form
+        onSubmit={handleSubmit}
+        className="relative rounded-xl border border-slate-300 bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 transition-all shadow-sm"
+      >
         <textarea
           ref={textareaRef}
           value={input}
@@ -124,7 +137,9 @@ export function AIQueryComposer({
               <Layers className="w-3.5 h-3.5" />
               <select
                 value={selectedDomain}
-                onChange={(e) => setSelectedDomain(e.target.value as IntelligenceDomain)}
+                onChange={(e) =>
+                  setSelectedDomain(e.target.value as IntelligenceDomain)
+                }
                 className="bg-white border border-slate-200 rounded px-2 py-1 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
               >
                 {domains.map((d) => (

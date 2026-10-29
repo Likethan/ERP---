@@ -13,9 +13,9 @@ Validates:
 10. Scheduled Lifecycle Background Sweepers
 """
 
+import uuid
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
-import uuid
 
 import pytest
 from httpx import AsyncClient
@@ -24,7 +24,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
     BadRequestException,
-    EntitlementExceededException,
     QuotaExceededException,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
@@ -34,22 +33,12 @@ from app.models.subscription import (
     BillingInterval,
     CustomerHealthStatus,
     CustomerNoteType,
-    CustomerSuccessHealthSnapshot,
-    CustomerSuccessNote,
     InvoiceStatus,
     OverrideType,
-    PaymentStatus,
-    SubscriptionChangeStatus,
-    SubscriptionChangeType,
-    SubscriptionEntitlementOverride,
-    SubscriptionInvoice,
     SubscriptionLifecycleHistory,
-    SubscriptionPlan,
     SubscriptionPlanStatus,
     SubscriptionStatus,
     SubscriptionUsageAggregate,
-    SubscriptionUsageEvent,
-    TenantSubscription,
 )
 from app.schemas.subscription import (
     EntitlementOverrideCreateRequest,

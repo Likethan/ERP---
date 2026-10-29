@@ -1,5 +1,9 @@
 import { ApiResponse } from "@campusos/types";
-import { DocumentItem, DocumentStatus, VerificationChecklistItem } from "@campusos/types";
+import {
+  DocumentItem,
+  DocumentStatus,
+  VerificationChecklistItem,
+} from "@campusos/types";
 import { documentsService } from "./documents.service";
 
 class DocumentVerificationService {
@@ -14,7 +18,7 @@ class DocumentVerificationService {
       (d) =>
         d.status === DocumentStatus.UPLOADED ||
         d.status === DocumentStatus.UNDER_REVIEW ||
-        d.status === DocumentStatus.REJECTED
+        d.status === DocumentStatus.REJECTED,
     );
 
     if (filters) {
@@ -28,7 +32,9 @@ class DocumentVerificationService {
         queue = queue.filter((d) => d.status === filters.status);
       }
       if (filters.reviewerId && filters.reviewerId !== "ALL") {
-        queue = queue.filter((d) => d.assignedReviewerId === filters.reviewerId);
+        queue = queue.filter(
+          (d) => d.assignedReviewerId === filters.reviewerId,
+        );
       }
     }
 
@@ -38,7 +44,7 @@ class DocumentVerificationService {
   async startVerification(
     documentId: string,
     reviewerId: string,
-    reviewerName: string
+    reviewerName: string,
   ): Promise<ApiResponse<DocumentItem>> {
     const docRes = await documentsService.getDocumentById(documentId);
     if (!docRes.data) {
@@ -64,7 +70,7 @@ class DocumentVerificationService {
   async verifyDocument(
     documentId: string,
     verifierName: string,
-    notes?: string
+    notes?: string,
   ): Promise<ApiResponse<DocumentItem>> {
     const docRes = await documentsService.getDocumentById(documentId);
     if (!docRes.data) {
@@ -91,7 +97,9 @@ class DocumentVerificationService {
       performedBy: verifierName,
       role: "VERIFICATION_OFFICER",
       timestamp: new Date().toISOString(),
-      notes: notes || "Authenticated against official institutional and state guidelines.",
+      notes:
+        notes ||
+        "Authenticated against official institutional and state guidelines.",
     });
 
     return { success: true, data: doc };
@@ -100,10 +108,12 @@ class DocumentVerificationService {
   async rejectDocument(
     documentId: string,
     reason: string,
-    verifierName: string
+    verifierName: string,
   ): Promise<ApiResponse<DocumentItem>> {
     if (!reason || reason.trim().length === 0) {
-      throw new Error("A specific rejection reason is mandatory when rejecting a document.");
+      throw new Error(
+        "A specific rejection reason is mandatory when rejecting a document.",
+      );
     }
 
     const docRes = await documentsService.getDocumentById(documentId);
@@ -133,7 +143,7 @@ class DocumentVerificationService {
   async requestReupload(
     documentId: string,
     instruction: string,
-    verifierName: string
+    verifierName: string,
   ): Promise<ApiResponse<DocumentItem>> {
     const docRes = await documentsService.getDocumentById(documentId);
     if (!docRes.data) {
@@ -161,7 +171,7 @@ class DocumentVerificationService {
     documentId: string,
     checklistItemId: string,
     checked: boolean,
-    notes?: string
+    notes?: string,
   ): Promise<ApiResponse<DocumentItem>> {
     const docRes = await documentsService.getDocumentById(documentId);
     if (!docRes.data) {
@@ -170,7 +180,9 @@ class DocumentVerificationService {
 
     const doc = docRes.data;
     if (doc.verificationChecklist) {
-      const item = doc.verificationChecklist.find((c: VerificationChecklistItem) => c.id === checklistItemId);
+      const item = doc.verificationChecklist.find(
+        (c: VerificationChecklistItem) => c.id === checklistItemId,
+      );
       if (item) {
         item.checked = checked;
         if (notes) item.notes = notes;

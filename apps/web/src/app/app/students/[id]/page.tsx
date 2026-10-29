@@ -13,7 +13,13 @@ import {
   GuardianRelationType,
   MilestoneCategory,
 } from "@/types/people";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
@@ -47,17 +53,25 @@ export default function Student360ProfilePage({
   const { activePersona } = useAuth();
 
   // Role permissions
-  const canManageLifecycle = activePersona.role === "ADMIN" || activePersona.role === "HOD";
-  const canVerifyDocs = activePersona.role === "ADMIN" || activePersona.role === "HOD";
-  const canAddMilestones = activePersona.role === "ADMIN" || activePersona.role === "HOD" || activePersona.role === "FACULTY";
+  const canManageLifecycle =
+    activePersona.role === "ADMIN" || activePersona.role === "HOD";
+  const canVerifyDocs =
+    activePersona.role === "ADMIN" || activePersona.role === "HOD";
+  const canAddMilestones =
+    activePersona.role === "ADMIN" ||
+    activePersona.role === "HOD" ||
+    activePersona.role === "FACULTY";
 
-  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(null);
+  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
   // Lifecycle status modal
   const [statusModalOpen, setStatusModalOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<StudentComprehensiveDetail["status"]>("ACTIVE");
+  const [newStatus, setNewStatus] =
+    useState<StudentComprehensiveDetail["status"]>("ACTIVE");
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   // Guardian Management modal
@@ -86,7 +100,8 @@ export default function Student360ProfilePage({
   const [milestoneModalOpen, setMilestoneModalOpen] = useState(false);
   const [milestoneTitle, setMilestoneTitle] = useState("");
   const [milestoneDesc, setMilestoneDesc] = useState("");
-  const [milestoneCategory, setMilestoneCategory] = useState<AcademicMilestone["category"]>("ACHIEVEMENT");
+  const [milestoneCategory, setMilestoneCategory] =
+    useState<AcademicMilestone["category"]>("ACHIEVEMENT");
   const [milestoneSemester, setMilestoneSemester] = useState("5");
 
   const loadStudent = useCallback(async () => {
@@ -212,7 +227,11 @@ export default function Student360ProfilePage({
   // Verify Document
   const handleVerifyDocument = async (docId: string) => {
     if (!student) return;
-    await studentsService.verifyDocument(student.id, docId, "Admissions Directorate");
+    await studentsService.verifyDocument(
+      student.id,
+      docId,
+      "Admissions Directorate",
+    );
     showToast({
       type: "success",
       title: "Document Verified",
@@ -224,7 +243,11 @@ export default function Student360ProfilePage({
   // Reject Document
   const handleRejectDocument = async (docId: string) => {
     if (!student) return;
-    await studentsService.rejectDocument(student.id, docId, "Discrepancy in seal/signature.");
+    await studentsService.rejectDocument(
+      student.id,
+      docId,
+      "Discrepancy in seal/signature.",
+    );
     showToast({
       type: "warning",
       title: "Document Rejected",
@@ -275,7 +298,11 @@ export default function Student360ProfilePage({
     return (
       <div className="space-y-4">
         <Link href="/app/students">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Directory
           </Button>
         </Link>
@@ -293,7 +320,10 @@ export default function Student360ProfilePage({
     { id: "overview", label: "Overview & Bio" },
     { id: "academic", label: "Academics & Milestones" },
     { id: "guardians", label: `Guardians (${student.guardians?.length || 1})` },
-    { id: "documents", label: `Document Vault (${student.documentsVault?.length || student.documents?.length || 0})` },
+    {
+      id: "documents",
+      label: `Document Vault (${student.documentsVault?.length || student.documents?.length || 0})`,
+    },
     { id: "timeline", label: "Lifecycle Timeline" },
     { id: "connected-modules", label: "Connected Engines" },
   ];
@@ -307,7 +337,11 @@ export default function Student360ProfilePage({
       {/* Back button */}
       <div>
         <Link href="/app/students">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Student Directory
           </Button>
         </Link>
@@ -328,7 +362,9 @@ export default function Student360ProfilePage({
                   {student.firstName} {student.lastName}
                 </h1>
                 <Badge
-                  variant={student.status === "ACTIVE" ? "success" : "secondary"}
+                  variant={
+                    student.status === "ACTIVE" ? "success" : "secondary"
+                  }
                   dot
                 >
                   {student.status}
@@ -342,7 +378,9 @@ export default function Student360ProfilePage({
               </div>
 
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                {student.program.name} &bull; Cohort {student.academicYear} &bull; Semester {student.currentSemester} (Section {student.section})
+                {student.program.name} &bull; Cohort {student.academicYear}{" "}
+                &bull; Semester {student.currentSemester} (Section{" "}
+                {student.section})
               </p>
 
               <div className="mt-2.5 flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
@@ -397,7 +435,9 @@ export default function Student360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Biographical & Civil Identity</CardTitle>
-              <CardDescription>Verified civil and personal demographic coordinates.</CardDescription>
+              <CardDescription>
+                Verified civil and personal demographic coordinates.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
@@ -408,11 +448,15 @@ export default function Student360ProfilePage({
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Gender</span>
-                <span className="text-slate-800 dark:text-slate-200">{student.gender}</span>
+                <span className="text-slate-800 dark:text-slate-200">
+                  {student.gender}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Date of Birth</span>
-                <span className="text-slate-800 dark:text-slate-200 font-mono">{student.dateOfBirth}</span>
+                <span className="text-slate-800 dark:text-slate-200 font-mono">
+                  {student.dateOfBirth}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Blood Group</span>
@@ -422,7 +466,9 @@ export default function Student360ProfilePage({
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Admission Date</span>
-                <span className="text-slate-800 dark:text-slate-200 font-mono">{student.admissionDate}</span>
+                <span className="text-slate-800 dark:text-slate-200 font-mono">
+                  {student.admissionDate}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5">
                 <span className="text-slate-400">Admission Quota</span>
@@ -437,12 +483,16 @@ export default function Student360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Address & Residence</CardTitle>
-              <CardDescription>Permanent postal address and campus residency status.</CardDescription>
+              <CardDescription>
+                Permanent postal address and campus residency status.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Street Address</span>
-                <span className="text-slate-800 dark:text-slate-200">{student.address.street}</span>
+                <span className="text-slate-800 dark:text-slate-200">
+                  {student.address.street}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">City / State</span>
@@ -452,7 +502,9 @@ export default function Student360ProfilePage({
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Postal Pincode</span>
-                <span className="font-mono text-slate-800 dark:text-slate-200">{student.address.pincode}</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">
+                  {student.address.pincode}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Campus Residence</span>
@@ -464,7 +516,8 @@ export default function Student360ProfilePage({
                 <div className="grid grid-cols-2 py-1.5">
                   <span className="text-slate-400">Room / Bed Allocation</span>
                   <span className="font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
-                    {student.hostel.roomNumber} ({student.hostel.bed}) &bull; {student.hostel.block}
+                    {student.hostel.roomNumber} ({student.hostel.bed}) &bull;{" "}
+                    {student.hostel.block}
                   </span>
                 </div>
               )}
@@ -489,10 +542,17 @@ export default function Student360ProfilePage({
                   {student.academicStats.cgpa.toFixed(2)} CGPA
                 </div>
                 <p className="text-xs text-slate-500">
-                  Total Credits Earned: <span className="font-mono font-semibold">{student.academicStats.totalCreditsEarned}</span> / 160
+                  Total Credits Earned:{" "}
+                  <span className="font-mono font-semibold">
+                    {student.academicStats.totalCreditsEarned}
+                  </span>{" "}
+                  / 160
                 </p>
                 <p className="text-xs text-slate-500">
-                  Institutional Cohort Rank: <span className="font-mono font-semibold">#{student.academicStats.rank}</span>
+                  Institutional Cohort Rank:{" "}
+                  <span className="font-mono font-semibold">
+                    #{student.academicStats.rank}
+                  </span>
                 </p>
               </CardContent>
             </Card>
@@ -503,9 +563,16 @@ export default function Student360ProfilePage({
                 <CardDescription>Four-Year B.Tech Program</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-xs">
-                <div className="font-semibold text-slate-900 dark:text-white">{student.program.name}</div>
-                <p className="text-slate-500">Department: {student.program.department}</p>
-                <p className="text-slate-500">Current Standing: Semester {student.currentSemester} &bull; Section {student.section}</p>
+                <div className="font-semibold text-slate-900 dark:text-white">
+                  {student.program.name}
+                </div>
+                <p className="text-slate-500">
+                  Department: {student.program.department}
+                </p>
+                <p className="text-slate-500">
+                  Current Standing: Semester {student.currentSemester} &bull;
+                  Section {student.section}
+                </p>
               </CardContent>
             </Card>
 
@@ -519,7 +586,11 @@ export default function Student360ProfilePage({
                   {student.attendanceSummary.overallPercentage}%
                 </div>
                 <p className="text-xs text-slate-500">
-                  Attended: <span className="font-mono">{student.attendanceSummary.attendedClasses}</span> / {student.attendanceSummary.totalClasses} classes
+                  Attended:{" "}
+                  <span className="font-mono">
+                    {student.attendanceSummary.attendedClasses}
+                  </span>{" "}
+                  / {student.attendanceSummary.totalClasses} classes
                 </p>
               </CardContent>
             </Card>
@@ -533,7 +604,8 @@ export default function Student360ProfilePage({
                   Academic Milestones & Achievements
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Official timeline of verified achievements, honors, and degree progression steps.
+                  Official timeline of verified achievements, honors, and degree
+                  progression steps.
                 </p>
               </div>
               {canAddMilestones && (
@@ -567,7 +639,11 @@ export default function Student360ProfilePage({
                             Sem {mls.semester}
                           </span>
                         )}
-                        <Badge variant={mls.status === "COMPLETED" ? "success" : "secondary"}>
+                        <Badge
+                          variant={
+                            mls.status === "COMPLETED" ? "success" : "secondary"
+                          }
+                        >
                           {mls.category}
                         </Badge>
                       </div>
@@ -602,7 +678,8 @@ export default function Student360ProfilePage({
                 Family & Guardian Relationships
               </h3>
               <p className="text-xs text-slate-500">
-                Parents, legal guardians, and designated emergency contact coordinates.
+                Parents, legal guardians, and designated emergency contact
+                coordinates.
               </p>
             </div>
             <Button
@@ -631,13 +708,13 @@ export default function Student360ProfilePage({
                         {grd.relationLabel || grd.relation}
                       </Badge>
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5">{grd.occupation}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {grd.occupation}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-1">
-                    {grd.isPrimary && (
-                      <Badge variant="success">Primary</Badge>
-                    )}
+                    {grd.isPrimary && <Badge variant="success">Primary</Badge>}
                     {grd.isEmergencyContact && (
                       <Badge variant="warning">Emergency</Badge>
                     )}
@@ -656,13 +733,18 @@ export default function Student360ProfilePage({
                   {grd.annualIncome && (
                     <div className="flex items-center gap-2 text-slate-400">
                       <span>Annual Income:</span>
-                      <span className="font-mono font-medium text-slate-700 dark:text-slate-300">{grd.annualIncome}</span>
+                      <span className="font-mono font-medium text-slate-700 dark:text-slate-300">
+                        {grd.annualIncome}
+                      </span>
                     </div>
                   )}
                   {grd.address && (
                     <div className="flex items-start gap-2 text-slate-400 pt-1">
                       <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5" />
-                      <span>{grd.address.street}, {grd.address.city}, {grd.address.state} - {grd.address.pincode}</span>
+                      <span>
+                        {grd.address.street}, {grd.address.city},{" "}
+                        {grd.address.state} - {grd.address.pincode}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -694,7 +776,8 @@ export default function Student360ProfilePage({
                 Student Document Repository & Vault
               </h3>
               <p className="text-xs text-slate-500">
-                Official certified certificates, identity proofs, and academic credentials.
+                Official certified certificates, identity proofs, and academic
+                credentials.
               </p>
             </div>
             <Button
@@ -720,13 +803,18 @@ export default function Student360ProfilePage({
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                  <tr
+                    key={doc.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition"
+                  >
                     <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-indigo-500 shrink-0" />
                         <div>
                           <div>{doc.name}</div>
-                          <span className="text-[10px] text-slate-400 font-mono">{doc.fileSize}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            {doc.fileSize}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -744,8 +832,8 @@ export default function Student360ProfilePage({
                           doc.status === "VERIFIED"
                             ? "success"
                             : doc.status === "UNDER_REVIEW"
-                            ? "warning"
-                            : "destructive"
+                              ? "warning"
+                              : "destructive"
                         }
                         dot
                       >
@@ -799,7 +887,8 @@ export default function Student360ProfilePage({
             Student Institutional Lifecycle
           </h3>
           <p className="text-xs text-slate-500 mb-6">
-            Chronological audit trail of admissions, enrollments, registrations, and milestones.
+            Chronological audit trail of admissions, enrollments, registrations,
+            and milestones.
           </p>
 
           <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
@@ -808,10 +897,14 @@ export default function Student360ProfilePage({
                 <div className="absolute -left-6 top-1 h-3 w-3 rounded-full border-2 border-indigo-600 bg-white dark:bg-slate-900" />
                 <div className="text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-slate-400">{act.timestamp}</span>
+                    <span className="font-mono text-slate-400">
+                      {act.timestamp}
+                    </span>
                     <Badge variant="secondary">{act.domain}</Badge>
                     <span className="text-slate-400">&bull;</span>
-                    <span className="text-slate-500 font-medium">Logged by {act.actor}</span>
+                    <span className="text-slate-500 font-medium">
+                      Logged by {act.actor}
+                    </span>
                   </div>
                   <p className="text-slate-800 dark:text-slate-200 font-medium mt-1">
                     {act.action}
@@ -834,7 +927,9 @@ export default function Student360ProfilePage({
                 <span>Attendance Engine</span>
                 <Badge variant="success">Operational</Badge>
               </CardTitle>
-              <CardDescription>Live session presence synchronization.</CardDescription>
+              <CardDescription>
+                Live session presence synchronization.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
@@ -850,7 +945,12 @@ export default function Student360ProfilePage({
                 </span>
               </div>
               <Link href={`/app/attendance/students/${student.id}`}>
-                <Button size="sm" variant="outline" className="w-full mt-2" rightIcon={<ExternalLink className="h-3 w-3" />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full mt-2"
+                  rightIcon={<ExternalLink className="h-3 w-3" />}
+                >
                   Open Full Attendance Sheet
                 </Button>
               </Link>
@@ -863,19 +963,30 @@ export default function Student360ProfilePage({
                 <span>Finance & Fee Billing</span>
                 <Badge variant="secondary">Linked</Badge>
               </CardTitle>
-              <CardDescription>Term tuition and student ledger balance.</CardDescription>
+              <CardDescription>
+                Term tuition and student ledger balance.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Total Billed Fees</span>
-                <span className="font-mono font-bold">₹ {student.financeSummary.totalBilled.toLocaleString()}</span>
+                <span className="font-mono font-bold">
+                  ₹ {student.financeSummary.totalBilled.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Pending Dues</span>
-                <span className="font-mono text-emerald-600 font-bold">₹ {student.financeSummary.pendingDue.toLocaleString()}</span>
+                <span className="font-mono text-emerald-600 font-bold">
+                  ₹ {student.financeSummary.pendingDue.toLocaleString()}
+                </span>
               </div>
               <Link href="/app/finance/invoices">
-                <Button size="sm" variant="outline" className="w-full mt-2" rightIcon={<ExternalLink className="h-3 w-3" />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full mt-2"
+                  rightIcon={<ExternalLink className="h-3 w-3" />}
+                >
                   View Finance Ledgers
                 </Button>
               </Link>
@@ -888,7 +999,9 @@ export default function Student360ProfilePage({
                 <span>Examinations & Gradebook</span>
                 <Badge variant="secondary">Linked</Badge>
               </CardTitle>
-              <CardDescription>Continuous assessments and transcript.</CardDescription>
+              <CardDescription>
+                Continuous assessments and transcript.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
@@ -904,7 +1017,12 @@ export default function Student360ProfilePage({
                 </span>
               </div>
               <Link href="/app/examinations/results">
-                <Button size="sm" variant="outline" className="w-full mt-2" rightIcon={<ExternalLink className="h-3 w-3" />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full mt-2"
+                  rightIcon={<ExternalLink className="h-3 w-3" />}
+                >
                   Open Academic Transcript
                 </Button>
               </Link>
@@ -917,19 +1035,30 @@ export default function Student360ProfilePage({
                 <span>Placement & Careers</span>
                 <Badge variant="success">Eligible</Badge>
               </CardTitle>
-              <CardDescription>Corporate drives and shortlisting profile.</CardDescription>
+              <CardDescription>
+                Corporate drives and shortlisting profile.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Active Applications</span>
-                <span className="font-mono font-bold">{student.placementSummary.appliedDrives} Drives</span>
+                <span className="font-mono font-bold">
+                  {student.placementSummary.appliedDrives} Drives
+                </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-500">Offers Extended</span>
-                <span className="font-mono font-bold text-emerald-600">{student.placementSummary.offersReceived} Offers</span>
+                <span className="font-mono font-bold text-emerald-600">
+                  {student.placementSummary.offersReceived} Offers
+                </span>
               </div>
               <Link href="/app/placement">
-                <Button size="sm" variant="outline" className="w-full mt-2" rightIcon={<ExternalLink className="h-3 w-3" />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full mt-2"
+                  rightIcon={<ExternalLink className="h-3 w-3" />}
+                >
                   View Placement Drives
                 </Button>
               </Link>
@@ -959,18 +1088,32 @@ export default function Student360ProfilePage({
               className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
             >
               <option value="ACTIVE">ACTIVE — Good Academic Standing</option>
-              <option value="ON_LEAVE">ON_LEAVE — Sabbatical / Leave of Absence</option>
+              <option value="ON_LEAVE">
+                ON_LEAVE — Sabbatical / Leave of Absence
+              </option>
               <option value="SUSPENDED">SUSPENDED — Disciplinary Hold</option>
               <option value="GRADUATED">GRADUATED — Degree Conferred</option>
-              <option value="WITHDRAWN">WITHDRAWN — Transferred / Discontinued</option>
+              <option value="WITHDRAWN">
+                WITHDRAWN — Transferred / Discontinued
+              </option>
             </select>
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setStatusModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setStatusModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm" isLoading={isUpdatingStatus}>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              isLoading={isUpdatingStatus}
+            >
               Record Transition
             </Button>
           </div>
@@ -991,7 +1134,9 @@ export default function Student360ProfilePage({
             <Input
               required
               value={guardianForm.name}
-              onChange={(e) => setGuardianForm({ ...guardianForm, name: e.target.value })}
+              onChange={(e) =>
+                setGuardianForm({ ...guardianForm, name: e.target.value })
+              }
               placeholder="e.g. Meenakshi Patel"
             />
           </div>
@@ -1003,7 +1148,12 @@ export default function Student360ProfilePage({
               </label>
               <select
                 value={guardianForm.relation}
-                onChange={(e) => setGuardianForm({ ...guardianForm, relation: e.target.value as GuardianRelationType })}
+                onChange={(e) =>
+                  setGuardianForm({
+                    ...guardianForm,
+                    relation: e.target.value as GuardianRelationType,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
               >
                 <option value="FATHER">Father</option>
@@ -1019,7 +1169,12 @@ export default function Student360ProfilePage({
               </label>
               <Input
                 value={guardianForm.occupation}
-                onChange={(e) => setGuardianForm({ ...guardianForm, occupation: e.target.value })}
+                onChange={(e) =>
+                  setGuardianForm({
+                    ...guardianForm,
+                    occupation: e.target.value,
+                  })
+                }
                 placeholder="e.g. Software Architect"
               />
             </div>
@@ -1033,7 +1188,9 @@ export default function Student360ProfilePage({
               <Input
                 required
                 value={guardianForm.phone}
-                onChange={(e) => setGuardianForm({ ...guardianForm, phone: e.target.value })}
+                onChange={(e) =>
+                  setGuardianForm({ ...guardianForm, phone: e.target.value })
+                }
                 placeholder="+91 98450 00000"
               />
             </div>
@@ -1044,7 +1201,9 @@ export default function Student360ProfilePage({
               <Input
                 type="email"
                 value={guardianForm.email}
-                onChange={(e) => setGuardianForm({ ...guardianForm, email: e.target.value })}
+                onChange={(e) =>
+                  setGuardianForm({ ...guardianForm, email: e.target.value })
+                }
                 placeholder="guardian@example.com"
               />
             </div>
@@ -1055,7 +1214,12 @@ export default function Student360ProfilePage({
               <input
                 type="checkbox"
                 checked={guardianForm.isPrimary}
-                onChange={(e) => setGuardianForm({ ...guardianForm, isPrimary: e.target.checked })}
+                onChange={(e) =>
+                  setGuardianForm({
+                    ...guardianForm,
+                    isPrimary: e.target.checked,
+                  })
+                }
                 className="rounded border-slate-300 text-indigo-600"
               />
               <span>Primary Guardian</span>
@@ -1064,7 +1228,12 @@ export default function Student360ProfilePage({
               <input
                 type="checkbox"
                 checked={guardianForm.isEmergencyContact}
-                onChange={(e) => setGuardianForm({ ...guardianForm, isEmergencyContact: e.target.checked })}
+                onChange={(e) =>
+                  setGuardianForm({
+                    ...guardianForm,
+                    isEmergencyContact: e.target.checked,
+                  })
+                }
                 className="rounded border-slate-300 text-indigo-600"
               />
               <span>Emergency Contact</span>
@@ -1072,7 +1241,12 @@ export default function Student360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setGuardianModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setGuardianModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">
@@ -1108,15 +1282,21 @@ export default function Student360ProfilePage({
               </label>
               <select
                 value={docCategory}
-                onChange={(e) => setDocCategory(e.target.value as DocumentCategory)}
+                onChange={(e) =>
+                  setDocCategory(e.target.value as DocumentCategory)
+                }
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
               >
                 <option value="IDENTITY">IDENTITY (Aadhaar / Passport)</option>
                 <option value="ACADEMIC">ACADEMIC (Board Transcripts)</option>
                 <option value="ADMISSION">ADMISSION (Allotment Memo)</option>
-                <option value="FINANCIAL">FINANCIAL (Scholarship Orders)</option>
+                <option value="FINANCIAL">
+                  FINANCIAL (Scholarship Orders)
+                </option>
                 <option value="MEDICAL">MEDICAL (Fitness Certificates)</option>
-                <option value="CERTIFICATES">CERTIFICATES (Honors / Badges)</option>
+                <option value="CERTIFICATES">
+                  CERTIFICATES (Honors / Badges)
+                </option>
               </select>
             </div>
             <div>
@@ -1136,11 +1316,18 @@ export default function Student360ProfilePage({
             <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
               Drag file here, or click to browse
             </p>
-            <p className="text-[11px] text-slate-400">PDF, PNG, JPG up to 10MB</p>
+            <p className="text-[11px] text-slate-400">
+              PDF, PNG, JPG up to 10MB
+            </p>
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setUploadDocModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setUploadDocModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">
@@ -1160,21 +1347,41 @@ export default function Student360ProfilePage({
           <div className="space-y-4 pt-2">
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center min-h-[220px] text-center">
               <FileText className="h-16 w-16 text-indigo-500 mb-3" />
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">{previewDoc.name}</h4>
-              <p className="text-xs text-slate-500 mt-1">Category: {previewDoc.category} &bull; File Size: {previewDoc.fileSize}</p>
-              <p className="text-xs font-mono text-slate-400 mt-0.5">Uploaded on {previewDoc.uploadedAt} by {previewDoc.uploadedBy}</p>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                {previewDoc.name}
+              </h4>
+              <p className="text-xs text-slate-500 mt-1">
+                Category: {previewDoc.category} &bull; File Size:{" "}
+                {previewDoc.fileSize}
+              </p>
+              <p className="text-xs font-mono text-slate-400 mt-0.5">
+                Uploaded on {previewDoc.uploadedAt} by {previewDoc.uploadedBy}
+              </p>
               <div className="mt-3">
-                <Badge variant={previewDoc.status === "VERIFIED" ? "success" : "warning"} dot>
+                <Badge
+                  variant={
+                    previewDoc.status === "VERIFIED" ? "success" : "warning"
+                  }
+                  dot
+                >
                   {previewDoc.status}
                 </Badge>
               </div>
             </div>
 
             <div className="flex justify-between items-center pt-2">
-              <Button size="sm" variant="outline" leftIcon={<Download className="h-3.5 w-3.5" />}>
+              <Button
+                size="sm"
+                variant="outline"
+                leftIcon={<Download className="h-3.5 w-3.5" />}
+              >
                 Download Copy
               </Button>
-              <Button size="sm" variant="secondary" onClick={() => setPreviewDoc(null)}>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setPreviewDoc(null)}
+              >
                 Close Preview
               </Button>
             </div>
@@ -1208,13 +1415,23 @@ export default function Student360ProfilePage({
               </label>
               <select
                 value={milestoneCategory}
-                onChange={(e) => setMilestoneCategory(e.target.value as MilestoneCategory)}
+                onChange={(e) =>
+                  setMilestoneCategory(e.target.value as MilestoneCategory)
+                }
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
               >
-                <option value="ACHIEVEMENT">ACHIEVEMENT (Awards & Honors)</option>
-                <option value="SEMESTER_PROGRESSION">SEMESTER_PROGRESSION (Year Clearance)</option>
-                <option value="INTERNSHIP">INTERNSHIP (Industrial Training)</option>
-                <option value="PLACEMENT">PLACEMENT (Corporate Selection)</option>
+                <option value="ACHIEVEMENT">
+                  ACHIEVEMENT (Awards & Honors)
+                </option>
+                <option value="SEMESTER_PROGRESSION">
+                  SEMESTER_PROGRESSION (Year Clearance)
+                </option>
+                <option value="INTERNSHIP">
+                  INTERNSHIP (Industrial Training)
+                </option>
+                <option value="PLACEMENT">
+                  PLACEMENT (Corporate Selection)
+                </option>
                 <option value="GRADUATION">GRADUATION (Degree Finality)</option>
               </select>
             </div>
@@ -1251,7 +1468,12 @@ export default function Student360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setMilestoneModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setMilestoneModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">

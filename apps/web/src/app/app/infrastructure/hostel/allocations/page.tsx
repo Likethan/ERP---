@@ -5,7 +5,13 @@ import Link from "next/link";
 import { hostelAllocationsService } from "@/services/hostel-allocations.service";
 import { hostelsService } from "@/services/hostels.service";
 import { hostelRoomsService } from "@/services/hostel-rooms.service";
-import { HostelAllocation, Hostel, HostelRoom, AllocationStatus, BedStatus } from "@campusos/types";
+import {
+  HostelAllocation,
+  Hostel,
+  HostelRoom,
+  AllocationStatus,
+  BedStatus,
+} from "@campusos/types";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -122,7 +128,9 @@ export default function HostelAllocationsPage() {
             >
               {a.studentName}
             </Link>
-            <div className="text-[11px] font-mono text-slate-400">{a.registerNumber}</div>
+            <div className="text-[11px] font-mono text-slate-400">
+              {a.registerNumber}
+            </div>
           </div>
         ),
       },
@@ -132,7 +140,9 @@ export default function HostelAllocationsPage() {
         cell: (a) => (
           <div className="text-xs">
             <span className="text-white font-medium">{a.programCode}</span>
-            <div className="text-[11px] text-slate-400">Year {a.year} • Sem {a.semester}</div>
+            <div className="text-[11px] text-slate-400">
+              Year {a.year} • Sem {a.semester}
+            </div>
           </div>
         ),
       },
@@ -152,7 +162,11 @@ export default function HostelAllocationsPage() {
         id: "allocatedDate",
         header: "Allocated Date",
         accessorKey: "allocatedDate",
-        cell: (a) => <span className="text-xs text-slate-300 font-mono">{a.allocatedDate}</span>,
+        cell: (a) => (
+          <span className="text-xs text-slate-300 font-mono">
+            {a.allocatedDate}
+          </span>
+        ),
       },
       {
         id: "status",
@@ -160,9 +174,11 @@ export default function HostelAllocationsPage() {
         accessorKey: "status",
         cell: (a) => {
           const map: Record<string, string> = {
-            ALLOCATED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+            ALLOCATED:
+              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
             PENDING: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-            TRANSFER_REQUESTED: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+            TRANSFER_REQUESTED:
+              "bg-purple-500/10 text-purple-400 border-purple-500/20",
             TRANSFERRED: "bg-sky-500/10 text-sky-400 border-sky-500/20",
             VACATED: "bg-slate-500/10 text-slate-400 border-slate-500/20",
             CANCELLED: "bg-rose-500/10 text-rose-400 border-rose-500/20",
@@ -179,7 +195,11 @@ export default function HostelAllocationsPage() {
         header: "Actions",
         cell: (a) => (
           <Link href={`/app/infrastructure/hostel/allocations/${a.id}`}>
-            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               Manage 360°
             </Button>
@@ -187,7 +207,7 @@ export default function HostelAllocationsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -200,7 +220,10 @@ export default function HostelAllocationsPage() {
               Infrastructure
             </Link>
             <span>/</span>
-            <Link href="/app/infrastructure/hostel" className="hover:text-white">
+            <Link
+              href="/app/infrastructure/hostel"
+              className="hover:text-white"
+            >
               Hostel
             </Link>
             <span>/</span>
@@ -211,7 +234,8 @@ export default function HostelAllocationsPage() {
             Hostel Allocations & Room Assignments
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Student hostel eligibility pipeline, room/bed assignment tracking, transfers, and clearance workflows.
+            Student hostel eligibility pipeline, room/bed assignment tracking,
+            transfers, and clearance workflows.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -231,13 +255,21 @@ export default function HostelAllocationsPage() {
           Hostel Allocation Pipeline
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-300">
-          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">1. Student</span>
+          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">
+            1. Student
+          </span>
           <ArrowRight className="h-3.5 w-3.5 text-slate-600" />
-          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">2. Eligibility Check</span>
+          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">
+            2. Eligibility Check
+          </span>
           <ArrowRight className="h-3.5 w-3.5 text-slate-600" />
-          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">3. Hostel Hall</span>
+          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">
+            3. Hostel Hall
+          </span>
           <ArrowRight className="h-3.5 w-3.5 text-slate-600" />
-          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">4. Room & Bed</span>
+          <span className="px-2.5 py-1 rounded bg-slate-800 border border-slate-700">
+            4. Room & Bed
+          </span>
           <ArrowRight className="h-3.5 w-3.5 text-slate-600" />
           <span className="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
             5. Allocation & Key Handover
@@ -307,22 +339,30 @@ export default function HostelAllocationsPage() {
         <form onSubmit={handleAllocate} className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Student Full Name *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Student Full Name *
+              </label>
               <Input
                 required
                 placeholder="e.g. Siddharth Rao"
                 value={form.studentName}
-                onChange={(e) => setForm({ ...form, studentName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, studentName: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Registration / Roll No. *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Registration / Roll No. *
+              </label>
               <Input
                 required
                 placeholder="e.g. REG2024CS099"
                 value={form.registerNumber}
-                onChange={(e) => setForm({ ...form, registerNumber: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, registerNumber: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
@@ -330,45 +370,63 @@ export default function HostelAllocationsPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Program Code</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Program Code
+              </label>
               <Input
                 value={form.programCode}
-                onChange={(e) => setForm({ ...form, programCode: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, programCode: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Academic Year</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Academic Year
+              </label>
               <Input
                 type="number"
                 min={1}
                 max={5}
                 value={form.year}
-                onChange={(e) => setForm({ ...form, year: Number(e.target.value) })}
+                onChange={(e) =>
+                  setForm({ ...form, year: Number(e.target.value) })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Semester</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Semester
+              </label>
               <Input
                 type="number"
                 min={1}
                 max={10}
                 value={form.semester}
-                onChange={(e) => setForm({ ...form, semester: Number(e.target.value) })}
+                onChange={(e) =>
+                  setForm({ ...form, semester: Number(e.target.value) })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
           </div>
 
           <div className="border-t border-slate-800 pt-3 space-y-3">
-            <h4 className="text-xs font-bold text-slate-300 uppercase">Target Bed Slot</h4>
+            <h4 className="text-xs font-bold text-slate-300 uppercase">
+              Target Bed Slot
+            </h4>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Hostel</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Hostel
+                </label>
                 <select
                   value={form.hostelId}
-                  onChange={(e) => setForm({ ...form, hostelId: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, hostelId: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
                 >
                   {hostels.map((h) => (
@@ -379,10 +437,14 @@ export default function HostelAllocationsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Room Number</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Room Number
+                </label>
                 <Input
                   value={form.roomNumber}
-                  onChange={(e) => setForm({ ...form, roomNumber: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, roomNumber: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
@@ -390,18 +452,26 @@ export default function HostelAllocationsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Block</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Block
+                </label>
                 <Input
                   value={form.blockName}
-                  onChange={(e) => setForm({ ...form, blockName: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, blockName: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Bed Designation</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Bed Designation
+                </label>
                 <Input
                   value={form.bedNumber}
-                  onChange={(e) => setForm({ ...form, bedNumber: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, bedNumber: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
@@ -417,7 +487,10 @@ export default function HostelAllocationsPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Confirm & Issue Allocation
             </Button>
           </div>

@@ -140,7 +140,9 @@ export default function ResultDetailPage() {
         <StatCard
           title="Publication Status"
           value={result.isPublished ? "Published" : "Internal"}
-          description={result.isPublished ? "Visible to student" : "Pending batch release"}
+          description={
+            result.isPublished ? "Visible to student" : "Pending batch release"
+          }
           icon={<Globe className="h-5 w-5 text-purple-600" />}
         />
       </div>
@@ -183,7 +185,9 @@ export default function ResultDetailPage() {
         <div className="md:col-span-2 p-5 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 space-y-4">
           <h3 className="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-100 pb-2 dark:border-slate-800 flex items-center justify-between">
             <span>Evaluation Components Breakdown</span>
-            <span className="text-xs text-indigo-600 font-normal">Weighted CBCS Aggregate</span>
+            <span className="text-xs text-indigo-600 font-normal">
+              Weighted CBCS Aggregate
+            </span>
           </h3>
 
           <div className="overflow-x-auto">
@@ -203,11 +207,15 @@ export default function ResultDetailPage() {
                     <td className="p-2.5 font-medium text-slate-900 dark:text-white">
                       {item.componentName}
                     </td>
-                    <td className="p-2.5 text-slate-500">{item.componentType}</td>
+                    <td className="p-2.5 text-slate-500">
+                      {item.componentType}
+                    </td>
                     <td className="p-2.5 text-right font-mono font-semibold">
                       {item.obtainedMarks} / {item.maxMarks}
                     </td>
-                    <td className="p-2.5 text-right text-slate-500">{item.weightage}%</td>
+                    <td className="p-2.5 text-right text-slate-500">
+                      {item.weightage}%
+                    </td>
                     <td className="p-2.5 text-right font-bold text-indigo-600 dark:text-indigo-400">
                       {item.weightedScore.toFixed(1)} pts
                     </td>
@@ -216,8 +224,12 @@ export default function ResultDetailPage() {
               </tbody>
               <tfoot className="border-t-2 border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30 font-bold">
                 <tr>
-                  <td colSpan={2} className="p-2.5">Final Computed Total</td>
-                  <td className="p-2.5 text-right font-mono">{result.totalMarks} / {result.maxMarks}</td>
+                  <td colSpan={2} className="p-2.5">
+                    Final Computed Total
+                  </td>
+                  <td className="p-2.5 text-right font-mono">
+                    {result.totalMarks} / {result.maxMarks}
+                  </td>
                   <td className="p-2.5 text-right">100%</td>
                   <td className="p-2.5 text-right text-indigo-700 dark:text-indigo-300">
                     {result.percentage}% ({result.grade})
@@ -237,24 +249,40 @@ export default function ResultDetailPage() {
         <div className="space-y-4 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700 pl-8 text-xs">
           <div className="relative">
             <span className="absolute -left-8 top-1 h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-slate-900" />
-            <p className="font-semibold text-slate-900 dark:text-white">Marks Scored & Verified</p>
-            <p className="text-slate-400">Submitted by course faculty {result.facultyName}</p>
+            <p className="font-semibold text-slate-900 dark:text-white">
+              Marks Scored & Verified
+            </p>
+            <p className="text-slate-400">
+              Submitted by course faculty {result.facultyName}
+            </p>
           </div>
           <div className="relative">
             <span className="absolute -left-8 top-1 h-3 w-3 rounded-full bg-blue-500 ring-4 ring-white dark:ring-slate-900" />
-            <p className="font-semibold text-slate-900 dark:text-white">Grades Computed (CBCS CBCS Scale)</p>
-            <p className="text-slate-400">Mapped to Grade {result.grade} ({result.gradePoint}.0 GP)</p>
+            <p className="font-semibold text-slate-900 dark:text-white">
+              Grades Computed (CBCS CBCS Scale)
+            </p>
+            <p className="text-slate-400">
+              Mapped to Grade {result.grade} ({result.gradePoint}.0 GP)
+            </p>
           </div>
           <div className="relative">
             <span className="absolute -left-8 top-1 h-3 w-3 rounded-full bg-purple-500 ring-4 ring-white dark:ring-slate-900" />
-            <p className="font-semibold text-slate-900 dark:text-white">Result Ratified & Finalized</p>
-            <p className="text-slate-400">{new Date(result.finalizedAt || "").toLocaleString()}</p>
+            <p className="font-semibold text-slate-900 dark:text-white">
+              Result Ratified & Finalized
+            </p>
+            <p className="text-slate-400">
+              {new Date(result.finalizedAt || "").toLocaleString()}
+            </p>
           </div>
           {result.isPublished && (
             <div className="relative">
               <span className="absolute -left-8 top-1 h-3 w-3 rounded-full bg-teal-500 ring-4 ring-white dark:ring-slate-900" />
-              <p className="font-semibold text-slate-900 dark:text-white">Published to Student Portal</p>
-              <p className="text-slate-400">{new Date(result.publishedAt || "").toLocaleString()}</p>
+              <p className="font-semibold text-slate-900 dark:text-white">
+                Published to Student Portal
+              </p>
+              <p className="text-slate-400">
+                {new Date(result.publishedAt || "").toLocaleString()}
+              </p>
             </div>
           )}
         </div>

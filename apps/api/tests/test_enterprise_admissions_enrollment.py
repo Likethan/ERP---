@@ -14,69 +14,50 @@ Comprehensive automated tests covering:
 """
 
 import uuid
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
-from fastapi import HTTPException
-from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
+from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.admissions import (
-    AdmissionApplication,
-    AdmissionCycle,
     AdmissionCycleStatus,
-    AdmissionOffer,
-    ApplicantProfile,
     ApplicantVerificationStatus,
-    ApplicationDocument,
-    ApplicationDocumentRequirement,
-    ApplicationProgramChoice,
-    ApplicationReview,
     ApplicationStatus,
     DocumentVerificationStatus,
-    EligibilityEvaluation,
-    EligibilityRule,
-    EnrollmentWorkflow,
     EnrollmentWorkflowStatus,
     OfferStatus,
-    OnboardingChecklist,
     OnboardingStatus,
-    OnboardingTask,
-    OnboardingTaskCategory,
     ReviewDecision,
     ReviewStage,
-    SeatAllocation,
-    SelectionResult,
-    SelectionRun,
-    SelectionStatus,
 )
-from app.models.core import AcademicYear, Batch, Campus, Department, Institution, Program, Regulation, Semester
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.core import (
+    AcademicYear,
+    Batch,
+    Campus,
+    Department,
+    Institution,
+    Program,
+    Regulation,
+)
+from app.models.people import Role, StudentProfile, User
 from app.schemas.admissions import (
     AdmissionApplicationCreate,
     AdmissionApplicationUpdate,
     AdmissionCycleCreate,
     AdmissionCycleUpdate,
     AdmissionOfferCreate,
-    AdmissionOfferRespond,
-    AdmissionOfferRevoke,
-    ApplicantMergeRequest,
     ApplicantProfileCreate,
-    ApplicantProfileUpdate,
     ApplicationDocumentRequirementCreate,
     ApplicationDocumentUpload,
     ApplicationDocumentVerify,
     ApplicationReviewCreate,
-    ApplicationStatusTransition,
-    EligibilityEvaluationRequest,
     EligibilityRuleCreate,
     EnrollmentWorkflowInitiate,
     OnboardingTaskUpdate,
     SeatAllocationCreate,
-    SeatAllocationUpdate,
     SelectionRunCreate,
 )
 from app.services.admissions_service import AdmissionsService

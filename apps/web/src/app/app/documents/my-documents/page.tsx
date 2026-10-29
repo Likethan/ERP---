@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { documentsService } from "@/services/documents.service";
-import { DocumentItem, DocumentCategoryCode, DocumentStatus } from "@campusos/types";
+import {
+  DocumentItem,
+  DocumentCategoryCode,
+  DocumentStatus,
+} from "@campusos/types";
 import { DocumentStatusBadge } from "@/components/documents/document-status-badge";
 import { DocumentCard } from "@/components/documents/document-card";
 import { Button } from "@/components/ui/button";
@@ -36,7 +40,9 @@ export default function MyDocumentsPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [activeTab, setActiveTab] = useState<"ALL" | "VERIFIED" | "PENDING" | "REJECTED">("ALL");
+  const [activeTab, setActiveTab] = useState<
+    "ALL" | "VERIFIED" | "PENDING" | "REJECTED"
+  >("ALL");
 
   useEffect(() => {
     async function loadMyDocuments() {
@@ -58,16 +64,19 @@ export default function MyDocumentsPage() {
   }, []);
 
   const filteredDocs = documents.filter((doc) => {
-    if (activeTab === "VERIFIED" && doc.status !== DocumentStatus.VERIFIED) return false;
+    if (activeTab === "VERIFIED" && doc.status !== DocumentStatus.VERIFIED)
+      return false;
     if (
       activeTab === "PENDING" &&
       doc.status !== DocumentStatus.UPLOADED &&
       doc.status !== DocumentStatus.UNDER_REVIEW
     )
       return false;
-    if (activeTab === "REJECTED" && doc.status !== DocumentStatus.REJECTED) return false;
+    if (activeTab === "REJECTED" && doc.status !== DocumentStatus.REJECTED)
+      return false;
 
-    if (categoryFilter !== "ALL" && doc.category !== categoryFilter) return false;
+    if (categoryFilter !== "ALL" && doc.category !== categoryFilter)
+      return false;
     if (statusFilter !== "ALL" && doc.status !== statusFilter) return false;
 
     if (search.trim()) {
@@ -90,9 +99,12 @@ export default function MyDocumentsPage() {
             <FileCheck className="w-3.5 h-3.5" />
             <span>Personal Records Center</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-100">My Document Vault</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-100">
+            My Document Vault
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
-            View your verified academic credentials, proof of identity, fee receipts, and career certificates.
+            View your verified academic credentials, proof of identity, fee
+            receipts, and career certificates.
           </p>
         </div>
 
@@ -104,7 +116,10 @@ export default function MyDocumentsPage() {
             </Button>
           </Link>
           <Link href="/app/documents/upload">
-            <Button size="sm" className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700"
+            >
               <Upload className="w-4 h-4" />
               Upload Document
             </Button>
@@ -132,12 +147,14 @@ export default function MyDocumentsPage() {
                 `In Review (${
                   documents.filter(
                     (d) =>
-                      d.status === DocumentStatus.UPLOADED || d.status === DocumentStatus.UNDER_REVIEW
+                      d.status === DocumentStatus.UPLOADED ||
+                      d.status === DocumentStatus.UNDER_REVIEW,
                   ).length
                 })`}
               {tab === "REJECTED" &&
                 `Rejected / Re-upload (${
-                  documents.filter((d) => d.status === DocumentStatus.REJECTED).length
+                  documents.filter((d) => d.status === DocumentStatus.REJECTED)
+                    .length
                 })`}
             </button>
           ))}
@@ -148,7 +165,9 @@ export default function MyDocumentsPage() {
           <button
             onClick={() => setViewMode("table")}
             className={`p-1.5 rounded text-xs transition ${
-              viewMode === "table" ? "bg-slate-800 text-slate-100 shadow" : "text-slate-400 hover:text-slate-200"
+              viewMode === "table"
+                ? "bg-slate-800 text-slate-100 shadow"
+                : "text-slate-400 hover:text-slate-200"
             }`}
             title="Table View"
           >
@@ -157,7 +176,9 @@ export default function MyDocumentsPage() {
           <button
             onClick={() => setViewMode("card")}
             className={`p-1.5 rounded text-xs transition ${
-              viewMode === "card" ? "bg-slate-800 text-slate-100 shadow" : "text-slate-400 hover:text-slate-200"
+              viewMode === "card"
+                ? "bg-slate-800 text-slate-100 shadow"
+                : "text-slate-400 hover:text-slate-200"
             }`}
             title="Card View"
           >
@@ -211,13 +232,18 @@ export default function MyDocumentsPage() {
 
       {/* Content Area: Table vs Cards */}
       {loading ? (
-        <div className="py-20 text-center text-xs text-slate-500">Loading your document vault...</div>
+        <div className="py-20 text-center text-xs text-slate-500">
+          Loading your document vault...
+        </div>
       ) : filteredDocs.length === 0 ? (
         <div className="py-16 text-center bg-slate-900 border border-slate-800 rounded-xl p-8">
           <FileText className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-slate-300">No documents found</h3>
+          <h3 className="text-sm font-semibold text-slate-300">
+            No documents found
+          </h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            No records matched your search filters. Click upload below to submit a new file.
+            No records matched your search filters. Click upload below to submit
+            a new file.
           </p>
           <Link href="/app/documents/upload" className="inline-block mt-4">
             <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700">
@@ -251,10 +277,15 @@ export default function MyDocumentsPage() {
                 {filteredDocs.map((doc) => {
                   const expStatus = getDocumentExpiryStatus(doc.expiryDate);
                   return (
-                    <tr key={doc.id} className="hover:bg-slate-800/40 transition">
+                    <tr
+                      key={doc.id}
+                      className="hover:bg-slate-800/40 transition"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-slate-100 hover:text-blue-400 transition">
-                          <Link href={`/app/documents/${doc.id}`}>{doc.name}</Link>
+                          <Link href={`/app/documents/${doc.id}`}>
+                            {doc.name}
+                          </Link>
                         </div>
                         <div className="text-[11px] text-slate-500 mt-0.5">
                           {doc.documentType} • {doc.fileSize}
@@ -262,7 +293,9 @@ export default function MyDocumentsPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="font-medium text-blue-400">{doc.category}</span>
+                        <span className="font-medium text-blue-400">
+                          {doc.category}
+                        </span>
                       </td>
 
                       <td className="py-3.5 px-4">
@@ -281,7 +314,8 @@ export default function MyDocumentsPage() {
                         {doc.verifiedBy ? (
                           <span className="text-emerald-400 flex items-center gap-1 font-medium">
                             <ShieldCheck className="w-3.5 h-3.5" />
-                            {doc.verifiedBy.split(" ")[0]} {doc.verifiedBy.split(" ")[1] || ""}
+                            {doc.verifiedBy.split(" ")[0]}{" "}
+                            {doc.verifiedBy.split(" ")[1] || ""}
                           </span>
                         ) : (
                           <span className="text-slate-500 italic">Pending</span>
@@ -290,7 +324,11 @@ export default function MyDocumentsPage() {
 
                       <td className="py-3.5 px-4 text-right">
                         <Link href={`/app/documents/${doc.id}`}>
-                          <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-xs h-7 gap-1"
+                          >
                             <Eye className="w-3.5 h-3.5" />
                             Details
                           </Button>

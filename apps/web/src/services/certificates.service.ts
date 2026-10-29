@@ -23,7 +23,9 @@ class CertificatesService {
         items = items.filter((c) => c.recipientId === filters.recipientId);
       }
       if (filters.certificateType && filters.certificateType !== "ALL") {
-        items = items.filter((c) => c.certificateType === filters.certificateType);
+        items = items.filter(
+          (c) => c.certificateType === filters.certificateType,
+        );
       }
       if (filters.status && filters.status !== "ALL") {
         items = items.filter((c) => c.status === filters.status);
@@ -35,7 +37,7 @@ class CertificatesService {
             c.certificateNumber.toLowerCase().includes(q) ||
             c.recipientName.toLowerCase().includes(q) ||
             c.recipientRollNumber.toLowerCase().includes(q) ||
-            c.certificateType.toLowerCase().includes(q)
+            c.certificateType.toLowerCase().includes(q),
         );
       }
     }
@@ -43,14 +45,20 @@ class CertificatesService {
     return { success: true, data: items };
   }
 
-  async getIssuedCertificateById(id: string): Promise<ApiResponse<IssuedCertificate | null>> {
+  async getIssuedCertificateById(
+    id: string,
+  ): Promise<ApiResponse<IssuedCertificate | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const cert =
-      this.certificates.find((c) => c.id === id || c.certificateNumber === id) || null;
+      this.certificates.find(
+        (c) => c.id === id || c.certificateNumber === id,
+      ) || null;
     return { success: true, data: cert };
   }
 
-  async verifyCertificate(certCode: string): Promise<ApiResponse<IssuedCertificate | null>> {
+  async verifyCertificate(
+    certCode: string,
+  ): Promise<ApiResponse<IssuedCertificate | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const clean = certCode.trim().toLowerCase();
     const cert =
@@ -58,13 +66,13 @@ class CertificatesService {
         (c) =>
           c.certificateNumber.toLowerCase().includes(clean) ||
           c.qrVerificationUrl.toLowerCase().includes(clean) ||
-          c.digitalSignatureHash.toLowerCase().includes(clean)
+          c.digitalSignatureHash.toLowerCase().includes(clean),
       ) || null;
     return { success: true, data: cert };
   }
 
   async createIssuedCertificate(
-    data: Partial<IssuedCertificate>
+    data: Partial<IssuedCertificate>,
   ): Promise<ApiResponse<IssuedCertificate>> {
     await new Promise((r) => setTimeout(r, 60));
     const nextSeq = this.certificates.length + 42;
@@ -76,8 +84,10 @@ class CertificatesService {
       recipientId: data.recipientId || "stu-001",
       recipientName: data.recipientName || "Aarav Patel",
       recipientRollNumber: data.recipientRollNumber || "24CSE0101",
-      recipientProgram: data.recipientProgram || "B.Tech Computer Science & Engineering",
-      recipientDepartment: data.recipientDepartment || "Computer Science & Engineering",
+      recipientProgram:
+        data.recipientProgram || "B.Tech Computer Science & Engineering",
+      recipientDepartment:
+        data.recipientDepartment || "Computer Science & Engineering",
       templateId: data.templateId || "tmpl-bonafide-01",
       templateVersion: data.templateVersion || "2.1",
       issuingAuthority: data.issuingAuthority || "Office of the Registrar",
@@ -94,10 +104,12 @@ class CertificatesService {
 
   async revokeCertificate(
     id: string,
-    reason: string
+    reason: string,
   ): Promise<ApiResponse<IssuedCertificate>> {
     await new Promise((r) => setTimeout(r, 50));
-    const cert = this.certificates.find((c) => c.id === id || c.certificateNumber === id);
+    const cert = this.certificates.find(
+      (c) => c.id === id || c.certificateNumber === id,
+    );
     if (!cert) {
       throw new Error(`Issued certificate with ID ${id} not found`);
     }

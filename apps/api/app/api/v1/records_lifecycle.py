@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_user, get_tenant_context, require_permission
+from app.core.deps import get_tenant_context, require_permission
 from app.core.permissions import (
     RECORDS_ARCHIVE_EXECUTE_DOT,
     RECORDS_ARCHIVE_RETRIEVE_DOT,
@@ -35,7 +35,6 @@ from app.core.permissions import (
 )
 from app.core.tenant import TenantContext
 from app.models.people import User
-from app.models.records_lifecycle import ScheduledRunType
 from app.schemas.common import ApiResponse
 from app.schemas.records_lifecycle import (
     RecordArchivalAccessLogCreate,

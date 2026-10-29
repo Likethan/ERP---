@@ -1,12 +1,11 @@
 """SSO & OIDC Federation Endpoints (Step 22)."""
 
-from datetime import datetime, timezone
 import secrets
 from typing import Annotated
 from urllib.parse import urlencode
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Header, Request, status
+from fastapi import APIRouter, Depends, Header, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -17,13 +16,12 @@ from app.core.exceptions import (
     ForbiddenException,
 )
 from app.core.security import (
-    AuthenticationException,
     create_access_token,
     create_refresh_token,
     hash_token,
 )
 from app.core.tenant import TenantContext
-from app.identity.models import IdentityProviderStatus, SessionStatus
+from app.identity.models import IdentityProviderStatus
 from app.identity.oidc_service import OidcService
 from app.identity.policy_service import TenantIdentityPolicyService
 from app.identity.schemas import (
@@ -32,7 +30,6 @@ from app.identity.schemas import (
 )
 from app.identity.service import EnterpriseIdentityService
 from app.identity.session_service import IdentitySessionService
-from app.schemas.auth import UserResponse
 from app.schemas.common import ApiResponse
 
 router = APIRouter(prefix="/federation", tags=["Identity Federation & SSO"])

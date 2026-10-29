@@ -24,17 +24,25 @@ export interface FacultyFilterParams {
 
 class FacultyService {
   private faculty: FacultyDetailView[] = [...MOCK_FACULTY];
-  private workloadsPool: Record<string, FacultyWorkloadSummary> = { ...MOCK_FACULTY_WORKLOADS };
-  private publicationsPool: Record<string, FacultyPublication[]> = { ...MOCK_FACULTY_PUBLICATIONS };
+  private workloadsPool: Record<string, FacultyWorkloadSummary> = {
+    ...MOCK_FACULTY_WORKLOADS,
+  };
+  private publicationsPool: Record<string, FacultyPublication[]> = {
+    ...MOCK_FACULTY_PUBLICATIONS,
+  };
 
-  async list(params?: FacultyFilterParams | string): Promise<PaginatedResponse<FacultyDetailView>> {
+  async list(
+    params?: FacultyFilterParams | string,
+  ): Promise<PaginatedResponse<FacultyDetailView>> {
     await new Promise((r) => setTimeout(r, 60));
 
     let items = [...this.faculty];
 
     if (typeof params === "string") {
       // Legacy signature compatibility: list(department?: string)
-      items = items.filter((f) => f.department.toLowerCase().includes(params.toLowerCase()));
+      items = items.filter((f) =>
+        f.department.toLowerCase().includes(params.toLowerCase()),
+      );
       return {
         success: true,
         data: items,
@@ -55,16 +63,20 @@ class FacultyService {
           f.lastName.toLowerCase().includes(q) ||
           f.employeeCode.toLowerCase().includes(q) ||
           f.email.toLowerCase().includes(q) ||
-          f.specialization.toLowerCase().includes(q)
+          f.specialization.toLowerCase().includes(q),
       );
     }
 
     if (params?.department && params.department !== "ALL") {
-      items = items.filter((f) => f.department.toLowerCase() === params.department?.toLowerCase());
+      items = items.filter(
+        (f) => f.department.toLowerCase() === params.department?.toLowerCase(),
+      );
     }
 
     if (params?.designation && params.designation !== "ALL") {
-      items = items.filter((f) => f.designation.toLowerCase().includes(params.designation!.toLowerCase()));
+      items = items.filter((f) =>
+        f.designation.toLowerCase().includes(params.designation!.toLowerCase()),
+      );
     }
 
     if (params?.status && params.status !== "ALL") {
@@ -97,37 +109,45 @@ class FacultyService {
 
   async getById(id: string): Promise<ApiResponse<FacultyDetailView | null>> {
     await new Promise((r) => setTimeout(r, 50));
-    const member = this.faculty.find((f) => f.id === id || f.employeeCode === id);
+    const member = this.faculty.find(
+      (f) => f.id === id || f.employeeCode === id,
+    );
     if (!member) {
       return { success: true, data: null };
     }
 
     // Attach workload, labs, and publications
-    const workload = this.workloadsPool[member.id] || this.workloadsPool[member.employeeCode] || {
-      facultyId: member.id,
-      academicYear: "2026-2027",
-      semester: 5,
-      totalAssignedHours: member.teachingLoadHours || 12,
-      lectureHours: 8,
-      labHours: 4,
-      preparationHours: 2,
-      weeklyTargetHours: 16,
-      status: (member.teachingLoadHours >= 16 ? "BALANCED" : "UNDER_ALLOCATED") as WorkloadAllocationStatus,
-      assignments: member.assignedSubjects.map((s) => ({
-        id: s.id,
-        code: s.code,
-        name: s.name,
-        semester: s.semester,
-        section: s.section,
-        studentCount: s.studentCount,
-        lectureHours: 3,
-        labHours: 1,
-        credits: 4,
-      })),
-      labDesignations: [],
-    };
+    const workload = this.workloadsPool[member.id] ||
+      this.workloadsPool[member.employeeCode] || {
+        facultyId: member.id,
+        academicYear: "2026-2027",
+        semester: 5,
+        totalAssignedHours: member.teachingLoadHours || 12,
+        lectureHours: 8,
+        labHours: 4,
+        preparationHours: 2,
+        weeklyTargetHours: 16,
+        status: (member.teachingLoadHours >= 16
+          ? "BALANCED"
+          : "UNDER_ALLOCATED") as WorkloadAllocationStatus,
+        assignments: member.assignedSubjects.map((s) => ({
+          id: s.id,
+          code: s.code,
+          name: s.name,
+          semester: s.semester,
+          section: s.section,
+          studentCount: s.studentCount,
+          lectureHours: 3,
+          labHours: 1,
+          credits: 4,
+        })),
+        labDesignations: [],
+      };
 
-    const publications = this.publicationsPool[member.id] || this.publicationsPool[member.employeeCode] || [];
+    const publications =
+      this.publicationsPool[member.id] ||
+      this.publicationsPool[member.employeeCode] ||
+      [];
 
     const fullFaculty: FacultyDetailView = {
       ...member,
@@ -142,7 +162,9 @@ class FacultyService {
     };
   }
 
-  async create(data: Partial<FacultyDetailView>): Promise<ApiResponse<FacultyDetailView>> {
+  async create(
+    data: Partial<FacultyDetailView>,
+  ): Promise<ApiResponse<FacultyDetailView>> {
     await new Promise((r) => setTimeout(r, 100));
     const newFac: FacultyDetailView = {
       id: `fac-${Date.now()}`,
@@ -174,9 +196,14 @@ class FacultyService {
     };
   }
 
-  async update(id: string, data: Partial<FacultyDetailView>): Promise<ApiResponse<FacultyDetailView>> {
+  async update(
+    id: string,
+    data: Partial<FacultyDetailView>,
+  ): Promise<ApiResponse<FacultyDetailView>> {
     await new Promise((r) => setTimeout(r, 80));
-    const idx = this.faculty.findIndex((f) => f.id === id || f.employeeCode === id);
+    const idx = this.faculty.findIndex(
+      (f) => f.id === id || f.employeeCode === id,
+    );
     if (idx === -1) throw new Error("Faculty member not found");
     this.faculty[idx] = { ...this.faculty[idx], ...data };
     return { success: true, data: this.faculty[idx] };
@@ -186,7 +213,9 @@ class FacultyService {
   // Workload & Lab Methods
   // ==========================================
 
-  async getWorkload(facultyId: string): Promise<ApiResponse<FacultyWorkloadSummary>> {
+  async getWorkload(
+    facultyId: string,
+  ): Promise<ApiResponse<FacultyWorkloadSummary>> {
     await new Promise((r) => setTimeout(r, 40));
     const fac = await this.getById(facultyId);
     return {
@@ -207,7 +236,10 @@ class FacultyService {
     };
   }
 
-  async assignLab(facultyId: string, lab: Partial<LabDesignationItem>): Promise<ApiResponse<LabDesignationItem>> {
+  async assignLab(
+    facultyId: string,
+    lab: Partial<LabDesignationItem>,
+  ): Promise<ApiResponse<LabDesignationItem>> {
     await new Promise((r) => setTimeout(r, 60));
     const newLab: LabDesignationItem = {
       id: `lab-des-${Date.now()}`,
@@ -238,16 +270,21 @@ class FacultyService {
     return { success: true, data: newLab };
   }
 
-  async removeLabAssignment(facultyId: string, labId: string): Promise<ApiResponse<boolean>> {
+  async removeLabAssignment(
+    facultyId: string,
+    labId: string,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 50));
     if (this.workloadsPool[facultyId]) {
-      const target = this.workloadsPool[facultyId].labDesignations.find((l) => l.id === labId);
+      const target = this.workloadsPool[facultyId].labDesignations.find(
+        (l) => l.id === labId,
+      );
       if (target) {
         this.workloadsPool[facultyId].labHours -= target.weeklyHours;
         this.workloadsPool[facultyId].totalAssignedHours -= target.weeklyHours;
-        this.workloadsPool[facultyId].labDesignations = this.workloadsPool[facultyId].labDesignations.filter(
-          (l) => l.id !== labId
-        );
+        this.workloadsPool[facultyId].labDesignations = this.workloadsPool[
+          facultyId
+        ].labDesignations.filter((l) => l.id !== labId);
       }
     }
     return { success: true, data: true };
@@ -257,7 +294,9 @@ class FacultyService {
   // Publication Methods
   // ==========================================
 
-  async getPublications(facultyId: string): Promise<ApiResponse<FacultyPublication[]>> {
+  async getPublications(
+    facultyId: string,
+  ): Promise<ApiResponse<FacultyPublication[]>> {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -265,7 +304,10 @@ class FacultyService {
     };
   }
 
-  async createPublication(facultyId: string, pub: Partial<FacultyPublication>): Promise<ApiResponse<FacultyPublication>> {
+  async createPublication(
+    facultyId: string,
+    pub: Partial<FacultyPublication>,
+  ): Promise<ApiResponse<FacultyPublication>> {
     await new Promise((r) => setTimeout(r, 80));
     const newPub: FacultyPublication = {
       id: `pub-${Date.now()}`,
@@ -273,7 +315,10 @@ class FacultyService {
       publicationType: pub.publicationType || "JOURNAL",
       venueName: pub.venueName || "International Journal of Engineering",
       publicationYear: pub.publicationYear || new Date().getFullYear(),
-      authors: pub.authors && pub.authors.length > 0 ? pub.authors : ["Faculty Author"],
+      authors:
+        pub.authors && pub.authors.length > 0
+          ? pub.authors
+          : ["Faculty Author"],
       doi: pub.doi,
       status: pub.status || "PUBLISHED",
       citationCount: pub.citationCount || 0,
@@ -288,7 +333,11 @@ class FacultyService {
     return { success: true, data: newPub };
   }
 
-  async updatePublication(facultyId: string, pubId: string, pub: Partial<FacultyPublication>): Promise<ApiResponse<FacultyPublication>> {
+  async updatePublication(
+    facultyId: string,
+    pubId: string,
+    pub: Partial<FacultyPublication>,
+  ): Promise<ApiResponse<FacultyPublication>> {
     await new Promise((r) => setTimeout(r, 60));
     const list = this.publicationsPool[facultyId] || [];
     const idx = list.findIndex((p) => p.id === pubId);
@@ -297,10 +346,15 @@ class FacultyService {
     return { success: true, data: list[idx] };
   }
 
-  async deletePublication(facultyId: string, pubId: string): Promise<ApiResponse<boolean>> {
+  async deletePublication(
+    facultyId: string,
+    pubId: string,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 50));
     if (this.publicationsPool[facultyId]) {
-      this.publicationsPool[facultyId] = this.publicationsPool[facultyId].filter((p) => p.id !== pubId);
+      this.publicationsPool[facultyId] = this.publicationsPool[
+        facultyId
+      ].filter((p) => p.id !== pubId);
     }
     return { success: true, data: true };
   }

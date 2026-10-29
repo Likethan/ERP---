@@ -21,29 +21,24 @@ from fastapi import (
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.exceptions import PermissionDeniedException
 from app.core.deps import (
     get_current_active_user,
     get_tenant_context,
     require_permission,
     resolve_user_permissions,
 )
+from app.core.exceptions import PermissionDeniedException
 from app.core.permissions import (
     CERTIFICATE_REQUESTS_APPROVE,
     CERTIFICATE_REQUESTS_CANCEL,
     CERTIFICATE_REQUESTS_CREATE,
     CERTIFICATE_REQUESTS_ISSUE,
-    CERTIFICATE_REQUESTS_READ,
     CERTIFICATE_REQUESTS_REVIEW,
     CERTIFICATE_TEMPLATES_MANAGE,
-    CERTIFICATE_TEMPLATES_READ,
     CERTIFICATES_READ,
     CERTIFICATES_REVOKE,
     DOCUMENT_CATEGORIES_MANAGE,
-    DOCUMENT_CATEGORIES_READ,
     DOCUMENT_REQUIREMENTS_MANAGE,
-    DOCUMENT_REQUIREMENTS_READ,
-    DOCUMENTS_ARCHIVE,
     DOCUMENTS_CREATE,
     DOCUMENTS_DELETE,
     DOCUMENTS_READ,
@@ -59,14 +54,11 @@ from app.models.documents import (
     CertificateRequest,
     CertificateTemplate,
     Document,
-    DocumentCategory,
-    DocumentRequirement,
-    DocumentType,
     InstitutionalRecord,
     IssuedCertificate,
 )
 from app.models.people import User
-from app.schemas.common import ApiResponse, PaginatedMeta, PaginatedResponse
+from app.schemas.common import ApiResponse
 from app.schemas.documents import (
     CertificateRequestApprove,
     CertificateRequestCancel,
@@ -87,23 +79,19 @@ from app.schemas.documents import (
     DocumentRejectRequest,
     DocumentRequirementCreate,
     DocumentRequirementResponse,
-    DocumentRequirementUpdate,
     DocumentResponse,
     DocumentReuploadRequest,
     DocumentsDashboardSummaryResponse,
     DocumentTypeCreate,
     DocumentTypeResponse,
-    DocumentTypeUpdate,
     DocumentUpdate,
     DocumentVerifyRequest,
     DocumentVersionResponse,
     InstitutionalRecordCreate,
     InstitutionalRecordResponse,
     InstitutionalRecordUpdate,
-    RelatedDocumentRef,
 )
 from app.services.document_service import DocumentService
-
 
 # =============================================================================
 # ROUTER DEFINITIONS

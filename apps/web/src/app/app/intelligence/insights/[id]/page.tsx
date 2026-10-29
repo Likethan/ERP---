@@ -64,7 +64,9 @@ export default function InsightDetailPage() {
     if (res.success && res.data) {
       setInsight(res.data);
       toast({
-        title: res.data.isSaved ? "Insight Saved" : "Insight Removed from Saved",
+        title: res.data.isSaved
+          ? "Insight Saved"
+          : "Insight Removed from Saved",
         variant: "neutral",
       });
     }
@@ -72,7 +74,10 @@ export default function InsightDetailPage() {
 
   const handleMarkActioned = async () => {
     if (!insight) return;
-    const res = await aiInsightsService.markInsightActioned(insight.id, "Administrator");
+    const res = await aiInsightsService.markInsightActioned(
+      insight.id,
+      "Administrator",
+    );
     if (res.success && res.data) {
       setInsight(res.data);
       toast({ title: "Insight Marked as Actioned", variant: "success" });
@@ -116,7 +121,11 @@ export default function InsightDetailPage() {
           />
           <div className="flex items-center gap-2 mt-1">
             <Link href="/app/intelligence/insights">
-              <Button variant="ghost" size="sm" className="p-1 h-7 w-7 text-slate-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1 h-7 w-7 text-slate-500"
+              >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             </Link>
@@ -159,7 +168,10 @@ export default function InsightDetailPage() {
 
           {insight.recommendedActionHref && (
             <Link href={insight.recommendedActionHref}>
-              <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+              <Button
+                size="sm"
+                className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 Execute Action <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
@@ -174,10 +186,16 @@ export default function InsightDetailPage() {
         <InsightStatusBadge status={insight.status} />
         <span className="text-slate-400">•</span>
         <span className="text-slate-600">
-          Detected: {new Date(insight.detectedAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
+          Detected:{" "}
+          {new Date(insight.detectedAt).toLocaleString([], {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
         </span>
         <span className="text-slate-400">•</span>
-        <span className="text-slate-600">Affected Records: {insight.affectedRecordCount}</span>
+        <span className="text-slate-600">
+          Affected Records: {insight.affectedRecordCount}
+        </span>
       </div>
 
       {/* Grid: Summary & Evidence */}
@@ -205,11 +223,20 @@ export default function InsightDetailPage() {
             <CardContent className="p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {insight.evidence?.map((ev, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                    <p className="text-xs text-slate-500 font-medium">{ev.metric}</p>
-                    <p className="text-base font-bold text-slate-900 mt-0.5">{ev.value}</p>
+                  <div
+                    key={idx}
+                    className="p-3 rounded-lg bg-slate-50 border border-slate-200"
+                  >
+                    <p className="text-xs text-slate-500 font-medium">
+                      {ev.metric}
+                    </p>
+                    <p className="text-base font-bold text-slate-900 mt-0.5">
+                      {ev.value}
+                    </p>
                     {ev.baseline && (
-                      <p className="text-[11px] text-slate-400 mt-1">Baseline: {ev.baseline}</p>
+                      <p className="text-[11px] text-slate-400 mt-1">
+                        Baseline: {ev.baseline}
+                      </p>
                     )}
                   </div>
                 ))}
@@ -224,14 +251,19 @@ export default function InsightDetailPage() {
                 <Calculator className="w-4 h-4 text-blue-600" />
                 3. Methodology & Computational Provenance
               </CardTitle>
-              <Badge variant="neutral" className="text-[10px]">Deterministic</Badge>
+              <Badge variant="neutral" className="text-[10px]">
+                Deterministic
+              </Badge>
             </CardHeader>
             <CardContent className="p-4 space-y-3 text-xs text-slate-700">
               <p className="leading-relaxed">{insight.methodology}</p>
               <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 space-y-1 text-[11px]">
-                <p className="font-semibold text-slate-800">Data Processing Formula:</p>
+                <p className="font-semibold text-slate-800">
+                  Data Processing Formula:
+                </p>
                 <code className="text-blue-800 font-mono block">
-                  CORRELATE(SubsystemRecords, TimeWindow = Term 2026-27) WHERE Variance &gt; StandardDeviation
+                  CORRELATE(SubsystemRecords, TimeWindow = Term 2026-27) WHERE
+                  Variance &gt; StandardDeviation
                 </code>
               </div>
             </CardContent>
@@ -249,14 +281,26 @@ export default function InsightDetailPage() {
               <CardContent className="p-0">
                 <div className="divide-y divide-slate-100">
                   {insight.affectedRecords.map((rec) => (
-                    <div key={rec.id} className="p-3 px-4 flex items-center justify-between hover:bg-slate-50 text-xs">
+                    <div
+                      key={rec.id}
+                      className="p-3 px-4 flex items-center justify-between hover:bg-slate-50 text-xs"
+                    >
                       <div>
-                        <p className="font-semibold text-slate-800">{rec.name}</p>
-                        <p className="text-[11px] text-slate-500">{rec.type} • ID: {rec.id}</p>
+                        <p className="font-semibold text-slate-800">
+                          {rec.name}
+                        </p>
+                        <p className="text-[11px] text-slate-500">
+                          {rec.type} • ID: {rec.id}
+                        </p>
                       </div>
                       <Link href={rec.href}>
-                        <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
-                          Inspect Record <ExternalLink className="w-3.5 h-3.5" />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-blue-600 gap-1"
+                        >
+                          Inspect Record{" "}
+                          <ExternalLink className="w-3.5 h-3.5" />
                         </Button>
                       </Link>
                     </div>
@@ -278,11 +322,19 @@ export default function InsightDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3 text-xs text-slate-800">
-              <p className="leading-relaxed font-medium">{insight.recommendedAction}</p>
+              <p className="leading-relaxed font-medium">
+                {insight.recommendedAction}
+              </p>
 
               {insight.recommendedActionHref && (
-                <Link href={insight.recommendedActionHref} className="block pt-2">
-                  <Button size="sm" className="w-full text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1">
+                <Link
+                  href={insight.recommendedActionHref}
+                  className="block pt-2"
+                >
+                  <Button
+                    size="sm"
+                    className="w-full text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1"
+                  >
                     Open Action Screen <ArrowRight className="w-3 h-3" />
                   </Button>
                 </Link>
@@ -302,10 +354,17 @@ export default function InsightDetailPage() {
               <div className="relative pl-4 border-l-2 border-slate-200 space-y-3">
                 <div className="relative">
                   <span className="w-2 h-2 rounded-full bg-blue-600 absolute -left-[21px] top-1" />
-                  <p className="font-semibold text-slate-800">Signal Detected</p>
-                  <p className="text-[11px] text-slate-500">Autonomous correlation engine</p>
+                  <p className="font-semibold text-slate-800">
+                    Signal Detected
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    Autonomous correlation engine
+                  </p>
                   <span className="text-[10px] text-slate-400">
-                    {new Date(insight.detectedAt).toLocaleDateString([], { month: "short", day: "numeric" })}
+                    {new Date(insight.detectedAt).toLocaleDateString([], {
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </span>
                 </div>
 
@@ -315,7 +374,10 @@ export default function InsightDetailPage() {
                     <p className="font-semibold text-slate-800">{act.action}</p>
                     <p className="text-[11px] text-slate-500">By {act.actor}</p>
                     <span className="text-[10px] text-slate-400">
-                      {new Date(act.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(act.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                 ))}

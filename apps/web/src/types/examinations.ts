@@ -21,12 +21,7 @@ export type AssessmentType =
   | "VIVA";
 
 export type AssessmentStatus =
-  | "DRAFT"
-  | "SCHEDULED"
-  | "OPEN"
-  | "COMPLETED"
-  | "FINALIZED"
-  | "CANCELLED";
+  "DRAFT" | "SCHEDULED" | "OPEN" | "COMPLETED" | "FINALIZED" | "CANCELLED";
 
 export type ExaminationType =
   | "INTERNAL"
@@ -38,11 +33,7 @@ export type ExaminationType =
   | "PROJECT";
 
 export type ExaminationStatus =
-  | "DRAFT"
-  | "SCHEDULED"
-  | "ONGOING"
-  | "COMPLETED"
-  | "CANCELLED";
+  "DRAFT" | "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
 
 export type ExamScheduleStatus =
   | "SCHEDULED"
@@ -53,10 +44,7 @@ export type ExamScheduleStatus =
   | "CANCELLED";
 
 export type EligibilityStatus =
-  | "ELIGIBLE"
-  | "INELIGIBLE"
-  | "PENDING_REVIEW"
-  | "CONDITIONALLY_ELIGIBLE";
+  "ELIGIBLE" | "INELIGIBLE" | "PENDING_REVIEW" | "CONDITIONALLY_ELIGIBLE";
 
 export type MarkStatus =
   | "NOT_ENTERED"
@@ -68,23 +56,12 @@ export type MarkStatus =
   | "FINALIZED";
 
 export type MarkCorrectionStatus =
-  | "PENDING"
-  | "APPROVED"
-  | "REJECTED"
-  | "CANCELLED";
+  "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export type ResultStatus =
-  | "PASS"
-  | "FAIL"
-  | "ABSENT"
-  | "WITHHELD"
-  | "INCOMPLETE";
+  "PASS" | "FAIL" | "ABSENT" | "WITHHELD" | "INCOMPLETE";
 
-export type PublicationStatus =
-  | "DRAFT"
-  | "READY"
-  | "PUBLISHED"
-  | "REVOKED";
+export type PublicationStatus = "DRAFT" | "READY" | "PUBLISHED" | "REVOKED";
 
 // ==========================================
 // 2. Assessment & Component Types
@@ -175,7 +152,8 @@ export interface ExamSchedule {
 
 export interface ExamConflictCheck {
   hasConflict: boolean;
-  conflictType?: "ROOM_OVERLAP" | "SECTION_OVERLAP" | "FACULTY_OVERLAP" | "STUDENT_OVERLAP";
+  conflictType?:
+    "ROOM_OVERLAP" | "SECTION_OVERLAP" | "FACULTY_OVERLAP" | "STUDENT_OVERLAP";
   message?: string;
   conflictingScheduleId?: string;
 }

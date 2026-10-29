@@ -76,7 +76,7 @@ export default function CampusClubsDirectoryPage() {
 
       if (res.success) {
         setFeedback(
-          `Membership request for ${joinClubTarget.name} has been submitted! Status: PENDING coordinator review.`
+          `Membership request for ${joinClubTarget.name} has been submitted! Status: PENDING coordinator review.`,
         );
         setJoinClubTarget(null);
         loadClubs();
@@ -90,7 +90,8 @@ export default function CampusClubsDirectoryPage() {
 
   const filteredClubs = useMemo(() => {
     return clubs.filter((c) => {
-      const matchCat = selectedCategory === "ALL" || c.category === selectedCategory;
+      const matchCat =
+        selectedCategory === "ALL" || c.category === selectedCategory;
       const matchQuery =
         searchQuery === "" ||
         c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -107,18 +108,24 @@ export default function CampusClubsDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Clubs & Societies</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Clubs & Societies
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <Building2 className="h-6 w-6 text-cyan-400" />
             Clubs & Student Organizations Directory
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Explore active guilds, technical teams, cultural societies, and community leadership councils.
+            Explore active guilds, technical teams, cultural societies, and
+            community leadership councils.
           </p>
         </div>
 
@@ -139,7 +146,10 @@ export default function CampusClubsDirectoryPage() {
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -149,7 +159,14 @@ export default function CampusClubsDirectoryPage() {
       <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-2">
-          {["ALL", "TECHNICAL", "CULTURAL", "LITERARY", "SPORTS", "ENTREPRENEURSHIP"].map((cat) => (
+          {[
+            "ALL",
+            "TECHNICAL",
+            "CULTURAL",
+            "LITERARY",
+            "SPORTS",
+            "ENTREPRENEURSHIP",
+          ].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -201,7 +218,9 @@ export default function CampusClubsDirectoryPage() {
               </div>
 
               <div>
-                <h3 className="text-base font-bold text-white tracking-tight">{club.name}</h3>
+                <h3 className="text-base font-bold text-white tracking-tight">
+                  {club.name}
+                </h3>
                 <p className="text-xs text-slate-400 mt-1.5 line-clamp-3 leading-relaxed">
                   {club.description}
                 </p>
@@ -210,32 +229,41 @@ export default function CampusClubsDirectoryPage() {
               <div className="space-y-2 pt-2 border-t border-slate-800 text-xs text-slate-300">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Student Lead:</span>
-                  <span className="font-semibold text-white">{club.studentLead}</span>
+                  <span className="font-semibold text-white">
+                    {club.studentLead}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Faculty Advisor:</span>
-                  <span className="font-medium text-slate-300">{club.facultyCoordinator}</span>
+                  <span className="font-medium text-slate-300">
+                    {club.facultyCoordinator}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Active Roster:</span>
-                  <span className="font-mono font-bold text-cyan-400">{club.membersCount} members</span>
+                  <span className="font-mono font-bold text-cyan-400">
+                    {club.membersCount} members
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Established:</span>
-                  <span className="font-mono text-slate-400">{club.establishedYear}</span>
+                  <span className="font-mono text-slate-400">
+                    {club.establishedYear}
+                  </span>
                 </div>
               </div>
 
-              {club.upcomingEventTitles && club.upcomingEventTitles.length > 0 && (
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                  <span className="text-[10px] font-mono text-slate-500 uppercase block">
-                    Upcoming Activity:
-                  </span>
-                  <div className="text-[11px] font-semibold text-indigo-300 line-clamp-1">
-                    {club.upcomingEventTitles[0]}
+              {club.upcomingEventTitles &&
+                club.upcomingEventTitles.length > 0 && (
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase block">
+                      Upcoming Activity:
+                    </span>
+                    <div className="text-[11px] font-semibold text-indigo-300 line-clamp-1">
+                      {club.upcomingEventTitles[0]}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between gap-2">
@@ -268,22 +296,37 @@ export default function CampusClubsDirectoryPage() {
         {joinClubTarget && (
           <div className="space-y-4">
             <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-xs">
-              <div className="font-bold text-white text-sm">{joinClubTarget.name}</div>
-              <div className="text-slate-400">Faculty Advisor: {joinClubTarget.facultyCoordinator}</div>
-              <div className="text-slate-400">Meeting Schedule: {joinClubTarget.meetingSchedule}</div>
+              <div className="font-bold text-white text-sm">
+                {joinClubTarget.name}
+              </div>
+              <div className="text-slate-400">
+                Faculty Advisor: {joinClubTarget.facultyCoordinator}
+              </div>
+              <div className="text-slate-400">
+                Meeting Schedule: {joinClubTarget.meetingSchedule}
+              </div>
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              You are requesting to join as <strong>{user?.first_name} {user?.last_name}</strong>.
-              Your application will be forwarded to the Club President and Faculty Advisor for verification.
+              You are requesting to join as{" "}
+              <strong>
+                {user?.first_name} {user?.last_name}
+              </strong>
+              . Your application will be forwarded to the Club President and
+              Faculty Advisor for verification.
             </p>
 
             <div className="p-3 rounded-xl bg-indigo-950/20 border border-indigo-500/30 text-[11px] text-indigo-300">
-              Note: Membership requests require faculty coordinator approval. Students cannot approve their own membership.
+              Note: Membership requests require faculty coordinator approval.
+              Students cannot approve their own membership.
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setJoinClubTarget(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setJoinClubTarget(null)}
+              >
                 Cancel
               </Button>
               <Button

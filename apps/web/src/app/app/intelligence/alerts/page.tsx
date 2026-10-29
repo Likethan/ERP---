@@ -18,7 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { aiAlertsService } from "@/services/ai-alerts.service";
-import { Alert, AlertStatus, AlertSeverity, IntelligenceDomain } from "@campusos/types";
+import {
+  Alert,
+  AlertStatus,
+  AlertSeverity,
+  IntelligenceDomain,
+} from "@campusos/types";
 import { AlertCard } from "@/components/intelligence/alert-card";
 
 export default function AlertsCenterPage() {
@@ -57,17 +62,25 @@ export default function AlertsCenterPage() {
     const res = await aiAlertsService.acknowledgeAlert(id, "Administrator");
     if (res.success && res.data) {
       setAlerts((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, status: AlertStatus.ACKNOWLEDGED } : a))
+        prev.map((a) =>
+          a.id === id ? { ...a, status: AlertStatus.ACKNOWLEDGED } : a,
+        ),
       );
       toast({ title: "Alert Acknowledged", variant: "warning" });
     }
   };
 
   const handleResolve = async (id: string) => {
-    const res = await aiAlertsService.resolveAlert(id, "Administrator", "Operational correction verified");
+    const res = await aiAlertsService.resolveAlert(
+      id,
+      "Administrator",
+      "Operational correction verified",
+    );
     if (res.success && res.data) {
       setAlerts((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, status: AlertStatus.RESOLVED } : a))
+        prev.map((a) =>
+          a.id === id ? { ...a, status: AlertStatus.RESOLVED } : a,
+        ),
       );
       toast({ title: "Alert Resolved", variant: "success" });
     }
@@ -77,7 +90,9 @@ export default function AlertsCenterPage() {
     const res = await aiAlertsService.dismissAlert(id, "Administrator");
     if (res.success && res.data) {
       setAlerts((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, status: AlertStatus.DISMISSED } : a))
+        prev.map((a) =>
+          a.id === id ? { ...a, status: AlertStatus.DISMISSED } : a,
+        ),
       );
       toast({ title: "Alert Dismissed", variant: "neutral" });
     }
@@ -99,7 +114,8 @@ export default function AlertsCenterPage() {
             Operational Alert Center
           </h1>
           <p className="text-sm text-slate-500">
-            Real-time threshold breaches, statutory deadlines, and risk signals across campus operations.
+            Real-time threshold breaches, statutory deadlines, and risk signals
+            across campus operations.
           </p>
         </div>
 
@@ -110,7 +126,10 @@ export default function AlertsCenterPage() {
             </Button>
           </Link>
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               Investigate with AI
             </Button>
           </Link>
@@ -180,11 +199,15 @@ export default function AlertsCenterPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-44 rounded-xl bg-slate-100 animate-pulse" />
+            <div
+              key={i}
+              className="h-44 rounded-xl bg-slate-100 animate-pulse"
+            />
           ))
         ) : alerts.length === 0 ? (
           <div className="col-span-full p-12 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500">
-            No alerts match your selected filters. All operational parameters normal.
+            No alerts match your selected filters. All operational parameters
+            normal.
           </div>
         ) : (
           alerts.map((alert) => (

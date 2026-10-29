@@ -81,7 +81,7 @@ export function Dialog({
         className={cn(
           "relative w-full rounded-xl border border-slate-200 bg-white shadow-2xl p-6 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 animate-scale-in z-10 my-8",
           maxWidthClasses[maxWidth],
-          className
+          className,
         )}
       >
         {(title || description) && (
@@ -138,7 +138,12 @@ export function DialogHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("pb-3 border-b border-slate-200 dark:border-slate-800", className)}>
+    <div
+      className={cn(
+        "pb-3 border-b border-slate-200 dark:border-slate-800",
+        className,
+      )}
+    >
       {children}
     </div>
   );
@@ -152,9 +157,33 @@ export function DialogTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("text-lg font-bold tracking-tight text-slate-900 dark:text-white", className)}>
+    <h2
+      className={cn(
+        "text-lg font-bold tracking-tight text-slate-900 dark:text-white",
+        className,
+      )}
+    >
       {children}
     </h2>
+  );
+}
+
+export function DialogDescription({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p
+      className={cn(
+        "text-xs text-slate-500 dark:text-slate-400 leading-relaxed",
+        className
+      )}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -169,7 +198,7 @@ export function DialogFooter({
     <div
       className={cn(
         "pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2.5",
-        className
+        className,
       )}
     >
       {children}

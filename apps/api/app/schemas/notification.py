@@ -8,16 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.notification import (
     ChannelStrategy,
-    DeliveryStatus,
-    DigestType,
-    FailureClassification,
     NotificationChannel,
-    ProviderHealthStatus,
-    ProviderType,
     RecipientStrategy,
     SensitivityClassification,
-    SuppressionReason,
-    TemplateStatus,
 )
 from app.schemas.campus import NotificationPreferenceItem
 

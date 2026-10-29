@@ -59,7 +59,9 @@ export default function AcademicStructurePage() {
   const [batchRegId, setBatchRegId] = useState("");
   const [batchName, setBatchName] = useState("");
   const [batchAdmYear, setBatchAdmYear] = useState(new Date().getFullYear());
-  const [batchGradYear, setBatchGradYear] = useState(new Date().getFullYear() + 4);
+  const [batchGradYear, setBatchGradYear] = useState(
+    new Date().getFullYear() + 4,
+  );
 
   const [secProgId, setSecProgId] = useState("");
   const [secBatchId, setSecBatchId] = useState("");
@@ -71,13 +73,14 @@ export default function AcademicStructurePage() {
   const canManagePrograms = hasPermission("core:programs:manage");
   const canManageSections = hasPermission("core:sections:manage");
   const canManageRegulations = hasPermission("core:regulations:manage");
-  const canManageTab = activeTab === "years" || activeTab === "semesters"
-    ? canManageYears
-    : activeTab === "regulations"
-      ? canManageRegulations
-      : activeTab === "batches"
-        ? canManagePrograms
-        : canManageSections;
+  const canManageTab =
+    activeTab === "years" || activeTab === "semesters"
+      ? canManageYears
+      : activeTab === "regulations"
+        ? canManageRegulations
+        : activeTab === "batches"
+          ? canManagePrograms
+          : canManageSections;
 
   const loadAll = useCallback(async () => {
     try {
@@ -107,7 +110,11 @@ export default function AcademicStructurePage() {
         setSelectedProgramId((current) => current || pRes.data[0].id);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load academic structure");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load academic structure",
+      );
     } finally {
       setLoading(false);
     }
@@ -119,11 +126,15 @@ export default function AcademicStructurePage() {
 
   const handleOpenModal = () => {
     setFormError(null);
-    if (activeTab === "semesters" && selectedYearId) setSemYearId(selectedYearId);
-    if (activeTab === "batches" && selectedProgramId) setBatchProgId(selectedProgramId);
+    if (activeTab === "semesters" && selectedYearId)
+      setSemYearId(selectedYearId);
+    if (activeTab === "batches" && selectedProgramId)
+      setBatchProgId(selectedProgramId);
     if (activeTab === "sections") {
       if (selectedProgramId) setSecProgId(selectedProgramId);
-      const progBatches = batches.filter((b) => !selectedProgramId || b.program_id === selectedProgramId);
+      const progBatches = batches.filter(
+        (b) => !selectedProgramId || b.program_id === selectedProgramId,
+      );
       if (progBatches.length > 0) setSecBatchId(progBatches[0].id);
       if (semesters.length > 0) setSecSemId(semesters[0].id);
     }
@@ -186,7 +197,9 @@ export default function AcademicStructurePage() {
       setShowModal(false);
       await loadAll();
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "Failed to create entry");
+      setFormError(
+        err instanceof Error ? err.message : "Failed to create entry",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -197,9 +210,12 @@ export default function AcademicStructurePage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Academic Structure</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Academic Structure
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Configure Academic Years, Semesters, Curriculum Regulations, Student Batches, and Class Sections.
+            Configure Academic Years, Semesters, Curriculum Regulations, Student
+            Batches, and Class Sections.
           </p>
         </div>
         {canManageTab && (
@@ -207,10 +223,29 @@ export default function AcademicStructurePage() {
             onClick={handleOpenModal}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-colors self-start sm:self-auto"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
-            Add {activeTab === "years" ? "Academic Year" : activeTab === "semesters" ? "Semester" : activeTab === "regulations" ? "Regulation" : activeTab === "batches" ? "Batch" : "Section"}
+            Add{" "}
+            {activeTab === "years"
+              ? "Academic Year"
+              : activeTab === "semesters"
+                ? "Semester"
+                : activeTab === "regulations"
+                  ? "Regulation"
+                  : activeTab === "batches"
+                    ? "Batch"
+                    : "Section"}
           </button>
         )}
       </div>
@@ -226,7 +261,10 @@ export default function AcademicStructurePage() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => { setActiveTab(tab.id as ActiveTab); setFormError(null); }}
+            onClick={() => {
+              setActiveTab(tab.id as ActiveTab);
+              setFormError(null);
+            }}
             className={`pb-3 px-1 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
               activeTab === tab.id
                 ? "border-blue-500 text-blue-400 font-semibold"
@@ -251,9 +289,24 @@ export default function AcademicStructurePage() {
       {/* Main Tab Content */}
       {loading ? (
         <div className="flex items-center justify-center p-12 text-slate-500 text-sm">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          <svg
+            className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            />
           </svg>
           Loading academic structure...
         </div>
@@ -264,8 +317,13 @@ export default function AcademicStructurePage() {
             <div>
               {years.length === 0 ? (
                 <div className="p-12 text-center text-slate-500">
-                  <p className="text-base font-medium text-slate-400">No academic years defined yet.</p>
-                  <p className="text-sm mt-1">Create an academic year (e.g. 2024-2025) to begin scheduling terms.</p>
+                  <p className="text-base font-medium text-slate-400">
+                    No academic years defined yet.
+                  </p>
+                  <p className="text-sm mt-1">
+                    Create an academic year (e.g. 2024-2025) to begin scheduling
+                    terms.
+                  </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-sm text-slate-300">
@@ -275,14 +333,21 @@ export default function AcademicStructurePage() {
                       <th className="px-6 py-3 font-semibold">Start Date</th>
                       <th className="px-6 py-3 font-semibold">End Date</th>
                       <th className="px-6 py-3 font-semibold">Status</th>
-                      <th className="px-6 py-3 font-semibold text-right">Semesters</th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Semesters
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {years.map((y) => {
-                      const semCount = semesters.filter((s) => s.academic_year_id === y.id).length;
+                      const semCount = semesters.filter(
+                        (s) => s.academic_year_id === y.id,
+                      ).length;
                       return (
-                        <tr key={y.id} className="hover:bg-slate-800/30 transition-colors">
+                        <tr
+                          key={y.id}
+                          className="hover:bg-slate-800/30 transition-colors"
+                        >
                           <td className="px-6 py-4 font-semibold text-white flex items-center gap-3">
                             {y.name}
                             {y.is_current && (
@@ -291,14 +356,20 @@ export default function AcademicStructurePage() {
                               </span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-slate-400">{y.start_date}</td>
-                          <td className="px-6 py-4 text-slate-400">{y.end_date}</td>
+                          <td className="px-6 py-4 text-slate-400">
+                            {y.start_date}
+                          </td>
+                          <td className="px-6 py-4 text-slate-400">
+                            {y.end_date}
+                          </td>
                           <td className="px-6 py-4">
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-950/80 text-blue-300 border border-blue-800/80">
                               Configured
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-right font-medium text-slate-300">{semCount} terms</td>
+                          <td className="px-6 py-4 text-right font-medium text-slate-300">
+                            {semCount} terms
+                          </td>
                         </tr>
                       );
                     })}
@@ -313,7 +384,9 @@ export default function AcademicStructurePage() {
             <div>
               {/* Year Filter */}
               <div className="p-4 bg-slate-950/30 border-b border-slate-800 flex items-center gap-3">
-                <span className="text-xs font-medium text-slate-400 uppercase">Filter Academic Year:</span>
+                <span className="text-xs font-medium text-slate-400 uppercase">
+                  Filter Academic Year:
+                </span>
                 <select
                   value={selectedYearId}
                   onChange={(e) => setSelectedYearId(e.target.value)}
@@ -328,42 +401,77 @@ export default function AcademicStructurePage() {
                 </select>
               </div>
 
-              {semesters.filter((s) => !selectedYearId || s.academic_year_id === selectedYearId).length === 0 ? (
+              {semesters.filter(
+                (s) => !selectedYearId || s.academic_year_id === selectedYearId,
+              ).length === 0 ? (
                 <div className="p-12 text-center text-slate-500">
-                  <p className="text-base font-medium text-slate-400">No semesters found.</p>
-                  <p className="text-sm mt-1">Add semesters under this academic year to structure terms.</p>
+                  <p className="text-base font-medium text-slate-400">
+                    No semesters found.
+                  </p>
+                  <p className="text-sm mt-1">
+                    Add semesters under this academic year to structure terms.
+                  </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-sm text-slate-300">
                   <thead className="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
                     <tr>
-                      <th className="px-6 py-3 font-semibold">Semester / Term</th>
+                      <th className="px-6 py-3 font-semibold">
+                        Semester / Term
+                      </th>
                       <th className="px-6 py-3 font-semibold">Term Type</th>
                       <th className="px-6 py-3 font-semibold">Number</th>
                       <th className="px-6 py-3 font-semibold">Start Date</th>
                       <th className="px-6 py-3 font-semibold">End Date</th>
                       <th className="px-6 py-3 font-semibold">Status</th>
-                      <th className="px-6 py-3 font-semibold text-right">Sections</th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Sections
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {semesters
-                      .filter((s) => !selectedYearId || s.academic_year_id === selectedYearId)
+                      .filter(
+                        (s) =>
+                          !selectedYearId ||
+                          s.academic_year_id === selectedYearId,
+                      )
                       .map((s) => {
-                        const secCount = sections.filter((sec) => sec.semester_id === s.id).length;
+                        const secCount = sections.filter(
+                          (sec) => sec.semester_id === s.id,
+                        ).length;
                         return (
-                          <tr key={s.id} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="px-6 py-4 font-semibold text-white">{s.name}</td>
+                          <tr
+                            key={s.id}
+                            className="hover:bg-slate-800/30 transition-colors"
+                          >
+                            <td className="px-6 py-4 font-semibold text-white">
+                              {s.name}
+                            </td>
                             <td className="px-6 py-4">
                               <span className="px-2 py-0.5 text-xs rounded font-medium bg-indigo-950/80 text-indigo-300 border border-indigo-800">
                                 {s.term_type}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-slate-400">Sem {s.semester_number}</td>
-                            <td className="px-6 py-4 text-slate-400">{s.start_date}</td>
-                            <td className="px-6 py-4 text-slate-400">{s.end_date}</td>
-                            <td className="px-6 py-4"><span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>{s.is_active ? "Active" : "Inactive"}</span></td>
-                            <td className="px-6 py-4 text-right font-medium text-slate-300">{secCount} sections</td>
+                            <td className="px-6 py-4 text-slate-400">
+                              Sem {s.semester_number}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {s.start_date}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {s.end_date}
+                            </td>
+                            <td className="px-6 py-4">
+                              <span
+                                className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}
+                              >
+                                {s.is_active ? "Active" : "Inactive"}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right font-medium text-slate-300">
+                              {secCount} sections
+                            </td>
                           </tr>
                         );
                       })}
@@ -378,8 +486,13 @@ export default function AcademicStructurePage() {
             <div>
               {regulations.length === 0 ? (
                 <div className="p-12 text-center text-slate-500">
-                  <p className="text-base font-medium text-slate-400">No regulations defined.</p>
-                  <p className="text-sm mt-1">Regulations define degree curriculum structures (e.g. R2021, R2023).</p>
+                  <p className="text-base font-medium text-slate-400">
+                    No regulations defined.
+                  </p>
+                  <p className="text-sm mt-1">
+                    Regulations define degree curriculum structures (e.g. R2021,
+                    R2023).
+                  </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-sm text-slate-300">
@@ -387,20 +500,37 @@ export default function AcademicStructurePage() {
                     <tr>
                       <th className="px-6 py-3 font-semibold">Code</th>
                       <th className="px-6 py-3 font-semibold">Title</th>
-                      <th className="px-6 py-3 font-semibold">Effective Year</th>
+                      <th className="px-6 py-3 font-semibold">
+                        Effective Year
+                      </th>
                       <th className="px-6 py-3 font-semibold">Description</th>
-                      <th className="px-6 py-3 font-semibold text-right">Status</th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {regulations.map((r) => (
-                      <tr key={r.id} className="hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 font-mono font-bold text-blue-400">{r.code}</td>
-                        <td className="px-6 py-4 font-semibold text-white">{r.title}</td>
-                        <td className="px-6 py-4 text-slate-400">{r.effective_year}</td>
-                        <td className="px-6 py-4 text-slate-400 text-xs max-w-xs truncate">{r.description || "—"}</td>
+                      <tr
+                        key={r.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
+                        <td className="px-6 py-4 font-mono font-bold text-blue-400">
+                          {r.code}
+                        </td>
+                        <td className="px-6 py-4 font-semibold text-white">
+                          {r.title}
+                        </td>
+                        <td className="px-6 py-4 text-slate-400">
+                          {r.effective_year}
+                        </td>
+                        <td className="px-6 py-4 text-slate-400 text-xs max-w-xs truncate">
+                          {r.description || "—"}
+                        </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${r.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>
+                          <span
+                            className={`px-2 py-0.5 text-xs rounded-full font-medium border ${r.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}
+                          >
                             {r.is_active ? "Active" : "Inactive"}
                           </span>
                         </td>
@@ -416,7 +546,9 @@ export default function AcademicStructurePage() {
           {activeTab === "batches" && (
             <div>
               <div className="p-4 bg-slate-950/30 border-b border-slate-800 flex items-center gap-3">
-                <span className="text-xs font-medium text-slate-400 uppercase">Filter Program:</span>
+                <span className="text-xs font-medium text-slate-400 uppercase">
+                  Filter Program:
+                </span>
                 <select
                   value={selectedProgramId}
                   onChange={(e) => setSelectedProgramId(e.target.value)}
@@ -431,10 +563,16 @@ export default function AcademicStructurePage() {
                 </select>
               </div>
 
-              {batches.filter((b) => !selectedProgramId || b.program_id === selectedProgramId).length === 0 ? (
+              {batches.filter(
+                (b) => !selectedProgramId || b.program_id === selectedProgramId,
+              ).length === 0 ? (
                 <div className="p-12 text-center text-slate-500">
-                  <p className="text-base font-medium text-slate-400">No student cohorts / batches configured.</p>
-                  <p className="text-sm mt-1">Batches group students admitted in a specific calendar year.</p>
+                  <p className="text-base font-medium text-slate-400">
+                    No student cohorts / batches configured.
+                  </p>
+                  <p className="text-sm mt-1">
+                    Batches group students admitted in a specific calendar year.
+                  </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-sm text-slate-300">
@@ -442,24 +580,49 @@ export default function AcademicStructurePage() {
                     <tr>
                       <th className="px-6 py-3 font-semibold">Batch Name</th>
                       <th className="px-6 py-3 font-semibold">Program</th>
-                      <th className="px-6 py-3 font-semibold">Admission Year</th>
-                      <th className="px-6 py-3 font-semibold">Expected Graduation</th>
-                      <th className="px-6 py-3 font-semibold text-right">Status</th>
+                      <th className="px-6 py-3 font-semibold">
+                        Admission Year
+                      </th>
+                      <th className="px-6 py-3 font-semibold">
+                        Expected Graduation
+                      </th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {batches
-                      .filter((b) => !selectedProgramId || b.program_id === selectedProgramId)
+                      .filter(
+                        (b) =>
+                          !selectedProgramId ||
+                          b.program_id === selectedProgramId,
+                      )
                       .map((b) => {
-                        const prog = programs.find((p) => p.id === b.program_id);
+                        const prog = programs.find(
+                          (p) => p.id === b.program_id,
+                        );
                         return (
-                          <tr key={b.id} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="px-6 py-4 font-semibold text-white">{b.name}</td>
-                            <td className="px-6 py-4 text-slate-300">{prog?.name || b.program_id}</td>
-                            <td className="px-6 py-4 text-slate-400">{b.admission_year}</td>
-                            <td className="px-6 py-4 text-slate-400">{b.graduation_year}</td>
+                          <tr
+                            key={b.id}
+                            className="hover:bg-slate-800/30 transition-colors"
+                          >
+                            <td className="px-6 py-4 font-semibold text-white">
+                              {b.name}
+                            </td>
+                            <td className="px-6 py-4 text-slate-300">
+                              {prog?.name || b.program_id}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {b.admission_year}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {b.graduation_year}
+                            </td>
                             <td className="px-6 py-4 text-right">
-                              <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${b.is_active ? "bg-blue-950/80 text-blue-300 border-blue-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>
+                              <span
+                                className={`px-2 py-0.5 text-xs rounded-full font-medium border ${b.is_active ? "bg-blue-950/80 text-blue-300 border-blue-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}
+                              >
                                 {b.is_active ? "Active Cohort" : "Inactive"}
                               </span>
                             </td>
@@ -477,7 +640,9 @@ export default function AcademicStructurePage() {
             <div>
               <div className="p-4 bg-slate-950/30 border-b border-slate-800 flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-slate-400 uppercase">Program:</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase">
+                    Program:
+                  </span>
                   <select
                     value={selectedProgramId}
                     onChange={(e) => setSelectedProgramId(e.target.value)}
@@ -493,10 +658,17 @@ export default function AcademicStructurePage() {
                 </div>
               </div>
 
-              {sections.filter((s) => !selectedProgramId || s.program_id === selectedProgramId).length === 0 ? (
+              {sections.filter(
+                (s) => !selectedProgramId || s.program_id === selectedProgramId,
+              ).length === 0 ? (
                 <div className="p-12 text-center text-slate-500">
-                  <p className="text-base font-medium text-slate-400">No class sections found.</p>
-                  <p className="text-sm mt-1">Create sections (e.g. Section A, Section B) to assign students.</p>
+                  <p className="text-base font-medium text-slate-400">
+                    No class sections found.
+                  </p>
+                  <p className="text-sm mt-1">
+                    Create sections (e.g. Section A, Section B) to assign
+                    students.
+                  </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-sm text-slate-300">
@@ -506,30 +678,59 @@ export default function AcademicStructurePage() {
                       <th className="px-6 py-3 font-semibold">Program</th>
                       <th className="px-6 py-3 font-semibold">Batch</th>
                       <th className="px-6 py-3 font-semibold">Semester</th>
-                      <th className="px-6 py-3 font-semibold text-right">Student Capacity</th>
-                      <th className="px-6 py-3 font-semibold text-right">Status</th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Student Capacity
+                      </th>
+                      <th className="px-6 py-3 font-semibold text-right">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {sections
-                      .filter((s) => !selectedProgramId || s.program_id === selectedProgramId)
+                      .filter(
+                        (s) =>
+                          !selectedProgramId ||
+                          s.program_id === selectedProgramId,
+                      )
                       .map((s) => {
-                        const prog = programs.find((p) => p.id === s.program_id);
+                        const prog = programs.find(
+                          (p) => p.id === s.program_id,
+                        );
                         const bth = batches.find((b) => b.id === s.batch_id);
-                        const sem = semesters.find((sm) => sm.id === s.semester_id);
+                        const sem = semesters.find(
+                          (sm) => sm.id === s.semester_id,
+                        );
                         return (
-                          <tr key={s.id} className="hover:bg-slate-800/30 transition-colors">
+                          <tr
+                            key={s.id}
+                            className="hover:bg-slate-800/30 transition-colors"
+                          >
                             <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
                               <span className="w-7 h-7 rounded-lg bg-blue-950/80 border border-blue-800 text-blue-400 flex items-center justify-center font-mono text-xs">
                                 {s.name}
                               </span>
                               Section {s.name}
                             </td>
-                            <td className="px-6 py-4 text-slate-300">{prog?.name || s.program_id}</td>
-                            <td className="px-6 py-4 text-slate-400">{bth?.name || s.batch_id}</td>
-                            <td className="px-6 py-4 text-slate-400">{sem?.name || s.semester_id}</td>
-                            <td className="px-6 py-4 text-right font-mono text-slate-300">{s.capacity} seats</td>
-                            <td className="px-6 py-4 text-right"><span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}>{s.is_active ? "Active" : "Inactive"}</span></td>
+                            <td className="px-6 py-4 text-slate-300">
+                              {prog?.name || s.program_id}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {bth?.name || s.batch_id}
+                            </td>
+                            <td className="px-6 py-4 text-slate-400">
+                              {sem?.name || s.semester_id}
+                            </td>
+                            <td className="px-6 py-4 text-right font-mono text-slate-300">
+                              {s.capacity} seats
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <span
+                                className={`px-2 py-0.5 text-xs rounded-full font-medium border ${s.is_active ? "bg-emerald-950/80 text-emerald-400 border-emerald-800" : "bg-slate-800 text-slate-400 border-slate-700"}`}
+                              >
+                                {s.is_active ? "Active" : "Inactive"}
+                              </span>
+                            </td>
                           </tr>
                         );
                       })}
@@ -547,7 +748,16 @@ export default function AcademicStructurePage() {
           <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-8">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h2 className="text-lg font-bold text-white">
-                Add {activeTab === "years" ? "Academic Year" : activeTab === "semesters" ? "Semester" : activeTab === "regulations" ? "Regulation" : activeTab === "batches" ? "Batch" : "Section"}
+                Add{" "}
+                {activeTab === "years"
+                  ? "Academic Year"
+                  : activeTab === "semesters"
+                    ? "Semester"
+                    : activeTab === "regulations"
+                      ? "Regulation"
+                      : activeTab === "batches"
+                        ? "Batch"
+                        : "Section"}
               </h2>
               <button
                 onClick={() => setShowModal(false)}
@@ -582,7 +792,9 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Start Date *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Start Date *
+                      </label>
                       <input
                         type="date"
                         required
@@ -592,7 +804,9 @@ export default function AcademicStructurePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">End Date *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        End Date *
+                      </label>
                       <input
                         type="date"
                         required
@@ -610,7 +824,10 @@ export default function AcademicStructurePage() {
                       onChange={(e) => setYearIsCurrent(e.target.checked)}
                       className="rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-blue-500"
                     />
-                    <label htmlFor="yearIsCurrent" className="text-xs text-slate-300">
+                    <label
+                      htmlFor="yearIsCurrent"
+                      className="text-xs text-slate-300"
+                    >
                       Set as current active academic year
                     </label>
                   </div>
@@ -621,7 +838,9 @@ export default function AcademicStructurePage() {
               {activeTab === "semesters" && (
                 <>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Academic Year *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Academic Year *
+                    </label>
                     <select
                       required
                       value={semYearId}
@@ -637,7 +856,9 @@ export default function AcademicStructurePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Semester Name *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Semester Name *
+                    </label>
                     <input
                       type="text"
                       required
@@ -649,7 +870,9 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Semester Number *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Semester Number *
+                      </label>
                       <input
                         type="number"
                         min="1"
@@ -661,7 +884,9 @@ export default function AcademicStructurePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Term Type *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Term Type *
+                      </label>
                       <select
                         value={semTermType}
                         onChange={(e) => setSemTermType(e.target.value)}
@@ -675,7 +900,9 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Start Date *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Start Date *
+                      </label>
                       <input
                         type="date"
                         required
@@ -685,7 +912,9 @@ export default function AcademicStructurePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">End Date *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        End Date *
+                      </label>
                       <input
                         type="date"
                         required
@@ -703,7 +932,9 @@ export default function AcademicStructurePage() {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Code *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Code *
+                      </label>
                       <input
                         type="text"
                         required
@@ -714,7 +945,9 @@ export default function AcademicStructurePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Effective Year *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Effective Year *
+                      </label>
                       <input
                         type="number"
                         min="2000"
@@ -727,7 +960,9 @@ export default function AcademicStructurePage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Regulation Title *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Regulation Title *
+                    </label>
                     <input
                       type="text"
                       required
@@ -738,7 +973,9 @@ export default function AcademicStructurePage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Description</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Description
+                    </label>
                     <textarea
                       rows={2}
                       placeholder="Curriculum governance details..."
@@ -754,7 +991,9 @@ export default function AcademicStructurePage() {
               {activeTab === "batches" && (
                 <>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Program *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Program *
+                    </label>
                     <select
                       required
                       value={batchProgId}
@@ -770,7 +1009,9 @@ export default function AcademicStructurePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Curriculum Regulation *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Curriculum Regulation *
+                    </label>
                     <select
                       required
                       value={batchRegId}
@@ -786,7 +1027,9 @@ export default function AcademicStructurePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Batch Label *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Batch Label *
+                    </label>
                     <input
                       type="text"
                       required
@@ -798,26 +1041,34 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Admission Year *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Admission Year *
+                      </label>
                       <input
                         type="number"
                         min="2000"
                         max="2100"
                         required
                         value={batchAdmYear}
-                        onChange={(e) => setBatchAdmYear(Number(e.target.value))}
+                        onChange={(e) =>
+                          setBatchAdmYear(Number(e.target.value))
+                        }
                         className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Graduation Year *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Graduation Year *
+                      </label>
                       <input
                         type="number"
                         min="2000"
                         max="2100"
                         required
                         value={batchGradYear}
-                        onChange={(e) => setBatchGradYear(Number(e.target.value))}
+                        onChange={(e) =>
+                          setBatchGradYear(Number(e.target.value))
+                        }
                         className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -829,7 +1080,9 @@ export default function AcademicStructurePage() {
               {activeTab === "sections" && (
                 <>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Program *</label>
+                    <label className="block text-xs font-medium text-slate-300 mb-1">
+                      Program *
+                    </label>
                     <select
                       required
                       value={secProgId}
@@ -846,7 +1099,9 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Batch Cohort *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Batch Cohort *
+                      </label>
                       <select
                         required
                         value={secBatchId}
@@ -855,7 +1110,9 @@ export default function AcademicStructurePage() {
                       >
                         <option value="">Select Batch</option>
                         {batches
-                          .filter((b) => !secProgId || b.program_id === secProgId)
+                          .filter(
+                            (b) => !secProgId || b.program_id === secProgId,
+                          )
                           .map((b) => (
                             <option key={b.id} value={b.id}>
                               {b.name}
@@ -864,7 +1121,9 @@ export default function AcademicStructurePage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Semester *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Semester *
+                      </label>
                       <select
                         required
                         value={secSemId}
@@ -882,7 +1141,9 @@ export default function AcademicStructurePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Section Name *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Section Name *
+                      </label>
                       <input
                         type="text"
                         required
@@ -893,7 +1154,9 @@ export default function AcademicStructurePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1">Capacity *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Capacity *
+                      </label>
                       <input
                         type="number"
                         min="1"

@@ -21,13 +21,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, require_platform_admin
-from app.core.exceptions import NotFoundException
 from app.models.onboarding import (
     OnboardingApproval,
     OnboardingChecklistItem,
     OnboardingMigrationJob,
     OnboardingUATScenario,
-    TenantOnboardingPlan,
 )
 from app.models.people import User
 from app.schemas.onboarding import (

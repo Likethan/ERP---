@@ -11,7 +11,7 @@ from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import and_, case, func, or_, select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -22,13 +22,10 @@ from app.core.exceptions import (
     ValidationException,
 )
 from app.models.academics import (
-    Classroom,
     CourseEnrollment,
     CourseFacultyAssignment,
     CourseOffering,
-    Subject,
 )
-from app.models.attendance import AttendanceRecord, AttendanceSession
 from app.models.audit import AuditLog
 from app.models.core import AcademicYear, Semester
 from app.models.examination import (
@@ -39,11 +36,10 @@ from app.models.examination import (
     GradeScale,
     GradeScaleItem,
     MarkCorrectionRequest,
-    ResultCorrectionAudit,
     SemesterExamResult,
     StudentAssessmentMark,
 )
-from app.models.people import FacultyProfile, StudentProfile, User
+from app.models.people import FacultyProfile, StudentProfile
 from app.schemas.examination import (
     AssessmentBulkMarksSubmitRequest,
     AssessmentCreateRequest,
@@ -54,12 +50,12 @@ from app.schemas.examination import (
     ExamConflictCheckResponse,
     ExamEligibilityOverrideRequest,
     ExamEligibilityResponse,
+    ExaminationDashboardResponse,
     ExamScheduleCreateRequest,
     ExamScheduleResponse,
     ExamScheduleUpdateRequest,
     ExamTermCreateRequest,
     ExamTermResponse,
-    ExaminationDashboardResponse,
     GradeScaleCreateRequest,
     GradeScaleResponse,
     MarkCorrectionCreateRequest,
@@ -2246,7 +2242,7 @@ class ExaminationService:
                 actor_id=publisher_user_id,
                 producer="EXAMINATION_MODULE",
             )
-        except Exception as ev_err:
+        except Exception:
             pass
 
         await db.commit()

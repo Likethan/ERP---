@@ -3,7 +3,11 @@
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { hostelComplaintsService } from "@/services/hostel-complaints.service";
-import { HostelComplaint, ComplaintStatus, ComplaintPriority } from "@campusos/types";
+import {
+  HostelComplaint,
+  ComplaintStatus,
+  ComplaintPriority,
+} from "@campusos/types";
 import { useAuth } from "@/lib/auth-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +26,11 @@ import {
   UserCheck,
 } from "lucide-react";
 
-export default function HostelComplaintDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function HostelComplaintDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const complaintId = resolvedParams.id;
   const { user } = useAuth();
@@ -43,7 +51,8 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
   const loadComplaint = async () => {
     setLoading(true);
     try {
-      const res = await hostelComplaintsService.getHostelComplaintById(complaintId);
+      const res =
+        await hostelComplaintsService.getHostelComplaintById(complaintId);
       if (res.success && res.data) {
         setComplaint(res.data);
       }
@@ -58,12 +67,14 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
 
   const handleStartWork = async () => {
     if (!complaint) return;
-    const actor = user?.first_name ? `${user.first_name} ${user.last_name}` : "Maintenance Staff";
+    const actor = user?.first_name
+      ? `${user.first_name} ${user.last_name}`
+      : "Maintenance Staff";
     await hostelComplaintsService.updateComplaintStatus(
       complaint.id,
       ComplaintStatus.IN_PROGRESS,
       actor,
-      "Technician commenced on-site assessment and repairs"
+      "Technician commenced on-site assessment and repairs",
     );
     loadComplaint();
   };
@@ -71,12 +82,14 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
   const handleResolve = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!complaint || !resolutionNotes.trim()) return;
-    const actor = user?.first_name ? `${user.first_name} ${user.last_name}` : "Maintenance Supervisor";
+    const actor = user?.first_name
+      ? `${user.first_name} ${user.last_name}`
+      : "Maintenance Supervisor";
     await hostelComplaintsService.updateComplaintStatus(
       complaint.id,
       ComplaintStatus.RESOLVED,
       actor,
-      resolutionNotes.trim()
+      resolutionNotes.trim(),
     );
     setResolveModalOpen(false);
     setResolutionNotes("");
@@ -85,12 +98,14 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
 
   const handleClose = async () => {
     if (!complaint) return;
-    const actor = user?.first_name ? `${user.first_name} ${user.last_name}` : "Hostel Warden";
+    const actor = user?.first_name
+      ? `${user.first_name} ${user.last_name}`
+      : "Hostel Warden";
     await hostelComplaintsService.updateComplaintStatus(
       complaint.id,
       ComplaintStatus.CLOSED,
       actor,
-      "Resident confirmed issue resolution. Ticket formally closed."
+      "Resident confirmed issue resolution. Ticket formally closed.",
     );
     loadComplaint();
   };
@@ -98,12 +113,14 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
   const handleAssign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!complaint || !staffNameInput.trim()) return;
-    const actor = user?.first_name ? `${user.first_name} ${user.last_name}` : "Warden Office";
+    const actor = user?.first_name
+      ? `${user.first_name} ${user.last_name}`
+      : "Warden Office";
     await hostelComplaintsService.assignComplaint(
       complaint.id,
       `tech-${Date.now().toString(36)}`,
       staffNameInput.trim(),
-      actor
+      actor,
     );
     setAssignModalOpen(false);
     setStaffNameInput("");
@@ -122,7 +139,9 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
   if (!complaint) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Complaint Record Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Complaint Record Not Found
+        </h2>
         <Link href="/app/infrastructure/hostel/complaints">
           <Button variant="outline" className="border-slate-700">
             Back to Complaints
@@ -133,18 +152,27 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
   }
 
   const priorityColors = {
-    [ComplaintPriority.CRITICAL]: "bg-red-500/10 text-red-400 border-red-500/20",
-    [ComplaintPriority.HIGH]: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    [ComplaintPriority.MEDIUM]: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    [ComplaintPriority.LOW]: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+    [ComplaintPriority.CRITICAL]:
+      "bg-red-500/10 text-red-400 border-red-500/20",
+    [ComplaintPriority.HIGH]:
+      "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    [ComplaintPriority.MEDIUM]:
+      "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    [ComplaintPriority.LOW]:
+      "bg-slate-500/10 text-slate-400 border-slate-500/20",
   };
 
   const statusColors: Record<ComplaintStatus, string> = {
-    [ComplaintStatus.OPEN]: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    [ComplaintStatus.ASSIGNED]: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    [ComplaintStatus.IN_PROGRESS]: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-    [ComplaintStatus.RESOLVED]: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    [ComplaintStatus.CLOSED]: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+    [ComplaintStatus.OPEN]:
+      "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    [ComplaintStatus.ASSIGNED]:
+      "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    [ComplaintStatus.IN_PROGRESS]:
+      "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    [ComplaintStatus.RESOLVED]:
+      "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    [ComplaintStatus.CLOSED]:
+      "bg-slate-500/10 text-slate-400 border-slate-500/20",
     [ComplaintStatus.REJECTED]: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
@@ -169,18 +197,31 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
               <span className="font-mono text-sm font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-md border border-indigo-500/20">
                 {complaint.ticketNumber}
               </span>
-              <Badge variant="outline" className={priorityColors[complaint.priority]}>
+              <Badge
+                variant="outline"
+                className={priorityColors[complaint.priority]}
+              >
                 {complaint.priority} PRIORITY
               </Badge>
-              <Badge variant="outline" className={statusColors[complaint.status]}>
+              <Badge
+                variant="outline"
+                className={statusColors[complaint.status]}
+              >
                 {complaint.status}
               </Badge>
-              <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700">
+              <Badge
+                variant="outline"
+                className="bg-slate-800 text-slate-300 border-slate-700"
+              >
                 {complaint.category}
               </Badge>
             </div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">{complaint.title}</h1>
-            <p className="text-slate-400 text-sm max-w-2xl">{complaint.description}</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
+              {complaint.title}
+            </h1>
+            <p className="text-slate-400 text-sm max-w-2xl">
+              {complaint.description}
+            </p>
           </div>
 
           {/* Action Buttons for Warden / Admin */}
@@ -204,7 +245,8 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                   Start In-Progress
                 </Button>
               )}
-              {(complaint.status === ComplaintStatus.ASSIGNED || complaint.status === ComplaintStatus.IN_PROGRESS) && (
+              {(complaint.status === ComplaintStatus.ASSIGNED ||
+                complaint.status === ComplaintStatus.IN_PROGRESS) && (
                 <Button
                   onClick={() => setResolveModalOpen(true)}
                   className="bg-emerald-600 hover:bg-emerald-500 text-white gap-2 text-xs"
@@ -239,15 +281,25 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Hostel Facility</span>
-                <span className="font-medium text-white">{complaint.hostelName}</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Hostel Facility
+                </span>
+                <span className="font-medium text-white">
+                  {complaint.hostelName}
+                </span>
               </div>
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Room Number</span>
-                <span className="font-semibold text-indigo-300">Room {complaint.roomNumber}</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Room Number
+                </span>
+                <span className="font-semibold text-indigo-300">
+                  Room {complaint.roomNumber}
+                </span>
               </div>
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Resident Student</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Resident Student
+                </span>
                 <Link
                   href={`/app/students/${complaint.studentId}`}
                   className="font-medium text-indigo-400 hover:underline flex items-center gap-1.5"
@@ -257,8 +309,12 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                 </Link>
               </div>
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Register Number</span>
-                <span className="font-mono text-slate-300">{complaint.registerNumber}</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Register Number
+                </span>
+                <span className="font-mono text-slate-300">
+                  {complaint.registerNumber}
+                </span>
               </div>
             </div>
           </div>
@@ -271,14 +327,20 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Assigned Technician</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Assigned Technician
+                </span>
                 <span className="font-medium text-white">
                   {complaint.assignedStaffName || "Unassigned"}
                 </span>
               </div>
               <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
-                <span className="text-xs text-slate-500 block mb-1">Resolution SLA Target</span>
-                <span className="font-medium text-white">{complaint.slaTargetHours} Hours</span>
+                <span className="text-xs text-slate-500 block mb-1">
+                  Resolution SLA Target
+                </span>
+                <span className="font-medium text-white">
+                  {complaint.slaTargetHours} Hours
+                </span>
               </div>
             </div>
 
@@ -288,10 +350,13 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                   <CheckCircle2 className="w-4 h-4" />
                   Official Resolution Note
                 </div>
-                <p className="text-sm text-slate-300">{complaint.resolutionNotes}</p>
+                <p className="text-sm text-slate-300">
+                  {complaint.resolutionNotes}
+                </p>
                 {complaint.resolvedAt && (
                   <span className="text-xs text-emerald-500/80 block mt-1">
-                    Resolved at: {new Date(complaint.resolvedAt).toLocaleString("en-IN")}
+                    Resolved at:{" "}
+                    {new Date(complaint.resolvedAt).toLocaleString("en-IN")}
                   </span>
                 )}
               </div>
@@ -310,16 +375,24 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
             <div className="space-y-3">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Target Resolution</span>
-                <span className="font-mono text-white">{complaint.slaTargetHours}h SLA</span>
+                <span className="font-mono text-white">
+                  {complaint.slaTargetHours}h SLA
+                </span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Breach Status</span>
                 {complaint.slaBreached ? (
-                  <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20 gap-1">
+                  <Badge
+                    variant="outline"
+                    className="bg-red-500/10 text-red-400 border-red-500/20 gap-1"
+                  >
                     <ShieldAlert className="w-3 h-3" /> SLA Breached
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 gap-1">
+                  <Badge
+                    variant="outline"
+                    className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 gap-1"
+                  >
                     <CheckCircle2 className="w-3 h-3" /> Within SLA
                   </Badge>
                 )}
@@ -345,13 +418,24 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                   <div className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-slate-900 group-hover:scale-125 transition-transform" />
                   <div className="space-y-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold text-white">{item.action}</span>
+                      <span className="text-xs font-semibold text-white">
+                        {item.action}
+                      </span>
                       <span className="text-[10px] text-slate-500">
-                        {new Date(item.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        {new Date(item.timestamp).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
-                    <span className="text-xs text-indigo-400 block font-medium">{item.actor}</span>
-                    {item.notes && <p className="text-xs text-slate-400 bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">{item.notes}</p>}
+                    <span className="text-xs text-indigo-400 block font-medium">
+                      {item.actor}
+                    </span>
+                    {item.notes && (
+                      <p className="text-xs text-slate-400 bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
+                        {item.notes}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -370,7 +454,9 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
             </h3>
             <form onSubmit={handleAssign} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-400 block mb-1">Technician / Staff Name</label>
+                <label className="text-xs font-semibold text-slate-400 block mb-1">
+                  Technician / Staff Name
+                </label>
                 <input
                   type="text"
                   required
@@ -389,7 +475,10 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   Assign Staff
                 </Button>
               </div>
@@ -408,7 +497,9 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
             </h3>
             <form onSubmit={handleResolve} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-400 block mb-1">Resolution Summary</label>
+                <label className="text-xs font-semibold text-slate-400 block mb-1">
+                  Resolution Summary
+                </label>
                 <textarea
                   required
                   rows={3}
@@ -427,7 +518,10 @@ export default function HostelComplaintDetailPage({ params }: { params: Promise<
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   Confirm Resolution
                 </Button>
               </div>

@@ -11,17 +11,17 @@ Guarantees:
 - Never claims a backup is restorable based solely on file existence
 """
 
-from datetime import UTC, datetime
 import hashlib
 import json
 import logging
-from pathlib import Path
 import time
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.config import settings

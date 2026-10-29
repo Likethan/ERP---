@@ -3,7 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { studentsService } from "@/services/students.service";
@@ -25,7 +31,9 @@ import {
 } from "lucide-react";
 
 export function StudentDashboard() {
-  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(null);
+  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(
+    null,
+  );
   const [todaySchedule, setTodaySchedule] = useState<TimetableSlotItem[]>([]);
   const [activeDrives, setActiveDrives] = useState<JobDriveItem[]>([]);
 
@@ -63,7 +71,8 @@ export function StudentDashboard() {
             Welcome back, {student.firstName}!
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            {student.program.name} • Semester {student.currentSemester} (Section {student.section})
+            {student.program.name} • Semester {student.currentSemester} (Section{" "}
+            {student.section})
           </p>
         </div>
 
@@ -74,7 +83,11 @@ export function StudentDashboard() {
             </Button>
           </Link>
           <Link href="/app/documents">
-            <Button variant="primary" size="sm" leftIcon={<FileText className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<FileText className="h-3.5 w-3.5" />}
+            >
               Document Vault
             </Button>
           </Link>
@@ -94,14 +107,21 @@ export function StudentDashboard() {
         <StatCard
           label="Cumulative GPA"
           value={student.academicStats.cgpa.toFixed(2)}
-          change={{ value: `Rank #${student.academicStats.rank} in CSE`, trend: "up" }}
+          change={{
+            value: `Rank #${student.academicStats.rank} in CSE`,
+            trend: "up",
+          }}
           description={`${student.academicStats.totalCreditsEarned} credits earned • 0 backlogs`}
           variant="indigo"
           icon={<GraduationCap className="h-4 w-4" />}
         />
         <StatCard
           label="Fee Dues Status"
-          value={student.financeSummary.pendingDue === 0 ? "₹0 Due" : `₹${student.financeSummary.pendingDue}`}
+          value={
+            student.financeSummary.pendingDue === 0
+              ? "₹0 Due"
+              : `₹${student.financeSummary.pendingDue}`
+          }
           change={{ value: "All cleared", trend: "neutral" }}
           description="Annual tuition & hostel levy settled"
           variant="sky"
@@ -134,7 +154,11 @@ export function StudentDashboard() {
                 </CardDescription>
               </div>
               <Link href="/app/academics/timetable">
-                <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-slate-400 hover:text-white"
+                >
                   Full Timetable <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </Link>
@@ -177,11 +201,16 @@ export function StudentDashboard() {
               <div>
                 <CardTitle>Enrolled Academic Courses (5th Semester)</CardTitle>
                 <CardDescription>
-                  Continuous Internal Assessment marks & individual course attendance.
+                  Continuous Internal Assessment marks & individual course
+                  attendance.
                 </CardDescription>
               </div>
               <Link href="/app/academics/subjects">
-                <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-slate-400 hover:text-white"
+                >
                   Curriculum View <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </Link>
@@ -200,12 +229,19 @@ export function StudentDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {student.enrolledCourses.map((c) => (
-                      <tr key={c.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr
+                        key={c.id}
+                        className="hover:bg-slate-800/40 transition-colors"
+                      >
                         <td className="px-5 py-3.5 font-medium text-white">
                           <div>{c.code}</div>
-                          <div className="text-[11px] text-slate-400 font-normal">{c.title}</div>
+                          <div className="text-[11px] text-slate-400 font-normal">
+                            {c.title}
+                          </div>
                         </td>
-                        <td className="px-4 py-3.5 text-slate-300">{c.faculty}</td>
+                        <td className="px-4 py-3.5 text-slate-300">
+                          {c.faculty}
+                        </td>
                         <td className="px-4 py-3.5 font-mono">{c.credits}</td>
                         <td className="px-4 py-3.5">
                           <span className="font-semibold text-emerald-400 font-mono">
@@ -249,7 +285,9 @@ export function StudentDashboard() {
                     </span>
                     <Badge variant="success">₹{drive.packageLPA} LPA</Badge>
                   </div>
-                  <div className="text-xs text-slate-300">{drive.roleTitle}</div>
+                  <div className="text-xs text-slate-300">
+                    {drive.roleTitle}
+                  </div>
                   <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400">
                     <span>Min CGPA: {drive.minimumCGPA}</span>
                     <Link
@@ -268,16 +306,21 @@ export function StudentDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Campus Residential & Logistics</CardTitle>
-              <CardDescription>Allocated room & daily bus corridor subscription.</CardDescription>
+              <CardDescription>
+                Allocated room & daily bus corridor subscription.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-xs">
               {student.hostel && (
                 <div className="flex items-start gap-3 p-3 rounded-lg border border-slate-800 bg-slate-950/40">
                   <BedDouble className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-white">{student.hostel.hostelName}</div>
+                    <div className="font-semibold text-white">
+                      {student.hostel.hostelName}
+                    </div>
                     <div className="text-slate-400 text-[11px] mt-0.5">
-                      {student.hostel.block} • Room {student.hostel.roomNumber} ({student.hostel.bed})
+                      {student.hostel.block} • Room {student.hostel.roomNumber}{" "}
+                      ({student.hostel.bed})
                     </div>
                   </div>
                 </div>
@@ -288,10 +331,12 @@ export function StudentDashboard() {
                   <Bus className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
                     <div className="font-semibold text-white">
-                      {student.transport.routeCode} — {student.transport.routeName}
+                      {student.transport.routeCode} —{" "}
+                      {student.transport.routeName}
                     </div>
                     <div className="text-slate-400 text-[11px] mt-0.5">
-                      Boarding: {student.transport.stopName} (Bus {student.transport.busNumber})
+                      Boarding: {student.transport.stopName} (Bus{" "}
+                      {student.transport.busNumber})
                     </div>
                   </div>
                 </div>

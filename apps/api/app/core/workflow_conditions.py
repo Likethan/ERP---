@@ -5,9 +5,9 @@ Evaluates structured condition definitions against execution context variables
 using an explicit allowlist of operators and type-safe comparisons.
 """
 
+import logging
 from collections.abc import Sequence
 from enum import StrEnum
-import logging
 from typing import Any
 
 from app.core.exceptions import ValidationException

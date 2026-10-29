@@ -22,7 +22,7 @@ export function FilterBar({
     <div
       className={cn(
         "flex flex-wrap items-center gap-3 p-3 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm",
-        className
+        className,
       )}
     >
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mr-1">

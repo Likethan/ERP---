@@ -11,7 +11,9 @@ import { ApiResponse, TransportStop, StopStatus } from "@campusos/types";
 import { MOCK_TRANSPORT_STOPS } from "@/mocks/infrastructure.mock";
 
 class TransportStopsService {
-  private stops: TransportStop[] = JSON.parse(JSON.stringify(MOCK_TRANSPORT_STOPS));
+  private stops: TransportStop[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSPORT_STOPS),
+  );
 
   async listStops(filters?: {
     routeId?: string;
@@ -22,7 +24,9 @@ class TransportStopsService {
     let items = [...this.stops];
 
     if (filters?.routeId && filters.routeId !== "ALL") {
-      items = items.filter((s) => s.routeId === filters.routeId || s.routeCode === filters.routeId);
+      items = items.filter(
+        (s) => s.routeId === filters.routeId || s.routeCode === filters.routeId,
+      );
     }
     if (filters?.status && filters.status !== "ALL") {
       items = items.filter((s) => s.status === filters.status);
@@ -35,7 +39,7 @@ class TransportStopsService {
           s.code.toLowerCase().includes(q) ||
           s.routeName.toLowerCase().includes(q) ||
           s.routeCode.toLowerCase().includes(q) ||
-          s.landmark?.toLowerCase().includes(q)
+          s.landmark?.toLowerCase().includes(q),
       );
     }
 
@@ -48,7 +52,9 @@ class TransportStopsService {
     return { success: true, data: stop };
   }
 
-  async createStop(payload: Partial<TransportStop>): Promise<ApiResponse<TransportStop>> {
+  async createStop(
+    payload: Partial<TransportStop>,
+  ): Promise<ApiResponse<TransportStop>> {
     await new Promise((r) => setTimeout(r, 50));
     const newStop: TransportStop = {
       id: `stp-${Date.now().toString(36)}`,

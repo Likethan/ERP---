@@ -243,4 +243,3 @@ async def root_metrics():
 
 # Include API v1 Router
 app.include_router(api_v1_router, prefix=settings.API_V1_STR)
-

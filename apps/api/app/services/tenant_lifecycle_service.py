@@ -15,10 +15,10 @@ from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.cache import tenant_cache
 from app.core.events import DomainEventEnvelope, OutboxService
 from app.core.exceptions import (
-    ConflictException,
     InvalidLifecycleTransitionException,
     NotFoundException,
 )
+from app.core.logging import logger
 from app.models.core import Institution
 from app.models.platform_ops import (
     TenantLifecycleStatus,

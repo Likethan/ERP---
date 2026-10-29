@@ -9,7 +9,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
@@ -24,11 +24,11 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, TenantScopedModel
-
+from app.models.base import TenantScopedModel
 
 # =============================================================================
 # ENUMS

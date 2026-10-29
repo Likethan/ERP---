@@ -127,7 +127,8 @@ export default function OfferDetailPage({ params }: PageProps) {
         await loadData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to decline offer";
+      const msg =
+        err instanceof Error ? err.message : "Failed to decline offer";
       showToast({
         title: "Action Failed",
         message: msg,
@@ -184,7 +185,9 @@ export default function OfferDetailPage({ params }: PageProps) {
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-muted-foreground">Loading offer dossier...</p>
+          <p className="text-sm text-muted-foreground">
+            Loading offer dossier...
+          </p>
         </div>
       </div>
     );
@@ -211,7 +214,8 @@ export default function OfferDetailPage({ params }: PageProps) {
   }
 
   const isExpired =
-    offer.status === "RELEASED" && new Date(offer.responseDeadline).getTime() < Date.now();
+    offer.status === "RELEASED" &&
+    new Date(offer.responseDeadline).getTime() < Date.now();
 
   return (
     <div className="p-6 space-y-6 max-w-[1400px] mx-auto">
@@ -237,12 +241,18 @@ export default function OfferDetailPage({ params }: PageProps) {
                 Offer Officially Accepted
               </h3>
               <p className="text-xs text-emerald-700/80 dark:text-emerald-400/80">
-                Placement confirmed for {offer.studentName} at {offer.companyName}. Record automatically reflected in CampusOS Placement Outcomes.
+                Placement confirmed for {offer.studentName} at{" "}
+                {offer.companyName}. Record automatically reflected in CampusOS
+                Placement Outcomes.
               </p>
             </div>
           </div>
           <Link href="/app/placement/outcomes">
-            <Button size="sm" variant="outline" className="border-emerald-500/30 text-emerald-700 dark:text-emerald-300 gap-1 text-xs">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-emerald-500/30 text-emerald-700 dark:text-emerald-300 gap-1 text-xs"
+            >
               View Outcomes Ledger
               <ChevronRight className="w-3.5 h-3.5" />
             </Button>
@@ -350,23 +360,34 @@ export default function OfferDetailPage({ params }: PageProps) {
                     {formatLPA(offer.ctcLpa)}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Fixed Base + Performance Incentive + Comprehensive Corporate Benefits
+                    Fixed Base + Performance Incentive + Comprehensive Corporate
+                    Benefits
                   </p>
                 </div>
 
                 <div className="text-right sm:border-l sm:pl-6 border-emerald-500/20">
-                  <span className="text-xs text-muted-foreground">Monthly Equivalent</span>
+                  <span className="text-xs text-muted-foreground">
+                    Monthly Equivalent
+                  </span>
                   <div className="text-lg font-bold text-foreground">
-                    ₹{Math.round((offer.ctcLpa * 100000) / 12).toLocaleString("en-IN")}/mo
+                    ₹
+                    {Math.round((offer.ctcLpa * 100000) / 12).toLocaleString(
+                      "en-IN",
+                    )}
+                    /mo
                   </div>
-                  <span className="text-[11px] text-muted-foreground">Gross Pre-Tax</span>
+                  <span className="text-[11px] text-muted-foreground">
+                    Gross Pre-Tax
+                  </span>
                 </div>
               </div>
 
               {/* Breakdown Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-card border rounded-lg p-3.5 space-y-1">
-                  <span className="text-xs text-muted-foreground">Base Salary (Fixed)</span>
+                  <span className="text-xs text-muted-foreground">
+                    Base Salary (Fixed)
+                  </span>
                   <div className="text-lg font-bold text-foreground">
                     {formatLPA(offer.baseSalaryLpa)}
                   </div>
@@ -376,7 +397,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="bg-card border rounded-lg p-3.5 space-y-1">
-                  <span className="text-xs text-muted-foreground">Variable / Bonus</span>
+                  <span className="text-xs text-muted-foreground">
+                    Variable / Bonus
+                  </span>
                   <div className="text-lg font-bold text-foreground">
                     {offer.variableLpa ? formatLPA(offer.variableLpa) : "None"}
                   </div>
@@ -386,9 +409,13 @@ export default function OfferDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="bg-card border rounded-lg p-3.5 space-y-1">
-                  <span className="text-xs text-muted-foreground">Internship Stipend</span>
+                  <span className="text-xs text-muted-foreground">
+                    Internship Stipend
+                  </span>
                   <div className="text-lg font-bold text-foreground">
-                    {offer.stipendMonthly ? `₹${offer.stipendMonthly.toLocaleString()}/mo` : "N/A"}
+                    {offer.stipendMonthly
+                      ? `₹${offer.stipendMonthly.toLocaleString()}/mo`
+                      : "N/A"}
                   </div>
                   <p className="text-[11px] text-muted-foreground">
                     Applicable during pre-graduation training
@@ -407,7 +434,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                       <MapPin className="w-3.5 h-3.5" />
                       Posting Location
                     </span>
-                    <span className="font-semibold text-foreground">{offer.location}</span>
+                    <span className="font-semibold text-foreground">
+                      {offer.location}
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-between p-2.5 bg-muted/30 rounded-lg">
@@ -415,7 +444,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                       <Calendar className="w-3.5 h-3.5" />
                       Joining Date
                     </span>
-                    <span className="font-semibold text-foreground">{offer.joiningDate}</span>
+                    <span className="font-semibold text-foreground">
+                      {offer.joiningDate}
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-between p-2.5 bg-muted/30 rounded-lg">
@@ -423,7 +454,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                       <Clock className="w-3.5 h-3.5" />
                       Offer Issue Date
                     </span>
-                    <span className="font-semibold text-foreground">{offer.offerDate}</span>
+                    <span className="font-semibold text-foreground">
+                      {offer.offerDate}
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-between p-2.5 bg-muted/30 rounded-lg">
@@ -431,7 +464,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                       <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
                       Response Deadline
                     </span>
-                    <span className="font-semibold text-foreground">{offer.responseDeadline}</span>
+                    <span className="font-semibold text-foreground">
+                      {offer.responseDeadline}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -446,7 +481,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                     <span className="font-semibold text-foreground">
                       Notes recorded upon decision:
                     </span>
-                    <p className="text-muted-foreground italic">&ldquo;{offer.responseNotes}&rdquo;</p>
+                    <p className="text-muted-foreground italic">
+                      &ldquo;{offer.responseNotes}&rdquo;
+                    </p>
                   </div>
                 </div>
               )}
@@ -466,10 +503,14 @@ export default function OfferDetailPage({ params }: PageProps) {
             <CardContent className="pt-4 space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b">
                 <span className="text-muted-foreground">Released By</span>
-                <span className="font-semibold text-foreground">{offer.releasedBy}</span>
+                <span className="font-semibold text-foreground">
+                  {offer.releasedBy}
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b">
-                <span className="text-muted-foreground">Related Application</span>
+                <span className="text-muted-foreground">
+                  Related Application
+                </span>
                 <Link
                   href={`/app/placement/applications/${offer.applicationId}`}
                   className="font-mono text-primary hover:underline"
@@ -518,7 +559,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                         <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                           <span>{event.actor}</span>
                           <span>•</span>
-                          <span>{new Date(event.timestamp).toLocaleDateString()}</span>
+                          <span>
+                            {new Date(event.timestamp).toLocaleDateString()}
+                          </span>
                         </div>
                         {event.details && (
                           <p className="text-xs text-muted-foreground mt-1 bg-muted/30 p-2 rounded">
@@ -529,7 +572,9 @@ export default function OfferDetailPage({ params }: PageProps) {
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-muted-foreground">No events recorded.</p>
+                  <p className="text-xs text-muted-foreground">
+                    No events recorded.
+                  </p>
                 )}
               </div>
             </CardContent>
@@ -584,8 +629,10 @@ export default function OfferDetailPage({ params }: PageProps) {
               </div>
 
               <p className="text-[11px] text-muted-foreground">
-                By clicking <strong>Confirm Acceptance</strong>, you confirm your commitment to join {offer.companyName}.
-                This will automatically update your CampusOS placement dossier to <strong>PLACED</strong>.
+                By clicking <strong>Confirm Acceptance</strong>, you confirm
+                your commitment to join {offer.companyName}. This will
+                automatically update your CampusOS placement dossier to{" "}
+                <strong>PLACED</strong>.
               </p>
 
               <div className="flex items-center justify-end gap-2 pt-2 border-t">
@@ -631,7 +678,8 @@ export default function OfferDetailPage({ params }: PageProps) {
             <form onSubmit={handleDecline} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
-                  Reason for Declining <span className="text-destructive">*</span>
+                  Reason for Declining{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <textarea
                   rows={3}

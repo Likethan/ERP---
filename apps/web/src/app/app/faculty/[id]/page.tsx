@@ -4,11 +4,14 @@ import React, { use, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { facultyService } from "@/services/faculty.service";
 import { FacultyDetailView } from "@/types/domain";
+import { PublicationType, PublicationStatus } from "@/types/people";
 import {
-  PublicationType,
-  PublicationStatus,
-} from "@/types/people";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
@@ -42,8 +45,12 @@ export default function Faculty360ProfilePage({
   const { activePersona } = useAuth();
 
   // Role permissions
-  const canManageWorkload = activePersona.role === "ADMIN" || activePersona.role === "HOD";
-  const canAddPublication = activePersona.role === "ADMIN" || activePersona.role === "HOD" || activePersona.role === "FACULTY";
+  const canManageWorkload =
+    activePersona.role === "ADMIN" || activePersona.role === "HOD";
+  const canAddPublication =
+    activePersona.role === "ADMIN" ||
+    activePersona.role === "HOD" ||
+    activePersona.role === "FACULTY";
 
   const [faculty, setFaculty] = useState<FacultyDetailView | null>(null);
   const [loading, setLoading] = useState(true);
@@ -197,7 +204,11 @@ export default function Faculty360ProfilePage({
     return (
       <div className="space-y-4">
         <Link href="/app/faculty">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Directory
           </Button>
         </Link>
@@ -217,9 +228,15 @@ export default function Faculty360ProfilePage({
 
   const TABS = [
     { id: "overview", label: "Overview & Classes" },
-    { id: "workload", label: `Workload (${workload?.totalAssignedHours || faculty.teachingLoadHours}h/wk)` },
+    {
+      id: "workload",
+      label: `Workload (${workload?.totalAssignedHours || faculty.teachingLoadHours}h/wk)`,
+    },
     { id: "labs", label: `Lab Designations (${labDesignations.length})` },
-    { id: "research", label: `Research & Publications (${publications.length})` },
+    {
+      id: "research",
+      label: `Research & Publications (${publications.length})`,
+    },
     { id: "timeline", label: "Service Timeline" },
   ];
 
@@ -228,7 +245,11 @@ export default function Faculty360ProfilePage({
       {/* Back button */}
       <div>
         <Link href="/app/faculty">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Faculty Roster
           </Button>
         </Link>
@@ -249,7 +270,9 @@ export default function Faculty360ProfilePage({
                   {faculty.firstName} {faculty.lastName}
                 </h1>
                 <Badge
-                  variant={faculty.status === "ACTIVE" ? "success" : "secondary"}
+                  variant={
+                    faculty.status === "ACTIVE" ? "success" : "secondary"
+                  }
                   dot
                 >
                   {faculty.status}
@@ -312,28 +335,40 @@ export default function Faculty360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Academic & Professional Background</CardTitle>
-              <CardDescription>Highest educational degrees and areas of scholarly inquiry.</CardDescription>
+              <CardDescription>
+                Highest educational degrees and areas of scholarly inquiry.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Designation</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{faculty.designation}</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  {faculty.designation}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Department</span>
-                <span className="text-slate-800 dark:text-slate-200">{faculty.department}</span>
+                <span className="text-slate-800 dark:text-slate-200">
+                  {faculty.department}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Highest Credential</span>
-                <span className="text-slate-800 dark:text-slate-200 font-medium">{faculty.qualification}</span>
+                <span className="text-slate-800 dark:text-slate-200 font-medium">
+                  {faculty.qualification}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Primary Specialization</span>
-                <span className="text-slate-800 dark:text-slate-200">{faculty.specialization}</span>
+                <span className="text-slate-800 dark:text-slate-200">
+                  {faculty.specialization}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5">
                 <span className="text-slate-400">Appointment Date</span>
-                <span className="font-mono text-slate-800 dark:text-slate-200">{faculty.joiningDate}</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">
+                  {faculty.joiningDate}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -342,11 +377,15 @@ export default function Faculty360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Today&apos;s Lecture Schedule</CardTitle>
-              <CardDescription>Classroom slots, halls, and attendance logging status.</CardDescription>
+              <CardDescription>
+                Classroom slots, halls, and attendance logging status.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {faculty.todayClasses.length === 0 ? (
-                <p className="text-xs text-slate-400 py-4 text-center">No lecture sessions scheduled today.</p>
+                <p className="text-xs text-slate-400 py-4 text-center">
+                  No lecture sessions scheduled today.
+                </p>
               ) : (
                 <div className="space-y-3">
                   {faculty.todayClasses.map((cls, idx) => (
@@ -355,12 +394,17 @@ export default function Faculty360ProfilePage({
                       className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-xs flex items-center justify-between"
                     >
                       <div>
-                        <div className="font-semibold text-slate-900 dark:text-white">{cls.subject}</div>
+                        <div className="font-semibold text-slate-900 dark:text-white">
+                          {cls.subject}
+                        </div>
                         <p className="text-[11px] text-slate-500 mt-0.5">
                           {cls.time} &bull; {cls.room} &bull; {cls.section}
                         </p>
                       </div>
-                      <Badge variant={cls.attendanceMarked ? "success" : "warning"} dot>
+                      <Badge
+                        variant={cls.attendanceMarked ? "success" : "warning"}
+                        dot
+                      >
                         {cls.attendanceMarked ? "Logged" : "Pending"}
                       </Badge>
                     </div>
@@ -385,7 +429,8 @@ export default function Faculty360ProfilePage({
                   Teaching Workload Allocation
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Academic Year 2026-2027 &bull; Semester 5 &bull; Target: {workload?.weeklyTargetHours || 16} hrs/week
+                  Academic Year 2026-2027 &bull; Semester 5 &bull; Target:{" "}
+                  {workload?.weeklyTargetHours || 16} hrs/week
                 </p>
               </div>
 
@@ -394,8 +439,8 @@ export default function Faculty360ProfilePage({
                   workload?.status === "HIGH_ALLOCATION"
                     ? "warning"
                     : workload?.status === "BALANCED"
-                    ? "success"
-                    : "secondary"
+                      ? "success"
+                      : "secondary"
                 }
               >
                 {workload?.status || "BALANCED"}
@@ -404,25 +449,34 @@ export default function Faculty360ProfilePage({
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 py-2">
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <span className="text-[11px] text-slate-500 uppercase font-semibold">Total Assigned</span>
+                <span className="text-[11px] text-slate-500 uppercase font-semibold">
+                  Total Assigned
+                </span>
                 <div className="text-xl font-bold font-mono text-indigo-600 dark:text-indigo-400 mt-0.5">
-                  {workload?.totalAssignedHours || faculty.teachingLoadHours} hrs/wk
+                  {workload?.totalAssignedHours || faculty.teachingLoadHours}{" "}
+                  hrs/wk
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <span className="text-[11px] text-slate-500 uppercase font-semibold">Lecture Theory</span>
+                <span className="text-[11px] text-slate-500 uppercase font-semibold">
+                  Lecture Theory
+                </span>
                 <div className="text-xl font-bold font-mono text-slate-800 dark:text-slate-200 mt-0.5">
                   {workload?.lectureHours || 8} hrs/wk
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <span className="text-[11px] text-slate-500 uppercase font-semibold">Lab Practicals</span>
+                <span className="text-[11px] text-slate-500 uppercase font-semibold">
+                  Lab Practicals
+                </span>
                 <div className="text-xl font-bold font-mono text-slate-800 dark:text-slate-200 mt-0.5">
                   {workload?.labHours || 4} hrs/wk
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <span className="text-[11px] text-slate-500 uppercase font-semibold">Weekly Target</span>
+                <span className="text-[11px] text-slate-500 uppercase font-semibold">
+                  Weekly Target
+                </span>
                 <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">
                   {workload?.weeklyTargetHours || 16} hrs/wk
                 </div>
@@ -447,7 +501,10 @@ export default function Faculty360ProfilePage({
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {(workload?.assignments || []).map((asg) => (
-                  <tr key={asg.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                  <tr
+                    key={asg.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition"
+                  >
                     <td className="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                       {asg.code}
                     </td>
@@ -461,7 +518,8 @@ export default function Faculty360ProfilePage({
                       {asg.studentCount} Students
                     </td>
                     <td className="px-4 py-3 text-right font-mono font-semibold">
-                      {asg.lectureHours + asg.labHours} hrs ({asg.lectureHours}L + {asg.labHours}P)
+                      {asg.lectureHours + asg.labHours} hrs ({asg.lectureHours}L
+                      + {asg.labHours}P)
                     </td>
                   </tr>
                 ))}
@@ -482,7 +540,8 @@ export default function Faculty360ProfilePage({
                 Laboratory Supervision & Practical Batches
               </h3>
               <p className="text-xs text-slate-500">
-                Practical instruction venues, timing slots, and student batch capacities.
+                Practical instruction venues, timing slots, and student batch
+                capacities.
               </p>
             </div>
             {canManageWorkload && (
@@ -515,15 +574,15 @@ export default function Faculty360ProfilePage({
                       {lab.courseCode} &bull; Batch: {lab.section}
                     </p>
                   </div>
-                  <Badge variant="secondary">
-                    {lab.weeklyHours} hrs/wk
-                  </Badge>
+                  <Badge variant="secondary">{lab.weeklyHours} hrs/wk</Badge>
                 </div>
 
                 <div className="mt-4 space-y-1.5 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-3">
                   <div className="flex items-center gap-2">
                     <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                    <span>{lab.dayOfWeek} &bull; {lab.timeSlot}</span>
+                    <span>
+                      {lab.dayOfWeek} &bull; {lab.timeSlot}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Building className="h-3.5 w-3.5 text-slate-400 shrink-0" />
@@ -540,7 +599,9 @@ export default function Faculty360ProfilePage({
                     <Button
                       size="sm"
                       variant="ghost"
-                      leftIcon={<Trash2 className="h-3.5 w-3.5 text-rose-500" />}
+                      leftIcon={
+                        <Trash2 className="h-3.5 w-3.5 text-rose-500" />
+                      }
                       onClick={() => handleRemoveLab(lab.id)}
                     >
                       Release Duty
@@ -564,7 +625,8 @@ export default function Faculty360ProfilePage({
                 Research Publications & Patents
               </h3>
               <p className="text-xs text-slate-500">
-                Peer-reviewed journals, conference proceedings, patents, and scholarly output.
+                Peer-reviewed journals, conference proceedings, patents, and
+                scholarly output.
               </p>
             </div>
             {canAddPublication && (
@@ -589,7 +651,11 @@ export default function Faculty360ProfilePage({
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary">{pub.publicationType}</Badge>
-                      <Badge variant={pub.status === "PUBLISHED" ? "success" : "warning"}>
+                      <Badge
+                        variant={
+                          pub.status === "PUBLISHED" ? "success" : "warning"
+                        }
+                      >
                         {pub.status}
                       </Badge>
                       <span className="text-xs font-mono text-slate-400">
@@ -653,7 +719,10 @@ export default function Faculty360ProfilePage({
                 <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">
                   Appointed Chair of Department Curriculum Scrutiny Committee
                 </h4>
-                <p className="text-slate-500">Board of Studies nomination for Autonomous Syllabus Formulation.</p>
+                <p className="text-slate-500">
+                  Board of Studies nomination for Autonomous Syllabus
+                  Formulation.
+                </p>
               </div>
             </div>
 
@@ -664,18 +733,25 @@ export default function Faculty360ProfilePage({
                 <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">
                   Promotion to Full Professor & Dean Academics
                 </h4>
-                <p className="text-slate-500">Conferred by University Governing Board following peer-review audit.</p>
+                <p className="text-slate-500">
+                  Conferred by University Governing Board following peer-review
+                  audit.
+                </p>
               </div>
             </div>
 
             <div className="relative">
               <div className="absolute -left-6 top-1 h-3 w-3 rounded-full border-2 border-indigo-600 bg-white dark:bg-slate-900" />
               <div className="text-xs">
-                <span className="font-mono text-slate-400">{faculty.joiningDate}</span>
+                <span className="font-mono text-slate-400">
+                  {faculty.joiningDate}
+                </span>
                 <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">
                   Initial Faculty Appointment Induction
                 </h4>
-                <p className="text-slate-500">Joined CampusOS Academic Faculty as Assistant Professor.</p>
+                <p className="text-slate-500">
+                  Joined CampusOS Academic Faculty as Assistant Professor.
+                </p>
               </div>
             </div>
           </div>
@@ -738,7 +814,14 @@ export default function Faculty360ProfilePage({
                 onChange={(e) => setLabDay(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
               >
-                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((d) => (
+                {[
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ].map((d) => (
                   <option key={d} value={d}>
                     {d}
                   </option>
@@ -793,7 +876,12 @@ export default function Faculty360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setLabModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setLabModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">
@@ -880,7 +968,9 @@ export default function Faculty360ProfilePage({
               </label>
               <select
                 value={pubStatus}
-                onChange={(e) => setPubStatus(e.target.value as PublicationStatus)}
+                onChange={(e) =>
+                  setPubStatus(e.target.value as PublicationStatus)
+                }
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
               >
                 <option value="PUBLISHED">PUBLISHED</option>
@@ -892,7 +982,12 @@ export default function Faculty360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setPubModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setPubModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">

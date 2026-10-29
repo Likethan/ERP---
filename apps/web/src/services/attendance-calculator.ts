@@ -35,13 +35,16 @@ export const DEFAULT_ATTENDANCE_POLICY: AttendancePolicy = {
  */
 export function calculateAttendancePercentage(
   counts: AttendanceCounts,
-  policy: AttendancePolicy = DEFAULT_ATTENDANCE_POLICY
+  policy: AttendancePolicy = DEFAULT_ATTENDANCE_POLICY,
 ): number {
-  const total = counts.total ?? (counts.present + counts.absent + counts.late + counts.excused);
+  const total =
+    counts.total ??
+    counts.present + counts.absent + counts.late + counts.excused;
   if (total <= 0) return 100;
 
   const excusedValue = policy.includeExcusedInTotal ? counts.excused : 0;
-  const effectivePresent = counts.present + counts.late * policy.lateArrivalWeight + excusedValue;
+  const effectivePresent =
+    counts.present + counts.late * policy.lateArrivalWeight + excusedValue;
 
   const rawPercent = (effectivePresent / total) * 100;
   return Number(Math.min(100, Math.max(0, rawPercent)).toFixed(1));
@@ -52,7 +55,7 @@ export function calculateAttendancePercentage(
  */
 export function determineAttendanceRisk(
   percentage: number,
-  policy: AttendancePolicy = DEFAULT_ATTENDANCE_POLICY
+  policy: AttendancePolicy = DEFAULT_ATTENDANCE_POLICY,
 ): AttendanceRiskLevel {
   if (percentage < policy.criticalThreshold) {
     return "CRITICAL";
@@ -70,7 +73,7 @@ export function determineAttendanceRisk(
 export function calculateSessionsNeededToRecover(
   attended: number,
   total: number,
-  targetPercentage: number = 75
+  targetPercentage: number = 75,
 ): number {
   if (total <= 0) return 0;
   const targetFraction = targetPercentage / 100;

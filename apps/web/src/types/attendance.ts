@@ -10,15 +10,19 @@
 
 export type AttendanceStatus = "PRESENT" | "ABSENT" | "LATE" | "EXCUSED";
 
-export type AttendanceSessionStatus = "SCHEDULED" | "OPEN" | "COMPLETED" | "CANCELLED";
+export type AttendanceSessionStatus =
+  "SCHEDULED" | "OPEN" | "COMPLETED" | "CANCELLED";
 
 export type AttendanceRiskLevel = "HEALTHY" | "WARNING" | "CRITICAL";
 
-export type LeaveType = "MEDICAL" | "ON_DUTY" | "CASUAL" | "SPORTS" | "ACADEMIC";
+export type LeaveType =
+  "MEDICAL" | "ON_DUTY" | "CASUAL" | "SPORTS" | "ACADEMIC";
 
-export type AttendanceLeaveStatus = "DRAFT" | "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+export type AttendanceLeaveStatus =
+  "DRAFT" | "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 
-export type AttendanceCorrectionStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+export type AttendanceCorrectionStatus =
+  "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export type SessionType = "THEORY" | "LAB" | "TUTORIAL" | "SEMINAR";
 
@@ -32,11 +36,11 @@ export interface AttendancePolicy {
   departmentId: string;
   departmentName: string;
   academicYear: string;
-  minimumPercentage: number;   // e.g. 75%
-  warningThreshold: number;    // e.g. 80%
-  criticalThreshold: number;   // e.g. 65%
+  minimumPercentage: number; // e.g. 75%
+  warningThreshold: number; // e.g. 80%
+  criticalThreshold: number; // e.g. 65%
   includeExcusedInTotal: boolean;
-  lateArrivalWeight: number;   // e.g. 0.5 (half present) or 1.0 (full present) or 0
+  lateArrivalWeight: number; // e.g. 0.5 (half present) or 1.0 (full present) or 0
   requireApprovalForCorrections: boolean;
   maxLeaveDaysConsecutive: number;
   status: "ACTIVE" | "INACTIVE";
@@ -55,9 +59,9 @@ export interface AttendanceSession {
   department: string;
   facultyId: string;
   facultyName: string;
-  date: string;               // YYYY-MM-DD
-  startTime: string;          // e.g. "09:30 AM"
-  endTime: string;            // e.g. "10:30 AM"
+  date: string; // YYYY-MM-DD
+  startTime: string; // e.g. "09:30 AM"
+  endTime: string; // e.g. "10:30 AM"
   room: string;
   sessionType: SessionType;
   status: AttendanceSessionStatus;
@@ -234,8 +238,16 @@ export interface AttendanceSummary {
   pendingLeaveRequestsCount: number;
   pendingCorrectionsCount: number;
   lowAttendanceCoursesCount: number;
-  departmentBreakdown: { department: string; percentage: number; studentCount: number }[];
-  semesterBreakdown: { semester: number; percentage: number; studentCount: number }[];
+  departmentBreakdown: {
+    department: string;
+    percentage: number;
+    studentCount: number;
+  }[];
+  semesterBreakdown: {
+    semester: number;
+    percentage: number;
+    studentCount: number;
+  }[];
 }
 
 // ==========================================

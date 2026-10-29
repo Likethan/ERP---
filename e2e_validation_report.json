@@ -5,10 +5,10 @@
   "node_installed": true,
   "npm_installed": true,
   "npx_installed": true,
-  "web_server_active": false,
+  "web_server_active": true,
   "api_server_active": false,
   "status": "BLOCKED",
-  "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev').",
+  "details": "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web.",
   "journeys_tested": [
     "Journey 01: User Login, Session Persistence, and Logout",
     "Journey 02: Unauthorized Navigation Redirects to Login",

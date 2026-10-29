@@ -10,19 +10,17 @@ Tests:
 7. Reporting and Analytics API Endpoints
 """
 
-from datetime import UTC, datetime, timedelta
 import uuid
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.exceptions import ForbiddenException, NotFoundException, ValidationException
-from app.core.export_security import sanitize_csv_field, sanitize_csv_row
+from app.core.exceptions import NotFoundException, ValidationException
+from app.core.export_security import sanitize_csv_field
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.reporting_registry import (
     DATASET_REGISTRY,
-    DIMENSION_REGISTRY,
     METRIC_REGISTRY,
     validate_query_specification,
 )
@@ -30,21 +28,14 @@ from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.core import Institution
 from app.models.people import User
 from app.models.reporting import (
-    ReportDefinition,
-    ReportExecution,
     ReportExecutionStatus,
-    ReportExport,
     ReportExportFormat,
     ReportStatus,
-    ReportVersion,
 )
 from app.schemas.reporting import (
-    DateRangeFilter,
-    FilterCondition,
     QuerySpecification,
     ReportCreate,
     ReportUpdate,
-    SavedReportCreate,
 )
 from app.services.report_export_service import ReportExportService
 from app.services.reporting_engine import ReportingEngine

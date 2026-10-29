@@ -16,7 +16,7 @@ import html
 import re
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -46,7 +46,6 @@ from app.models.knowledge import (
     KnowledgeReviewScheduleType,
     KnowledgeReviewStage,
     KnowledgeScheduledReview,
-    KnowledgeScopeType,
     KnowledgeUserAcknowledgement,
 )
 from app.models.people import Role, User, UserRoleAssignment
@@ -59,7 +58,6 @@ from app.schemas.knowledge import (
     KnowledgeItemDraftUpdate,
     KnowledgeItemMetadataUpdate,
     KnowledgePublishRequest,
-    KnowledgeRelationshipCreate,
     KnowledgeRetireRequest,
     KnowledgeReviewActionRequest,
     KnowledgeReviewSubmitRequest,
@@ -68,7 +66,6 @@ from app.schemas.knowledge import (
     KnowledgeSearchResultItem,
     KnowledgeUserAcknowledgementCreate,
 )
-
 
 # Standard institutional categories template
 DEFAULT_SYSTEM_CATEGORIES: list[dict[str, Any]] = [

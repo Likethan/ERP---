@@ -11,13 +11,12 @@ Provides:
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
     DateTime,
-    Float,
     ForeignKey,
     Index,
     Integer,
@@ -26,11 +25,11 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, SoftDeleteMixin, TenantScopedModel
-
+from app.models.base import BaseModel, TenantScopedModel
 
 # -----------------------------------------------------------------------------
 # 1. Enums
@@ -171,16 +170,16 @@ class MarketplaceApp(BaseModel):
     category: Mapped[str] = mapped_column(String(48), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False, default="")
     provider_name: Mapped[str] = mapped_column(String(128), nullable=False)
-    provider_url: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
-    provider_email: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
-    icon_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    provider_url: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    provider_email: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    icon_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
 
     supported_modules: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     required_scopes: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     connection_method: Mapped[str] = mapped_column(String(32), default=ConnectionMethod.API_KEY.value, nullable=False)
     config_schema: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
     supported_capabilities: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
-    documentation_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    documentation_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     setup_instructions: Mapped[str] = mapped_column(Text, default="", nullable=False)
     min_platform_version: Mapped[str] = mapped_column(String(32), default="1.0.0", nullable=False)
     required_entitlements: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
@@ -190,8 +189,8 @@ class MarketplaceApp(BaseModel):
     )
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_featured: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    deprecation_notice: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    deprecated_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    deprecation_notice: Mapped[str | None] = mapped_column(Text, nullable=True)
+    deprecated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     versions: Mapped[list["MarketplaceAppVersion"]] = relationship(
@@ -249,7 +248,7 @@ class TenantAppInstallation(TenantScopedModel):
         ForeignKey("marketplace_apps.id", ondelete="RESTRICT"),
         nullable=False,
     )
-    app_version_id: Mapped[Optional[UUID]] = mapped_column(
+    app_version_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("marketplace_app_versions.id", ondelete="SET NULL"),
         nullable=True,
@@ -269,25 +268,25 @@ class TenantAppInstallation(TenantScopedModel):
     )
 
     # Reference to encrypted credential vault
-    credential_id: Mapped[Optional[UUID]] = mapped_column(
+    credential_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("integration_credentials.id", ondelete="SET NULL"),
         nullable=True,
     )
-    oauth_state: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
-    oauth_state_expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    webhook_secret: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
+    oauth_state: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    oauth_state_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    webhook_secret: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
     health_status: Mapped[str] = mapped_column(String(32), default="UNKNOWN", nullable=False)
     health_details: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
-    last_health_check_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_health_check_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     consecutive_failure_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    last_successful_sync_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    last_failure_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    last_error_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    connected_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    disconnected_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    installed_by_user_id: Mapped[Optional[UUID]] = mapped_column(
+    last_successful_sync_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_failure_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_error_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    connected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    disconnected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    installed_by_user_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("people_users.id", ondelete="SET NULL"),
         nullable=True,
@@ -323,10 +322,10 @@ class TenantAppInstallationLifecycleHistory(BaseModel):
         ForeignKey("tenant_app_installations.id", ondelete="CASCADE"),
         nullable=False,
     )
-    from_status: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    from_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
     to_status: Mapped[str] = mapped_column(String(32), nullable=False)
     reason: Mapped[str] = mapped_column(Text, default="", nullable=False)
-    triggered_by_user_id: Mapped[Optional[UUID]] = mapped_column(
+    triggered_by_user_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("people_users.id", ondelete="SET NULL"),
         nullable=True,
@@ -360,8 +359,8 @@ class IntegrationSyncCheckpoint(BaseModel):
         nullable=False,
     )
     entity_type: Mapped[str] = mapped_column(String(64), nullable=False)
-    cursor_position: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
-    last_sync_timestamp: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    cursor_position: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    last_sync_timestamp: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     checkpoint_data: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
 
     installation: Mapped[TenantAppInstallation] = relationship(
@@ -395,13 +394,13 @@ class IntegrationDataConflict(BaseModel):
         String(48), default=ConflictResolutionPolicy.MANUAL_REVIEW.value, nullable=False
     )
     resolved_payload: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
-    resolved_by_user_id: Mapped[Optional[UUID]] = mapped_column(
+    resolved_by_user_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("people_users.id", ondelete="SET NULL"),
         nullable=True,
     )
-    resolved_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    resolution_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    resolution_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="OPEN", index=True, nullable=False)
 
     installation: Mapped[TenantAppInstallation] = relationship(
@@ -437,12 +436,12 @@ class MarketplaceSyncRun(BaseModel):
     records_skipped: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     records_failed: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
-    error_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    error_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     execution_metadata: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
     started_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
-    completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     installation: Mapped[TenantAppInstallation] = relationship(
         "TenantAppInstallation", back_populates="sync_runs"

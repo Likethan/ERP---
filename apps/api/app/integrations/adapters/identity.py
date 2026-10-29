@@ -6,11 +6,10 @@ Enforces:
 - Mapping external sub/email claims to internal CampusOS User entities.
 """
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlencode
-from uuid import UUID
 
 from app.core.exceptions import ValidationException
 from app.integrations.adapters.base import BaseIntegrationAdapter

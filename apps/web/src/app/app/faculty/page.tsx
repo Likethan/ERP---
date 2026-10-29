@@ -13,14 +13,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { DataGrid, ColumnDef } from "@/components/data-grid";
-import {
-  GraduationCap,
-  Award,
-  BookOpen,
-  Clock,
-  Eye,
-  Plus,
-} from "lucide-react";
+import { GraduationCap, Award, BookOpen, Clock, Eye, Plus } from "lucide-react";
 
 export default function FacultyDirectoryPage() {
   const { showToast } = useToast();
@@ -45,7 +38,9 @@ export default function FacultyDirectoryPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [employeeCode, setEmployeeCode] = useState("");
-  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [department, setDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [designation, setDesignation] = useState("Assistant Professor");
   const [qualification, setQualification] = useState("Ph.D. / M.Tech");
   const [specialization, setSpecialization] = useState("");
@@ -56,7 +51,8 @@ export default function FacultyDirectoryPage() {
       const res = await facultyService.list({
         search,
         department: selectedDept !== "ALL" ? selectedDept : undefined,
-        designation: selectedDesignation !== "ALL" ? selectedDesignation : undefined,
+        designation:
+          selectedDesignation !== "ALL" ? selectedDesignation : undefined,
         status: selectedStatus !== "ALL" ? selectedStatus : undefined,
         page: currentPage,
         pageSize,
@@ -74,7 +70,15 @@ export default function FacultyDirectoryPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, selectedDept, selectedDesignation, selectedStatus, currentPage, pageSize, showToast]);
+  }, [
+    search,
+    selectedDept,
+    selectedDesignation,
+    selectedStatus,
+    currentPage,
+    pageSize,
+    showToast,
+  ]);
 
   useEffect(() => {
     loadData();
@@ -128,124 +132,134 @@ export default function FacultyDirectoryPage() {
   };
 
   // DataGrid Column Definitions
-  const columns: ColumnDef<FacultyDetailView>[] = useMemo(() => [
-    {
-      id: "employeeCode",
-      header: "Employee Code",
-      accessorKey: "employeeCode",
-      sortable: true,
-      cell: (item) => (
-        <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-          {item.employeeCode}
-        </span>
-      ),
-    },
-    {
-      id: "name",
-      header: "Faculty Identity",
-      sortable: true,
-      accessorFn: (item) => `${item.firstName} ${item.lastName}`,
-      cell: (item) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:bg-purple-950/60 dark:text-purple-300 font-bold text-xs shrink-0 border border-purple-500/20">
-            {item.firstName[0]}
-            {item.lastName[0]}
-          </div>
-          <div>
-            <Link
-              href={`/app/faculty/${item.id}`}
-              className="font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-            >
-              {item.firstName} {item.lastName}
-            </Link>
-            <div className="text-[11px] text-slate-400 flex items-center gap-2">
-              <span>{item.email}</span>
-              <span>&bull;</span>
-              <span>{item.phone}</span>
+  const columns: ColumnDef<FacultyDetailView>[] = useMemo(
+    () => [
+      {
+        id: "employeeCode",
+        header: "Employee Code",
+        accessorKey: "employeeCode",
+        sortable: true,
+        cell: (item) => (
+          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+            {item.employeeCode}
+          </span>
+        ),
+      },
+      {
+        id: "name",
+        header: "Faculty Identity",
+        sortable: true,
+        accessorFn: (item) => `${item.firstName} ${item.lastName}`,
+        cell: (item) => (
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:bg-purple-950/60 dark:text-purple-300 font-bold text-xs shrink-0 border border-purple-500/20">
+              {item.firstName[0]}
+              {item.lastName[0]}
+            </div>
+            <div>
+              <Link
+                href={`/app/faculty/${item.id}`}
+                className="font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+              >
+                {item.firstName} {item.lastName}
+              </Link>
+              <div className="text-[11px] text-slate-400 flex items-center gap-2">
+                <span>{item.email}</span>
+                <span>&bull;</span>
+                <span>{item.phone}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: "department",
-      header: "Department",
-      sortable: true,
-      accessorKey: "department",
-      cell: (item) => (
-        <div>
-          <span className="text-xs font-medium text-slate-800 dark:text-slate-200">
-            {item.department}
-          </span>
-          <p className="text-[11px] text-slate-400">{item.designation}</p>
-        </div>
-      ),
-    },
-    {
-      id: "qualification",
-      header: "Credentials",
-      sortable: true,
-      accessorKey: "qualification",
-      cell: (item) => (
-        <div>
-          <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">
-            {item.qualification}
-          </span>
-          <p className="text-[11px] text-slate-400 truncate max-w-[180px]">
-            {item.specialization}
-          </p>
-        </div>
-      ),
-    },
-    {
-      id: "workload",
-      header: "Weekly Load",
-      sortable: true,
-      accessorFn: (item) => item.teachingLoadHours,
-      cell: (item) => (
-        <div className="flex items-center gap-2 text-xs">
-          <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-          <span className="font-mono font-semibold text-slate-900 dark:text-white">
-            {item.teachingLoadHours} hrs/wk
-          </span>
-        </div>
-      ),
-    },
-    {
-      id: "status",
-      header: "Status",
-      sortable: true,
-      accessorKey: "status",
-      cell: (item) => {
-        const variantMap: Record<string, "success" | "warning" | "destructive" | "secondary"> = {
-          ACTIVE: "success",
-          ON_LEAVE: "warning",
-          SABBATICAL: "secondary",
-          RESIGNED: "destructive",
-        };
-        return (
-          <Badge variant={variantMap[item.status] || "secondary"} dot>
-            {item.status}
-          </Badge>
-        );
+        ),
       },
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      align: "right",
-      enableHiding: false,
-      cell: (item) => (
-        <div className="flex items-center justify-end gap-1.5">
-          <Link href={`/app/faculty/${item.id}`}>
-            <Button size="sm" variant="ghost" leftIcon={<Eye className="h-3.5 w-3.5" />}>
-              Profile
-            </Button>
-          </Link>
-        </div>
-      ),
-    },
-  ], []);
+      {
+        id: "department",
+        header: "Department",
+        sortable: true,
+        accessorKey: "department",
+        cell: (item) => (
+          <div>
+            <span className="text-xs font-medium text-slate-800 dark:text-slate-200">
+              {item.department}
+            </span>
+            <p className="text-[11px] text-slate-400">{item.designation}</p>
+          </div>
+        ),
+      },
+      {
+        id: "qualification",
+        header: "Credentials",
+        sortable: true,
+        accessorKey: "qualification",
+        cell: (item) => (
+          <div>
+            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">
+              {item.qualification}
+            </span>
+            <p className="text-[11px] text-slate-400 truncate max-w-[180px]">
+              {item.specialization}
+            </p>
+          </div>
+        ),
+      },
+      {
+        id: "workload",
+        header: "Weekly Load",
+        sortable: true,
+        accessorFn: (item) => item.teachingLoadHours,
+        cell: (item) => (
+          <div className="flex items-center gap-2 text-xs">
+            <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+            <span className="font-mono font-semibold text-slate-900 dark:text-white">
+              {item.teachingLoadHours} hrs/wk
+            </span>
+          </div>
+        ),
+      },
+      {
+        id: "status",
+        header: "Status",
+        sortable: true,
+        accessorKey: "status",
+        cell: (item) => {
+          const variantMap: Record<
+            string,
+            "success" | "warning" | "destructive" | "secondary"
+          > = {
+            ACTIVE: "success",
+            ON_LEAVE: "warning",
+            SABBATICAL: "secondary",
+            RESIGNED: "destructive",
+          };
+          return (
+            <Badge variant={variantMap[item.status] || "secondary"} dot>
+              {item.status}
+            </Badge>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        align: "right",
+        enableHiding: false,
+        cell: (item) => (
+          <div className="flex items-center justify-end gap-1.5">
+            <Link href={`/app/faculty/${item.id}`}>
+              <Button
+                size="sm"
+                variant="ghost"
+                leftIcon={<Eye className="h-3.5 w-3.5" />}
+              >
+                Profile
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
 
   // Custom filter slot in DataGrid
   const customFilterSlot = (
@@ -310,7 +324,8 @@ export default function FacultyDirectoryPage() {
             Faculty Directory & Professorial Roster
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Professorial appointments, designations, academic teaching workload, and laboratory supervisors.
+            Professorial appointments, designations, academic teaching workload,
+            and laboratory supervisors.
           </p>
         </div>
 
@@ -490,7 +505,9 @@ export default function FacultyDirectoryPage() {
                 <option value="Professor">Professor & Chair</option>
                 <option value="Associate Professor">Associate Professor</option>
                 <option value="Assistant Professor">Assistant Professor</option>
-                <option value="Adjunct Professor">Adjunct / Visiting Professor</option>
+                <option value="Adjunct Professor">
+                  Adjunct / Visiting Professor
+                </option>
               </select>
             </div>
             <div>

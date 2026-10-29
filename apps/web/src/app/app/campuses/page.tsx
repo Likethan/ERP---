@@ -35,7 +35,9 @@ export default function CampusesPage() {
       setInstitution(instRes.data);
       setCampuses(campRes.data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load campus locations");
+      setError(
+        err instanceof Error ? err.message : "Failed to load campus locations",
+      );
     } finally {
       setLoading(false);
     }
@@ -73,7 +75,9 @@ export default function CampusesPage() {
       setCampusAddress("");
       await loadData();
     } catch (err: unknown) {
-      setCampusError(err instanceof Error ? err.message : "Failed to create campus branch");
+      setCampusError(
+        err instanceof Error ? err.message : "Failed to create campus branch",
+      );
     } finally {
       setSubmittingCampus(false);
     }
@@ -84,23 +88,39 @@ export default function CampusesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Campus Locations</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Campus Locations
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Physical campus locations and institutional branches for {institution?.legal_name || "the institution"}.
+            Physical campus locations and institutional branches for{" "}
+            {institution?.legal_name || "the institution"}.
           </p>
         </div>
         {canManage && (
           <button
-              onClick={() => {
-                setEditingCampus(null);
-                setCampusCode(""); setCampusName(""); setCampusCity(""); setCampusAddress("");
+            onClick={() => {
+              setEditingCampus(null);
+              setCampusCode("");
+              setCampusName("");
+              setCampusCity("");
+              setCampusAddress("");
               setCampusError(null);
               setShowAddCampus(true);
             }}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-colors self-start sm:self-auto"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add Campus Branch
           </button>
@@ -118,17 +138,35 @@ export default function CampusesPage() {
 
       {loading ? (
         <div className="flex items-center justify-center p-12 text-slate-500 text-sm">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          <svg
+            className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            />
           </svg>
           Loading campus locations...
         </div>
       ) : campuses.length === 0 ? (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-16 text-center text-slate-500 space-y-2">
-          <p className="text-base font-semibold text-slate-300">No campuses configured</p>
+          <p className="text-base font-semibold text-slate-300">
+            No campuses configured
+          </p>
           <p className="text-sm text-slate-400">
-            Add your primary campus to associate departments, classrooms, and facilities.
+            Add your primary campus to associate departments, classrooms, and
+            facilities.
           </p>
         </div>
       ) : (
@@ -156,7 +194,12 @@ export default function CampusesPage() {
                 <div>
                   <h3 className="text-lg font-bold text-white">{c.name}</h3>
                   <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg
+                      className="w-3.5 h-3.5 text-slate-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -182,7 +225,22 @@ export default function CampusesPage() {
 
               <div className="pt-4 mt-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
                 <span>Campus ID: {c.id.substring(0, 8)}...</span>
-                {canManage && <button onClick={() => { setEditingCampus(c); setCampusCode(c.code); setCampusName(c.name); setCampusCity(c.city); setCampusAddress(c.address || ""); setCampusError(null); setShowAddCampus(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800">Edit</button>}
+                {canManage && (
+                  <button
+                    onClick={() => {
+                      setEditingCampus(c);
+                      setCampusCode(c.code);
+                      setCampusName(c.name);
+                      setCampusCity(c.city);
+                      setCampusAddress(c.address || "");
+                      setCampusError(null);
+                      setShowAddCampus(true);
+                    }}
+                    className="rounded-md border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800"
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -194,8 +252,16 @@ export default function CampusesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h2 className="text-lg font-bold text-white">{editingCampus ? "Edit Campus Location" : "Add Campus Location"}</h2>
-              <button onClick={() => { setShowAddCampus(false); setEditingCampus(null); }} className="text-slate-400 hover:text-white">
+              <h2 className="text-lg font-bold text-white">
+                {editingCampus ? "Edit Campus Location" : "Add Campus Location"}
+              </h2>
+              <button
+                onClick={() => {
+                  setShowAddCampus(false);
+                  setEditingCampus(null);
+                }}
+                className="text-slate-400 hover:text-white"
+              >
                 ✕
               </button>
             </div>
@@ -209,7 +275,9 @@ export default function CampusesPage() {
             <form onSubmit={handleCreateCampus} className="space-y-4 text-sm">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Campus Code *</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Campus Code *
+                  </label>
                   <input
                     type="text"
                     required
@@ -221,7 +289,9 @@ export default function CampusesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">City / Region *</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    City / Region *
+                  </label>
                   <input
                     type="text"
                     required
@@ -234,7 +304,9 @@ export default function CampusesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Campus Name *</label>
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Campus Name *
+                </label>
                 <input
                   type="text"
                   required
@@ -246,7 +318,9 @@ export default function CampusesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Physical Address</label>
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Physical Address
+                </label>
                 <textarea
                   rows={2}
                   placeholder="Street address, postal code, landmarks..."
@@ -257,7 +331,22 @@ export default function CampusesPage() {
                 />
               </div>
 
-              {editingCampus && <label className="flex items-center gap-2 text-xs text-slate-300"><input type="checkbox" checked={editingCampus.is_active} onChange={(e) => setEditingCampus({ ...editingCampus, is_active: e.target.checked })} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Campus is operational</label>}
+              {editingCampus && (
+                <label className="flex items-center gap-2 text-xs text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={editingCampus.is_active}
+                    onChange={(e) =>
+                      setEditingCampus({
+                        ...editingCampus,
+                        is_active: e.target.checked,
+                      })
+                    }
+                    className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500"
+                  />{" "}
+                  Campus is operational
+                </label>
+              )}
 
               <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
@@ -269,10 +358,14 @@ export default function CampusesPage() {
                 </button>
                 <button
                   type="submit"
-                    disabled={submittingCampus}
+                  disabled={submittingCampus}
                   className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:opacity-50"
                 >
-                  {submittingCampus ? "Saving..." : editingCampus ? "Save changes" : "Create Campus"}
+                  {submittingCampus
+                    ? "Saving..."
+                    : editingCampus
+                      ? "Save changes"
+                      : "Create Campus"}
                 </button>
               </div>
             </form>

@@ -8,18 +8,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.governance_registry import DataClassificationLevel, MaskingStrategy
 from app.models.governance import (
-    AccessReviewDecisionType,
-    AccessReviewStatus,
     GovernancePolicyCategory,
     GovernancePolicyStatus,
-    HoldStatus,
-    PrivacyRequestStatus,
     PrivacyRequestType,
     RetentionAction,
     RetentionTriggerEvent,
     RetentionUnit,
 )
-
 
 # =============================================================================
 # 1. DATA CLASSIFICATION & SENSITIVE FIELDS

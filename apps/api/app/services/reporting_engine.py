@@ -5,23 +5,14 @@ tenant-isolated SQLAlchemy aggregation queries across all institutional domains.
 Enforces role-level data scoping, canonical metric formulas, and output normalization.
 """
 
-from datetime import UTC, date, datetime, timedelta
 import logging
-from typing import Any
+from datetime import UTC, date, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import (
-    Boolean,
-    Date,
-    DateTime,
-    Numeric,
-    String,
     and_,
     case,
-    cast,
-    desc,
     func,
-    or_,
     select,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,20 +20,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import ForbiddenException, ValidationException
 from app.core.reporting_registry import (
     DATASET_REGISTRY,
-    DIMENSION_REGISTRY,
-    METRIC_REGISTRY,
     validate_query_specification,
 )
 from app.models.academics import CourseOffering, Subject
 from app.models.attendance import AttendanceRecord, AttendanceSession
-from app.models.campus import CampusEvent, EventRegistration
-from app.models.core import Department, Program, Section, Semester
-from app.models.documents import Document, DocumentCategory
-from app.models.examination import Assessment, SemesterExamResult, StudentAssessmentMark
-from app.models.finance import Invoice, PaymentTransaction
-from app.models.infrastructure import Hostel, HostelAllocation, HostelBed
+from app.models.core import Department, Program
+from app.models.documents import Document
+from app.models.examination import SemesterExamResult
+from app.models.finance import Invoice
 from app.models.people import FacultyProfile, Role, StudentProfile, User, UserRoleAssignment
-from app.models.placement import Company, PlacementApplication, PlacementOffer
+from app.models.placement import PlacementOffer
 from app.schemas.reporting import (
     AnalyticsQueryResult,
     ChartSeries,

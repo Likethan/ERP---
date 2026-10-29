@@ -52,7 +52,9 @@ export default function IntelligenceOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [summary, setSummary] = useState<IntelligenceOverviewSummary | null>(null);
+  const [summary, setSummary] = useState<IntelligenceOverviewSummary | null>(
+    null,
+  );
   const [healthMetrics, setHealthMetrics] = useState<CampusHealthMetric[]>([]);
   const [recentInsights, setRecentInsights] = useState<Insight[]>([]);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
@@ -73,14 +75,18 @@ export default function IntelligenceOverviewPage() {
 
       if (sumRes.success && sumRes.data) setSummary(sumRes.data);
       if (healthRes.success && healthRes.data) setHealthMetrics(healthRes.data);
-      if (insRes.success && insRes.data) setRecentInsights(insRes.data.slice(0, 4));
-      if (altRes.success && altRes.data) setRecentAlerts(altRes.data.slice(0, 4));
-      if (actRes.success && actRes.data) setRecentActivities(actRes.data.slice(0, 5));
+      if (insRes.success && insRes.data)
+        setRecentInsights(insRes.data.slice(0, 4));
+      if (altRes.success && altRes.data)
+        setRecentAlerts(altRes.data.slice(0, 4));
+      if (actRes.success && actRes.data)
+        setRecentActivities(actRes.data.slice(0, 5));
 
       if (isManual) {
         toast({
           title: "Intelligence Telemetry Refreshed",
-          description: "All cross-module signals, health indices, and alerts synchronized.",
+          description:
+            "All cross-module signals, health indices, and alerts synchronized.",
           variant: "success",
         });
       }
@@ -116,7 +122,8 @@ export default function IntelligenceOverviewPage() {
             CampusOS Intelligence
           </h1>
           <p className="text-sm text-slate-500">
-            Unified executive operational telemetry, early-warning risk radar, and cross-domain insights.
+            Unified executive operational telemetry, early-warning risk radar,
+            and cross-domain insights.
           </p>
         </div>
 
@@ -128,12 +135,17 @@ export default function IntelligenceOverviewPage() {
             disabled={refreshing}
             className="gap-1.5 text-xs"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
+            />
             Refresh Signals
           </Button>
 
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 font-semibold text-xs shadow-sm bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 font-semibold text-xs shadow-sm bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Launch AI Assistant
             </Button>
@@ -220,16 +232,25 @@ export default function IntelligenceOverviewPage() {
             What do you want to understand about your campus?
           </h2>
           <p className="text-xs text-blue-200/90 leading-relaxed">
-            Ask complex queries across student attendance, academic progression, fee collections, corporate placements, and digital records with full explainability.
+            Ask complex queries across student attendance, academic progression,
+            fee collections, corporate placements, and digital records with full
+            explainability.
           </p>
           <div className="pt-2 flex flex-wrap items-center gap-2">
             <Link href="/app/intelligence/assistant">
-              <Button size="sm" className="bg-white hover:bg-slate-100 text-blue-900 font-semibold text-xs gap-1.5">
+              <Button
+                size="sm"
+                className="bg-white hover:bg-slate-100 text-blue-900 font-semibold text-xs gap-1.5"
+              >
                 Open Assistant Console <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
             <Link href="/app/intelligence/analytics">
-              <Button size="sm" variant="outline" className="text-white border-white/30 hover:bg-white/10 text-xs">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-white border-white/30 hover:bg-white/10 text-xs"
+              >
                 Cross-Domain Analytics
               </Button>
             </Link>
@@ -242,11 +263,20 @@ export default function IntelligenceOverviewPage() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Domain Operational Health</h2>
-            <p className="text-xs text-slate-500">Autonomous health scoring and alert summaries across campus subsystems</p>
+            <h2 className="text-base font-semibold text-slate-900">
+              Domain Operational Health
+            </h2>
+            <p className="text-xs text-slate-500">
+              Autonomous health scoring and alert summaries across campus
+              subsystems
+            </p>
           </div>
           <Link href="/app/intelligence/analytics">
-            <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-blue-600 gap-1"
+            >
               Explore Analytics <ArrowRight className="w-3 h-3" />
             </Button>
           </Link>
@@ -264,30 +294,40 @@ export default function IntelligenceOverviewPage() {
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-xs text-slate-900">{domain}</span>
+                      <span className="font-semibold text-xs text-slate-900">
+                        {domain}
+                      </span>
                       <Badge
                         variant={
                           data.status === "EXCELLENT"
                             ? "success"
                             : data.status === "GOOD"
-                            ? "info"
-                            : "warning"
+                              ? "info"
+                              : "warning"
                         }
                         className="text-[10px]"
                       >
                         {data.healthScore}/100 • {data.status}
                       </Badge>
                     </div>
-                    <p className="text-xs font-medium text-slate-700 mb-1">{data.primaryMetric}</p>
-                    <p className="text-[11px] text-slate-500 line-clamp-2">{data.summary}</p>
+                    <p className="text-xs font-medium text-slate-700 mb-1">
+                      {data.primaryMetric}
+                    </p>
+                    <p className="text-[11px] text-slate-500 line-clamp-2">
+                      {data.summary}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2 text-[11px]">
                     <span className="text-slate-500">
                       {data.activeAlerts > 0 ? (
-                        <span className="text-amber-700 font-medium">{data.activeAlerts} active alert</span>
+                        <span className="text-amber-700 font-medium">
+                          {data.activeAlerts} active alert
+                        </span>
                       ) : (
-                        <span className="text-emerald-700 font-medium">No alerts</span>
+                        <span className="text-emerald-700 font-medium">
+                          No alerts
+                        </span>
                       )}
                     </span>
                     <Link
@@ -312,10 +352,17 @@ export default function IntelligenceOverviewPage() {
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 Active Insights & Recommendations
               </h2>
-              <p className="text-xs text-slate-500">Actionable operational suggestions based on cross-module correlations</p>
+              <p className="text-xs text-slate-500">
+                Actionable operational suggestions based on cross-module
+                correlations
+              </p>
             </div>
             <Link href="/app/intelligence/insights">
-              <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-blue-600 gap-1"
+              >
                 View All <ArrowRight className="w-3 h-3" />
               </Button>
             </Link>
@@ -346,10 +393,16 @@ export default function IntelligenceOverviewPage() {
                 <AlertTriangle className="w-4 h-4 text-amber-600" />
                 Operational Early-Warning Alerts
               </h2>
-              <p className="text-xs text-slate-500">Threshold breaches and immediate institutional SLA tasks</p>
+              <p className="text-xs text-slate-500">
+                Threshold breaches and immediate institutional SLA tasks
+              </p>
             </div>
             <Link href="/app/intelligence/alerts">
-              <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-blue-600 gap-1"
+              >
                 Alert Center <ArrowRight className="w-3 h-3" />
               </Button>
             </Link>
@@ -381,10 +434,16 @@ export default function IntelligenceOverviewPage() {
               <Activity className="w-4 h-4 text-slate-500" />
               Recent Intelligence Audit & Query Activity
             </CardTitle>
-            <p className="text-xs text-slate-500">Live operational ledger of AI tool invocations and user queries</p>
+            <p className="text-xs text-slate-500">
+              Live operational ledger of AI tool invocations and user queries
+            </p>
           </div>
           <Link href="/app/intelligence/activity">
-            <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-blue-600 gap-1"
+            >
               Full Activity Log <ArrowRight className="w-3 h-3" />
             </Button>
           </Link>
@@ -397,22 +456,38 @@ export default function IntelligenceOverviewPage() {
                 <Skeleton className="h-8 w-full" />
               </div>
             ) : recentActivities.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-500">No recent activity recorded.</div>
+              <div className="p-6 text-center text-xs text-slate-500">
+                No recent activity recorded.
+              </div>
             ) : (
               recentActivities.map((act) => (
-                <div key={act.id} className="p-3 sm:px-4 flex items-center justify-between text-xs hover:bg-slate-50 transition-colors">
+                <div
+                  key={act.id}
+                  className="p-3 sm:px-4 flex items-center justify-between text-xs hover:bg-slate-50 transition-colors"
+                >
                   <div className="space-y-0.5 pr-2">
-                    <p className="font-semibold text-slate-800 line-clamp-1">{act.query}</p>
+                    <p className="font-semibold text-slate-800 line-clamp-1">
+                      {act.query}
+                    </p>
                     <div className="flex flex-wrap items-center gap-2 text-slate-500 text-[11px]">
-                      <span>{act.userName} ({act.userRole})</span>
+                      <span>
+                        {act.userName} ({act.userRole})
+                      </span>
                       <span>•</span>
-                      <span className="font-mono text-slate-600">{act.toolsInvoked.join(", ")}</span>
+                      <span className="font-mono text-slate-600">
+                        {act.toolsInvoked.join(", ")}
+                      </span>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <Badge variant="neutral" className="text-[10px]">{act.durationMs}ms</Badge>
+                    <Badge variant="neutral" className="text-[10px]">
+                      {act.durationMs}ms
+                    </Badge>
                     <p className="text-[10px] text-slate-400 mt-0.5">
-                      {new Date(act.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(act.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                   </div>
                 </div>

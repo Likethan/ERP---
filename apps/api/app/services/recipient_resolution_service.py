@@ -7,14 +7,13 @@ Enforces:
 - Privacy preservation: sensitive records are never leaked across tenant or unauthorized boundaries.
 """
 
-from dataclasses import dataclass, field
 import logging
+from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID
 
 from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.models.case_management import QueueMember
 from app.models.core import TenantMembership

@@ -4,7 +4,11 @@ import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceCorrection, AttendanceCorrectionStatus, AttendanceStatus } from "@/types/attendance";
+import {
+  AttendanceCorrection,
+  AttendanceCorrectionStatus,
+  AttendanceStatus,
+} from "@/types/attendance";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { ColumnDef } from "@/components/data-grid/data-grid.types";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +37,11 @@ export default function AttendanceCorrectionsPage() {
 
   // Review Modal
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedCorrection, setSelectedCorrection] = useState<AttendanceCorrection | null>(null);
-  const [reviewAction, setReviewAction] = useState<"APPROVED" | "REJECTED">("APPROVED");
+  const [selectedCorrection, setSelectedCorrection] =
+    useState<AttendanceCorrection | null>(null);
+  const [reviewAction, setReviewAction] = useState<"APPROVED" | "REJECTED">(
+    "APPROVED",
+  );
   const [reviewNotes, setReviewNotes] = useState("");
   const [reviewing, setReviewing] = useState(false);
 
@@ -49,7 +56,11 @@ export default function AttendanceCorrectionsPage() {
       }
     } catch (err) {
       console.error("Failed to load corrections", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load attendance corrections." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load attendance corrections.",
+      });
     } finally {
       setLoading(false);
     }
@@ -68,7 +79,7 @@ export default function AttendanceCorrectionsPage() {
         selectedCorrection.id,
         reviewAction,
         reviewNotes,
-        "Dr. K. S. Anand (HOD - CSE)"
+        "Dr. K. S. Anand (HOD - CSE)",
       );
 
       if (res.success) {
@@ -84,7 +95,11 @@ export default function AttendanceCorrectionsPage() {
       }
     } catch (err) {
       console.error("Failed to review correction", err);
-      showToast({ type: "error", title: "Review Error", message: "Could not process correction review." });
+      showToast({
+        type: "error",
+        title: "Review Error",
+        message: "Could not process correction review.",
+      });
     } finally {
       setReviewing(false);
     }
@@ -165,8 +180,12 @@ export default function AttendanceCorrectionsPage() {
           <div className="text-xs text-slate-600 dark:text-slate-400">
             {row.reviewedBy ? (
               <div>
-                <div className="font-medium text-slate-800 dark:text-slate-200">{row.reviewedBy}</div>
-                <div className="text-[10px] text-slate-400">{new Date(row.reviewedAt || "").toLocaleDateString()}</div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">
+                  {row.reviewedBy}
+                </div>
+                <div className="text-[10px] text-slate-400">
+                  {new Date(row.reviewedAt || "").toLocaleDateString()}
+                </div>
               </div>
             ) : (
               <span className="text-slate-400 italic">Pending HOD</span>
@@ -195,7 +214,7 @@ export default function AttendanceCorrectionsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -207,13 +226,16 @@ export default function AttendanceCorrectionsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300">
               Audit Scrutiny
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Supervised Attendance Revisions</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Supervised Attendance Revisions
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Attendance Corrections Workflow
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Supervised approval mechanism ensuring locked session registers are never silently modified.
+            Supervised approval mechanism ensuring locked session registers are
+            never silently modified.
           </p>
         </div>
       </div>
@@ -260,17 +282,28 @@ export default function AttendanceCorrectionsPage() {
               <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
                 <div className="flex justify-between">
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {selectedCorrection.studentName} ({selectedCorrection.rollNumber})
+                    {selectedCorrection.studentName} (
+                    {selectedCorrection.rollNumber})
                   </span>
-                  <Badge variant={selectedCorrection.status === "APPROVED" ? "success" : "warning"}>
+                  <Badge
+                    variant={
+                      selectedCorrection.status === "APPROVED"
+                        ? "success"
+                        : "warning"
+                    }
+                  >
                     {selectedCorrection.status}
                   </Badge>
                 </div>
                 <div className="text-slate-600 dark:text-slate-400 mt-1">
-                  <strong>Course: </strong>{selectedCorrection.courseCode} • <strong>Date: </strong>{selectedCorrection.sessionDate}
+                  <strong>Course: </strong>
+                  {selectedCorrection.courseCode} • <strong>Date: </strong>
+                  {selectedCorrection.sessionDate}
                 </div>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className="font-medium text-slate-500">Requested Transition:</span>
+                  <span className="font-medium text-slate-500">
+                    Requested Transition:
+                  </span>
                   <span className="px-2 py-0.5 text-xs font-semibold rounded bg-rose-100 text-rose-800">
                     {selectedCorrection.originalStatus}
                   </span>
@@ -280,7 +313,8 @@ export default function AttendanceCorrectionsPage() {
                   </span>
                 </div>
                 <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
-                  <strong>Justification: </strong>{selectedCorrection.reason}
+                  <strong>Justification: </strong>
+                  {selectedCorrection.reason}
                 </div>
               </div>
 
@@ -292,15 +326,26 @@ export default function AttendanceCorrectionsPage() {
                 </div>
                 <div className="space-y-2.5">
                   {selectedCorrection.auditTimeline.map((step, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-[11px]">
+                    <div
+                      key={idx}
+                      className="flex items-start gap-2.5 text-[11px]"
+                    >
                       <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
                       <div>
-                        <div className="font-medium text-slate-800 dark:text-slate-200">{step.action}</div>
+                        <div className="font-medium text-slate-800 dark:text-slate-200">
+                          {step.action}
+                        </div>
                         <div className="text-slate-500">
-                          {step.actor} • {new Date(step.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {step.actor} •{" "}
+                          {new Date(step.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </div>
                         {step.details && (
-                          <div className="text-slate-400 italic mt-0.5">&ldquo;{step.details}&rdquo;</div>
+                          <div className="text-slate-400 italic mt-0.5">
+                            &ldquo;{step.details}&rdquo;
+                          </div>
                         )}
                       </div>
                     </div>
@@ -363,7 +408,9 @@ export default function AttendanceCorrectionsPage() {
                 </Button>
                 <Button
                   type="submit"
-                  variant={reviewAction === "APPROVED" ? "primary" : "destructive"}
+                  variant={
+                    reviewAction === "APPROVED" ? "primary" : "destructive"
+                  }
                   disabled={reviewing}
                 >
                   {reviewing ? "Executing..." : `Confirm ${reviewAction}`}
@@ -374,7 +421,11 @@ export default function AttendanceCorrectionsPage() {
 
           {selectedCorrection?.status !== "PENDING" && (
             <div className="pt-2 flex justify-end">
-              <Button type="button" variant="outline" onClick={() => setReviewModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setReviewModalOpen(false)}
+              >
                 Close
               </Button>
             </div>

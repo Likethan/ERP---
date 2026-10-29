@@ -103,12 +103,16 @@ export default function SecurityPage() {
   const [activeTab, setActiveTab] = useState<"soc" | "credentials">("soc");
 
   // SOC state
-  const [socSubTab, setSocSubTab] = useState<"incidents" | "detections" | "rules" | "actions">("incidents");
+  const [socSubTab, setSocSubTab] = useState<
+    "incidents" | "detections" | "rules" | "actions"
+  >("incidents");
   const [overview, setOverview] = useState<SocOverview | null>(null);
   const [incidents, setIncidents] = useState<IncidentItem[]>([]);
   const [detections, setDetections] = useState<DetectionItem[]>([]);
   const [rules, setRules] = useState<RuleItem[]>([]);
-  const [selectedIncident, setSelectedIncident] = useState<IncidentItem | null>(null);
+  const [selectedIncident, setSelectedIncident] = useState<IncidentItem | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
   const [socError, setSocError] = useState<string | null>(null);
 
@@ -149,17 +153,26 @@ export default function SecurityPage() {
     setLoading(true);
     setSocError(null);
     try {
-      const [overviewData, incidentsData, detectionsData, rulesData] = await Promise.allSettled([
-        apiFetch<SocOverview>("/api/v1/security/overview"),
-        apiFetch<{ items: IncidentItem[]; total: number }>("/api/v1/security/incidents"),
-        apiFetch<{ items: DetectionItem[]; total: number }>("/api/v1/security/detections"),
-        apiFetch<RuleItem[]>("/api/v1/security/rules"),
-      ]);
+      const [overviewData, incidentsData, detectionsData, rulesData] =
+        await Promise.allSettled([
+          apiFetch<SocOverview>("/api/v1/security/overview"),
+          apiFetch<{ items: IncidentItem[]; total: number }>(
+            "/api/v1/security/incidents",
+          ),
+          apiFetch<{ items: DetectionItem[]; total: number }>(
+            "/api/v1/security/detections",
+          ),
+          apiFetch<RuleItem[]>("/api/v1/security/rules"),
+        ]);
 
-      if (overviewData.status === "fulfilled") setOverview(overviewData.value.data);
-      if (incidentsData.status === "fulfilled") setIncidents(incidentsData.value.data?.items || []);
-      if (detectionsData.status === "fulfilled") setDetections(detectionsData.value.data?.items || []);
-      if (rulesData.status === "fulfilled") setRules(rulesData.value.data || []);
+      if (overviewData.status === "fulfilled")
+        setOverview(overviewData.value.data);
+      if (incidentsData.status === "fulfilled")
+        setIncidents(incidentsData.value.data?.items || []);
+      if (detectionsData.status === "fulfilled")
+        setDetections(detectionsData.value.data?.items || []);
+      if (rulesData.status === "fulfilled")
+        setRules(rulesData.value.data || []);
     } catch (err: unknown) {
       if (err instanceof Error) setSocError(err.message);
       else setSocError("Failed to fetch security operations data.");
@@ -190,17 +203,23 @@ export default function SecurityPage() {
         }),
       });
 
-      setSuccessMessage("Password changed successfully. All other active sessions have been invalidated across devices.");
+      setSuccessMessage(
+        "Password changed successfully. All other active sessions have been invalidated across devices.",
+      );
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: unknown) {
       if (err instanceof ApiClientError) {
-        setErrorMessage(err.errorResponse.error.message || "Failed to update password.");
+        setErrorMessage(
+          err.errorResponse.error.message || "Failed to update password.",
+        );
       } else if (err instanceof Error) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage("An unexpected error occurred while changing password.");
+        setErrorMessage(
+          "An unexpected error occurred while changing password.",
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -210,13 +229,16 @@ export default function SecurityPage() {
   const handleStatusTransition = async (incidentId: string) => {
     if (!newStatus) return;
     try {
-      const updated = await apiFetch<IncidentItem>(`/api/v1/security/incidents/${incidentId}/status`, {
-        method: "POST",
-        body: JSON.stringify({
-          status: newStatus,
-          reason: transitionReason || undefined,
-        }),
-      });
+      const updated = await apiFetch<IncidentItem>(
+        `/api/v1/security/incidents/${incidentId}/status`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            status: newStatus,
+            reason: transitionReason || undefined,
+          }),
+        },
+      );
       setSelectedIncident(updated.data);
       setNewStatus("");
       setTransitionReason("");
@@ -238,7 +260,9 @@ export default function SecurityPage() {
       });
       setNewNoteContent("");
       // Refresh selected incident details
-      const refreshed = await apiFetch<IncidentItem>(`/api/v1/security/incidents/${incidentId}`);
+      const refreshed = await apiFetch<IncidentItem>(
+        `/api/v1/security/incidents/${incidentId}`,
+      );
       setSelectedIncident(refreshed.data);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Failed to add note");
@@ -251,12 +275,18 @@ export default function SecurityPage() {
         method: "POST",
       });
       if (selectedIncident) {
-        const refreshed = await apiFetch<IncidentItem>(`/api/v1/security/incidents/${selectedIncident.id}`);
+        const refreshed = await apiFetch<IncidentItem>(
+          `/api/v1/security/incidents/${selectedIncident.id}`,
+        );
         setSelectedIncident(refreshed.data);
       }
       loadSocData();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to execute containment action");
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Failed to execute containment action",
+      );
     }
   };
 
@@ -266,12 +296,18 @@ export default function SecurityPage() {
         method: "POST",
       });
       if (selectedIncident) {
-        const refreshed = await apiFetch<IncidentItem>(`/api/v1/security/incidents/${selectedIncident.id}`);
+        const refreshed = await apiFetch<IncidentItem>(
+          `/api/v1/security/incidents/${selectedIncident.id}`,
+        );
         setSelectedIncident(refreshed.data);
       }
       loadSocData();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to approve containment action");
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Failed to approve containment action",
+      );
     }
   };
 
@@ -289,7 +325,9 @@ export default function SecurityPage() {
     }
   };
 
-  const getSeverityBadgeVariant = (sev: string): "destructive" | "warning" | "info" | "secondary" | "neutral" => {
+  const getSeverityBadgeVariant = (
+    sev: string,
+  ): "destructive" | "warning" | "info" | "secondary" | "neutral" => {
     switch (sev.toUpperCase()) {
       case "CRITICAL":
         return "destructive";
@@ -304,7 +342,15 @@ export default function SecurityPage() {
     }
   };
 
-  const getStatusBadgeVariant = (st: string): "destructive" | "warning" | "success" | "info" | "secondary" | "neutral" => {
+  const getStatusBadgeVariant = (
+    st: string,
+  ):
+    | "destructive"
+    | "warning"
+    | "success"
+    | "info"
+    | "secondary"
+    | "neutral" => {
     switch (st.toUpperCase()) {
       case "NEW":
         return "destructive";
@@ -325,8 +371,13 @@ export default function SecurityPage() {
   };
 
   const filteredIncidents = incidents.filter((inc) => {
-    if (statusFilter !== "ALL" && inc.status.toUpperCase() !== statusFilter) return false;
-    if (severityFilter !== "ALL" && inc.severity.toUpperCase() !== severityFilter) return false;
+    if (statusFilter !== "ALL" && inc.status.toUpperCase() !== statusFilter)
+      return false;
+    if (
+      severityFilter !== "ALL" &&
+      inc.severity.toUpperCase() !== severityFilter
+    )
+      return false;
     if (
       searchQuery &&
       !inc.incident_number.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -347,7 +398,8 @@ export default function SecurityPage() {
             Security & Operations Center
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Enterprise threat detection, incident containment, forensic investigation, and credential governance.
+            Enterprise threat detection, incident containment, forensic
+            investigation, and credential governance.
           </p>
         </div>
 
@@ -385,7 +437,11 @@ export default function SecurityPage() {
               value={overview?.critical_incidents ?? 0}
               subtitle="Immediate action required"
               icon={<ShieldAlert className="h-5 w-5 text-red-400" />}
-              variant={overview && overview.critical_incidents > 0 ? "amber" : "default"}
+              variant={
+                overview && overview.critical_incidents > 0
+                  ? "amber"
+                  : "default"
+              }
             />
             <StatCard
               title="High Threats"
@@ -463,7 +519,9 @@ export default function SecurityPage() {
               disabled={loading}
               className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-2.5 py-1.5 rounded border border-slate-800 hover:bg-slate-900"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+              />
               Refresh Telemetry
             </button>
           </div>
@@ -534,13 +592,19 @@ export default function SecurityPage() {
                   <tbody className="divide-y divide-slate-800/60 text-slate-300">
                     {filteredIncidents.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-8 text-center text-slate-500">
+                        <td
+                          colSpan={6}
+                          className="py-8 text-center text-slate-500"
+                        >
                           No security incidents found matching criteria.
                         </td>
                       </tr>
                     ) : (
                       filteredIncidents.map((inc) => (
-                        <tr key={inc.id} className="hover:bg-slate-800/30 transition-colors">
+                        <tr
+                          key={inc.id}
+                          className="hover:bg-slate-800/30 transition-colors"
+                        >
                           <td className="py-3.5 px-4 font-mono font-medium text-indigo-400">
                             {inc.incident_number}
                           </td>
@@ -548,7 +612,9 @@ export default function SecurityPage() {
                             {inc.title}
                           </td>
                           <td className="py-3.5 px-4">
-                            <Badge variant={getSeverityBadgeVariant(inc.severity)}>
+                            <Badge
+                              variant={getSeverityBadgeVariant(inc.severity)}
+                            >
                               {inc.severity}
                             </Badge>
                           </td>
@@ -563,7 +629,9 @@ export default function SecurityPage() {
                           <td className="py-3.5 px-4 text-right">
                             <button
                               onClick={async () => {
-                                const details = await apiFetch<IncidentItem>(`/api/v1/security/incidents/${inc.id}`);
+                                const details = await apiFetch<IncidentItem>(
+                                  `/api/v1/security/incidents/${inc.id}`,
+                                );
                                 setSelectedIncident(details.data);
                               }}
                               className="text-indigo-400 hover:text-indigo-300 font-medium px-2 py-1 rounded hover:bg-indigo-950/50"
@@ -598,20 +666,34 @@ export default function SecurityPage() {
                 <tbody className="divide-y divide-slate-800/60 text-slate-300">
                   {detections.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={7}
+                        className="py-8 text-center text-slate-500"
+                      >
                         No active detections recorded.
                       </td>
                     </tr>
                   ) : (
                     detections.map((det) => (
-                      <tr key={det.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={det.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4 font-mono font-medium text-amber-400">
                           {det.rule_id}
                         </td>
-                        <td className="py-3 px-4 text-white font-medium">{det.event_type}</td>
-                        <td className="py-3 px-4 text-slate-400">{det.detection_source}</td>
-                        <td className="py-3 px-4 text-slate-300">{det.actor_id || "ANONYMOUS"}</td>
-                        <td className="py-3 px-4 font-mono text-slate-400">{det.ip_address}</td>
+                        <td className="py-3 px-4 text-white font-medium">
+                          {det.event_type}
+                        </td>
+                        <td className="py-3 px-4 text-slate-400">
+                          {det.detection_source}
+                        </td>
+                        <td className="py-3 px-4 text-slate-300">
+                          {det.actor_id || "ANONYMOUS"}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-slate-400">
+                          {det.ip_address}
+                        </td>
                         <td className="py-3 px-4">
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-200">
                             {det.occurrence_count}x
@@ -645,18 +727,35 @@ export default function SecurityPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-300">
                   {rules.map((rule) => (
-                    <tr key={rule.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-medium text-indigo-400">{rule.rule_id}</td>
-                      <td className="py-3.5 px-4 font-medium text-white">{rule.name}</td>
-                      <td className="py-3.5 px-4 text-slate-400">{rule.category}</td>
-                      <td className="py-3.5 px-4">
-                        <Badge variant={getSeverityBadgeVariant(rule.severity)}>{rule.severity}</Badge>
+                    <tr
+                      key={rule.id}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
+                      <td className="py-3.5 px-4 font-mono font-medium text-indigo-400">
+                        {rule.rule_id}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-400">{rule.evaluation_window_seconds}s</td>
-                      <td className="py-3.5 px-4 font-medium text-white">{rule.threshold} events</td>
+                      <td className="py-3.5 px-4 font-medium text-white">
+                        {rule.name}
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-400">
+                        {rule.category}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <Badge variant={getSeverityBadgeVariant(rule.severity)}>
+                          {rule.severity}
+                        </Badge>
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-400">
+                        {rule.evaluation_window_seconds}s
+                      </td>
+                      <td className="py-3.5 px-4 font-medium text-white">
+                        {rule.threshold} events
+                      </td>
                       <td className="py-3.5 px-4 text-right">
                         <button
-                          onClick={() => handleToggleRule(rule.rule_id, rule.is_enabled)}
+                          onClick={() =>
+                            handleToggleRule(rule.rule_id, rule.is_enabled)
+                          }
                           className={`px-2.5 py-1 text-xs font-semibold rounded ${
                             rule.is_enabled
                               ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800 hover:bg-emerald-900/80"
@@ -682,7 +781,9 @@ export default function SecurityPage() {
                     <span className="font-mono text-xs text-indigo-400 font-semibold">
                       {selectedIncident.incident_number}
                     </span>
-                    <h2 className="text-lg font-bold text-white mt-1">{selectedIncident.title}</h2>
+                    <h2 className="text-lg font-bold text-white mt-1">
+                      {selectedIncident.title}
+                    </h2>
                   </div>
                   <button
                     onClick={() => setSelectedIncident(null)}
@@ -696,13 +797,19 @@ export default function SecurityPage() {
                 <div className="grid grid-cols-2 gap-3 text-xs bg-slate-950 p-4 rounded-lg border border-slate-800">
                   <div>
                     <span className="text-slate-500">Severity: </span>
-                    <Badge variant={getSeverityBadgeVariant(selectedIncident.severity)}>
+                    <Badge
+                      variant={getSeverityBadgeVariant(
+                        selectedIncident.severity,
+                      )}
+                    >
                       {selectedIncident.severity}
                     </Badge>
                   </div>
                   <div>
                     <span className="text-slate-500">Current Status: </span>
-                    <Badge variant={getStatusBadgeVariant(selectedIncident.status)}>
+                    <Badge
+                      variant={getStatusBadgeVariant(selectedIncident.status)}
+                    >
                       {selectedIncident.status}
                     </Badge>
                   </div>
@@ -741,7 +848,9 @@ export default function SecurityPage() {
                     />
 
                     <button
-                      onClick={() => handleStatusTransition(selectedIncident.id)}
+                      onClick={() =>
+                        handleStatusTransition(selectedIncident.id)
+                      }
                       disabled={!newStatus}
                       className="px-3 py-1.5 text-xs font-semibold rounded bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-50"
                     >
@@ -755,7 +864,8 @@ export default function SecurityPage() {
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
                     Containment & Response Actions
                   </h3>
-                  {selectedIncident.actions && selectedIncident.actions.length > 0 ? (
+                  {selectedIncident.actions &&
+                  selectedIncident.actions.length > 0 ? (
                     <div className="space-y-2">
                       {selectedIncident.actions.map((act) => (
                         <div
@@ -763,22 +873,31 @@ export default function SecurityPage() {
                           className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950 text-xs"
                         >
                           <div>
-                            <span className="font-semibold text-white">{act.action_type}</span>
-                            <span className="text-slate-400 ml-2">→ {act.target_identifier}</span>
+                            <span className="font-semibold text-white">
+                              {act.action_type}
+                            </span>
+                            <span className="text-slate-400 ml-2">
+                              → {act.target_identifier}
+                            </span>
                             <div className="text-[11px] text-slate-500 mt-0.5">
-                              Status: <span className="text-indigo-300 font-mono">{act.status}</span> | Risk: {act.risk_level}
+                              Status:{" "}
+                              <span className="text-indigo-300 font-mono">
+                                {act.status}
+                              </span>{" "}
+                              | Risk: {act.risk_level}
                             </div>
                           </div>
 
                           <div className="flex gap-2">
-                            {act.status === "PROPOSED" && act.requires_approval && (
-                              <button
-                                onClick={() => handleApproveAction(act.id)}
-                                className="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium"
-                              >
-                                Approve
-                              </button>
-                            )}
+                            {act.status === "PROPOSED" &&
+                              act.requires_approval && (
+                                <button
+                                  onClick={() => handleApproveAction(act.id)}
+                                  className="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium"
+                                >
+                                  Approve
+                                </button>
+                              )}
                             {act.status === "APPROVED" && (
                               <button
                                 onClick={() => handleExecuteAction(act.id)}
@@ -788,14 +907,18 @@ export default function SecurityPage() {
                               </button>
                             )}
                             {act.status === "EXECUTED" && (
-                              <span className="text-emerald-400 font-medium">✓ Executed</span>
+                              <span className="text-emerald-400 font-medium">
+                                ✓ Executed
+                              </span>
                             )}
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-500">No response actions proposed for this incident.</p>
+                    <p className="text-xs text-slate-500">
+                      No response actions proposed for this incident.
+                    </p>
                   )}
                 </div>
 
@@ -806,12 +929,21 @@ export default function SecurityPage() {
                   </h3>
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                     {selectedIncident.notes?.map((note) => (
-                      <div key={note.id} className="p-2.5 rounded bg-slate-950 border border-slate-800/80 text-xs space-y-1">
+                      <div
+                        key={note.id}
+                        className="p-2.5 rounded bg-slate-950 border border-slate-800/80 text-xs space-y-1"
+                      >
                         <div className="flex justify-between text-[11px] text-slate-500">
-                          <span className="font-semibold text-slate-400">{note.note_type}</span>
-                          <span>{new Date(note.created_at).toLocaleTimeString()}</span>
+                          <span className="font-semibold text-slate-400">
+                            {note.note_type}
+                          </span>
+                          <span>
+                            {new Date(note.created_at).toLocaleTimeString()}
+                          </span>
                         </div>
-                        <p className="text-slate-300 whitespace-pre-line">{note.content}</p>
+                        <p className="text-slate-300 whitespace-pre-line">
+                          {note.content}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -865,7 +997,11 @@ export default function SecurityPage() {
               </div>
             )}
 
-            <form onSubmit={handlePasswordSubmit} className="space-y-5" noValidate>
+            <form
+              onSubmit={handlePasswordSubmit}
+              className="space-y-5"
+              noValidate
+            >
               <div>
                 <label
                   htmlFor="current-password"
@@ -925,21 +1061,34 @@ export default function SecurityPage() {
 
               {/* Real-time Policy Rules Checklist */}
               <div className="rounded-lg bg-slate-950 p-4 border border-slate-800 space-y-2">
-                <span className="text-xs font-medium text-slate-400">Institutional Password Policy:</span>
+                <span className="text-xs font-medium text-slate-400">
+                  Institutional Password Policy:
+                </span>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className={`flex items-center gap-1.5 ${hasMinLength ? "text-emerald-400" : "text-slate-500"}`}>
+                  <div
+                    className={`flex items-center gap-1.5 ${hasMinLength ? "text-emerald-400" : "text-slate-500"}`}
+                  >
                     <span>{hasMinLength ? "✓" : "○"}</span> Minimum 8 characters
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasUpper ? "text-emerald-400" : "text-slate-500"}`}>
+                  <div
+                    className={`flex items-center gap-1.5 ${hasUpper ? "text-emerald-400" : "text-slate-500"}`}
+                  >
                     <span>{hasUpper ? "✓" : "○"}</span> Uppercase letter (A-Z)
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasLower ? "text-emerald-400" : "text-slate-500"}`}>
+                  <div
+                    className={`flex items-center gap-1.5 ${hasLower ? "text-emerald-400" : "text-slate-500"}`}
+                  >
                     <span>{hasLower ? "✓" : "○"}</span> Lowercase letter (a-z)
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasNumberOrSpecial ? "text-emerald-400" : "text-slate-500"}`}>
-                    <span>{hasNumberOrSpecial ? "✓" : "○"}</span> Number or symbol
+                  <div
+                    className={`flex items-center gap-1.5 ${hasNumberOrSpecial ? "text-emerald-400" : "text-slate-500"}`}
+                  >
+                    <span>{hasNumberOrSpecial ? "✓" : "○"}</span> Number or
+                    symbol
                   </div>
-                  <div className={`col-span-2 flex items-center gap-1.5 ${isMatch ? "text-emerald-400" : "text-slate-500"}`}>
+                  <div
+                    className={`col-span-2 flex items-center gap-1.5 ${isMatch ? "text-emerald-400" : "text-slate-500"}`}
+                  >
                     <span>{isMatch ? "✓" : "○"}</span> Passwords match
                   </div>
                 </div>

@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import {
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  AlertTriangle,
-} from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, AlertTriangle } from "lucide-react";
 import { DataGridProps, SortState, RowDensity } from "./data-grid.types";
-export type { ColumnDef, DataGridProps, BulkAction, SortState, RowDensity } from "./data-grid.types";
+export type {
+  ColumnDef,
+  DataGridProps,
+  BulkAction,
+  SortState,
+  RowDensity,
+} from "./data-grid.types";
 import { DataGridToolbar } from "./data-grid-toolbar";
 import { DataGridPagination } from "./data-grid-pagination";
 import { DataGridBulkActions } from "./data-grid-bulk-actions";
@@ -78,9 +79,12 @@ export function DataGrid<T>({
   });
 
   // Local selection if uncontrolled
-  const [localSelectedKeys, setLocalSelectedKeys] = useState<Set<string>>(new Set());
+  const [localSelectedKeys, setLocalSelectedKeys] = useState<Set<string>>(
+    new Set(),
+  );
 
-  const activeSelectedKeys = selectedKeys !== undefined ? selectedKeys : localSelectedKeys;
+  const activeSelectedKeys =
+    selectedKeys !== undefined ? selectedKeys : localSelectedKeys;
   const setActiveSelectedKeys = (keys: Set<string>) => {
     if (onSelectionChange) {
       onSelectionChange(keys);
@@ -89,8 +93,11 @@ export function DataGrid<T>({
     }
   };
 
-  const isControlledPagination = controlledCurrentPage !== undefined && controlledOnPageChange !== undefined;
-  const currentPage = isControlledPagination ? controlledCurrentPage : localPage;
+  const isControlledPagination =
+    controlledCurrentPage !== undefined && controlledOnPageChange !== undefined;
+  const currentPage = isControlledPagination
+    ? controlledCurrentPage
+    : localPage;
   const pageSize = isControlledPagination ? initialPageSize : localPageSize;
 
   const handlePageChange = (page: number) => {
@@ -177,8 +184,16 @@ export function DataGrid<T>({
       const { key, direction } = sortState;
       const targetCol = columns.find((c) => c.id === key);
       result.sort((a, b) => {
-        let valA: unknown = targetCol?.accessorFn ? targetCol.accessorFn(a) : targetCol?.accessorKey ? a[targetCol.accessorKey] : "";
-        let valB: unknown = targetCol?.accessorFn ? targetCol.accessorFn(b) : targetCol?.accessorKey ? b[targetCol.accessorKey] : "";
+        let valA: unknown = targetCol?.accessorFn
+          ? targetCol.accessorFn(a)
+          : targetCol?.accessorKey
+            ? a[targetCol.accessorKey]
+            : "";
+        let valB: unknown = targetCol?.accessorFn
+          ? targetCol.accessorFn(b)
+          : targetCol?.accessorKey
+            ? b[targetCol.accessorKey]
+            : "";
 
         if (typeof valA === "string") valA = valA.toLowerCase();
         if (typeof valB === "string") valB = valB.toLowerCase();
@@ -193,7 +208,10 @@ export function DataGrid<T>({
   }, [data, controlledOnSearchChange, localSearch, columns, sortState]);
 
   // Total records & sliced data
-  const totalRecords = isControlledPagination && controlledTotalRecords !== undefined ? controlledTotalRecords : processedData.length;
+  const totalRecords =
+    isControlledPagination && controlledTotalRecords !== undefined
+      ? controlledTotalRecords
+      : processedData.length;
   const totalPages = Math.ceil(totalRecords / pageSize) || 1;
 
   const paginatedData = useMemo(() => {
@@ -201,15 +219,25 @@ export function DataGrid<T>({
     if (!paginated) return processedData;
     const start = (currentPage - 1) * pageSize;
     return processedData.slice(start, start + pageSize);
-  }, [isControlledPagination, data, paginated, processedData, currentPage, pageSize]);
+  }, [
+    isControlledPagination,
+    data,
+    paginated,
+    processedData,
+    currentPage,
+    pageSize,
+  ]);
 
   // Row selection helpers
   const allPageKeys = useMemo(() => {
     return paginatedData.map(keyExtractor);
   }, [paginatedData, keyExtractor]);
 
-  const isAllPageSelected = allPageKeys.length > 0 && allPageKeys.every((k) => activeSelectedKeys.has(k));
-  const isSomePageSelected = allPageKeys.some((k) => activeSelectedKeys.has(k)) && !isAllPageSelected;
+  const isAllPageSelected =
+    allPageKeys.length > 0 &&
+    allPageKeys.every((k) => activeSelectedKeys.has(k));
+  const isSomePageSelected =
+    allPageKeys.some((k) => activeSelectedKeys.has(k)) && !isAllPageSelected;
 
   const toggleSelectAll = () => {
     const next = new Set(activeSelectedKeys);
@@ -238,11 +266,14 @@ export function DataGrid<T>({
 
   // Export functionality
   const handleExport = (format: "csv" | "json") => {
-    const itemsToExport = selectedItems.length > 0 ? selectedItems : processedData;
+    const itemsToExport =
+      selectedItems.length > 0 ? selectedItems : processedData;
     if (itemsToExport.length === 0) return;
 
     if (format === "json") {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(itemsToExport, null, 2));
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(itemsToExport, null, 2));
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `${exportFileName}.json`);
@@ -251,13 +282,21 @@ export function DataGrid<T>({
       downloadAnchor.remove();
     } else {
       // CSV format
-      const exportCols = visibleColumns.filter((c) => c.accessorKey || c.accessorFn);
-      const headers = exportCols.map((c) => (typeof c.header === "string" ? c.header : c.id));
+      const exportCols = visibleColumns.filter(
+        (c) => c.accessorKey || c.accessorFn,
+      );
+      const headers = exportCols.map((c) =>
+        typeof c.header === "string" ? c.header : c.id,
+      );
       const csvRows = [headers.join(",")];
 
       itemsToExport.forEach((item) => {
         const row = exportCols.map((col) => {
-          let val = col.accessorFn ? col.accessorFn(item) : col.accessorKey ? item[col.accessorKey] : "";
+          let val = col.accessorFn
+            ? col.accessorFn(item)
+            : col.accessorKey
+              ? item[col.accessorKey]
+              : "";
           if (val === null || val === undefined) val = "";
           const str = String(val).replace(/"/g, '""');
           return `"${str}"`;
@@ -265,7 +304,9 @@ export function DataGrid<T>({
         csvRows.push(row.join(","));
       });
 
-      const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([csvRows.join("\n")], {
+        type: "text/csv;charset=utf-8;",
+      });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
@@ -284,7 +325,9 @@ export function DataGrid<T>({
   }[density];
 
   return (
-    <div className={`rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden ${className}`}>
+    <div
+      className={`rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden ${className}`}
+    >
       {/* Top Toolbar */}
       <DataGridToolbar
         searchQuery={searchQuery}
@@ -316,15 +359,25 @@ export function DataGrid<T>({
       {/* Main Table Content */}
       {loading ? (
         <div className="p-4">
-          <TableSkeleton rows={pageSize > 10 ? 10 : pageSize} cols={visibleColumns.length + (selectable ? 1 : 0)} />
+          <TableSkeleton
+            rows={pageSize > 10 ? 10 : pageSize}
+            cols={visibleColumns.length + (selectable ? 1 : 0)}
+          />
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center p-12 text-center">
           <AlertTriangle className="h-10 w-10 text-rose-500 mb-3" />
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white">Failed to load data</h3>
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            Failed to load data
+          </h3>
           <p className="text-xs text-slate-500 max-w-sm mt-1">{error}</p>
           {onRetry && (
-            <Button size="sm" variant="outline" onClick={onRetry} className="mt-4">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onRetry}
+              className="mt-4"
+            >
               Retry Query
             </Button>
           )}
@@ -366,7 +419,9 @@ export function DataGrid<T>({
 
                   {visibleColumns.map((col) => {
                     const isSorted = sortState?.key === col.id;
-                    const canSort = col.sortable !== false && (col.accessorKey || col.accessorFn);
+                    const canSort =
+                      col.sortable !== false &&
+                      (col.accessorKey || col.accessorFn);
 
                     return (
                       <th
@@ -428,7 +483,10 @@ export function DataGrid<T>({
                       {visibleColumns.map((col) => {
                         let content: React.ReactNode;
                         if (col.cell) {
-                          const cellContext = Object.assign(Object.create(item as any), { row: item });
+                          const cellContext = Object.assign(
+                            Object.create(item as any),
+                            { row: item },
+                          );
                           content = col.cell(cellContext, index);
                         } else if (col.accessorFn) {
                           content = String(col.accessorFn(item) ?? "");
@@ -440,7 +498,11 @@ export function DataGrid<T>({
                           <td
                             key={col.id}
                             className={`${densityStyles} ${
-                              col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left"
+                              col.align === "right"
+                                ? "text-right"
+                                : col.align === "center"
+                                  ? "text-center"
+                                  : "text-left"
                             }`}
                           >
                             {content}
@@ -462,7 +524,9 @@ export function DataGrid<T>({
                 const isSelected = activeSelectedKeys.has(key);
                 return (
                   <div key={key} className="pt-2">
-                    {mobileCardRender(item, isSelected, () => toggleSelectRow(key))}
+                    {mobileCardRender(item, isSelected, () =>
+                      toggleSelectRow(key),
+                    )}
                   </div>
                 );
               })}

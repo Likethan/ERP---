@@ -11,7 +11,7 @@ import { AgingBucket, AgingBucketSummary, Scholarship } from "@/types/finance";
  */
 export function formatMoney(
   amount: number | null | undefined,
-  options?: { hideDecimals?: boolean; currency?: string }
+  options?: { hideDecimals?: boolean; currency?: string },
 ): string {
   if (amount === null || amount === undefined || isNaN(amount)) {
     return "₹0.00";
@@ -58,9 +58,14 @@ export function subtractMoney(a: number, b: number): number {
 /**
  * Calculates gross invoice total by summing line item amounts.
  */
-export function calculateInvoiceGross(lines: { totalAmount: number }[]): number {
+export function calculateInvoiceGross(
+  lines: { totalAmount: number }[],
+): number {
   if (!lines || lines.length === 0) return 0;
-  const sumMinor = lines.reduce((acc, line) => acc + Math.round((line.totalAmount || 0) * 100), 0);
+  const sumMinor = lines.reduce(
+    (acc, line) => acc + Math.round((line.totalAmount || 0) * 100),
+    0,
+  );
   return sumMinor / 100;
 }
 
@@ -71,7 +76,7 @@ export function calculateDiscountAmount(
   gross: number,
   discountType: "PERCENTAGE" | "FIXED",
   value: number,
-  maxDiscount?: number
+  maxDiscount?: number,
 ): number {
   if (gross <= 0 || value <= 0) return 0;
 
@@ -94,13 +99,16 @@ export function calculateDiscountAmount(
  */
 export function calculateScholarshipImpact(
   originalFee: number,
-  scholarship: Pick<Scholarship, "discountType" | "value" | "maxDiscountAmount">
+  scholarship: Pick<
+    Scholarship,
+    "discountType" | "value" | "maxDiscountAmount"
+  >,
 ): { discountAmount: number; adjustedFee: number } {
   const discountAmount = calculateDiscountAmount(
     originalFee,
     scholarship.discountType,
     scholarship.value,
-    scholarship.maxDiscountAmount
+    scholarship.maxDiscountAmount,
   );
   const adjustedFee = subtractMoney(originalFee, discountAmount);
   return { discountAmount, adjustedFee };
@@ -113,7 +121,7 @@ export function calculateNetPayable(
   gross: number,
   scholarship = 0,
   discount = 0,
-  adjustments = 0
+  adjustments = 0,
 ): number {
   const deductions = addMoney(addMoney(scholarship, discount), adjustments);
   const net = subtractMoney(gross, deductions);
@@ -123,7 +131,10 @@ export function calculateNetPayable(
 /**
  * Calculates outstanding balance: Net Payable - Paid Amount.
  */
-export function calculateOutstanding(netPayable: number, paidAmount: number): number {
+export function calculateOutstanding(
+  netPayable: number,
+  paidAmount: number,
+): number {
   const balance = subtractMoney(netPayable, paidAmount);
   return Math.max(0, balance);
 }
@@ -131,7 +142,10 @@ export function calculateOutstanding(netPayable: number, paidAmount: number): nu
 /**
  * Calculates days overdue from a given due date. Returns 0 if not overdue.
  */
-export function calculateOverdueDays(dueDate: string, referenceDate?: string): number {
+export function calculateOverdueDays(
+  dueDate: string,
+  referenceDate?: string,
+): number {
   const due = new Date(dueDate).getTime();
   const ref = referenceDate ? new Date(referenceDate).getTime() : Date.now();
 
@@ -146,7 +160,10 @@ export function calculateOverdueDays(dueDate: string, referenceDate?: string): n
 /**
  * Classifies an invoice into an overdue aging bucket.
  */
-export function calculateAgingBucket(dueDate: string, referenceDate?: string): AgingBucket {
+export function calculateAgingBucket(
+  dueDate: string,
+  referenceDate?: string,
+): AgingBucket {
   const days = calculateOverdueDays(dueDate, referenceDate);
 
   if (days === 0) return "CURRENT";
@@ -159,7 +176,10 @@ export function calculateAgingBucket(dueDate: string, referenceDate?: string): A
 /**
  * Calculates overall collection efficiency rate percentage.
  */
-export function calculateCollectionRate(billed: number, collected: number): number {
+export function calculateCollectionRate(
+  billed: number,
+  collected: number,
+): number {
   if (billed <= 0) return 0;
   const rate = (collected / billed) * 100;
   return Math.round(rate * 10) / 10;
@@ -170,7 +190,7 @@ export function calculateCollectionRate(billed: number, collected: number): numb
  */
 export function compileAgingBuckets(
   invoices: { dueDate: string; outstandingAmount: number }[],
-  referenceDate?: string
+  referenceDate?: string,
 ): AgingBucketSummary[] {
   const buckets: Record<
     AgingBucket,
@@ -188,7 +208,10 @@ export function compileAgingBuckets(
   invoices.forEach((inv) => {
     if (inv.outstandingAmount > 0) {
       const bucket = calculateAgingBucket(inv.dueDate, referenceDate);
-      buckets[bucket].amount = addMoney(buckets[bucket].amount, inv.outstandingAmount);
+      buckets[bucket].amount = addMoney(
+        buckets[bucket].amount,
+        inv.outstandingAmount,
+      );
       buckets[bucket].invoiceCount++;
       totalOutstanding = addMoney(totalOutstanding, inv.outstandingAmount);
     }
@@ -196,7 +219,10 @@ export function compileAgingBuckets(
 
   return (Object.keys(buckets) as AgingBucket[]).map((key) => {
     const item = buckets[key];
-    const percentage = totalOutstanding > 0 ? Math.round((item.amount / totalOutstanding) * 100) : 0;
+    const percentage =
+      totalOutstanding > 0
+        ? Math.round((item.amount / totalOutstanding) * 100)
+        : 0;
     return {
       bucket: key,
       label: item.label,

@@ -18,10 +18,9 @@ Encapsulates complete domain logic for:
 
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
-from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import String, cast, delete, desc, func, or_, select
+from sqlalchemy import String, cast, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, create_audit_entry
@@ -60,12 +59,10 @@ from app.models.research import (
     ResearchGrantAward,
     ResearchGrantInternalReviewStatus,
     ResearchInventionDisclosure,
-    ResearchIPConfidentiality,
     ResearchMilestone,
     ResearchMilestoneStatus,
     ResearchOpportunityStatus,
     ResearchOutput,
-    ResearchOutputStatus,
     ResearchProject,
     ResearchProjectRisk,
     ResearchProjectRiskLevel,
@@ -76,35 +73,49 @@ from app.models.research import (
     ResearchTeamRole,
 )
 from app.schemas.research import (
+    ResearchAgreementAmendmentCreate,
     ResearchAnalyticsSummaryResponse,
     ResearchBudgetPlanCreate,
+    ResearchBudgetPlanResponse,
     ResearchBudgetRevisionRequest,
     ResearchDeadlineSweepResponse,
+    ResearcherWorkloadResponse,
     ResearchEthicsApprovalCreate,
     ResearchEthicsApprovalDecision,
+    ResearchEthicsApprovalResponse,
+    ResearchExpressionOfInterestCreate,
     ResearchFacilityReferenceCreate,
+    ResearchFinancialSummaryResponse,
     ResearchFundingOpportunityCreate,
     ResearchFundingOpportunityUpdate,
     ResearchGrantApplicationCreate,
     ResearchGrantApplicationUpdate,
     ResearchGrantAwardCreate,
-    ResearchGrantAwardUpdate,
+    ResearchGrantAwardResponse,
     ResearchGrantExternalSubmissionConfirm,
     ResearchGrantInternalReview,
     ResearchInventionDisclosureCreate,
     ResearchInventionDisclosureUpdate,
     ResearchMilestoneCreate,
+    ResearchMilestoneResponse,
     ResearchMilestoneUpdate,
     ResearchMilestoneVerify,
     ResearchOutputCreate,
-    ResearchOutputUpdate,
+    ResearchOutputResponse,
     ResearchOutputVerify,
     ResearchProjectCreate,
+    ResearchProjectDetailResponse,
+    ResearchProjectHealthReport,
+    ResearchProjectResponse,
     ResearchProjectRiskCreate,
+    ResearchProjectRiskResponse,
     ResearchProjectRiskUpdate,
     ResearchProjectTransition,
     ResearchProjectUpdate,
+    ResearchSponsorDecisionRecord,
+    ResearchSponsoredAgreementCreate,
     ResearchTeamMemberCreate,
+    ResearchTeamMemberResponse,
     ResearchTeamMemberUpdate,
 )
 
@@ -227,10 +238,13 @@ class ResearchService:
         domain: str | None = None,
         department_id: UUID | None = None,
         campus_id: UUID | None = None,
+        search: str | None = None,
+        pi_id: UUID | None = None,
+        user_id: UUID | None = None,
         limit: int = 50,
         offset: int = 0,
     ) -> tuple[list[ResearchProject], int]:
-        """List tenant research projects with filtering and total count."""
+        """List tenant research projects with advanced filtering, full-text search, and count."""
         stmt = select(ResearchProject).where(ResearchProject.tenant_id == tenant_id)
         if status:
             s_val = status.value if hasattr(status, "value") else str(status)
@@ -244,6 +258,26 @@ class ResearchService:
             stmt = stmt.where(ResearchProject.lead_department_id == department_id)
         if campus_id:
             stmt = stmt.where(ResearchProject.lead_campus_id == campus_id)
+        if pi_id:
+            stmt = stmt.where(ResearchProject.principal_investigator_id == pi_id)
+        if search:
+            search_term = f"%{search.strip()}%"
+            stmt = stmt.where(
+                or_(
+                    ResearchProject.title.ilike(search_term),
+                    ResearchProject.project_code.ilike(search_term),
+                    ResearchProject.abstract.ilike(search_term),
+                    ResearchProject.research_domain.ilike(search_term),
+                )
+            )
+        if user_id:
+            stmt = stmt.join(
+                ResearchTeamMember,
+                (ResearchTeamMember.project_id == ResearchProject.id)
+                & (ResearchTeamMember.tenant_id == tenant_id)
+                & (ResearchTeamMember.user_id == user_id)
+                & (ResearchTeamMember.is_active.is_(True)),
+            )
 
         count_stmt = select(func.count()).select_from(stmt.subquery())
         total = await db.scalar(count_stmt) or 0
@@ -1172,15 +1206,13 @@ class ResearchService:
         cls,
         db: AsyncSession,
         tenant_id: UUID,
-        project_id: UUID,
+        project_id: UUID | None = None,
         award_id: UUID | None = None,
     ) -> list[ResearchBudgetPlan]:
-        """List all itemized budget plans for a project."""
-        await cls.get_project(db, tenant_id, project_id)
-        stmt = select(ResearchBudgetPlan).where(
-            ResearchBudgetPlan.tenant_id == tenant_id,
-            ResearchBudgetPlan.project_id == project_id,
-        )
+        """List all itemized budget plans for a project or all across tenant."""
+        stmt = select(ResearchBudgetPlan).where(ResearchBudgetPlan.tenant_id == tenant_id)
+        if project_id:
+            stmt = stmt.where(ResearchBudgetPlan.project_id == project_id)
         if award_id:
             stmt = stmt.where(ResearchBudgetPlan.award_id == award_id)
 
@@ -1310,18 +1342,15 @@ class ResearchService:
         cls,
         db: AsyncSession,
         tenant_id: UUID,
-        project_id: UUID,
+        project_id: UUID | None = None,
     ) -> list[ResearchMilestone]:
-        """List milestones for a project."""
-        await cls.get_project(db, tenant_id, project_id)
+        """List milestones for a project or all across tenant."""
+        stmt = select(ResearchMilestone).where(ResearchMilestone.tenant_id == tenant_id)
+        if project_id:
+            stmt = stmt.where(ResearchMilestone.project_id == project_id)
         milestones = (
             await db.scalars(
-                select(ResearchMilestone)
-                .where(
-                    ResearchMilestone.tenant_id == tenant_id,
-                    ResearchMilestone.project_id == project_id,
-                )
-                .order_by(ResearchMilestone.planned_completion_date)
+                stmt.order_by(ResearchMilestone.planned_completion_date)
             )
         ).all()
         return list(milestones)
@@ -1449,18 +1478,15 @@ class ResearchService:
         cls,
         db: AsyncSession,
         tenant_id: UUID,
-        project_id: UUID,
+        project_id: UUID | None = None,
     ) -> list[ResearchEthicsApproval]:
-        """List ethics approval requests for a project."""
-        await cls.get_project(db, tenant_id, project_id)
+        """List ethics approval requests for a project or all across tenant."""
+        stmt = select(ResearchEthicsApproval).where(ResearchEthicsApproval.tenant_id == tenant_id)
+        if project_id:
+            stmt = stmt.where(ResearchEthicsApproval.project_id == project_id)
         approvals = (
             await db.scalars(
-                select(ResearchEthicsApproval)
-                .where(
-                    ResearchEthicsApproval.tenant_id == tenant_id,
-                    ResearchEthicsApproval.project_id == project_id,
-                )
-                .order_by(desc(ResearchEthicsApproval.submission_date))
+                stmt.order_by(desc(ResearchEthicsApproval.submission_date))
             )
         ).all()
         return list(approvals)
@@ -2208,3 +2234,637 @@ class ResearchService:
             overdue_milestones_flagged=len(overdue_milestones),
             closing_opportunities_flagged=len(closing_opps),
         )
+
+    # =========================================================================
+    # 13. STEP 61 ENTERPRISE RESEARCH EXTENSIONS
+    # =========================================================================
+
+    @classmethod
+    async def get_project_health(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        project_id: UUID,
+    ) -> ResearchProjectHealthReport:
+        """Calculate explainable project health diagnosis based on explicit domain rules."""
+        project = await cls.get_project(db, tenant_id, project_id)
+
+        # 1. Milestones analysis
+        milestones = (
+            await db.scalars(
+                select(ResearchMilestone).where(
+                    ResearchMilestone.tenant_id == tenant_id,
+                    ResearchMilestone.project_id == project_id,
+                )
+            )
+        ).all()
+
+        today = date.today()
+        overdue_milestones = [
+            m for m in milestones
+            if m.planned_completion_date < today
+            and m.status not in (ResearchMilestoneStatus.ACCEPTED.value, "ACCEPTED", ResearchMilestoneStatus.CANCELLED.value, "CANCELLED")
+        ]
+        blocked_milestones = [
+            m for m in milestones
+            if m.status in (ResearchMilestoneStatus.BLOCKED.value, "BLOCKED", ResearchMilestoneStatus.AT_RISK.value, "AT_RISK")
+        ]
+
+        # 2. Ethics compliance
+        ethics_status = "NOT_REQUIRED"
+        if project.requires_ethics_approval:
+            ethics_records = (
+                await db.scalars(
+                    select(ResearchEthicsApproval).where(
+                        ResearchEthicsApproval.tenant_id == tenant_id,
+                        ResearchEthicsApproval.project_id == project_id,
+                    )
+                )
+            ).all()
+
+            approved_ethics = [
+                e for e in ethics_records
+                if e.status in (
+                    ResearchEthicsApprovalStatus.APPROVED.value,
+                    "APPROVED",
+                    ResearchEthicsApprovalStatus.CONDITIONAL_APPROVAL.value,
+                    "CONDITIONAL_APPROVAL",
+                )
+                and (e.expiry_date is None or e.expiry_date >= today)
+            ]
+            expiring_soon_ethics = [
+                e for e in approved_ethics
+                if e.expiry_date and e.expiry_date <= today + timedelta(days=30)
+            ]
+
+            if not approved_ethics:
+                has_submitted = any(
+                    e.status in (
+                        ResearchEthicsApprovalStatus.SUBMITTED.value,
+                        "SUBMITTED",
+                        ResearchEthicsApprovalStatus.UNDER_REVIEW.value,
+                        "UNDER_REVIEW",
+                    )
+                    for e in ethics_records
+                )
+                ethics_status = "APPROVAL_PENDING" if has_submitted else "EXPIRED"
+            elif expiring_soon_ethics:
+                ethics_status = "EXPIRING_SOON"
+            else:
+                ethics_status = "COMPLIANT"
+
+        # 3. Budget utilization & burn rate
+        allocated_budget = float(project.total_budget_allocated)
+        meta = project.metadata_json or {}
+        actual_expenditure = float(meta.get("actual_expenditure", 0.0))
+        budget_utilization = (actual_expenditure / allocated_budget * 100.0) if allocated_budget > 0 else 0.0
+
+        burn_rate_warning = False
+        if project.start_date and project.planned_completion_date:
+            total_days = max(1, (project.planned_completion_date - project.start_date).days)
+            elapsed_days = max(0, (today - project.start_date).days)
+            timeline_fraction = min(1.0, elapsed_days / total_days)
+
+            if budget_utilization > 100.0 or (
+                budget_utilization > (timeline_fraction * 100.0 + 30.0) and timeline_fraction > 0.25
+            ):
+                burn_rate_warning = True
+
+        # 4. Risks analysis
+        risks = (
+            await db.scalars(
+                select(ResearchProjectRisk).where(
+                    ResearchProjectRisk.tenant_id == tenant_id,
+                    ResearchProjectRisk.project_id == project_id,
+                )
+            )
+        ).all()
+        high_critical_risks = [
+            r for r in risks
+            if r.calculated_risk_level in ("CRITICAL", "HIGH")
+            and r.status not in (
+                ResearchProjectRiskStatus.MITIGATED.value if hasattr(ResearchProjectRiskStatus.MITIGATED, "value") else str(ResearchProjectRiskStatus.MITIGATED),
+                "MITIGATED",
+                ResearchProjectRiskStatus.ACCEPTED.value if hasattr(ResearchProjectRiskStatus.ACCEPTED, "value") else str(ResearchProjectRiskStatus.ACCEPTED),
+                "ACCEPTED",
+                ResearchProjectRiskStatus.CLOSED.value if hasattr(ResearchProjectRiskStatus.CLOSED, "value") else str(ResearchProjectRiskStatus.CLOSED),
+                "CLOSED",
+            )
+        ]
+
+        # 5. Explainable scoring and diagnostic reasons
+        diagnostic_reasons: list[str] = []
+        score = 100
+
+        if overdue_milestones:
+            deduction = min(35, len(overdue_milestones) * 15)
+            score -= deduction
+            diagnostic_reasons.append(f"{len(overdue_milestones)} project milestone(s) are overdue past scheduled deadline.")
+
+        if blocked_milestones:
+            deduction = min(25, len(blocked_milestones) * 10)
+            score -= deduction
+            diagnostic_reasons.append(f"{len(blocked_milestones)} milestone(s) are blocked or flagged at risk.")
+
+        if ethics_status == "APPROVAL_PENDING" and project.status in ("ACTIVE", "APPROVED"):
+            score -= 25
+            diagnostic_reasons.append("Required ethics or compliance approval is pending review.")
+        elif ethics_status == "EXPIRED" and project.status == "ACTIVE":
+            score -= 30
+            diagnostic_reasons.append("Required institutional ethics approval is expired or missing.")
+        elif ethics_status == "EXPIRING_SOON":
+            score -= 10
+            diagnostic_reasons.append("Ethics committee approval expires within the next 30 days.")
+
+        if budget_utilization > 100.0:
+            score -= 25
+            diagnostic_reasons.append(f"Budget expenditure ({budget_utilization:.1f}%) exceeds approved allocation.")
+        elif burn_rate_warning:
+            score -= 15
+            diagnostic_reasons.append(f"High financial burn rate: {budget_utilization:.1f}% spent relative to schedule progression.")
+
+        if high_critical_risks:
+            deduction = min(25, len(high_critical_risks) * 10)
+            score -= deduction
+            diagnostic_reasons.append(f"{len(high_critical_risks)} unmitigated high/critical risk register entry(ies).")
+
+        score = max(0, min(100, score))
+
+        if score >= 80:
+            health_status = "HEALTHY"
+            if not diagnostic_reasons:
+                diagnostic_reasons.append("Project execution, compliance, and budget burn are tracking within normal parameters.")
+        elif score >= 50:
+            health_status = "NEEDS_ATTENTION"
+        else:
+            health_status = "AT_RISK"
+
+        return ResearchProjectHealthReport(
+            project_id=project.id,
+            project_code=project.project_code,
+            title=project.title,
+            health_status=health_status,
+            health_score=score,
+            diagnostic_reasons=diagnostic_reasons,
+            overdue_milestones_count=len(overdue_milestones),
+            blocked_milestones_count=len(blocked_milestones),
+            ethics_compliance_status=ethics_status,
+            budget_utilization_percent=round(budget_utilization, 2),
+            burn_rate_warning=burn_rate_warning,
+            high_critical_risks_count=len(high_critical_risks),
+            calculated_at=datetime.now(UTC),
+        )
+
+    @classmethod
+    async def get_project_details(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        project_id: UUID,
+    ) -> ResearchProjectDetailResponse:
+        """Fetch 360-degree project workspace payload with all associated entities."""
+        project = await cls.get_project(db, tenant_id, project_id)
+        health = await cls.get_project_health(db, tenant_id, project_id)
+
+        team = await cls.list_team_members(db, tenant_id, project_id)
+        milestones = await cls.list_milestones(db, tenant_id, project_id)
+        budgets = await cls.list_budget_plans(db, tenant_id, project_id)
+        ethics = await cls.list_ethics_approvals(db, tenant_id, project_id)
+        outputs, _ = await cls.list_research_outputs(db, tenant_id, project_id=project_id)
+        risks = await cls.list_project_risks(db, tenant_id, project_id)
+        awards, _ = await cls.list_grant_awards(db, tenant_id, project_id=project_id)
+
+        return ResearchProjectDetailResponse(
+            project=ResearchProjectResponse.model_validate(project),
+            health=health,
+            team_members=[ResearchTeamMemberResponse.model_validate(m) for m in team],
+            milestones=[ResearchMilestoneResponse.model_validate(m) for m in milestones],
+            budgets=[ResearchBudgetPlanResponse.model_validate(b) for b in budgets],
+            ethics_approvals=[ResearchEthicsApprovalResponse.model_validate(e) for e in ethics],
+            outputs=[ResearchOutputResponse.model_validate(o) for o in outputs],
+            risks=[ResearchProjectRiskResponse.model_validate(r) for r in risks],
+            awards=[ResearchGrantAwardResponse.model_validate(a) for a in awards],
+        )
+
+    @classmethod
+    async def save_funding_opportunity(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        opportunity_id: UUID,
+        user_id: UUID,
+        save: bool = True,
+    ) -> ResearchFundingOpportunity:
+        """Bookmark or unbookmark a funding opportunity for an investigator."""
+        opp = await cls.get_funding_opportunity(db, tenant_id, opportunity_id)
+        meta = dict(opp.metadata_json or {})
+        saved_list = list(meta.get("saved_by_users", []))
+        user_str = str(user_id)
+
+        if save and user_str not in saved_list:
+            saved_list.append(user_str)
+        elif not save and user_str in saved_list:
+            saved_list.remove(user_str)
+
+        meta["saved_by_users"] = saved_list
+        opp.metadata_json = meta
+
+        await create_audit_entry(
+            db=db,
+            tenant_id=tenant_id,
+            action=AuditEventCategory.RESEARCH_OPPORTUNITY_SAVED,
+            entity_type="research_funding_opportunity",
+            entity_id=opp.id,
+            user_id=user_id,
+            new_values_json={"saved": save},
+        )
+        await db.commit()
+        await db.refresh(opp)
+        return opp
+
+    @classmethod
+    async def record_expression_of_interest(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        opportunity_id: UUID,
+        data: ResearchExpressionOfInterestCreate,
+        current_user_id: UUID,
+    ) -> ResearchFundingOpportunity:
+        """Record an investigator's formal Expression of Interest in a funding opportunity."""
+        opp = await cls.get_funding_opportunity(db, tenant_id, opportunity_id)
+        meta = dict(opp.metadata_json or {})
+        eoi_list = list(meta.get("expressions_of_interest", []))
+
+        eoi_entry = {
+            "eoi_id": str(uuid4()),
+            "prospective_project_title": data.prospective_project_title,
+            "principal_investigator_id": str(data.principal_investigator_id),
+            "notes": data.notes,
+            "estimated_budget": data.estimated_budget,
+            "recorded_by_user_id": str(current_user_id),
+            "recorded_at": datetime.now(UTC).isoformat(),
+        }
+        eoi_list.append(eoi_entry)
+        meta["expressions_of_interest"] = eoi_list
+        opp.metadata_json = meta
+
+        await create_audit_entry(
+            db=db,
+            tenant_id=tenant_id,
+            action=AuditEventCategory.RESEARCH_EOI_RECORDED,
+            entity_type="research_funding_opportunity",
+            entity_id=opp.id,
+            user_id=current_user_id,
+            new_values_json=eoi_entry,
+        )
+        await db.commit()
+        await db.refresh(opp)
+        return opp
+
+    @classmethod
+    async def record_sponsor_decision(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        application_id: UUID,
+        data: ResearchSponsorDecisionRecord,
+        current_user_id: UUID,
+    ) -> ResearchGrantApplication:
+        """Record verified external sponsor funding decision (Awarded, Declined, Withdrawn, Resubmission)."""
+        app = await cls.get_grant_application(db, tenant_id, application_id)
+
+        # Must have been submitted externally
+        if (
+            app.external_submission_status != ResearchExternalSubmissionStatus.SUBMITTED_EXTERNAL.value
+            and app.external_submission_status != "SUBMITTED_EXTERNAL"
+            and app.external_submission_status != ResearchExternalSubmissionStatus.UNDER_EXTERNAL_REVIEW.value
+            and app.external_submission_status != "UNDER_EXTERNAL_REVIEW"
+        ):
+            raise ResearchGrantSubmissionDeniedException(
+                f"Cannot record sponsor decision for grant '{app.application_code}' in external status '{app.external_submission_status}'. "
+                "Must be in SUBMITTED_EXTERNAL or UNDER_EXTERNAL_REVIEW status."
+            )
+
+        dec_upper = data.decision.strip().upper()
+        if dec_upper in ("AWARDED", "APPROVED"):
+            target_status = ResearchExternalSubmissionStatus.AWARDED.value
+        elif dec_upper in ("DECLINED", "REJECTED", "REJECTED_EXTERNAL"):
+            target_status = ResearchExternalSubmissionStatus.REJECTED_EXTERNAL.value
+        elif dec_upper == "WITHDRAWN":
+            target_status = "WITHDRAWN"
+        elif dec_upper in ("RESUBMISSION_REQUESTED", "REVISION_REQUESTED"):
+            target_status = "REVISION_REQUESTED"
+        else:
+            target_status = dec_upper
+
+        app.external_submission_status = target_status
+
+        meta = dict(app.metadata_json or {})
+        decision_details = {
+            "decision": dec_upper,
+            "decision_date": str(data.decision_date),
+            "award_amount": data.award_amount,
+            "award_number": data.award_number,
+            "sponsor_feedback": data.sponsor_feedback,
+            "decision_notes": data.decision_notes,
+            "award_letter_url": data.award_letter_url,
+            "recorded_by_user_id": str(current_user_id),
+            "recorded_at": datetime.now(UTC).isoformat(),
+        }
+        meta["sponsor_decision"] = decision_details
+        app.metadata_json = meta
+
+        # Auto-create ResearchGrantAward if AWARDED and requested
+        if target_status == ResearchExternalSubmissionStatus.AWARDED.value and data.create_award_record and app.project_id:
+            award_num = data.award_number or f"AWD-{app.application_code}"
+            existing_award = await db.scalar(
+                select(ResearchGrantAward).where(
+                    ResearchGrantAward.tenant_id == tenant_id,
+                    ResearchGrantAward.award_number == award_num,
+                )
+            )
+            if not existing_award:
+                awarded_val = Decimal(str(data.award_amount if data.award_amount is not None else app.proposed_budget))
+                award = ResearchGrantAward(
+                    tenant_id=tenant_id,
+                    award_number=award_num,
+                    grant_application_id=app.id,
+                    project_id=app.project_id,
+                    funding_organization=meta.get("funding_agency_name") or "External Grant Agency",
+                    award_amount=awarded_val,
+                    currency=app.currency,
+                    award_date=data.decision_date,
+                    start_date=data.decision_date,
+                    end_date=data.decision_date + timedelta(days=365 * 3),
+                    approved_budget_json={"total": float(awarded_val)},
+                    disbursement_schedule_json=[],
+                    spending_conditions=data.decision_notes,
+                    reporting_deadlines_json=[],
+                    financial_owner_id=current_user_id,
+                    received_amount=Decimal("0.00"),
+                    allocated_amount=awarded_val,
+                    committed_expenditure=Decimal("0.00"),
+                    actual_expenditure=Decimal("0.00"),
+                    remaining_budget=awarded_val,
+                    status=ResearchAwardStatus.ACTIVE.value,
+                    metadata_json={"sponsor_decision_ref": decision_details},
+                )
+                db.add(award)
+                await db.flush()
+
+        await create_audit_entry(
+            db=db,
+            tenant_id=tenant_id,
+            action=AuditEventCategory.RESEARCH_SPONSOR_DECISION_RECORDED,
+            entity_type="research_grant_application",
+            entity_id=app.id,
+            user_id=current_user_id,
+            new_values_json=decision_details,
+        )
+        await db.commit()
+        await db.refresh(app)
+        return app
+
+    @classmethod
+    async def create_sponsored_agreement(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        data: ResearchSponsoredAgreementCreate,
+        current_user_id: UUID,
+    ) -> ResearchGrantAward:
+        """Create a formal sponsored research agreement with deliverables and payment milestones."""
+        existing = await db.scalar(
+            select(ResearchGrantAward).where(
+                ResearchGrantAward.tenant_id == tenant_id,
+                ResearchGrantAward.award_number == data.agreement_number,
+            )
+        )
+        if existing:
+            raise ResearchProjectInvalidTransitionException(
+                current_status="NONE",
+                requested_status="ACTIVE",
+                reason=f"Agreement or award number '{data.agreement_number}' already exists in this institution.",
+            )
+
+        meta = dict(data.metadata_json or {})
+        meta["agreement_type"] = data.agreement_type
+        meta["contract_document_url"] = data.contract_document_url
+        meta["scope_of_work"] = data.scope_of_work
+        meta["deliverables"] = data.deliverables
+        meta["amendments"] = []
+        if data.international_partner_id:
+            meta["international_partner_id"] = str(data.international_partner_id)
+        if data.international_agreement_id:
+            meta["international_agreement_id"] = str(data.international_agreement_id)
+
+        award_val = Decimal(str(data.award_amount))
+        award = ResearchGrantAward(
+            tenant_id=tenant_id,
+            award_number=data.agreement_number,
+            grant_application_id=data.grant_application_id,
+            project_id=data.project_id,
+            funding_organization=data.funding_organization,
+            award_amount=award_val,
+            currency=data.currency,
+            award_date=date.today(),
+            start_date=data.start_date,
+            end_date=data.end_date,
+            approved_budget_json={"total": float(award_val)},
+            disbursement_schedule_json=data.payment_milestones,
+            spending_conditions=data.scope_of_work,
+            reporting_deadlines_json=data.reporting_obligations,
+            financial_owner_id=data.financial_owner_id or current_user_id,
+            received_amount=Decimal("0.00"),
+            allocated_amount=award_val,
+            committed_expenditure=Decimal("0.00"),
+            actual_expenditure=Decimal("0.00"),
+            remaining_budget=award_val,
+            status=ResearchAwardStatus.ACTIVE.value,
+            metadata_json=meta,
+        )
+        db.add(award)
+        await db.flush()
+
+        await create_audit_entry(
+            db=db,
+            tenant_id=tenant_id,
+            action=AuditEventCategory.RESEARCH_AGREEMENT_CREATED,
+            entity_type="research_grant_award",
+            entity_id=award.id,
+            user_id=current_user_id,
+            new_values_json={"agreement_number": data.agreement_number, "funding_org": data.funding_organization},
+        )
+        await db.commit()
+        await db.refresh(award)
+        return award
+
+    @classmethod
+    async def record_agreement_amendment(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        award_id: UUID,
+        data: ResearchAgreementAmendmentCreate,
+        current_user_id: UUID,
+    ) -> ResearchGrantAward:
+        """Record an audited contract amendment or extension for a sponsored research agreement."""
+        award = await cls.get_grant_award(db, tenant_id, award_id)
+        meta = dict(award.metadata_json or {})
+        amendments = list(meta.get("amendments", []))
+
+        amendment_entry = {
+            "amendment_id": str(uuid4()),
+            "amendment_number": data.amendment_number,
+            "amendment_date": str(data.amendment_date),
+            "description": data.description,
+            "extended_end_date": str(data.extended_end_date) if data.extended_end_date else None,
+            "budget_adjustment": data.budget_adjustment,
+            "document_url": data.document_url,
+            "recorded_by_user_id": str(current_user_id),
+            "recorded_at": datetime.now(UTC).isoformat(),
+        }
+        amendments.append(amendment_entry)
+        meta["amendments"] = amendments
+        award.metadata_json = meta
+
+        if data.extended_end_date:
+            award.end_date = data.extended_end_date
+        if data.budget_adjustment != 0.0:
+            award.award_amount = Decimal(str(float(award.award_amount) + data.budget_adjustment))
+            award.remaining_budget = Decimal(str(float(award.remaining_budget) + data.budget_adjustment))
+
+        await create_audit_entry(
+            db=db,
+            tenant_id=tenant_id,
+            action=AuditEventCategory.RESEARCH_AGREEMENT_AMENDED,
+            entity_type="research_grant_award",
+            entity_id=award.id,
+            user_id=current_user_id,
+            new_values_json=amendment_entry,
+        )
+        await db.commit()
+        await db.refresh(award)
+        return award
+
+    @classmethod
+    async def get_project_financial_summary(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        project_id: UUID,
+    ) -> ResearchFinancialSummaryResponse:
+        """Compile reconciled project financial summary against authorized finance ledger records."""
+        project = await cls.get_project(db, tenant_id, project_id)
+
+        budget_plans = await cls.list_budget_plans(db, tenant_id, project_id)
+        active_plan = next((p for p in budget_plans if p.status == "APPROVED"), None)
+        if not active_plan and budget_plans:
+            active_plan = budget_plans[0]
+
+        total_approved = float(project.total_budget_allocated)
+        categories = []
+        if active_plan:
+            total_approved = max(total_approved, float(active_plan.total_budget))
+            categories = [
+                {"category": "PERSONNEL", "allocated": float(active_plan.personnel_costs)},
+                {"category": "EQUIPMENT", "allocated": float(active_plan.equipment_costs)},
+                {"category": "MATERIALS_CONSUMABLES", "allocated": float(active_plan.consumables_materials_costs)},
+                {"category": "TRAVEL", "allocated": float(active_plan.travel_fieldwork_costs)},
+                {"category": "OVERHEAD_INDIRECT", "allocated": float(active_plan.institutional_overheads)},
+                {"category": "SUBCONTRACTING", "allocated": float(active_plan.external_services_costs)},
+                {"category": "CONTINGENCY", "allocated": float(active_plan.contingency_costs)},
+            ]
+
+        awards, _ = await cls.list_grant_awards(db, tenant_id, project_id=project_id)
+        total_committed = sum(float(a.committed_expenditure) for a in awards)
+        total_actual = sum(float(a.actual_expenditure) for a in awards)
+        if total_actual == 0.0 and project.metadata_json:
+            total_actual = float(project.metadata_json.get("actual_expenditure", 0.0))
+
+        remaining = max(0.0, total_approved - total_actual)
+        utilization_rate = (total_actual / total_approved * 100.0) if total_approved > 0 else 0.0
+        approaching_limit = utilization_rate >= 85.0
+
+        reporting_deadlines = []
+        for a in awards:
+            if a.reporting_deadlines_json:
+                reporting_deadlines.extend(a.reporting_deadlines_json)
+
+        return ResearchFinancialSummaryResponse(
+            project_id=project.id,
+            currency=project.currency,
+            total_approved_budget=round(total_approved, 2),
+            total_committed_expenditure=round(total_committed, 2),
+            total_actual_expenditure=round(total_actual, 2),
+            remaining_balance=round(remaining, 2),
+            budget_utilization_rate=round(utilization_rate, 2),
+            approaching_limit=approaching_limit,
+            categories_breakdown=categories,
+            overdue_financial_reports_count=0,
+            reporting_deadlines=reporting_deadlines,
+        )
+
+    @classmethod
+    async def get_researcher_workload(
+        cls,
+        db: AsyncSession,
+        tenant_id: UUID,
+        user_id: UUID,
+    ) -> ResearcherWorkloadResponse:
+        """Fetch all authorized active research projects and workload allocations for a researcher."""
+        memberships = (
+            await db.scalars(
+                select(ResearchTeamMember).where(
+                    ResearchTeamMember.tenant_id == tenant_id,
+                    ResearchTeamMember.user_id == user_id,
+                    ResearchTeamMember.is_active.is_(True),
+                )
+            )
+        ).all()
+
+        project_ids = [m.project_id for m in memberships]
+        projects_dict = {}
+        if project_ids:
+            proj_records = (
+                await db.scalars(
+                    select(ResearchProject).where(
+                        ResearchProject.tenant_id == tenant_id,
+                        ResearchProject.id.in_(project_ids),
+                    )
+                )
+            ).all()
+            projects_dict = {p.id: p for p in proj_records}
+
+        active_projects_list = []
+        total_workload = 0.0
+
+        for m in memberships:
+            proj = projects_dict.get(m.project_id)
+            if not proj:
+                continue
+            meta = getattr(m, "metadata_json", None) or {}
+            workload_pct = float(meta.get("workload_percentage", 20.0))
+            if proj.status in ("ACTIVE", "APPROVED", "UNDER_REVIEW"):
+                total_workload += workload_pct
+
+            active_projects_list.append({
+                "project_id": str(proj.id),
+                "project_code": proj.project_code,
+                "title": proj.title,
+                "role": m.role,
+                "status": proj.status,
+                "workload_percentage": workload_pct,
+                "contribution_description": m.contribution_description,
+                "start_date": str(m.start_date) if m.start_date else None,
+                "end_date": str(m.end_date) if m.end_date else None,
+            })
+
+        return ResearcherWorkloadResponse(
+            user_id=user_id,
+            total_active_projects=len(active_projects_list),
+            total_workload_percentage=round(total_workload, 2),
+            projects=active_projects_list,
+        )
+

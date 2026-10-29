@@ -17,19 +17,30 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast, ToastType } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
 import { financeService } from "@/services/finance.service";
 import { formatMoney } from "@/services/financial-calculator";
-import { Scholarship, ScholarshipStatus, ScholarshipType } from "@/types/finance";
+import {
+  Scholarship,
+  ScholarshipStatus,
+  ScholarshipType,
+} from "@/types/finance";
 
 export default function ScholarshipsPage() {
   const { hasPermission } = useAuth();
   const { showToast } = useToast();
-  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+  const notify = (title: string, type: ToastType = "info") =>
+    showToast({ title, type });
 
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,14 +56,18 @@ export default function ScholarshipsPage() {
   const [code, setCode] = useState("");
   const [type, setType] = useState<ScholarshipType>("MERIT");
   const [description, setDescription] = useState("");
-  const [discountType, setDiscountType] = useState<"PERCENTAGE" | "FIXED">("PERCENTAGE");
+  const [discountType, setDiscountType] = useState<"PERCENTAGE" | "FIXED">(
+    "PERCENTAGE",
+  );
   const [value, setValue] = useState<number>(20);
   const [maxDiscountAmount, setMaxDiscountAmount] = useState<number>(25000);
   const [eligibilityCriteria, setEligibilityCriteria] = useState("");
   const [academicYear, setAcademicYear] = useState("2026-2027");
   const [submitting, setSubmitting] = useState(false);
 
-  const canManage = hasPermission("finance.manage_scholarships") || hasPermission("scholarships:create");
+  const canManage =
+    hasPermission("finance.manage_scholarships") ||
+    hasPermission("scholarships:create");
 
   const loadData = async () => {
     try {
@@ -90,7 +105,9 @@ export default function ScholarshipsPage() {
         description: description.trim(),
         discountType,
         value: Number(value),
-        maxDiscountAmount: maxDiscountAmount ? Number(maxDiscountAmount) : undefined,
+        maxDiscountAmount: maxDiscountAmount
+          ? Number(maxDiscountAmount)
+          : undefined,
         eligibilityCriteria: eligibilityCriteria.trim(),
         academicYear,
       });
@@ -105,7 +122,8 @@ export default function ScholarshipsPage() {
       setEligibilityCriteria("");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to create scholarship.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to create scholarship.";
       notify(msg, "error");
     } finally {
       setSubmitting(false);
@@ -158,8 +176,12 @@ export default function ScholarshipsPage() {
       sortable: true,
       cell: ({ row }) => (
         <div>
-          <div className="font-semibold text-slate-900 dark:text-white">{row.name}</div>
-          <div className="text-xs text-slate-500 line-clamp-1">{row.description}</div>
+          <div className="font-semibold text-slate-900 dark:text-white">
+            {row.name}
+          </div>
+          <div className="text-xs text-slate-500 line-clamp-1">
+            {row.description}
+          </div>
         </div>
       ),
     },
@@ -179,7 +201,9 @@ export default function ScholarshipsPage() {
       cell: ({ row }) => (
         <div>
           <span className="font-bold text-emerald-700 dark:text-emerald-400">
-            {row.discountType === "PERCENTAGE" ? `${row.value}% Waiver` : formatMoney(row.value)}
+            {row.discountType === "PERCENTAGE"
+              ? `${row.value}% Waiver`
+              : formatMoney(row.value)}
           </span>
           {row.maxDiscountAmount && (
             <div className="text-[11px] text-slate-500">
@@ -193,7 +217,9 @@ export default function ScholarshipsPage() {
       id: "academicYear",
       header: "Academic Year",
       accessorKey: "academicYear",
-      cell: ({ row }) => <span className="text-xs text-slate-600">{row.academicYear}</span>,
+      cell: ({ row }) => (
+        <span className="text-xs text-slate-600">{row.academicYear}</span>
+      ),
     },
     {
       id: "recipients",
@@ -212,11 +238,16 @@ export default function ScholarshipsPage() {
       accessorKey: "status",
       cell: ({ row }) => {
         const badges: Record<string, string> = {
-          APPROVED: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
-          PENDING_APPROVAL: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
-          DRAFT: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
-          REJECTED: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
-          EXPIRED: "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-400",
+          APPROVED:
+            "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+          PENDING_APPROVAL:
+            "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
+          DRAFT:
+            "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
+          REJECTED:
+            "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
+          EXPIRED:
+            "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-400",
         };
         return (
           <span
@@ -249,17 +280,23 @@ export default function ScholarshipsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Scholarships</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Scholarships
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Scholarship Schemes & Concessions
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Institutional fee discounts, merit grants, socio-economic waivers, and student allocations.
+            Institutional fee discounts, merit grants, socio-economic waivers,
+            and student allocations.
           </p>
         </div>
 
@@ -415,7 +452,9 @@ export default function ScholarshipsPage() {
                 </label>
                 <Select
                   value={discountType}
-                  onChange={(e) => setDiscountType(e.target.value as "PERCENTAGE" | "FIXED")}
+                  onChange={(e) =>
+                    setDiscountType(e.target.value as "PERCENTAGE" | "FIXED")
+                  }
                   className="mt-1"
                 >
                   <option value="PERCENTAGE">Percentage (%)</option>
@@ -425,7 +464,8 @@ export default function ScholarshipsPage() {
 
               <div>
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Value ({discountType === "PERCENTAGE" ? "%" : "₹"}) <span className="text-rose-500">*</span>
+                  Value ({discountType === "PERCENTAGE" ? "%" : "₹"}){" "}
+                  <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   type="number"
@@ -477,7 +517,11 @@ export default function ScholarshipsPage() {
             </div>
 
             <DialogFooter className="pt-3">
-              <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setModalOpen(false)}
+              >
                 Cancel
               </Button>
               <Button

@@ -9,7 +9,7 @@ Supports:
 - Operational telemetry and health metrics
 """
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
@@ -19,7 +19,6 @@ from app.core.database import get_db_session
 from app.core.deps import get_tenant_context, require_permission
 from app.core.events import EVENT_REGISTRY
 from app.core.permissions import (
-    WORKFLOW_ACTIONS_MANAGE,
     WORKFLOW_EXECUTIONS_READ,
     WORKFLOWS_ACTIVATE,
     WORKFLOWS_ARCHIVE,
@@ -35,7 +34,7 @@ from app.core.tenant import TenantContext
 from app.core.workflow_actions import ACTION_REGISTRY
 from app.models.people import User
 from app.models.workflow import WorkflowTriggerType
-from app.schemas.common import ApiResponse, PaginatedResponse
+from app.schemas.common import ApiResponse
 from app.schemas.workflow import (
     ActionRegistryItem,
     EventRegistryItem,

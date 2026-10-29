@@ -19,7 +19,13 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,7 +48,9 @@ export default function FeeAssignmentsPage() {
 
   // Single Assignment Modal
   const [singleModalOpen, setSingleModalOpen] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState(MOCK_STUDENTS[0]?.id || "");
+  const [selectedStudentId, setSelectedStudentId] = useState(
+    MOCK_STUDENTS[0]?.id || "",
+  );
   const [selectedStructureId, setSelectedStructureId] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
   const [scholarshipAmount, setScholarshipAmount] = useState(0);
@@ -71,7 +79,10 @@ export default function FeeAssignmentsPage() {
     } catch (err: unknown) {
       showToast({
         title: "Error Loading Assignments",
-        message: err instanceof Error ? err.message : "Unable to retrieve student fee assignments",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Unable to retrieve student fee assignments",
         type: "error",
       });
     } finally {
@@ -86,7 +97,11 @@ export default function FeeAssignmentsPage() {
   const handleSingleAssign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedStudentId || !selectedStructureId) {
-      showToast({ title: "Validation Error", message: "Select student and fee structure.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Select student and fee structure.",
+        type: "error",
+      });
       return;
     }
 
@@ -111,7 +126,8 @@ export default function FeeAssignmentsPage() {
     } catch (err: unknown) {
       showToast({
         title: "Assignment Failed",
-        message: err instanceof Error ? err.message : "Error creating fee assignment",
+        message:
+          err instanceof Error ? err.message : "Error creating fee assignment",
         type: "error",
       });
     } finally {
@@ -121,7 +137,11 @@ export default function FeeAssignmentsPage() {
 
   const handleBulkAssign = async () => {
     if (!bulkStructureId || selectedStudentIds.length === 0) {
-      showToast({ title: "Validation Error", message: "Select fee structure and at least one student.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Select fee structure and at least one student.",
+        type: "error",
+      });
       return;
     }
 
@@ -143,7 +163,10 @@ export default function FeeAssignmentsPage() {
     } catch (err: unknown) {
       showToast({
         title: "Bulk Assignment Failed",
-        message: err instanceof Error ? err.message : "Error processing bulk assignments",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Error processing bulk assignments",
         type: "error",
       });
     } finally {
@@ -161,7 +184,7 @@ export default function FeeAssignmentsPage() {
 
   const toggleStudentSelection = (sId: string) => {
     setSelectedStudentIds((prev) =>
-      prev.includes(sId) ? prev.filter((id) => id !== sId) : [...prev, sId]
+      prev.includes(sId) ? prev.filter((id) => id !== sId) : [...prev, sId],
     );
   };
 
@@ -172,14 +195,21 @@ export default function FeeAssignmentsPage() {
         a.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.feeStructureName.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "ALL" || a.status === statusFilter;
-      const matchesProgram = programFilter === "ALL" || a.program.includes(programFilter);
+      const matchesProgram =
+        programFilter === "ALL" || a.program.includes(programFilter);
       return matchesSearch && matchesStatus && matchesProgram;
     });
   }, [assignments, searchQuery, statusFilter, programFilter]);
 
   const totalGross = assignments.reduce((acc, a) => acc + a.grossAmount, 0);
-  const totalOutstanding = assignments.reduce((acc, a) => acc + a.outstandingAmount, 0);
-  const totalScholarships = assignments.reduce((acc, a) => acc + a.scholarshipAmount + a.discountAmount, 0);
+  const totalOutstanding = assignments.reduce(
+    (acc, a) => acc + a.outstandingAmount,
+    0,
+  );
+  const totalScholarships = assignments.reduce(
+    (acc, a) => acc + a.scholarshipAmount + a.discountAmount,
+    0,
+  );
 
   const columns: ColumnDef<StudentFeeAssignment>[] = [
     {
@@ -201,7 +231,9 @@ export default function FeeAssignmentsPage() {
       sortable: true,
       cell: (row) => (
         <div>
-          <p className="text-xs font-medium text-slate-200 line-clamp-1">{row.feeStructureName}</p>
+          <p className="text-xs font-medium text-slate-200 line-clamp-1">
+            {row.feeStructureName}
+          </p>
           <p className="text-[11px] text-slate-400">
             {row.program} • Sem {row.semester} ({row.academicYear})
           </p>
@@ -214,7 +246,9 @@ export default function FeeAssignmentsPage() {
       accessorKey: "grossAmount",
       sortable: true,
       cell: (row) => (
-        <span className="font-mono text-xs text-slate-300">{formatMoney(row.grossAmount)}</span>
+        <span className="font-mono text-xs text-slate-300">
+          {formatMoney(row.grossAmount)}
+        </span>
       ),
     },
     {
@@ -258,7 +292,7 @@ export default function FeeAssignmentsPage() {
     {
       id: "invoice",
       header: "Billing Invoice",
-      cell: (row) => (
+      cell: (row) =>
         row.invoiceId ? (
           <Link
             href={`/app/finance/invoices/${row.invoiceId}`}
@@ -269,8 +303,7 @@ export default function FeeAssignmentsPage() {
           </Link>
         ) : (
           <span className="text-xs text-slate-500">—</span>
-        )
-      ),
+        ),
     },
   ];
 
@@ -280,7 +313,10 @@ export default function FeeAssignmentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
-            <Link href="/app/finance" className="hover:text-slate-200 transition-colors">
+            <Link
+              href="/app/finance"
+              className="hover:text-slate-200 transition-colors"
+            >
               Finance
             </Link>
             <span>/</span>
@@ -291,16 +327,27 @@ export default function FeeAssignmentsPage() {
             Student Fee Assignments & Invoicing
           </h1>
           <p className="mt-1 text-xs text-slate-400 max-w-2xl">
-            Map students to approved academic fee structures, apply scholarship exemptions, and automatically dispatch billing invoices.
+            Map students to approved academic fee structures, apply scholarship
+            exemptions, and automatically dispatch billing invoices.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" size="sm" onClick={() => setBulkModalOpen(true)} className="gap-1.5 text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setBulkModalOpen(true)}
+            className="gap-1.5 text-xs"
+          >
             <Users className="h-3.5 w-3.5" />
             Bulk Cohort Assignment
           </Button>
-          <Button variant="primary" size="sm" onClick={() => setSingleModalOpen(true)} className="gap-1.5 text-xs">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setSingleModalOpen(true)}
+            className="gap-1.5 text-xs"
+          >
             <Plus className="h-3.5 w-3.5" />
             Assign Student Fee
           </Button>
@@ -348,7 +395,9 @@ export default function FeeAssignmentsPage() {
             className="h-9 text-xs w-52 bg-slate-950/60 border-slate-800 text-slate-200"
           >
             <option value="ALL">All Academic Disciplines</option>
-            <option value="Computer Science">Computer Science & Engineering</option>
+            <option value="Computer Science">
+              Computer Science & Engineering
+            </option>
             <option value="Electronics">Electronics & Communication</option>
             <option value="AI">AI & Data Science</option>
           </Select>
@@ -375,8 +424,13 @@ export default function FeeAssignmentsPage() {
         emptyState={
           <div className="py-12 text-center">
             <UserCheck className="mx-auto h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm font-semibold text-slate-300">No Student Fee Assignments</p>
-            <p className="text-xs text-slate-500 mt-1">Assign students individually or in bulk cohorts to initiate billing.</p>
+            <p className="text-sm font-semibold text-slate-300">
+              No Student Fee Assignments
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Assign students individually or in bulk cohorts to initiate
+              billing.
+            </p>
           </div>
         }
       />
@@ -435,7 +489,9 @@ export default function FeeAssignmentsPage() {
                   type="number"
                   min="0"
                   value={scholarshipAmount.toString()}
-                  onChange={(e) => setScholarshipAmount(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setScholarshipAmount(parseFloat(e.target.value) || 0)
+                  }
                   className="h-8 text-xs font-mono bg-slate-950 border-slate-800"
                 />
               </div>
@@ -448,7 +504,9 @@ export default function FeeAssignmentsPage() {
                   type="number"
                   min="0"
                   value={discountAmount.toString()}
-                  onChange={(e) => setDiscountAmount(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setDiscountAmount(parseFloat(e.target.value) || 0)
+                  }
                   className="h-8 text-xs font-mono bg-slate-950 border-slate-800"
                 />
               </div>
@@ -468,10 +526,20 @@ export default function FeeAssignmentsPage() {
             </div>
 
             <DialogFooter className="pt-3 border-t border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={() => setSingleModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setSingleModalOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" size="sm" disabled={assigning}>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={assigning}
+              >
                 {assigning ? "Assigning..." : "Assign & Generate Invoice"}
               </Button>
             </DialogFooter>
@@ -510,10 +578,18 @@ export default function FeeAssignmentsPage() {
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <span className="font-semibold text-slate-300">
-                  Select Candidates ({selectedStudentIds.length} of {MOCK_STUDENTS.length})
+                  Select Candidates ({selectedStudentIds.length} of{" "}
+                  {MOCK_STUDENTS.length})
                 </span>
-                <Button variant="ghost" size="sm" onClick={toggleSelectAllStudents} className="h-6 text-xs text-indigo-400 p-0">
-                  {selectedStudentIds.length === MOCK_STUDENTS.length ? "Deselect All" : "Select All"}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleSelectAllStudents}
+                  className="h-6 text-xs text-indigo-400 p-0"
+                >
+                  {selectedStudentIds.length === MOCK_STUDENTS.length
+                    ? "Deselect All"
+                    : "Select All"}
                 </Button>
               </div>
 
@@ -536,10 +612,14 @@ export default function FeeAssignmentsPage() {
                           <p className="font-medium text-slate-200">
                             {student.firstName} {student.lastName}
                           </p>
-                          <p className="text-[11px] font-mono text-slate-400">{student.rollNumber}</p>
+                          <p className="text-[11px] font-mono text-slate-400">
+                            {student.rollNumber}
+                          </p>
                         </div>
                       </div>
-                      <span className="text-[11px] text-slate-400">{student.program?.department || "Department"}</span>
+                      <span className="text-[11px] text-slate-400">
+                        {student.program?.department || "Department"}
+                      </span>
                     </label>
                   );
                 })}
@@ -549,14 +629,17 @@ export default function FeeAssignmentsPage() {
             <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
               <div className="flex justify-between">
                 <span className="text-slate-400">Selected Cohort Size:</span>
-                <span className="font-semibold text-white">{selectedStudentIds.length} students</span>
+                <span className="font-semibold text-white">
+                  {selectedStudentIds.length} students
+                </span>
               </div>
               <div className="flex justify-between font-bold text-sm pt-1 border-t border-slate-800">
                 <span className="text-white">Estimated Gross Billing:</span>
                 <span className="font-mono text-emerald-400">
                   {formatMoney(
                     selectedStudentIds.length *
-                      (structures.find((f) => f.id === bulkStructureId)?.grossTotal || 0)
+                      (structures.find((f) => f.id === bulkStructureId)
+                        ?.grossTotal || 0),
                   )}
                 </span>
               </div>
@@ -564,7 +647,11 @@ export default function FeeAssignmentsPage() {
           </div>
 
           <DialogFooter className="pt-3 border-t border-slate-800">
-            <Button variant="outline" size="sm" onClick={() => setBulkModalOpen(false)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setBulkModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button
@@ -573,7 +660,9 @@ export default function FeeAssignmentsPage() {
               onClick={handleBulkAssign}
               disabled={bulkAssigning || selectedStudentIds.length === 0}
             >
-              {bulkAssigning ? "Processing..." : `Assign to ${selectedStudentIds.length} Students`}
+              {bulkAssigning
+                ? "Processing..."
+                : `Assign to ${selectedStudentIds.length} Students`}
             </Button>
           </DialogFooter>
         </DialogContent>

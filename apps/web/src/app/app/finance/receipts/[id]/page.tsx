@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import {
@@ -18,7 +18,7 @@ import { financeService } from "@/services/finance.service";
 import { formatMoney } from "@/services/financial-calculator";
 import { Receipt } from "@/types/finance";
 
-export default function ReceiptDetailPage() {
+function ReceiptDetailContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const receiptId = params?.id as string;
@@ -37,7 +37,9 @@ export default function ReceiptDetailPage() {
         const res = await financeService.getReceiptById(receiptId);
         setReceipt(res.data);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Receipt voucher not found.");
+        setError(
+          err instanceof Error ? err.message : "Receipt voucher not found.",
+        );
       } finally {
         setLoading(false);
       }
@@ -56,7 +58,9 @@ export default function ReceiptDetailPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-sm text-slate-500">Retrieving official fee receipt voucher...</div>
+        <div className="text-sm text-slate-500">
+          Retrieving official fee receipt voucher...
+        </div>
       </div>
     );
   }
@@ -72,7 +76,9 @@ export default function ReceiptDetailPage() {
         </Link>
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-300">
           <h2 className="text-lg font-bold">Receipt Voucher Unavailable</h2>
-          <p className="mt-1 text-sm">{error || "Receipt voucher not found."}</p>
+          <p className="mt-1 text-sm">
+            {error || "Receipt voucher not found."}
+          </p>
         </div>
       </div>
     );
@@ -84,11 +90,17 @@ export default function ReceiptDetailPage() {
       <div className="print:hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <Link href="/app/finance/receipts" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance/receipts"
+              className="hover:text-emerald-600 transition"
+            >
               Receipts
             </Link>
             <span>/</span>
@@ -100,7 +112,8 @@ export default function ReceiptDetailPage() {
             Official Money Receipt
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Validated electronic receipt voucher with institutional security seal.
+            Validated electronic receipt voucher with institutional security
+            seal.
           </p>
         </div>
 
@@ -142,7 +155,8 @@ export default function ReceiptDetailPage() {
                 CampusOS Institute of Technology
               </h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-                Deemed-to-be University • Accredited A++ Grade • Finance & Accounts Division
+                Deemed-to-be University • Accredited A++ Grade • Finance &
+                Accounts Division
               </p>
               <p className="text-xs text-slate-500 mt-0.5">
                 Campus Central Road, Knowledge City, Bangalore, KA 560064
@@ -157,7 +171,9 @@ export default function ReceiptDetailPage() {
             <div className="mt-2 text-sm font-mono font-bold text-emerald-700 dark:text-emerald-400">
               {receipt.receiptNumber}
             </div>
-            <div className="text-xs text-slate-500 mt-0.5">Date: {receipt.date}</div>
+            <div className="text-xs text-slate-500 mt-0.5">
+              Date: {receipt.date}
+            </div>
           </div>
         </div>
 
@@ -170,7 +186,9 @@ export default function ReceiptDetailPage() {
             <p className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">
               {receipt.studentName}
             </p>
-            <p className="text-slate-500 font-mono mt-0.5">{receipt.rollNumber}</p>
+            <p className="text-slate-500 font-mono mt-0.5">
+              {receipt.rollNumber}
+            </p>
           </div>
 
           <div>
@@ -190,7 +208,9 @@ export default function ReceiptDetailPage() {
             <p className="font-mono font-semibold text-slate-900 dark:text-white mt-0.5">
               {receipt.transactionRef}
             </p>
-            <p className="text-slate-500 mt-0.5">Mode: {receipt.paymentMethod.replace("_", " ")}</p>
+            <p className="text-slate-500 mt-0.5">
+              Mode: {receipt.paymentMethod.replace("_", " ")}
+            </p>
           </div>
 
           <div>
@@ -223,7 +243,8 @@ export default function ReceiptDetailPage() {
                   </div>
                 </td>
                 <td className="py-3 font-mono text-slate-700 dark:text-slate-300">
-                  {receipt.paymentMethod.replace("_", " ")} ({receipt.transactionRef})
+                  {receipt.paymentMethod.replace("_", " ")} (
+                  {receipt.transactionRef})
                 </td>
                 <td className="py-3 text-right font-bold text-slate-900 dark:text-white text-sm">
                   {formatMoney(receipt.amount)}
@@ -236,9 +257,12 @@ export default function ReceiptDetailPage() {
         {/* Total Box */}
         <div className="flex flex-col sm:flex-row justify-between items-center py-6 border-b-2 border-slate-800 dark:border-slate-200 gap-4">
           <div className="text-xs text-slate-600 dark:text-slate-400">
-            <span className="font-bold text-slate-900 dark:text-white uppercase">Amount in Words: </span>
+            <span className="font-bold text-slate-900 dark:text-white uppercase">
+              Amount in Words:{" "}
+            </span>
             <span className="italic">
-              Official electronic settlement voucher for institutional tuition and fee structure.
+              Official electronic settlement voucher for institutional tuition
+              and fee structure.
             </span>
           </div>
 
@@ -260,7 +284,9 @@ export default function ReceiptDetailPage() {
               Digitally Verified by CampusOS Finance Engine
             </div>
             <p className="text-[11px]">Recorded by: {receipt.recordedBy}</p>
-            <p className="text-[11px]">Security Hash: SHA256-VOUCHER-{receipt.id.toUpperCase()}</p>
+            <p className="text-[11px]">
+              Security Hash: SHA256-VOUCHER-{receipt.id.toUpperCase()}
+            </p>
           </div>
 
           <div className="flex items-center gap-8">
@@ -282,3 +308,12 @@ export default function ReceiptDetailPage() {
     </div>
   );
 }
+
+export default function ReceiptDetailPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading receipt...</div>}>
+      <ReceiptDetailContent />
+    </Suspense>
+  );
+}
+

@@ -29,15 +29,22 @@ import { Button } from "@/components/ui/button";
 
 export default function CommunicationPreferencesPage() {
   const { user, hasPermission } = useAuth();
-  const [preferences, setPreferences] = useState<CategoryNotificationPreference[]>([]);
-  const [deliveries, setDeliveries] = useState<NotificationDeliverySummary[]>([]);
+  const [preferences, setPreferences] = useState<
+    CategoryNotificationPreference[]
+  >([]);
+  const [deliveries, setDeliveries] = useState<NotificationDeliverySummary[]>(
+    [],
+  );
   const [history, setHistory] = useState<CommunicationRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"preferences" | "delivery" | "history">("preferences");
+  const [activeTab, setActiveTab] = useState<
+    "preferences" | "delivery" | "history"
+  >("preferences");
 
-  const isAdmin = hasPermission("campus.manage_notifications") || hasPermission("*");
+  const isAdmin =
+    hasPermission("campus.manage_notifications") || hasPermission("*");
 
   useEffect(() => {
     async function loadData() {
@@ -59,7 +66,10 @@ export default function CommunicationPreferencesPage() {
     loadData();
   }, []);
 
-  const handleToggle = (category: NotificationCategory, channel: "inApp" | "email" | "sms" | "push") => {
+  const handleToggle = (
+    category: NotificationCategory,
+    channel: "inApp" | "email" | "sms" | "push",
+  ) => {
     setPreferences((prev) =>
       prev.map((item) =>
         item.category === category
@@ -67,8 +77,8 @@ export default function CommunicationPreferencesPage() {
               ...item,
               [channel]: !item[channel],
             }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -88,18 +98,24 @@ export default function CommunicationPreferencesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Communication Settings</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Communication Settings
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <SlidersHorizontal className="h-6 w-6 text-indigo-400" />
             Communication Channels & Delivery Console
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Control notification channel routing across In-App, Email, SMS, and Push dispatches.
+            Control notification channel routing across In-App, Email, SMS, and
+            Push dispatches.
           </p>
         </div>
 
@@ -120,7 +136,10 @@ export default function CommunicationPreferencesPage() {
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -201,10 +220,17 @@ export default function CommunicationPreferencesPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {preferences.map((item) => (
-                    <tr key={item.category} className="hover:bg-slate-800/30 transition-colors">
+                    <tr
+                      key={item.category}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
                       <td className="p-4">
-                        <div className="font-bold text-white text-xs">{item.categoryLabel}</div>
-                        <div className="text-[11px] text-slate-500 font-mono mt-0.5">{item.category}</div>
+                        <div className="font-bold text-white text-xs">
+                          {item.categoryLabel}
+                        </div>
+                        <div className="text-[11px] text-slate-500 font-mono mt-0.5">
+                          {item.category}
+                        </div>
                       </td>
 
                       {/* In-App Toggle */}
@@ -213,7 +239,9 @@ export default function CommunicationPreferencesPage() {
                           type="button"
                           onClick={() => handleToggle(item.category, "inApp")}
                           className={`w-12 h-6 rounded-full transition-colors p-0.5 inline-flex items-center cursor-pointer ${
-                            item.inApp ? "bg-indigo-600 justify-end" : "bg-slate-800 justify-start"
+                            item.inApp
+                              ? "bg-indigo-600 justify-end"
+                              : "bg-slate-800 justify-start"
                           }`}
                         >
                           <span className="w-5 h-5 rounded-full bg-white block shadow" />
@@ -226,7 +254,9 @@ export default function CommunicationPreferencesPage() {
                           type="button"
                           onClick={() => handleToggle(item.category, "email")}
                           className={`w-12 h-6 rounded-full transition-colors p-0.5 inline-flex items-center cursor-pointer ${
-                            item.email ? "bg-blue-600 justify-end" : "bg-slate-800 justify-start"
+                            item.email
+                              ? "bg-blue-600 justify-end"
+                              : "bg-slate-800 justify-start"
                           }`}
                         >
                           <span className="w-5 h-5 rounded-full bg-white block shadow" />
@@ -239,7 +269,9 @@ export default function CommunicationPreferencesPage() {
                           type="button"
                           onClick={() => handleToggle(item.category, "sms")}
                           className={`w-12 h-6 rounded-full transition-colors p-0.5 inline-flex items-center cursor-pointer ${
-                            item.sms ? "bg-emerald-600 justify-end" : "bg-slate-800 justify-start"
+                            item.sms
+                              ? "bg-emerald-600 justify-end"
+                              : "bg-slate-800 justify-start"
                           }`}
                         >
                           <span className="w-5 h-5 rounded-full bg-white block shadow" />
@@ -252,7 +284,9 @@ export default function CommunicationPreferencesPage() {
                           type="button"
                           onClick={() => handleToggle(item.category, "push")}
                           className={`w-12 h-6 rounded-full transition-colors p-0.5 inline-flex items-center cursor-pointer ${
-                            item.push ? "bg-purple-600 justify-end" : "bg-slate-800 justify-start"
+                            item.push
+                              ? "bg-purple-600 justify-end"
+                              : "bg-slate-800 justify-start"
                           }`}
                         >
                           <span className="w-5 h-5 rounded-full bg-white block shadow" />
@@ -266,8 +300,11 @@ export default function CommunicationPreferencesPage() {
           </div>
 
           <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/60 text-xs text-slate-400">
-            <span className="font-semibold text-slate-300">Preference Policy: </span>
-            Critical security dispatches, examination CIA-1 timetables, and fee dues receipts are delivered to In-App and Email by default.
+            <span className="font-semibold text-slate-300">
+              Preference Policy:{" "}
+            </span>
+            Critical security dispatches, examination CIA-1 timetables, and fee
+            dues receipts are delivered to In-App and Email by default.
           </div>
         </div>
       )}
@@ -278,7 +315,8 @@ export default function CommunicationPreferencesPage() {
           <div className="p-3.5 rounded-xl border border-amber-500/40 bg-amber-950/20 text-amber-300 text-xs flex items-center gap-2 font-medium">
             <ShieldAlert className="h-4 w-4 shrink-0 text-amber-400" />
             <span>
-              <strong>Note:</strong> Delivery statistics are frontend mock simulations representing future gateway queues.
+              <strong>Note:</strong> Delivery statistics are frontend mock
+              simulations representing future gateway queues.
             </span>
           </div>
 
@@ -297,22 +335,38 @@ export default function CommunicationPreferencesPage() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
                   <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">Total Audience:</span>
-                    <span className="font-mono font-bold text-white">{d.audienceSize.toLocaleString()}</span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">In-App Delivered:</span>
-                    <span className="font-mono font-bold text-indigo-400">{d.inAppDelivered.toLocaleString()}</span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">Email Delivered:</span>
-                    <span className="font-mono font-bold text-blue-400">
-                      {d.emailDelivered.toLocaleString()}
-                      {d.emailFailed > 0 && <span className="text-rose-400 text-[10px] ml-1">({d.emailFailed} fail)</span>}
+                    <span className="text-[10px] text-slate-500 block">
+                      Total Audience:
+                    </span>
+                    <span className="font-mono font-bold text-white">
+                      {d.audienceSize.toLocaleString()}
                     </span>
                   </div>
                   <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">SMS Delivered:</span>
+                    <span className="text-[10px] text-slate-500 block">
+                      In-App Delivered:
+                    </span>
+                    <span className="font-mono font-bold text-indigo-400">
+                      {d.inAppDelivered.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                    <span className="text-[10px] text-slate-500 block">
+                      Email Delivered:
+                    </span>
+                    <span className="font-mono font-bold text-blue-400">
+                      {d.emailDelivered.toLocaleString()}
+                      {d.emailFailed > 0 && (
+                        <span className="text-rose-400 text-[10px] ml-1">
+                          ({d.emailFailed} fail)
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                    <span className="text-[10px] text-slate-500 block">
+                      SMS Delivered:
+                    </span>
                     <span className="font-mono font-bold text-emerald-400">
                       {d.smsDelivered.toLocaleString()}
                     </span>
@@ -346,8 +400,13 @@ export default function CommunicationPreferencesPage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {history.map((record) => (
-                  <tr key={record.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="p-3.5 font-bold text-white max-w-xs truncate">{record.title}</td>
+                  <tr
+                    key={record.id}
+                    className="hover:bg-slate-800/30 transition-colors"
+                  >
+                    <td className="p-3.5 font-bold text-white max-w-xs truncate">
+                      {record.title}
+                    </td>
                     <td className="p-3.5">
                       <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                         {record.category}
@@ -355,13 +414,17 @@ export default function CommunicationPreferencesPage() {
                     </td>
                     <td className="p-3.5 text-slate-300">{record.audience}</td>
                     <td className="p-3.5 text-slate-400">{record.publisher}</td>
-                    <td className="p-3.5 text-[11px] font-mono text-slate-400">{record.channelSummary}</td>
+                    <td className="p-3.5 text-[11px] font-mono text-slate-400">
+                      {record.channelSummary}
+                    </td>
                     <td className="p-3.5">
                       <span className="font-mono text-[10px] font-bold text-emerald-400">
                         {record.deliveryStatus} ({record.deliveredRate}%)
                       </span>
                     </td>
-                    <td className="p-3.5 font-mono text-slate-500 text-[11px]">{record.timestamp}</td>
+                    <td className="p-3.5 font-mono text-slate-500 text-[11px]">
+                      {record.timestamp}
+                    </td>
                   </tr>
                 ))}
               </tbody>

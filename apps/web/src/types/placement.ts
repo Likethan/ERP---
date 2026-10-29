@@ -19,17 +19,10 @@ export interface AuditEntry {
 // ==========================================
 
 export type PlacementProfileStatus =
-  | "ACTIVE"
-  | "INACTIVE"
-  | "OPTED_OUT"
-  | "BLOCKED";
+  "ACTIVE" | "INACTIVE" | "OPTED_OUT" | "BLOCKED";
 
 export type ResumeStatus =
-  | "NOT_UPLOADED"
-  | "UPLOADED"
-  | "UNDER_REVIEW"
-  | "VERIFIED"
-  | "REJECTED";
+  "NOT_UPLOADED" | "UPLOADED" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED";
 
 export interface StudentSkillsProfile {
   technical: string[];
@@ -77,11 +70,7 @@ export interface StudentPlacementProfile {
 // 2. Corporate Partners & Companies
 // ==========================================
 
-export type CompanyStatus =
-  | "PROSPECT"
-  | "ACTIVE"
-  | "INACTIVE"
-  | "BLACKLISTED";
+export type CompanyStatus = "PROSPECT" | "ACTIVE" | "INACTIVE" | "BLACKLISTED";
 
 export type CompanyType =
   | "PRODUCT"
@@ -91,10 +80,7 @@ export type CompanyType =
   | "CORE_ENGINEERING"
   | "GOVERNMENT";
 
-export type CompanyTier =
-  | "TIER_1_SUPER_DREAM"
-  | "TIER_2_DREAM"
-  | "TIER_3_MASS";
+export type CompanyTier = "TIER_1_SUPER_DREAM" | "TIER_2_DREAM" | "TIER_3_MASS";
 
 export interface CompanyContact {
   id: string;
@@ -134,18 +120,9 @@ export interface Company {
 // ==========================================
 
 export type DriveStatus =
-  | "DRAFT"
-  | "UPCOMING"
-  | "OPEN"
-  | "CLOSED"
-  | "COMPLETED"
-  | "CANCELLED";
+  "DRAFT" | "UPCOMING" | "OPEN" | "CLOSED" | "COMPLETED" | "CANCELLED";
 
-export type DriveType =
-  | "ON_CAMPUS"
-  | "OFF_CAMPUS"
-  | "VIRTUAL"
-  | "POOLED";
+export type DriveType = "ON_CAMPUS" | "OFF_CAMPUS" | "VIRTUAL" | "POOLED";
 
 export interface JobDrive {
   id: string;
@@ -234,10 +211,7 @@ export interface RuleEvaluationResult {
 }
 
 export type EligibilityStatus =
-  | "ELIGIBLE"
-  | "INELIGIBLE"
-  | "CONDITIONALLY_ELIGIBLE"
-  | "PENDING_REVIEW";
+  "ELIGIBLE" | "INELIGIBLE" | "CONDITIONALLY_ELIGIBLE" | "PENDING_REVIEW";
 
 export interface EligibilitySnapshot {
   studentId: string;
@@ -297,19 +271,10 @@ export interface Application {
 // ==========================================
 
 export type InterviewStage =
-  | "SCREENING"
-  | "APTITUDE"
-  | "TECHNICAL"
-  | "MANAGERIAL"
-  | "HR"
-  | "FINAL";
+  "SCREENING" | "APTITUDE" | "TECHNICAL" | "MANAGERIAL" | "HR" | "FINAL";
 
 export type InterviewStatus =
-  | "SCHEDULED"
-  | "COMPLETED"
-  | "RESCHEDULED"
-  | "CANCELLED"
-  | "NO_SHOW";
+  "SCHEDULED" | "COMPLETED" | "RESCHEDULED" | "CANCELLED" | "NO_SHOW";
 
 export interface InterviewEvaluation {
   technicalRating: number; // 1 to 5
@@ -356,12 +321,7 @@ export interface Interview {
 // ==========================================
 
 export type OfferStatus =
-  | "DRAFT"
-  | "RELEASED"
-  | "ACCEPTED"
-  | "DECLINED"
-  | "EXPIRED"
-  | "WITHDRAWN";
+  "DRAFT" | "RELEASED" | "ACCEPTED" | "DECLINED" | "EXPIRED" | "WITHDRAWN";
 
 export interface Offer {
   id: string;
@@ -394,11 +354,7 @@ export interface Offer {
 // ==========================================
 
 export type PlacementStatus =
-  | "NOT_PLACED"
-  | "IN_PROCESS"
-  | "PLACED"
-  | "WITHDRAWN"
-  | "DEFERRED";
+  "NOT_PLACED" | "IN_PROCESS" | "PLACED" | "WITHDRAWN" | "DEFERRED";
 
 export interface PlacementOutcome {
   id: string;
@@ -482,17 +438,19 @@ export interface PlacementDashboardSummary {
     title: string;
     description: string;
     timestamp: string;
-    type: "DRIVE" | "APPLICATION" | "SHORTLIST" | "INTERVIEW" | "OFFER" | "PLACEMENT";
+    type:
+      | "DRIVE"
+      | "APPLICATION"
+      | "SHORTLIST"
+      | "INTERVIEW"
+      | "OFFER"
+      | "PLACEMENT";
     href: string;
   }[];
 }
 
 export type PlacementReportType =
-  | "SUMMARY"
-  | "DEPARTMENT"
-  | "COMPANY"
-  | "PACKAGES"
-  | "STATUS";
+  "SUMMARY" | "DEPARTMENT" | "COMPANY" | "PACKAGES" | "STATUS";
 
 export interface PlacementReportFilter {
   reportType: PlacementReportType;

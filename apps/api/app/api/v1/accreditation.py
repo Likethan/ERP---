@@ -3,11 +3,11 @@
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_user, get_tenant_context, require_permission
+from app.core.deps import get_tenant_context, require_permission
 from app.core.permissions import (
     ACCREDITATION_APPROVE_DOT,
     ACCREDITATION_ASSESS_DOT,
@@ -20,7 +20,6 @@ from app.core.permissions import (
     ACCREDITATION_IMPROVEMENT_MANAGE_DOT,
     ACCREDITATION_INDICATOR_MANAGE_DOT,
     ACCREDITATION_READ_DOT,
-    ACCREDITATION_REPORT_EXPORT_DOT,
 )
 from app.core.tenant import TenantContext
 from app.models.people import User
@@ -30,7 +29,6 @@ from app.schemas.accreditation import (
     AccreditationCriterionUpdate,
     AccreditationCycleCreate,
     AccreditationCycleResponse,
-    AccreditationCycleUpdate,
     AccreditationDashboardSummary,
     AccreditationEvidenceCreate,
     AccreditationEvidenceMapCreate,
@@ -59,12 +57,10 @@ from app.schemas.accreditation import (
     QualityFindingResponse,
     QualityImprovementPlanCreate,
     QualityImprovementPlanResponse,
-    QualityImprovementPlanUpdate,
     QualityIndicatorCreate,
     QualityIndicatorObservationCreate,
     QualityIndicatorObservationResponse,
     QualityIndicatorResponse,
-    QualityIndicatorUpdate,
 )
 from app.schemas.common import ApiResponse
 from app.services.accreditation_service import AccreditationService

@@ -22,18 +22,21 @@ class DocumentUploadService {
   ];
   private maxSizeBytes = 15 * 1024 * 1024; // 15MB
 
-  validateUpload(file: {
-    name: string;
-    size: number;
-    type: string;
-  }, metadata?: {
-    documentName?: string;
-    category?: string;
-    documentType?: string;
-    issueDate?: string;
-    expiryDate?: string;
-    documentNumber?: string;
-  }): UploadValidationResult {
+  validateUpload(
+    file: {
+      name: string;
+      size: number;
+      type: string;
+    },
+    metadata?: {
+      documentName?: string;
+      category?: string;
+      documentType?: string;
+      issueDate?: string;
+      expiryDate?: string;
+      documentNumber?: string;
+    },
+  ): UploadValidationResult {
     const errors: string[] = [];
 
     if (!file.name) {
@@ -41,11 +44,15 @@ class DocumentUploadService {
     }
 
     if (file.size > this.maxSizeBytes) {
-      errors.push(`File size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the maximum allowed limit of 15 MB.`);
+      errors.push(
+        `File size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the maximum allowed limit of 15 MB.`,
+      );
     }
 
     if (file.type && !this.allowedTypes.includes(file.type.toLowerCase())) {
-      errors.push("Invalid file format. Only PDF, JPG, PNG, and DOCX documents are permitted.");
+      errors.push(
+        "Invalid file format. Only PDF, JPG, PNG, and DOCX documents are permitted.",
+      );
     }
 
     if (metadata) {
@@ -73,7 +80,7 @@ class DocumentUploadService {
 
   async simulateUpload(
     file: { name: string; size: number; type: string },
-    onProgress?: (percent: number) => void
+    onProgress?: (percent: number) => void,
   ): Promise<SimulatedUploadResult> {
     const steps = [15, 45, 75, 100];
     for (const step of steps) {

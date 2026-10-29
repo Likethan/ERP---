@@ -99,7 +99,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Association of Computer Engineers",
     code: "ACE",
     category: "TECHNICAL",
-    description: "Premier computer science guild focusing on systems engineering, competitive coding, hackathons, and open-source contributions.",
+    description:
+      "Premier computer science guild focusing on systems engineering, competitive coding, hackathons, and open-source contributions.",
     facultyCoordinator: "Dr. Rajesh Sharma",
     facultyCoordinatorEmail: "rajesh.sharma@campusos.edu",
     studentLead: "Aarav Patel",
@@ -130,7 +131,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Autonomous Robotics & Embedded Systems Club",
     code: "ROBO",
     category: "TECHNICAL",
-    description: "Research and competition society building autonomous mobile rovers, drone swarms, and ROS2 embedded controllers.",
+    description:
+      "Research and competition society building autonomous mobile rovers, drone swarms, and ROS2 embedded controllers.",
     facultyCoordinator: "Dr. Ananya Mukherjee",
     facultyCoordinatorEmail: "ananya.mukherjee@campusos.edu",
     studentLead: "Vikramaditya Rao",
@@ -141,7 +143,9 @@ export const MOCK_CLUBS: ClubItem[] = [
     status: "ACTIVE",
     membersCount: 88,
     activeEventsCount: 1,
-    upcomingEventTitles: ["RoboSoccer Championship & Autonomous Obstacle Navigation"],
+    upcomingEventTitles: [
+      "RoboSoccer Championship & Autonomous Obstacle Navigation",
+    ],
     createdAt: "2024-08-01T10:00:00Z",
     updatedAt: "2026-09-18T14:00:00Z",
     timeline: [
@@ -158,7 +162,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Dhwani Cultural & Fine Arts Guild",
     code: "DHWANI",
     category: "CULTURAL",
-    description: "The heartbeat of campus performing arts, classical & contemporary music bands, theatre, street plays, and visual arts.",
+    description:
+      "The heartbeat of campus performing arts, classical & contemporary music bands, theatre, street plays, and visual arts.",
     facultyCoordinator: "Prof. Savita Hebbar",
     facultyCoordinatorEmail: "savita.hebbar@campusos.edu",
     studentLead: "Priya Sundaram",
@@ -169,7 +174,9 @@ export const MOCK_CLUBS: ClubItem[] = [
     status: "ACTIVE",
     membersCount: 140,
     activeEventsCount: 1,
-    upcomingEventTitles: ["Surabhi 2026: Annual Inter-Collegiate Cultural Festival"],
+    upcomingEventTitles: [
+      "Surabhi 2026: Annual Inter-Collegiate Cultural Festival",
+    ],
     createdAt: "2024-08-01T10:00:00Z",
     updatedAt: "2026-09-22T09:00:00Z",
     timeline: [
@@ -186,7 +193,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Innovation & Entrepreneurship Cell",
     code: "ECELL",
     category: "ENTREPRENEURSHIP",
-    description: "Incubating student startup ideas, venture bootcamps, angel pitch showcases, and intellectual property advisories.",
+    description:
+      "Incubating student startup ideas, venture bootcamps, angel pitch showcases, and intellectual property advisories.",
     facultyCoordinator: "Dr. Kunal Bhasin",
     facultyCoordinatorEmail: "kunal.bhasin@campusos.edu",
     studentLead: "Sneha Kulkarni",
@@ -214,7 +222,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Apex Sports & Athletics Guild",
     code: "SPORTS",
     category: "SPORTS",
-    description: "Governing university varsity teams in football, basketball, cricket, badminton, athletics, and chess.",
+    description:
+      "Governing university varsity teams in football, basketball, cricket, badminton, athletics, and chess.",
     facultyCoordinator: "Coach Ramesh Varma",
     facultyCoordinatorEmail: "ramesh.varma@campusos.edu",
     studentLead: "Kiran Devadiga",
@@ -225,7 +234,9 @@ export const MOCK_CLUBS: ClubItem[] = [
     status: "ACTIVE",
     membersCount: 180,
     activeEventsCount: 1,
-    upcomingEventTitles: ["Inter-Departmental Badminton & Table Tennis Tournament"],
+    upcomingEventTitles: [
+      "Inter-Departmental Badminton & Table Tennis Tournament",
+    ],
     createdAt: "2024-08-01T10:00:00Z",
     updatedAt: "2026-09-25T17:00:00Z",
     timeline: [],
@@ -235,7 +246,8 @@ export const MOCK_CLUBS: ClubItem[] = [
     name: "Odyssey Literary & Debating Society",
     code: "LIT",
     category: "LITERARY",
-    description: "Parliamentary debating, Model United Nations, creative writing workshops, and the university quarterly journal.",
+    description:
+      "Parliamentary debating, Model United Nations, creative writing workshops, and the university quarterly journal.",
     facultyCoordinator: "Dr. Meenakshi Sundaram",
     facultyCoordinatorEmail: "meenakshi.s@campusos.edu",
     studentLead: "Rohan Joshi",
@@ -425,7 +437,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "HackCampus 2026: 36-Hour National Autonomous Hackathon",
     slug: "hackcampus-2026",
     category: "Hackathon",
-    description: "Flagship annual national hackathon bringing together 100+ university teams to architect resilient distributed systems, on-device AI algorithms, and smart campus IoT fabrics.",
+    description:
+      "Flagship annual national hackathon bringing together 100+ university teams to architect resilient distributed systems, on-device AI algorithms, and smart campus IoT fabrics.",
     organizer: "Association of Computer Engineers (ACE)",
     organizerType: "CLUB",
     clubId: "club-ace",
@@ -449,7 +462,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     targetAudience: {
       type: "ALL_STUDENTS",
       estimatedCount: 4200,
-      customDescription: "Open to all registered undergraduate and postgraduate engineering students.",
+      customDescription:
+        "Open to all registered undergraduate and postgraduate engineering students.",
     },
     status: "REGISTRATION_OPEN",
     createdBy: "Dr. Rajesh Sharma",
@@ -482,7 +496,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "National Symposium on Scalable High-Performance Architecture",
     slug: "symposium-scalable-architecture-2026",
     category: "Symposium",
-    description: "Distinguished research presentations by leading faculty from IISc Bangalore and IIT Madras on non-volatile memory, RISC-V extensions, and heterogeneous compute.",
+    description:
+      "Distinguished research presentations by leading faculty from IISc Bangalore and IIT Madras on non-volatile memory, RISC-V extensions, and heterogeneous compute.",
     organizer: "Dean Academics & Dept of CSE",
     organizerType: "DEPARTMENT",
     departmentId: "dept-cse",
@@ -506,7 +521,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
       type: "SPECIFIC_DEPARTMENT",
       departmentName: "Computer Science & Engineering",
       estimatedCount: 525,
-      customDescription: "Faculty, PG Scholars, and 3rd/4th Year B.Tech CSE candidates.",
+      customDescription:
+        "Faculty, PG Scholars, and 3rd/4th Year B.Tech CSE candidates.",
     },
     status: "REGISTRATION_OPEN",
     createdBy: "Dr. K. S. Anand",
@@ -527,7 +543,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "RoboSoccer Championship & Autonomous Obstacle Navigation",
     slug: "robosoccer-championship-2026",
     category: "Technical",
-    description: "High-octane competitive robotics tournament where autonomous vision-guided bot squads compete in obstacle tracks and micro-soccer arenas.",
+    description:
+      "High-octane competitive robotics tournament where autonomous vision-guided bot squads compete in obstacle tracks and micro-soccer arenas.",
     organizer: "Autonomous Robotics & Embedded Systems Club",
     organizerType: "CLUB",
     clubId: "club-robotics",
@@ -563,7 +580,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "Surabhi 2026: Annual Inter-Collegiate Cultural Festival",
     slug: "surabhi-cultural-fest-2026",
     category: "Cultural",
-    description: "The grandest 3-day cultural showcase featuring battle of the bands, classical fusion concerts, choreography face-offs, and street theatre.",
+    description:
+      "The grandest 3-day cultural showcase featuring battle of the bands, classical fusion concerts, choreography face-offs, and street theatre.",
     organizer: "Dhwani Cultural & Fine Arts Guild",
     organizerType: "CLUB",
     clubId: "club-cultural",
@@ -599,7 +617,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "Hands-on Workshop: Production Rust & Distributed Microservices",
     slug: "workshop-production-rust-2026",
     category: "Workshop",
-    description: "Intensive 2-day technical bootcamp covering memory safety semantics, Tokio async runtime, and gRPC service meshes in Rust.",
+    description:
+      "Intensive 2-day technical bootcamp covering memory safety semantics, Tokio async runtime, and gRPC service meshes in Rust.",
     organizer: "Association of Computer Engineers (ACE)",
     organizerType: "CLUB",
     clubId: "club-ace",
@@ -636,7 +655,8 @@ export const MOCK_EVENTS: CampusEventItem[] = [
     title: "Cisco Systems Campus Recruitment Pre-Placement Orientation",
     slug: "cisco-pre-placement-orientation-2026",
     category: "Placement",
-    description: "Mandatory corporate orientation and technical interview debrief for shortlisted final-year candidates appearing for Cisco Systems drives.",
+    description:
+      "Mandatory corporate orientation and technical interview debrief for shortlisted final-year candidates appearing for Cisco Systems drives.",
     organizer: "Career Development Cell",
     organizerType: "INSTITUTION",
     startDate: "2026-10-05",
@@ -914,8 +934,10 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
   {
     id: "anc-01",
     title: "Schedule for Continuous Internal Assessment (CIA-1) Published",
-    summary: "Official timetable released for all B.Tech and M.Tech mid-term internal examinations.",
-    content: "All undergraduate and postgraduate students are requested to inspect the official CIA-1 timetable commencing 12th October 2026. Hall tickets will be verified at classroom entrances. Room allocations and seating arrangements are published on the Examinations portal.",
+    summary:
+      "Official timetable released for all B.Tech and M.Tech mid-term internal examinations.",
+    content:
+      "All undergraduate and postgraduate students are requested to inspect the official CIA-1 timetable commencing 12th October 2026. Hall tickets will be verified at classroom entrances. Room allocations and seating arrangements are published on the Examinations portal.",
     category: "EXAMINATION",
     priority: "URGENT",
     status: "PUBLISHED",
@@ -924,7 +946,8 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
     audience: {
       type: "STUDENTS",
       estimatedRecipientCount: 4200,
-      description: "All enrolled undergraduate and postgraduate students across all semesters.",
+      description:
+        "All enrolled undergraduate and postgraduate students across all semesters.",
     },
     isPinned: true,
     publishDate: "2026-10-01 08:30 AM",
@@ -945,8 +968,10 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
   {
     id: "anc-02",
     title: "Cisco Systems On-Campus Recruitment Drive: Shortlisted Candidates",
-    summary: "Round 2 Technical Interview schedules for Cisco Systems have been assigned.",
-    content: "Round 2 Technical Interview schedules for Cisco Systems have been assigned. Shortlisted students must report to Placement Suite 201 sharp at their allocated time slots with two physical copies of their verified resume and identity badge.",
+    summary:
+      "Round 2 Technical Interview schedules for Cisco Systems have been assigned.",
+    content:
+      "Round 2 Technical Interview schedules for Cisco Systems have been assigned. Shortlisted students must report to Placement Suite 201 sharp at their allocated time slots with two physical copies of their verified resume and identity badge.",
     category: "PLACEMENT",
     priority: "HIGH",
     status: "PUBLISHED",
@@ -956,7 +981,8 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
       type: "SPECIFIC_SEMESTER",
       semester: 7,
       estimatedRecipientCount: 142,
-      description: "Final-year B.Tech students shortlisted for Cisco Systems campus drive.",
+      description:
+        "Final-year B.Tech students shortlisted for Cisco Systems campus drive.",
     },
     isPinned: true,
     publishDate: "2026-10-01 05:00 PM",
@@ -970,8 +996,10 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
   {
     id: "anc-03",
     title: "Central Library Extended Reading Hours During CIA-1 Evaluations",
-    summary: "Central Library reading rooms will remain accessible until 11:00 PM daily throughout the examination period.",
-    content: "To support students in preparing for the Continuous Internal Assessment (CIA-1), the Central Library and Digital Computing Commons will extend operational hours until 11:00 PM on all weekdays and Saturdays. High-speed Wi-Fi and reference book reserves will be fully staffed.",
+    summary:
+      "Central Library reading rooms will remain accessible until 11:00 PM daily throughout the examination period.",
+    content:
+      "To support students in preparing for the Continuous Internal Assessment (CIA-1), the Central Library and Digital Computing Commons will extend operational hours until 11:00 PM on all weekdays and Saturdays. High-speed Wi-Fi and reference book reserves will be fully staffed.",
     category: "ACADEMIC",
     priority: "NORMAL",
     status: "PUBLISHED",
@@ -994,8 +1022,10 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
   {
     id: "anc-04",
     title: "HackCampus 2026: Team Registration Closes in 48 Hours",
-    summary: "Last call for 36-hour autonomous software & systems hackathon registrations.",
-    content: "Only 70 team slots remain open for HackCampus 2026. Interdisciplinary teams consisting of 3 to 4 students from CSE, AI&DS, ECE, and Mechanical are eligible. Cash prizes worth ₹2,50,000 and direct internship interviews with corporate sponsors.",
+    summary:
+      "Last call for 36-hour autonomous software & systems hackathon registrations.",
+    content:
+      "Only 70 team slots remain open for HackCampus 2026. Interdisciplinary teams consisting of 3 to 4 students from CSE, AI&DS, ECE, and Mechanical are eligible. Cash prizes worth ₹2,50,000 and direct internship interviews with corporate sponsors.",
     category: "CLUB",
     priority: "HIGH",
     status: "PUBLISHED",
@@ -1004,7 +1034,8 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
     audience: {
       type: "STUDENTS",
       estimatedRecipientCount: 4200,
-      description: "All engineering students eligible for technical competitions.",
+      description:
+        "All engineering students eligible for technical competitions.",
     },
     isPinned: false,
     publishDate: "2026-10-02 09:00 AM",
@@ -1018,8 +1049,10 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
   {
     id: "anc-05",
     title: "Institutional Research Grants 2026-27: Call for Faculty Proposals",
-    summary: "Faculty seed funding submissions are now open for interdisciplinary research labs.",
-    content: "The Dean of Research invites grant applications from tenured and tenure-track faculty for the FY2026-27 Institutional Seed Fund. Priority will be allocated to proposals in autonomous robotics, renewable materials, and quantum computing.",
+    summary:
+      "Faculty seed funding submissions are now open for interdisciplinary research labs.",
+    content:
+      "The Dean of Research invites grant applications from tenured and tenure-track faculty for the FY2026-27 Institutional Seed Fund. Priority will be allocated to proposals in autonomous robotics, renewable materials, and quantum computing.",
     category: "ACADEMIC",
     priority: "NORMAL",
     status: "SCHEDULED",
@@ -1028,7 +1061,8 @@ export const MOCK_ANNOUNCEMENTS: AnnouncementItem[] = [
     audience: {
       type: "FACULTY",
       estimatedRecipientCount: 320,
-      description: "All full-time and adjunct faculty members across departments.",
+      description:
+        "All full-time and adjunct faculty members across departments.",
     },
     isPinned: false,
     publishDate: "2026-10-10 10:00 AM",
@@ -1045,7 +1079,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-01",
     title: "Class Attendance Marked — CS301 Data Structures",
-    message: "Your attendance was verified as PRESENT for CS301 Data Structures with Prof. Rajesh Sharma at 10:15 AM.",
+    message:
+      "Your attendance was verified as PRESENT for CS301 Data Structures with Prof. Rajesh Sharma at 10:15 AM.",
     category: "ATTENDANCE" as any,
     priority: "NORMAL",
     status: "UNREAD",
@@ -1059,7 +1094,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-02",
     title: "Cisco Systems Interview Confirmed",
-    message: "Round 2 Technical Interview scheduled at Cisco Placement Suite 201 on 15 Oct 2026 at 02:30 PM.",
+    message:
+      "Round 2 Technical Interview scheduled at Cisco Placement Suite 201 on 15 Oct 2026 at 02:30 PM.",
     category: "PLACEMENT",
     priority: "HIGH",
     status: "UNREAD",
@@ -1073,7 +1109,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-03",
     title: "Event Registration Confirmed: HackCampus 2026",
-    message: "Your entry pass #TKT-HC26-0014 for HackCampus 2026 has been generated. Reporting at SAC Arena 08:30 AM.",
+    message:
+      "Your entry pass #TKT-HC26-0014 for HackCampus 2026 has been generated. Reporting at SAC Arena 08:30 AM.",
     category: "EVENT",
     priority: "NORMAL",
     status: "UNREAD",
@@ -1087,7 +1124,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-04",
     title: "Tuition Fee Invoice #INV-2026-094 Generated",
-    message: "Semester 5 tuition fee invoice has been billed. View payment schedule and online clearance options.",
+    message:
+      "Semester 5 tuition fee invoice has been billed. View payment schedule and online clearance options.",
     category: "FINANCE",
     priority: "HIGH",
     status: "READ",
@@ -1102,7 +1140,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-05",
     title: "CIA-1 Mid-Term Examination Timetable Released",
-    message: "Controller of Examinations has published the CIA-1 timetable starting 12 October 2026.",
+    message:
+      "Controller of Examinations has published the CIA-1 timetable starting 12 October 2026.",
     category: "ACADEMIC",
     priority: "URGENT",
     status: "READ",
@@ -1117,7 +1156,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-06",
     title: "New Club Membership Request Received",
-    message: "Ananya Deshmukh (AI24B022) has requested to join Association of Computer Engineers.",
+    message:
+      "Ananya Deshmukh (AI24B022) has requested to join Association of Computer Engineers.",
     category: "CLUB",
     priority: "NORMAL",
     status: "UNREAD",
@@ -1131,7 +1171,8 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-07",
     title: "Campus Security System Notice",
-    message: "Biometric and RFID turnstiles will undergo scheduled firmware upgrades this Sunday between 01:00 AM - 04:00 AM.",
+    message:
+      "Biometric and RFID turnstiles will undergo scheduled firmware upgrades this Sunday between 01:00 AM - 04:00 AM.",
     category: "SYSTEM",
     priority: "LOW",
     status: "ARCHIVED",

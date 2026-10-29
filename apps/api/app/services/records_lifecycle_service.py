@@ -11,32 +11,28 @@ Central domain service orchestrating:
 - Bounded batch scheduled lifecycle sweeps with operational metrics
 """
 
-from datetime import UTC, datetime, timedelta
 import hashlib
 import json
 import logging
 import secrets
-from typing import Any
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.exceptions import (
-    BadRequestException,
     ConflictException,
     DispositionApprovalRequiredException,
     InvalidRecordLifecycleTransitionException,
     LegalHoldActiveException,
     NotFoundException,
-    PermissionDeniedException,
     RecordArchivalException,
     RecordCategoryNotFoundException,
     RecordNotFoundException,
     RetentionPolicyNotFoundException,
-    ValidationException,
 )
 from app.core.storage import get_document_storage
 from app.models.academics import CourseEnrollment
@@ -50,7 +46,6 @@ from app.models.records_lifecycle import (
     DispositionRequestStatus,
     LegalHoldScope,
     LegalHoldStatus,
-    PolicyScope,
     RecordArchivalAccessLog,
     RecordArchivalRecord,
     RecordCategory,
@@ -66,7 +61,6 @@ from app.models.records_lifecycle import (
     RetentionPolicyDefinition,
     RetentionPolicyStatus,
     RetentionPolicyVersionRecord,
-    RetentionTriggerEvent,
     RetentionUnit,
     ScheduledRunStatus,
     ScheduledRunType,

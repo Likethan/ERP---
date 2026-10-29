@@ -19,7 +19,13 @@ import {
   Building,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,7 +67,8 @@ export default function InvoiceDetailPage() {
     } catch (err: unknown) {
       showToast({
         title: "Error Loading Invoice",
-        message: err instanceof Error ? err.message : "Unable to retrieve invoice",
+        message:
+          err instanceof Error ? err.message : "Unable to retrieve invoice",
         type: "error",
       });
     } finally {
@@ -78,7 +85,11 @@ export default function InvoiceDetailPage() {
     if (!invoice) return;
 
     if (payAmount <= 0) {
-      showToast({ title: "Validation Error", message: "Enter a positive amount.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Enter a positive amount.",
+        type: "error",
+      });
       return;
     }
 
@@ -111,7 +122,8 @@ export default function InvoiceDetailPage() {
     } catch (err: unknown) {
       showToast({
         title: "Payment Failed",
-        message: err instanceof Error ? err.message : "Unable to record payment",
+        message:
+          err instanceof Error ? err.message : "Unable to record payment",
         type: "error",
       });
     } finally {
@@ -124,20 +136,29 @@ export default function InvoiceDetailPage() {
     if (!invoice) return;
 
     if (!cancelReason.trim()) {
-      showToast({ title: "Validation Error", message: "Provide reason for cancellation.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Provide reason for cancellation.",
+        type: "error",
+      });
       return;
     }
 
     try {
       setCancelling(true);
       await financeService.cancelInvoice(invoice.id, cancelReason.trim());
-      showToast({ title: "Invoice Cancelled", message: "Invoice status marked as CANCELLED.", type: "info" });
+      showToast({
+        title: "Invoice Cancelled",
+        message: "Invoice status marked as CANCELLED.",
+        type: "info",
+      });
       setCancelModalOpen(false);
       loadData();
     } catch (err: unknown) {
       showToast({
         title: "Cancellation Blocked",
-        message: err instanceof Error ? err.message : "Error cancelling invoice",
+        message:
+          err instanceof Error ? err.message : "Error cancelling invoice",
         type: "error",
       });
     } finally {
@@ -156,7 +177,9 @@ export default function InvoiceDetailPage() {
   if (!invoice) {
     return (
       <div className="py-20 text-center space-y-3">
-        <p className="text-base font-semibold text-slate-200">Invoice Not Found</p>
+        <p className="text-base font-semibold text-slate-200">
+          Invoice Not Found
+        </p>
         <Link href="/app/finance/invoices">
           <Button variant="outline" size="sm">
             Back to Invoices
@@ -169,17 +192,41 @@ export default function InvoiceDetailPage() {
   const getStatusBadge = (status: InvoiceStatus) => {
     switch (status) {
       case "PAID":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PAID IN FULL</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            PAID IN FULL
+          </span>
+        );
       case "PARTIALLY_PAID":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">PARTIALLY PAID</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            PARTIALLY PAID
+          </span>
+        );
       case "ISSUED":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">ISSUED</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            ISSUED
+          </span>
+        );
       case "OVERDUE":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">OVERDUE</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            OVERDUE
+          </span>
+        );
       case "DRAFT":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">DRAFT</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">
+            DRAFT
+          </span>
+        );
       case "CANCELLED":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-500 border border-slate-700/60 line-through">CANCELLED</span>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-500 border border-slate-700/60 line-through">
+            CANCELLED
+          </span>
+        );
     }
   };
 
@@ -232,7 +279,11 @@ export default function InvoiceDetailPage() {
 
           {invoice.receiptIds.length > 0 && (
             <Link href={`/app/finance/receipts/${invoice.receiptIds[0]}`}>
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs text-emerald-400 border-emerald-500/30">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-xs text-emerald-400 border-emerald-500/30"
+              >
                 <Receipt className="h-3.5 w-3.5" />
                 View Receipt
               </Button>
@@ -276,29 +327,53 @@ export default function InvoiceDetailPage() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-400 print:text-black">
               FEE INVOICE
             </h3>
-            <p className="font-mono text-base font-bold text-white print:text-black">{invoice.invoiceNumber}</p>
-            <p className="text-xs text-slate-400 print:text-gray-600">Issued Date: {invoice.issueDate}</p>
-            <p className="text-xs font-semibold text-rose-400 print:text-black">Due Date: {invoice.dueDate}</p>
+            <p className="font-mono text-base font-bold text-white print:text-black">
+              {invoice.invoiceNumber}
+            </p>
+            <p className="text-xs text-slate-400 print:text-gray-600">
+              Issued Date: {invoice.issueDate}
+            </p>
+            <p className="text-xs font-semibold text-rose-400 print:text-black">
+              Due Date: {invoice.dueDate}
+            </p>
           </div>
         </div>
 
         {/* Student & Billing Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 print:bg-gray-50 print:border-gray-300">
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Billed To (Candidate):</h4>
-            <p className="text-sm font-bold text-white print:text-black">{invoice.studentName}</p>
-            <p className="text-xs font-mono text-indigo-400 print:text-black">Roll No: {invoice.rollNumber}</p>
-            <p className="text-xs text-slate-300 print:text-gray-700 mt-1">{invoice.program}</p>
-            <p className="text-xs text-slate-400 print:text-gray-600">{invoice.department}</p>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+              Billed To (Candidate):
+            </h4>
+            <p className="text-sm font-bold text-white print:text-black">
+              {invoice.studentName}
+            </p>
+            <p className="text-xs font-mono text-indigo-400 print:text-black">
+              Roll No: {invoice.rollNumber}
+            </p>
+            <p className="text-xs text-slate-300 print:text-gray-700 mt-1">
+              {invoice.program}
+            </p>
+            <p className="text-xs text-slate-400 print:text-gray-600">
+              {invoice.department}
+            </p>
           </div>
 
           <div className="space-y-1 text-xs sm:text-right">
-            <h4 className="font-bold uppercase tracking-wider text-slate-400 mb-2">Billing Term:</h4>
-            <p className="text-slate-300 print:text-gray-700">Academic Year: {invoice.academicYear}</p>
-            <p className="text-slate-300 print:text-gray-700">Semester Term: Semester {invoice.semester}</p>
+            <h4 className="font-bold uppercase tracking-wider text-slate-400 mb-2">
+              Billing Term:
+            </h4>
+            <p className="text-slate-300 print:text-gray-700">
+              Academic Year: {invoice.academicYear}
+            </p>
+            <p className="text-slate-300 print:text-gray-700">
+              Semester Term: Semester {invoice.semester}
+            </p>
             <div className="pt-2">
               <span className="text-slate-400 mr-2">Current Status:</span>
-              <span className="font-bold text-white print:text-black">{invoice.status}</span>
+              <span className="font-bold text-white print:text-black">
+                {invoice.status}
+              </span>
             </div>
           </div>
         </div>
@@ -318,12 +393,25 @@ export default function InvoiceDetailPage() {
             </thead>
             <tbody className="divide-y divide-slate-800/60 print:divide-gray-200">
               {invoice.lines.map((line, idx) => (
-                <tr key={line.id} className="hover:bg-slate-800/30 print:hover:bg-transparent">
-                  <td className="py-2.5 px-4 font-mono text-slate-500">{idx + 1}</td>
-                  <td className="py-2.5 px-4 font-medium text-slate-200 print:text-black">{line.title}</td>
-                  <td className="py-2.5 px-4 text-slate-400 print:text-gray-600">{line.categoryName}</td>
-                  <td className="py-2.5 px-4 text-center text-slate-300 print:text-black">{line.quantity}</td>
-                  <td className="py-2.5 px-4 text-right font-mono text-slate-300 print:text-black">{formatMoney(line.unitAmount)}</td>
+                <tr
+                  key={line.id}
+                  className="hover:bg-slate-800/30 print:hover:bg-transparent"
+                >
+                  <td className="py-2.5 px-4 font-mono text-slate-500">
+                    {idx + 1}
+                  </td>
+                  <td className="py-2.5 px-4 font-medium text-slate-200 print:text-black">
+                    {line.title}
+                  </td>
+                  <td className="py-2.5 px-4 text-slate-400 print:text-gray-600">
+                    {line.categoryName}
+                  </td>
+                  <td className="py-2.5 px-4 text-center text-slate-300 print:text-black">
+                    {line.quantity}
+                  </td>
+                  <td className="py-2.5 px-4 text-right font-mono text-slate-300 print:text-black">
+                    {formatMoney(line.unitAmount)}
+                  </td>
                   <td className="py-2.5 px-4 text-right font-mono font-semibold text-slate-200 print:text-black">
                     {formatMoney(line.totalAmount)}
                   </td>
@@ -336,52 +424,73 @@ export default function InvoiceDetailPage() {
         {/* Financial Calculation Summary Breakdown */}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-6 pt-2">
           <div className="text-xs text-slate-400 space-y-1 max-w-sm">
-            <p className="font-semibold text-slate-300 print:text-black">Payment Terms & Notes:</p>
+            <p className="font-semibold text-slate-300 print:text-black">
+              Payment Terms & Notes:
+            </p>
             <p className="text-[11px] leading-relaxed">
-              1. Fee settlement must be realized prior to due date to avoid semester registration hold.
-              2. For fee concessions, verified scholarship entitlement order must be endorsed by Dean Office.
+              1. Fee settlement must be realized prior to due date to avoid
+              semester registration hold. 2. For fee concessions, verified
+              scholarship entitlement order must be endorsed by Dean Office.
             </p>
           </div>
 
           <div className="w-full sm:w-80 space-y-2 bg-slate-950/60 p-4 rounded-xl border border-slate-800 text-xs print:bg-transparent print:border-gray-300">
             <div className="flex justify-between py-1">
-              <span className="text-slate-400 print:text-gray-600">Gross Fee Total:</span>
-              <span className="font-mono text-slate-200 print:text-black">{formatMoney(invoice.grossAmount)}</span>
+              <span className="text-slate-400 print:text-gray-600">
+                Gross Fee Total:
+              </span>
+              <span className="font-mono text-slate-200 print:text-black">
+                {formatMoney(invoice.grossAmount)}
+              </span>
             </div>
 
             {invoice.scholarshipAmount > 0 && (
               <div className="flex justify-between py-1 text-cyan-400 print:text-black">
                 <span>Scholarship Concession:</span>
-                <span className="font-mono">-{formatMoney(invoice.scholarshipAmount)}</span>
+                <span className="font-mono">
+                  -{formatMoney(invoice.scholarshipAmount)}
+                </span>
               </div>
             )}
 
             {invoice.discountAmount > 0 && (
               <div className="flex justify-between py-1 text-cyan-400 print:text-black">
                 <span>Institutional Waiver / Discount:</span>
-                <span className="font-mono">-{formatMoney(invoice.discountAmount)}</span>
+                <span className="font-mono">
+                  -{formatMoney(invoice.discountAmount)}
+                </span>
               </div>
             )}
 
             {invoice.adjustmentAmount !== 0 && (
               <div className="flex justify-between py-1 text-slate-400">
                 <span>Adjustments:</span>
-                <span className="font-mono">{formatMoney(invoice.adjustmentAmount)}</span>
+                <span className="font-mono">
+                  {formatMoney(invoice.adjustmentAmount)}
+                </span>
               </div>
             )}
 
             <div className="flex justify-between py-1.5 border-t border-slate-800 font-semibold text-sm">
-              <span className="text-white print:text-black">Net Amount Payable:</span>
-              <span className="font-mono text-slate-100 print:text-black">{formatMoney(invoice.netPayable)}</span>
+              <span className="text-white print:text-black">
+                Net Amount Payable:
+              </span>
+              <span className="font-mono text-slate-100 print:text-black">
+                {formatMoney(invoice.netPayable)}
+              </span>
             </div>
 
             <div className="flex justify-between py-1 text-emerald-400 print:text-black">
               <span>Total Paid & Cleared:</span>
-              <span className="font-mono font-semibold">{formatMoney(invoice.paidAmount)}</span>
+              <span className="font-mono font-semibold">
+                {formatMoney(invoice.paidAmount)}
+              </span>
             </div>
 
             <div className="flex justify-between py-2 border-t border-slate-800 font-bold text-sm">
-              <span className="text-rose-400 print:text-black">Outstanding Balance Due:</span>
+              <span className="text-rose-400 print:text-black">
+                Outstanding Balance Due:
+              </span>
               <span className="font-mono text-rose-400 print:text-black text-base">
                 {formatMoney(invoice.outstandingAmount)}
               </span>
@@ -403,9 +512,13 @@ export default function InvoiceDetailPage() {
                 className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80 text-xs"
               >
                 <div>
-                  <span className="font-semibold text-slate-200">{h.action}</span>
+                  <span className="font-semibold text-slate-200">
+                    {h.action}
+                  </span>
                   <span className="text-slate-500 mx-2">•</span>
-                  <span className="text-slate-400">{h.notes || `Processed by ${h.actor}`}</span>
+                  <span className="text-slate-400">
+                    {h.notes || `Processed by ${h.actor}`}
+                  </span>
                 </div>
                 <span className="text-[11px] text-slate-500 font-mono">
                   {new Date(h.timestamp).toLocaleString()}
@@ -430,15 +543,21 @@ export default function InvoiceDetailPage() {
             <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs space-y-1">
               <div className="flex justify-between">
                 <span className="text-slate-400">Student:</span>
-                <span className="font-medium text-slate-200">{invoice.studentName} ({invoice.rollNumber})</span>
+                <span className="font-medium text-slate-200">
+                  {invoice.studentName} ({invoice.rollNumber})
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Invoice:</span>
-                <span className="font-mono text-indigo-400">{invoice.invoiceNumber}</span>
+                <span className="font-mono text-indigo-400">
+                  {invoice.invoiceNumber}
+                </span>
               </div>
               <div className="flex justify-between font-bold pt-1 border-t border-slate-800">
                 <span className="text-slate-300">Remaining Balance:</span>
-                <span className="font-mono text-rose-400">{formatMoney(invoice.outstandingAmount)}</span>
+                <span className="font-mono text-rose-400">
+                  {formatMoney(invoice.outstandingAmount)}
+                </span>
               </div>
             </div>
 
@@ -467,7 +586,9 @@ export default function InvoiceDetailPage() {
                 className="h-8 text-xs bg-slate-950 border-slate-800"
               >
                 <option value="UPI">UPI (Google Pay, PhonePe, Paytm)</option>
-                <option value="BANK_TRANSFER">Bank Transfer / NEFT / RTGS</option>
+                <option value="BANK_TRANSFER">
+                  Bank Transfer / NEFT / RTGS
+                </option>
                 <option value="CARD">Debit / Credit Card Counter</option>
                 <option value="CASH">Institutional Cash Counter</option>
                 <option value="CHEQUE">Cheque / Demand Draft</option>
@@ -500,11 +621,23 @@ export default function InvoiceDetailPage() {
             </div>
 
             <DialogFooter className="pt-3 border-t border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={() => setPayModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setPayModalOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" size="sm" disabled={recordingPay}>
-                {recordingPay ? "Committing..." : `Confirm Payment (${formatMoney(payAmount)})`}
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={recordingPay}
+              >
+                {recordingPay
+                  ? "Committing..."
+                  : `Confirm Payment (${formatMoney(payAmount)})`}
               </Button>
             </DialogFooter>
           </form>
@@ -523,7 +656,8 @@ export default function InvoiceDetailPage() {
 
           <form onSubmit={handleCancelInvoice} className="space-y-4 py-2">
             <p className="text-xs text-slate-400">
-              Cancelling this invoice will permanently withdraw it from the candidate's account and void any outstanding balance.
+              Cancelling this invoice will permanently withdraw it from the
+              candidate's account and void any outstanding balance.
             </p>
 
             <div>
@@ -541,10 +675,20 @@ export default function InvoiceDetailPage() {
             </div>
 
             <DialogFooter className="pt-3 border-t border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={() => setCancelModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setCancelModalOpen(false)}
+              >
                 Go Back
               </Button>
-              <Button type="submit" variant="destructive" size="sm" disabled={cancelling}>
+              <Button
+                type="submit"
+                variant="destructive"
+                size="sm"
+                disabled={cancelling}
+              >
                 {cancelling ? "Cancelling..." : "Confirm Cancellation"}
               </Button>
             </DialogFooter>

@@ -3,7 +3,11 @@
 import { useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AnnouncementDetailRedirect({ params }: { params: Promise<{ id: string }> }) {
+export default function AnnouncementDetailRedirect({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolved = use(params);
   const router = useRouter();
   useEffect(() => {

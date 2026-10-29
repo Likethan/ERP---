@@ -9,10 +9,10 @@ Defines production-grade entities governing:
 - Post-import data reconciliation reports and audit histories
 """
 
-from datetime import UTC, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
@@ -24,10 +24,11 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, TenantScopedModel
+from app.models.base import BaseModel, TenantScopedModel
 
 # Cross-dialect JSON compatibility for PostgreSQL JSONB and SQLite JSON
 JSONB_COMPAT = JSONB

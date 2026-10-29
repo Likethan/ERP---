@@ -7,26 +7,18 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.accreditation import (
-    AccreditationAssessmentStatus,
     AccreditationCriterionType,
     AccreditationEvidenceCategory,
     AccreditationEvidenceVerificationStatus,
-    AccreditationFrameworkStatus,
     AccreditationFrameworkType,
     AccreditationMaturityLevel,
-    AccreditationReadinessCategory,
     AccreditationScoringModel,
-    QualityAuditStatus,
     QualityAuditType,
-    QualityCAPAStatus,
     QualityCAPAType,
-    QualityDataQualityStatus,
     QualityFindingSeverity,
-    QualityFindingStatus,
     QualityImprovementStatus,
     QualityIndicatorCategory,
 )
-
 
 # =============================================================================
 # 1. ACCREDITATION FRAMEWORK SCHEMAS

@@ -12,14 +12,13 @@ Provides endpoints for:
 """
 
 from typing import Annotated
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import require_platform_admin, require_platform_permission
+from app.core.deps import require_platform_permission
 from app.core.events import OutboxService
 from app.core.permissions import (
     PLATFORM_BACKUP_TRIGGER,
@@ -33,7 +32,6 @@ from app.models.people import User
 from app.models.reliability import (
     PlatformBackupRecord,
     PlatformRestoreVerification,
-    PlatformStorageAuditRecord,
 )
 from app.schemas.reliability import (
     BackupCreateRequest,

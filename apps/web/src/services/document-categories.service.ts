@@ -1,4 +1,8 @@
-import { ApiResponse, DocumentCategory, DocumentCategoryCode } from "@campusos/types";
+import {
+  ApiResponse,
+  DocumentCategory,
+  DocumentCategoryCode,
+} from "@campusos/types";
 import { MOCK_DOCUMENT_CATEGORIES } from "@/mocks/documents.mock";
 
 class DocumentCategoriesService {
@@ -9,19 +13,25 @@ class DocumentCategoriesService {
     return { success: true, data: [...this.categories] };
   }
 
-  async getCategoryById(id: string): Promise<ApiResponse<DocumentCategory | null>> {
+  async getCategoryById(
+    id: string,
+  ): Promise<ApiResponse<DocumentCategory | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const cat = this.categories.find((c) => c.id === id) || null;
     return { success: true, data: cat };
   }
 
-  async getCategoryByCode(code: DocumentCategoryCode): Promise<ApiResponse<DocumentCategory | null>> {
+  async getCategoryByCode(
+    code: DocumentCategoryCode,
+  ): Promise<ApiResponse<DocumentCategory | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const cat = this.categories.find((c) => c.code === code) || null;
     return { success: true, data: cat };
   }
 
-  async createCategory(data: Partial<DocumentCategory>): Promise<ApiResponse<DocumentCategory>> {
+  async createCategory(
+    data: Partial<DocumentCategory>,
+  ): Promise<ApiResponse<DocumentCategory>> {
     await new Promise((r) => setTimeout(r, 60));
     const newCategory: DocumentCategory = {
       id: `cat-${Date.now()}`,
@@ -30,7 +40,9 @@ class DocumentCategoriesService {
       description: data.description || "",
       required: data.required ?? false,
       applicableRoles: data.applicableRoles || ["STUDENT", "FACULTY", "STAFF"],
-      applicableDocumentTypes: data.applicableDocumentTypes || ["General Record"],
+      applicableDocumentTypes: data.applicableDocumentTypes || [
+        "General Record",
+      ],
       verificationRequired: data.verificationRequired ?? true,
       expiryRequired: data.expiryRequired ?? false,
       isActive: true,
@@ -55,7 +67,7 @@ class DocumentCategoriesService {
 
   async updateCategory(
     id: string,
-    data: Partial<DocumentCategory>
+    data: Partial<DocumentCategory>,
   ): Promise<ApiResponse<DocumentCategory>> {
     await new Promise((r) => setTimeout(r, 50));
     const cat = this.categories.find((c) => c.id === id);

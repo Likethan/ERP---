@@ -17,7 +17,10 @@ import {
 } from "@campusos/types";
 import { StatCard } from "@/components/ui/stat-card";
 import { Button } from "@/components/ui/button";
-import { DocumentStatusBadge, ConfidentialityBadge } from "@/components/documents/document-status-badge";
+import {
+  DocumentStatusBadge,
+  ConfidentialityBadge,
+} from "@/components/documents/document-status-badge";
 import {
   FileText,
   ShieldCheck,
@@ -40,9 +43,13 @@ import {
 
 export default function DocumentsDashboardPage() {
   const [loading, setLoading] = useState(true);
-  const [summary, setSummary] = useState<DocumentsDashboardSummary | null>(null);
+  const [summary, setSummary] = useState<DocumentsDashboardSummary | null>(
+    null,
+  );
   const [pendingQueue, setPendingQueue] = useState<DocumentItem[]>([]);
-  const [recentRequests, setRecentRequests] = useState<CertificateRequest[]>([]);
+  const [recentRequests, setRecentRequests] = useState<CertificateRequest[]>(
+    [],
+  );
   const [recentRecords, setRecentRecords] = useState<InstitutionalRecord[]>([]);
 
   useEffect(() => {
@@ -60,7 +67,9 @@ export default function DocumentsDashboardPage() {
 
         if (docsRes.success && docsRes.data) {
           const queue = docsRes.data.filter(
-            (d) => d.status === DocumentStatus.UPLOADED || d.status === DocumentStatus.UNDER_REVIEW
+            (d) =>
+              d.status === DocumentStatus.UPLOADED ||
+              d.status === DocumentStatus.UNDER_REVIEW,
           );
           setPendingQueue(queue.slice(0, 5));
         }
@@ -95,7 +104,8 @@ export default function DocumentsDashboardPage() {
             Document Operations Center
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Centralized document verification desk, digital certificates pipeline, and regulatory institutional repository.
+            Centralized document verification desk, digital certificates
+            pipeline, and regulatory institutional repository.
           </p>
         </div>
 
@@ -118,7 +128,10 @@ export default function DocumentsDashboardPage() {
             </Button>
           </Link>
           <Link href="/app/documents/upload">
-            <Button size="sm" className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700"
+            >
               <Upload className="w-4 h-4" />
               Upload Document
             </Button>
@@ -176,7 +189,9 @@ export default function DocumentsDashboardPage() {
         />
         <StatCard
           title="Pending Requests"
-          value={loading ? "--" : String(summary?.pendingCertificateRequests || 0)}
+          value={
+            loading ? "--" : String(summary?.pendingCertificateRequests || 0)
+          }
           icon={<Clock className="w-5 h-5 text-yellow-400" />}
           subtitle="Awaiting issuance approval"
         />
@@ -193,7 +208,9 @@ export default function DocumentsDashboardPage() {
             <div className="text-2xl font-bold text-emerald-400">
               {summary ? `${summary.verificationRate}%` : "--%"}
             </div>
-            <div className="text-xs text-slate-400 mt-0.5">Verification Rate</div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Verification Rate
+            </div>
           </div>
           <div className="md:pl-6 pt-3 md:pt-0">
             <div className="text-2xl font-bold text-rose-400">
@@ -205,19 +222,25 @@ export default function DocumentsDashboardPage() {
             <div className="text-2xl font-bold text-blue-400">
               {summary ? `${summary.averageVerificationHours}h` : "--"}
             </div>
-            <div className="text-xs text-slate-400 mt-0.5">Avg Verification SLA</div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Avg Verification SLA
+            </div>
           </div>
           <div className="md:pl-6 pt-3 md:pt-0">
             <div className="text-2xl font-bold text-slate-200">
               {summary ? summary.documentsUploadedThisMonth : "--"}
             </div>
-            <div className="text-xs text-slate-400 mt-0.5">Uploaded This Month</div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Uploaded This Month
+            </div>
           </div>
           <div className="md:pl-6 pt-3 md:pt-0">
             <div className="text-2xl font-bold text-amber-300">
               {summary ? summary.certificatesIssuedThisMonth : "--"}
             </div>
-            <div className="text-xs text-slate-400 mt-0.5">Certificates Issued</div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Certificates Issued
+            </div>
           </div>
         </div>
       </div>
@@ -247,7 +270,9 @@ export default function DocumentsDashboardPage() {
             </div>
 
             {loading ? (
-              <div className="py-12 text-center text-xs text-slate-500">Loading queue items...</div>
+              <div className="py-12 text-center text-xs text-slate-500">
+                Loading queue items...
+              </div>
             ) : pendingQueue.length === 0 ? (
               <div className="py-12 text-center text-xs text-slate-500">
                 All document submissions are verified and up-to-date!
@@ -255,7 +280,10 @@ export default function DocumentsDashboardPage() {
             ) : (
               <div className="divide-y divide-slate-800/80">
                 {pendingQueue.map((doc) => (
-                  <div key={doc.id} className="py-3.5 flex items-center justify-between gap-4">
+                  <div
+                    key={doc.id}
+                    className="py-3.5 flex items-center justify-between gap-4"
+                  >
                     <div className="flex items-start gap-3 min-w-0">
                       <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 shrink-0 mt-0.5">
                         <FileText className="w-4 h-4" />
@@ -272,7 +300,9 @@ export default function DocumentsDashboardPage() {
                           {doc.ownerRollNumber && (
                             <>
                               <span>•</span>
-                              <span className="font-mono text-slate-500">{doc.ownerRollNumber}</span>
+                              <span className="font-mono text-slate-500">
+                                {doc.ownerRollNumber}
+                              </span>
                             </>
                           )}
                           <span>•</span>
@@ -284,7 +314,11 @@ export default function DocumentsDashboardPage() {
                     <div className="flex items-center gap-3 shrink-0">
                       <DocumentStatusBadge status={doc.status} />
                       <Link href={`/app/documents/verification/${doc.id}`}>
-                        <Button size="sm" variant="outline" className="text-xs h-7">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7"
+                        >
                           Review
                         </Button>
                       </Link>
@@ -297,7 +331,10 @@ export default function DocumentsDashboardPage() {
 
           <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
             <span>Standard SLA turnaround threshold: 24 hours</span>
-            <Link href="/app/documents/all" className="text-blue-400 hover:underline">
+            <Link
+              href="/app/documents/all"
+              className="text-blue-400 hover:underline"
+            >
               Explore All Documents Master Directory →
             </Link>
           </div>
@@ -312,7 +349,10 @@ export default function DocumentsDashboardPage() {
                 <AlertTriangle className="w-4 h-4 text-orange-400" />
                 Document Expiry Radar
               </h3>
-              <Link href="/app/documents/reports" className="text-xs text-blue-400 hover:underline">
+              <Link
+                href="/app/documents/reports"
+                className="text-xs text-blue-400 hover:underline"
+              >
                 Audit
               </Link>
             </div>
@@ -322,7 +362,9 @@ export default function DocumentsDashboardPage() {
                 href="/app/documents/all?status=EXPIRED"
                 className="flex items-center justify-between p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/15 transition"
               >
-                <span className="text-rose-300 font-medium">Lapsed / Expired Documents</span>
+                <span className="text-rose-300 font-medium">
+                  Lapsed / Expired Documents
+                </span>
                 <span className="font-mono font-bold text-rose-400">
                   {summary?.expiryBreakdown.expired || 0}
                 </span>
@@ -332,7 +374,9 @@ export default function DocumentsDashboardPage() {
                 href="/app/documents/all?expiryStatus=EXPIRING_7_DAYS"
                 className="flex items-center justify-between p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/15 transition"
               >
-                <span className="text-amber-300 font-medium">Expiring within 7 Days</span>
+                <span className="text-amber-300 font-medium">
+                  Expiring within 7 Days
+                </span>
                 <span className="font-mono font-bold text-amber-400">
                   {summary?.expiryBreakdown.expiring7Days || 0}
                 </span>
@@ -342,7 +386,9 @@ export default function DocumentsDashboardPage() {
                 href="/app/documents/all?expiryStatus=EXPIRING_30_DAYS"
                 className="flex items-center justify-between p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/15 transition"
               >
-                <span className="text-blue-300 font-medium">Expiring within 30 Days</span>
+                <span className="text-blue-300 font-medium">
+                  Expiring within 30 Days
+                </span>
                 <span className="font-mono font-bold text-blue-400">
                   {summary?.expiryBreakdown.expiring30Days || 0}
                 </span>
@@ -351,7 +397,8 @@ export default function DocumentsDashboardPage() {
               <div className="flex items-center justify-between p-2 text-slate-400">
                 <span>Valid / Permanent Records</span>
                 <span className="font-mono text-slate-300">
-                  {(summary?.expiryBreakdown.valid || 0) + (summary?.expiryBreakdown.noExpiry || 0)}
+                  {(summary?.expiryBreakdown.valid || 0) +
+                    (summary?.expiryBreakdown.noExpiry || 0)}
                 </span>
               </div>
             </div>
@@ -364,7 +411,10 @@ export default function DocumentsDashboardPage() {
                 <Layers className="w-4 h-4 text-blue-400" />
                 Category Distribution
               </h3>
-              <Link href="/app/documents/categories" className="text-xs text-blue-400 hover:underline">
+              <Link
+                href="/app/documents/categories"
+                className="text-xs text-blue-400 hover:underline"
+              >
                 Manage
               </Link>
             </div>
@@ -452,7 +502,10 @@ export default function DocumentsDashboardPage() {
             >
               Manage Templates ({MOCK_CERTIFICATE_TEMPLATES_COUNT || 5})
             </Link>
-            <Link href="/app/documents/certificates" className="text-blue-400 hover:underline">
+            <Link
+              href="/app/documents/certificates"
+              className="text-blue-400 hover:underline"
+            >
               Certificate Center →
             </Link>
           </div>
@@ -508,7 +561,9 @@ export default function DocumentsDashboardPage() {
           </div>
 
           <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-            <span className="text-slate-500">Autonomous governance compliance</span>
+            <span className="text-slate-500">
+              Autonomous governance compliance
+            </span>
             <Link
               href="/app/documents/institutional-records"
               className="text-blue-400 hover:underline"

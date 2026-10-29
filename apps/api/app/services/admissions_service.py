@@ -22,7 +22,7 @@ from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, func, or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -58,13 +58,12 @@ from app.models.admissions import (
     OnboardingTask,
     OnboardingTaskCategory,
     ReviewDecision,
-    ReviewStage,
     SeatAllocation,
     SelectionResult,
     SelectionRun,
     SelectionStatus,
 )
-from app.models.core import Batch, Campus, Program, Semester
+from app.models.core import Batch
 from app.models.people import Role, StudentProfile, User, UserRoleAssignment
 from app.schemas.admissions import (
     AdmissionApplicationCreate,
@@ -82,7 +81,6 @@ from app.schemas.admissions import (
     EligibilityRuleCreate,
     EligibilityRuleUpdate,
     EnrollmentWorkflowInitiate,
-    OnboardingTaskCreate,
     OnboardingTaskUpdate,
     SeatAllocationCreate,
     SeatAllocationUpdate,

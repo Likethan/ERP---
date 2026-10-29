@@ -53,12 +53,20 @@ class AcademicsService {
   // Canonical Domain collections
   private academicSubjects: AcademicSubject[] = [...MOCK_ACADEMIC_SUBJECTS];
   private curriculumSchemes: CurriculumScheme[] = [...MOCK_CURRICULUM_SCHEMES];
-  private courseOfferingDetails: CourseOfferingDetail[] = [...MOCK_COURSE_OFFERING_DETAILS];
-  private studentEnrollments: StudentCourseEnrollmentRecord[] = [...MOCK_STUDENT_COURSE_ENROLLMENTS];
+  private courseOfferingDetails: CourseOfferingDetail[] = [
+    ...MOCK_COURSE_OFFERING_DETAILS,
+  ];
+  private studentEnrollments: StudentCourseEnrollmentRecord[] = [
+    ...MOCK_STUDENT_COURSE_ENROLLMENTS,
+  ];
   private masterTimeSlots: MasterTimeSlot[] = [...MOCK_MASTER_TIME_SLOTS];
-  private scheduledTimetable: ScheduledTimetableEntry[] = [...MOCK_SCHEDULED_TIMETABLE];
+  private scheduledTimetable: ScheduledTimetableEntry[] = [
+    ...MOCK_SCHEDULED_TIMETABLE,
+  ];
   private conflicts: TimetableConflict[] = [...MOCK_TIMETABLE_CONFLICTS];
-  private summary: AcademicOperationsSummary = { ...MOCK_ACADEMIC_OPERATIONS_SUMMARY };
+  private summary: AcademicOperationsSummary = {
+    ...MOCK_ACADEMIC_OPERATIONS_SUMMARY,
+  };
 
   // ==========================================
   // Summary & Department / Program Methods
@@ -67,10 +75,18 @@ class AcademicsService {
   async getSummaryMetrics(): Promise<ApiResponse<AcademicOperationsSummary>> {
     await new Promise((r) => setTimeout(r, 30));
     // Dynamically calculate accurate counts from local state
-    const activeSubjects = this.academicSubjects.filter((s) => s.status === "ACTIVE").length;
-    const activeOfferings = this.courseOfferingDetails.filter((o) => o.status === "ACTIVE" || o.status === "OPEN").length;
-    const unassigned = this.courseOfferingDetails.filter((o) => o.facultyAssignments.length === 0).length;
-    const activeCurricula = this.curriculumSchemes.filter((c) => c.status === "PUBLISHED" || c.status === "APPROVED").length;
+    const activeSubjects = this.academicSubjects.filter(
+      (s) => s.status === "ACTIVE",
+    ).length;
+    const activeOfferings = this.courseOfferingDetails.filter(
+      (o) => o.status === "ACTIVE" || o.status === "OPEN",
+    ).length;
+    const unassigned = this.courseOfferingDetails.filter(
+      (o) => o.facultyAssignments.length === 0,
+    ).length;
+    const activeCurricula = this.curriculumSchemes.filter(
+      (c) => c.status === "PUBLISHED" || c.status === "APPROVED",
+    ).length;
 
     const dynamicSummary: AcademicOperationsSummary = {
       ...this.summary,
@@ -110,8 +126,10 @@ class AcademicsService {
     if (params?.department && params.department !== "ALL") {
       items = items.filter(
         (s) =>
-          s.departmentName.toLowerCase().includes(params.department!.toLowerCase()) ||
-          s.departmentId.toLowerCase() === params.department!.toLowerCase()
+          s.departmentName
+            .toLowerCase()
+            .includes(params.department!.toLowerCase()) ||
+          s.departmentId.toLowerCase() === params.department!.toLowerCase(),
       );
     }
     if (params?.type && (params.type as string) !== "ALL") {
@@ -127,20 +145,26 @@ class AcademicsService {
           s.code.toLowerCase().includes(q) ||
           s.name.toLowerCase().includes(q) ||
           s.shortName.toLowerCase().includes(q) ||
-          s.departmentName.toLowerCase().includes(q)
+          s.departmentName.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getAcademicSubjectById(id: string): Promise<ApiResponse<AcademicSubject | null>> {
+  async getAcademicSubjectById(
+    id: string,
+  ): Promise<ApiResponse<AcademicSubject | null>> {
     await new Promise((r) => setTimeout(r, 30));
-    const sub = this.academicSubjects.find((s) => s.id === id || s.code.toLowerCase() === id.toLowerCase());
+    const sub = this.academicSubjects.find(
+      (s) => s.id === id || s.code.toLowerCase() === id.toLowerCase(),
+    );
     return { success: true, data: sub || null };
   }
 
-  async createAcademicSubject(data: Partial<AcademicSubject>): Promise<ApiResponse<AcademicSubject>> {
+  async createAcademicSubject(
+    data: Partial<AcademicSubject>,
+  ): Promise<ApiResponse<AcademicSubject>> {
     await new Promise((r) => setTimeout(r, 60));
     const newSubject: AcademicSubject = {
       id: `subj-${Date.now()}`,
@@ -155,7 +179,8 @@ class AcademicsService {
       practicalHours: Number(data.practicalHours) || 0,
       type: data.type || "THEORY",
       category: data.category || "CORE",
-      description: data.description || "Course syllabus and learning objectives.",
+      description:
+        data.description || "Course syllabus and learning objectives.",
       status: data.status || "ACTIVE",
       prerequisites: data.prerequisites || [],
       curriculumCount: 1,
@@ -166,7 +191,10 @@ class AcademicsService {
     return { success: true, data: newSubject };
   }
 
-  async updateAcademicSubject(id: string, data: Partial<AcademicSubject>): Promise<ApiResponse<AcademicSubject>> {
+  async updateAcademicSubject(
+    id: string,
+    data: Partial<AcademicSubject>,
+  ): Promise<ApiResponse<AcademicSubject>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.academicSubjects.findIndex((s) => s.id === id);
     if (idx === -1) {
@@ -193,7 +221,9 @@ class AcademicsService {
     return { success: true, data: items };
   }
 
-  async createSubject(data: Partial<SubjectItem>): Promise<ApiResponse<SubjectItem>> {
+  async createSubject(
+    data: Partial<SubjectItem>,
+  ): Promise<ApiResponse<SubjectItem>> {
     await new Promise((r) => setTimeout(r, 60));
     const newSub: SubjectItem = {
       id: `sub-${Date.now()}`,
@@ -224,7 +254,9 @@ class AcademicsService {
     let items = [...this.curriculumSchemes];
 
     if (params?.department && params.department !== "ALL") {
-      items = items.filter((c) => c.department.toLowerCase().includes(params.department!.toLowerCase()));
+      items = items.filter((c) =>
+        c.department.toLowerCase().includes(params.department!.toLowerCase()),
+      );
     }
     if (params?.status && (params.status as string) !== "ALL") {
       items = items.filter((c) => c.status === params.status);
@@ -235,20 +267,24 @@ class AcademicsService {
         (c) =>
           c.programName.toLowerCase().includes(q) ||
           c.regulation.toLowerCase().includes(q) ||
-          c.department.toLowerCase().includes(q)
+          c.department.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getCurriculumSchemeById(id: string): Promise<ApiResponse<CurriculumScheme | null>> {
+  async getCurriculumSchemeById(
+    id: string,
+  ): Promise<ApiResponse<CurriculumScheme | null>> {
     await new Promise((r) => setTimeout(r, 30));
     const scheme = this.curriculumSchemes.find((c) => c.id === id);
     return { success: true, data: scheme || null };
   }
 
-  async createCurriculumScheme(data: Partial<CurriculumScheme>): Promise<ApiResponse<CurriculumScheme>> {
+  async createCurriculumScheme(
+    data: Partial<CurriculumScheme>,
+  ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 60));
     const newScheme: CurriculumScheme = {
       id: `curr-${Date.now()}`,
@@ -283,7 +319,10 @@ class AcademicsService {
     return { success: true, data: newScheme };
   }
 
-  async updateCurriculumScheme(id: string, data: Partial<CurriculumScheme>): Promise<ApiResponse<CurriculumScheme>> {
+  async updateCurriculumScheme(
+    id: string,
+    data: Partial<CurriculumScheme>,
+  ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.curriculumSchemes.findIndex((c) => c.id === id);
     if (idx === -1) {
@@ -294,7 +333,9 @@ class AcademicsService {
     return { success: true, data: updated };
   }
 
-  async publishCurriculumScheme(id: string): Promise<ApiResponse<CurriculumScheme>> {
+  async publishCurriculumScheme(
+    id: string,
+  ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.curriculumSchemes.findIndex((c) => c.id === id);
     if (idx === -1) {
@@ -316,7 +357,7 @@ class AcademicsService {
   async addSubjectToCurriculum(
     curriculumId: string,
     semesterNumber: number,
-    subject: CurriculumSubject
+    subject: CurriculumSubject,
   ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 40));
     const curr = this.curriculumSchemes.find((c) => c.id === curriculumId);
@@ -331,7 +372,10 @@ class AcademicsService {
 
     sem.subjects.push(subject);
     sem.totalCredits = sem.subjects.reduce((sum, s) => sum + s.credits, 0);
-    curr.totalCredits = curr.semesters.reduce((sum, s) => sum + s.totalCredits, 0);
+    curr.totalCredits = curr.semesters.reduce(
+      (sum, s) => sum + s.totalCredits,
+      0,
+    );
 
     return { success: true, data: curr };
   }
@@ -339,7 +383,7 @@ class AcademicsService {
   async removeSubjectFromCurriculum(
     curriculumId: string,
     semesterNumber: number,
-    subjectId: string
+    subjectId: string,
   ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 40));
     const curr = this.curriculumSchemes.find((c) => c.id === curriculumId);
@@ -347,9 +391,14 @@ class AcademicsService {
 
     const sem = curr.semesters.find((s) => s.semesterNumber === semesterNumber);
     if (sem) {
-      sem.subjects = sem.subjects.filter((s) => s.id !== subjectId && s.subjectId !== subjectId);
+      sem.subjects = sem.subjects.filter(
+        (s) => s.id !== subjectId && s.subjectId !== subjectId,
+      );
       sem.totalCredits = sem.subjects.reduce((sum, s) => sum + s.credits, 0);
-      curr.totalCredits = curr.semesters.reduce((sum, s) => sum + s.totalCredits, 0);
+      curr.totalCredits = curr.semesters.reduce(
+        (sum, s) => sum + s.totalCredits,
+        0,
+      );
     }
 
     return { success: true, data: curr };
@@ -358,7 +407,7 @@ class AcademicsService {
   async createElectiveGroup(
     curriculumId: string,
     semesterNumber: number,
-    group: ElectiveGroup
+    group: ElectiveGroup,
   ): Promise<ApiResponse<CurriculumScheme>> {
     await new Promise((r) => setTimeout(r, 40));
     const curr = this.curriculumSchemes.find((c) => c.id === curriculumId);
@@ -399,10 +448,14 @@ class AcademicsService {
       items = items.filter((o) => o.semester === Number(params.semester));
     }
     if (params?.department && params.department !== "ALL") {
-      items = items.filter((o) => o.department.toLowerCase().includes(params.department!.toLowerCase()));
+      items = items.filter((o) =>
+        o.department.toLowerCase().includes(params.department!.toLowerCase()),
+      );
     }
     if (params?.section && params.section !== "ALL") {
-      items = items.filter((o) => o.section.toLowerCase() === params.section!.toLowerCase());
+      items = items.filter(
+        (o) => o.section.toLowerCase() === params.section!.toLowerCase(),
+      );
     }
     if (params?.status && (params.status as string) !== "ALL") {
       items = items.filter((o) => o.status === params.status);
@@ -413,20 +466,26 @@ class AcademicsService {
         (o) =>
           o.subjectCode.toLowerCase().includes(q) ||
           o.subjectName.toLowerCase().includes(q) ||
-          o.facultyAssignments.some((f) => f.facultyName.toLowerCase().includes(q))
+          o.facultyAssignments.some((f) =>
+            f.facultyName.toLowerCase().includes(q),
+          ),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getCourseOfferingDetailById(id: string): Promise<ApiResponse<CourseOfferingDetail | null>> {
+  async getCourseOfferingDetailById(
+    id: string,
+  ): Promise<ApiResponse<CourseOfferingDetail | null>> {
     await new Promise((r) => setTimeout(r, 30));
     const offering = this.courseOfferingDetails.find((o) => o.id === id);
     return { success: true, data: offering || null };
   }
 
-  async createCourseOffering(data: Partial<CourseOfferingDetail>): Promise<ApiResponse<CourseOfferingDetail>> {
+  async createCourseOffering(
+    data: Partial<CourseOfferingDetail>,
+  ): Promise<ApiResponse<CourseOfferingDetail>> {
     await new Promise((r) => setTimeout(r, 60));
     const newOffering: CourseOfferingDetail = {
       id: `off-${Date.now()}`,
@@ -454,7 +513,10 @@ class AcademicsService {
     return { success: true, data: newOffering };
   }
 
-  async updateCourseOffering(id: string, data: Partial<CourseOfferingDetail>): Promise<ApiResponse<CourseOfferingDetail>> {
+  async updateCourseOffering(
+    id: string,
+    data: Partial<CourseOfferingDetail>,
+  ): Promise<ApiResponse<CourseOfferingDetail>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.courseOfferingDetails.findIndex((o) => o.id === id);
     if (idx === -1) {
@@ -467,10 +529,12 @@ class AcademicsService {
 
   async assignFacultyToOffering(
     offeringId: string,
-    assignment: Omit<CourseFacultyAssignment, "id">
+    assignment: Omit<CourseFacultyAssignment, "id">,
   ): Promise<ApiResponse<CourseOfferingDetail>> {
     await new Promise((r) => setTimeout(r, 40));
-    const offering = this.courseOfferingDetails.find((o) => o.id === offeringId);
+    const offering = this.courseOfferingDetails.find(
+      (o) => o.id === offeringId,
+    );
     if (!offering) throw new Error("Course offering not found");
 
     const newAssignment: CourseFacultyAssignment = {
@@ -481,17 +545,27 @@ class AcademicsService {
     return { success: true, data: offering };
   }
 
-  async removeFacultyFromOffering(offeringId: string, assignmentId: string): Promise<ApiResponse<CourseOfferingDetail>> {
+  async removeFacultyFromOffering(
+    offeringId: string,
+    assignmentId: string,
+  ): Promise<ApiResponse<CourseOfferingDetail>> {
     await new Promise((r) => setTimeout(r, 40));
-    const offering = this.courseOfferingDetails.find((o) => o.id === offeringId);
+    const offering = this.courseOfferingDetails.find(
+      (o) => o.id === offeringId,
+    );
     if (!offering) throw new Error("Course offering not found");
 
-    offering.facultyAssignments = offering.facultyAssignments.filter((f) => f.id !== assignmentId);
+    offering.facultyAssignments = offering.facultyAssignments.filter(
+      (f) => f.id !== assignmentId,
+    );
     return { success: true, data: offering };
   }
 
   // Legacy getCourseOfferings for backwards compatibility
-  async getCourseOfferings(params?: { semester?: number; department?: string }): Promise<ApiResponse<CourseOfferingItem[]>> {
+  async getCourseOfferings(params?: {
+    semester?: number;
+    department?: string;
+  }): Promise<ApiResponse<CourseOfferingItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.offerings];
     if (params?.semester) {
@@ -519,10 +593,15 @@ class AcademicsService {
     let items = [...this.studentEnrollments];
 
     if (params?.courseOfferingId && params.courseOfferingId !== "ALL") {
-      items = items.filter((e) => e.courseOfferingId === params.courseOfferingId);
+      items = items.filter(
+        (e) => e.courseOfferingId === params.courseOfferingId,
+      );
     }
     if (params?.studentId) {
-      items = items.filter((e) => e.studentId === params.studentId || e.rollNumber === params.studentId);
+      items = items.filter(
+        (e) =>
+          e.studentId === params.studentId || e.rollNumber === params.studentId,
+      );
     }
     if (params?.semester && (params.semester as unknown as string) !== "ALL") {
       items = items.filter((e) => e.semester === Number(params.semester));
@@ -540,14 +619,16 @@ class AcademicsService {
           e.studentName.toLowerCase().includes(q) ||
           e.rollNumber.toLowerCase().includes(q) ||
           e.subjectCode.toLowerCase().includes(q) ||
-          e.subjectName.toLowerCase().includes(q)
+          e.subjectName.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async enrollStudent(data: Partial<StudentCourseEnrollmentRecord>): Promise<ApiResponse<StudentCourseEnrollmentRecord>> {
+  async enrollStudent(
+    data: Partial<StudentCourseEnrollmentRecord>,
+  ): Promise<ApiResponse<StudentCourseEnrollmentRecord>> {
     await new Promise((r) => setTimeout(r, 50));
     const newEnrollment: StudentCourseEnrollmentRecord = {
       id: `enr-${Date.now()}`,
@@ -573,7 +654,9 @@ class AcademicsService {
     this.studentEnrollments.unshift(newEnrollment);
 
     // Update offering enrolled count
-    const offering = this.courseOfferingDetails.find((o) => o.id === newEnrollment.courseOfferingId);
+    const offering = this.courseOfferingDetails.find(
+      (o) => o.id === newEnrollment.courseOfferingId,
+    );
     if (offering) {
       offering.enrolledCount += 1;
     }
@@ -589,7 +672,9 @@ class AcademicsService {
     section: string;
   }): Promise<ApiResponse<{ enrolledCount: number }>> {
     await new Promise((r) => setTimeout(r, 80));
-    const offering = this.courseOfferingDetails.find((o) => o.id === data.courseOfferingId);
+    const offering = this.courseOfferingDetails.find(
+      (o) => o.id === data.courseOfferingId,
+    );
     const subCode = offering ? offering.subjectCode : "CS301";
     const subName = offering ? offering.subjectName : "Course";
     const credits = offering ? offering.credits : 3;
@@ -597,7 +682,8 @@ class AcademicsService {
     let count = 0;
     for (const sid of data.studentIds) {
       const exists = this.studentEnrollments.some(
-        (e) => e.studentId === sid && e.courseOfferingId === data.courseOfferingId
+        (e) =>
+          e.studentId === sid && e.courseOfferingId === data.courseOfferingId,
       );
       if (!exists) {
         this.studentEnrollments.push({
@@ -630,7 +716,10 @@ class AcademicsService {
     return { success: true, data: { enrolledCount: count } };
   }
 
-  async updateEnrollmentStatus(id: string, status: CourseEnrollmentStatus): Promise<ApiResponse<boolean>> {
+  async updateEnrollmentStatus(
+    id: string,
+    status: CourseEnrollmentStatus,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 40));
     const enr = this.studentEnrollments.find((e) => e.id === id);
     if (!enr) throw new Error("Enrollment not found");
@@ -664,25 +753,37 @@ class AcademicsService {
       items = items.filter((t) => t.day === params.day);
     }
     if (params?.section && params.section !== "ALL") {
-      items = items.filter((t) => t.section.toLowerCase() === params.section!.toLowerCase());
+      items = items.filter(
+        (t) => t.section.toLowerCase() === params.section!.toLowerCase(),
+      );
     }
     if (params?.facultyId && params.facultyId !== "ALL") {
-      items = items.filter((t) => t.facultyId === params.facultyId || t.facultyName.includes(params.facultyId!));
+      items = items.filter(
+        (t) =>
+          t.facultyId === params.facultyId ||
+          t.facultyName.includes(params.facultyId!),
+      );
     }
     if (params?.roomNumber && params.roomNumber !== "ALL") {
-      items = items.filter((t) => t.roomNumber.toLowerCase().includes(params.roomNumber!.toLowerCase()));
+      items = items.filter((t) =>
+        t.roomNumber.toLowerCase().includes(params.roomNumber!.toLowerCase()),
+      );
     }
 
     return { success: true, data: items };
   }
 
-  async getTimetableEntryById(id: string): Promise<ApiResponse<ScheduledTimetableEntry | null>> {
+  async getTimetableEntryById(
+    id: string,
+  ): Promise<ApiResponse<ScheduledTimetableEntry | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const entry = this.scheduledTimetable.find((t) => t.id === id);
     return { success: true, data: entry || null };
   }
 
-  async createTimetableEntry(data: Omit<ScheduledTimetableEntry, "id">): Promise<ApiResponse<ScheduledTimetableEntry>> {
+  async createTimetableEntry(
+    data: Omit<ScheduledTimetableEntry, "id">,
+  ): Promise<ApiResponse<ScheduledTimetableEntry>> {
     await new Promise((r) => setTimeout(r, 60));
     const newEntry: ScheduledTimetableEntry = {
       ...data,
@@ -695,7 +796,7 @@ class AcademicsService {
 
   async updateTimetableEntry(
     id: string,
-    data: Partial<ScheduledTimetableEntry>
+    data: Partial<ScheduledTimetableEntry>,
   ): Promise<ApiResponse<ScheduledTimetableEntry>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.scheduledTimetable.findIndex((t) => t.id === id);
@@ -707,7 +808,9 @@ class AcademicsService {
 
   async deleteTimetableEntry(id: string): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 40));
-    this.scheduledTimetable = this.scheduledTimetable.filter((t) => t.id !== id);
+    this.scheduledTimetable = this.scheduledTimetable.filter(
+      (t) => t.id !== id,
+    );
     this.recalculateConflicts();
     return { success: true, data: true };
   }
@@ -777,14 +880,19 @@ class AcademicsService {
   }
 
   // Legacy getTimetable for backwards compatibility
-  async getTimetable(day?: string, section?: string): Promise<ApiResponse<TimetableSlotItem[]>> {
+  async getTimetable(
+    day?: string,
+    section?: string,
+  ): Promise<ApiResponse<TimetableSlotItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.timetable];
     if (day) {
       items = items.filter((t) => t.day.toLowerCase() === day.toLowerCase());
     }
     if (section) {
-      items = items.filter((t) => t.section.toLowerCase() === section.toLowerCase());
+      items = items.filter(
+        (t) => t.section.toLowerCase() === section.toLowerCase(),
+      );
     }
     return { success: true, data: items };
   }

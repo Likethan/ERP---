@@ -46,13 +46,16 @@ export default function JobDrivesDirectoryPage() {
     title: "",
     driveType: "ON_CAMPUS" as DriveType,
     location: "Main Auditorium & Labs",
-    applicationDeadline: new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
+    applicationDeadline: new Date(Date.now() + 7 * 86400000)
+      .toISOString()
+      .split("T")[0],
     driveDate: new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
     batchGraduationYear: 2026,
     positionTitle: "Associate Software Engineer",
     departmentFunction: "Core Engineering",
     vacancies: 5,
-    targetPrograms: "B.Tech Computer Science & Engineering, B.Tech Electronics & Communication",
+    targetPrograms:
+      "B.Tech Computer Science & Engineering, B.Tech Electronics & Communication",
     minCgpa: 7.5,
     maxBacklogs: 0,
     requiredSkills: "Java, Python, Data Structures, SQL",
@@ -72,10 +75,17 @@ export default function JobDrivesDirectoryPage() {
       setDrives(drivesRes.data);
       setCompanies(companiesRes.data);
       if (companiesRes.data.length > 0) {
-        setWizardData((prev) => ({ ...prev, companyId: companiesRes.data[0].id }));
+        setWizardData((prev) => ({
+          ...prev,
+          companyId: companiesRes.data[0].id,
+        }));
       }
     } catch {
-      showToast({ title: "Error", message: "Failed to load job drives", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load job drives",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -92,7 +102,8 @@ export default function JobDrivesDirectoryPage() {
         companyId: wizardData.companyId,
         companyName: selectedComp?.name,
         companyTier: selectedComp?.tier,
-        title: wizardData.title || `${selectedComp?.name} Campus Recruitment 2026`,
+        title:
+          wizardData.title || `${selectedComp?.name} Campus Recruitment 2026`,
         driveType: wizardData.driveType,
         location: wizardData.location,
         applicationDeadline: wizardData.applicationDeadline,
@@ -115,20 +126,29 @@ export default function JobDrivesDirectoryPage() {
         stipendMonthly: wizardData.stipendMonthly,
         minCgpa: wizardData.minCgpa,
         maxBacklogs: wizardData.maxBacklogs,
-        requiredSkills: wizardData.requiredSkills.split(",").map((s) => s.trim()),
-        targetPrograms: wizardData.targetPrograms.split(",").map((p) => p.trim()),
+        requiredSkills: wizardData.requiredSkills
+          .split(",")
+          .map((s) => s.trim()),
+        targetPrograms: wizardData.targetPrograms
+          .split(",")
+          .map((p) => p.trim()),
       });
 
       showToast({
         title: "Drive Created",
-        message: "Job drive registered as DRAFT (Senate/Officer approval required to open)",
+        message:
+          "Job drive registered as DRAFT (Senate/Officer approval required to open)",
         type: "success",
       });
       setShowWizard(false);
       setWizardStep(1);
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to create recruitment drive", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to create recruitment drive",
+        type: "error",
+      });
     }
   };
 
@@ -168,7 +188,9 @@ export default function JobDrivesDirectoryPage() {
           <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
             <span className="font-mono font-medium">{item.code}</span>
             <span>•</span>
-            <span className="font-medium text-indigo-600 dark:text-indigo-400">{item.companyName}</span>
+            <span className="font-medium text-indigo-600 dark:text-indigo-400">
+              {item.companyName}
+            </span>
           </div>
         </div>
       ),
@@ -184,7 +206,10 @@ export default function JobDrivesDirectoryPage() {
             <span>{item.driveDate}</span>
           </div>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Deadline: <strong className="text-rose-600 dark:text-rose-400">{item.applicationDeadline}</strong>
+            Deadline:{" "}
+            <strong className="text-rose-600 dark:text-rose-400">
+              {item.applicationDeadline}
+            </strong>
           </p>
         </div>
       ),
@@ -194,9 +219,13 @@ export default function JobDrivesDirectoryPage() {
       header: "Positions",
       cell: (item) => (
         <div className="text-xs">
-          <span className="font-bold text-slate-900 dark:text-white">{item.positionsCount}</span>
+          <span className="font-bold text-slate-900 dark:text-white">
+            {item.positionsCount}
+          </span>
           <span className="text-slate-500 ml-1">roles</span>
-          <p className="text-[11px] text-slate-500 mt-0.5">{item.driveType.replace(/_/g, " ")}</p>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            {item.driveType.replace(/_/g, " ")}
+          </p>
         </div>
       ),
     },
@@ -217,7 +246,9 @@ export default function JobDrivesDirectoryPage() {
           <div className="flex items-center gap-2 text-[11px] text-slate-500">
             <span>{item.interviewsCount} Intv</span>
             <span>•</span>
-            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{item.offersCount} Offers</strong>
+            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">
+              {item.offersCount} Offers
+            </strong>
           </div>
         </div>
       ),
@@ -226,7 +257,10 @@ export default function JobDrivesDirectoryPage() {
       id: "status",
       header: "Status",
       cell: (item) => {
-        const statusBadges: Record<DriveStatus, "success" | "warning" | "secondary" | "destructive"> = {
+        const statusBadges: Record<
+          DriveStatus,
+          "success" | "warning" | "secondary" | "destructive"
+        > = {
           OPEN: "success",
           UPCOMING: "warning",
           DRAFT: "secondary",
@@ -264,7 +298,10 @@ export default function JobDrivesDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
-            <Link href="/app/placement" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/app/placement"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Placement Hub
             </Link>
             <span>/</span>
@@ -274,12 +311,17 @@ export default function JobDrivesDirectoryPage() {
             Campus Recruitment Drives & Hiring Events
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Manage corporate campus recruitment cycles, registration deadlines, position requirements, and candidate conversion pipelines.
+            Manage corporate campus recruitment cycles, registration deadlines,
+            position requirements, and candidate conversion pipelines.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="primary" onClick={() => setShowWizard(true)} className="gap-2 text-xs">
+          <Button
+            variant="primary"
+            onClick={() => setShowWizard(true)}
+            className="gap-2 text-xs"
+          >
             <Plus className="w-4 h-4" />
             Create Job Drive
           </Button>
@@ -362,8 +404,12 @@ export default function JobDrivesDirectoryPage() {
             {/* Wizard Step Indicator */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
-                <h3 className="text-base font-bold text-white">Create Recruitment Drive Workflow</h3>
-                <p className="text-xs text-slate-400">Step {wizardStep} of 7: Guided Drive Creation</p>
+                <h3 className="text-base font-bold text-white">
+                  Create Recruitment Drive Workflow
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Step {wizardStep} of 7: Guided Drive Creation
+                </p>
               </div>
               <span className="text-xs font-mono font-bold text-indigo-400 bg-indigo-950/50 px-2 py-1 rounded">
                 DRAFT STAGE
@@ -373,13 +419,24 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 1: Company */}
             {wizardStep === 1 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 1 — Select Corporate Recruiter</h4>
-                <p className="text-slate-400">Choose the empanelled corporate partner for this drive.</p>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 1 — Select Corporate Recruiter
+                </h4>
+                <p className="text-slate-400">
+                  Choose the empanelled corporate partner for this drive.
+                </p>
                 <div>
-                  <label className="text-slate-300 font-medium">Corporate Partner *</label>
+                  <label className="text-slate-300 font-medium">
+                    Corporate Partner *
+                  </label>
                   <select
                     value={wizardData.companyId}
-                    onChange={(e) => setWizardData({ ...wizardData, companyId: e.target.value })}
+                    onChange={(e) =>
+                      setWizardData({
+                        ...wizardData,
+                        companyId: e.target.value,
+                      })
+                    }
                     className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2.5 text-white text-xs"
                   >
                     {companies.map((c) => (
@@ -395,13 +452,19 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 2: Drive Details */}
             {wizardStep === 2 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 2 — Drive Title & Schedule</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 2 — Drive Title & Schedule
+                </h4>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-slate-300 font-medium">Drive Title *</label>
+                    <label className="text-slate-300 font-medium">
+                      Drive Title *
+                    </label>
                     <Input
                       value={wizardData.title}
-                      onChange={(e) => setWizardData({ ...wizardData, title: e.target.value })}
+                      onChange={(e) =>
+                        setWizardData({ ...wizardData, title: e.target.value })
+                      }
                       placeholder="e.g. Google Cloud Graduate Engineering Drive 2026"
                       className="mt-1"
                     />
@@ -409,10 +472,17 @@ export default function JobDrivesDirectoryPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-300 font-medium">Drive Mode</label>
+                      <label className="text-slate-300 font-medium">
+                        Drive Mode
+                      </label>
                       <select
                         value={wizardData.driveType}
-                        onChange={(e) => setWizardData({ ...wizardData, driveType: e.target.value as DriveType })}
+                        onChange={(e) =>
+                          setWizardData({
+                            ...wizardData,
+                            driveType: e.target.value as DriveType,
+                          })
+                        }
                         className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-white text-xs"
                       >
                         <option value="ON_CAMPUS">On Campus</option>
@@ -422,10 +492,17 @@ export default function JobDrivesDirectoryPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-slate-300 font-medium">Venue / Platform</label>
+                      <label className="text-slate-300 font-medium">
+                        Venue / Platform
+                      </label>
                       <Input
                         value={wizardData.location}
-                        onChange={(e) => setWizardData({ ...wizardData, location: e.target.value })}
+                        onChange={(e) =>
+                          setWizardData({
+                            ...wizardData,
+                            location: e.target.value,
+                          })
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -433,20 +510,34 @@ export default function JobDrivesDirectoryPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-300 font-medium">Application Deadline *</label>
+                      <label className="text-slate-300 font-medium">
+                        Application Deadline *
+                      </label>
                       <Input
                         type="date"
                         value={wizardData.applicationDeadline}
-                        onChange={(e) => setWizardData({ ...wizardData, applicationDeadline: e.target.value })}
+                        onChange={(e) =>
+                          setWizardData({
+                            ...wizardData,
+                            applicationDeadline: e.target.value,
+                          })
+                        }
                         className="mt-1"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-300 font-medium">Drive Date *</label>
+                      <label className="text-slate-300 font-medium">
+                        Drive Date *
+                      </label>
                       <Input
                         type="date"
                         value={wizardData.driveDate}
-                        onChange={(e) => setWizardData({ ...wizardData, driveDate: e.target.value })}
+                        onChange={(e) =>
+                          setWizardData({
+                            ...wizardData,
+                            driveDate: e.target.value,
+                          })
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -458,32 +549,55 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 3: Positions */}
             {wizardStep === 3 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 3 — Job Positions Offered</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 3 — Job Positions Offered
+                </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-300 font-medium">Position Title *</label>
+                    <label className="text-slate-300 font-medium">
+                      Position Title *
+                    </label>
                     <Input
                       value={wizardData.positionTitle}
-                      onChange={(e) => setWizardData({ ...wizardData, positionTitle: e.target.value })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          positionTitle: e.target.value,
+                        })
+                      }
                       placeholder="e.g. Software Engineer"
                       className="mt-1"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-300 font-medium">Function / Practice</label>
+                    <label className="text-slate-300 font-medium">
+                      Function / Practice
+                    </label>
                     <Input
                       value={wizardData.departmentFunction}
-                      onChange={(e) => setWizardData({ ...wizardData, departmentFunction: e.target.value })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          departmentFunction: e.target.value,
+                        })
+                      }
                       className="mt-1"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Estimated Open Vacancies</label>
+                  <label className="text-slate-300 font-medium">
+                    Estimated Open Vacancies
+                  </label>
                   <Input
                     type="number"
                     value={wizardData.vacancies}
-                    onChange={(e) => setWizardData({ ...wizardData, vacancies: parseInt(e.target.value) || 1 })}
+                    onChange={(e) =>
+                      setWizardData({
+                        ...wizardData,
+                        vacancies: parseInt(e.target.value) || 1,
+                      })
+                    }
                     className="mt-1"
                   />
                 </div>
@@ -493,43 +607,73 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 4: Eligibility Cutoffs */}
             {wizardStep === 4 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 4 — Academic Eligibility Cutoffs</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 4 — Academic Eligibility Cutoffs
+                </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-300 font-medium">Minimum CGPA Cutoff</label>
+                    <label className="text-slate-300 font-medium">
+                      Minimum CGPA Cutoff
+                    </label>
                     <Input
                       type="number"
                       step="0.1"
                       value={wizardData.minCgpa}
-                      onChange={(e) => setWizardData({ ...wizardData, minCgpa: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          minCgpa: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       className="mt-1 font-mono"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-300 font-medium">Max Active Backlogs Allowed</label>
+                    <label className="text-slate-300 font-medium">
+                      Max Active Backlogs Allowed
+                    </label>
                     <Input
                       type="number"
                       value={wizardData.maxBacklogs}
-                      onChange={(e) => setWizardData({ ...wizardData, maxBacklogs: parseInt(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          maxBacklogs: parseInt(e.target.value) || 0,
+                        })
+                      }
                       className="mt-1 font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-medium">Eligible Academic Programs</label>
+                  <label className="text-slate-300 font-medium">
+                    Eligible Academic Programs
+                  </label>
                   <Input
                     value={wizardData.targetPrograms}
-                    onChange={(e) => setWizardData({ ...wizardData, targetPrograms: e.target.value })}
+                    onChange={(e) =>
+                      setWizardData({
+                        ...wizardData,
+                        targetPrograms: e.target.value,
+                      })
+                    }
                     className="mt-1"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-medium">Mandatory Skill Competencies</label>
+                  <label className="text-slate-300 font-medium">
+                    Mandatory Skill Competencies
+                  </label>
                   <Input
                     value={wizardData.requiredSkills}
-                    onChange={(e) => setWizardData({ ...wizardData, requiredSkills: e.target.value })}
+                    onChange={(e) =>
+                      setWizardData({
+                        ...wizardData,
+                        requiredSkills: e.target.value,
+                      })
+                    }
                     className="mt-1"
                   />
                 </div>
@@ -539,35 +683,58 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 5: Compensation */}
             {wizardStep === 5 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 5 — Compensation Package</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 5 — Compensation Package
+                </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-300 font-medium">Total CTC (LPA) *</label>
+                    <label className="text-slate-300 font-medium">
+                      Total CTC (LPA) *
+                    </label>
                     <Input
                       type="number"
                       step="0.5"
                       value={wizardData.ctcLpa}
-                      onChange={(e) => setWizardData({ ...wizardData, ctcLpa: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          ctcLpa: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       className="mt-1 font-mono font-bold"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-300 font-medium">Base Salary (LPA)</label>
+                    <label className="text-slate-300 font-medium">
+                      Base Salary (LPA)
+                    </label>
                     <Input
                       type="number"
                       step="0.5"
                       value={wizardData.baseSalaryLpa}
-                      onChange={(e) => setWizardData({ ...wizardData, baseSalaryLpa: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setWizardData({
+                          ...wizardData,
+                          baseSalaryLpa: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       className="mt-1 font-mono"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Monthly Internship Stipend (₹)</label>
+                  <label className="text-slate-300 font-medium">
+                    Monthly Internship Stipend (₹)
+                  </label>
                   <Input
                     type="number"
                     value={wizardData.stipendMonthly}
-                    onChange={(e) => setWizardData({ ...wizardData, stipendMonthly: parseInt(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setWizardData({
+                        ...wizardData,
+                        stipendMonthly: parseInt(e.target.value) || 0,
+                      })
+                    }
                     className="mt-1 font-mono"
                   />
                 </div>
@@ -577,29 +744,44 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 6: Review */}
             {wizardStep === 6 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 6 — Review Drive Specification</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 6 — Review Drive Specification
+                </h4>
                 <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-2">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Recruiter:</span>
                     <strong className="text-white">
-                      {companies.find((c) => c.id === wizardData.companyId)?.name}
+                      {
+                        companies.find((c) => c.id === wizardData.companyId)
+                          ?.name
+                      }
                     </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Drive Title:</span>
-                    <strong className="text-white">{wizardData.title || "Standard Drive"}</strong>
+                    <strong className="text-white">
+                      {wizardData.title || "Standard Drive"}
+                    </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Mode & Venue:</span>
-                    <strong className="text-white">{wizardData.driveType} ({wizardData.location})</strong>
+                    <strong className="text-white">
+                      {wizardData.driveType} ({wizardData.location})
+                    </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Drive Date:</span>
-                    <strong className="text-white">{wizardData.driveDate}</strong>
+                    <strong className="text-white">
+                      {wizardData.driveDate}
+                    </strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Application Deadline:</span>
-                    <strong className="text-rose-400 font-bold">{wizardData.applicationDeadline}</strong>
+                    <span className="text-slate-400">
+                      Application Deadline:
+                    </span>
+                    <strong className="text-rose-400 font-bold">
+                      {wizardData.applicationDeadline}
+                    </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Position & Package:</span>
@@ -610,7 +792,8 @@ export default function JobDrivesDirectoryPage() {
                   <div className="flex justify-between">
                     <span className="text-slate-400">Cutoff:</span>
                     <strong className="text-white">
-                      Min CGPA {wizardData.minCgpa}, Max Backlogs {wizardData.maxBacklogs}
+                      Min CGPA {wizardData.minCgpa}, Max Backlogs{" "}
+                      {wizardData.maxBacklogs}
                     </strong>
                   </div>
                 </div>
@@ -620,14 +803,18 @@ export default function JobDrivesDirectoryPage() {
             {/* Step 7: Confirmation & Save DRAFT */}
             {wizardStep === 7 && (
               <div className="space-y-4 text-xs">
-                <h4 className="font-semibold text-slate-200 text-sm">Step 7 — Save as Draft</h4>
+                <h4 className="font-semibold text-slate-200 text-sm">
+                  Step 7 — Save as Draft
+                </h4>
                 <div className="p-4 rounded-xl border border-indigo-900/60 bg-indigo-950/30 text-indigo-300 space-y-2">
                   <AlertCircle className="w-5 h-5 text-indigo-400" />
                   <p className="font-medium">
-                    As per institutional placement governance, new recruitment drives are saved as <strong>DRAFT</strong>.
+                    As per institutional placement governance, new recruitment
+                    drives are saved as <strong>DRAFT</strong>.
                   </p>
                   <p className="text-slate-400">
-                    The placement director or coordinator can review positions and publish to student portals when ready.
+                    The placement director or coordinator can review positions
+                    and publish to student portals when ready.
                   </p>
                 </div>
               </div>
@@ -646,7 +833,11 @@ export default function JobDrivesDirectoryPage() {
               </Button>
 
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => setShowWizard(false)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowWizard(false)}
+                >
                   Cancel
                 </Button>
 
@@ -654,13 +845,19 @@ export default function JobDrivesDirectoryPage() {
                   <Button
                     variant="primary"
                     size="sm"
-                    onClick={() => setWizardStep((prev) => Math.min(7, prev + 1))}
+                    onClick={() =>
+                      setWizardStep((prev) => Math.min(7, prev + 1))
+                    }
                   >
                     Next
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
                 ) : (
-                  <Button variant="primary" size="sm" onClick={handleSaveDraftDrive}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleSaveDraftDrive}
+                  >
                     Save as DRAFT
                   </Button>
                 )}

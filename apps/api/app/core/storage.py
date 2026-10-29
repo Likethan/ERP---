@@ -5,17 +5,15 @@ Provides an abstract interface and concrete storage provider adapters
 MIME-type validation, size limits, SHA-256 checksums, and path traversal protection.
 """
 
-from abc import ABC, abstractmethod
 import hashlib
 import os
-from pathlib import Path
 import re
+from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any
 from uuid import UUID
 
-from app.core.config import settings
 from app.core.exceptions import ValidationException
-
 
 # Allowed MIME types and corresponding extensions for educational documents
 ALLOWED_DOCUMENT_TYPES: dict[str, list[str]] = {

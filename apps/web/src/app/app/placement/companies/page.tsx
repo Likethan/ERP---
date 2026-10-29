@@ -23,7 +23,12 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
 import { formatLPA } from "@/services/placement-calculator";
-import { Company, CompanyTier, CompanyStatus, CompanyType } from "@/types/placement";
+import {
+  Company,
+  CompanyTier,
+  CompanyStatus,
+  CompanyType,
+} from "@/types/placement";
 
 export default function CompaniesDirectoryPage() {
   const { showToast } = useToast();
@@ -60,7 +65,11 @@ export default function CompaniesDirectoryPage() {
       const res = await placementService.getCompanies();
       setCompanies(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load corporate partners", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load corporate partners",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -73,7 +82,11 @@ export default function CompaniesDirectoryPage() {
   const handleCreateCompany = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      showToast({ title: "Validation Error", message: "Company name is required", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Company name is required",
+        type: "error",
+      });
       return;
     }
 
@@ -103,11 +116,19 @@ export default function CompaniesDirectoryPage() {
         notes: formData.notes,
       });
 
-      showToast({ title: "Success", message: `${formData.name} successfully onboarded`, type: "success" });
+      showToast({
+        title: "Success",
+        message: `${formData.name} successfully onboarded`,
+        type: "success",
+      });
       setShowModal(false);
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to onboard company", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to onboard company",
+        type: "error",
+      });
     }
   };
 
@@ -161,14 +182,31 @@ export default function CompaniesDirectoryPage() {
       header: "Hiring Tier",
       sortable: true,
       cell: (item) => {
-        const tierBadges: Record<CompanyTier, { label: string; color: string }> = {
-          TIER_1_SUPER_DREAM: { label: "Super Dream (>₹15 LPA)", color: "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200" },
-          TIER_2_DREAM: { label: "Dream (₹8 - ₹15 LPA)", color: "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200" },
-          TIER_3_MASS: { label: "Mass / Core (<₹8 LPA)", color: "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200" },
+        const tierBadges: Record<
+          CompanyTier,
+          { label: string; color: string }
+        > = {
+          TIER_1_SUPER_DREAM: {
+            label: "Super Dream (>₹15 LPA)",
+            color:
+              "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200",
+          },
+          TIER_2_DREAM: {
+            label: "Dream (₹8 - ₹15 LPA)",
+            color:
+              "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200",
+          },
+          TIER_3_MASS: {
+            label: "Mass / Core (<₹8 LPA)",
+            color:
+              "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200",
+          },
         };
         const t = tierBadges[item.tier] || tierBadges.TIER_2_DREAM;
         return (
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${t.color}`}>
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${t.color}`}
+          >
             {t.label}
           </span>
         );
@@ -196,7 +234,10 @@ export default function CompaniesDirectoryPage() {
       cell: (item) => (
         <div className="text-xs text-slate-600 dark:text-slate-400">
           <p>
-            <strong className="text-slate-900 dark:text-white">{item.totalHiredCount}</strong> Alumni Hired
+            <strong className="text-slate-900 dark:text-white">
+              {item.totalHiredCount}
+            </strong>{" "}
+            Alumni Hired
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">
             {item.activeDrivesCount} Active Drive(s)
@@ -208,12 +249,18 @@ export default function CompaniesDirectoryPage() {
       id: "contact",
       header: "Primary Contact",
       cell: (item) => {
-        const contact = item.contacts.find((c) => c.isPrimary) || item.contacts[0];
-        if (!contact) return <span className="text-xs text-slate-400">Not assigned</span>;
+        const contact =
+          item.contacts.find((c) => c.isPrimary) || item.contacts[0];
+        if (!contact)
+          return <span className="text-xs text-slate-400">Not assigned</span>;
         return (
           <div className="text-xs">
-            <span className="font-medium text-slate-900 dark:text-white">{contact.name}</span>
-            <p className="text-[11px] text-slate-500 truncate max-w-[160px]">{contact.email}</p>
+            <span className="font-medium text-slate-900 dark:text-white">
+              {contact.name}
+            </span>
+            <p className="text-[11px] text-slate-500 truncate max-w-[160px]">
+              {contact.email}
+            </p>
           </div>
         );
       },
@@ -223,12 +270,24 @@ export default function CompaniesDirectoryPage() {
       header: "Status",
       cell: (item) => {
         if (item.status === "ACTIVE") {
-          return <Badge variant="success" dot>ACTIVE</Badge>;
+          return (
+            <Badge variant="success" dot>
+              ACTIVE
+            </Badge>
+          );
         }
         if (item.status === "BLACKLISTED") {
-          return <Badge variant="destructive" dot>BLACKLISTED</Badge>;
+          return (
+            <Badge variant="destructive" dot>
+              BLACKLISTED
+            </Badge>
+          );
         }
-        return <Badge variant="secondary" dot>{item.status}</Badge>;
+        return (
+          <Badge variant="secondary" dot>
+            {item.status}
+          </Badge>
+        );
       },
     },
     {
@@ -254,7 +313,10 @@ export default function CompaniesDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
-            <Link href="/app/placement" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/app/placement"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Placement Hub
             </Link>
             <span>/</span>
@@ -264,12 +326,17 @@ export default function CompaniesDirectoryPage() {
             Corporate Partners & Recruiting Employers
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Enterprise directory of empanelled corporate recruiters, hiring tiers, historical hiring records, and campus HR contacts.
+            Enterprise directory of empanelled corporate recruiters, hiring
+            tiers, historical hiring records, and campus HR contacts.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="primary" onClick={() => setShowModal(true)} className="gap-2 text-xs">
+          <Button
+            variant="primary"
+            onClick={() => setShowModal(true)}
+            className="gap-2 text-xs"
+          >
             <Plus className="w-4 h-4" />
             Onboard New Partner
           </Button>
@@ -286,7 +353,9 @@ export default function CompaniesDirectoryPage() {
         />
         <StatCard
           title="Super Dream Partners"
-          value={companies.filter((c) => c.tier === "TIER_1_SUPER_DREAM").length}
+          value={
+            companies.filter((c) => c.tier === "TIER_1_SUPER_DREAM").length
+          }
           icon={<Award className="w-5 h-5 text-purple-500" />}
           description="Packages exceeding ₹15 LPA"
         />
@@ -323,7 +392,9 @@ export default function CompaniesDirectoryPage() {
             className="text-xs"
           >
             <option value="ALL">All Hiring Tiers</option>
-            <option value="TIER_1_SUPER_DREAM">Super Dream (&gt;₹15 LPA)</option>
+            <option value="TIER_1_SUPER_DREAM">
+              Super Dream (&gt;₹15 LPA)
+            </option>
             <option value="TIER_2_DREAM">Dream (₹8 - ₹15 LPA)</option>
             <option value="TIER_3_MASS">Mass / Core (&lt;₹8 LPA)</option>
           </Select>
@@ -358,28 +429,42 @@ export default function CompaniesDirectoryPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
           <div className="w-full max-w-xl rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-base font-bold text-white">Onboard Corporate Partner</h3>
+            <h3 className="text-base font-bold text-white">
+              Onboard Corporate Partner
+            </h3>
             <p className="text-xs text-slate-400">
-              Register a new corporate recruiter and assign placement tiers and primary HR contacts.
+              Register a new corporate recruiter and assign placement tiers and
+              primary HR contacts.
             </p>
 
             <form onSubmit={handleCreateCompany} className="space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-medium">Company Name *</label>
+                  <label className="text-slate-300 font-medium">
+                    Company Name *
+                  </label>
                   <Input
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="e.g. Microsoft India"
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Partner Code</label>
+                  <label className="text-slate-300 font-medium">
+                    Partner Code
+                  </label>
                   <Input
                     value={formData.code}
-                    onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        code: e.target.value.toUpperCase(),
+                      })
+                    }
                     placeholder="e.g. MSFT"
                     className="mt-1 font-mono"
                   />
@@ -388,22 +473,37 @@ export default function CompaniesDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-medium">Hiring Tier</label>
+                  <label className="text-slate-300 font-medium">
+                    Hiring Tier
+                  </label>
                   <select
                     value={formData.tier}
-                    onChange={(e) => setFormData({ ...formData, tier: e.target.value as CompanyTier })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        tier: e.target.value as CompanyTier,
+                      })
+                    }
                     className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-white text-xs"
                   >
-                    <option value="TIER_1_SUPER_DREAM">Super Dream (&gt;₹15 LPA)</option>
+                    <option value="TIER_1_SUPER_DREAM">
+                      Super Dream (&gt;₹15 LPA)
+                    </option>
                     <option value="TIER_2_DREAM">Dream (₹8 - ₹15 LPA)</option>
-                    <option value="TIER_3_MASS">Mass / Core (&lt;₹8 LPA)</option>
+                    <option value="TIER_3_MASS">
+                      Mass / Core (&lt;₹8 LPA)
+                    </option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Industry Domain</label>
+                  <label className="text-slate-300 font-medium">
+                    Industry Domain
+                  </label>
                   <Input
                     value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, industry: e.target.value })
+                    }
                     className="mt-1"
                   />
                 </div>
@@ -411,19 +511,27 @@ export default function CompaniesDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-medium">Official Website</label>
+                  <label className="text-slate-300 font-medium">
+                    Official Website
+                  </label>
                   <Input
                     value={formData.website}
-                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, website: e.target.value })
+                    }
                     placeholder="https://..."
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Headquarters Location</label>
+                  <label className="text-slate-300 font-medium">
+                    Headquarters Location
+                  </label>
                   <Input
                     value={formData.headquarters}
-                    onChange={(e) => setFormData({ ...formData, headquarters: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, headquarters: e.target.value })
+                    }
                     className="mt-1"
                   />
                 </div>
@@ -431,22 +539,36 @@ export default function CompaniesDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-medium">Expected Avg Package (LPA)</label>
+                  <label className="text-slate-300 font-medium">
+                    Expected Avg Package (LPA)
+                  </label>
                   <Input
                     type="number"
                     step="0.5"
                     value={formData.averageCtcLpa}
-                    onChange={(e) => setFormData({ ...formData, averageCtcLpa: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        averageCtcLpa: parseFloat(e.target.value) || 0,
+                      })
+                    }
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-300 font-medium">Peak Package (LPA)</label>
+                  <label className="text-slate-300 font-medium">
+                    Peak Package (LPA)
+                  </label>
                   <Input
                     type="number"
                     step="0.5"
                     value={formData.highestCtcLpa}
-                    onChange={(e) => setFormData({ ...formData, highestCtcLpa: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        highestCtcLpa: parseFloat(e.target.value) || 0,
+                      })
+                    }
                     className="mt-1"
                   />
                 </div>
@@ -460,18 +582,27 @@ export default function CompaniesDirectoryPage() {
                   <Input
                     placeholder="Contact Name"
                     value={formData.contactName}
-                    onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, contactName: e.target.value })
+                    }
                   />
                   <Input
                     placeholder="HR Email"
                     value={formData.contactEmail}
-                    onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, contactEmail: e.target.value })
+                    }
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button variant="ghost" size="sm" type="button" onClick={() => setShowModal(false)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                >
                   Cancel
                 </Button>
                 <Button variant="primary" size="sm" type="submit">

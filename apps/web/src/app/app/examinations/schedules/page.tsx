@@ -57,7 +57,8 @@ export default function ExamSchedulesPage() {
 
   // Conflict Check State
   const [conflictChecking, setConflictChecking] = useState(false);
-  const [conflictResult, setConflictResult] = useState<ExamConflictCheck | null>(null);
+  const [conflictResult, setConflictResult] =
+    useState<ExamConflictCheck | null>(null);
 
   const loadData = async () => {
     try {
@@ -73,7 +74,11 @@ export default function ExamSchedulesPage() {
       setSchedules(schRes.data);
       setExaminations(examRes.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load examination schedules", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load examination schedules",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -107,7 +112,16 @@ export default function ExamSchedulesPage() {
     }
 
     runConflictCheck();
-  }, [date, startTime, endTime, room, facultyId, courseOfferingId, modalOpen, step]);
+  }, [
+    date,
+    startTime,
+    endTime,
+    room,
+    facultyId,
+    courseOfferingId,
+    modalOpen,
+    step,
+  ]);
 
   const handleCreateSchedule = async () => {
     if (conflictResult?.hasConflict) {
@@ -127,13 +141,18 @@ export default function ExamSchedulesPage() {
         examinationId: examId,
         examinationName: selectedExamObj?.name || "End Semester Examinations",
         courseOfferingId,
-        courseCode: courseOfferingId === "co-cs301-a" ? "CS301" : courseOfferingId === "co-cs302-a" ? "CS302" : "CS303",
+        courseCode:
+          courseOfferingId === "co-cs301-a"
+            ? "CS301"
+            : courseOfferingId === "co-cs302-a"
+              ? "CS302"
+              : "CS303",
         courseName:
           courseOfferingId === "co-cs301-a"
             ? "Data Structures & Algorithms"
             : courseOfferingId === "co-cs302-a"
-            ? "Database Management Systems"
-            : "Operating Systems & Concurrency",
+              ? "Database Management Systems"
+              : "Operating Systems & Concurrency",
         program: "B.Tech Computer Science & Engineering",
         department: "Computer Science & Engineering",
         semester: 5,
@@ -143,20 +162,30 @@ export default function ExamSchedulesPage() {
         endTime,
         room,
         facultyId,
-        facultyName: facultyId === "fac-001" ? "Dr. Ramesh Sundaram" : facultyId === "fac-002" ? "Dr. Anita Roy" : "Prof. Meenakshi Sundaram",
+        facultyName:
+          facultyId === "fac-001"
+            ? "Dr. Ramesh Sundaram"
+            : facultyId === "fac-002"
+              ? "Dr. Anita Roy"
+              : "Prof. Meenakshi Sundaram",
         totalCandidates: 68,
         status: "CONFIRMED",
         invigilatorNotes,
       });
 
-      showToast({ title: "Success", message: "Exam timetable period scheduled successfully.", type: "success" });
+      showToast({
+        title: "Success",
+        message: "Exam timetable period scheduled successfully.",
+        type: "success",
+      });
       setModalOpen(false);
       setStep(1);
       loadData();
     } catch (err: unknown) {
       showToast({
         title: "Error",
-        message: err instanceof Error ? err.message : "Failed to create exam schedule",
+        message:
+          err instanceof Error ? err.message : "Failed to create exam schedule",
         type: "error",
       });
     } finally {
@@ -203,7 +232,9 @@ export default function ExamSchedulesPage() {
           <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-200">
             <MapPin className="h-3.5 w-3.5 text-slate-400" />
             <span className="font-medium">{row.room}</span>
-            <span className="text-slate-400">({row.totalCandidates} seats)</span>
+            <span className="text-slate-400">
+              ({row.totalCandidates} seats)
+            </span>
           </div>
         ),
       },
@@ -226,8 +257,8 @@ export default function ExamSchedulesPage() {
               row.status === "CONFIRMED"
                 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
                 : row.status === "IN_PROGRESS"
-                ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                  : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
             }`}
           >
             {row.status}
@@ -247,7 +278,7 @@ export default function ExamSchedulesPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -259,17 +290,27 @@ export default function ExamSchedulesPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
               Examination Timetable
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Conflict-Free Hall Allotment</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Conflict-Free Hall Allotment
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Examination Schedules & Timetables
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Schedule centralized exam dates, hall allocations, and faculty invigilation assignments with automated collision detection.
+            Schedule centralized exam dates, hall allocations, and faculty
+            invigilation assignments with automated collision detection.
           </p>
         </div>
 
-        <Button variant="primary" className="gap-2" onClick={() => { setStep(1); setModalOpen(true); }}>
+        <Button
+          variant="primary"
+          className="gap-2"
+          onClick={() => {
+            setStep(1);
+            setModalOpen(true);
+          }}
+        >
           <Plus className="h-4 w-4" />
           Schedule Paper
         </Button>
@@ -289,7 +330,9 @@ export default function ExamSchedulesPage() {
         >
           <option value="ALL">All Exam Cycles</option>
           {examinations.map((ex) => (
-            <option key={ex.id} value={ex.id}>{ex.name}</option>
+            <option key={ex.id} value={ex.id}>
+              {ex.name}
+            </option>
           ))}
         </select>
 
@@ -299,8 +342,12 @@ export default function ExamSchedulesPage() {
           className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         >
           <option value="ALL">All Departments</option>
-          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-          <option value="Electronics & Communication">Electronics & Communication</option>
+          <option value="Computer Science & Engineering">
+            Computer Science & Engineering
+          </option>
+          <option value="Electronics & Communication">
+            Electronics & Communication
+          </option>
         </select>
 
         <select
@@ -341,7 +388,9 @@ export default function ExamSchedulesPage() {
                 <div
                   key={i}
                   className={`h-1.5 w-6 rounded-full ${
-                    step >= i ? "bg-indigo-600" : "bg-slate-200 dark:bg-slate-700"
+                    step >= i
+                      ? "bg-indigo-600"
+                      : "bg-slate-200 dark:bg-slate-700"
                   }`}
                 />
               ))}
@@ -360,11 +409,14 @@ export default function ExamSchedulesPage() {
                 className="w-full rounded-lg border border-slate-300 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 {examinations.map((ex) => (
-                  <option key={ex.id} value={ex.id}>{ex.name} ({ex.type})</option>
+                  <option key={ex.id} value={ex.id}>
+                    {ex.name} ({ex.type})
+                  </option>
                 ))}
               </select>
               <p className="text-slate-500">
-                This timetable period will be linked to the institutional examination session.
+                This timetable period will be linked to the institutional
+                examination session.
               </p>
             </div>
           )}
@@ -380,9 +432,15 @@ export default function ExamSchedulesPage() {
                 onChange={(e) => setCourseOfferingId(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="co-cs301-a">CS301 - Data Structures & Algorithms (Sec A)</option>
-                <option value="co-cs302-a">CS302 - Database Management Systems (Sec A)</option>
-                <option value="co-cs303-a">CS303 - Operating Systems & Concurrency (Sec A)</option>
+                <option value="co-cs301-a">
+                  CS301 - Data Structures & Algorithms (Sec A)
+                </option>
+                <option value="co-cs302-a">
+                  CS302 - Database Management Systems (Sec A)
+                </option>
+                <option value="co-cs303-a">
+                  CS303 - Operating Systems & Concurrency (Sec A)
+                </option>
               </select>
             </div>
           )}
@@ -436,10 +494,18 @@ export default function ExamSchedulesPage() {
                 onChange={(e) => setRoom(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="CS-LH-201">Lecture Hall CS-LH-201 (Capacity 70)</option>
-                <option value="CS-LH-202">Lecture Hall CS-LH-202 (Capacity 70)</option>
-                <option value="Auditorium Hall A">Auditorium Hall A (Capacity 250)</option>
-                <option value="Auditorium Hall B">Auditorium Hall B (Capacity 250)</option>
+                <option value="CS-LH-201">
+                  Lecture Hall CS-LH-201 (Capacity 70)
+                </option>
+                <option value="CS-LH-202">
+                  Lecture Hall CS-LH-202 (Capacity 70)
+                </option>
+                <option value="Auditorium Hall A">
+                  Auditorium Hall A (Capacity 250)
+                </option>
+                <option value="Auditorium Hall B">
+                  Auditorium Hall B (Capacity 250)
+                </option>
               </select>
             </div>
           )}
@@ -460,7 +526,9 @@ export default function ExamSchedulesPage() {
                 <option value="fac-003">Prof. Meenakshi Sundaram (ECE)</option>
               </select>
               <div>
-                <span className="text-slate-400">Invigilation Guidelines / Notes</span>
+                <span className="text-slate-400">
+                  Invigilation Guidelines / Notes
+                </span>
                 <input
                   type="text"
                   value={invigilatorNotes}
@@ -491,7 +559,10 @@ export default function ExamSchedulesPage() {
               ) : (
                 <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3 dark:border-emerald-900/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span>No timetable collisions. Room and invigilator are clear for this time slot.</span>
+                  <span>
+                    No timetable collisions. Room and invigilator are clear for
+                    this time slot.
+                  </span>
                 </div>
               )}
 
@@ -516,7 +587,9 @@ export default function ExamSchedulesPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Room:</span>
-                  <span className="font-medium text-slate-800 dark:text-slate-200">{room}</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">
+                    {room}
+                  </span>
                 </div>
               </div>
             </div>
@@ -525,7 +598,11 @@ export default function ExamSchedulesPage() {
           {/* Navigation Controls */}
           <div className="flex justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
             {step > 1 ? (
-              <Button type="button" variant="outline" onClick={() => setStep(step - 1)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStep(step - 1)}
+              >
                 Back
               </Button>
             ) : (
@@ -533,7 +610,11 @@ export default function ExamSchedulesPage() {
             )}
 
             {step < 6 ? (
-              <Button type="button" variant="primary" onClick={() => setStep(step + 1)}>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setStep(step + 1)}
+              >
                 Continue
               </Button>
             ) : (

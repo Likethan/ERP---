@@ -28,7 +28,9 @@ class CertificateRequestsService {
         items = items.filter((r) => r.studentId === filters.studentId);
       }
       if (filters.certificateType && filters.certificateType !== "ALL") {
-        items = items.filter((r) => r.certificateType === filters.certificateType);
+        items = items.filter(
+          (r) => r.certificateType === filters.certificateType,
+        );
       }
       if (filters.search) {
         const q = filters.search.toLowerCase();
@@ -37,7 +39,7 @@ class CertificateRequestsService {
             r.requestId.toLowerCase().includes(q) ||
             r.studentName.toLowerCase().includes(q) ||
             r.rollNumber.toLowerCase().includes(q) ||
-            r.templateName.toLowerCase().includes(q)
+            r.templateName.toLowerCase().includes(q),
         );
       }
     }
@@ -45,14 +47,17 @@ class CertificateRequestsService {
     return { success: true, data: items };
   }
 
-  async getRequestById(id: string): Promise<ApiResponse<CertificateRequest | null>> {
+  async getRequestById(
+    id: string,
+  ): Promise<ApiResponse<CertificateRequest | null>> {
     await new Promise((r) => setTimeout(r, 20));
-    const req = this.requests.find((r) => r.id === id || r.requestId === id) || null;
+    const req =
+      this.requests.find((r) => r.id === id || r.requestId === id) || null;
     return { success: true, data: req };
   }
 
   async createRequest(
-    data: Partial<CertificateRequest>
+    data: Partial<CertificateRequest>,
   ): Promise<ApiResponse<CertificateRequest>> {
     await new Promise((r) => setTimeout(r, 80));
     const nextSeq = this.requests.length + 86;
@@ -66,15 +71,31 @@ class CertificateRequestsService {
       department: data.department || "Computer Science & Engineering",
       certificateType: data.certificateType || CertificateType.BONAFIDE,
       templateId: data.templateId || "tmpl-bonafide-01",
-      templateName: data.templateName || "Institutional Student Bonafide Certificate",
+      templateName:
+        data.templateName || "Institutional Student Bonafide Certificate",
       purpose: data.purpose || "Official documentation and verification",
       requestedDate: new Date().toISOString(),
       requiredByDate: data.requiredByDate,
       status: CertificateRequestStatus.SUBMITTED,
       validationChecks: [
-        { id: "chk-c1", title: "Active Enrollment Status", passed: true, details: "Verified in academic registry" },
-        { id: "chk-c2", title: "Finance Dues Clearance", passed: true, details: "Accounts ledger in good standing" },
-        { id: "chk-c3", title: "Disciplinary Standing Check", passed: true, details: "No active disciplinary proceedings" },
+        {
+          id: "chk-c1",
+          title: "Active Enrollment Status",
+          passed: true,
+          details: "Verified in academic registry",
+        },
+        {
+          id: "chk-c2",
+          title: "Finance Dues Clearance",
+          passed: true,
+          details: "Accounts ledger in good standing",
+        },
+        {
+          id: "chk-c3",
+          title: "Disciplinary Standing Check",
+          passed: true,
+          details: "No active disciplinary proceedings",
+        },
       ],
       timeline: [
         {
@@ -96,7 +117,7 @@ class CertificateRequestsService {
     id: string,
     reviewerId: string,
     reviewerName: string,
-    notes?: string
+    notes?: string,
   ): Promise<ApiResponse<CertificateRequest>> {
     await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((r) => r.id === id || r.requestId === id);
@@ -125,7 +146,7 @@ class CertificateRequestsService {
     id: string,
     reason: string,
     reviewerId: string,
-    reviewerName: string
+    reviewerName: string,
   ): Promise<ApiResponse<CertificateRequest>> {
     if (!reason || reason.trim().length === 0) {
       throw new Error("A specific rejection reason is mandatory.");
@@ -155,7 +176,10 @@ class CertificateRequestsService {
     return { success: true, data: req };
   }
 
-  async cancelRequest(id: string, reason?: string): Promise<ApiResponse<CertificateRequest>> {
+  async cancelRequest(
+    id: string,
+    reason?: string,
+  ): Promise<ApiResponse<CertificateRequest>> {
     await new Promise((r) => setTimeout(r, 40));
     const req = this.requests.find((r) => r.id === id || r.requestId === id);
     if (!req) {
@@ -166,7 +190,9 @@ class CertificateRequestsService {
       req.status !== CertificateRequestStatus.SUBMITTED &&
       req.status !== CertificateRequestStatus.UNDER_REVIEW
     ) {
-      throw new Error("Only submitted or under-review requests can be cancelled.");
+      throw new Error(
+        "Only submitted or under-review requests can be cancelled.",
+      );
     }
 
     req.status = CertificateRequestStatus.CANCELLED;
@@ -184,10 +210,12 @@ class CertificateRequestsService {
 
   async issueCertificateForRequest(
     requestId: string,
-    issuingAuthority: string
+    issuingAuthority: string,
   ): Promise<ApiResponse<IssuedCertificate>> {
     await new Promise((r) => setTimeout(r, 70));
-    const req = this.requests.find((r) => r.id === requestId || r.requestId === requestId);
+    const req = this.requests.find(
+      (r) => r.id === requestId || r.requestId === requestId,
+    );
     if (!req) {
       throw new Error(`Certificate Request with ID ${requestId} not found`);
     }

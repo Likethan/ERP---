@@ -1,5 +1,9 @@
 import { ApiResponse } from "@campusos/types";
-import { AIActivity, AIActivityStatus, IntelligenceDomain } from "@campusos/types";
+import {
+  AIActivity,
+  AIActivityStatus,
+  IntelligenceDomain,
+} from "@campusos/types";
 import { MOCK_AI_ACTIVITIES } from "@/mocks/intelligence-dataset.mock";
 
 class AiActivityService {
@@ -26,7 +30,7 @@ class AiActivityService {
           a.query.toLowerCase().includes(q) ||
           a.userName.toLowerCase().includes(q) ||
           a.resultSummary.toLowerCase().includes(q) ||
-          a.toolsInvoked.some((t) => t.toLowerCase().includes(q))
+          a.toolsInvoked.some((t) => t.toLowerCase().includes(q)),
       );
     }
 

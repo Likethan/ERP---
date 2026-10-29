@@ -22,7 +22,13 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast, ToastType } from "@/components/ui/toast";
@@ -35,7 +41,8 @@ import { MOCK_STUDENTS } from "@/mocks/students.mock";
 export default function PaymentsPage() {
   const { hasPermission } = useAuth();
   const { showToast } = useToast();
-  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+  const notify = (title: string, type: ToastType = "info") =>
+    showToast({ title, type });
 
   const [payments, setPayments] = useState<Payment[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -59,7 +66,9 @@ export default function PaymentsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
 
-  const canRecord = hasPermission("finance.record_payments") || hasPermission("payments:create");
+  const canRecord =
+    hasPermission("finance.record_payments") ||
+    hasPermission("payments:create");
 
   const loadData = async () => {
     try {
@@ -87,9 +96,11 @@ export default function PaymentsPage() {
     return invoices.filter(
       (inv) =>
         (inv.studentId === selectedStudentId ||
-          inv.studentName.toLowerCase().includes(selectedStudentId.toLowerCase())) &&
+          inv.studentName
+            .toLowerCase()
+            .includes(selectedStudentId.toLowerCase())) &&
         inv.outstandingAmount > 0 &&
-        inv.status !== "CANCELLED"
+        inv.status !== "CANCELLED",
     );
   }, [selectedStudentId, invoices]);
 
@@ -105,7 +116,7 @@ export default function PaymentsPage() {
         (inv.studentId === studentId ||
           inv.studentName.toLowerCase().includes(studentId.toLowerCase())) &&
         inv.outstandingAmount > 0 &&
-        inv.status !== "CANCELLED"
+        inv.status !== "CANCELLED",
     );
     if (payable.length > 0) {
       setSelectedInvoiceId(payable[0].id);
@@ -138,7 +149,7 @@ export default function PaymentsPage() {
     if (paymentAmount > selectedInvoice.outstandingAmount) {
       notify(
         `Amount (${formatMoney(paymentAmount)}) exceeds invoice outstanding balance of ${formatMoney(selectedInvoice.outstandingAmount)}.`,
-        "error"
+        "error",
       );
       return;
     }
@@ -160,7 +171,10 @@ export default function PaymentsPage() {
         recordedBy: "Accounts Cashier",
       });
 
-      notify(`Payment of ${formatMoney(paymentAmount)} recorded successfully!`, "success");
+      notify(
+        `Payment of ${formatMoney(paymentAmount)} recorded successfully!`,
+        "success",
+      );
       setModalOpen(false);
       setIsConfirming(false);
       setSelectedStudentId("");
@@ -172,7 +186,8 @@ export default function PaymentsPage() {
       setNotes("");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to record payment.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to record payment.";
       notify(msg, "error");
     } finally {
       setSubmitting(false);
@@ -194,7 +209,9 @@ export default function PaymentsPage() {
 
   const bankWireCollected = useMemo(() => {
     return payments
-      .filter((p) => p.status === "SUCCESS" && p.paymentMethod === "BANK_TRANSFER")
+      .filter(
+        (p) => p.status === "SUCCESS" && p.paymentMethod === "BANK_TRANSFER",
+      )
       .reduce((sum, p) => sum + p.amount, 0);
   }, [payments]);
 
@@ -202,7 +219,8 @@ export default function PaymentsPage() {
     return payments
       .filter(
         (p) =>
-          p.status === "SUCCESS" && (p.paymentMethod === "CASH" || p.paymentMethod === "CHEQUE")
+          p.status === "SUCCESS" &&
+          (p.paymentMethod === "CASH" || p.paymentMethod === "CHEQUE"),
       )
       .reduce((sum, p) => sum + p.amount, 0);
   }, [payments]);
@@ -218,7 +236,8 @@ export default function PaymentsPage() {
         p.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.receiptNumber.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesMethod = methodFilter === "ALL" || p.paymentMethod === methodFilter;
+      const matchesMethod =
+        methodFilter === "ALL" || p.paymentMethod === methodFilter;
       const matchesStatus = statusFilter === "ALL" || p.status === statusFilter;
 
       return matchesSearch && matchesMethod && matchesStatus;
@@ -239,7 +258,9 @@ export default function PaymentsPage() {
           >
             {row.transactionRef}
           </Link>
-          <div className="text-xs text-slate-500 font-mono">Rec: {row.receiptNumber}</div>
+          <div className="text-xs text-slate-500 font-mono">
+            Rec: {row.receiptNumber}
+          </div>
         </div>
       ),
     },
@@ -250,8 +271,12 @@ export default function PaymentsPage() {
       sortable: true,
       cell: ({ row }) => (
         <div>
-          <div className="font-medium text-slate-900 dark:text-white">{row.studentName}</div>
-          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+          <div className="font-medium text-slate-900 dark:text-white">
+            {row.studentName}
+          </div>
+          <div className="text-xs text-slate-500 font-mono">
+            {row.rollNumber}
+          </div>
         </div>
       ),
     },
@@ -275,7 +300,9 @@ export default function PaymentsPage() {
       accessorKey: "paymentDate",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-xs text-slate-600 dark:text-slate-300">{row.paymentDate}</span>
+        <span className="text-xs text-slate-600 dark:text-slate-300">
+          {row.paymentDate}
+        </span>
       ),
     },
     {
@@ -285,12 +312,16 @@ export default function PaymentsPage() {
       cell: ({ row }) => {
         const colors: Record<string, string> = {
           UPI: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300",
-          BANK_TRANSFER: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300",
+          BANK_TRANSFER:
+            "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300",
           CARD: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-300",
           CASH: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300",
-          CHEQUE: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/50 dark:text-purple-300",
-          ONLINE: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/50 dark:text-teal-300",
-          OTHER: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300",
+          CHEQUE:
+            "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/50 dark:text-purple-300",
+          ONLINE:
+            "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/50 dark:text-teal-300",
+          OTHER:
+            "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300",
         };
         return (
           <span
@@ -336,10 +367,14 @@ export default function PaymentsPage() {
       accessorKey: "status",
       cell: ({ row }) => {
         const badges: Record<string, string> = {
-          SUCCESS: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
-          PENDING: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
-          FAILED: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
-          REVERSED: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
+          SUCCESS:
+            "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+          PENDING:
+            "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
+          FAILED:
+            "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
+          REVERSED:
+            "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
         };
         return (
           <span
@@ -380,17 +415,23 @@ export default function PaymentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Payments</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Payments
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Payments & Collections Ledger
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Real-time institutional collections registry, allocation audit, and bank transaction vouchers.
+            Real-time institutional collections registry, allocation audit, and
+            bank transaction vouchers.
           </p>
         </div>
 
@@ -501,7 +542,9 @@ export default function PaymentsPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg font-bold">
               <CreditCard className="w-5 h-5 text-emerald-600" />
-              {isConfirming ? "Confirm Payment Recording" : "Record Student Fee Payment"}
+              {isConfirming
+                ? "Confirm Payment Recording"
+                : "Record Student Fee Payment"}
             </DialogTitle>
           </DialogHeader>
 
@@ -526,7 +569,8 @@ export default function PaymentsPage() {
                   <option value="">-- Choose Candidate --</option>
                   {MOCK_STUDENTS.map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.firstName} {s.lastName} ({s.rollNumber}) — {s.program.code}
+                      {s.firstName} {s.lastName} ({s.rollNumber}) —{" "}
+                      {s.program.code}
                     </option>
                   ))}
                 </Select>
@@ -535,7 +579,8 @@ export default function PaymentsPage() {
               {/* Step 2: Target Unpaid Invoice */}
               <div>
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Select Invoice to Settle <span className="text-rose-500">*</span>
+                  Select Invoice to Settle{" "}
+                  <span className="text-rose-500">*</span>
                 </label>
                 {studentPayableInvoices.length > 0 ? (
                   <Select
@@ -545,7 +590,8 @@ export default function PaymentsPage() {
                   >
                     {studentPayableInvoices.map((inv) => (
                       <option key={inv.id} value={inv.id}>
-                        {inv.invoiceNumber} — {inv.program} Sem {inv.semester} (Due: {formatMoney(inv.outstandingAmount)})
+                        {inv.invoiceNumber} — {inv.program} Sem {inv.semester}{" "}
+                        (Due: {formatMoney(inv.outstandingAmount)})
                       </option>
                     ))}
                   </Select>
@@ -586,7 +632,11 @@ export default function PaymentsPage() {
                 <Input
                   type="number"
                   min={1}
-                  max={selectedInvoice ? selectedInvoice.outstandingAmount : 1000000}
+                  max={
+                    selectedInvoice
+                      ? selectedInvoice.outstandingAmount
+                      : 1000000
+                  }
                   value={paymentAmount || ""}
                   onChange={(e) => setPaymentAmount(Number(e.target.value))}
                   placeholder="Enter amount in ₹"
@@ -603,11 +653,15 @@ export default function PaymentsPage() {
                   </label>
                   <Select
                     value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                    onChange={(e) =>
+                      setPaymentMethod(e.target.value as PaymentMethod)
+                    }
                     className="mt-1"
                   >
                     <option value="UPI">UPI / QR Transfer</option>
-                    <option value="BANK_TRANSFER">Bank Wire / NEFT / RTGS</option>
+                    <option value="BANK_TRANSFER">
+                      Bank Wire / NEFT / RTGS
+                    </option>
                     <option value="CARD">Debit / Credit Card</option>
                     <option value="CASH">Counter Cash</option>
                     <option value="CHEQUE">Cheque / Demand Draft</option>
@@ -617,7 +671,8 @@ export default function PaymentsPage() {
 
                 <div>
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Transaction Ref / UTR <span className="text-rose-500">*</span>
+                    Transaction Ref / UTR{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <Input
                     value={referenceNumber}
@@ -630,7 +685,8 @@ export default function PaymentsPage() {
               </div>
 
               {/* Extra Details for Bank/Cheque */}
-              {(paymentMethod === "BANK_TRANSFER" || paymentMethod === "CHEQUE") && (
+              {(paymentMethod === "BANK_TRANSFER" ||
+                paymentMethod === "CHEQUE") && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
@@ -683,7 +739,11 @@ export default function PaymentsPage() {
                 <Button
                   type="submit"
                   variant="primary"
-                  disabled={!selectedInvoice || paymentAmount <= 0 || !referenceNumber.trim()}
+                  disabled={
+                    !selectedInvoice ||
+                    paymentAmount <= 0 ||
+                    !referenceNumber.trim()
+                  }
                   className="bg-emerald-600 hover:bg-emerald-700 text-white"
                 >
                   Proceed to Review
@@ -698,7 +758,9 @@ export default function PaymentsPage() {
                   Irreversible Cashier Ledger Action
                 </p>
                 <p className="mt-1 text-slate-600 dark:text-slate-300">
-                  Recording this transaction will immediately credit the invoice balance and automatically generate an immutable student fee receipt voucher.
+                  Recording this transaction will immediately credit the invoice
+                  balance and automatically generate an immutable student fee
+                  receipt voucher.
                 </p>
               </div>
 
@@ -706,7 +768,8 @@ export default function PaymentsPage() {
                 <div className="flex justify-between">
                   <span className="text-slate-500">Student:</span>
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {selectedInvoice?.studentName} ({selectedInvoice?.rollNumber})
+                    {selectedInvoice?.studentName} (
+                    {selectedInvoice?.rollNumber})
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -723,23 +786,31 @@ export default function PaymentsPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Payment Method:</span>
-                  <span className="font-medium text-slate-900 dark:text-white">{paymentMethod}</span>
+                  <span className="font-medium text-slate-900 dark:text-white">
+                    {paymentMethod}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Transaction Reference:</span>
-                  <span className="font-mono text-slate-900 dark:text-white">{referenceNumber}</span>
+                  <span className="font-mono text-slate-900 dark:text-white">
+                    {referenceNumber}
+                  </span>
                 </div>
                 {bankName && (
                   <div className="flex justify-between">
                     <span className="text-slate-500">Issuing Bank:</span>
-                    <span className="text-slate-900 dark:text-white">{bankName}</span>
+                    <span className="text-slate-900 dark:text-white">
+                      {bankName}
+                    </span>
                   </div>
                 )}
                 <div className="flex justify-between border-t border-slate-200 pt-2 font-semibold">
-                  <span className="text-slate-600">Remaining Balance Post Payment:</span>
+                  <span className="text-slate-600">
+                    Remaining Balance Post Payment:
+                  </span>
                   <span className="text-slate-900 dark:text-white">
                     {formatMoney(
-                      (selectedInvoice?.outstandingAmount || 0) - paymentAmount
+                      (selectedInvoice?.outstandingAmount || 0) - paymentAmount,
                     )}
                   </span>
                 </div>

@@ -22,7 +22,13 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -67,11 +73,35 @@ export default function FeeStructuresPage() {
   const [wizardSemester, setWizardSemester] = useState(5);
   const [wizardNotes, setWizardNotes] = useState("");
   const [wizardComponents, setWizardComponents] = useState<
-    Array<{ id: string; title: string; categoryName: string; amount: number; isMandatory: boolean }>
+    Array<{
+      id: string;
+      title: string;
+      categoryName: string;
+      amount: number;
+      isMandatory: boolean;
+    }>
   >([
-    { id: "c-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
-    { id: "c-2", title: "Laboratory & Computing Levy", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
-    { id: "c-3", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
+    {
+      id: "c-1",
+      title: "Academic Tuition Fee",
+      categoryName: "Tuition Fee",
+      amount: 55000,
+      isMandatory: true,
+    },
+    {
+      id: "c-2",
+      title: "Laboratory & Computing Levy",
+      categoryName: "Laboratory Fee",
+      amount: 15000,
+      isMandatory: true,
+    },
+    {
+      id: "c-3",
+      title: "Semester Examination Fee",
+      categoryName: "Examination Fee",
+      amount: 3500,
+      isMandatory: true,
+    },
   ]);
 
   const loadData = async () => {
@@ -86,7 +116,10 @@ export default function FeeStructuresPage() {
     } catch (err: unknown) {
       showToast({
         title: "Error Loading Fee Structures",
-        message: err instanceof Error ? err.message : "Unable to retrieve fee structures",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Unable to retrieve fee structures",
         type: "error",
       });
     } finally {
@@ -107,9 +140,27 @@ export default function FeeStructuresPage() {
     setWizardSemester(5);
     setWizardNotes("Draft fee structure created for departmental review.");
     setWizardComponents([
-      { id: "c-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
-      { id: "c-2", title: "Laboratory & Computing Levy", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
-      { id: "c-3", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
+      {
+        id: "c-1",
+        title: "Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        amount: 55000,
+        isMandatory: true,
+      },
+      {
+        id: "c-2",
+        title: "Laboratory & Computing Levy",
+        categoryName: "Laboratory Fee",
+        amount: 15000,
+        isMandatory: true,
+      },
+      {
+        id: "c-3",
+        title: "Semester Examination Fee",
+        categoryName: "Examination Fee",
+        amount: 3500,
+        isMandatory: true,
+      },
     ]);
     setWizardOpen(true);
   };
@@ -129,7 +180,11 @@ export default function FeeStructuresPage() {
 
   const handleRemoveComponent = (idx: number) => {
     if (wizardComponents.length <= 1) {
-      showToast({ title: "Validation Error", message: "At least one component is required.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "At least one component is required.",
+        type: "error",
+      });
       return;
     }
     setWizardComponents((prev) => prev.filter((_, i) => i !== idx));
@@ -155,7 +210,8 @@ export default function FeeStructuresPage() {
 
       showToast({
         title: "Draft Saved",
-        message: "Fee Structure saved in DRAFT state. Awaiting formal approval.",
+        message:
+          "Fee Structure saved in DRAFT state. Awaiting formal approval.",
         type: "success",
       });
       setWizardOpen(false);
@@ -163,7 +219,8 @@ export default function FeeStructuresPage() {
     } catch (err: unknown) {
       showToast({
         title: "Save Failed",
-        message: err instanceof Error ? err.message : "Unable to save fee structure",
+        message:
+          err instanceof Error ? err.message : "Unable to save fee structure",
         type: "error",
       });
     } finally {
@@ -178,27 +235,53 @@ export default function FeeStructuresPage() {
         s.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.program.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "ALL" || s.status === statusFilter;
-      const matchesProgram = programFilter === "ALL" || s.program === programFilter;
+      const matchesProgram =
+        programFilter === "ALL" || s.program === programFilter;
       return matchesSearch && matchesStatus && matchesProgram;
     });
   }, [structures, searchQuery, statusFilter, programFilter]);
 
   const activeCount = structures.filter((s) => s.status === "ACTIVE").length;
-  const pendingCount = structures.filter((s) => s.status === "PENDING_APPROVAL").length;
-  const totalStudents = structures.reduce((acc, s) => acc + (s.totalStudentsAssigned || 0), 0);
+  const pendingCount = structures.filter(
+    (s) => s.status === "PENDING_APPROVAL",
+  ).length;
+  const totalStudents = structures.reduce(
+    (acc, s) => acc + (s.totalStudentsAssigned || 0),
+    0,
+  );
 
   const getStatusBadge = (status: FeeStructureStatus) => {
     switch (status) {
       case "ACTIVE":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Active
+          </span>
+        );
       case "PENDING_APPROVAL":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">Pending Approval</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            Pending Approval
+          </span>
+        );
       case "APPROVED":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Approved</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            Approved
+          </span>
+        );
       case "DRAFT":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">Draft</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">
+            Draft
+          </span>
+        );
       case "RETIRED":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">Retired</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            Retired
+          </span>
+        );
     }
   };
 
@@ -275,7 +358,11 @@ export default function FeeStructuresPage() {
       cell: (row) => (
         <div className="flex items-center gap-2">
           <Link href={`/app/finance/fee-structures/${row.id}`}>
-            <Button variant="ghost" size="sm" className="h-7 text-xs text-slate-300 hover:text-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs text-slate-300 hover:text-white"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               View
             </Button>
@@ -291,7 +378,10 @@ export default function FeeStructuresPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
-            <Link href="/app/finance" className="hover:text-slate-200 transition-colors">
+            <Link
+              href="/app/finance"
+              className="hover:text-slate-200 transition-colors"
+            >
               Finance
             </Link>
             <span>/</span>
@@ -302,12 +392,19 @@ export default function FeeStructuresPage() {
             Fee Structures Directory
           </h1>
           <p className="mt-1 text-xs text-slate-400 max-w-2xl">
-            Configure academic, laboratory, examination, and hostel billing schedules. Structures follow strict approval lifecycles before student fee assignment.
+            Configure academic, laboratory, examination, and hostel billing
+            schedules. Structures follow strict approval lifecycles before
+            student fee assignment.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="primary" size="sm" onClick={openWizard} className="gap-1.5 text-xs">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={openWizard}
+            className="gap-1.5 text-xs"
+          >
             <Plus className="h-3.5 w-3.5" />
             Configure Fee Structure
           </Button>
@@ -386,8 +483,12 @@ export default function FeeStructuresPage() {
         emptyState={
           <div className="py-12 text-center">
             <Layers className="mx-auto h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm font-semibold text-slate-300">No Fee Structures Found</p>
-            <p className="text-xs text-slate-500 mt-1">Try resetting search criteria or configure a new fee structure.</p>
+            <p className="text-sm font-semibold text-slate-300">
+              No Fee Structures Found
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Try resetting search criteria or configure a new fee structure.
+            </p>
           </div>
         }
       />
@@ -416,8 +517,8 @@ export default function FeeStructuresPage() {
                   s === currentStep
                     ? "bg-indigo-500"
                     : s < currentStep
-                    ? "bg-emerald-500"
-                    : "bg-slate-800"
+                      ? "bg-emerald-500"
+                      : "bg-slate-800"
                 }`}
               />
             ))}
@@ -427,7 +528,9 @@ export default function FeeStructuresPage() {
             {/* Step 1: Program & Academic Period */}
             {currentStep === 1 && (
               <div className="space-y-4 animate-fade-in">
-                <h3 className="text-sm font-semibold text-white">Step 1: Program & Academic Context</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  Step 1: Program & Academic Context
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
                     <label className="text-xs font-semibold text-slate-300 block mb-1">
@@ -447,7 +550,9 @@ export default function FeeStructuresPage() {
                     </label>
                     <Input
                       value={wizardCode}
-                      onChange={(e) => setWizardCode(e.target.value.toUpperCase())}
+                      onChange={(e) =>
+                        setWizardCode(e.target.value.toUpperCase())
+                      }
                       className="h-8 text-xs font-mono uppercase bg-slate-950 border-slate-800"
                     />
                   </div>
@@ -489,7 +594,9 @@ export default function FeeStructuresPage() {
                     </label>
                     <Select
                       value={wizardSemester.toString()}
-                      onChange={(e) => setWizardSemester(parseInt(e.target.value, 10))}
+                      onChange={(e) =>
+                        setWizardSemester(parseInt(e.target.value, 10))
+                      }
                       className="h-8 text-xs bg-slate-950 border-slate-800"
                     >
                       {SEMESTERS.map((sem) => (
@@ -507,8 +614,15 @@ export default function FeeStructuresPage() {
             {currentStep === 2 && (
               <div className="space-y-3 animate-fade-in">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-white">Step 2: Select Fee Categories & Heads</h3>
-                  <Button variant="outline" size="sm" onClick={handleAddComponent} className="h-7 text-xs gap-1">
+                  <h3 className="text-sm font-semibold text-white">
+                    Step 2: Select Fee Categories & Heads
+                  </h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddComponent}
+                    className="h-7 text-xs gap-1"
+                  >
                     <Plus className="h-3 w-3" />
                     Add Head
                   </Button>
@@ -520,13 +634,17 @@ export default function FeeStructuresPage() {
                       key={comp.id}
                       className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950 border border-slate-800"
                     >
-                      <span className="font-mono text-xs text-slate-500 w-6">#{idx + 1}</span>
+                      <span className="font-mono text-xs text-slate-500 w-6">
+                        #{idx + 1}
+                      </span>
                       <Input
                         value={comp.title}
                         onChange={(e) => {
                           const val = e.target.value;
                           setWizardComponents((prev) =>
-                            prev.map((c, i) => (i === idx ? { ...c, title: val } : c))
+                            prev.map((c, i) =>
+                              i === idx ? { ...c, title: val } : c,
+                            ),
                           );
                         }}
                         className="h-8 text-xs flex-1 bg-slate-900 border-slate-800"
@@ -537,7 +655,9 @@ export default function FeeStructuresPage() {
                         onChange={(e) => {
                           const val = e.target.value;
                           setWizardComponents((prev) =>
-                            prev.map((c, i) => (i === idx ? { ...c, categoryName: val } : c))
+                            prev.map((c, i) =>
+                              i === idx ? { ...c, categoryName: val } : c,
+                            ),
                           );
                         }}
                         className="h-8 text-xs w-44 bg-slate-900 border-slate-800"
@@ -566,7 +686,9 @@ export default function FeeStructuresPage() {
             {/* Step 3: Configure Amounts */}
             {currentStep === 3 && (
               <div className="space-y-3 animate-fade-in">
-                <h3 className="text-sm font-semibold text-white">Step 3: Configure Component Amounts</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  Step 3: Configure Component Amounts
+                </h3>
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                   {wizardComponents.map((comp, idx) => (
                     <div
@@ -574,11 +696,17 @@ export default function FeeStructuresPage() {
                       className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800"
                     >
                       <div>
-                        <p className="text-xs font-semibold text-slate-200">{comp.title}</p>
-                        <p className="text-[11px] text-slate-400">{comp.categoryName}</p>
+                        <p className="text-xs font-semibold text-slate-200">
+                          {comp.title}
+                        </p>
+                        <p className="text-[11px] text-slate-400">
+                          {comp.categoryName}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-slate-400">₹</span>
+                        <span className="text-xs font-mono text-slate-400">
+                          ₹
+                        </span>
                         <Input
                           type="number"
                           min="0"
@@ -586,7 +714,9 @@ export default function FeeStructuresPage() {
                           onChange={(e) => {
                             const val = parseFloat(e.target.value) || 0;
                             setWizardComponents((prev) =>
-                              prev.map((c, i) => (i === idx ? { ...c, amount: val } : c))
+                              prev.map((c, i) =>
+                                i === idx ? { ...c, amount: val } : c,
+                              ),
                             );
                           }}
                           className="h-8 text-xs w-32 font-mono text-right bg-slate-900 border-slate-800"
@@ -596,7 +726,9 @@ export default function FeeStructuresPage() {
                   ))}
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-                  <span className="text-xs font-semibold text-slate-400">Gross Total Calculation:</span>
+                  <span className="text-xs font-semibold text-slate-400">
+                    Gross Total Calculation:
+                  </span>
                   <span className="font-mono text-sm font-bold text-emerald-400">
                     {formatMoney(grossCalculated)}
                   </span>
@@ -607,9 +739,12 @@ export default function FeeStructuresPage() {
             {/* Step 4: Configure Applicability */}
             {currentStep === 4 && (
               <div className="space-y-3 animate-fade-in">
-                <h3 className="text-sm font-semibold text-white">Step 4: Configure Applicability Rules</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  Step 4: Configure Applicability Rules
+                </h3>
                 <p className="text-xs text-slate-400">
-                  Designate mandatory vs optional levies (e.g. hostel accommodation or student bus transit).
+                  Designate mandatory vs optional levies (e.g. hostel
+                  accommodation or student bus transit).
                 </p>
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                   {wizardComponents.map((comp, idx) => (
@@ -618,8 +753,12 @@ export default function FeeStructuresPage() {
                       className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800"
                     >
                       <div>
-                        <p className="text-xs font-semibold text-slate-200">{comp.title}</p>
-                        <p className="font-mono text-[11px] text-slate-400">{formatMoney(comp.amount)}</p>
+                        <p className="text-xs font-semibold text-slate-200">
+                          {comp.title}
+                        </p>
+                        <p className="font-mono text-[11px] text-slate-400">
+                          {formatMoney(comp.amount)}
+                        </p>
                       </div>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -628,7 +767,9 @@ export default function FeeStructuresPage() {
                           onChange={(e) => {
                             const checked = e.target.checked;
                             setWizardComponents((prev) =>
-                              prev.map((c, i) => (i === idx ? { ...c, isMandatory: checked } : c))
+                              prev.map((c, i) =>
+                                i === idx ? { ...c, isMandatory: checked } : c,
+                              ),
                             );
                           }}
                           className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
@@ -646,7 +787,9 @@ export default function FeeStructuresPage() {
             {/* Step 5: Notes & Documentation */}
             {currentStep === 5 && (
               <div className="space-y-3 animate-fade-in">
-                <h3 className="text-sm font-semibold text-white">Step 5: Governance Notes & Effective Date</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  Step 5: Governance Notes & Effective Date
+                </h3>
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
                     Administrative Notes & Committee Sanction
@@ -665,15 +808,21 @@ export default function FeeStructuresPage() {
             {/* Step 6: Review & Save Draft */}
             {currentStep === 6 && (
               <div className="space-y-3 animate-fade-in">
-                <h3 className="text-sm font-semibold text-white">Step 6: Review Scheme Specifications</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  Step 6: Review Scheme Specifications
+                </h3>
                 <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Scheme Code:</span>
-                    <span className="font-mono font-bold text-indigo-400">{wizardCode}</span>
+                    <span className="font-mono font-bold text-indigo-400">
+                      {wizardCode}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Program:</span>
-                    <span className="text-slate-200">{wizardProgram} (Sem {wizardSemester})</span>
+                    <span className="text-slate-200">
+                      {wizardProgram} (Sem {wizardSemester})
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Academic Year:</span>
@@ -681,18 +830,24 @@ export default function FeeStructuresPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Billing Heads:</span>
-                    <span className="text-slate-200">{wizardComponents.length} components</span>
+                    <span className="text-slate-200">
+                      {wizardComponents.length} components
+                    </span>
                   </div>
                   <div className="flex justify-between border-t border-slate-800 pt-2 font-bold text-sm">
                     <span className="text-white">Gross Scheme Total:</span>
-                    <span className="font-mono text-emerald-400">{formatMoney(grossCalculated)}</span>
+                    <span className="font-mono text-emerald-400">
+                      {formatMoney(grossCalculated)}
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
                   <span>
-                    This structure will be saved in <strong>DRAFT</strong> status. Per institutional governance, it will not be activated or billed to students until formally approved.
+                    This structure will be saved in <strong>DRAFT</strong>{" "}
+                    status. Per institutional governance, it will not be
+                    activated or billed to students until formally approved.
                   </span>
                 </div>
               </div>
@@ -716,7 +871,12 @@ export default function FeeStructuresPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button type="button" variant="ghost" size="sm" onClick={() => setWizardOpen(false)}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setWizardOpen(false)}
+              >
                 Cancel
               </Button>
               {currentStep < 6 ? (

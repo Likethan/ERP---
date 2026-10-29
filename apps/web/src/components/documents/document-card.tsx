@@ -3,7 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { DocumentItem } from "@campusos/types";
-import { DocumentStatusBadge, ConfidentialityBadge } from "./document-status-badge";
+import {
+  DocumentStatusBadge,
+  ConfidentialityBadge,
+} from "./document-status-badge";
 import {
   FileText,
   Calendar,
@@ -21,7 +24,10 @@ interface DocumentCardProps {
   showActions?: boolean;
 }
 
-export function DocumentCard({ document, showActions = true }: DocumentCardProps) {
+export function DocumentCard({
+  document,
+  showActions = true,
+}: DocumentCardProps) {
   const expiryStatus = getDocumentExpiryStatus(document.expiryDate);
 
   return (
@@ -40,7 +46,9 @@ export function DocumentCard({ document, showActions = true }: DocumentCardProps
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="text-sm font-semibold text-slate-100 line-clamp-1 hover:text-blue-400 transition">
-              <Link href={`/app/documents/${document.id}`}>{document.name}</Link>
+              <Link href={`/app/documents/${document.id}`}>
+                {document.name}
+              </Link>
             </h4>
             <div className="flex items-center gap-2 mt-1 text-xs text-slate-400 font-medium">
               <span className="text-blue-400">{document.category}</span>
@@ -88,7 +96,8 @@ export function DocumentCard({ document, showActions = true }: DocumentCardProps
                 Verified By
               </span>
               <span className="text-emerald-400 truncate max-w-[160px] font-medium">
-                {document.verifiedBy.split(" ")[0]} {document.verifiedBy.split(" ")[1] || ""}
+                {document.verifiedBy.split(" ")[0]}{" "}
+                {document.verifiedBy.split(" ")[1] || ""}
               </span>
             </div>
           )}

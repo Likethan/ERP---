@@ -13,10 +13,14 @@ import {
 export function calculateVerificationRate(documents: DocumentItem[]): number {
   if (!documents || documents.length === 0) return 0;
   const processableDocs = documents.filter(
-    (d) => d.status !== DocumentStatus.MISSING && d.status !== DocumentStatus.REQUIRED
+    (d) =>
+      d.status !== DocumentStatus.MISSING &&
+      d.status !== DocumentStatus.REQUIRED,
   );
   if (processableDocs.length === 0) return 0;
-  const verified = processableDocs.filter((d) => d.status === DocumentStatus.VERIFIED).length;
+  const verified = processableDocs.filter(
+    (d) => d.status === DocumentStatus.VERIFIED,
+  ).length;
   return Number(((verified / processableDocs.length) * 100).toFixed(1));
 }
 
@@ -27,10 +31,14 @@ export function calculateVerificationRate(documents: DocumentItem[]): number {
 export function calculateRejectionRate(documents: DocumentItem[]): number {
   if (!documents || documents.length === 0) return 0;
   const processableDocs = documents.filter(
-    (d) => d.status !== DocumentStatus.MISSING && d.status !== DocumentStatus.REQUIRED
+    (d) =>
+      d.status !== DocumentStatus.MISSING &&
+      d.status !== DocumentStatus.REQUIRED,
   );
   if (processableDocs.length === 0) return 0;
-  const rejected = processableDocs.filter((d) => d.status === DocumentStatus.REJECTED).length;
+  const rejected = processableDocs.filter(
+    (d) => d.status === DocumentStatus.REJECTED,
+  ).length;
   return Number(((rejected / processableDocs.length) * 100).toFixed(1));
 }
 
@@ -38,7 +46,10 @@ export function calculateRejectionRate(documents: DocumentItem[]): number {
  * Calculates the document completion rate for an individual owner or cohort.
  * Formula: (Verified Required Documents / Total Required Documents) * 100
  */
-export function calculateDocumentCompletionRate(requiredCount: number, verifiedCount: number): number {
+export function calculateDocumentCompletionRate(
+  requiredCount: number,
+  verifiedCount: number,
+): number {
   if (requiredCount <= 0) return 100;
   const rate = (verifiedCount / requiredCount) * 100;
   return Number(Math.min(100, Math.max(0, rate)).toFixed(1));
@@ -47,10 +58,14 @@ export function calculateDocumentCompletionRate(requiredCount: number, verifiedC
 /**
  * Counts total documents pending review or under active verification.
  */
-export function calculatePendingVerificationCount(documents: DocumentItem[]): number {
+export function calculatePendingVerificationCount(
+  documents: DocumentItem[],
+): number {
   if (!documents || documents.length === 0) return 0;
   return documents.filter(
-    (d) => d.status === DocumentStatus.UPLOADED || d.status === DocumentStatus.UNDER_REVIEW
+    (d) =>
+      d.status === DocumentStatus.UPLOADED ||
+      d.status === DocumentStatus.UNDER_REVIEW,
   ).length;
 }
 
@@ -59,11 +74,13 @@ export function calculatePendingVerificationCount(documents: DocumentItem[]): nu
  */
 export function getDocumentExpiryStatus(
   expiryDateStr?: string | null,
-  referenceDateStr?: string
+  referenceDateStr?: string,
 ): DocumentExpiryStatus {
   if (!expiryDateStr) return DocumentExpiryStatus.NO_EXPIRY;
 
-  const refDate = referenceDateStr ? new Date(referenceDateStr) : new Date("2026-10-02T00:00:00.000Z");
+  const refDate = referenceDateStr
+    ? new Date(referenceDateStr)
+    : new Date("2026-10-02T00:00:00.000Z");
   const expDate = new Date(expiryDateStr);
 
   const diffTime = expDate.getTime() - refDate.getTime();
@@ -89,13 +106,16 @@ export function getDocumentExpiryStatus(
  */
 export function calculateExpiredDocumentCount(
   documents: DocumentItem[],
-  referenceDateStr?: string
+  referenceDateStr?: string,
 ): number {
   if (!documents || documents.length === 0) return 0;
   return documents.filter((d) => {
     if (d.status === DocumentStatus.EXPIRED) return true;
     if (d.expiryDate) {
-      return getDocumentExpiryStatus(d.expiryDate, referenceDateStr) === DocumentExpiryStatus.EXPIRED;
+      return (
+        getDocumentExpiryStatus(d.expiryDate, referenceDateStr) ===
+        DocumentExpiryStatus.EXPIRED
+      );
     }
     return false;
   }).length;
@@ -107,7 +127,7 @@ export function calculateExpiredDocumentCount(
 export function calculateExpiringDocumentCount(
   documents: DocumentItem[],
   withinDays: number = 30,
-  referenceDateStr?: string
+  referenceDateStr?: string,
 ): number {
   if (!documents || documents.length === 0) return 0;
   return documents.filter((d) => {
@@ -117,7 +137,10 @@ export function calculateExpiringDocumentCount(
       return status === DocumentExpiryStatus.EXPIRING_7_DAYS;
     }
     if (withinDays <= 30) {
-      return status === DocumentExpiryStatus.EXPIRING_7_DAYS || status === DocumentExpiryStatus.EXPIRING_30_DAYS;
+      return (
+        status === DocumentExpiryStatus.EXPIRING_7_DAYS ||
+        status === DocumentExpiryStatus.EXPIRING_30_DAYS
+      );
     }
     return (
       status === DocumentExpiryStatus.EXPIRING_7_DAYS ||
@@ -130,17 +153,21 @@ export function calculateExpiringDocumentCount(
 /**
  * Calculates certificate approval rate across all resolved requests.
  */
-export function calculateCertificateApprovalRate(requests: CertificateRequest[]): number {
+export function calculateCertificateApprovalRate(
+  requests: CertificateRequest[],
+): number {
   if (!requests || requests.length === 0) return 0;
   const resolved = requests.filter(
     (r) =>
       r.status === CertificateRequestStatus.APPROVED ||
       r.status === CertificateRequestStatus.ISSUED ||
-      r.status === CertificateRequestStatus.REJECTED
+      r.status === CertificateRequestStatus.REJECTED,
   );
   if (resolved.length === 0) return 0;
   const approved = resolved.filter(
-    (r) => r.status === CertificateRequestStatus.APPROVED || r.status === CertificateRequestStatus.ISSUED
+    (r) =>
+      r.status === CertificateRequestStatus.APPROVED ||
+      r.status === CertificateRequestStatus.ISSUED,
   ).length;
   return Number(((approved / resolved.length) * 100).toFixed(1));
 }
@@ -148,20 +175,30 @@ export function calculateCertificateApprovalRate(requests: CertificateRequest[])
 /**
  * Calculates certificate issuance rate across all submitted requests.
  */
-export function calculateCertificateIssuanceRate(requests: CertificateRequest[]): number {
+export function calculateCertificateIssuanceRate(
+  requests: CertificateRequest[],
+): number {
   if (!requests || requests.length === 0) return 0;
-  const nonDraft = requests.filter((r) => r.status !== CertificateRequestStatus.DRAFT);
+  const nonDraft = requests.filter(
+    (r) => r.status !== CertificateRequestStatus.DRAFT,
+  );
   if (nonDraft.length === 0) return 0;
-  const issued = nonDraft.filter((r) => r.status === CertificateRequestStatus.ISSUED).length;
+  const issued = nonDraft.filter(
+    (r) => r.status === CertificateRequestStatus.ISSUED,
+  ).length;
   return Number(((issued / nonDraft.length) * 100).toFixed(1));
 }
 
 /**
  * Calculates average verification turnaround time in hours from timeline timestamps.
  */
-export function calculateAverageVerificationTime(documents: DocumentItem[]): number {
+export function calculateAverageVerificationTime(
+  documents: DocumentItem[],
+): number {
   if (!documents || documents.length === 0) return 0;
-  const verifiedDocs = documents.filter((d) => d.status === DocumentStatus.VERIFIED && d.verifiedAt && d.uploadedAt);
+  const verifiedDocs = documents.filter(
+    (d) => d.status === DocumentStatus.VERIFIED && d.verifiedAt && d.uploadedAt,
+  );
   if (verifiedDocs.length === 0) return 24; // Standard SLA fallback
 
   let totalHours = 0;
@@ -184,7 +221,7 @@ export function calculateAverageVerificationTime(documents: DocumentItem[]): num
  * Generates category distribution with count and percentage.
  */
 export function calculateCategoryDistribution(
-  documents: DocumentItem[]
+  documents: DocumentItem[],
 ): { category: string; count: number; percentage: number }[] {
   if (!documents || documents.length === 0) return [];
   const total = documents.length;
@@ -206,7 +243,7 @@ export function calculateCategoryDistribution(
  */
 export function calculateExpiryBreakdown(
   documents: DocumentItem[],
-  referenceDateStr?: string
+  referenceDateStr?: string,
 ): {
   expired: number;
   expiring7Days: number;

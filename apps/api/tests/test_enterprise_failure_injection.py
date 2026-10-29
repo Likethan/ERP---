@@ -17,10 +17,8 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.exceptions import ValidationException
 from app.core.resilience import (
     CircuitBreaker,
-    CircuitBreakerOpenException,
     ReliabilityCircuitBreakerState,
     retry_async,
 )

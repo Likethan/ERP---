@@ -41,7 +41,9 @@ export default function InterviewDetailPage() {
   const [commRating, setCommRating] = useState(4);
   const [probRating, setProbRating] = useState(4);
   const [fitRating, setFitRating] = useState(5);
-  const [recommendation, setRecommendation] = useState<"STRONG_HIRE" | "HIRE" | "BORDERLINE" | "NO_HIRE">("STRONG_HIRE");
+  const [recommendation, setRecommendation] = useState<
+    "STRONG_HIRE" | "HIRE" | "BORDERLINE" | "NO_HIRE"
+  >("STRONG_HIRE");
   const [evalNotes, setEvalNotes] = useState("");
 
   // Reschedule modal
@@ -55,7 +57,11 @@ export default function InterviewDetailPage() {
       setLoading(true);
       const res = await placementService.getInterviewById(interviewId);
       if (!res.data) {
-        showToast({ title: "Not Found", message: "Interview session not found", type: "error" });
+        showToast({
+          title: "Not Found",
+          message: "Interview session not found",
+          type: "error",
+        });
         router.push("/app/placement/interviews");
         return;
       }
@@ -71,7 +77,11 @@ export default function InterviewDetailPage() {
       setNewDate(res.data.date);
       setNewTime(res.data.time);
     } catch {
-      showToast({ title: "Error", message: "Failed to load interview dossier", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load interview dossier",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -99,10 +109,18 @@ export default function InterviewDetailPage() {
         evaluatedAt: new Date().toISOString(),
       });
 
-      showToast({ title: "Evaluation Saved", message: "Candidate evaluation submitted & round completed", type: "success" });
+      showToast({
+        title: "Evaluation Saved",
+        message: "Candidate evaluation submitted & round completed",
+        type: "success",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to record evaluation", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to record evaluation",
+        type: "error",
+      });
     }
   };
 
@@ -115,13 +133,21 @@ export default function InterviewDetailPage() {
         newDate,
         newTime,
         rescheduleReason || "Panel availability adjustment",
-        "Placement Coordinator"
+        "Placement Coordinator",
       );
-      showToast({ title: "Interview Rescheduled", message: `Updated to ${newDate} at ${newTime}`, type: "info" });
+      showToast({
+        title: "Interview Rescheduled",
+        message: `Updated to ${newDate} at ${newTime}`,
+        type: "info",
+      });
       setShowRescheduleModal(false);
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to reschedule interview", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to reschedule interview",
+        type: "error",
+      });
     }
   };
 
@@ -130,7 +156,9 @@ export default function InterviewDetailPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500">Loading interview evaluation dossier...</p>
+          <p className="text-xs text-slate-500">
+            Loading interview evaluation dossier...
+          </p>
         </div>
       </div>
     );
@@ -166,14 +194,16 @@ export default function InterviewDetailPage() {
                     interview.status === "COMPLETED"
                       ? "success"
                       : interview.status === "SCHEDULED"
-                      ? "warning"
-                      : "secondary"
+                        ? "warning"
+                        : "secondary"
                   }
                   dot
                 >
                   {interview.status}
                 </Badge>
-                <Badge variant="outline">{interview.stage} Round {interview.roundNumber}</Badge>
+                <Badge variant="outline">
+                  {interview.stage} Round {interview.roundNumber}
+                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5">
@@ -188,7 +218,10 @@ export default function InterviewDetailPage() {
                   {interview.companyName} — {interview.positionTitle}
                 </span>
                 <span>•</span>
-                <span>{interview.date} at {interview.time} ({interview.durationMinutes} mins)</span>
+                <span>
+                  {interview.date} at {interview.time} (
+                  {interview.durationMinutes} mins)
+                </span>
               </div>
             </div>
           </div>
@@ -205,7 +238,9 @@ export default function InterviewDetailPage() {
                 Reschedule
               </Button>
             )}
-            <Link href={`/app/placement/applications/${interview.applicationId}`}>
+            <Link
+              href={`/app/placement/applications/${interview.applicationId}`}
+            >
               <Button variant="secondary" size="sm" className="gap-1.5 text-xs">
                 <FileCheck2 className="w-3.5 h-3.5" />
                 View Application
@@ -227,7 +262,9 @@ export default function InterviewDetailPage() {
               <div>
                 <span className="text-slate-500">Interview Mode:</span>
                 <p className="font-semibold text-slate-900 dark:text-white mt-0.5">
-                  {interview.mode === "ONLINE" ? "Virtual / Video Conference" : "In Person (Campus)"}
+                  {interview.mode === "ONLINE"
+                    ? "Virtual / Video Conference"
+                    : "In Person (Campus)"}
                 </p>
               </div>
               <div>
@@ -267,7 +304,10 @@ export default function InterviewDetailPage() {
               )}
             </div>
 
-            <form onSubmit={handleSubmitEvaluation} className="space-y-4 text-xs">
+            <form
+              onSubmit={handleSubmitEvaluation}
+              className="space-y-4 text-xs"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-slate-600 dark:text-slate-300 font-medium">
@@ -280,7 +320,14 @@ export default function InterviewDetailPage() {
                   >
                     {[1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
-                        {num} — {num === 5 ? "Exceptional" : num === 4 ? "Strong" : num === 3 ? "Adequate" : "Poor"}
+                        {num} —{" "}
+                        {num === 5
+                          ? "Exceptional"
+                          : num === 4
+                            ? "Strong"
+                            : num === 3
+                              ? "Adequate"
+                              : "Poor"}
                       </option>
                     ))}
                   </select>
@@ -297,7 +344,14 @@ export default function InterviewDetailPage() {
                   >
                     {[1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
-                        {num} — {num === 5 ? "Exceptional" : num === 4 ? "Strong" : num === 3 ? "Adequate" : "Poor"}
+                        {num} —{" "}
+                        {num === 5
+                          ? "Exceptional"
+                          : num === 4
+                            ? "Strong"
+                            : num === 3
+                              ? "Adequate"
+                              : "Poor"}
                       </option>
                     ))}
                   </select>
@@ -316,7 +370,14 @@ export default function InterviewDetailPage() {
                   >
                     {[1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
-                        {num} — {num === 5 ? "Exceptional" : num === 4 ? "Strong" : num === 3 ? "Adequate" : "Poor"}
+                        {num} —{" "}
+                        {num === 5
+                          ? "Exceptional"
+                          : num === 4
+                            ? "Strong"
+                            : num === 3
+                              ? "Adequate"
+                              : "Poor"}
                       </option>
                     ))}
                   </select>
@@ -333,7 +394,14 @@ export default function InterviewDetailPage() {
                   >
                     {[1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
-                        {num} — {num === 5 ? "Exceptional" : num === 4 ? "Strong" : num === 3 ? "Adequate" : "Poor"}
+                        {num} —{" "}
+                        {num === 5
+                          ? "Exceptional"
+                          : num === 4
+                            ? "Strong"
+                            : num === 3
+                              ? "Adequate"
+                              : "Poor"}
                       </option>
                     ))}
                   </select>
@@ -349,9 +417,13 @@ export default function InterviewDetailPage() {
                   onChange={(e) => setRecommendation(e.target.value as any)}
                   className="mt-1 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white font-semibold"
                 >
-                  <option value="STRONG_HIRE">STRONG HIRE (Priority Offer)</option>
+                  <option value="STRONG_HIRE">
+                    STRONG HIRE (Priority Offer)
+                  </option>
                   <option value="HIRE">HIRE (Qualified for Offer)</option>
-                  <option value="BORDERLINE">BORDERLINE (Requires Second Review)</option>
+                  <option value="BORDERLINE">
+                    BORDERLINE (Requires Second Review)
+                  </option>
                   <option value="NO_HIRE">NO HIRE (Reject)</option>
                 </select>
               </div>
@@ -370,7 +442,12 @@ export default function InterviewDetailPage() {
               </div>
 
               <div className="flex justify-end pt-2">
-                <Button variant="primary" size="sm" type="submit" className="gap-1.5">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  type="submit"
+                  className="gap-1.5"
+                >
                   <Check className="w-3.5 h-3.5" />
                   Save Performance Evaluation
                 </Button>
@@ -393,7 +470,8 @@ export default function InterviewDetailPage() {
                     {entry.action}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    By {entry.actor} • {new Date(entry.timestamp).toLocaleDateString()}
+                    By {entry.actor} •{" "}
+                    {new Date(entry.timestamp).toLocaleDateString()}
                   </div>
                   {entry.details && (
                     <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 bg-slate-50 dark:bg-slate-800 p-2 rounded">
@@ -411,9 +489,12 @@ export default function InterviewDetailPage() {
       {showRescheduleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
           <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Reschedule Interview Round</h3>
+            <h3 className="text-base font-bold text-white">
+              Reschedule Interview Round
+            </h3>
             <p className="text-xs text-slate-400">
-              Provide new interview date, time, and documented rescheduling reason.
+              Provide new interview date, time, and documented rescheduling
+              reason.
             </p>
 
             <div className="space-y-3 text-xs">
@@ -422,7 +503,9 @@ export default function InterviewDetailPage() {
                 <Input
                   type="date"
                   value={newDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewDate(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setNewDate(e.target.value)
+                  }
                   className="mt-1"
                 />
               </div>
@@ -431,17 +514,23 @@ export default function InterviewDetailPage() {
                 <label className="text-slate-300 font-medium">New Time *</label>
                 <Input
                   value={newTime}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTime(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setNewTime(e.target.value)
+                  }
                   placeholder="e.g. 02:30 PM"
                   className="mt-1"
                 />
               </div>
 
               <div>
-                <label className="text-slate-300 font-medium">Rescheduling Reason *</label>
+                <label className="text-slate-300 font-medium">
+                  Rescheduling Reason *
+                </label>
                 <textarea
                   value={rescheduleReason}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRescheduleReason(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setRescheduleReason(e.target.value)
+                  }
                   placeholder="e.g. Recruiter panel flight delay or conflict with university exam."
                   rows={3}
                   className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-white"
@@ -450,7 +539,11 @@ export default function InterviewDetailPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setShowRescheduleModal(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowRescheduleModal(false)}
+              >
                 Cancel
               </Button>
               <Button variant="primary" size="sm" onClick={handleReschedule}>

@@ -21,38 +21,31 @@ Validates:
 18. Tenant Status Lifecycle Enforcement: Suspended/Archived tenants are blocked from operations.
 """
 
-from datetime import date, datetime, timezone
 import uuid
+from datetime import UTC, date, datetime
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.cache import TenantIsolatedCache, tenant_cache
+from app.core.cache import TenantIsolatedCache
 from app.core.exceptions import (
     CrossTenantRelationshipException,
     NotFoundException,
-    TenantArchivedException,
-    TenantSuspendedException,
 )
 from app.core.jobs import TenantJobContext, TenantJobRunner
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
-from app.core.tenant import TenantContext, set_current_tenant_context
 from app.core.tenant_validation import validate_entities_same_tenant
-from app.models.academics import Subject
-from app.models.attendance import AttendancePolicy, AttendanceSession
+from app.models.attendance import AttendancePolicy
 from app.models.audit import AuditLog
-from app.models.campus import Club, Event
-from app.models.core import Campus, Department, Institution, Program, TenantMembership
-from app.models.documents import Document, DocumentCategory, DocumentType
-from app.models.examination import Assessment, ExamTerm
-from app.models.finance import FeeCategory, Invoice
-from app.models.infrastructure import Hostel, TransportRoute
-from app.models.intelligence import Conversation, Message
-from app.models.people import FacultyProfile, Role, StudentProfile, User, UserRoleAssignment
-from app.models.placement import Company, JobDrive
+from app.models.campus import Club
+from app.models.core import Department, Institution, Program
+from app.models.documents import Document, DocumentCategory
+from app.models.finance import Invoice
+from app.models.intelligence import Conversation
+from app.models.people import StudentProfile, User
+from app.models.placement import Company
 from app.repositories.base import TenantScopedRepository
 
 
@@ -444,7 +437,7 @@ async def test_audit_log_isolation(
         entity_type="StudentProfile",
         entity_id=uuid.uuid4(),
         ip_address="127.0.0.1",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
     )
     log_b = AuditLog(
         id=uuid.uuid4(),
@@ -454,7 +447,7 @@ async def test_audit_log_isolation(
         entity_type="Invoice",
         entity_id=uuid.uuid4(),
         ip_address="127.0.0.1",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
     )
     db_session.add_all([log_a, log_b])
     await db_session.commit()
@@ -584,7 +577,7 @@ async def test_tenant_status_lifecycle_enforcement(
     """Test 18: Suspended or Archived tenants are blocked from normal operations."""
     # Suspend tenant A
     tenant_a.status = "SUSPENDED"
-    tenant_a.suspended_at = datetime.now(timezone.utc)
+    tenant_a.suspended_at = datetime.now(UTC)
     await db_session.commit()
 
     headers = make_auth_headers(tenant_admin_a, tenant_a.id, "INSTITUTION_ADMIN")

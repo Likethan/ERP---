@@ -17,14 +17,21 @@ export interface BreadcrumbsProps {
   className?: string;
 }
 
-export function Breadcrumbs({ customSegments, items, className }: BreadcrumbsProps) {
+export function Breadcrumbs({
+  customSegments,
+  items,
+  className,
+}: BreadcrumbsProps) {
   const pathname = usePathname();
   const segments = customSegments || items;
 
   // If custom segments or items provided, use them
   if (segments && segments.length > 0) {
     return (
-      <nav aria-label="Breadcrumb" className={cn("flex items-center text-xs text-slate-400", className)}>
+      <nav
+        aria-label="Breadcrumb"
+        className={cn("flex items-center text-xs text-slate-400", className)}
+      >
         <ol className="flex items-center gap-1.5 flex-wrap">
           <li>
             <Link
@@ -47,7 +54,9 @@ export function Breadcrumbs({ customSegments, items, className }: BreadcrumbsPro
                     {segment.label}
                   </Link>
                 ) : (
-                  <span className="font-medium text-slate-200">{segment.label}</span>
+                  <span className="font-medium text-slate-200">
+                    {segment.label}
+                  </span>
                 )}
               </li>
             );
@@ -71,7 +80,10 @@ export function Breadcrumbs({ customSegments, items, className }: BreadcrumbsPro
   };
 
   return (
-    <nav aria-label="Breadcrumb" className={cn("flex items-center text-xs text-slate-400", className)}>
+    <nav
+      aria-label="Breadcrumb"
+      className={cn("flex items-center text-xs text-slate-400", className)}
+    >
       <ol className="flex items-center gap-1.5 flex-wrap">
         <li>
           <Link
@@ -88,7 +100,9 @@ export function Breadcrumbs({ customSegments, items, className }: BreadcrumbsPro
             <li key={idx} className="flex items-center gap-1.5">
               <ChevronRight className="h-3 w-3 text-slate-600" />
               {isLast ? (
-                <span className="font-medium text-slate-200">{formatLabel(part)}</span>
+                <span className="font-medium text-slate-200">
+                  {formatLabel(part)}
+                </span>
               ) : (
                 <Link
                   href={href}

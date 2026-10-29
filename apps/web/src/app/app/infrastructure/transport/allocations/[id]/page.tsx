@@ -3,7 +3,10 @@
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { transportAllocationsService } from "@/services/transport-allocations.service";
-import { TransportAllocation, TransportAllocationStatus } from "@campusos/types";
+import {
+  TransportAllocation,
+  TransportAllocationStatus,
+} from "@campusos/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -51,7 +54,10 @@ export default function TransportAllocationDetailPage({
 
   const handleCancelPass = async () => {
     if (!alloc) return;
-    await transportAllocationsService.cancelTransportAllocation(alloc.id, "Student requested hostel relocation");
+    await transportAllocationsService.cancelTransportAllocation(
+      alloc.id,
+      "Student requested hostel relocation",
+    );
     loadAlloc();
   };
 
@@ -67,7 +73,9 @@ export default function TransportAllocationDetailPage({
   if (!alloc) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Transport Pass Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Transport Pass Not Found
+        </h2>
         <Link href="/app/infrastructure/transport/allocations">
           <Button variant="outline" className="border-slate-700">
             Back to Passes
@@ -145,7 +153,9 @@ export default function TransportAllocationDetailPage({
               <User className="w-4 h-4 text-indigo-400" />
               {alloc.studentName}
             </Link>
-            <span className="font-mono text-xs text-slate-400 block">{alloc.registerNumber}</span>
+            <span className="font-mono text-xs text-slate-400 block">
+              {alloc.registerNumber}
+            </span>
           </div>
 
           <div className="space-y-1">
@@ -155,7 +165,9 @@ export default function TransportAllocationDetailPage({
             <div className="text-2xl font-mono font-bold text-indigo-400">
               #{alloc.seatNumber || "General"}
             </div>
-            <span className="text-xs text-slate-400">Reserved Window/Aisle</span>
+            <span className="text-xs text-slate-400">
+              Reserved Window/Aisle
+            </span>
           </div>
 
           <div className="space-y-1">

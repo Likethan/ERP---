@@ -11,19 +11,18 @@ Exposes RESTful endpoints for:
 - Generating operational analytics and SLA compliance reporting
 """
 
-from typing import Annotated, Any
-from uuid import UUID
+from typing import Annotated
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy import desc, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, require_platform_admin
-from app.core.exceptions import NotFoundException, PermissionDeniedException
+from app.core.exceptions import PermissionDeniedException
 from app.models.people import User
-from app.models.support import SupportSlaPolicy, SupportTeam
-from app.schemas.common import PaginatedMeta, PaginatedResponse
+from app.models.support import SupportSlaPolicy
 from app.schemas.support import (
     SupportAnalyticsMetrics,
     SupportSlaPolicyCreateRequest,

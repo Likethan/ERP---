@@ -21,6 +21,12 @@ export enum UserRole {
   WARDEN = "WARDEN",
   TRANSPORT_OFFICER = "TRANSPORT_OFFICER",
   FACILITY_OFFICER = "FACILITY_OFFICER",
+  SPORTS_OFFICER = "SPORTS_OFFICER",
+  COACH = "COACH",
+  STUDENT_AFFAIRS_ADMIN = "STUDENT_AFFAIRS_ADMIN",
+  CASE_OFFICER = "CASE_OFFICER",
+  INVESTIGATOR = "INVESTIGATOR",
+  OMBUDS_OFFICER = "OMBUDS_OFFICER",
 }
 
 /**
@@ -38,6 +44,8 @@ export enum DomainName {
   INFRASTRUCTURE = "infrastructure",
   DOCUMENTS = "documents",
   INTELLIGENCE = "intelligence",
+  SPORTS = "sports",
+  STUDENT_AFFAIRS = "student_affairs",
 }
 
 /**
@@ -521,7 +529,15 @@ export interface Subject {
   lecture_hours: number;
   tutorial_hours: number;
   practical_hours: number;
-  subject_type: "THEORY" | "PRACTICAL" | "LAB" | "PROJECT" | "ELECTIVE" | "SEMINAR" | "INTERNSHIP" | string;
+  subject_type:
+    | "THEORY"
+    | "PRACTICAL"
+    | "LAB"
+    | "PROJECT"
+    | "ELECTIVE"
+    | "SEMINAR"
+    | "INTERNSHIP"
+    | string;
   description?: string | null;
   is_active: boolean;
   created_at: string;
@@ -535,7 +551,16 @@ export interface CurriculumSubject {
   subject_code?: string | null;
   subject_name?: string | null;
   semester_number: number;
-  category: "CORE" | "ELECTIVE" | "PROFESSIONAL_ELECTIVE" | "OPEN_ELECTIVE" | "LAB" | "PROJECT" | "INTERNSHIP" | "FOUNDATION" | string;
+  category:
+    | "CORE"
+    | "ELECTIVE"
+    | "PROFESSIONAL_ELECTIVE"
+    | "OPEN_ELECTIVE"
+    | "LAB"
+    | "PROJECT"
+    | "INTERNSHIP"
+    | "FOUNDATION"
+    | string;
   is_mandatory: boolean;
   elective_group?: string | null;
   credits: number;
@@ -575,7 +600,8 @@ export interface Classroom {
   building: string;
   room_number: string;
   capacity: number;
-  room_type: "CLASSROOM" | "LAB" | "SEMINAR_HALL" | "AUDITORIUM" | "WORKSHOP" | string;
+  room_type:
+    "CLASSROOM" | "LAB" | "SEMINAR_HALL" | "AUDITORIUM" | "WORKSHOP" | string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -622,7 +648,8 @@ export interface CourseFacultyAssignment {
   faculty_id: UUID;
   faculty_name?: string | null;
   faculty_employee_code?: string | null;
-  role: "PRIMARY" | "CO_FACULTY" | "LAB_INSTRUCTOR" | "TEACHING_ASSISTANT" | string;
+  role:
+    "PRIMARY" | "CO_FACULTY" | "LAB_INSTRUCTOR" | "TEACHING_ASSISTANT" | string;
   start_date: string;
   end_date?: string | null;
   is_active: boolean;
@@ -641,7 +668,8 @@ export interface CourseEnrollment {
   student_admission_number?: string | null;
   course_offering_id: UUID;
   enrollment_type: "REGULAR" | "ELECTIVE" | "REPEAT" | "AUDIT" | string;
-  status: "ENROLLED" | "DROPPED" | "WITHDRAWN" | "COMPLETED" | "FAILED" | string;
+  status:
+    "ENROLLED" | "DROPPED" | "WITHDRAWN" | "COMPLETED" | "FAILED" | string;
   enrollment_date: string;
   dropped_date?: string | null;
   created_at: string;
@@ -1111,7 +1139,12 @@ export interface ExamSchedule {
 
 export interface ExamConflictCheck {
   has_conflict: boolean;
-  conflict_type?: "ROOM_CONFLICT" | "STUDENT_CONFLICT" | "INVIGILATOR_CONFLICT" | string | null;
+  conflict_type?:
+    | "ROOM_CONFLICT"
+    | "STUDENT_CONFLICT"
+    | "INVIGILATOR_CONFLICT"
+    | string
+    | null;
   conflicting_schedules: ExamSchedule[];
   message?: string | null;
 }
@@ -1259,9 +1292,11 @@ export type PaymentMode =
   | "DD"
   | "NEFT_RTGS"
   | "ONLINE_GATEWAY";
-export type ConcessionType = "MERIT" | "NEED_BASED" | "SIBLING" | "STAFF_WARD" | "SPORTS" | "SPECIAL";
+export type ConcessionType =
+  "MERIT" | "NEED_BASED" | "SIBLING" | "STAFF_WARD" | "SPORTS" | "SPECIAL";
 export type AdjustmentType = "CREDIT" | "DEBIT";
-export type RefundStatus = "REQUESTED" | "APPROVED" | "PROCESSED" | "REJECTED" | "CANCELLED";
+export type RefundStatus =
+  "REQUESTED" | "APPROVED" | "PROCESSED" | "REJECTED" | "CANCELLED";
 
 export interface FeeCategory {
   id: UUID;
@@ -1577,7 +1612,14 @@ export interface EventRegistration {
   student_id: UUID;
   registration_code: string;
   registered_at: string;
-  status: "REGISTERED" | "WAITLISTED" | "CONFIRMED" | "CANCELLED" | "ATTENDED" | "NO_SHOW" | string;
+  status:
+    | "REGISTERED"
+    | "WAITLISTED"
+    | "CONFIRMED"
+    | "CANCELLED"
+    | "ATTENDED"
+    | "NO_SHOW"
+    | string;
   cancelled_at?: string | null;
   cancellation_reason?: string | null;
   attended: boolean;
@@ -1625,7 +1667,8 @@ export interface Club {
   faculty_advisor_name?: string | null;
   student_lead_id?: UUID | null;
   student_lead_name?: string | null;
-  status: "DRAFT" | "PENDING_APPROVAL" | "ACTIVE" | "SUSPENDED" | "ARCHIVED" | string;
+  status:
+    "DRAFT" | "PENDING_APPROVAL" | "ACTIVE" | "SUSPENDED" | "ARCHIVED" | string;
   is_active: boolean;
   members_count: number;
   events_count: number;
@@ -1640,7 +1683,15 @@ export interface ClubMembership {
   tenant_id: UUID;
   club_id: UUID;
   student_id: UUID;
-  role: "MEMBER" | "PRESIDENT" | "VICE_PRESIDENT" | "SECRETARY" | "TREASURER" | "EVENT_COORDINATOR" | "OTHER" | string;
+  role:
+    | "MEMBER"
+    | "PRESIDENT"
+    | "VICE_PRESIDENT"
+    | "SECRETARY"
+    | "TREASURER"
+    | "EVENT_COORDINATOR"
+    | "OTHER"
+    | string;
   status: "PENDING" | "ACTIVE" | "REJECTED" | "SUSPENDED" | "LEFT" | string;
   joined_at?: string | null;
   left_at?: string | null;
@@ -1678,7 +1729,14 @@ export interface Announcement {
   summary?: string | null;
   content: string;
   priority: "LOW" | "NORMAL" | "HIGH" | "URGENT";
-  status: "DRAFT" | "SCHEDULED" | "PUBLISHED" | "EXPIRED" | "ARCHIVED" | "CANCELLED" | string;
+  status:
+    | "DRAFT"
+    | "SCHEDULED"
+    | "PUBLISHED"
+    | "EXPIRED"
+    | "ARCHIVED"
+    | "CANCELLED"
+    | string;
   publish_at: string;
   expires_at?: string | null;
   is_pinned: boolean;
@@ -1744,9 +1802,12 @@ export interface CampusDashboardStats {
 // PLACEMENT & CAREER ENGINE TYPES
 // ============================================================================
 
-export type CompanyTier = "DREAM" | "SUPER_DREAM" | "TIER_1" | "TIER_2" | "MASS" | string;
-export type CompanyType = "PRODUCT" | "SERVICE" | "STARTUP" | "MNC" | "PSU" | "GOVT" | string;
-export type CompanyStatus = "PROSPECT" | "ACTIVE" | "INACTIVE" | "BLACKLISTED" | "ARCHIVED" | string;
+export type CompanyTier =
+  "DREAM" | "SUPER_DREAM" | "TIER_1" | "TIER_2" | "MASS" | string;
+export type CompanyType =
+  "PRODUCT" | "SERVICE" | "STARTUP" | "MNC" | "PSU" | "GOVT" | string;
+export type CompanyStatus =
+  "PROSPECT" | "ACTIVE" | "INACTIVE" | "BLACKLISTED" | "ARCHIVED" | string;
 
 export interface CompanyContact {
   id: UUID;
@@ -1799,7 +1860,12 @@ export interface JobPosition {
   job_drive_id: UUID;
   title: string;
   description?: string | null;
-  employment_type: "FULL_TIME" | "PART_TIME" | "INTERNSHIP" | "INTERNSHIP_TO_FULL_TIME" | string;
+  employment_type:
+    | "FULL_TIME"
+    | "PART_TIME"
+    | "INTERNSHIP"
+    | "INTERNSHIP_TO_FULL_TIME"
+    | string;
   work_location?: string | null;
   vacancy_count: number;
   salary_min?: number | null;
@@ -1891,7 +1957,8 @@ export interface StudentPlacementProfile {
   github_url?: string | null;
   linkedin_url?: string | null;
   resume_document_id?: UUID | null;
-  availability_status: "AVAILABLE" | "OPTED_OUT" | "PLACED" | "HIGHER_STUDIES" | string;
+  availability_status:
+    "AVAILABLE" | "OPTED_OUT" | "PLACED" | "HIGHER_STUDIES" | string;
   profile_completion_percentage: number;
   created_at: string;
   updated_at: string;
@@ -1939,7 +2006,16 @@ export interface InterviewRound {
   name: string;
   description?: string | null;
   sequence: number;
-  round_type: "APTITUDE" | "TECHNICAL" | "CODING" | "GROUP_DISCUSSION" | "MANAGERIAL" | "HR" | "FINAL" | "OTHER" | string;
+  round_type:
+    | "APTITUDE"
+    | "TECHNICAL"
+    | "CODING"
+    | "GROUP_DISCUSSION"
+    | "MANAGERIAL"
+    | "HR"
+    | "FINAL"
+    | "OTHER"
+    | string;
   status: string;
   created_at: string;
   updated_at: string;
@@ -1954,7 +2030,13 @@ export interface InterviewSchedule {
   location?: string | null;
   meeting_url?: string | null;
   interviewer?: string | null;
-  status: "SCHEDULED" | "COMPLETED" | "RESCHEDULED" | "CANCELLED" | "NO_SHOW" | string;
+  status:
+    | "SCHEDULED"
+    | "COMPLETED"
+    | "RESCHEDULED"
+    | "CANCELLED"
+    | "NO_SHOW"
+    | string;
   created_at: string;
   updated_at: string;
 }
@@ -1990,7 +2072,15 @@ export interface PlacementOffer {
   employment_type: string;
   offer_expiry_date: string;
   document_id?: UUID | null;
-  status: "DRAFT" | "ISSUED" | "ACCEPTED" | "DECLINED" | "EXPIRED" | "WITHDRAWN" | "CANCELLED" | string;
+  status:
+    | "DRAFT"
+    | "ISSUED"
+    | "ACCEPTED"
+    | "DECLINED"
+    | "EXPIRED"
+    | "WITHDRAWN"
+    | "CANCELLED"
+    | string;
   accepted_at?: string | null;
   declined_at?: string | null;
   decline_reason?: string | null;
@@ -2003,7 +2093,13 @@ export interface PlacementOutcome {
   tenant_id: UUID;
   student_id: UUID;
   academic_year_id: UUID;
-  outcome: "PLACED" | "NOT_PLACED" | "HIGHER_STUDIES" | "ENTREPRENEURSHIP" | "OTHER" | string;
+  outcome:
+    | "PLACED"
+    | "NOT_PLACED"
+    | "HIGHER_STUDIES"
+    | "ENTREPRENEURSHIP"
+    | "OTHER"
+    | string;
   accepted_offer_id?: UUID | null;
   company_id?: UUID | null;
   designation?: string | null;
@@ -2439,7 +2535,12 @@ export interface TransportVehicle {
   nextServiceDate: string;
   status: VehicleStatus;
   services?: VehicleServiceRecord[];
-  documents?: Array<{ id: string; title: string; category: string; expiryDate?: string }>;
+  documents?: Array<{
+    id: string;
+    title: string;
+    category: string;
+    expiryDate?: string;
+  }>;
 }
 
 export interface TransportDriver {
@@ -2565,8 +2666,17 @@ export interface MaintenanceRequest {
   workOrderNumber: string;
   assetOrFacilityId: string;
   assetOrFacilityName: string;
-  category: "ELECTRICAL" | "PLUMBING" | "CIVIL" | "HVAC" | "IT_EQUIPMENT" | "CARPENTRY" | "TRANSPORT_VEHICLE" | "OTHER";
-  sourceType: "HOSTEL" | "ROOM" | "FACILITY" | "VEHICLE" | "EQUIPMENT" | "CAMPUS";
+  category:
+    | "ELECTRICAL"
+    | "PLUMBING"
+    | "CIVIL"
+    | "HVAC"
+    | "IT_EQUIPMENT"
+    | "CARPENTRY"
+    | "TRANSPORT_VEHICLE"
+    | "OTHER";
+  sourceType:
+    "HOSTEL" | "ROOM" | "FACILITY" | "VEHICLE" | "EQUIPMENT" | "CAMPUS";
   location: string;
   reportedBy: {
     userId: string;
@@ -2853,7 +2963,18 @@ export interface DocumentItem {
   verificationChecklist?: VerificationChecklistItem[];
   activityTimeline: DocumentTimelineItem[];
   relatedRecord?: {
-    entityType: "STUDENT" | "FACULTY" | "STAFF" | "PROGRAM" | "DEPARTMENT" | "ADMISSION" | "PLACEMENT" | "HOSTEL" | "TRANSPORT" | "FINANCE" | "CAMPUS";
+    entityType:
+      | "STUDENT"
+      | "FACULTY"
+      | "STAFF"
+      | "PROGRAM"
+      | "DEPARTMENT"
+      | "ADMISSION"
+      | "PLACEMENT"
+      | "HOSTEL"
+      | "TRANSPORT"
+      | "FINANCE"
+      | "CAMPUS";
     entityId: string;
     label: string;
   };
@@ -3507,8 +3628,10 @@ export interface CampusHealthMetric {
  */
 export type WorkflowStatus = "DRAFT" | "ACTIVE" | "PAUSED" | "ARCHIVED";
 export type WorkflowTriggerType = "SCHEDULE" | "EVENT" | "MANUAL";
-export type ExecutionStatus = "QUEUED" | "RUNNING" | "WAITING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
-export type ExecutionStepStatus = "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED" | "SKIPPED";
+export type ExecutionStatus =
+  "QUEUED" | "RUNNING" | "WAITING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
+export type ExecutionStepStatus =
+  "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED" | "SKIPPED";
 
 export interface WorkflowTriggerDefinition {
   trigger_type: WorkflowTriggerType;
@@ -3610,7 +3733,8 @@ export interface WorkflowOperationalMetrics {
 
 export type ReportStatus = "DRAFT" | "ACTIVE" | "ARCHIVED";
 export type ReportVisibility = "PRIVATE" | "ROLE" | "TENANT" | "SYSTEM";
-export type ReportExecutionStatus = "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "EXPIRED";
+export type ReportExecutionStatus =
+  "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "EXPIRED";
 export type ReportExportFormat = "CSV" | "XLSX" | "PDF" | "JSON";
 
 export interface FilterCondition {
@@ -4879,13 +5003,22 @@ export type SaaSSubscriptionStatus =
   | "CANCELLED"
   | "EXPIRED";
 
-export type SaaSSubscriptionChangeType = "UPGRADE" | "DOWNGRADE" | "INTERVAL_CHANGE";
-export type SaaSSubscriptionChangeStatus = "PENDING_APPROVAL" | "SCHEDULED" | "APPLIED" | "REJECTED" | "CANCELLED";
+export type SaaSSubscriptionChangeType =
+  "UPGRADE" | "DOWNGRADE" | "INTERVAL_CHANGE";
+export type SaaSSubscriptionChangeStatus =
+  "PENDING_APPROVAL" | "SCHEDULED" | "APPLIED" | "REJECTED" | "CANCELLED";
 export type SaaSOverrideType = "MODULE_GATE" | "CAPABILITY" | "QUOTA_LIMIT";
-export type SaaSInvoiceStatus = "DRAFT" | "ISSUED" | "PAID" | "PAST_DUE" | "VOID" | "REFUNDED";
+export type SaaSInvoiceStatus =
+  "DRAFT" | "ISSUED" | "PAID" | "PAST_DUE" | "VOID" | "REFUNDED";
 export type SaaSPaymentStatus = "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED";
-export type CustomerHealthStatus = "HEALTHY" | "GOOD" | "NEEDS_ATTENTION" | "AT_RISK" | "CRITICAL";
-export type CustomerNoteType = "GENERAL" | "CALL_LOG" | "RENEWAL_RISK" | "EXPANSION_OPPORTUNITY" | "ESCALATION";
+export type CustomerHealthStatus =
+  "HEALTHY" | "GOOD" | "NEEDS_ATTENTION" | "AT_RISK" | "CRITICAL";
+export type CustomerNoteType =
+  | "GENERAL"
+  | "CALL_LOG"
+  | "RENEWAL_RISK"
+  | "EXPANSION_OPPORTUNITY"
+  | "ESCALATION";
 
 export interface SubscriptionPlanModel {
   id: UUID;
@@ -5455,19 +5588,22 @@ export type RecordLifecycleState =
   | "LEGAL_HOLD"
   | "REVIEW_BLOCKED";
 
-
-
-export type RetentionPolicyStatus = "DRAFT" | "PUBLISHED" | "DEPRECATED" | "ARCHIVED";
+export type RetentionPolicyStatus =
+  "DRAFT" | "PUBLISHED" | "DEPRECATED" | "ARCHIVED";
 
 export type PolicyScope = "GLOBAL" | "CATEGORY" | "MODULE" | "DEPARTMENT";
 
-export type DispositionMethod = "SECURE_DELETE" | "ANONYMIZE" | "PERMANENT_ARCHIVE" | "REVIEW_ONLY";
+export type DispositionMethod =
+  "SECURE_DELETE" | "ANONYMIZE" | "PERMANENT_ARCHIVE" | "REVIEW_ONLY";
 
-export type LegalHoldStatus = "ACTIVE" | "PENDING_RELEASE" | "RELEASED" | "REVOKED";
+export type LegalHoldStatus =
+  "ACTIVE" | "PENDING_RELEASE" | "RELEASED" | "REVOKED";
 
-export type LegalHoldScope = "ALL" | "CATEGORY" | "MODULE" | "DEPARTMENT" | "SPECIFIC_RECORD";
+export type LegalHoldScope =
+  "ALL" | "CATEGORY" | "MODULE" | "DEPARTMENT" | "SPECIFIC_RECORD";
 
-export type ArchivalStatus = "STORED" | "VERIFIED" | "RESTORED" | "CORRUPTED" | "PURGED";
+export type ArchivalStatus =
+  "STORED" | "VERIFIED" | "RESTORED" | "CORRUPTED" | "PURGED";
 
 export type DispositionRequestStatus =
   | "DRAFT"
@@ -5479,11 +5615,7 @@ export type DispositionRequestStatus =
   | "FAILED";
 
 export type DispositionItemStatus =
-  | "ELIGIBLE"
-  | "BLOCKED_HOLD"
-  | "BLOCKED_DEPENDENCY"
-  | "EXECUTED"
-  | "FAILED";
+  "ELIGIBLE" | "BLOCKED_HOLD" | "BLOCKED_DEPENDENCY" | "EXECUTED" | "FAILED";
 
 export interface RecordCategoryModel {
   id: UUID;
@@ -6553,7 +6685,6 @@ export interface AccreditationDashboardSummaryModel {
   overall_readiness_avg_pct: number;
 }
 
-
 // =============================================================================
 // STEP 44: ENTERPRISE INSTITUTIONAL RESEARCH, INNOVATION, GRANTS & IP MANAGEMENT
 // =============================================================================
@@ -6595,11 +6726,7 @@ export type ResearchTeamRole =
   | "COMPLIANCE_REVIEWER";
 
 export type ResearchOpportunityStatus =
-  | "DRAFT"
-  | "OPEN"
-  | "CLOSING_SOON"
-  | "CLOSED"
-  | "ARCHIVED";
+  "DRAFT" | "OPEN" | "CLOSING_SOON" | "CLOSED" | "ARCHIVED";
 
 export type ResearchGrantInternalReviewStatus =
   | "DRAFT"
@@ -6660,18 +6787,10 @@ export type ResearchOutputType =
   | "INDUSTRY_DELIVERABLE";
 
 export type ResearchOutputStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "ACCEPTED"
-  | "PUBLISHED"
-  | "VERIFIED"
-  | "REJECTED";
+  "DRAFT" | "SUBMITTED" | "ACCEPTED" | "PUBLISHED" | "VERIFIED" | "REJECTED";
 
 export type ResearchIPConfidentiality =
-  | "PUBLIC"
-  | "INTERNAL_CONFIDENTIAL"
-  | "STRICTLY_CONFIDENTIAL"
-  | "TRADE_SECRET";
+  "PUBLIC" | "INTERNAL_CONFIDENTIAL" | "STRICTLY_CONFIDENTIAL" | "TRADE_SECRET";
 
 export type ResearchPatentStatus =
   | "NOT_FILED"
@@ -6687,11 +6806,7 @@ export type ResearchPatentStatus =
 export type ResearchProjectRiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export type ResearchProjectRiskStatus =
-  | "IDENTIFIED"
-  | "ANALYZING"
-  | "MITIGATING"
-  | "RESOLVED"
-  | "ACCEPTED";
+  "IDENTIFIED" | "ANALYZING" | "MITIGATING" | "RESOLVED" | "ACCEPTED";
 
 export interface ResearchProjectModel {
   id: UUID;
@@ -7510,6 +7625,1634 @@ export interface LibraryDeadlineSweepModel {
   expiring_subscriptions_flagged: number;
 }
 
+// ============================================================================
+// MODULE 18: ENTERPRISE SPORTS, ATHLETICS & RECREATION DOMAIN TYPES (Step 57)
+// ============================================================================
 
+export enum SportsDepartmentStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  ARCHIVED = "ARCHIVED",
+}
 
+export enum SportsActivityCategory {
+  VARSITY = "VARSITY",
+  INTRAMURAL = "INTRAMURAL",
+  CLUB = "CLUB",
+  RECREATIONAL = "RECREATIONAL",
+  FITNESS = "FITNESS",
+  COMPETITIVE = "COMPETITIVE",
+}
+
+export enum SportsEligibilityRuleType {
+  ACADEMIC_CGPA = "ACADEMIC_CGPA",
+  MIN_ATTENDANCE = "MIN_ATTENDANCE",
+  HEALTH_CLEARANCE = "HEALTH_CLEARANCE",
+  MAX_SEASONS = "MAX_SEASONS",
+  DISCIPLINARY_CLEAN = "DISCIPLINARY_CLEAN",
+}
+
+export enum SportsFacilityType {
+  CRICKET_GROUND = "CRICKET_GROUND",
+  FOOTBALL_FIELD = "FOOTBALL_FIELD",
+  BASKETBALL_COURT = "BASKETBALL_COURT",
+  VOLLEYBALL_COURT = "VOLLEYBALL_COURT",
+  BADMINTON_COURT = "BADMINTON_COURT",
+  TENNIS_COURT = "TENNIS_COURT",
+  SWIMMING_POOL = "SWIMMING_POOL",
+  GYMNASIUM = "GYMNASIUM",
+  INDOOR_HALL = "INDOOR_HALL",
+  ATHLETIC_TRACK = "ATHLETIC_TRACK",
+  RECREATION_ROOM = "RECREATION_ROOM",
+  OUTDOOR_GROUND = "OUTDOOR_GROUND",
+  OTHER = "OTHER",
+}
+
+export enum SportsFacilitySurface {
+  GRASS = "GRASS",
+  TURF = "TURF",
+  WOOD = "WOOD",
+  SYNTHETIC = "SYNTHETIC",
+  CLAY = "CLAY",
+  CONCRETE = "CONCRETE",
+  WATER = "WATER",
+  OTHER = "OTHER",
+}
+
+export enum SportsFacilityStatus {
+  AVAILABLE = "AVAILABLE",
+  RESERVED = "RESERVED",
+  MAINTENANCE_CLOSED = "MAINTENANCE_CLOSED",
+  RENOVATION = "RENOVATION",
+  INACTIVE = "INACTIVE",
+}
+
+export enum FacilityBookingPurpose {
+  TRAINING = "TRAINING",
+  MATCH = "MATCH",
+  RECREATION = "RECREATION",
+  MAINTENANCE = "MAINTENANCE",
+  EVENT = "EVENT",
+  CLASS = "CLASS",
+}
+
+export enum FacilityBookingStatus {
+  PENDING = "PENDING",
+  CONFIRMED = "CONFIRMED",
+  CANCELLED = "CANCELLED",
+  REJECTED = "REJECTED",
+  COMPLETED = "COMPLETED",
+}
+
+export enum SportsParticipantStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  SUSPENDED = "SUSPENDED",
+  ALUMNI = "ALUMNI",
+}
+
+export enum SportsClearanceStatus {
+  PENDING = "PENDING",
+  CLEARED = "CLEARED",
+  RESTRICTED = "RESTRICTED",
+  SUSPENDED = "SUSPENDED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum SportsMemberRole {
+  CAPTAIN = "CAPTAIN",
+  VICE_CAPTAIN = "VICE_CAPTAIN",
+  PLAYER = "PLAYER",
+  SUBSTITUTE = "SUBSTITUTE",
+  MANAGER = "MANAGER",
+}
+
+export enum SportsRosterStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  INJURED = "INJURED",
+  TRANSFERRED = "TRANSFERRED",
+  DROPPED = "DROPPED",
+}
+
+export enum SportsCoachingRole {
+  HEAD_COACH = "HEAD_COACH",
+  ASSISTANT_COACH = "ASSISTANT_COACH",
+  FITNESS_TRAINER = "FITNESS_TRAINER",
+  PHYSIO = "PHYSIO",
+  COORDINATOR = "COORDINATOR",
+}
+
+export enum SportsProgramType {
+  CAMP = "CAMP",
+  FITNESS = "FITNESS",
+  ACADEMY = "ACADEMY",
+  DEVELOPMENT = "DEVELOPMENT",
+  RECREATION = "RECREATION",
+}
+
+export enum SportsAttendanceStatus {
+  PRESENT = "PRESENT",
+  ABSENT = "ABSENT",
+  EXCUSED = "EXCUSED",
+  LATE = "LATE",
+  INJURED = "INJURED",
+}
+
+export enum SportsCompetitionType {
+  INTERNAL = "INTERNAL",
+  INTERCOLLEGIATE = "INTERCOLLEGIATE",
+  INVITATIONAL = "INVITATIONAL",
+  LEAGUE = "LEAGUE",
+  FRIENDLY = "FRIENDLY",
+}
+
+export enum SportsTournamentFormat {
+  KNOCKOUT = "KNOCKOUT",
+  ROUND_ROBIN = "ROUND_ROBIN",
+  LEAGUE = "LEAGUE",
+  GROUP_KNOCKOUT = "GROUP_KNOCKOUT",
+  DOUBLE_ELIMINATION = "DOUBLE_ELIMINATION",
+}
+
+export enum SportsRegistrationType {
+  INDIVIDUAL = "INDIVIDUAL",
+  TEAM = "TEAM",
+}
+
+export enum SportsStandingRule {
+  STANDARD_POINTS = "STANDARD_POINTS",
+  GOAL_DIFFERENCE = "GOAL_DIFFERENCE",
+  HEAD_TO_HEAD = "HEAD_TO_HEAD",
+  WIN_PERCENTAGE = "WIN_PERCENTAGE",
+}
+
+export enum SportsCompetitionStatus {
+  DRAFT = "DRAFT",
+  REGISTRATION_OPEN = "REGISTRATION_OPEN",
+  SCHEDULED = "SCHEDULED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum SportsFixtureStatus {
+  SCHEDULED = "SCHEDULED",
+  RESCHEDULED = "RESCHEDULED",
+  POSTPONED = "POSTPONED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+  FORFEITED = "FORFEITED",
+}
+
+export enum SportsMatchStage {
+  LEAGUE = "LEAGUE",
+  GROUP_STAGE = "GROUP_STAGE",
+  ROUND_OF_16 = "ROUND_OF_16",
+  QUARTER_FINAL = "QUARTER_FINAL",
+  SEMI_FINAL = "SEMI_FINAL",
+  THIRD_PLACE = "THIRD_PLACE",
+  FINAL = "FINAL",
+}
+
+export enum SportsOfficialRole {
+  REFEREE = "REFEREE",
+  UMPIRE = "UMPIRE",
+  TIMEKEEPER = "TIMEKEEPER",
+  LINE_JUDGE = "LINE_JUDGE",
+  TABLE_OFFICIAL = "TABLE_OFFICIAL",
+  SCORER = "SCORER",
+}
+
+export enum SportsMedal {
+  GOLD = "GOLD",
+  SILVER = "SILVER",
+  BRONZE = "BRONZE",
+  PARTICIPATION = "PARTICIPATION",
+  TROPHY = "TROPHY",
+}
+
+export enum SportsRecognitionLevel {
+  INSTITUTIONAL = "INSTITUTIONAL",
+  UNIVERSITY = "UNIVERSITY",
+  ZONAL = "ZONAL",
+  STATE = "STATE",
+  NATIONAL = "NATIONAL",
+  INTERNATIONAL = "INTERNATIONAL",
+}
+
+export enum SportsCheckoutStatus {
+  ISSUED = "ISSUED",
+  RETURNED = "RETURNED",
+  OVERDUE = "OVERDUE",
+  DAMAGED = "DAMAGED",
+  LOST = "LOST",
+}
+
+export enum SportsEquipmentCondition {
+  EXCELLENT = "EXCELLENT",
+  GOOD = "GOOD",
+  FAIR = "FAIR",
+  DAMAGED = "DAMAGED",
+  UNUSABLE = "UNUSABLE",
+}
+
+export interface SportsDepartmentModel {
+  id: UUID;
+  tenant_id: UUID;
+  campus_id?: UUID | null;
+  code: string;
+  name: string;
+  description?: string | null;
+  status: SportsDepartmentStatus | string;
+  head_user_id?: UUID | null;
+  operating_hours?: Record<string, any> | null;
+  policies?: Record<string, any> | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsFacilityModel {
+  id: UUID;
+  tenant_id: UUID;
+  campus_id?: UUID | null;
+  department_id?: UUID | null;
+  code: string;
+  name: string;
+  facility_type: SportsFacilityType | string;
+  surface: SportsFacilitySurface | string;
+  is_indoor: boolean;
+  capacity: number;
+  operating_hours?: Record<string, any> | null;
+  accessibility_info?: Record<string, any> | null;
+  equipment_asset_ids?: UUID[] | null;
+  status: SportsFacilityStatus | string;
+  maintenance_notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FacilityBookingModel {
+  id: UUID;
+  tenant_id: UUID;
+  facility_id: UUID;
+  booking_date: string;
+  start_time: string;
+  end_time: string;
+  purpose: FacilityBookingPurpose | string;
+  title: string;
+  reserved_by_user_id?: UUID | null;
+  team_id?: UUID | null;
+  training_session_id?: UUID | null;
+  match_fixture_id?: UUID | null;
+  status: FacilityBookingStatus | string;
+  participant_count?: number | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsParticipantModel {
+  id: UUID;
+  tenant_id: UUID;
+  user_id: UUID;
+  participant_code: string;
+  primary_sport: string;
+  status: SportsParticipantStatus | string;
+  clearance_status: SportsClearanceStatus | string;
+  clearance_expiry?: string | null;
+  consent_recorded: boolean;
+  consent_date?: string | null;
+  operational_restrictions?: Record<string, any> | null;
+  sports_history?: Record<string, any> | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsTeamModel {
+  id: UUID;
+  tenant_id: UUID;
+  campus_id?: UUID | null;
+  department_id?: UUID | null;
+  code: string;
+  name: string;
+  sport: string;
+  category: SportsActivityCategory | string;
+  gender_category: string;
+  captain_participant_id?: UUID | null;
+  head_coach_user_id?: UUID | null;
+  max_roster_size: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeamMembershipModel {
+  id: UUID;
+  tenant_id: UUID;
+  team_id: UUID;
+  participant_id: UUID;
+  role: SportsMemberRole | string;
+  jersey_number?: number | null;
+  position?: string | null;
+  status: SportsRosterStatus | string;
+  joined_at: string;
+  left_at?: string | null;
+  approved_by_user_id?: UUID | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsCoachingAssignmentModel {
+  id: UUID;
+  tenant_id: UUID;
+  coach_user_id: UUID;
+  team_id?: UUID | null;
+  sport: string;
+  role: SportsCoachingRole | string;
+  certification_level?: string | null;
+  is_primary: boolean;
+  start_date: string;
+  end_date?: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsTrainingProgramModel {
+  id: UUID;
+  tenant_id: UUID;
+  campus_id?: UUID | null;
+  department_id?: UUID | null;
+  code: string;
+  name: string;
+  program_type: SportsProgramType | string;
+  sport: string;
+  lead_coach_user_id?: UUID | null;
+  facility_id?: UUID | null;
+  capacity: number;
+  start_date: string;
+  end_date: string;
+  registration_deadline?: string | null;
+  fee_amount?: number | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsTrainingSessionModel {
+  id: UUID;
+  tenant_id: UUID;
+  program_id: UUID;
+  facility_id?: UUID | null;
+  session_date: string;
+  start_time: string;
+  end_time: string;
+  title: string;
+  focus_area?: string | null;
+  drills_plan?: Record<string, any> | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsTrainingAttendanceModel {
+  id: UUID;
+  tenant_id: UUID;
+  session_id: UUID;
+  participant_id: UUID;
+  status: SportsAttendanceStatus | string;
+  notes?: string | null;
+  recorded_by_user_id?: UUID | null;
+  recorded_at: string;
+}
+
+export interface SportsCompetitionModel {
+  id: UUID;
+  tenant_id: UUID;
+  campus_id?: UUID | null;
+  department_id?: UUID | null;
+  code: string;
+  name: string;
+  competition_type: SportsCompetitionType | string;
+  tournament_format: SportsTournamentFormat | string;
+  sport: string;
+  registration_type: SportsRegistrationType | string;
+  standing_rule: SportsStandingRule | string;
+  points_for_win: number;
+  points_for_draw: number;
+  points_for_loss: number;
+  start_date: string;
+  end_date: string;
+  registration_deadline: string;
+  max_participants: number;
+  fee_amount?: number | null;
+  status: SportsCompetitionStatus | string;
+  rules_config?: Record<string, any> | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CompetitionRegistrationModel {
+  id: UUID;
+  tenant_id: UUID;
+  competition_id: UUID;
+  team_id?: UUID | null;
+  participant_id?: UUID | null;
+  registered_at: string;
+  status: string;
+  seed_number?: number | null;
+  invoice_id?: UUID | null;
+  payment_status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MatchFixtureModel {
+  id: UUID;
+  tenant_id: UUID;
+  competition_id: UUID;
+  match_number: number;
+  stage: SportsMatchStage | string;
+  round_number: number;
+  home_team_id?: UUID | null;
+  away_team_id?: UUID | null;
+  home_participant_id?: UUID | null;
+  away_participant_id?: UUID | null;
+  facility_id?: UUID | null;
+  match_date: string;
+  start_time: string;
+  end_time: string;
+  status: SportsFixtureStatus | string;
+  postponement_reason?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MatchOfficialAssignmentModel {
+  id: UUID;
+  tenant_id: UUID;
+  fixture_id: UUID;
+  official_user_id: UUID;
+  role: SportsOfficialRole | string;
+  is_confirmed: boolean;
+  created_at: string;
+}
+
+export interface MatchResultModel {
+  id: UUID;
+  tenant_id: UUID;
+  fixture_id: UUID;
+  winner_team_id?: UUID | null;
+  winner_participant_id?: UUID | null;
+  is_draw: boolean;
+  is_forfeit: boolean;
+  is_abandoned: boolean;
+  home_score: number;
+  away_score: number;
+  score_breakdown?: Record<string, any> | null;
+  verified_by_user_id?: UUID | null;
+  verified_at?: string | null;
+  audit_notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CompetitionStandingModel {
+  id: UUID;
+  tenant_id: UUID;
+  competition_id: UUID;
+  team_id?: UUID | null;
+  participant_id?: UUID | null;
+  rank: number;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  points_for: number;
+  points_against: number;
+  point_difference: number;
+  points: number;
+  form_guide?: string | null;
+  updated_at: string;
+}
+
+export interface SportsAchievementModel {
+  id: UUID;
+  tenant_id: UUID;
+  recipient_type: string;
+  team_id?: UUID | null;
+  participant_id?: UUID | null;
+  sport: string;
+  title: string;
+  level: SportsRecognitionLevel | string;
+  medal?: SportsMedal | string | null;
+  award_date: string;
+  competition_id?: UUID | null;
+  citation?: string | null;
+  certificate_number?: string | null;
+  created_at: string;
+}
+
+export interface SportsEquipmentAssignmentModel {
+  id: UUID;
+  tenant_id: UUID;
+  asset_id?: UUID | null;
+  equipment_name: string;
+  item_code: string;
+  category: string;
+  allocated_quantity: number;
+  team_id?: UUID | null;
+  facility_id?: UUID | null;
+  responsible_user_id: UUID;
+  checkout_date: string;
+  due_date: string;
+  return_date?: string | null;
+  status: SportsCheckoutStatus | string;
+  return_condition?: SportsEquipmentCondition | string | null;
+  condition_notes?: string | null;
+  replacement_fee?: number | null;
+  invoice_id?: UUID | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SportsDashboardSummaryModel {
+  total_departments: number;
+  total_facilities: number;
+  facilities_available: number;
+  facilities_maintenance: number;
+  total_participants: number;
+  participants_cleared: number;
+  total_teams: number;
+  active_tournaments: number;
+  matches_scheduled_today: number;
+  equipment_items_checked_out: number;
+  equipment_overdue_count: number;
+  upcoming_training_sessions_count: number;
+}
+
+/**
+ * ============================================================================
+ * MODULE 19: ENTERPRISE STUDENT AFFAIRS, GRIEVANCE REDRESSAL & DISCIPLINARY (STEP 58)
+ * "One Campus. One System. One Source of Truth."
+ * ============================================================================
+ */
+
+export enum SACaseType {
+  GRIEVANCE = "GRIEVANCE",
+  DISCIPLINARY = "DISCIPLINARY",
+  APPEAL = "APPEAL",
+  MEDIATION = "MEDIATION",
+  INFORMAL_CONCILIATION = "INFORMAL_CONCILIATION",
+}
+
+export enum SACaseStatus {
+  SUBMITTED = "SUBMITTED",
+  ACKNOWLEDGED = "ACKNOWLEDGED",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  INVESTIGATION = "INVESTIGATION",
+  HEARING = "HEARING",
+  AWAITING_INFO = "AWAITING_INFO",
+  RESOLVED = "RESOLVED",
+  CLOSED = "CLOSED",
+  REOPENED = "REOPENED",
+}
+
+export enum SACasePriority {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+  CRITICAL_URGENT = "CRITICAL_URGENT",
+}
+
+export enum SAConfidentialityLevel {
+  STANDARD = "STANDARD",
+  CONFIDENTIAL = "CONFIDENTIAL",
+  RESTRICTED = "RESTRICTED",
+  LEGAL_HOLD = "LEGAL_HOLD",
+}
+
+export enum SASubmitterType {
+  STUDENT = "STUDENT",
+  FACULTY = "FACULTY",
+  STAFF = "STAFF",
+  ANONYMOUS = "ANONYMOUS",
+  EXTERNAL = "EXTERNAL",
+}
+
+export enum SAParticipantRole {
+  SUBMITTER = "SUBMITTER",
+  RESPONDENT = "RESPONDENT",
+  WITNESS = "WITNESS",
+  SUPPORT_PERSON = "SUPPORT_PERSON",
+  CASE_OFFICER = "CASE_OFFICER",
+  INVESTIGATOR = "INVESTIGATOR",
+  MEDIATOR = "MEDIATOR",
+  PANEL_MEMBER = "PANEL_MEMBER",
+  DECISION_MAKER = "DECISION_MAKER",
+  APPEAL_REVIEWER = "APPEAL_REVIEWER",
+  SAFEGUARDING_OFFICER = "SAFEGUARDING_OFFICER",
+}
+
+export enum SAFindingStatus {
+  PENDING = "PENDING",
+  SUBSTANTIATED = "SUBSTANTIATED",
+  UNSUBSTANTIATED = "UNSUBSTANTIATED",
+  INCONCLUSIVE = "INCONCLUSIVE",
+  DISMISSED = "DISMISSED",
+}
+
+export enum SASanctionType {
+  FORMAL_WARNING = "FORMAL_WARNING",
+  DISCIPLINARY_PROBATION = "DISCIPLINARY_PROBATION",
+  COMMUNITY_SERVICE = "COMMUNITY_SERVICE",
+  RESTITUTION = "RESTITUTION",
+  SUSPENSION = "SUSPENSION",
+  EXPULSION = "EXPULSION",
+  FACILITY_RESTRICTION = "FACILITY_RESTRICTION",
+  COUNSELING_REFERRAL = "COUNSELING_REFERRAL",
+  PARENTAL_NOTIFICATION = "PARENTAL_NOTIFICATION",
+}
+
+export enum SADisciplinaryStage {
+  INTAKE_ASSESSMENT = "INTAKE_ASSESSMENT",
+  NOTICE_ISSUED = "NOTICE_ISSUED",
+  INVESTIGATION_ACTIVE = "INVESTIGATION_ACTIVE",
+  HEARING_SCHEDULED = "HEARING_SCHEDULED",
+  FINDINGS_RECORDED = "FINDINGS_RECORDED",
+  SANCTION_APPROVED = "SANCTION_APPROVED",
+  APPEAL_PENDING = "APPEAL_PENDING",
+  CONCLUDED = "CONCLUDED",
+}
+
+export enum SAEvidenceType {
+  DOCUMENT = "DOCUMENT",
+  IMAGE = "IMAGE",
+  TESTIMONY = "TESTIMONY",
+  COMMUNICATION_LOG = "COMMUNICATION_LOG",
+  PHYSICAL_REPORT = "PHYSICAL_REPORT",
+  SECURITY_LOG = "SECURITY_LOG",
+}
+
+export enum SAEvidenceAccessLevel {
+  PUBLIC_DISCLOSED = "PUBLIC_DISCLOSED",
+  PARTICIPANTS_ONLY = "PARTICIPANTS_ONLY",
+  PANEL_AND_OFFICERS = "PANEL_AND_OFFICERS",
+  RESTRICTED_INVESTIGATOR_ONLY = "RESTRICTED_INVESTIGATOR_ONLY",
+}
+
+export enum SAMeetingType {
+  INTAKE_INTERVIEW = "INTAKE_INTERVIEW",
+  PRELIMINARY_INQUIRY = "PRELIMINARY_INQUIRY",
+  FORMAL_INVESTIGATION = "FORMAL_INVESTIGATION",
+  MEDIATION_SESSION = "MEDIATION_SESSION",
+  HEARING_PANEL = "HEARING_PANEL",
+  RESOLUTION_CONFERENCE = "RESOLUTION_CONFERENCE",
+  APPEAL_HEARING = "APPEAL_HEARING",
+}
+
+export enum SAMeetingStatus {
+  SCHEDULED = "SCHEDULED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+  RESCHEDULED = "RESCHEDULED",
+}
+
+export enum SAActionType {
+  APOLOGY = "APOLOGY",
+  POLICY_REVISION = "POLICY_REVISION",
+  GRADE_RECHECK = "GRADE_RECHECK",
+  FACILITY_REPAIR = "FACILITY_REPAIR",
+  MEDIATED_AGREEMENT = "MEDIATED_AGREEMENT",
+  RESTITUTION = "RESTITUTION",
+  TRAINING_MANDATE = "TRAINING_MANDATE",
+  OTHER = "OTHER",
+}
+
+export enum SAActionStatus {
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  OVERDUE = "OVERDUE",
+  WAIVED = "WAIVED",
+}
+
+export enum SAAppealGrounds {
+  PROCEDURAL_IRREGULARITY = "PROCEDURAL_IRREGULARITY",
+  NEW_EVIDENCE = "NEW_EVIDENCE",
+  DISPROPORTIONATE_SANCTION = "DISPROPORTIONATE_SANCTION",
+  BIAS_CONFLICT_OF_INTEREST = "BIAS_CONFLICT_OF_INTEREST",
+}
+
+export enum SAAppealStatus {
+  FILED = "FILED",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  UPHELD = "UPHELD",
+  OVERTURNED = "OVERTURNED",
+  SANCTION_MODIFIED = "SANCTION_MODIFIED",
+  REMANDED = "REMANDED",
+}
+
+export enum SAEscalationLevel {
+  LEVEL_1_LEAD = "LEVEL_1_LEAD",
+  LEVEL_2_DIRECTOR = "LEVEL_2_DIRECTOR",
+  LEVEL_3_EXECUTIVE_SAFEGUARDING = "LEVEL_3_EXECUTIVE_SAFEGUARDING",
+}
+
+export enum SAEscalationStatus {
+  ACTIVE = "ACTIVE",
+  RESOLVED = "RESOLVED",
+  DE_ESCALATED = "DE_ESCALATED",
+}
+
+export enum SACaseAuditAction {
+  VIEWED_CASE = "VIEWED_CASE",
+  VIEWED_EVIDENCE = "VIEWED_EVIDENCE",
+  EXPORTED_RECORD = "EXPORTED_RECORD",
+  DISCLOSED_TO_PANEL = "DISCLOSED_TO_PANEL",
+  STATUS_UPDATED = "STATUS_UPDATED",
+  SANCTION_RECORDED = "SANCTION_RECORDED",
+  APPEAL_FILED = "APPEAL_FILED",
+}
+
+export interface StudentAffairsOfficeModel {
+  id: UUID;
+  tenant_id: UUID;
+  code: string;
+  name: string;
+  description?: string | null;
+  campus_id?: UUID | null;
+  lead_staff_id?: UUID | null;
+  contact_email?: string | null;
+  phone_number?: string | null;
+  room_location?: string | null;
+  is_active: boolean;
+  metadata_json?: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GrievanceCategoryModel {
+  id: UUID;
+  tenant_id: UUID;
+  code: string;
+  name: string;
+  description?: string | null;
+  case_type: SACaseType | string;
+  default_priority: SACasePriority | string;
+  sla_response_hours: number;
+  sla_resolution_days: number;
+  is_confidential_by_default: boolean;
+  allow_anonymous: boolean;
+  policy_document_url?: string | null;
+  policy_reference_code?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GrievanceCaseModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_number: string;
+  case_type: SACaseType | string;
+  category_id: UUID;
+  category?: GrievanceCategoryModel | null;
+  title: string;
+  description: string;
+  requested_resolution?: string | null;
+  status: SACaseStatus | string;
+  priority: SACasePriority | string;
+  confidentiality_level: SAConfidentialityLevel | string;
+  is_anonymous: boolean;
+  submitter_type: SASubmitterType | string;
+  submitter_user_id?: UUID | null;
+  submitter_student_id?: UUID | null;
+  submitter_name_redacted: string;
+  campus_id?: UUID | null;
+  assigned_office_id?: UUID | null;
+  assigned_officer_id?: UUID | null;
+  target_response_date?: string | null;
+  target_resolution_date?: string | null;
+  is_escalated: boolean;
+  escalation_reason?: string | null;
+  resolution_summary?: string | null;
+  resolution_date?: string | null;
+  closed_at?: string | null;
+  reopen_count: number;
+  metadata_json?: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+  participants?: CaseParticipantModel[];
+  disciplinary_proceeding?: DisciplinaryProceedingModel | null;
+  evidence_items?: CaseEvidenceModel[];
+  meetings?: CaseMeetingModel[];
+  communications?: CaseCommunicationModel[];
+  resolution_actions?: ResolutionActionModel[];
+  appeals?: AppealRecordModel[];
+}
+
+export interface CaseParticipantModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  user_id?: UUID | null;
+  role: SAParticipantRole | string;
+  display_name: string;
+  has_conflict_of_interest: boolean;
+  conflict_declared_reason?: string | null;
+  assigned_at: string;
+  unassigned_at?: string | null;
+  created_at: string;
+}
+
+export interface CaseAssignmentHistoryModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  previous_officer_id?: UUID | null;
+  new_officer_id: UUID;
+  reassignment_reason?: string | null;
+  assigned_by_id: UUID;
+  assigned_at: string;
+}
+
+export interface DisciplinaryProceedingModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  respondent_student_id: UUID;
+  allegation_summary: string;
+  policy_provisions_violated: string;
+  investigator_id?: UUID | null;
+  procedural_stage: SADisciplinaryStage | string;
+  notice_served_at?: string | null;
+  student_response?: string | null;
+  student_responded_at?: string | null;
+  findings_summary?: string | null;
+  finding_status: SAFindingStatus | string;
+  sanction_type?: SASanctionType | string | null;
+  sanction_details?: string | null;
+  decision_maker_id?: UUID | null;
+  decision_date?: string | null;
+  appeal_deadline?: string | null;
+  is_communicated: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseEvidenceModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  document_id?: UUID | null;
+  evidence_type: SAEvidenceType | string;
+  title: string;
+  description?: string | null;
+  file_url: string;
+  file_size_bytes: number;
+  uploaded_by_id: UUID;
+  confidentiality_level: SAEvidenceAccessLevel | string;
+  is_redacted: boolean;
+  redaction_summary?: string | null;
+  original_evidence_id?: UUID | null;
+  is_under_legal_hold: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseMeetingModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  title: string;
+  meeting_type: SAMeetingType | string;
+  scheduled_start: string;
+  scheduled_end: string;
+  venue_or_url?: string | null;
+  facilitator_id?: UUID | null;
+  status: SAMeetingStatus | string;
+  notes_confidential?: string | null;
+  agreed_actions?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseCommunicationModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  sender_user_id: UUID;
+  sender_role: string;
+  message_body: string;
+  is_internal_only: boolean;
+  attachment_url?: string | null;
+  is_acknowledged: boolean;
+  acknowledged_at?: string | null;
+  created_at: string;
+}
+
+export interface ResolutionActionModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  description: string;
+  action_type: SAActionType | string;
+  assigned_owner_id?: UUID | null;
+  due_date?: string | null;
+  status: SAActionStatus | string;
+  completion_notes?: string | null;
+  completed_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AppealRecordModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  appellant_id: UUID;
+  appeal_date: string;
+  appeal_grounds: SAAppealGrounds | string;
+  grounds_statement: string;
+  assigned_reviewer_id?: UUID | null;
+  review_status: SAAppealStatus | string;
+  outcome_summary?: string | null;
+  outcome_date?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseEscalationModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  escalation_level: SAEscalationLevel | string;
+  status: SAEscalationStatus | string;
+  trigger_reason: string;
+  escalated_by_id: UUID;
+  safeguarding_lead_id?: UUID | null;
+  resolution_actions?: string | null;
+  resolved_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseAccessAuditModel {
+  id: UUID;
+  tenant_id: UUID;
+  case_id: UUID;
+  user_id: UUID;
+  user_role: string;
+  action: SACaseAuditAction | string;
+  details?: string | null;
+  created_at: string;
+}
+
+export interface StudentAffairsPolicyConfigModel {
+  id: UUID;
+  tenant_id: UUID;
+  policy_name: string;
+  policy_code: string;
+  current_version: string;
+  effective_date: string;
+  document_url?: string | null;
+  standard_appeal_window_days: number;
+  sla_triage_hours: number;
+  sla_investigation_days: number;
+  sla_hearing_notice_days: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StudentAffairsDashboardMetrics {
+  total_cases: number;
+  active_grievances: number;
+  active_disciplinary: number;
+  pending_intake: number;
+  hearings_scheduled: number;
+  appeals_pending: number;
+  urgent_escalations: number;
+  resolved_this_month: number;
+  sla_compliance_rate: number;
+}
+
+// ============================================================================
+// STEP 61: ENTERPRISE RESEARCH COLLABORATION, PORTFOLIO & SPONSORED GRANTS
+// ============================================================================
+
+export type ResearchProjectCategory =
+  | "FACULTY_LED"
+  | "DEPARTMENTAL"
+  | "INTERDISCIPLINARY"
+  | "STUDENT_RESEARCH"
+  | "INDUSTRY_SPONSORED"
+  | "GOVERNMENT_FUNDED"
+  | "COLLABORATIVE"
+  | "APPLIED_INNOVATION"
+  | "INTERNATIONAL_COLLABORATION"
+  | "FUNDED_RESEARCH";
+
+export type ResearchProjectStatus =
+  | "DRAFT"
+  | "PROPOSAL"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "ACTIVE"
+  | "ON_HOLD"
+  | "COMPLETED"
+  | "CLOSED"
+  | "CANCELLED";
+
+export type ResearchMilestoneStatus =
+  | "PLANNED"
+  | "IN_PROGRESS"
+  | "SUBMITTED_FOR_REVIEW"
+  | "ACCEPTED"
+  | "REVISION_REQUESTED"
+  | "BLOCKED"
+  | "CANCELLED";
+
+export type ResearchEthicsApprovalType =
+  | "HUMAN_SUBJECTS_IRB"
+  | "ANIMAL_CARE_IACUC"
+  | "BIO_SAFETY_IBC"
+  | "RADIATION_SAFETY"
+  | "DATA_PRIVACY_ETHICS"
+  | "GENERAL_INSTITUTIONAL";
+
+export type ResearchEthicsApprovalStatus =
+  | "NOT_REQUIRED"
+  | "PREPARATION"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "CHANGES_REQUIRED"
+  | "REJECTED"
+  | "EXPIRED";
+
+export type ResearchRiskSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type ResearchRiskStatus = "IDENTIFIED" | "MONITORED" | "MITIGATED" | "ACCEPTED" | "CLOSED";
+
+export type ResearchTeamRole =
+  | "PRINCIPAL_INVESTIGATOR"
+  | "CO_INVESTIGATOR"
+  | "FACULTY_MENTOR"
+  | "POSTDOC_RESEARCHER"
+  | "RESEARCH_SCHOLAR"
+  | "STUDENT_RESEARCHER"
+  | "INDUSTRY_COLLABORATOR"
+  | "EXTERNAL_CO_PI"
+  | "PROJECT_MANAGER"
+  | "RESEARCH_ASSISTANT";
+
+export type ResearchOpportunityStatus = "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED" | "CANCELLED";
+
+export type ResearchGrantInternalReviewStatus =
+  | "DRAFT"
+  | "SUBMITTED_INTERNAL"
+  | "DEPARTMENTAL_REVIEW"
+  | "BUDGET_REVIEW"
+  | "REVISION_REQUESTED"
+  | "INSTITUTIONALLY_APPROVED"
+  | "REJECTED_INTERNAL";
+
+export type ResearchExternalSubmissionStatus =
+  | "NOT_SUBMITTED"
+  | "SUBMITTED_EXTERNAL"
+  | "UNDER_EXTERNAL_REVIEW"
+  | "AWARDED"
+  | "REJECTED_EXTERNAL"
+  | "DECLINED"
+  | "WITHDRAWN"
+  | "REVISION_REQUESTED";
+
+export interface ResearchProjectModel {
+  id: UUID;
+  tenant_id: UUID;
+  project_code: string;
+  title: string;
+  abstract: string;
+  research_category: ResearchProjectCategory | string;
+  research_domain: string;
+  principal_investigator_id: UUID;
+  pi_name?: string | null;
+  start_date: string;
+  planned_end_date: string;
+  actual_end_date?: string | null;
+  total_budget_allocated: number;
+  currency: string;
+  status: ResearchProjectStatus | string;
+  requires_ethics_approval: boolean;
+  is_international: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResearchProjectHealthReportModel {
+  project_id: UUID;
+  project_code: string;
+  health_score: number;
+  health_status: "HEALTHY" | "NEEDS_ATTENTION" | "AT_RISK" | "CRITICAL";
+  overdue_milestones_count: number;
+  blocked_milestones_count: number;
+  ethics_compliant: boolean;
+  ethics_status: string;
+  financial_burn_rate_percent: number;
+  high_critical_risks_count: number;
+  diagnostic_reasons: string[];
+}
+
+// =============================================================================
+// STEP 62: ENTERPRISE LEGAL AFFAIRS, CONTRACTS, COMPLIANCE & RISK TYPES
+// =============================================================================
+
+export type ContractCategoryType =
+  | "VENDOR_PROCUREMENT"
+  | "EMPLOYMENT_CONSULTING"
+  | "SERVICE_LEVEL"
+  | "STUDENT_SERVICE"
+  | "RESEARCH_SPONSORED"
+  | "INDUSTRY_COLLABORATION"
+  | "DATA_PROCESSING_NDA"
+  | "FACILITY_PARTNERSHIP"
+  | "INTERNATIONAL_INSTITUTIONAL"
+  | "OTHER";
+
+export type ContractStatusType =
+  | "DRAFT"
+  | "INTERNAL_REVIEW"
+  | "DEPARTMENT_APPROVAL"
+  | "LEGAL_REVIEW"
+  | "AUTHORIZED_APPROVAL"
+  | "READY_FOR_EXECUTION"
+  | "EXECUTED"
+  | "ACTIVE"
+  | "EXPIRING"
+  | "RENEWED"
+  | "TERMINATED"
+  | "EXPIRED"
+  | "REJECTED"
+  | "WITHDRAWN"
+  | "ON_HOLD"
+  | "ARCHIVED";
+
+export type ObligationStatusType =
+  | "PENDING"
+  | "APPROACHING"
+  | "COMPLETED"
+  | "OVERDUE"
+  | "WAIVED"
+  | "DISPUTED";
+
+export type RiskLevelType = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export interface InstitutionalContractModel {
+  id: UUID;
+  tenant_id: UUID;
+  contract_number: string;
+  title: string;
+  category: ContractCategoryType;
+  purpose?: string | null;
+  internal_owner_id: UUID;
+  counterparty_name: string;
+  status: ContractStatusType;
+  effective_date?: string | null;
+  expiration_date?: string | null;
+  auto_renew: boolean;
+  financial_value?: number | null;
+  currency: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================================================
+// STEP 64: ENTERPRISE CAREER DEVELOPMENT, INTERNSHIP & EMPLOYABILITY TYPES
+// ============================================================================
+
+export type OpportunityType =
+  | "SUMMER"
+  | "SEMESTER"
+  | "RESEARCH"
+  | "INDUSTRY_PROJECT"
+  | "EXTERNAL_APPROVED";
+
+export type InternshipWorkMode = "ON_SITE" | "REMOTE" | "HYBRID";
+
+export type InternshipOpportunityStatus =
+  | "DRAFT"
+  | "PUBLISHED"
+  | "PAUSED"
+  | "CLOSED"
+  | "ARCHIVED";
+
+export type InternshipApplicationStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "ELIGIBILITY_REVIEW"
+  | "PLACEMENT_OFFICE_REVIEW"
+  | "EMPLOYER_SHORTLISTING"
+  | "INTERVIEW_ASSESSMENT"
+  | "SELECTED"
+  | "WAITLISTED"
+  | "REJECTED"
+  | "OFFER_RECEIVED"
+  | "OFFER_ACCEPTED"
+  | "OFFER_DECLINED"
+  | "PLACEMENT_CONFIRMED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "WITHDRAWN"
+  | "CANCELLED";
+
+export type InternshipRecordStatus =
+  | "ONBOARDING"
+  | "IN_PROGRESS"
+  | "UNDER_EVALUATION"
+  | "COMPLETED"
+  | "TERMINATED"
+  | "FAILED";
+
+export type OnboardingItemStatus =
+  | "NOT_STARTED"
+  | "PENDING"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "REJECTED"
+  | "NOT_APPLICABLE";
+
+export type OnboardingRequirementKey =
+  | "OFFER_LETTER"
+  | "INTERNSHIP_AGREEMENT"
+  | "INSTITUTIONAL_APPROVAL"
+  | "STUDENT_ACKNOWLEDGMENT"
+  | "SUPERVISOR_ASSIGNMENT"
+  | "INTERNSHIP_OBJECTIVES"
+  | "WORK_SCHEDULE"
+  | "SAFETY_ORIENTATION"
+  | "CONFIDENTIALITY_NDA"
+  | "EMERGENCY_CONTACT"
+  | "ACADEMIC_APPROVAL";
+
+export type CheckinStatus = "SCHEDULED" | "COMPLETED" | "OVERDUE" | "CANCELLED";
+
+export type EvaluationType = "MIDPOINT" | "FINAL" | "STUDENT_REFLECTION";
+
+export type EvaluatorType =
+  | "FACULTY_SUPERVISOR"
+  | "EMPLOYER_SUPERVISOR"
+  | "STUDENT_SELF";
+
+export type GoalStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "ACHIEVED"
+  | "ABANDONED";
+
+export type GoalCategory =
+  | "SKILL_ACQUISITION"
+  | "CERTIFICATION"
+  | "RESUME_PORTFOLIO"
+  | "INTERNSHIP_APPLICATION"
+  | "NETWORKING";
+
+export type EmployerPartnershipStatus =
+  | "PROSPECT"
+  | "ACTIVE"
+  | "PARTNER"
+  | "STRATEGIC_PARTNER"
+  | "PAUSED"
+  | "ARCHIVED";
+
+export type CompanySizeType =
+  | "STARTUP"
+  | "SME"
+  | "MID_MARKET"
+  | "LARGE_ENTERPRISE"
+  | "MULTINATIONAL"
+  | "GOVERNMENT"
+  | "RESEARCH_INSTITUTE";
+
+export interface InternshipOpportunity {
+  id: UUID;
+  tenant_id: UUID;
+  opportunity_code: string;
+  company_id: UUID;
+  company_name?: string;
+  contact_id?: UUID | null;
+  title: string;
+  description: string;
+  internship_type: OpportunityType;
+  work_mode: InternshipWorkMode;
+  work_location: string;
+  start_date: string;
+  end_date: string;
+  duration_weeks: number;
+  vacancies_count: number;
+  is_paid: boolean;
+  stipend_amount?: number | null;
+  stipend_currency: string;
+  stipend_frequency: string;
+  required_skills_json: string[];
+  eligible_departments_json: string[];
+  eligible_programs_json?: string[];
+  min_cgpa?: number | null;
+  max_active_backlogs: number;
+  application_open_date: string;
+  application_close_date: string;
+  selection_stages_json: string[];
+  required_documents_json: string[];
+  coordinator_user_id?: UUID | null;
+  coordinator_name?: string;
+  status: InternshipOpportunityStatus;
+  supervision_requirements?: string | null;
+  evaluation_rubric_json?: Record<string, unknown> | null;
+  applications_count?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InternshipApplication {
+  id: UUID;
+  tenant_id: UUID;
+  application_number: string;
+  opportunity_id: UUID;
+  opportunity_title?: string;
+  company_id?: UUID;
+  company_name?: string;
+  student_id: UUID;
+  student_name?: string;
+  student_roll_number?: string;
+  student_department?: string;
+  student_cgpa?: number;
+  status: InternshipApplicationStatus;
+  applied_at: string;
+  resume_document_id?: UUID | null;
+  portfolio_url?: string | null;
+  cover_letter?: string | null;
+  supporting_documents_json?: string[];
+  eligibility_status: string;
+  eligibility_details_json?: Record<string, unknown> | null;
+  shared_with_employer: boolean;
+  shared_at?: string | null;
+  employer_feedback?: string | null;
+  interview_details_json?: Record<string, unknown> | null;
+  selection_decision: string;
+  offer_details_json?: Record<string, unknown> | null;
+  student_decision: string;
+  decision_date?: string | null;
+  decision_remarks?: string | null;
+  confirmed_placement_date?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InternshipOnboardingItem {
+  id: UUID;
+  internship_record_id: UUID;
+  requirement_key: OnboardingRequirementKey;
+  title: string;
+  description?: string | null;
+  status: OnboardingItemStatus;
+  document_reference_id?: UUID | null;
+  submission_notes?: string | null;
+  submitted_at?: string | null;
+  reviewed_by_user_id?: UUID | null;
+  reviewed_at?: string | null;
+  rejection_reason?: string | null;
+  is_mandatory: boolean;
+}
+
+export interface InternshipRecord {
+  id: UUID;
+  tenant_id: UUID;
+  internship_code: string;
+  application_id?: UUID | null;
+  opportunity_id?: UUID | null;
+  student_id: UUID;
+  student_name?: string;
+  student_roll_number?: string;
+  student_department?: string;
+  company_id: UUID;
+  company_name?: string;
+  title: string;
+  work_mode: InternshipWorkMode;
+  work_location: string;
+  start_date: string;
+  end_date: string;
+  actual_completion_date?: string | null;
+  stipend_amount?: number | null;
+  stipend_currency: string;
+  faculty_supervisor_id?: UUID | null;
+  faculty_supervisor_name?: string | null;
+  employer_supervisor_name?: string | null;
+  employer_supervisor_email?: string | null;
+  employer_supervisor_phone?: string | null;
+  employer_supervisor_designation?: string | null;
+  learning_objectives_json: string[];
+  status: InternshipRecordStatus;
+  completion_certificate_id?: UUID | null;
+  academic_credit_recommended?: number | null;
+  academic_credit_approved?: number | null;
+  academic_approval_status: string;
+  academic_approved_by_id?: UUID | null;
+  academic_approval_date?: string | null;
+  academic_notes?: string | null;
+  onboarding_items?: InternshipOnboardingItem[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InternshipProgressCheckin {
+  id: UUID;
+  internship_record_id: UUID;
+  scheduled_date: string;
+  conducted_date?: string | null;
+  checkin_type: string;
+  reviewer_user_id?: UUID | null;
+  reviewer_name?: string;
+  status: CheckinStatus;
+  progress_rating?: number | null;
+  supervisor_notes?: string | null;
+  student_feedback?: string | null;
+  challenges_identified?: string | null;
+  action_items?: string | null;
+  created_at: string;
+}
+
+export interface InternshipStudentUpdate {
+  id: UUID;
+  internship_record_id: UUID;
+  report_period: string;
+  submission_date: string;
+  hours_completed: number;
+  tasks_completed: string;
+  key_learnings: string;
+  challenges_faced?: string | null;
+  document_reference_id?: UUID | null;
+  supervisor_acknowledgment: boolean;
+  supervisor_comments?: string | null;
+  created_at: string;
+}
+
+export interface InternshipEvaluation {
+  id: UUID;
+  internship_record_id: UUID;
+  evaluation_type: EvaluationType;
+  evaluator_type: EvaluatorType;
+  evaluator_user_id?: UUID | null;
+  evaluator_name: string;
+  technical_skills_score: number;
+  problem_solving_score: number;
+  communication_score: number;
+  teamwork_score: number;
+  professional_conduct_score: number;
+  reliability_score: number;
+  project_delivery_score: number;
+  learning_outcomes_score: number;
+  overall_score: number;
+  qualitative_feedback?: string | null;
+  areas_of_strength?: string | null;
+  areas_for_improvement?: string | null;
+  recommend_completion: boolean;
+  evaluated_at: string;
+}
+
+export interface CareerDevelopmentGoal {
+  id: UUID;
+  tenant_id: UUID;
+  student_id: UUID;
+  title: string;
+  category: GoalCategory;
+  target_completion_date: string;
+  status: GoalStatus;
+  milestones_json: Array<{ title: string; completed: boolean }>;
+  target_skills_json: string[];
+  faculty_mentor_id?: UUID | null;
+  mentor_name?: string;
+  mentor_feedback?: string | null;
+  achieved_at?: string | null;
+  created_at: string;
+}
+
+export interface EmployerEngagementLog {
+  id: UUID;
+  tenant_id: UUID;
+  company_id: UUID;
+  engagement_type: string;
+  title: string;
+  description?: string | null;
+  conducted_date: string;
+  attendees_count: number;
+  faculty_coordinator_id?: UUID | null;
+  outcomes_summary?: string | null;
+  follow_up_actions?: string | null;
+  status: string;
+  created_at: string;
+}
+
+export interface EmployerFeedback {
+  id: UUID;
+  tenant_id: UUID;
+  company_id: UUID;
+  company_name?: string;
+  department_id?: UUID | null;
+  department_name?: string;
+  academic_year_id?: UUID | null;
+  feedback_date: string;
+  evaluator_name: string;
+  evaluator_designation?: string | null;
+  student_preparedness_rating: number;
+  curriculum_relevance_rating: number;
+  emerging_skills_recommended_json: string[];
+  curriculum_suggestions?: string | null;
+  department_action_plan?: string | null;
+  action_plan_status: string;
+  reviewed_by_hod_id?: UUID | null;
+  reviewed_at?: string | null;
+  created_at: string;
+}
+
+export interface CareerEvent {
+  id: UUID;
+  tenant_id: UUID;
+  event_code: string;
+  title: string;
+  event_type: string;
+  company_id?: UUID | null;
+  company_name?: string;
+  department_id?: UUID | null;
+  speaker_name?: string | null;
+  speaker_designation?: string | null;
+  event_date: string;
+  duration_minutes: number;
+  location?: string | null;
+  mode: string;
+  meeting_url?: string | null;
+  capacity: number;
+  registration_open_date: string;
+  registration_close_date: string;
+  status: string;
+  registered_students_count: number;
+  attendees_count: number;
+  is_registered?: boolean;
+  created_at: string;
+}
+
+export interface CareerDashboardSummary {
+  active_opportunities_count: number;
+  active_internships_count: number;
+  completed_internships_count: number;
+  pending_evaluations_count: number;
+  total_partnerships_count: number;
+  students_placed_count: number;
+  stipend_average_inr: number;
+  stipend_median_inr: number;
+  department_stats: Array<{
+    department: string;
+    internships_count: number;
+    completion_rate: number;
+    avg_stipend: number;
+  }>;
+  recent_opportunities: InternshipOpportunity[];
+  upcoming_events: CareerEvent[];
+}
+
+export interface EmployabilityAnalytics {
+  published_opportunities: number;
+  total_applications: number;
+  applications_conversion_funnel: {
+    applied: number;
+    shortlisted: number;
+    interviewed: number;
+    offered: number;
+    confirmed: number;
+    conversion_rate_pct: number;
+  };
+  internship_participation_count: number;
+  internship_completion_count: number;
+  internship_completion_rate_pct: number;
+  full_time_placements_count: number;
+  stipend_metrics: {
+    average_monthly_inr: number;
+    median_monthly_inr: number;
+    highest_monthly_inr: number;
+  };
+  in_demand_skills: Array<{ skill: string; demand_count: number }>;
+  department_breakdown: Array<{
+    department: string;
+    total_students: number;
+    internship_participating: number;
+    internship_completed: number;
+    full_time_placed: number;
+    placement_rate_pct: number;
+  }>;
+  employer_repeat_retention_rate_pct: number;
+}
 

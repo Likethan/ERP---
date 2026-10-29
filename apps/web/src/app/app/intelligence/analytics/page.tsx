@@ -33,14 +33,17 @@ export default function AnalyticsConsolePage() {
   const [loading, setLoading] = useState(false);
 
   // Analytics Builder States
-  const [domain, setDomain] = useState<IntelligenceDomain>(IntelligenceDomain.ATTENDANCE);
+  const [domain, setDomain] = useState<IntelligenceDomain>(
+    IntelligenceDomain.ATTENDANCE,
+  );
   const [metric, setMetric] = useState("Average Attendance");
   const [dimension, setDimension] = useState("Department");
   const [timeRange, setTimeRange] = useState("Current Semester");
 
   // Global filters
   const [deptFilter, setDeptFilter] = useState("ALL");
-  const [analyticsResult, setAnalyticsResult] = useState<AnalyticsResult | null>(null);
+  const [analyticsResult, setAnalyticsResult] =
+    useState<AnalyticsResult | null>(null);
 
   const runQuery = async () => {
     setLoading(true);
@@ -81,7 +84,8 @@ export default function AnalyticsConsolePage() {
             Cross-Domain Campus Analytics
           </h1>
           <p className="text-sm text-slate-500">
-            Multidimensional analytics builder and comparative performance telemetry.
+            Multidimensional analytics builder and comparative performance
+            telemetry.
           </p>
         </div>
 
@@ -92,7 +96,8 @@ export default function AnalyticsConsolePage() {
             onClick={() => {
               toast({
                 title: "Report Export Dispatched",
-                description: "Generating CSV spreadsheet export of current telemetry.",
+                description:
+                  "Generating CSV spreadsheet export of current telemetry.",
                 variant: "success",
               });
             }}
@@ -103,7 +108,10 @@ export default function AnalyticsConsolePage() {
           </Button>
 
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Ask AI Assistant
             </Button>
@@ -118,29 +126,47 @@ export default function AnalyticsConsolePage() {
             <BarChart3 className="w-4 h-4 text-blue-600" />
             Analytics Builder
           </CardTitle>
-          <Badge variant="info" className="text-[10px]">Interactive Configurator</Badge>
+          <Badge variant="info" className="text-[10px]">
+            Interactive Configurator
+          </Badge>
         </CardHeader>
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Domain */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-600">Subsystem Domain</label>
+              <label className="text-xs font-semibold text-slate-600">
+                Subsystem Domain
+              </label>
               <select
                 value={domain}
-                onChange={(e) => setDomain(e.target.value as IntelligenceDomain)}
+                onChange={(e) =>
+                  setDomain(e.target.value as IntelligenceDomain)
+                }
                 className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
               >
-                <option value={IntelligenceDomain.ATTENDANCE}>Attendance Telemetry</option>
-                <option value={IntelligenceDomain.FINANCE}>Finance & Revenues</option>
-                <option value={IntelligenceDomain.PLACEMENT}>Corporate Placements</option>
-                <option value={IntelligenceDomain.INFRASTRUCTURE}>Infrastructure & Assets</option>
-                <option value={IntelligenceDomain.ALL}>Cross-Campus Overview</option>
+                <option value={IntelligenceDomain.ATTENDANCE}>
+                  Attendance Telemetry
+                </option>
+                <option value={IntelligenceDomain.FINANCE}>
+                  Finance & Revenues
+                </option>
+                <option value={IntelligenceDomain.PLACEMENT}>
+                  Corporate Placements
+                </option>
+                <option value={IntelligenceDomain.INFRASTRUCTURE}>
+                  Infrastructure & Assets
+                </option>
+                <option value={IntelligenceDomain.ALL}>
+                  Cross-Campus Overview
+                </option>
               </select>
             </div>
 
             {/* Metric */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-600">Metric</label>
+              <label className="text-xs font-semibold text-slate-600">
+                Metric
+              </label>
               <select
                 value={metric}
                 onChange={(e) => setMetric(e.target.value)}
@@ -148,37 +174,57 @@ export default function AnalyticsConsolePage() {
               >
                 {domain === IntelligenceDomain.ATTENDANCE && (
                   <>
-                    <option value="Average Attendance">Average Attendance (%)</option>
-                    <option value="Risk Cohort (<75%)">Students Below 75% Threshold</option>
+                    <option value="Average Attendance">
+                      Average Attendance (%)
+                    </option>
+                    <option value="Risk Cohort (<75%)">
+                      Students Below 75% Threshold
+                    </option>
                   </>
                 )}
                 {domain === IntelligenceDomain.FINANCE && (
                   <>
-                    <option value="Billed vs Realized">Billed vs Realized Collections</option>
-                    <option value="Aging Receivables">Overdue Aging Buckets</option>
+                    <option value="Billed vs Realized">
+                      Billed vs Realized Collections
+                    </option>
+                    <option value="Aging Receivables">
+                      Overdue Aging Buckets
+                    </option>
                   </>
                 )}
                 {domain === IntelligenceDomain.PLACEMENT && (
                   <>
-                    <option value="Offers Released">Offers Released per Drive</option>
-                    <option value="CTC Distribution">Average Package (CTC)</option>
+                    <option value="Offers Released">
+                      Offers Released per Drive
+                    </option>
+                    <option value="CTC Distribution">
+                      Average Package (CTC)
+                    </option>
                   </>
                 )}
                 {domain === IntelligenceDomain.INFRASTRUCTURE && (
                   <>
-                    <option value="Occupancy Rate">Hostel Bed Utilization</option>
-                    <option value="Complaint Resolution SLA">Resolution Time (Hours)</option>
+                    <option value="Occupancy Rate">
+                      Hostel Bed Utilization
+                    </option>
+                    <option value="Complaint Resolution SLA">
+                      Resolution Time (Hours)
+                    </option>
                   </>
                 )}
                 {domain === IntelligenceDomain.ALL && (
-                  <option value="Composite Health">Overall Subsystem Health Index</option>
+                  <option value="Composite Health">
+                    Overall Subsystem Health Index
+                  </option>
                 )}
               </select>
             </div>
 
             {/* Dimension */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-600">Dimension / Grouping</label>
+              <label className="text-xs font-semibold text-slate-600">
+                Dimension / Grouping
+              </label>
               <select
                 value={dimension}
                 onChange={(e) => setDimension(e.target.value)}
@@ -192,15 +238,21 @@ export default function AnalyticsConsolePage() {
 
             {/* Time Range */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-600">Time Range</label>
+              <label className="text-xs font-semibold text-slate-600">
+                Time Range
+              </label>
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
                 className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
               >
-                <option value="Current Semester">Current Semester (2026-27)</option>
+                <option value="Current Semester">
+                  Current Semester (2026-27)
+                </option>
                 <option value="Past 30 Days">Past 30 Days</option>
-                <option value="Full Academic Year">Full Academic Year 2026-27</option>
+                <option value="Full Academic Year">
+                  Full Academic Year 2026-27
+                </option>
               </select>
             </div>
           </div>
@@ -212,7 +264,9 @@ export default function AnalyticsConsolePage() {
               disabled={loading}
               className="gap-1.5 font-semibold text-xs bg-blue-600 hover:bg-blue-700 text-white"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+              />
               Run Analytics Query
             </Button>
           </div>
@@ -234,9 +288,14 @@ export default function AnalyticsConsolePage() {
                 <CardTitle className="text-base font-bold text-slate-900">
                   {analyticsResult.title}
                 </CardTitle>
-                <p className="text-xs text-slate-500 mt-0.5">{analyticsResult.summary}</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {analyticsResult.summary}
+                </p>
               </div>
-              <Badge variant="neutral" className="text-xs capitalize font-medium">
+              <Badge
+                variant="neutral"
+                className="text-xs capitalize font-medium"
+              >
                 {analyticsResult.chartType} View
               </Badge>
             </CardHeader>
@@ -248,11 +307,16 @@ export default function AnalyticsConsolePage() {
                     const primaryDataset = analyticsResult.datasets[0];
                     const val = primaryDataset?.data[idx] ?? 0;
                     return (
-                      <div key={idx} className="p-3 rounded-lg bg-slate-50 border border-slate-200/80 text-center">
+                      <div
+                        key={idx}
+                        className="p-3 rounded-lg bg-slate-50 border border-slate-200/80 text-center"
+                      >
                         <span className="text-[11px] font-semibold text-slate-500 block truncate">
                           {label}
                         </span>
-                        <p className="text-base font-bold text-slate-900 mt-1">{val}</p>
+                        <p className="text-base font-bold text-slate-900 mt-1">
+                          {val}
+                        </p>
                         <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
                           <div
                             className="bg-blue-600 h-full rounded-full transition-all"
@@ -294,7 +358,10 @@ export default function AnalyticsConsolePage() {
                       {analyticsResult.tableData.rows.map((row, rIdx) => (
                         <tr key={rIdx} className="hover:bg-slate-50/60">
                           {row.map((cell, cIdx) => (
-                            <td key={cIdx} className="px-4 py-2.5 font-medium text-slate-800">
+                            <td
+                              key={cIdx}
+                              className="px-4 py-2.5 font-medium text-slate-800"
+                            >
                               {cell}
                             </td>
                           ))}

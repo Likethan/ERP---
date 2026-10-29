@@ -4,13 +4,12 @@ Provides platform operators with unified telemetry regarding database latency,
 worker queues, event backlogs, dead letters, tenant distributions, and provisioning readiness.
 """
 
-from datetime import UTC, datetime
 import time
+from datetime import UTC, datetime
 
 from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.cache import tenant_cache
 from app.models.core import Institution
 from app.models.event import EventDeadLetter
 from app.models.platform_ops import (

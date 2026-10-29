@@ -7,10 +7,10 @@ Enforces:
 - Validation, default fallback, and safe field extraction.
 """
 
+import re
 from collections.abc import Callable
 from datetime import date, datetime
 from enum import StrEnum
-import re
 from typing import Any
 
 from app.core.exceptions import ValidationException

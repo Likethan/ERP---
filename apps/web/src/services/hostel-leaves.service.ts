@@ -13,7 +13,9 @@ import { ApiResponse, HostelLeave, LeaveStatus } from "@campusos/types";
 import { MOCK_HOSTEL_LEAVES } from "@/mocks/infrastructure.mock";
 
 class HostelLeavesService {
-  private leaves: HostelLeave[] = JSON.parse(JSON.stringify(MOCK_HOSTEL_LEAVES));
+  private leaves: HostelLeave[] = JSON.parse(
+    JSON.stringify(MOCK_HOSTEL_LEAVES),
+  );
 
   async listHostelLeaves(filters?: {
     hostelId?: string;
@@ -41,14 +43,16 @@ class HostelLeavesService {
           l.registerNumber.toLowerCase().includes(q) ||
           l.reason.toLowerCase().includes(q) ||
           l.destination.toLowerCase().includes(q) ||
-          l.roomNumber.toLowerCase().includes(q)
+          l.roomNumber.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getHostelLeaveById(id: string): Promise<ApiResponse<HostelLeave | null>> {
+  async getHostelLeaveById(
+    id: string,
+  ): Promise<ApiResponse<HostelLeave | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const leave = this.leaves.find((l) => l.id === id) || null;
     return { success: true, data: leave };
@@ -87,7 +91,11 @@ class HostelLeavesService {
     return { success: true, data: newLeave };
   }
 
-  async approveHostelLeave(id: string, approvedBy: string, remarks?: string): Promise<ApiResponse<HostelLeave | null>> {
+  async approveHostelLeave(
+    id: string,
+    approvedBy: string,
+    remarks?: string,
+  ): Promise<ApiResponse<HostelLeave | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) return { success: false, data: null };
@@ -101,7 +109,11 @@ class HostelLeavesService {
     return { success: true, data: leave };
   }
 
-  async rejectHostelLeave(id: string, rejectedBy: string, reason: string): Promise<ApiResponse<HostelLeave | null>> {
+  async rejectHostelLeave(
+    id: string,
+    rejectedBy: string,
+    reason: string,
+  ): Promise<ApiResponse<HostelLeave | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) return { success: false, data: null };

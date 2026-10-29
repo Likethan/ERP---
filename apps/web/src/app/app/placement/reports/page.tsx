@@ -26,7 +26,9 @@ import { PlacementReportFilter } from "@/types/placement";
 
 export default function PlacementReportsPage() {
   const { showToast } = useToast();
-  const [reportType, setReportType] = useState<"SUMMARY" | "DEPARTMENT" | "COMPANY" | "PACKAGES" | "STATUS">("SUMMARY");
+  const [reportType, setReportType] = useState<
+    "SUMMARY" | "DEPARTMENT" | "COMPANY" | "PACKAGES" | "STATUS"
+  >("SUMMARY");
   const [department, setDepartment] = useState("ALL");
   const [graduationYear, setGraduationYear] = useState(2026);
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,7 +75,7 @@ export default function PlacementReportsPage() {
     if (!searchQuery.trim()) return reportData.rows;
     const q = searchQuery.toLowerCase();
     return reportData.rows.filter((row) =>
-      Object.values(row).some((val) => String(val).toLowerCase().includes(q))
+      Object.values(row).some((val) => String(val).toLowerCase().includes(q)),
     );
   }, [reportData, searchQuery]);
 
@@ -100,20 +102,23 @@ export default function PlacementReportsPage() {
       ...reportData.rows.map((row) =>
         headers
           .map((h) => {
-            const val = row[h] !== undefined && row[h] !== null ? String(row[h]) : "";
+            const val =
+              row[h] !== undefined && row[h] !== null ? String(row[h]) : "";
             return `"${val.replace(/"/g, '""')}"`;
           })
-          .join(",")
+          .join(","),
       ),
     ];
 
-    const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute(
       "download",
-      `CampusOS_Placement_${reportType}_Report_${new Date().toISOString().split("T")[0]}.csv`
+      `CampusOS_Placement_${reportType}_Report_${new Date().toISOString().split("T")[0]}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -140,7 +145,8 @@ export default function PlacementReportsPage() {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Operational and executive audit reports for institutional stakeholders, recruiters, and statutory compliance.
+            Operational and executive audit reports for institutional
+            stakeholders, recruiters, and statutory compliance.
           </p>
         </div>
 
@@ -152,7 +158,9 @@ export default function PlacementReportsPage() {
             disabled={loading}
             className="gap-1.5 text-xs h-9"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           <Button
@@ -181,7 +189,12 @@ export default function PlacementReportsPage() {
               key={tab.id}
               onClick={() =>
                 setReportType(
-                  tab.id as "SUMMARY" | "DEPARTMENT" | "COMPANY" | "PACKAGES" | "STATUS"
+                  tab.id as
+                    | "SUMMARY"
+                    | "DEPARTMENT"
+                    | "COMPANY"
+                    | "PACKAGES"
+                    | "STATUS",
                 )
               }
               className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all ${
@@ -221,8 +234,14 @@ export default function PlacementReportsPage() {
             className="w-44 h-9 text-xs"
             options={[
               { value: "ALL", label: "All Departments" },
-              { value: "Computer Science and Engineering", label: "Computer Science" },
-              { value: "Electronics & Communication Engineering", label: "Electronics" },
+              {
+                value: "Computer Science and Engineering",
+                label: "Computer Science",
+              },
+              {
+                value: "Electronics & Communication Engineering",
+                label: "Electronics",
+              },
               { value: "Mechanical Engineering", label: "Mechanical" },
               { value: "Information Technology", label: "Information Tech" },
             ]}
@@ -248,7 +267,12 @@ export default function PlacementReportsPage() {
               {reportData?.title || "Placement Report"}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Generated on {reportData?.generatedAt ? new Date(reportData.generatedAt).toLocaleString() : ""} • Showing {filteredRows.length} of {reportData?.totalRecords || 0} records
+              Generated on{" "}
+              {reportData?.generatedAt
+                ? new Date(reportData.generatedAt).toLocaleString()
+                : ""}{" "}
+              • Showing {filteredRows.length} of {reportData?.totalRecords || 0}{" "}
+              records
             </p>
           </div>
           <Badge variant="outline" className="text-xs">
@@ -259,12 +283,16 @@ export default function PlacementReportsPage() {
         {loading ? (
           <div className="p-12 flex flex-col items-center justify-center gap-3">
             <div className="w-7 h-7 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs text-muted-foreground">Compiling placement analytics...</p>
+            <p className="text-xs text-muted-foreground">
+              Compiling placement analytics...
+            </p>
           </div>
         ) : filteredRows.length === 0 ? (
           <div className="p-12 text-center space-y-2">
             <FileText className="w-10 h-10 text-muted-foreground mx-auto" />
-            <p className="text-sm font-medium text-foreground">No records found</p>
+            <p className="text-sm font-medium text-foreground">
+              No records found
+            </p>
             <p className="text-xs text-muted-foreground">
               No data matches your search query or filter selection.
             </p>
@@ -297,18 +325,23 @@ export default function PlacementReportsPage() {
                         header.toLowerCase().includes("package");
 
                       return (
-                        <td key={header} className="px-4 py-3 whitespace-nowrap text-foreground">
+                        <td
+                          key={header}
+                          className="px-4 py-3 whitespace-nowrap text-foreground"
+                        >
                           {isStatus ? (
                             <Badge
                               variant="outline"
                               className={`text-[11px] ${
-                                val === "PLACED" || val === "TIER_1" || val === "ACTIVE"
+                                val === "PLACED" ||
+                                val === "TIER_1" ||
+                                val === "ACTIVE"
                                   ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
                                   : val === "IN_PROCESS" || val === "RELEASED"
-                                  ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
-                                  : val === "NOT_PLACED" || val === "DECLINED"
-                                  ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
-                                  : ""
+                                    ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                                    : val === "NOT_PLACED" || val === "DECLINED"
+                                      ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                                      : ""
                               }`}
                             >
                               {val}

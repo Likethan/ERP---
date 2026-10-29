@@ -98,12 +98,15 @@ export default function ExamScheduleDetailPage() {
             </span>
           </div>
           <p className="mt-1 text-xs text-slate-500">
-            {schedule.examinationName} • {schedule.program} (Section {schedule.section})
+            {schedule.examinationName} • {schedule.program} (Section{" "}
+            {schedule.section})
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href={`/app/examinations/marks?course_offering_id=${schedule.courseOfferingId}`}>
+          <Link
+            href={`/app/examinations/marks?course_offering_id=${schedule.courseOfferingId}`}
+          >
             <Button variant="primary" size="sm" className="text-xs">
               Go to Marks Ledger
             </Button>
@@ -147,14 +150,26 @@ export default function ExamScheduleDetailPage() {
             Invigilation Guidelines
           </h3>
           <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            {schedule.invigilatorNotes || "Standard university examination guidelines apply. Hall tickets and college photo ID must be verified prior to entry."}
+            {schedule.invigilatorNotes ||
+              "Standard university examination guidelines apply. Hall tickets and college photo ID must be verified prior to entry."}
           </p>
           <div className="p-3 rounded-lg border border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/40 text-xs space-y-1">
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Exam Instructions:</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Exam Instructions:
+            </span>
             <ul className="list-disc pl-4 text-slate-500 space-y-1 mt-1">
-              <li>Candidates permitted inside hall 15 minutes before paper commencement.</li>
-              <li>Calculators and formula books only as approved by department syllabus.</li>
-              <li>Answer booklet barcodes must be scanned and sealed upon period conclusion.</li>
+              <li>
+                Candidates permitted inside hall 15 minutes before paper
+                commencement.
+              </li>
+              <li>
+                Calculators and formula books only as approved by department
+                syllabus.
+              </li>
+              <li>
+                Answer booklet barcodes must be scanned and sealed upon period
+                conclusion.
+              </li>
             </ul>
           </div>
         </div>
@@ -168,12 +183,20 @@ export default function ExamScheduleDetailPage() {
             <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
             <div>
               <p className="font-bold">Collision Free</p>
-              <p className="mt-0.5">Verified no room overlap, section clash, or faculty invigilation conflict.</p>
+              <p className="mt-0.5">
+                Verified no room overlap, section clash, or faculty invigilation
+                conflict.
+              </p>
             </div>
           </div>
           <div className="text-xs text-slate-400 space-y-1">
-            <p><strong>Scheduled on:</strong> {new Date(schedule.createdAt).toLocaleString()}</p>
-            <p><strong>Examination Session:</strong> {schedule.examinationName}</p>
+            <p>
+              <strong>Scheduled on:</strong>{" "}
+              {new Date(schedule.createdAt).toLocaleString()}
+            </p>
+            <p>
+              <strong>Examination Session:</strong> {schedule.examinationName}
+            </p>
           </div>
         </div>
       </div>

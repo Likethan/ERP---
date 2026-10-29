@@ -1,6 +1,5 @@
 """Marketplace Connectors Registry and Factory."""
 
-from typing import Type
 
 from app.core.exceptions import ValidationException
 from app.integrations.connectors.base import (
@@ -16,7 +15,7 @@ from app.integrations.connectors.nad_digilocker import NadDigilockerConnector
 from app.integrations.connectors.razorpay import RazorpayConnector
 from app.integrations.connectors.zoom import ZoomConnector
 
-_REGISTRY: dict[str, Type[BaseMarketplaceConnector]] = {
+_REGISTRY: dict[str, type[BaseMarketplaceConnector]] = {
     "CANVAS_LMS": CanvasLMSConnector,
     "MOODLE_LMS": MoodleLMSConnector,
     "ZOOM_EDUCATION": ZoomConnector,

@@ -18,7 +18,7 @@ Guarantees:
 import asyncio
 import logging
 import signal
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -328,7 +328,9 @@ async def cleanup_stale_outbox_events(ctx: TenantJobContext, db: Any) -> None:
 
 async def scan_operational_anomalies_and_risks(ctx: TenantJobContext, db: Any) -> None:
     """Scan operational data for statistical anomalies and risk patterns (Step 29)."""
-    from app.domains.intelligence.services.anomaly_detection_service import OperationalAnomalyService
+    from app.domains.intelligence.services.anomaly_detection_service import (
+        OperationalAnomalyService,
+    )
     from app.schemas.intelligence import AnomalyDetectionRequest
 
     try:
@@ -349,9 +351,9 @@ async def scan_operational_anomalies_and_risks(ctx: TenantJobContext, db: Any) -
 
 async def sweep_expired_trials(ctx: TenantJobContext, db: Any) -> None:
     """Evaluate trial expiration and grace periods for tenant (Step 30)."""
+    from app.models.platform_ops import TenantLifecycleStatus
     from app.services.entitlement_service import EntitlementService
     from app.services.tenant_lifecycle_service import TenantLifecycleService
-    from app.models.platform_ops import TenantLifecycleStatus
 
     try:
         trial_info = await EntitlementService.evaluate_trial_status(db, ctx.tenant_id)
@@ -462,7 +464,12 @@ async def sweep_subscription_lifecycle_task(ctx: TenantJobContext, db: Any) -> N
 async def sync_marketplace_integrations_task(ctx: TenantJobContext, db: Any) -> None:
     """Evaluate and trigger scheduled sync for active marketplace integrations (Step 39)."""
     from sqlalchemy import select
-    from app.models.marketplace import TenantAppInstallation, TenantInstallationStatus, SyncTriggerType
+
+    from app.models.marketplace import (
+        SyncTriggerType,
+        TenantAppInstallation,
+        TenantInstallationStatus,
+    )
     from app.schemas.marketplace import SyncTriggerRequest
     from app.services.marketplace_service import MarketplaceService
 
@@ -555,6 +562,7 @@ async def sweep_research_deadlines_task(ctx: TenantJobContext, db: Any) -> None:
 async def sweep_library_deadlines_task(ctx: TenantJobContext, db: Any) -> None:
     """Sweep institutional library for overdue loans, expired hold reservations, and expiring subscriptions (Step 45)."""
     from decimal import Decimal
+
     from app.services.library_service import LibraryService
 
     logger.debug("Executing scheduled library deadline and compliance sweep for tenant %s", ctx.tenant_id)
@@ -598,7 +606,9 @@ async def sweep_student_success_task(ctx: TenantJobContext, db: Any) -> None:
 async def sweep_admissions_offers_task(ctx: TenantJobContext, db: Any) -> None:
     """Sweep expired admission offers and release reserved seat capacities (Step 48)."""
     from datetime import date
+
     from sqlalchemy import select
+
     from app.models.admissions import AdmissionOffer, OfferStatus
     from app.services.admissions_service import AdmissionsService
 
@@ -624,6 +634,137 @@ async def sweep_admissions_offers_task(ctx: TenantJobContext, db: Any) -> None:
             )
     except Exception as exc:
         logger.error("Error in admissions offers scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_workforce_deadlines_and_accruals_task(ctx: TenantJobContext, db: Any) -> None:
+    """Sweep overdue workforce lifecycle tasks, probation milestones, and leave accruals (Step 51)."""
+    from datetime import date, timedelta
+
+    from sqlalchemy import select
+
+    from app.models.workforce import (
+        EmploymentStatus,
+        LifecycleTaskStatus,
+        WorkforceEmployee,
+        WorkforceLifecycleTask,
+    )
+
+    logger.debug("Executing workforce lifecycle sweep for tenant %s", ctx.tenant_id)
+    try:
+        # Check overdue lifecycle tasks
+        stmt = select(WorkforceLifecycleTask).where(
+            WorkforceLifecycleTask.tenant_id == ctx.tenant_id,
+            WorkforceLifecycleTask.status == LifecycleTaskStatus.PENDING,
+            WorkforceLifecycleTask.due_date < date.today(),
+        )
+        res = await db.execute(stmt)
+        overdue_tasks = res.scalars().all()
+        if overdue_tasks:
+            logger.info("Workforce sweep for tenant %s: found %d overdue lifecycle tasks", ctx.tenant_id, len(overdue_tasks))
+
+        # Check contracts reaching expiry within 30 days
+        expiry_threshold = date.today() + timedelta(days=30)
+        contract_stmt = select(WorkforceEmployee).where(
+            WorkforceEmployee.tenant_id == ctx.tenant_id,
+            WorkforceEmployee.employment_status == EmploymentStatus.ACTIVE,
+            WorkforceEmployee.contract_end_date.isnot(None),
+            WorkforceEmployee.contract_end_date <= expiry_threshold,
+        )
+        contract_res = await db.execute(contract_stmt)
+        expiring_contracts = contract_res.scalars().all()
+        if expiring_contracts:
+            logger.info("Workforce sweep for tenant %s: found %d employees with contracts expiring within 30 days", ctx.tenant_id, len(expiring_contracts))
+    except Exception as exc:
+        logger.error("Error in workforce scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_asset_lifecycle_maintenance_task(
+    ctx: TenantJobContext | None = None, db: AsyncSession | None = None
+) -> None:
+    """Evaluate and trigger upcoming PM work orders, overdue work orders, expiring warranties, and overdue loans."""
+    try:
+        from app.services.asset_service import AssetService
+        if ctx is not None and db is not None:
+            metrics = await AssetService.sweep_asset_maintenance_and_compliance(db, ctx.tenant_id)
+            if any(v > 0 for v in metrics.values()):
+                logger.info("Asset & maintenance sweep for tenant %s: %s", ctx.tenant_id, metrics)
+        else:
+            from app.core.database import async_session_factory
+            from app.models.tenant import Institution
+            async with async_session_factory() as session:
+                tenants = (await session.execute(select(Institution.id))).scalars().all()
+                for tid in tenants:
+                    try:
+                        await AssetService.sweep_asset_maintenance_and_compliance(session, tid)
+                    except Exception as exc:
+                        logger.error("Sweep error for tenant %s: %s", tid, exc)
+    except Exception as exc:
+        logger.error("Error in asset maintenance scheduled sweep: %s", exc)
+
+
+async def sweep_residential_life_operations_task(ctx: TenantJobContext, db: AsyncSession) -> None:
+    """Evaluate overdue outings, expired bed reservations, visitor passes, and maintenance SLAs (Step 54)."""
+    try:
+        from app.services.residential_service import ResidentialService
+        metrics = await ResidentialService.sweep_residential_operations(db, ctx.tenant_id)
+        if any(v > 0 for v in metrics.values()):
+            logger.info("Residential operations sweep for tenant %s: %s", ctx.tenant_id, metrics)
+    except Exception as exc:
+        logger.error("Error in residential operations scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_transport_operations_task(ctx: TenantJobContext, db: AsyncSession) -> None:
+    """Evaluate vehicle and driver compliance expiries, overdue trips, and expired waitlist offers (Step 55)."""
+    try:
+        from app.services.transport_service import TransportService
+        metrics = await TransportService.sweep_transport_operations(db, ctx.tenant_id)
+        if any(v > 0 for v in metrics.values()):
+            logger.info("Transport operations sweep for tenant %s: %s", ctx.tenant_id, metrics)
+    except Exception as exc:
+        logger.error("Error in transport operations scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_sports_operations_task(ctx: TenantJobContext, db: AsyncSession) -> None:
+    """Evaluate overdue sports equipment loans and expired athlete clearances (Step 57)."""
+    try:
+        from app.services.sports_service import sports_service
+        metrics = await sports_service.sweep_sports_operations(db, ctx.tenant_id)
+        if any(v > 0 for v in metrics.values()):
+            logger.info("Sports operations sweep for tenant %s: %s", ctx.tenant_id, metrics)
+    except Exception as exc:
+        logger.error("Error in sports operations scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_student_support_reminders_task(ctx: TenantJobContext, db: AsyncSession) -> None:
+    """Evaluate overdue support follow-ups, upcoming counselling appointments, and development plan reviews (Step 59)."""
+    try:
+        from app.services.student_support_service import StudentSupportService
+        service = StudentSupportService(db, ctx.tenant_id)
+        # Check overdue follow-ups
+        overdue_list = await service.list_follow_ups(status="PENDING")
+        today = date.today()
+        flagged = sum(1 for f in overdue_list if f.due_date <= today)
+        if flagged > 0:
+            logger.info("Student Support sweep for tenant %s: %d follow-ups due or overdue", ctx.tenant_id, flagged)
+    except Exception as exc:
+        logger.error("Error in student support scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
+
+
+async def sweep_international_agreements_and_deadlines_task(ctx: TenantJobContext, db: AsyncSession) -> None:
+    """Evaluate expiring institutional agreements, partner renewals, and application deadlines (Step 60)."""
+    try:
+        from app.services.international_service import InternationalService
+        service = InternationalService(db, ctx.tenant_id)
+        sweep_result = await service.sweep_agreements_and_deadlines()
+        if sweep_result["marked_expiring"] > 0 or sweep_result["marked_expired"] > 0:
+            logger.info(
+                "International Relations sweep for tenant %s: %d marked expiring, %d marked expired",
+                ctx.tenant_id,
+                sweep_result["marked_expiring"],
+                sweep_result["marked_expired"],
+            )
+    except Exception as exc:
+        logger.error("Error in international relations scheduled sweep for tenant %s: %s", ctx.tenant_id, exc)
 
 
 
@@ -752,6 +893,28 @@ async def run_scheduler_loop():
                 await run_single_scheduled_job(
                     "admissions_offers_sweep", sweep_admissions_offers_task
                 )
+                await run_single_scheduled_job(
+                    "workforce_lifecycle_sweep", sweep_workforce_deadlines_and_accruals_task
+                )
+                await run_single_scheduled_job(
+                    "asset_maintenance_sweep", sweep_asset_lifecycle_maintenance_task
+                )
+                await run_single_scheduled_job(
+                    "residential_operations_sweep", sweep_residential_life_operations_task
+                )
+                await run_single_scheduled_job(
+                    "transport_operations_sweep", sweep_transport_operations_task
+                )
+                await run_single_scheduled_job(
+                    "sports_operations_sweep", sweep_sports_operations_task
+                )
+                await run_single_scheduled_job(
+                    "student_support_sweep", sweep_student_support_reminders_task
+                )
+                await run_single_scheduled_job(
+                    "international_agreements_sweep", sweep_international_agreements_and_deadlines_task
+                )
+
 
 
             # Sleep 60 seconds between tick evaluations

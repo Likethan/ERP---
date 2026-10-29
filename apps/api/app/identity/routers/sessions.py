@@ -3,12 +3,11 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_active_user, get_tenant_context, require_permission
-from app.core.permissions import IDENTITY_SESSIONS_READ, IDENTITY_SESSIONS_REVOKE
+from app.core.deps import get_current_active_user, get_tenant_context
 from app.core.tenant import TenantContext
 from app.identity.schemas import (
     RevokeAllSessionsResponse,

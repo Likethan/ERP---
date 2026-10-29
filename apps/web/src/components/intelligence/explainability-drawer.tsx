@@ -20,7 +20,10 @@ interface ExplainabilityViewProps {
   sources?: AISource[];
 }
 
-export function ExplainabilityView({ explainability, sources }: ExplainabilityViewProps) {
+export function ExplainabilityView({
+  explainability,
+  sources,
+}: ExplainabilityViewProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!explainability && (!sources || sources.length === 0)) return null;
@@ -37,7 +40,11 @@ export function ExplainabilityView({ explainability, sources }: ExplainabilityVi
         </span>
         <span className="flex items-center gap-1 text-slate-500 text-[11px]">
           {isOpen ? "Hide details" : "View data provenance"}
-          {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          {isOpen ? (
+            <ChevronUp className="w-3.5 h-3.5" />
+          ) : (
+            <ChevronDown className="w-3.5 h-3.5" />
+          )}
         </span>
       </button>
 
@@ -81,12 +88,15 @@ export function ExplainabilityView({ explainability, sources }: ExplainabilityVi
                 <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   <Calendar className="w-3 h-3 text-slate-400" /> Time Period
                 </span>
-                <p className="font-medium text-slate-800">{explainability.timePeriod}</p>
+                <p className="font-medium text-slate-800">
+                  {explainability.timePeriod}
+                </p>
               </div>
 
               <div className="space-y-1">
                 <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                  <Calculator className="w-3 h-3 text-slate-400" /> Calculation Used
+                  <Calculator className="w-3 h-3 text-slate-400" /> Calculation
+                  Used
                 </span>
                 <p className="font-mono text-slate-800 text-[11px] bg-white p-1 rounded border border-slate-200">
                   {explainability.calculationUsed}
@@ -96,17 +106,23 @@ export function ExplainabilityView({ explainability, sources }: ExplainabilityVi
               {explainability.threshold && (
                 <div className="space-y-1">
                   <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                    <ShieldCheck className="w-3 h-3 text-slate-400" /> Policy Threshold
+                    <ShieldCheck className="w-3 h-3 text-slate-400" /> Policy
+                    Threshold
                   </span>
-                  <p className="font-medium text-amber-700">{explainability.threshold}</p>
+                  <p className="font-medium text-amber-700">
+                    {explainability.threshold}
+                  </p>
                 </div>
               )}
 
               <div className="space-y-1">
                 <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                  <CheckCircle className="w-3 h-3 text-emerald-500" /> Computed Result
+                  <CheckCircle className="w-3 h-3 text-emerald-500" /> Computed
+                  Result
                 </span>
-                <p className="font-semibold text-slate-900">{explainability.result}</p>
+                <p className="font-semibold text-slate-900">
+                  {explainability.result}
+                </p>
               </div>
             </div>
           )}
@@ -127,7 +143,9 @@ export function ExplainabilityView({ explainability, sources }: ExplainabilityVi
                       <p className="font-medium text-slate-800 group-hover:text-blue-700 truncate">
                         {src.name}
                       </p>
-                      <p className="text-[11px] text-slate-500 truncate">{src.description}</p>
+                      <p className="text-[11px] text-slate-500 truncate">
+                        {src.description}
+                      </p>
                     </div>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 shrink-0" />
                   </Link>

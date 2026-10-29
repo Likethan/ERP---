@@ -27,11 +27,8 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    LibraryBorrowLimitExceededException,
     LibraryCopyUnavailableException,
     LibraryDuplicateAccessionException,
-    LibraryInvalidRenewalException,
-    LibraryLoanNotFoundException,
     LibraryMemberSuspendedException,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
@@ -44,7 +41,6 @@ from app.models.library import (
     LibraryCirculationStatus,
     LibraryCopyCondition,
     LibraryFineCategory,
-    LibraryFineStatus,
     LibraryInventoryAuditStatus,
     LibraryLoanStatus,
     LibraryMemberCategory,
@@ -72,7 +68,6 @@ from app.schemas.library import (
     LibraryLoanReturnRequest,
     LibraryMemberProfileCreate,
     LibraryPhysicalCopyCreate,
-    LibraryReservationCancelRequest,
     LibraryReservationCreate,
     LibrarySubscriptionCreate,
 )

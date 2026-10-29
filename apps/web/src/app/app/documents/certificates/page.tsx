@@ -42,7 +42,8 @@ export default function CertificateCenterPage() {
 
   // Verification Search Tool State
   const [verifyCode, setVerifyCode] = useState("");
-  const [verifiedResult, setVerifiedResult] = useState<IssuedCertificate | null>(null);
+  const [verifiedResult, setVerifiedResult] =
+    useState<IssuedCertificate | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -87,9 +88,11 @@ export default function CertificateCenterPage() {
   };
 
   const pendingRequests = requests.filter(
-    (r) => r.status === "SUBMITTED" || r.status === "UNDER_REVIEW"
+    (r) => r.status === "SUBMITTED" || r.status === "UNDER_REVIEW",
   );
-  const revokedCerts = issuedCerts.filter((c) => c.status === IssuedCertificateStatus.REVOKED);
+  const revokedCerts = issuedCerts.filter(
+    (c) => c.status === IssuedCertificateStatus.REVOKED,
+  );
 
   return (
     <div className="space-y-8 pb-12">
@@ -104,7 +107,8 @@ export default function CertificateCenterPage() {
             Certificate Management Center
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Manage institutional certificate templates, process student requests, issue verifiable credentials, and revoke certifications.
+            Manage institutional certificate templates, process student
+            requests, issue verifiable credentials, and revoke certifications.
           </p>
         </div>
 
@@ -116,7 +120,10 @@ export default function CertificateCenterPage() {
             </Button>
           </Link>
           <Link href="/app/documents/certificates/requests">
-            <Button size="sm" className="text-xs gap-1.5 bg-blue-600 hover:bg-blue-700">
+            <Button
+              size="sm"
+              className="text-xs gap-1.5 bg-blue-600 hover:bg-blue-700"
+            >
               <Clock className="w-4 h-4" />
               Request Pipeline ({requests.length})
             </Button>
@@ -168,10 +175,14 @@ export default function CertificateCenterPage() {
             Certificate & Credential Authentication Tool
           </h2>
           <p className="text-xs text-slate-400">
-            Verify the authenticity of any institutional certificate using its serial number or digital verification hash.
+            Verify the authenticity of any institutional certificate using its
+            serial number or digital verification hash.
           </p>
 
-          <form onSubmit={handleVerifyLookup} className="flex gap-2 max-w-lg mx-auto pt-2">
+          <form
+            onSubmit={handleVerifyLookup}
+            className="flex gap-2 max-w-lg mx-auto pt-2"
+          >
             <Input
               value={verifyCode}
               onChange={(e) => setVerifyCode(e.target.value)}
@@ -197,12 +208,23 @@ export default function CertificateCenterPage() {
                     AUTHENTIC INSTITUTIONAL CREDENTIAL CONFIRMED
                   </div>
                   <div className="text-xs text-slate-300">
-                    Recipient: <strong className="text-slate-100">{verifiedResult.recipientName}</strong> (
-                    {verifiedResult.recipientRollNumber}) • Program: {verifiedResult.recipientProgram}
+                    Recipient:{" "}
+                    <strong className="text-slate-100">
+                      {verifiedResult.recipientName}
+                    </strong>{" "}
+                    ({verifiedResult.recipientRollNumber}) • Program:{" "}
+                    {verifiedResult.recipientProgram}
                   </div>
                   <div className="text-[11px] font-mono text-slate-400">
-                    Certificate No: {verifiedResult.certificateNumber} • Issued: {verifiedResult.issueDate} • Status:{" "}
-                    <strong className={verifiedResult.status === "ISSUED" ? "text-emerald-400" : "text-rose-400"}>
+                    Certificate No: {verifiedResult.certificateNumber} • Issued:{" "}
+                    {verifiedResult.issueDate} • Status:{" "}
+                    <strong
+                      className={
+                        verifiedResult.status === "ISSUED"
+                          ? "text-emerald-400"
+                          : "text-rose-400"
+                      }
+                    >
                       {verifiedResult.status}
                     </strong>
                   </div>
@@ -210,7 +232,9 @@ export default function CertificateCenterPage() {
               ) : (
                 <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-center text-xs text-rose-300">
                   <XCircle className="w-5 h-5 text-rose-400 mx-auto mb-1" />
-                  No authentic credential matching <strong>"{verifyCode}"</strong> was found in the institutional registry.
+                  No authentic credential matching{" "}
+                  <strong>"{verifyCode}"</strong> was found in the institutional
+                  registry.
                 </div>
               )}
             </div>
@@ -261,7 +285,9 @@ export default function CertificateCenterPage() {
                   </div>
                   <div className="flex items-center gap-2.5">
                     <CertificateRequestStatusBadge status={req.status} />
-                    <Link href={`/app/documents/certificates/requests/${req.id}`}>
+                    <Link
+                      href={`/app/documents/certificates/requests/${req.id}`}
+                    >
                       <ChevronRight className="w-4 h-4 text-slate-500 hover:text-slate-300" />
                     </Link>
                   </div>
@@ -302,7 +328,9 @@ export default function CertificateCenterPage() {
                   className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between text-xs"
                 >
                   <div>
-                    <span className="font-semibold text-slate-200">{cert.certificateType} Certificate</span>
+                    <span className="font-semibold text-slate-200">
+                      {cert.certificateType} Certificate
+                    </span>
                     <div className="text-[11px] text-slate-400 mt-0.5">
                       {cert.recipientName} ({cert.recipientRollNumber})
                     </div>
@@ -321,7 +349,9 @@ export default function CertificateCenterPage() {
                         VALID
                       </span>
                     )}
-                    <div className="text-[10px] text-slate-500 mt-1">{cert.issueDate}</div>
+                    <div className="text-[10px] text-slate-500 mt-1">
+                      {cert.issueDate}
+                    </div>
                   </div>
                 </div>
               ))}

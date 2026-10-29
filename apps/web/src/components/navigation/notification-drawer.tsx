@@ -5,7 +5,18 @@ import Link from "next/link";
 import { Drawer } from "@/components/ui/drawer";
 import { campusService } from "@/services/campus.service";
 import { NotificationItem } from "@/types/campus";
-import { Bell, CheckCheck, ExternalLink, Calendar, DollarSign, Briefcase, GraduationCap, ShieldCheck, FileText, Award } from "lucide-react";
+import {
+  Bell,
+  CheckCheck,
+  ExternalLink,
+  Calendar,
+  DollarSign,
+  Briefcase,
+  GraduationCap,
+  ShieldCheck,
+  FileText,
+  Award,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -68,7 +79,9 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
 
   const unreadCount = notifications.filter(isNotificationUnread).length;
   const displayedNotifications =
-    filter === "UNREAD" ? notifications.filter(isNotificationUnread) : notifications;
+    filter === "UNREAD"
+      ? notifications.filter(isNotificationUnread)
+      : notifications;
 
   return (
     <Drawer
@@ -117,7 +130,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
               "px-3 py-1 rounded-full text-xs font-medium transition-colors",
               filter === "ALL"
                 ? "bg-indigo-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:text-slate-200"
+                : "bg-slate-800 text-slate-400 hover:text-slate-200",
             )}
           >
             All ({notifications.length})
@@ -128,7 +141,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
               "px-3 py-1 rounded-full text-xs font-medium transition-colors",
               filter === "UNREAD"
                 ? "bg-indigo-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:text-slate-200"
+                : "bg-slate-800 text-slate-400 hover:text-slate-200",
             )}
           >
             Unread ({unreadCount})
@@ -147,7 +160,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                   "p-3.5 rounded-xl border transition-all text-left",
                   unread
                     ? "border-indigo-900/60 bg-indigo-950/20 text-slate-200 shadow-sm"
-                    : "border-slate-800/60 bg-slate-900/40 text-slate-400"
+                    : "border-slate-800/60 bg-slate-900/40 text-slate-400",
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -156,7 +169,12 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <span className={cn("text-xs font-semibold truncate", unread ? "text-white" : "text-slate-300")}>
+                      <span
+                        className={cn(
+                          "text-xs font-semibold truncate",
+                          unread ? "text-white" : "text-slate-300",
+                        )}
+                      >
                         {notif.title}
                       </span>
                       <span className="text-[10px] text-slate-500 font-mono shrink-0">
@@ -182,7 +200,9 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                           <button
                             onClick={async (e) => {
                               e.stopPropagation();
-                              await campusService.markNotificationRead(notif.id);
+                              await campusService.markNotificationRead(
+                                notif.id,
+                              );
                               loadNotifications();
                             }}
                             className="text-[10px] text-slate-500 hover:text-slate-300"

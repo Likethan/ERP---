@@ -55,11 +55,7 @@ export interface AcademicSubject {
 // ==========================================
 
 export type CurriculumStatus =
-  | "DRAFT"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "PUBLISHED"
-  | "RETIRED";
+  "DRAFT" | "UNDER_REVIEW" | "APPROVED" | "PUBLISHED" | "RETIRED";
 
 export interface CurriculumSubject {
   id: string;
@@ -107,7 +103,7 @@ export interface CurriculumScheme {
   programCode: string;
   department: string;
   regulation: string; // e.g. "R-2024", "R-2025", "R-2026"
-  version: string;    // e.g. "v1.0", "v2.1"
+  version: string; // e.g. "v1.0", "v2.1"
   academicYear: string;
   effectiveDate: string;
   totalCredits: number;
@@ -123,16 +119,10 @@ export interface CurriculumScheme {
 // ==========================================
 
 export type CourseOfferingStatus =
-  | "PLANNED"
-  | "OPEN"
-  | "ACTIVE"
-  | "COMPLETED"
-  | "CANCELLED";
+  "PLANNED" | "OPEN" | "ACTIVE" | "COMPLETED" | "CANCELLED";
 
 export type FacultyAssignmentRole =
-  | "PRIMARY_INSTRUCTOR"
-  | "CO_INSTRUCTOR"
-  | "LAB_INSTRUCTOR";
+  "PRIMARY_INSTRUCTOR" | "CO_INSTRUCTOR" | "LAB_INSTRUCTOR";
 
 export interface CourseFacultyAssignment {
   id: string;
@@ -172,11 +162,7 @@ export interface CourseOfferingDetail {
 // ==========================================
 
 export type CourseEnrollmentStatus =
-  | "PENDING"
-  | "ENROLLED"
-  | "DROPPED"
-  | "COMPLETED"
-  | "WITHDRAWN";
+  "PENDING" | "ENROLLED" | "DROPPED" | "COMPLETED" | "WITHDRAWN";
 
 export interface StudentCourseEnrollmentRecord {
   id: string;
@@ -204,19 +190,14 @@ export interface StudentCourseEnrollmentRecord {
 // ==========================================
 
 export type DayOfWeek =
-  | "MONDAY"
-  | "TUESDAY"
-  | "WEDNESDAY"
-  | "THURSDAY"
-  | "FRIDAY"
-  | "SATURDAY";
+  "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY";
 
 export interface MasterTimeSlot {
   id: string;
   periodNumber: number;
   startTime: string; // "08:30 AM"
-  endTime: string;   // "09:20 AM"
-  label: string;     // "Period 1"
+  endTime: string; // "09:20 AM"
+  label: string; // "Period 1"
   isBreak?: boolean;
 }
 
@@ -240,9 +221,7 @@ export interface ScheduledTimetableEntry {
 }
 
 export type TimetableConflictType =
-  | "FACULTY_CONFLICT"
-  | "SECTION_CONFLICT"
-  | "ROOM_CONFLICT";
+  "FACULTY_CONFLICT" | "SECTION_CONFLICT" | "ROOM_CONFLICT";
 
 export interface TimetableConflict {
   id: string;

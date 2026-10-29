@@ -41,7 +41,9 @@ export default function ProgramsPage() {
       setPrograms(progRes.data);
       setDepartments(deptRes.data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load degree programs");
+      setError(
+        err instanceof Error ? err.message : "Failed to load degree programs",
+      );
     } finally {
       setLoading(false);
     }
@@ -86,7 +88,9 @@ export default function ProgramsPage() {
       setDeptId("");
       await loadData();
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "Failed to create program");
+      setFormError(
+        err instanceof Error ? err.message : "Failed to create program",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -97,18 +101,37 @@ export default function ProgramsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Degree Programs</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Degree Programs
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
             Formal undergraduate, postgraduate, and doctoral degree curricula.
           </p>
         </div>
         {canManage && (
           <button
-            onClick={() => { setEditingProgram(null); setFormError(null); setCode(""); setName(""); setDeptId(""); setShowCreate(true); }}
+            onClick={() => {
+              setEditingProgram(null);
+              setFormError(null);
+              setCode("");
+              setName("");
+              setDeptId("");
+              setShowCreate(true);
+            }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-indigo-500 transition-colors shadow-sm self-start sm:self-auto"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
             </svg>
             Create Program
           </button>
@@ -132,7 +155,11 @@ export default function ProgramsPage() {
             strokeWidth="2"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
           </svg>
         </div>
 
@@ -160,16 +187,32 @@ export default function ProgramsPage() {
       {/* Programs Table */}
       {loading ? (
         <div className="flex h-48 items-center justify-center">
-          <div className="text-xs text-slate-400">Loading degree programs...</div>
+          <div className="text-xs text-slate-400">
+            Loading degree programs...
+          </div>
         </div>
       ) : programs.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-800 bg-slate-900/20 p-12 text-center">
-          <svg className="mx-auto h-10 w-10 text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
+          <svg
+            className="mx-auto h-10 w-10 text-slate-600 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342"
+            />
           </svg>
-          <p className="text-sm font-medium text-slate-300">No programs found.</p>
+          <p className="text-sm font-medium text-slate-300">
+            No programs found.
+          </p>
           <p className="mt-1 text-xs text-slate-500">
-            {search || selectedDeptId ? "Try clearing your filters." : "Create your first degree program under a department."}
+            {search || selectedDeptId
+              ? "Try clearing your filters."
+              : "Create your first degree program under a department."}
           </p>
         </div>
       ) : (
@@ -184,28 +227,66 @@ export default function ProgramsPage() {
                 <th className="px-5 py-3 font-semibold">Duration</th>
                 <th className="px-5 py-3 font-semibold">Credits</th>
                 <th className="px-5 py-3 font-semibold">Status</th>
-                {canManage && <th className="px-5 py-3 font-semibold text-right">Actions</th>}
+                {canManage && (
+                  <th className="px-5 py-3 font-semibold text-right">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {programs.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-5 py-3.5 font-mono text-indigo-400 font-medium">{p.code}</td>
-                  <td className="px-5 py-3.5 font-medium text-white">{p.name}</td>
-                  <td className="px-5 py-3.5 text-slate-400">{p.department_name || "Department"}</td>
+                <tr
+                  key={p.id}
+                  className="hover:bg-slate-800/40 transition-colors"
+                >
+                  <td className="px-5 py-3.5 font-mono text-indigo-400 font-medium">
+                    {p.code}
+                  </td>
+                  <td className="px-5 py-3.5 font-medium text-white">
+                    {p.name}
+                  </td>
+                  <td className="px-5 py-3.5 text-slate-400">
+                    {p.department_name || "Department"}
+                  </td>
                   <td className="px-5 py-3.5">
                     <span className="rounded bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-300">
                       {p.degree_level}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-slate-300">{p.duration_years} Years ({p.total_semesters} Sem)</td>
-                  <td className="px-5 py-3.5 text-slate-300">{p.required_credits}</td>
+                  <td className="px-5 py-3.5 text-slate-300">
+                    {p.duration_years} Years ({p.total_semesters} Sem)
+                  </td>
+                  <td className="px-5 py-3.5 text-slate-300">
+                    {p.required_credits}
+                  </td>
                   <td className="px-5 py-3.5">
                     <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
                       {p.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  {canManage && <td className="px-5 py-3.5 text-right"><button onClick={() => { setEditingProgram(p); setFormError(null); setDeptId(p.department_id); setCode(p.code); setName(p.name); setDegreeLevel(p.degree_level); setDurationYears(String(p.duration_years)); setTotalSemesters(p.total_semesters); setRequiredCredits(p.required_credits); setEditIsActive(p.is_active); setShowCreate(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800">Edit</button></td>}
+                  {canManage && (
+                    <td className="px-5 py-3.5 text-right">
+                      <button
+                        onClick={() => {
+                          setEditingProgram(p);
+                          setFormError(null);
+                          setDeptId(p.department_id);
+                          setCode(p.code);
+                          setName(p.name);
+                          setDegreeLevel(p.degree_level);
+                          setDurationYears(String(p.duration_years));
+                          setTotalSemesters(p.total_semesters);
+                          setRequiredCredits(p.required_credits);
+                          setEditIsActive(p.is_active);
+                          setShowCreate(true);
+                        }}
+                        className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -218,8 +299,18 @@ export default function ProgramsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-semibold text-white">{editingProgram ? "Edit Degree Program" : "Create Degree Program"}</h3>
-              <button onClick={() => { setShowCreate(false); setEditingProgram(null); }} className="text-slate-400 hover:text-white">
+              <h3 className="text-base font-semibold text-white">
+                {editingProgram
+                  ? "Edit Degree Program"
+                  : "Create Degree Program"}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowCreate(false);
+                  setEditingProgram(null);
+                }}
+                className="text-slate-400 hover:text-white"
+              >
                 ✕
               </button>
             </div>
@@ -232,7 +323,9 @@ export default function ProgramsPage() {
 
             <form onSubmit={handleCreateProgram} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Department</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Department
+                </label>
                 <select
                   required
                   value={deptId}
@@ -251,7 +344,9 @@ export default function ProgramsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Program Code</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Program Code
+                  </label>
                   <input
                     type="text"
                     required
@@ -263,7 +358,9 @@ export default function ProgramsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Degree Level</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Degree Level
+                  </label>
                   <select
                     value={degreeLevel}
                     onChange={(e) => setDegreeLevel(e.target.value)}
@@ -277,10 +374,22 @@ export default function ProgramsPage() {
                 </div>
               </div>
 
-              {editingProgram && <label className="flex items-center gap-2 text-slate-300"><input type="checkbox" checked={editIsActive} onChange={(e) => setEditIsActive(e.target.checked)} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Program is active</label>}
+              {editingProgram && (
+                <label className="flex items-center gap-2 text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={editIsActive}
+                    onChange={(e) => setEditIsActive(e.target.checked)}
+                    className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500"
+                  />{" "}
+                  Program is active
+                </label>
+              )}
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Program Full Name</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Program Full Name
+                </label>
                 <input
                   type="text"
                   required
@@ -293,7 +402,9 @@ export default function ProgramsPage() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Duration (Years)</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Duration (Years)
+                  </label>
                   <input
                     type="number"
                     step="0.5"
@@ -306,7 +417,9 @@ export default function ProgramsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Total Semesters</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Total Semesters
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -318,7 +431,9 @@ export default function ProgramsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Required Credits</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Required Credits
+                  </label>
                   <input
                     type="number"
                     min="20"
@@ -334,7 +449,10 @@ export default function ProgramsPage() {
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
                 <button
                   type="button"
-                  onClick={() => { setShowCreate(false); setEditingProgram(null); }}
+                  onClick={() => {
+                    setShowCreate(false);
+                    setEditingProgram(null);
+                  }}
                   className="rounded-lg px-3 py-2 text-slate-300 hover:bg-slate-800 transition-colors"
                 >
                   Cancel
@@ -344,7 +462,11 @@ export default function ProgramsPage() {
                   disabled={submitting}
                   className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 transition-colors disabled:opacity-50"
                 >
-                  {submitting ? "Saving..." : editingProgram ? "Save changes" : "Create Program"}
+                  {submitting
+                    ? "Saving..."
+                    : editingProgram
+                      ? "Save changes"
+                      : "Create Program"}
                 </button>
               </div>
             </form>

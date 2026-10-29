@@ -4,9 +4,9 @@ Represents security detections, incidents, investigation notes, remediation task
 containment response actions, and detection rule configurations.
 """
 
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
@@ -22,7 +22,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel
+from app.models.base import BaseModel
 
 
 class SecurityIncident(BaseModel):

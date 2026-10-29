@@ -72,15 +72,26 @@ import {
 export default function AccreditationQualityConsolePage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<
-    "overview" | "frameworks" | "assessment" | "evidence" | "kpi" | "audits" | "readiness"
+    | "overview"
+    | "frameworks"
+    | "assessment"
+    | "evidence"
+    | "kpi"
+    | "audits"
+    | "readiness"
   >("overview");
 
   // Summary & Master Data
-  const [summary, setSummary] = useState<AccreditationDashboardSummaryModel | null>(null);
-  const [frameworks, setFrameworks] = useState<AccreditationFrameworkModel[]>([]);
+  const [summary, setSummary] =
+    useState<AccreditationDashboardSummaryModel | null>(null);
+  const [frameworks, setFrameworks] = useState<AccreditationFrameworkModel[]>(
+    [],
+  );
   const [cycles, setCycles] = useState<AccreditationAssessmentCycleModel[]>([]);
   const [selectedCycleId, setSelectedCycleId] = useState<string>("");
-  const [assessments, setAssessments] = useState<AccreditationCriterionAssessmentModel[]>([]);
+  const [assessments, setAssessments] = useState<
+    AccreditationCriterionAssessmentModel[]
+  >([]);
   const [criteria, setCriteria] = useState<AccreditationCriterionModel[]>([]);
   const [evidences, setEvidences] = useState<AccreditationEvidenceModel[]>([]);
   const [indicators, setIndicators] = useState<QualityIndicatorModel[]>([]);
@@ -88,7 +99,8 @@ export default function AccreditationQualityConsolePage() {
   const [findings, setFindings] = useState<QualityFindingModel[]>([]);
   const [capas, setCapas] = useState<QualityCorrectiveActionModel[]>([]);
   const [cqiPlans, setCqiPlans] = useState<QualityImprovementPlanModel[]>([]);
-  const [readinessSnapshot, setReadinessSnapshot] = useState<AccreditationReadinessSnapshotModel | null>(null);
+  const [readinessSnapshot, setReadinessSnapshot] =
+    useState<AccreditationReadinessSnapshotModel | null>(null);
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
@@ -98,9 +110,12 @@ export default function AccreditationQualityConsolePage() {
 
   // Modals & Action States
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
-  const [selectedAssessment, setSelectedAssessment] = useState<AccreditationCriterionAssessmentModel | null>(null);
+  const [selectedAssessment, setSelectedAssessment] =
+    useState<AccreditationCriterionAssessmentModel | null>(null);
   const [editScore, setEditScore] = useState<number | "">("");
-  const [editMaturity, setEditMaturity] = useState<string>(AccreditationMaturityLevel.LEVEL_3_DEFINED);
+  const [editMaturity, setEditMaturity] = useState<string>(
+    AccreditationMaturityLevel.LEVEL_3_DEFINED,
+  );
   const [editSummary, setEditSummary] = useState("");
   const [editFindings, setEditFindings] = useState("");
   const [editStrengths, setEditStrengths] = useState("");
@@ -111,7 +126,9 @@ export default function AccreditationQualityConsolePage() {
 
   // Review Modal
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [reviewDecision, setReviewDecision] = useState<"APPROVED" | "CHANGES_REQUESTED">("APPROVED");
+  const [reviewDecision, setReviewDecision] = useState<
+    "APPROVED" | "CHANGES_REQUESTED"
+  >("APPROVED");
   const [reviewComments, setReviewComments] = useState("");
   const [adjustedScore, setAdjustedScore] = useState<number | "">("");
 
@@ -119,7 +136,9 @@ export default function AccreditationQualityConsolePage() {
   const [isEvidenceModalOpen, setIsEvidenceModalOpen] = useState(false);
   const [evCode, setEvCode] = useState("");
   const [evTitle, setEvTitle] = useState("");
-  const [evCategory, setEvCategory] = useState<string>(AccreditationEvidenceCategory.POLICY_SOP);
+  const [evCategory, setEvCategory] = useState<string>(
+    AccreditationEvidenceCategory.POLICY_SOP,
+  );
   const [evValidFrom, setEvValidFrom] = useState("");
   const [evValidUntil, setEvValidUntil] = useState("");
 
@@ -131,8 +150,11 @@ export default function AccreditationQualityConsolePage() {
 
   // Close CAPA Modal
   const [isCloseCapaModalOpen, setIsCloseCapaModalOpen] = useState(false);
-  const [selectedCapa, setSelectedCapa] = useState<QualityCorrectiveActionModel | null>(null);
-  const [capaDecision, setCapaDecision] = useState<"CLOSED_EFFECTIVE" | "REJECTED_FURTHER_ACTION">("CLOSED_EFFECTIVE");
+  const [selectedCapa, setSelectedCapa] =
+    useState<QualityCorrectiveActionModel | null>(null);
+  const [capaDecision, setCapaDecision] = useState<
+    "CLOSED_EFFECTIVE" | "REJECTED_FURTHER_ACTION"
+  >("CLOSED_EFFECTIVE");
   const [capaNotes, setCapaNotes] = useState("");
 
   // UI state
@@ -146,16 +168,33 @@ export default function AccreditationQualityConsolePage() {
       setLoading(true);
       setError(null);
 
-      const [sumRes, fwRes, cycRes, evRes, indRes, audRes, findRes, cqiRes] = await Promise.all([
-        apiFetch<AccreditationDashboardSummaryModel>("/api/v1/accreditation/dashboard/summary").catch(() => ({ data: null })),
-        apiFetch<AccreditationFrameworkModel[]>("/api/v1/accreditation/frameworks").catch(() => ({ data: [] })),
-        apiFetch<AccreditationAssessmentCycleModel[]>("/api/v1/accreditation/cycles").catch(() => ({ data: [] })),
-        apiFetch<AccreditationEvidenceModel[]>("/api/v1/accreditation/evidences").catch(() => ({ data: [] })),
-        apiFetch<QualityIndicatorModel[]>("/api/v1/accreditation/indicators").catch(() => ({ data: [] })),
-        apiFetch<QualityAuditProgramModel[]>("/api/v1/accreditation/audits").catch(() => ({ data: [] })),
-        apiFetch<QualityFindingModel[]>("/api/v1/accreditation/findings").catch(() => ({ data: [] })),
-        apiFetch<QualityImprovementPlanModel[]>("/api/v1/accreditation/cqi-plans").catch(() => ({ data: [] })),
-      ]);
+      const [sumRes, fwRes, cycRes, evRes, indRes, audRes, findRes, cqiRes] =
+        await Promise.all([
+          apiFetch<AccreditationDashboardSummaryModel>(
+            "/api/v1/accreditation/dashboard/summary",
+          ).catch(() => ({ data: null })),
+          apiFetch<AccreditationFrameworkModel[]>(
+            "/api/v1/accreditation/frameworks",
+          ).catch(() => ({ data: [] })),
+          apiFetch<AccreditationAssessmentCycleModel[]>(
+            "/api/v1/accreditation/cycles",
+          ).catch(() => ({ data: [] })),
+          apiFetch<AccreditationEvidenceModel[]>(
+            "/api/v1/accreditation/evidences",
+          ).catch(() => ({ data: [] })),
+          apiFetch<QualityIndicatorModel[]>(
+            "/api/v1/accreditation/indicators",
+          ).catch(() => ({ data: [] })),
+          apiFetch<QualityAuditProgramModel[]>(
+            "/api/v1/accreditation/audits",
+          ).catch(() => ({ data: [] })),
+          apiFetch<QualityFindingModel[]>(
+            "/api/v1/accreditation/findings",
+          ).catch(() => ({ data: [] })),
+          apiFetch<QualityImprovementPlanModel[]>(
+            "/api/v1/accreditation/cqi-plans",
+          ).catch(() => ({ data: [] })),
+        ]);
 
       setSummary(sumRes.data);
       const fwList = fwRes.data || [];
@@ -184,8 +223,12 @@ export default function AccreditationQualityConsolePage() {
   const loadCycleAssessments = async (cycleId: string) => {
     try {
       const [assessRes, snapshotRes] = await Promise.all([
-        apiFetch<AccreditationCriterionAssessmentModel[]>(`/api/v1/accreditation/cycles/${cycleId}/assessments`),
-        apiFetch<AccreditationReadinessSnapshotModel>(`/api/v1/accreditation/cycles/${cycleId}/readiness`).catch(() => ({ data: null })),
+        apiFetch<AccreditationCriterionAssessmentModel[]>(
+          `/api/v1/accreditation/cycles/${cycleId}/assessments`,
+        ),
+        apiFetch<AccreditationReadinessSnapshotModel>(
+          `/api/v1/accreditation/cycles/${cycleId}/readiness`,
+        ).catch(() => ({ data: null })),
       ]);
       setAssessments(assessRes.data || []);
       setReadinessSnapshot(snapshotRes.data);
@@ -207,8 +250,12 @@ export default function AccreditationQualityConsolePage() {
   const handleSeedTemplates = async () => {
     try {
       setLoading(true);
-      await apiFetch("/api/v1/accreditation/frameworks/seed-defaults", { method: "POST" });
-      setNotice("Statutory accreditation frameworks (NAAC, NBA, ISO-21001) successfully initialized.");
+      await apiFetch("/api/v1/accreditation/frameworks/seed-defaults", {
+        method: "POST",
+      });
+      setNotice(
+        "Statutory accreditation frameworks (NAAC, NBA, ISO-21001) successfully initialized.",
+      );
       await loadConsoleData();
     } catch (err: any) {
       setError(err?.message || "Failed to seed default frameworks");
@@ -220,9 +267,11 @@ export default function AccreditationQualityConsolePage() {
   // Run Scheduled Sweep
   const handleRunSweep = async () => {
     try {
-      const res = await apiFetch<any>("/api/v1/accreditation/scheduler/sweep", { method: "POST" });
+      const res = await apiFetch<any>("/api/v1/accreditation/scheduler/sweep", {
+        method: "POST",
+      });
       setNotice(
-        `Quality Compliance Sweep completed: ${res.data?.expired_evidence_flagged ?? 0} expired evidences flagged, ${res.data?.overdue_findings_flagged ?? 0} overdue findings escalated.`
+        `Quality Compliance Sweep completed: ${res.data?.expired_evidence_flagged ?? 0} expired evidences flagged, ${res.data?.overdue_findings_flagged ?? 0} overdue findings escalated.`,
       );
       await loadConsoleData();
     } catch (err: any) {
@@ -231,16 +280,22 @@ export default function AccreditationQualityConsolePage() {
   };
 
   // Open Assessment Draft Modal
-  const openAssessmentEditor = (assessment: AccreditationCriterionAssessmentModel) => {
+  const openAssessmentEditor = (
+    assessment: AccreditationCriterionAssessmentModel,
+  ) => {
     setSelectedAssessment(assessment);
     setEditScore(assessment.score ?? "");
-    setEditMaturity(assessment.maturity_level || AccreditationMaturityLevel.LEVEL_3_DEFINED);
+    setEditMaturity(
+      assessment.maturity_level || AccreditationMaturityLevel.LEVEL_3_DEFINED,
+    );
     setEditSummary(assessment.executive_summary || "");
     setEditFindings(assessment.findings || "");
     setEditStrengths(assessment.strengths || "");
     setEditWeaknesses(assessment.weaknesses || "");
     setEditRecommendations(assessment.recommendations || "");
-    setIsNotApplicable(assessment.status === AccreditationAssessmentStatus.NOT_APPLICABLE);
+    setIsNotApplicable(
+      assessment.status === AccreditationAssessmentStatus.NOT_APPLICABLE,
+    );
     setNotApplicableReason(assessment.not_applicable_reason || "");
     setIsAssessmentModalOpen(true);
   };
@@ -262,16 +317,21 @@ export default function AccreditationQualityConsolePage() {
 
       if (isNotApplicable) {
         if (!notApplicableReason.trim()) {
-          setError("A comprehensive statutory justification is required when marking a criterion Not Applicable.");
+          setError(
+            "A comprehensive statutory justification is required when marking a criterion Not Applicable.",
+          );
           return;
         }
         payload.not_applicable_reason = notApplicableReason.trim();
       }
 
-      await apiFetch(`/api/v1/accreditation/assessments/${selectedAssessment.id}/draft`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-      });
+      await apiFetch(
+        `/api/v1/accreditation/assessments/${selectedAssessment.id}/draft`,
+        {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        },
+      );
 
       setNotice(`Assessment draft for criterion updated successfully.`);
       setIsAssessmentModalOpen(false);
@@ -282,15 +342,21 @@ export default function AccreditationQualityConsolePage() {
   };
 
   // Submit Assessment for Review
-  const handleSubmitAssessment = async (assessment: AccreditationCriterionAssessmentModel) => {
+  const handleSubmitAssessment = async (
+    assessment: AccreditationCriterionAssessmentModel,
+  ) => {
     try {
-      await apiFetch(`/api/v1/accreditation/assessments/${assessment.id}/submit`, {
-        method: "POST",
-        body: JSON.stringify({
-          lock_version: assessment.lock_version,
-          submission_notes: "Submitted for independent institutional peer review.",
-        }),
-      });
+      await apiFetch(
+        `/api/v1/accreditation/assessments/${assessment.id}/submit`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            lock_version: assessment.lock_version,
+            submission_notes:
+              "Submitted for independent institutional peer review.",
+          }),
+        },
+      );
       setNotice("Criterion assessment submitted for independent peer review.");
       if (selectedCycleId) await loadCycleAssessments(selectedCycleId);
     } catch (err: any) {
@@ -299,7 +365,9 @@ export default function AccreditationQualityConsolePage() {
   };
 
   // Open Review Dialog
-  const openReviewDialog = (assessment: AccreditationCriterionAssessmentModel) => {
+  const openReviewDialog = (
+    assessment: AccreditationCriterionAssessmentModel,
+  ) => {
     setSelectedAssessment(assessment);
     setAdjustedScore(assessment.score ?? "");
     setReviewDecision("APPROVED");
@@ -311,14 +379,18 @@ export default function AccreditationQualityConsolePage() {
   const handleReviewDecision = async () => {
     if (!selectedAssessment) return;
     try {
-      await apiFetch(`/api/v1/accreditation/assessments/${selectedAssessment.id}/review`, {
-        method: "POST",
-        body: JSON.stringify({
-          decision: reviewDecision,
-          reviewer_comments: reviewComments,
-          adjusted_score: adjustedScore === "" ? undefined : Number(adjustedScore),
-        }),
-      });
+      await apiFetch(
+        `/api/v1/accreditation/assessments/${selectedAssessment.id}/review`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            decision: reviewDecision,
+            reviewer_comments: reviewComments,
+            adjusted_score:
+              adjustedScore === "" ? undefined : Number(adjustedScore),
+          }),
+        },
+      );
       setNotice(`Assessment review recorded: ${reviewDecision}.`);
       setIsReviewModalOpen(false);
       if (selectedCycleId) await loadCycleAssessments(selectedCycleId);
@@ -331,14 +403,19 @@ export default function AccreditationQualityConsolePage() {
   const handleFinalizeAudit = async () => {
     if (!finalizeAuditId) return;
     try {
-      await apiFetch(`/api/v1/accreditation/audits/${finalizeAuditId}/finalize`, {
-        method: "POST",
-        body: JSON.stringify({
-          summary_findings: finalizeFindings,
-          recommendations: finalizeRecommendations,
-        }),
-      });
-      setNotice("Audit report finalized and permanently locked as an immutable quality record.");
+      await apiFetch(
+        `/api/v1/accreditation/audits/${finalizeAuditId}/finalize`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            summary_findings: finalizeFindings,
+            recommendations: finalizeRecommendations,
+          }),
+        },
+      );
+      setNotice(
+        "Audit report finalized and permanently locked as an immutable quality record.",
+      );
       setIsFinalizeModalOpen(false);
       await loadConsoleData();
     } catch (err: any) {
@@ -371,7 +448,10 @@ export default function AccreditationQualityConsolePage() {
       const matchesSearch =
         searchQuery === "" ||
         a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (a.executive_summary && a.executive_summary.toLowerCase().includes(searchQuery.toLowerCase()));
+        (a.executive_summary &&
+          a.executive_summary
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()));
       const matchesStatus =
         assessmentStatusFilter === "ALL" || a.status === assessmentStatusFilter;
       return matchesSearch && matchesStatus;
@@ -386,9 +466,11 @@ export default function AccreditationQualityConsolePage() {
         e.evidence_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
         e.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCat =
-        evidenceCategoryFilter === "ALL" || e.evidence_category === evidenceCategoryFilter;
+        evidenceCategoryFilter === "ALL" ||
+        e.evidence_category === evidenceCategoryFilter;
       const matchesStatus =
-        evidenceStatusFilter === "ALL" || e.verification_status === evidenceStatusFilter;
+        evidenceStatusFilter === "ALL" ||
+        e.verification_status === evidenceStatusFilter;
       return matchesSearch && matchesCat && matchesStatus;
     });
   }, [evidences, searchQuery, evidenceCategoryFilter, evidenceStatusFilter]);
@@ -406,7 +488,8 @@ export default function AccreditationQualityConsolePage() {
             Institutional Accreditation & Continuous Improvement Engine
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            End-to-end statutory compliance, multi-criteria rubrics, verifiable evidence provenance, internal audits, and CAPA.
+            End-to-end statutory compliance, multi-criteria rubrics, verifiable
+            evidence provenance, internal audits, and CAPA.
           </p>
         </div>
 
@@ -435,7 +518,10 @@ export default function AccreditationQualityConsolePage() {
             <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
             <span>{notice}</span>
           </div>
-          <button onClick={() => setNotice(null)} className="text-emerald-400 hover:text-emerald-100">
+          <button
+            onClick={() => setNotice(null)}
+            className="text-emerald-400 hover:text-emerald-100"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -447,7 +533,10 @@ export default function AccreditationQualityConsolePage() {
             <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="text-rose-400 hover:text-rose-100">
+          <button
+            onClick={() => setError(null)}
+            className="text-rose-400 hover:text-rose-100"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -463,7 +552,9 @@ export default function AccreditationQualityConsolePage() {
           <div className="text-xl font-black text-white mt-1">
             {summary?.active_frameworks_count ?? frameworks.length}
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Statutory & Custom</div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            Statutory & Custom
+          </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -474,7 +565,9 @@ export default function AccreditationQualityConsolePage() {
           <div className="text-xl font-black text-white mt-1">
             {summary?.active_cycles_count ?? cycles.length}
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">SSR / Assessment</div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            SSR / Assessment
+          </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -484,9 +577,14 @@ export default function AccreditationQualityConsolePage() {
           </div>
           <div className="text-xl font-black text-emerald-400 mt-1">
             {summary?.assessed_criteria_count ?? 0}
-            <span className="text-xs font-normal text-slate-500"> / {summary?.total_criteria_count ?? 0}</span>
+            <span className="text-xs font-normal text-slate-500">
+              {" "}
+              / {summary?.total_criteria_count ?? 0}
+            </span>
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Submissions & Approvals</div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            Submissions & Approvals
+          </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -496,9 +594,14 @@ export default function AccreditationQualityConsolePage() {
           </div>
           <div className="text-xl font-black text-white mt-1">
             {summary?.verified_evidences_count ?? 0}
-            <span className="text-xs font-normal text-slate-500"> / {summary?.total_evidences_count ?? 0}</span>
+            <span className="text-xs font-normal text-slate-500">
+              {" "}
+              / {summary?.total_evidences_count ?? 0}
+            </span>
           </div>
-          <div className="text-[10px] text-emerald-500 mt-0.5">Peer-Audited Provenance</div>
+          <div className="text-[10px] text-emerald-500 mt-0.5">
+            Peer-Audited Provenance
+          </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -507,7 +610,8 @@ export default function AccreditationQualityConsolePage() {
             <AlertCircle className="h-3.5 w-3.5 text-rose-400" />
           </div>
           <div className="text-xl font-black text-rose-400 mt-1">
-            {summary?.open_findings_count ?? findings.filter((f) => f.status !== "CLOSED").length}
+            {summary?.open_findings_count ??
+              findings.filter((f) => f.status !== "CLOSED").length}
           </div>
           <div className="text-[10px] text-rose-500/80 mt-0.5">
             {summary?.critical_findings_count ?? 0} Critical Risk
@@ -522,7 +626,9 @@ export default function AccreditationQualityConsolePage() {
           <div className="text-xl font-black text-amber-400 mt-1">
             {summary?.overall_readiness_avg_pct ?? 0}%
           </div>
-          <div className="text-[10px] text-amber-300/80 mt-0.5">Weighted Institutional Index</div>
+          <div className="text-[10px] text-amber-300/80 mt-0.5">
+            Weighted Institutional Index
+          </div>
         </div>
       </div>
 
@@ -531,7 +637,11 @@ export default function AccreditationQualityConsolePage() {
         {[
           { id: "overview", label: "Dashboard & Status", icon: BarChart3 },
           { id: "frameworks", label: "Frameworks & Standards", icon: Award },
-          { id: "assessment", label: "Assessment Workspace", icon: ClipboardList },
+          {
+            id: "assessment",
+            label: "Assessment Workspace",
+            icon: ClipboardList,
+          },
           { id: "evidence", label: "Evidence Repository", icon: ShieldCheck },
           { id: "kpi", label: "Quality Indicators (KPIs)", icon: TrendingUp },
           { id: "audits", label: "Internal Audits & CAPA", icon: Scale },
@@ -567,8 +677,12 @@ export default function AccreditationQualityConsolePage() {
               <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-sm font-bold text-white">Statutory Frameworks & Standards</h3>
-                    <p className="text-xs text-slate-400">Institutional quality assurance benchmarks in effect</p>
+                    <h3 className="text-sm font-bold text-white">
+                      Statutory Frameworks & Standards
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Institutional quality assurance benchmarks in effect
+                    </p>
                   </div>
                   <button
                     onClick={() => setActiveTab("frameworks")}
@@ -582,7 +696,8 @@ export default function AccreditationQualityConsolePage() {
                 <div className="space-y-3">
                   {frameworks.length === 0 ? (
                     <div className="text-center py-8 text-xs text-slate-500">
-                      No frameworks configured yet. Click "Seed Standard Templates" above to load NAAC, NBA, and ISO-21001.
+                      No frameworks configured yet. Click "Seed Standard
+                      Templates" above to load NAAC, NBA, and ISO-21001.
                     </div>
                   ) : (
                     frameworks.map((fw) => (
@@ -596,13 +711,16 @@ export default function AccreditationQualityConsolePage() {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-xs text-white">{fw.name}</span>
+                              <span className="font-bold text-xs text-white">
+                                {fw.name}
+                              </span>
                               <span className="px-1.5 py-0.2 text-[9px] font-mono rounded bg-slate-800 text-slate-300">
                                 {fw.code}
                               </span>
                             </div>
                             <div className="text-[11px] text-slate-400">
-                              Issuing Body: {fw.issuing_body} • Scoring: {fw.scoring_model} (Max {fw.max_score})
+                              Issuing Body: {fw.issuing_body} • Scoring:{" "}
+                              {fw.scoring_model} (Max {fw.max_score})
                             </div>
                           </div>
                         </div>
@@ -617,7 +735,9 @@ export default function AccreditationQualityConsolePage() {
                           >
                             {fw.status}
                           </span>
-                          <span className="text-[10px] text-slate-500 font-mono">v{fw.current_version_number}.0</span>
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            v{fw.current_version_number}.0
+                          </span>
                         </div>
                       </div>
                     ))
@@ -629,8 +749,12 @@ export default function AccreditationQualityConsolePage() {
               <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-sm font-bold text-white">Active Assessment Cycles</h3>
-                    <p className="text-xs text-slate-400">Self-Study Reports (SSR) and cyclical accreditations</p>
+                    <h3 className="text-sm font-bold text-white">
+                      Active Assessment Cycles
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Self-Study Reports (SSR) and cyclical accreditations
+                    </p>
                   </div>
                   <button
                     onClick={() => setActiveTab("assessment")}
@@ -654,17 +778,27 @@ export default function AccreditationQualityConsolePage() {
                     >
                       <div className="flex items-center justify-between text-xs font-bold text-white">
                         <span>{cyc.title}</span>
-                        <span className="text-[10px] text-amber-400 font-mono">{cyc.academic_year}</span>
+                        <span className="text-[10px] text-amber-400 font-mono">
+                          {cyc.academic_year}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-1">{cyc.code}</div>
+                      <div className="text-[11px] text-slate-400 mt-1">
+                        {cyc.code}
+                      </div>
                       <div className="mt-3 flex items-center justify-between text-[11px]">
-                        <span className="text-slate-500">Readiness Progress:</span>
-                        <span className="font-bold text-amber-400">{cyc.readiness_percentage ?? 0}%</span>
+                        <span className="text-slate-500">
+                          Readiness Progress:
+                        </span>
+                        <span className="font-bold text-amber-400">
+                          {cyc.readiness_percentage ?? 0}%
+                        </span>
                       </div>
                       <div className="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
                         <div
                           className="bg-amber-500 h-full rounded-full transition-all duration-500"
-                          style={{ width: `${Math.min(100, cyc.readiness_percentage ?? 0)}%` }}
+                          style={{
+                            width: `${Math.min(100, cyc.readiness_percentage ?? 0)}%`,
+                          }}
                         />
                       </div>
                     </div>
@@ -682,14 +816,21 @@ export default function AccreditationQualityConsolePage() {
                     <span>Compliance Attention Required</span>
                   </h3>
                   <span className="text-[10px] font-mono rounded-full px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    {findings.filter((f) => f.severity === "CRITICAL" || f.severity === "HIGH").length} Urgent
+                    {
+                      findings.filter(
+                        (f) =>
+                          f.severity === "CRITICAL" || f.severity === "HIGH",
+                      ).length
+                    }{" "}
+                    Urgent
                   </span>
                 </div>
 
                 <div className="space-y-2.5">
                   {findings.length === 0 ? (
                     <div className="text-center py-6 text-xs text-slate-500">
-                      No open findings recorded. Conformance across internal quality audits is clear.
+                      No open findings recorded. Conformance across internal
+                      quality audits is clear.
                     </div>
                   ) : (
                     findings.slice(0, 4).map((f) => (
@@ -703,10 +844,14 @@ export default function AccreditationQualityConsolePage() {
                             {f.severity}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-400 line-clamp-2">{f.description}</div>
+                        <div className="text-[11px] text-slate-400 line-clamp-2">
+                          {f.description}
+                        </div>
                         <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
                           <span>Code: {f.finding_code}</span>
-                          <span className="text-amber-400">Due: {f.target_resolution_date?.split("T")[0]}</span>
+                          <span className="text-amber-400">
+                            Due: {f.target_resolution_date?.split("T")[0]}
+                          </span>
                         </div>
                       </div>
                     ))
@@ -721,14 +866,21 @@ export default function AccreditationQualityConsolePage() {
                     <TrendingUp className="h-4 w-4 text-emerald-400" />
                     <span>Continuous Improvement (CQI)</span>
                   </h3>
-                  <span className="text-xs text-slate-500">{cqiPlans.length} Initiatives</span>
+                  <span className="text-xs text-slate-500">
+                    {cqiPlans.length} Initiatives
+                  </span>
                 </div>
 
                 <div className="space-y-2.5">
                   {cqiPlans.map((plan) => (
-                    <div key={plan.id} className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
+                    <div
+                      key={plan.id}
+                      className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs"
+                    >
                       <div className="font-bold text-white">{plan.title}</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{plan.objective}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">
+                        {plan.objective}
+                      </div>
                       <div className="mt-2 text-[10px] text-emerald-400 flex items-center justify-between">
                         <span>Target: {plan.target_outcome}</span>
                         <span className="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 font-semibold">
@@ -749,8 +901,13 @@ export default function AccreditationQualityConsolePage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-white">Accreditation Standards & Versioning</h2>
-              <p className="text-xs text-slate-400">Manage criteria trees, scoring models, and publish formal revision snapshots</p>
+              <h2 className="text-base font-bold text-white">
+                Accreditation Standards & Versioning
+              </h2>
+              <p className="text-xs text-slate-400">
+                Manage criteria trees, scoring models, and publish formal
+                revision snapshots
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -764,7 +921,10 @@ export default function AccreditationQualityConsolePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {frameworks.map((fw) => (
-              <div key={fw.id} className="p-5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+              <div
+                key={fw.id}
+                className="p-5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="px-2 py-0.5 text-[9px] font-mono rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
                     {fw.code}
@@ -782,13 +942,30 @@ export default function AccreditationQualityConsolePage() {
 
                 <div>
                   <h4 className="text-sm font-bold text-white">{fw.name}</h4>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{fw.description}</p>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                    {fw.description}
+                  </p>
                 </div>
 
                 <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
-                  <div>Issuing Body: <span className="text-white font-medium">{fw.issuing_body}</span></div>
-                  <div>Scoring: <span className="text-white font-medium">{fw.scoring_model} (Max: {fw.max_score})</span></div>
-                  <div>Version: <span className="text-amber-400 font-mono">v{fw.current_version_number}.0 (Snapshot)</span></div>
+                  <div>
+                    Issuing Body:{" "}
+                    <span className="text-white font-medium">
+                      {fw.issuing_body}
+                    </span>
+                  </div>
+                  <div>
+                    Scoring:{" "}
+                    <span className="text-white font-medium">
+                      {fw.scoring_model} (Max: {fw.max_score})
+                    </span>
+                  </div>
+                  <div>
+                    Version:{" "}
+                    <span className="text-amber-400 font-mono">
+                      v{fw.current_version_number}.0 (Snapshot)
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -801,7 +978,9 @@ export default function AccreditationQualityConsolePage() {
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/70 border border-slate-800">
             <div className="flex items-center gap-3">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Assessment Cycle:</label>
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Assessment Cycle:
+              </label>
               <select
                 value={selectedCycleId}
                 onChange={(e) => handleCycleChange(e.target.value)}
@@ -864,19 +1043,23 @@ export default function AccreditationQualityConsolePage() {
                           item.status === "APPROVED"
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                             : item.status === "SUBMITTED"
-                            ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                            : item.status === "NOT_APPLICABLE"
-                            ? "bg-slate-700 text-slate-400"
-                            : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                              : item.status === "NOT_APPLICABLE"
+                                ? "bg-slate-700 text-slate-400"
+                                : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                         }`}
                       >
                         {item.status}
                       </span>
-                      <span className="text-[10px] font-mono text-slate-500">Lock v{item.lock_version}</span>
+                      <span className="text-[10px] font-mono text-slate-500">
+                        Lock v{item.lock_version}
+                      </span>
                     </div>
 
                     <div className="text-xs font-semibold text-white">
-                      {item.findings || item.executive_summary || "Criterion assessment in progress. Findings pending entry."}
+                      {item.findings ||
+                        item.executive_summary ||
+                        "Criterion assessment in progress. Findings pending entry."}
                     </div>
 
                     {item.not_applicable_reason && (
@@ -891,7 +1074,9 @@ export default function AccreditationQualityConsolePage() {
                       <div className="text-sm font-black text-white">
                         {item.score !== null ? `${item.score}` : "—"}
                       </div>
-                      <div className="text-[10px] text-slate-500">Maturity: {item.maturity_level ?? "N/A"}</div>
+                      <div className="text-[10px] text-slate-500">
+                        Maturity: {item.maturity_level ?? "N/A"}
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -902,15 +1087,16 @@ export default function AccreditationQualityConsolePage() {
                         Edit Draft
                       </button>
 
-                      {item.status !== "SUBMITTED" && item.status !== "APPROVED" && (
-                        <button
-                          onClick={() => handleSubmitAssessment(item)}
-                          className="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1"
-                        >
-                          <Send className="h-3 w-3" />
-                          <span>Submit</span>
-                        </button>
-                      )}
+                      {item.status !== "SUBMITTED" &&
+                        item.status !== "APPROVED" && (
+                          <button
+                            onClick={() => handleSubmitAssessment(item)}
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1"
+                          >
+                            <Send className="h-3 w-3" />
+                            <span>Submit</span>
+                          </button>
+                        )}
 
                       {item.status === "SUBMITTED" && (
                         <button
@@ -935,8 +1121,13 @@ export default function AccreditationQualityConsolePage() {
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/70 border border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-white">Institutional Evidence Repository</h3>
-              <p className="text-xs text-slate-400">Verifiable document provenance, BoS minutes, accreditation artifacts & lifecycle</p>
+              <h3 className="text-sm font-bold text-white">
+                Institutional Evidence Repository
+              </h3>
+              <p className="text-xs text-slate-400">
+                Verifiable document provenance, BoS minutes, accreditation
+                artifacts & lifecycle
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -950,7 +1141,9 @@ export default function AccreditationQualityConsolePage() {
                 <option value="GOVERNANCE_MINUTES">GOVERNANCE_MINUTES</option>
                 <option value="EXAM_RECORD">EXAM_RECORD</option>
                 <option value="FACULTY_CREDENTIAL">FACULTY_CREDENTIAL</option>
-                <option value="INFRASTRUCTURE_AUDIT">INFRASTRUCTURE_AUDIT</option>
+                <option value="INFRASTRUCTURE_AUDIT">
+                  INFRASTRUCTURE_AUDIT
+                </option>
               </select>
 
               <select
@@ -969,7 +1162,10 @@ export default function AccreditationQualityConsolePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredEvidences.map((ev) => (
-              <div key={ev.id} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+              <div
+                key={ev.id}
+                className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2.5"
+              >
                 <div className="flex items-center justify-between">
                   <span className="px-2 py-0.5 text-[9px] font-mono rounded bg-slate-800 text-amber-300">
                     {ev.evidence_code}
@@ -979,8 +1175,8 @@ export default function AccreditationQualityConsolePage() {
                       ev.verification_status === "VERIFIED"
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                         : ev.verification_status === "EXPIRED" || ev.is_expired
-                        ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                        : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                          : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                     }`}
                   >
                     {ev.is_expired ? "EXPIRED" : ev.verification_status}
@@ -989,13 +1185,21 @@ export default function AccreditationQualityConsolePage() {
 
                 <div>
                   <h4 className="text-xs font-bold text-white">{ev.title}</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">{ev.description}</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
+                    {ev.description}
+                  </p>
                 </div>
 
                 <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-500 flex items-center justify-between">
                   <span>Category: {ev.evidence_category}</span>
                   {ev.valid_until && (
-                    <span className={ev.is_expired ? "text-rose-400 font-bold" : "text-slate-400"}>
+                    <span
+                      className={
+                        ev.is_expired
+                          ? "text-rose-400 font-bold"
+                          : "text-slate-400"
+                      }
+                    >
                       Valid to: {ev.valid_until.split("T")[0]}
                     </span>
                   )}
@@ -1011,14 +1215,22 @@ export default function AccreditationQualityConsolePage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-white">Quality Indicators & Measurable Outcomes</h2>
-              <p className="text-xs text-slate-400">Institutional KPI tracking, data quality guarantees & completeness warnings</p>
+              <h2 className="text-base font-bold text-white">
+                Quality Indicators & Measurable Outcomes
+              </h2>
+              <p className="text-xs text-slate-400">
+                Institutional KPI tracking, data quality guarantees &
+                completeness warnings
+              </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {indicators.map((ind) => (
-              <div key={ind.id} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+              <div
+                key={ind.id}
+                className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="px-2 py-0.5 text-[9px] font-mono rounded bg-slate-800 text-slate-300">
                     {ind.code}
@@ -1028,8 +1240,8 @@ export default function AccreditationQualityConsolePage() {
                       ind.data_quality_status === "EXCELLENT"
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                         : ind.data_quality_status === "WARNING_INCOMPLETE"
-                        ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        : "bg-slate-700 text-slate-300"
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          : "bg-slate-700 text-slate-300"
                     }`}
                   >
                     {ind.data_quality_status}
@@ -1038,20 +1250,27 @@ export default function AccreditationQualityConsolePage() {
 
                 <div>
                   <h4 className="text-xs font-bold text-white">{ind.name}</h4>
-                  <div className="text-[10px] text-slate-500 uppercase mt-0.5">{ind.category}</div>
+                  <div className="text-[10px] text-slate-500 uppercase mt-0.5">
+                    {ind.category}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 p-2.5 rounded-lg bg-slate-950 text-center">
                   <div>
-                    <div className="text-[10px] text-slate-500">Current Value</div>
+                    <div className="text-[10px] text-slate-500">
+                      Current Value
+                    </div>
                     <div className="text-sm font-black text-amber-400 mt-0.5">
-                      {ind.current_value !== null ? `${ind.current_value}${ind.unit_of_measurement}` : "Pending"}
+                      {ind.current_value !== null
+                        ? `${ind.current_value}${ind.unit_of_measurement}`
+                        : "Pending"}
                     </div>
                   </div>
                   <div>
                     <div className="text-[10px] text-slate-500">Target</div>
                     <div className="text-sm font-bold text-white mt-0.5">
-                      {ind.target_value}{ind.unit_of_measurement}
+                      {ind.target_value}
+                      {ind.unit_of_measurement}
                     </div>
                   </div>
                 </div>
@@ -1074,8 +1293,13 @@ export default function AccreditationQualityConsolePage() {
           <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white">Internal Quality Audits</h3>
-                <p className="text-xs text-slate-400">Scheduled audits with checklist conformance and immutable final reports</p>
+                <h3 className="text-sm font-bold text-white">
+                  Internal Quality Audits
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Scheduled audits with checklist conformance and immutable
+                  final reports
+                </p>
               </div>
             </div>
 
@@ -1087,7 +1311,9 @@ export default function AccreditationQualityConsolePage() {
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-white">{aud.title}</span>
+                      <span className="font-bold text-xs text-white">
+                        {aud.title}
+                      </span>
                       <span className="px-1.5 py-0.2 text-[9px] font-mono rounded bg-slate-800 text-slate-300">
                         {aud.code}
                       </span>
@@ -1099,7 +1325,8 @@ export default function AccreditationQualityConsolePage() {
                       )}
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Type: {aud.audit_type} • Scheduled: {aud.scheduled_start_date?.split("T")[0]}
+                      Type: {aud.audit_type} • Scheduled:{" "}
+                      {aud.scheduled_start_date?.split("T")[0]}
                     </div>
                     {aud.summary_findings && (
                       <div className="text-[11px] text-slate-300 pt-1">
@@ -1133,23 +1360,33 @@ export default function AccreditationQualityConsolePage() {
           <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white">Corrective & Preventive Actions (CAPA)</h3>
+                <h3 className="text-sm font-bold text-white">
+                  Corrective & Preventive Actions (CAPA)
+                </h3>
                 <p className="text-xs text-slate-400">
-                  Accountable root-cause resolution with separation-of-duties verification
+                  Accountable root-cause resolution with separation-of-duties
+                  verification
                 </p>
               </div>
             </div>
 
             <div className="space-y-3">
               {findings.map((finding) => (
-                <div key={finding.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                <div
+                  key={finding.id}
+                  className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-white">{finding.title}</span>
+                    <span className="font-bold text-xs text-white">
+                      {finding.title}
+                    </span>
                     <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-950 px-2 py-0.5 rounded border border-rose-800/40">
                       {finding.severity}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400">{finding.description}</div>
+                  <div className="text-[11px] text-slate-400">
+                    {finding.description}
+                  </div>
                   {finding.root_cause_analysis && (
                     <div className="text-[11px] text-amber-300/90 italic">
                       Root Cause: {finding.root_cause_analysis}
@@ -1168,38 +1405,60 @@ export default function AccreditationQualityConsolePage() {
           <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 uppercase">
-                {readinessSnapshot?.readiness_category || "ASSESSMENT_IN_PROGRESS"}
+                {readinessSnapshot?.readiness_category ||
+                  "ASSESSMENT_IN_PROGRESS"}
               </span>
-              <h2 className="text-xl font-black text-white">Accreditation Readiness & SSR Preparedness Index</h2>
+              <h2 className="text-xl font-black text-white">
+                Accreditation Readiness & SSR Preparedness Index
+              </h2>
               <p className="text-xs text-slate-400 max-w-xl">
-                Multi-dimensional readiness scoring calculated from evaluated criteria completion, verified evidence ratio, internal audit compliance, and critical findings penalty.
+                Multi-dimensional readiness scoring calculated from evaluated
+                criteria completion, verified evidence ratio, internal audit
+                compliance, and critical findings penalty.
               </p>
             </div>
 
             <div className="text-center p-6 rounded-2xl bg-slate-950/80 border border-amber-500/30 shrink-0">
               <div className="text-3xl font-black text-amber-400">
-                {readinessSnapshot?.overall_readiness_score ?? summary?.overall_readiness_avg_pct ?? 0}%
+                {readinessSnapshot?.overall_readiness_score ??
+                  summary?.overall_readiness_avg_pct ??
+                  0}
+                %
               </div>
-              <div className="text-[10px] uppercase font-bold text-slate-400 mt-1">Readiness Index</div>
+              <div className="text-[10px] uppercase font-bold text-slate-400 mt-1">
+                Readiness Index
+              </div>
             </div>
           </div>
 
           {/* Gap Summaries */}
           <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5 space-y-3">
-            <h3 className="text-sm font-bold text-white">Identified Compliance Gaps</h3>
-            {readinessSnapshot?.gap_summary_json && readinessSnapshot.gap_summary_json.length > 0 ? (
+            <h3 className="text-sm font-bold text-white">
+              Identified Compliance Gaps
+            </h3>
+            {readinessSnapshot?.gap_summary_json &&
+            readinessSnapshot.gap_summary_json.length > 0 ? (
               <div className="space-y-2">
-                {readinessSnapshot.gap_summary_json.map((gap: any, i: number) => (
-                  <div key={i} className="p-3 rounded-lg bg-slate-950 border border-amber-900/40 text-xs flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold text-white">{gap.description || gap.gap_title}</div>
-                      <div className="text-[10px] text-slate-400">Criterion: {gap.criterion_code || "General"}</div>
+                {readinessSnapshot.gap_summary_json.map(
+                  (gap: any, i: number) => (
+                    <div
+                      key={i}
+                      className="p-3 rounded-lg bg-slate-950 border border-amber-900/40 text-xs flex items-center justify-between"
+                    >
+                      <div>
+                        <div className="font-semibold text-white">
+                          {gap.description || gap.gap_title}
+                        </div>
+                        <div className="text-[10px] text-slate-400">
+                          Criterion: {gap.criterion_code || "General"}
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 text-[9px] font-bold rounded uppercase bg-amber-950 text-amber-300">
+                        {gap.severity || "MEDIUM"}
+                      </span>
                     </div>
-                    <span className="px-2 py-0.5 text-[9px] font-bold rounded uppercase bg-amber-950 text-amber-300">
-                      {gap.severity || "MEDIUM"}
-                    </span>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             ) : (
               <div className="text-xs text-slate-500 py-6 text-center">
@@ -1215,8 +1474,13 @@ export default function AccreditationQualityConsolePage() {
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white">Criterion Evaluation & Rubrics Draft</h3>
-              <button onClick={() => setIsAssessmentModalOpen(false)} className="text-slate-400 hover:text-white">
+              <h3 className="text-sm font-bold text-white">
+                Criterion Evaluation & Rubrics Draft
+              </h3>
+              <button
+                onClick={() => setIsAssessmentModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -1224,28 +1488,50 @@ export default function AccreditationQualityConsolePage() {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] font-medium text-slate-400">Score</label>
+                  <label className="text-[11px] font-medium text-slate-400">
+                    Score
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     value={editScore}
-                    onChange={(e) => setEditScore(e.target.value === "" ? "" : Number(e.target.value))}
+                    onChange={(e) =>
+                      setEditScore(
+                        e.target.value === "" ? "" : Number(e.target.value),
+                      )
+                    }
                     className="w-full px-3 py-2 text-xs rounded-lg bg-slate-950 border border-slate-800 text-white mt-1 focus:outline-none focus:border-amber-500"
                     placeholder="Enter numeric score"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-medium text-slate-400">Maturity Level</label>
+                  <label className="text-[11px] font-medium text-slate-400">
+                    Maturity Level
+                  </label>
                   <select
                     value={editMaturity}
                     onChange={(e) => setEditMaturity(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg bg-slate-950 border border-slate-800 text-white mt-1 focus:outline-none"
                   >
-                    <option value={AccreditationMaturityLevel.LEVEL_1_INITIAL}>Level 1: Initial</option>
-                    <option value={AccreditationMaturityLevel.LEVEL_2_DEVELOPING}>Level 2: Developing</option>
-                    <option value={AccreditationMaturityLevel.LEVEL_3_DEFINED}>Level 3: Defined</option>
-                    <option value={AccreditationMaturityLevel.LEVEL_4_MANAGED}>Level 4: Managed</option>
-                    <option value={AccreditationMaturityLevel.LEVEL_5_OPTIMIZING}>Level 5: Optimizing</option>
+                    <option value={AccreditationMaturityLevel.LEVEL_1_INITIAL}>
+                      Level 1: Initial
+                    </option>
+                    <option
+                      value={AccreditationMaturityLevel.LEVEL_2_DEVELOPING}
+                    >
+                      Level 2: Developing
+                    </option>
+                    <option value={AccreditationMaturityLevel.LEVEL_3_DEFINED}>
+                      Level 3: Defined
+                    </option>
+                    <option value={AccreditationMaturityLevel.LEVEL_4_MANAGED}>
+                      Level 4: Managed
+                    </option>
+                    <option
+                      value={AccreditationMaturityLevel.LEVEL_5_OPTIMIZING}
+                    >
+                      Level 5: Optimizing
+                    </option>
                   </select>
                 </div>
               </div>
@@ -1258,14 +1544,20 @@ export default function AccreditationQualityConsolePage() {
                   onChange={(e) => setIsNotApplicable(e.target.checked)}
                   className="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0"
                 />
-                <label htmlFor="na_check" className="text-xs text-slate-300 font-medium">
-                  Mark Criterion as Not Applicable (Statutory Justification Required)
+                <label
+                  htmlFor="na_check"
+                  className="text-xs text-slate-300 font-medium"
+                >
+                  Mark Criterion as Not Applicable (Statutory Justification
+                  Required)
                 </label>
               </div>
 
               {isNotApplicable && (
                 <div>
-                  <label className="text-[11px] font-medium text-amber-400">Not Applicable Justification</label>
+                  <label className="text-[11px] font-medium text-amber-400">
+                    Not Applicable Justification
+                  </label>
                   <textarea
                     rows={2}
                     value={notApplicableReason}
@@ -1277,7 +1569,9 @@ export default function AccreditationQualityConsolePage() {
               )}
 
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Executive Summary</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Executive Summary
+                </label>
                 <textarea
                   rows={2}
                   value={editSummary}
@@ -1288,7 +1582,9 @@ export default function AccreditationQualityConsolePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Findings & Evidence Conformance</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Findings & Evidence Conformance
+                </label>
                 <textarea
                   rows={2}
                   value={editFindings}
@@ -1300,7 +1596,9 @@ export default function AccreditationQualityConsolePage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] font-medium text-slate-400">Institutional Strengths</label>
+                  <label className="text-[11px] font-medium text-slate-400">
+                    Institutional Strengths
+                  </label>
                   <textarea
                     rows={2}
                     value={editStrengths}
@@ -1309,7 +1607,9 @@ export default function AccreditationQualityConsolePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-medium text-slate-400">Areas for Improvement / Weaknesses</label>
+                  <label className="text-[11px] font-medium text-slate-400">
+                    Areas for Improvement / Weaknesses
+                  </label>
                   <textarea
                     rows={2}
                     value={editWeaknesses}
@@ -1347,18 +1647,25 @@ export default function AccreditationQualityConsolePage() {
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 <span>Independent Peer Review</span>
               </h3>
-              <button onClick={() => setIsReviewModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button
+                onClick={() => setIsReviewModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200">
-              Quality Assurance policy strictly enforces Separation of Duties: the primary assessor cannot review or approve their own assessment submission.
+              Quality Assurance policy strictly enforces Separation of Duties:
+              the primary assessor cannot review or approve their own assessment
+              submission.
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Review Decision</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Review Decision
+                </label>
                 <select
                   value={reviewDecision}
                   onChange={(e) => setReviewDecision(e.target.value as any)}
@@ -1370,19 +1677,27 @@ export default function AccreditationQualityConsolePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Adjusted Score (Optional)</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Adjusted Score (Optional)
+                </label>
                 <input
                   type="number"
                   step="0.1"
                   value={adjustedScore}
-                  onChange={(e) => setAdjustedScore(e.target.value === "" ? "" : Number(e.target.value))}
+                  onChange={(e) =>
+                    setAdjustedScore(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
                   className="w-full px-3 py-2 text-xs rounded-lg bg-slate-950 border border-slate-800 text-white mt-1 focus:outline-none"
                   placeholder="Leave blank to maintain assessor score"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Reviewer Observations & Justification</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Reviewer Observations & Justification
+                </label>
                 <textarea
                   rows={3}
                   value={reviewComments}
@@ -1420,18 +1735,24 @@ export default function AccreditationQualityConsolePage() {
                 <Lock className="h-4 w-4 text-amber-400" />
                 <span>Finalize Internal Audit Report</span>
               </h3>
-              <button onClick={() => setIsFinalizeModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button
+                onClick={() => setIsFinalizeModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-200">
-              Finalization locks the audit permanently into an immutable record. No further checklist mutations will be permitted.
+              Finalization locks the audit permanently into an immutable record.
+              No further checklist mutations will be permitted.
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Summary Findings</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Summary Findings
+                </label>
                 <textarea
                   rows={3}
                   value={finalizeFindings}
@@ -1442,7 +1763,9 @@ export default function AccreditationQualityConsolePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-400">Institutional Recommendations</label>
+                <label className="text-[11px] font-medium text-slate-400">
+                  Institutional Recommendations
+                </label>
                 <textarea
                   rows={3}
                   value={finalizeRecommendations}

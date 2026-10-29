@@ -5,7 +5,12 @@ import Link from "next/link";
 import { transportAllocationsService } from "@/services/transport-allocations.service";
 import { transportRoutesService } from "@/services/transport-routes.service";
 import { transportStopsService } from "@/services/transport-stops.service";
-import { TransportAllocation, TransportRoute, TransportStop, TransportAllocationStatus } from "@campusos/types";
+import {
+  TransportAllocation,
+  TransportRoute,
+  TransportStop,
+  TransportAllocationStatus,
+} from "@campusos/types";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -94,7 +99,9 @@ export default function TransportAllocationsListPage() {
     loadData();
   };
 
-  const activePasses = allocations.filter((a) => a.status === TransportAllocationStatus.ACTIVE).length;
+  const activePasses = allocations.filter(
+    (a) => a.status === TransportAllocationStatus.ACTIVE,
+  ).length;
   const paidPasses = allocations.filter((a) => a.feeStatus === "PAID").length;
 
   const columns: ColumnDef<TransportAllocation>[] = useMemo(
@@ -122,7 +129,9 @@ export default function TransportAllocationsListPage() {
         header: "Transit Corridor",
         cell: (a) => (
           <div className="text-xs">
-            <span className="font-mono font-bold text-blue-400">{a.routeCode || "R-01"}</span>
+            <span className="font-mono font-bold text-blue-400">
+              {a.routeCode || "R-01"}
+            </span>
             <span className="text-slate-300 block">{a.routeName}</span>
             <span className="text-slate-500">Bus: {a.vehicleNumber}</span>
           </div>
@@ -185,14 +194,18 @@ export default function TransportAllocationsListPage() {
         header: "Actions",
         cell: (a) => (
           <Link href={`/app/infrastructure/transport/allocations/${a.id}`}>
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+            >
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -216,7 +229,8 @@ export default function TransportAllocationsListPage() {
             Student Transport Allocations
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Manage student bus transit passes, designated pickup stops, seat assignments, and fee clearances.
+            Manage student bus transit passes, designated pickup stops, seat
+            assignments, and fee clearances.
           </p>
         </div>
 
@@ -232,20 +246,32 @@ export default function TransportAllocationsListPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Total Issued Passes</div>
-          <div className="text-2xl font-bold text-white mt-1">{allocations.length}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Total Issued Passes
+          </div>
+          <div className="text-2xl font-bold text-white mt-1">
+            {allocations.length}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Active Passes</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{activePasses}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Active Passes
+          </div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {activePasses}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
           <div className="text-slate-400 text-xs font-medium">Fee Cleared</div>
-          <div className="text-2xl font-bold text-blue-400 mt-1">{paidPasses}</div>
+          <div className="text-2xl font-bold text-blue-400 mt-1">
+            {paidPasses}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
           <div className="text-slate-400 text-xs font-medium">Fee Pending</div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{allocations.length - paidPasses}</div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">
+            {allocations.length - paidPasses}
+          </div>
         </div>
       </div>
 
@@ -327,7 +353,10 @@ export default function TransportAllocationsListPage() {
                     placeholder="e.g. Devansh Nair"
                     value={createForm.studentName}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, studentName: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        studentName: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"
                   />
@@ -342,7 +371,10 @@ export default function TransportAllocationsListPage() {
                     placeholder="e.g. REG2024CS005"
                     value={createForm.registerNumber}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, registerNumber: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        registerNumber: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500 font-mono"
                   />
@@ -355,12 +387,15 @@ export default function TransportAllocationsListPage() {
                 </label>
                 <select
                   value={createForm.routeId}
-                  onChange={(e) => setCreateForm({ ...createForm, routeId: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, routeId: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"
                 >
                   {routes.map((r) => (
                     <option key={r.id} value={r.id}>
-                      {r.routeCode} - {r.name} ({r.allocatedStudents}/{r.capacity} seats)
+                      {r.routeCode} - {r.name} ({r.allocatedStudents}/
+                      {r.capacity} seats)
                     </option>
                   ))}
                 </select>
@@ -372,7 +407,9 @@ export default function TransportAllocationsListPage() {
                 </label>
                 <select
                   value={createForm.stopId}
-                  onChange={(e) => setCreateForm({ ...createForm, stopId: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, stopId: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"
                 >
                   {stops
@@ -395,7 +432,10 @@ export default function TransportAllocationsListPage() {
                     placeholder="e.g. 24"
                     value={createForm.seatNumber}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, seatNumber: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        seatNumber: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500 font-mono"
                   />
@@ -429,7 +469,10 @@ export default function TransportAllocationsListPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-violet-600 hover:bg-violet-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-violet-600 hover:bg-violet-500 text-white"
+                >
                   Issue Pass
                 </Button>
               </div>

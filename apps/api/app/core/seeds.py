@@ -4,7 +4,6 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -554,12 +553,12 @@ async def seed_intelligence_master_data(
 ) -> None:
     """Seed sample intelligence conversations, insights, alerts, saved views, and activity records."""
     from app.models.intelligence import (
+        AIActivity,
         Alert,
         Conversation,
         Insight,
         Message,
         SavedInsight,
-        AIActivity,
     )
     from app.models.people import User
 
@@ -974,8 +973,8 @@ async def seed_configuration_defaults(db: AsyncSession, tenant_id: Any | None = 
         ConfigurationDataType,
         ConfigurationDefinition,
         ConfigurationDependency,
-        ConfigurationSensitivity,
         ConfigurationScope,
+        ConfigurationSensitivity,
         DependencyCriticality,
         NumberingResetFrequency,
         NumberingSequence,

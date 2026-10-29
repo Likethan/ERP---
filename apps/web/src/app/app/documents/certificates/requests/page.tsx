@@ -90,8 +90,10 @@ export default function CertificateRequestsPage() {
         program: "B.Tech Computer Science & Engineering",
         department: "Computer Science & Engineering",
         templateId: selectedTemplateId,
-        templateName: selectedTmpl?.templateName || "Institutional Bonafide Certificate",
-        certificateType: selectedTmpl?.certificateType || CertificateType.BONAFIDE,
+        templateName:
+          selectedTmpl?.templateName || "Institutional Bonafide Certificate",
+        certificateType:
+          selectedTmpl?.certificateType || CertificateType.BONAFIDE,
         purpose: requestPurpose,
         requiredByDate: requiredByDate || undefined,
       });
@@ -100,7 +102,9 @@ export default function CertificateRequestsPage() {
         setRequests((prev) => [res.data!, ...prev]);
         setNewRequestOpen(false);
         setRequestPurpose("");
-        alert(`Certificate Request ${res.data.requestId} submitted successfully!`);
+        alert(
+          `Certificate Request ${res.data.requestId} submitted successfully!`,
+        );
       }
     } catch (err) {
       console.error(err);
@@ -111,7 +115,8 @@ export default function CertificateRequestsPage() {
 
   const filteredRequests = requests.filter((req) => {
     if (statusFilter !== "ALL" && req.status !== statusFilter) return false;
-    if (typeFilter !== "ALL" && req.certificateType !== typeFilter) return false;
+    if (typeFilter !== "ALL" && req.certificateType !== typeFilter)
+      return false;
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -132,7 +137,10 @@ export default function CertificateRequestsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">
-            <Link href="/app/documents/certificates" className="hover:underline flex items-center gap-1">
+            <Link
+              href="/app/documents/certificates"
+              className="hover:underline flex items-center gap-1"
+            >
               <ArrowLeft className="w-3.5 h-3.5" />
               Certificate Center
             </Link>
@@ -141,7 +149,8 @@ export default function CertificateRequestsPage() {
             Certificate Requests Pipeline
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            End-to-end issuance workflow: Submission → Academic Validation → Review → Approval → Digital Issuance.
+            End-to-end issuance workflow: Submission → Academic Validation →
+            Review → Approval → Digital Issuance.
           </p>
         </div>
 
@@ -203,7 +212,9 @@ export default function CertificateRequestsPage() {
       {/* Pipeline Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-20 text-center text-xs text-slate-500">Loading request pipeline...</div>
+          <div className="py-20 text-center text-xs text-slate-500">
+            Loading request pipeline...
+          </div>
         ) : filteredRequests.length === 0 ? (
           <div className="py-16 text-center text-xs text-slate-500">
             No certificate requests matched your search.
@@ -236,12 +247,18 @@ export default function CertificateRequestsPage() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="font-semibold text-slate-200">{req.studentName}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">{req.rollNumber}</div>
+                      <div className="font-semibold text-slate-200">
+                        {req.studentName}
+                      </div>
+                      <div className="text-[11px] text-slate-400 font-mono">
+                        {req.rollNumber}
+                      </div>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="font-medium text-slate-200">{req.templateName}</span>
+                      <span className="font-medium text-slate-200">
+                        {req.templateName}
+                      </span>
                       <div className="text-[11px] text-amber-400/80 font-mono mt-0.5">
                         {req.certificateType}
                       </div>
@@ -253,7 +270,9 @@ export default function CertificateRequestsPage() {
 
                     <td className="py-3.5 px-4 text-slate-400">
                       {req.requiredByDate ? (
-                        <span className="text-amber-400">{req.requiredByDate}</span>
+                        <span className="text-amber-400">
+                          {req.requiredByDate}
+                        </span>
                       ) : (
                         <span className="text-slate-500">Standard</span>
                       )}
@@ -268,8 +287,14 @@ export default function CertificateRequestsPage() {
                     </td>
 
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/app/documents/certificates/requests/${req.id}`}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                      <Link
+                        href={`/app/documents/certificates/requests/${req.id}`}
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 gap-1"
+                        >
                           <Eye className="w-3.5 h-3.5" />
                           View 360
                         </Button>
@@ -292,7 +317,8 @@ export default function CertificateRequestsPage() {
         <form onSubmit={handleCreateRequest} className="space-y-4 text-xs">
           <div>
             <label className="block text-slate-400 font-medium mb-1">
-              Select Certificate Template <span className="text-rose-400">*</span>
+              Select Certificate Template{" "}
+              <span className="text-rose-400">*</span>
             </label>
             <Select
               value={selectedTemplateId}
@@ -321,7 +347,9 @@ export default function CertificateRequestsPage() {
           </div>
 
           <div>
-            <label className="block text-slate-400 font-medium mb-1">Required By Date</label>
+            <label className="block text-slate-400 font-medium mb-1">
+              Required By Date
+            </label>
             <Input
               type="date"
               value={requiredByDate}

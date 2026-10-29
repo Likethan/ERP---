@@ -5,7 +5,13 @@ import Link from "next/link";
 import { staffService } from "@/services/staff.service";
 import { StaffDetailView } from "@/types/domain";
 import { StaffShiftItem, StaffLeaveType } from "@/types/people";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
@@ -14,14 +20,7 @@ import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
-import {
-  ArrowLeft,
-  Mail,
-  Phone,
-  Clock,
-  Plus,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowLeft, Mail, Phone, Clock, Plus, RefreshCw } from "lucide-react";
 
 export default function Staff360ProfilePage({
   params,
@@ -34,8 +33,10 @@ export default function Staff360ProfilePage({
   const { activePersona } = useAuth();
 
   // Role permissions
-  const canManageRoster = activePersona.role === "ADMIN" || activePersona.role === "HOD";
-  const canApproveLeave = activePersona.role === "ADMIN" || activePersona.role === "HOD";
+  const canManageRoster =
+    activePersona.role === "ADMIN" || activePersona.role === "HOD";
+  const canApproveLeave =
+    activePersona.role === "ADMIN" || activePersona.role === "HOD";
 
   const [staff, setStaff] = useState<StaffDetailView | null>(null);
   const [shifts, setShifts] = useState<StaffShiftItem[]>([]);
@@ -148,7 +149,11 @@ export default function Staff360ProfilePage({
 
   // Handle Approve Leave
   const handleApproveLeave = async (leaveId: string) => {
-    await staffService.approveLeave(leaveId, "Administrative Officer", "Approved as per entitlement.");
+    await staffService.approveLeave(
+      leaveId,
+      "Administrative Officer",
+      "Approved as per entitlement.",
+    );
     showToast({
       type: "success",
       title: "Leave Approved",
@@ -159,7 +164,11 @@ export default function Staff360ProfilePage({
 
   // Handle Reject Leave
   const handleRejectLeave = async (leaveId: string) => {
-    await staffService.rejectLeave(leaveId, "Administrative Officer", "Duty constraints on selected dates.");
+    await staffService.rejectLeave(
+      leaveId,
+      "Administrative Officer",
+      "Duty constraints on selected dates.",
+    );
     showToast({
       type: "warning",
       title: "Leave Rejected",
@@ -180,7 +189,11 @@ export default function Staff360ProfilePage({
     return (
       <div className="space-y-4">
         <Link href="/app/staff">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Directory
           </Button>
         </Link>
@@ -198,7 +211,10 @@ export default function Staff360ProfilePage({
 
   const TABS = [
     { id: "overview", label: "Overview & Position" },
-    { id: "shift", label: `Operational Shift (${staff.shift?.shiftType || "GENERAL"})` },
+    {
+      id: "shift",
+      label: `Operational Shift (${staff.shift?.shiftType || "GENERAL"})`,
+    },
     { id: "leave", label: `Leave Roster (${leaves.length})` },
     { id: "timeline", label: "Service Timeline" },
   ];
@@ -208,7 +224,11 @@ export default function Staff360ProfilePage({
       {/* Back button */}
       <div>
         <Link href="/app/staff">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Staff Directory
           </Button>
         </Link>
@@ -295,16 +315,22 @@ export default function Staff360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Personnel Identity & Terms</CardTitle>
-              <CardDescription>Employment classification and official university role.</CardDescription>
+              <CardDescription>
+                Employment classification and official university role.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Official Role</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{staff.role}</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  {staff.role}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Department</span>
-                <span className="text-slate-800 dark:text-slate-200">{staff.department}</span>
+                <span className="text-slate-800 dark:text-slate-200">
+                  {staff.department}
+                </span>
               </div>
               <div className="grid grid-cols-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-400">Employment Terms</span>
@@ -314,7 +340,9 @@ export default function Staff360ProfilePage({
               </div>
               <div className="grid grid-cols-2 py-1.5">
                 <span className="text-slate-400">Appointment Joining Date</span>
-                <span className="font-mono text-slate-800 dark:text-slate-200">{staff.joiningDate}</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">
+                  {staff.joiningDate}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -323,7 +351,9 @@ export default function Staff360ProfilePage({
           <Card>
             <CardHeader>
               <CardTitle>Statutory Leave Entitlements</CardTitle>
-              <CardDescription>Current available balance for academic calendar year.</CardDescription>
+              <CardDescription>
+                Current available balance for academic calendar year.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="grid grid-cols-3 gap-3 text-center">
@@ -332,7 +362,9 @@ export default function Staff360ProfilePage({
                   <div className="text-xl font-bold font-mono text-indigo-600 dark:text-indigo-400 mt-1">
                     {staff.leaveBalance?.casual ?? 8}
                   </div>
-                  <span className="text-[10px] text-slate-400">Days Available</span>
+                  <span className="text-[10px] text-slate-400">
+                    Days Available
+                  </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
@@ -340,7 +372,9 @@ export default function Staff360ProfilePage({
                   <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
                     {staff.leaveBalance?.sick ?? 10}
                   </div>
-                  <span className="text-[10px] text-slate-400">Days Available</span>
+                  <span className="text-[10px] text-slate-400">
+                    Days Available
+                  </span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
@@ -348,7 +382,9 @@ export default function Staff360ProfilePage({
                   <div className="text-xl font-bold font-mono text-purple-600 dark:text-purple-400 mt-1">
                     {staff.leaveBalance?.earned ?? 22}
                   </div>
-                  <span className="text-[10px] text-slate-400">Days Available</span>
+                  <span className="text-[10px] text-slate-400">
+                    Days Available
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -368,7 +404,8 @@ export default function Staff360ProfilePage({
                   Current Operational Shift Schedule
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Campus facility coverage, daily sign-in and sign-out parameters.
+                  Campus facility coverage, daily sign-in and sign-out
+                  parameters.
                 </p>
               </div>
               {canManageRoster && (
@@ -386,7 +423,9 @@ export default function Staff360ProfilePage({
             {staff.shift ? (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-                  <span className="text-xs text-slate-400 font-semibold uppercase">Shift Name</span>
+                  <span className="text-xs text-slate-400 font-semibold uppercase">
+                    Shift Name
+                  </span>
                   <div className="text-base font-bold text-slate-900 dark:text-white mt-1">
                     {staff.shift.shiftName}
                   </div>
@@ -396,22 +435,30 @@ export default function Staff360ProfilePage({
                 </div>
 
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-                  <span className="text-xs text-slate-400 font-semibold uppercase">Daily Timings</span>
+                  <span className="text-xs text-slate-400 font-semibold uppercase">
+                    Daily Timings
+                  </span>
                   <div className="text-base font-bold font-mono text-indigo-600 dark:text-indigo-400 mt-1">
                     {staff.shift.startTime} &mdash; {staff.shift.endTime}
                   </div>
-                  <p className="text-xs text-slate-500 mt-2">8 Hours Daily Duty</p>
+                  <p className="text-xs text-slate-500 mt-2">
+                    8 Hours Daily Duty
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-                  <span className="text-xs text-slate-400 font-semibold uppercase">Scope & Coverage</span>
+                  <span className="text-xs text-slate-400 font-semibold uppercase">
+                    Scope & Coverage
+                  </span>
                   <div className="text-xs text-slate-700 dark:text-slate-300 mt-1">
                     {staff.shift.description || "General operational support."}
                   </div>
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-400 py-4">No shift schedule mapped.</p>
+              <p className="text-xs text-slate-400 py-4">
+                No shift schedule mapped.
+              </p>
             )}
           </div>
         </div>
@@ -460,7 +507,10 @@ export default function Staff360ProfilePage({
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {leaves.map((lv) => (
-                    <tr key={lv.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                    <tr
+                      key={lv.id}
+                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition"
+                    >
                       <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">
                         {lv.leaveType}
                       </td>
@@ -479,8 +529,8 @@ export default function Staff360ProfilePage({
                             lv.status === "APPROVED"
                               ? "success"
                               : lv.status === "PENDING"
-                              ? "warning"
-                              : "destructive"
+                                ? "warning"
+                                : "destructive"
                           }
                           dot
                         >
@@ -547,18 +597,24 @@ export default function Staff360ProfilePage({
                 <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">
                   Shift Schedule Reconfirmed for Academic Term
                 </h4>
-                <p className="text-slate-500">Allocated to {staff.shift?.shiftName || "General Shift"}.</p>
+                <p className="text-slate-500">
+                  Allocated to {staff.shift?.shiftName || "General Shift"}.
+                </p>
               </div>
             </div>
 
             <div className="relative">
               <div className="absolute -left-6 top-1 h-3 w-3 rounded-full border-2 border-indigo-600 bg-white dark:bg-slate-900" />
               <div className="text-xs">
-                <span className="font-mono text-slate-400">{staff.joiningDate}</span>
+                <span className="font-mono text-slate-400">
+                  {staff.joiningDate}
+                </span>
                 <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">
                   Appointment Induction to Campus Support Operations
                 </h4>
-                <p className="text-slate-500">Designated as {staff.role} in {staff.department}.</p>
+                <p className="text-slate-500">
+                  Designated as {staff.role} in {staff.department}.
+                </p>
               </div>
             </div>
           </div>
@@ -594,7 +650,12 @@ export default function Staff360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setShiftModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShiftModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="sm">
@@ -679,10 +740,20 @@ export default function Staff360ProfilePage({
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={() => setLeaveModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setLeaveModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm" isLoading={isSubmittingLeave}>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              isLoading={isSubmittingLeave}
+            >
               Submit Application
             </Button>
           </div>

@@ -19,30 +19,23 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    NotFoundException,
     PermissionDeniedException,
     ValidationException,
 )
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.core import Institution
-from app.models.people import Role, User, UserRoleAssignment
+from app.models.people import User
 from app.models.support import (
     SupportCategory,
     SupportMessageType,
     SupportPriority,
     SupportRequestType,
-    SupportSlaPolicy,
     SupportSlaState,
-    SupportTeam,
-    SupportTicket,
-    SupportTicketMessage,
     SupportTicketStatus,
-    SupportTimelineEventType,
 )
 from app.schemas.support import (
     SupportTicketArticleLinkRequest,

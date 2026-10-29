@@ -11,7 +11,8 @@ export const MOCK_FACULTY: FacultyDetailView[] = [
     designation: "Professor & Dean Academics",
     department: "Computer Science & Engineering",
     qualification: "Ph.D. (Distributed Systems, IISc)",
-    specialization: "Operating Systems, Distributed Architecture, High Performance Computing",
+    specialization:
+      "Operating Systems, Distributed Architecture, High Performance Computing",
     joiningDate: "2015-07-15",
     status: "ACTIVE",
     teachingLoadHours: 14,
@@ -81,7 +82,8 @@ export const MOCK_FACULTY: FacultyDetailView[] = [
     designation: "Professor & Head of Department",
     department: "Computer Science & Engineering",
     qualification: "Ph.D. (Database Systems, IIT Madras)",
-    specialization: "Transaction Management, Distributed Databases, NoSQL Architectures",
+    specialization:
+      "Transaction Management, Distributed Databases, NoSQL Architectures",
     joiningDate: "2012-08-01",
     status: "ACTIVE",
     teachingLoadHours: 10,

@@ -1,7 +1,6 @@
 """Pydantic Request & Response Schemas for Institutional Research, Innovation & IP (Step 44)."""
 
 from datetime import date, datetime, timedelta
-from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -10,21 +9,17 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.models.research import (
     ResearchEthicsApprovalType,
     ResearchEthicsStatus,
-    ResearchGrantExternalStatus,
     ResearchGrantInternalStatus,
     ResearchIPConfidentiality,
     ResearchMilestoneStatus,
     ResearchOpportunityStatus,
     ResearchOutputType,
-    ResearchOutputVerificationStatus,
     ResearchPatentStatus,
     ResearchProjectCategory,
     ResearchProjectStatus,
-    ResearchRiskSeverity,
     ResearchRiskStatus,
     ResearchTeamRole,
 )
-
 
 # =============================================================================
 # 1. RESEARCH PROJECT SCHEMAS
@@ -429,17 +424,19 @@ class ResearchGrantAwardResponse(BaseModel):
 class ResearchBudgetPlanCreate(BaseModel):
     project_id: UUID
     award_id: UUID | None = None
+    plan_code: str | None = None
+    plan_version: int | None = None
     category: str = Field(default="PERSONNEL", max_length=64)
     item_description: str = Field(default="Budget Line Item", max_length=255)
     personnel_costs: float = Field(default=0.0, ge=0.0)
     equipment_costs: float = Field(default=0.0, ge=0.0)
-    consumables_materials_costs: float = Field(default=0.0, ge=0.0)
-    travel_fieldwork_costs: float = Field(default=0.0, ge=0.0)
+    consumables_materials_costs: float = Field(default=0.0, ge=0.0, alias="consumables_materials")
+    travel_fieldwork_costs: float = Field(default=0.0, ge=0.0, alias="travel_costs")
     computing_software_costs: float = Field(default=0.0, ge=0.0)
     publication_dissemination_costs: float = Field(default=0.0, ge=0.0)
-    external_services_costs: float = Field(default=0.0, ge=0.0)
-    institutional_overheads: float = Field(default=0.0, ge=0.0)
-    contingency_costs: float = Field(default=0.0, ge=0.0)
+    external_services_costs: float = Field(default=0.0, ge=0.0, alias="subcontractor_costs")
+    institutional_overheads: float = Field(default=0.0, ge=0.0, alias="indirect_overheads")
+    contingency_costs: float = Field(default=0.0, ge=0.0, alias="contingency_funds")
     total_budget: float = Field(default=0.0, ge=0.0, alias="allocated_amount")
     currency: str = Field(default="USD", max_length=8)
     proposed_amount: float = Field(default=0.0, ge=0.0)
@@ -889,3 +886,130 @@ class ResearchDeadlineSweepResponse(BaseModel):
     expiring_ethics_approvals_flagged: int
     overdue_milestones_flagged: int
     closing_opportunities_flagged: int
+
+
+# =============================================================================
+# 13. STEP 61 ENTERPRISE RESEARCH EXTENSIONS
+# =============================================================================
+
+
+class ResearchProjectHealthReport(BaseModel):
+    """Explainable project health diagnosis calculated from deterministic operational rules."""
+
+    project_id: UUID
+    project_code: str
+    title: str
+    health_status: str  # HEALTHY | NEEDS_ATTENTION | AT_RISK
+    health_score: int  # 0 to 100
+    diagnostic_reasons: list[str] = Field(default_factory=list)
+    overdue_milestones_count: int = 0
+    blocked_milestones_count: int = 0
+    ethics_compliance_status: str  # COMPLIANT | EXPIRING_SOON | EXPIRED | APPROVAL_PENDING | NOT_REQUIRED
+    budget_utilization_percent: float = 0.0
+    burn_rate_warning: bool = False
+    high_critical_risks_count: int = 0
+    calculated_at: datetime = Field(default_factory=lambda: datetime.now())
+
+
+class ResearchProjectDetailResponse(BaseModel):
+    """Unified 360-degree project workspace payload for portfolio administration."""
+
+    project: ResearchProjectResponse
+    health: ResearchProjectHealthReport
+    team_members: list[ResearchTeamMemberResponse] = Field(default_factory=list)
+    milestones: list[ResearchMilestoneResponse] = Field(default_factory=list)
+    budgets: list[ResearchBudgetPlanResponse] = Field(default_factory=list)
+    ethics_approvals: list[ResearchEthicsApprovalResponse] = Field(default_factory=list)
+    outputs: list[ResearchOutputResponse] = Field(default_factory=list)
+    risks: list[ResearchProjectRiskResponse] = Field(default_factory=list)
+    awards: list[ResearchGrantAwardResponse] = Field(default_factory=list)
+
+
+class ResearchOpportunitySaveRequest(BaseModel):
+    """Save or bookmark a funding opportunity for an investigator or project team."""
+
+    saved: bool = True
+
+
+class ResearchExpressionOfInterestCreate(BaseModel):
+    """Record internal expression of interest and prospective project alignment."""
+
+    prospective_project_title: str = Field(..., min_length=3, max_length=255)
+    principal_investigator_id: UUID
+    notes: str = Field(..., min_length=3, max_length=2000)
+    estimated_budget: float | None = Field(default=None, ge=0.0)
+
+
+class ResearchSponsorDecisionRecord(BaseModel):
+    """Record formal decision and award outcome from external grant sponsor."""
+
+    decision: str = Field(..., description="AWARDED | DECLINED | WITHDRAWN | RESUBMISSION_REQUESTED")
+    decision_date: date = Field(default_factory=date.today)
+    award_amount: float | None = Field(default=None, ge=0.0)
+    award_number: str | None = Field(default=None, max_length=64)
+    sponsor_feedback: str | None = Field(default=None, max_length=2000)
+    decision_notes: str | None = None
+    award_letter_url: str | None = None
+    create_award_record: bool = True
+
+
+class ResearchSponsoredAgreementCreate(BaseModel):
+    """Register sponsored research contract, deliverables, and payment milestones."""
+
+    agreement_number: str = Field(..., min_length=2, max_length=64, alias="contract_number")
+    project_id: UUID
+    grant_application_id: UUID | None = None
+    funding_organization: str = Field(..., min_length=2, max_length=128, alias="sponsor_name")
+    award_amount: float = Field(..., ge=0.0, alias="total_funding_commitment")
+    currency: str = Field(default="INR", max_length=8)
+    start_date: date
+    end_date: date
+    agreement_type: str = Field(default="INDUSTRY_SPONSORED", max_length=64)
+    contract_document_url: str | None = None
+    scope_of_work: str | None = None
+    deliverables: list[dict[str, Any]] = Field(default_factory=list)
+    payment_milestones: list[dict[str, Any]] = Field(default_factory=list, alias="disbursement_schedule")
+    reporting_obligations: list[dict[str, Any]] = Field(default_factory=list)
+    financial_owner_id: UUID | None = None
+    international_partner_id: UUID | None = None
+    international_agreement_id: UUID | None = None
+    metadata_json: dict[str, Any] = Field(default_factory=dict)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class ResearchAgreementAmendmentCreate(BaseModel):
+    """Audited contract amendment and renewal for sponsored research agreements."""
+
+    amendment_number: str = Field(..., min_length=2, max_length=64)
+    amendment_date: date = Field(default_factory=date.today)
+    description: str = Field(..., min_length=3, max_length=2000)
+    extended_end_date: date | None = None
+    budget_adjustment: float = Field(default=0.0)
+    document_url: str | None = None
+
+
+class ResearchFinancialSummaryResponse(BaseModel):
+    """Reconciled project-level financial coordination with authoritative finance ledger."""
+
+    project_id: UUID
+    currency: str
+    total_approved_budget: float
+    total_committed_expenditure: float
+    total_actual_expenditure: float
+    remaining_balance: float
+    budget_utilization_rate: float
+    approaching_limit: bool
+    categories_breakdown: list[dict[str, Any]]
+    overdue_financial_reports_count: int
+    reporting_deadlines: list[dict[str, Any]]
+
+
+class ResearcherWorkloadResponse(BaseModel):
+    """Researcher active project portfolio and allocated workload percentage."""
+
+    user_id: UUID
+    total_active_projects: int
+    total_workload_percentage: float
+    projects: list[dict[str, Any]]
+

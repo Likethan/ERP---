@@ -4,9 +4,9 @@ Handles Subject Access Requests (SAR / Access / Export), controlled record corre
 and GDPR/FERPA/Digital Personal Data Protection aligned anonymization and deletion workflows.
 """
 
-from datetime import UTC, datetime, timedelta
 import json
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -17,7 +17,6 @@ from sqlalchemy.orm import selectinload
 from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.exceptions import (
     ConflictException,
-    ForbiddenException,
     NotFoundException,
     ValidationException,
 )
@@ -26,15 +25,14 @@ from app.core.storage import get_document_storage
 from app.models.attendance import AttendanceRecord
 from app.models.documents import Document
 from app.models.examination import SemesterExamResult
-from app.models.finance import Invoice, PaymentTransaction
+from app.models.finance import Invoice
 from app.models.governance import (
     PrivacyRequest,
     PrivacyRequestAction,
     PrivacyRequestStatus,
     PrivacyRequestType,
 )
-from app.models.people import StudentProfile, User
-from app.models.placement import PlacementApplication, PlacementOffer
+from app.models.people import StudentProfile
 from app.schemas.governance import (
     PrivacyRequestCreate,
     PrivacyRequestReview,

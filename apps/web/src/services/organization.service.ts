@@ -53,7 +53,7 @@ class OrganizationService {
 
   async updateInstitution(
     id: string,
-    payload: Partial<Institution>
+    payload: Partial<Institution>,
   ): Promise<ApiResponse<Institution>> {
     try {
       const res = await apiFetch<Institution>(`/api/v1/institutions/${id}`, {
@@ -133,7 +133,7 @@ class OrganizationService {
 
   async updateCampus(
     campusId: string,
-    payload: Partial<Campus>
+    payload: Partial<Campus>,
   ): Promise<ApiResponse<Campus>> {
     try {
       const res = await apiFetch<Campus>(`/api/v1/campuses/${campusId}`, {
@@ -163,7 +163,7 @@ class OrganizationService {
   // --- Departments ---
   async listDepartments(
     campusId?: string,
-    search?: string
+    search?: string,
   ): Promise<ApiResponse<Department[]>> {
     try {
       const params = new URLSearchParams();
@@ -189,7 +189,7 @@ class OrganizationService {
         (d) =>
           d.name.toLowerCase().includes(q) ||
           d.code.toLowerCase().includes(q) ||
-          (d.hod_name && d.hod_name.toLowerCase().includes(q))
+          (d.hod_name && d.hod_name.toLowerCase().includes(q)),
       );
     }
     return {
@@ -238,7 +238,7 @@ class OrganizationService {
 
   async updateDepartment(
     deptId: string,
-    payload: Partial<Department>
+    payload: Partial<Department>,
   ): Promise<ApiResponse<Department>> {
     try {
       const res = await apiFetch<Department>(`/api/v1/departments/${deptId}`, {
@@ -268,7 +268,7 @@ class OrganizationService {
   // --- Programs ---
   async listPrograms(
     departmentId?: string,
-    search?: string
+    search?: string,
   ): Promise<ApiResponse<Program[]>> {
     try {
       const params = new URLSearchParams();
@@ -294,7 +294,7 @@ class OrganizationService {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.code.toLowerCase().includes(q) ||
-          (p.department_name && p.department_name.toLowerCase().includes(q))
+          (p.department_name && p.department_name.toLowerCase().includes(q)),
       );
     }
     return {
@@ -349,7 +349,7 @@ class OrganizationService {
 
   async updateProgram(
     programId: string,
-    payload: Partial<Program>
+    payload: Partial<Program>,
   ): Promise<ApiResponse<Program>> {
     try {
       const res = await apiFetch<Program>(`/api/v1/programs/${programId}`, {
@@ -380,7 +380,7 @@ class OrganizationService {
   async listAcademicYears(): Promise<ApiResponse<AcademicYear[]>> {
     try {
       const res = await apiFetch<AcademicYear[]>(
-        "/api/v1/academic-structure/academic-years"
+        "/api/v1/academic-structure/academic-years",
       );
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         this.academicYears = res.data;
@@ -407,7 +407,7 @@ class OrganizationService {
         {
           method: "POST",
           body: JSON.stringify(payload),
-        }
+        },
       );
       if (res?.data) {
         this.academicYears.unshift(res.data);
@@ -436,7 +436,7 @@ class OrganizationService {
   async listSemesters(): Promise<ApiResponse<Semester[]>> {
     try {
       const res = await apiFetch<Semester[]>(
-        "/api/v1/academic-structure/semesters"
+        "/api/v1/academic-structure/semesters",
       );
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         this.semesters = res.data;
@@ -465,7 +465,7 @@ class OrganizationService {
         {
           method: "POST",
           body: JSON.stringify(payload),
-        }
+        },
       );
       if (res?.data) {
         this.semesters.unshift(res.data);
@@ -494,7 +494,7 @@ class OrganizationService {
   async listRegulations(): Promise<ApiResponse<Regulation[]>> {
     try {
       const res = await apiFetch<Regulation[]>(
-        "/api/v1/academic-structure/regulations"
+        "/api/v1/academic-structure/regulations",
       );
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         this.regulations = res.data;
@@ -521,7 +521,7 @@ class OrganizationService {
         {
           method: "POST",
           body: JSON.stringify(payload),
-        }
+        },
       );
       if (res?.data) {
         this.regulations.unshift(res.data);
@@ -569,13 +569,10 @@ class OrganizationService {
     graduation_year: number;
   }): Promise<ApiResponse<Batch>> {
     try {
-      const res = await apiFetch<Batch>(
-        "/api/v1/academic-structure/batches",
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await apiFetch<Batch>("/api/v1/academic-structure/batches", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
       if (res?.data) {
         this.batches.unshift(res.data);
         return res;
@@ -602,7 +599,7 @@ class OrganizationService {
   async listSections(): Promise<ApiResponse<Section[]>> {
     try {
       const res = await apiFetch<Section[]>(
-        "/api/v1/academic-structure/sections"
+        "/api/v1/academic-structure/sections",
       );
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         this.sections = res.data;
@@ -630,7 +627,7 @@ class OrganizationService {
         {
           method: "POST",
           body: JSON.stringify(payload),
-        }
+        },
       );
       if (res?.data) {
         this.sections.unshift(res.data);

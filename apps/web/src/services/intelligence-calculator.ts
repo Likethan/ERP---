@@ -17,7 +17,7 @@ import {
  * < 60%: CRITICAL risk (detention risk)
  */
 export function calculateAttendanceRisk(
-  attendancePercentage: number
+  attendancePercentage: number,
 ): "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" {
   if (attendancePercentage >= 85) return "LOW";
   if (attendancePercentage >= 75) return "MEDIUM";
@@ -34,7 +34,7 @@ export function calculateAttendanceRisk(
  */
 export function calculateAcademicRisk(
   cgpa: number,
-  failedSubjects = 0
+  failedSubjects = 0,
 ): "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" {
   if (failedSubjects > 2 || cgpa < 5.0) return "CRITICAL";
   if (failedSubjects >= 2 || cgpa < 6.0) return "HIGH";
@@ -47,7 +47,7 @@ export function calculateAcademicRisk(
  */
 export function calculateFinanceRisk(
   outstandingBalance: number,
-  overdueDays = 0
+  overdueDays = 0,
 ): "CLEAR" | "LOW" | "MEDIUM" | "HIGH" {
   if (outstandingBalance <= 0) return "CLEAR";
   if (outstandingBalance > 50000 || overdueDays > 60) return "HIGH";
@@ -64,7 +64,7 @@ export function calculatePlacementActivity(
   eligibleCount: number,
   appliedCount: number,
   shortlistedCount: number,
-  placedCount: number
+  placedCount: number,
 ): {
   placementRate: number;
   shortlistRate: number;
@@ -73,17 +73,20 @@ export function calculatePlacementActivity(
   const safeEligible = Math.max(0, eligibleCount);
   const safeApplied = Math.max(0, appliedCount);
 
-  const placementRate = safeEligible > 0
-    ? Number(((placedCount / safeEligible) * 100).toFixed(1))
-    : 0;
+  const placementRate =
+    safeEligible > 0
+      ? Number(((placedCount / safeEligible) * 100).toFixed(1))
+      : 0;
 
-  const shortlistRate = safeApplied > 0
-    ? Number(((shortlistedCount / safeApplied) * 100).toFixed(1))
-    : 0;
+  const shortlistRate =
+    safeApplied > 0
+      ? Number(((shortlistedCount / safeApplied) * 100).toFixed(1))
+      : 0;
 
-  const applicationRate = safeEligible > 0
-    ? Number(((appliedCount / safeEligible) * 100).toFixed(1))
-    : 0;
+  const applicationRate =
+    safeEligible > 0
+      ? Number(((appliedCount / safeEligible) * 100).toFixed(1))
+      : 0;
 
   return {
     placementRate: Math.min(100, placementRate),
@@ -97,7 +100,7 @@ export function calculatePlacementActivity(
  */
 export function calculateCampusEngagement(
   clubMemberships: number,
-  eventParticipations: number
+  eventParticipations: number,
 ): "LOW" | "MODERATE" | "HIGH" | "VERY_HIGH" {
   const points = clubMemberships * 2 + eventParticipations;
   if (points >= 6) return "VERY_HIGH";
@@ -113,7 +116,7 @@ export function calculateCampusEngagement(
 export function calculateInfrastructureRisk(
   occupancyPercentage: number,
   openComplaints: number,
-  pendingWorkOrders = 0
+  pendingWorkOrders = 0,
 ): {
   score: number;
   status: "NORMAL" | "ELEVATED" | "CRITICAL";
@@ -128,7 +131,8 @@ export function calculateInfrastructureRisk(
   if (pendingWorkOrders > 5) score += 20;
 
   const finalScore = Math.min(100, score);
-  const status = finalScore >= 70 ? "CRITICAL" : finalScore >= 40 ? "ELEVATED" : "NORMAL";
+  const status =
+    finalScore >= 70 ? "CRITICAL" : finalScore >= 40 ? "ELEVATED" : "NORMAL";
 
   return { score: finalScore, status };
 }
@@ -138,7 +142,7 @@ export function calculateInfrastructureRisk(
  */
 export function calculateDocumentRisk(
   missingDocumentsCount: number,
-  expiringDocumentsCount: number
+  expiringDocumentsCount: number,
 ): "LOW" | "MEDIUM" | "HIGH" {
   if (missingDocumentsCount > 2) return "HIGH";
   if (missingDocumentsCount > 0 || expiringDocumentsCount > 1) return "MEDIUM";
@@ -149,7 +153,7 @@ export function calculateDocumentRisk(
  * Evaluates a holistic Student Risk Score (0 = perfect standing, 100 = critical intervention required)
  */
 export function calculateStudentRiskSummary(
-  profile: Partial<StudentIntelligenceProfile>
+  profile: Partial<StudentIntelligenceProfile>,
 ): {
   compositeScore: number;
   primaryRiskFactor: string;
@@ -165,7 +169,8 @@ export function calculateStudentRiskSummary(
     primaryFactor = "Severe Attendance Shortfall (<60%)";
   } else if (attPct < 75) {
     riskScore += 20;
-    if (primaryFactor === "None") primaryFactor = "Attendance Condonation Risk (<75%)";
+    if (primaryFactor === "None")
+      primaryFactor = "Attendance Condonation Risk (<75%)";
   }
 
   // Academic weight: 35%
@@ -188,10 +193,12 @@ export function calculateStudentRiskSummary(
   // Document weight: 15%
   if ((profile.missingDocumentsCount ?? 0) > 0) {
     riskScore += 15;
-    if (primaryFactor === "None") primaryFactor = "Missing Mandatory Credentials";
+    if (primaryFactor === "None")
+      primaryFactor = "Missing Mandatory Credentials";
   }
 
-  const urgency = riskScore >= 50 ? "IMMEDIATE" : riskScore >= 25 ? "MONITOR" : "NONE";
+  const urgency =
+    riskScore >= 50 ? "IMMEDIATE" : riskScore >= 25 ? "MONITOR" : "NONE";
 
   return {
     compositeScore: Math.min(100, riskScore),
@@ -204,7 +211,7 @@ export function calculateStudentRiskSummary(
  * Computes Department Health Index (0 - 100)
  */
 export function calculateDepartmentHealth(
-  dept: Partial<DepartmentHealthSummary>
+  dept: Partial<DepartmentHealthSummary>,
 ): {
   score: number;
   status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL";
@@ -215,12 +222,7 @@ export function calculateDepartmentHealth(
   const docs = dept.documentCompletionRate ?? 95;
 
   // Weighted health index
-  const score = Math.round(
-    att * 0.35 +
-    place * 0.30 +
-    fee * 0.20 +
-    docs * 0.15
-  );
+  const score = Math.round(att * 0.35 + place * 0.3 + fee * 0.2 + docs * 0.15);
 
   const clamped = Math.max(0, Math.min(100, score));
   let status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL" = "GOOD";
@@ -236,9 +238,7 @@ export function calculateDepartmentHealth(
 /**
  * Computes Overall Campus Health Index across all domains
  */
-export function calculateCampusHealth(
-  metrics: CampusHealthMetric[]
-): {
+export function calculateCampusHealth(metrics: CampusHealthMetric[]): {
   overallScore: number;
   status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL";
   criticalAlertCount: number;
@@ -249,7 +249,10 @@ export function calculateCampusHealth(
 
   const totalScore = metrics.reduce((acc, m) => acc + (m.healthScore || 0), 0);
   const avg = Math.round(totalScore / metrics.length);
-  const criticalAlerts = metrics.reduce((acc, m) => acc + (m.alertCount || 0), 0);
+  const criticalAlerts = metrics.reduce(
+    (acc, m) => acc + (m.alertCount || 0),
+    0,
+  );
 
   let status: "EXCELLENT" | "GOOD" | "ATTENTION" | "CRITICAL" = "GOOD";
   if (avg >= 88 && criticalAlerts <= 1) status = "EXCELLENT";

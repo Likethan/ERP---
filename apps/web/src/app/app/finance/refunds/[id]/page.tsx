@@ -17,7 +17,13 @@ import {
   Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast, ToastType } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
@@ -30,20 +36,26 @@ export default function RefundDetailPage() {
   const refundId = params?.id as string;
   const { hasPermission } = useAuth();
   const { showToast } = useToast();
-  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+  const notify = (title: string, type: ToastType = "info") =>
+    showToast({ title, type });
 
   const [refund, setRefund] = useState<Refund | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Review Dialog State
-  const [actionType, setActionType] = useState<"APPROVE" | "REJECT" | null>(null);
+  const [actionType, setActionType] = useState<"APPROVE" | "REJECT" | null>(
+    null,
+  );
   const [reviewNotes, setReviewNotes] = useState("");
   const [approvedAmount, setApprovedAmount] = useState<number>(0);
   const [submitting, setSubmitting] = useState(false);
 
-  const canApprove = hasPermission("finance.approve_refunds") || hasPermission("refunds:approve");
-  const canProcess = hasPermission("finance.manage_refunds") || hasPermission("refunds:process");
+  const canApprove =
+    hasPermission("finance.approve_refunds") ||
+    hasPermission("refunds:approve");
+  const canProcess =
+    hasPermission("finance.manage_refunds") || hasPermission("refunds:process");
 
   const loadData = async () => {
     if (!refundId) return;
@@ -54,7 +66,9 @@ export default function RefundDetailPage() {
       setRefund(res.data);
       setApprovedAmount(res.data.requestedAmount);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Refund petition not found.");
+      setError(
+        err instanceof Error ? err.message : "Refund petition not found.",
+      );
     } finally {
       setLoading(false);
     }
@@ -70,8 +84,14 @@ export default function RefundDetailPage() {
       notify("Audit review justification notes are required.", "error");
       return;
     }
-    if (actionType === "APPROVE" && (approvedAmount <= 0 || approvedAmount > refund.requestedAmount)) {
-      notify(`Approved amount must be between ₹1 and ${formatMoney(refund.requestedAmount)}.`, "error");
+    if (
+      actionType === "APPROVE" &&
+      (approvedAmount <= 0 || approvedAmount > refund.requestedAmount)
+    ) {
+      notify(
+        `Approved amount must be between ₹1 and ${formatMoney(refund.requestedAmount)}.`,
+        "error",
+      );
       return;
     }
 
@@ -81,18 +101,21 @@ export default function RefundDetailPage() {
         refund.id,
         actionType,
         reviewNotes.trim(),
-        actionType === "APPROVE" ? Number(approvedAmount) : undefined
+        actionType === "APPROVE" ? Number(approvedAmount) : undefined,
       );
 
       notify(
-        actionType === "APPROVE" ? "Refund approved successfully!" : "Refund petition rejected.",
-        "success"
+        actionType === "APPROVE"
+          ? "Refund approved successfully!"
+          : "Refund petition rejected.",
+        "success",
       );
       setActionType(null);
       setReviewNotes("");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to review refund.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to review refund.";
       notify(msg, "error");
     } finally {
       setSubmitting(false);
@@ -107,7 +130,8 @@ export default function RefundDetailPage() {
       notify("Electronic bank reimbursement issued successfully!", "success");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to process disbursement.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to process disbursement.";
       notify(msg, "error");
     } finally {
       setSubmitting(false);
@@ -117,7 +141,9 @@ export default function RefundDetailPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-sm text-slate-500">Loading refund petition profile...</div>
+        <div className="text-sm text-slate-500">
+          Loading refund petition profile...
+        </div>
       </div>
     );
   }
@@ -133,13 +159,16 @@ export default function RefundDetailPage() {
         </Link>
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-300">
           <h2 className="text-lg font-bold">Petition Not Found</h2>
-          <p className="mt-1 text-sm">{error || "Requested refund petition does not exist."}</p>
+          <p className="mt-1 text-sm">
+            {error || "Requested refund petition does not exist."}
+          </p>
         </div>
       </div>
     );
   }
 
-  const isPending = refund.status === "REQUESTED" || refund.status === "UNDER_REVIEW";
+  const isPending =
+    refund.status === "REQUESTED" || refund.status === "UNDER_REVIEW";
   const isApproved = refund.status === "APPROVED";
 
   return (
@@ -148,11 +177,17 @@ export default function RefundDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <Link href="/app/finance/refunds" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance/refunds"
+              className="hover:text-emerald-600 transition"
+            >
               Refunds
             </Link>
             <span>/</span>
@@ -169,17 +204,18 @@ export default function RefundDetailPage() {
                 refund.status === "PROCESSED"
                   ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
                   : refund.status === "APPROVED"
-                  ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300"
-                  : refund.status === "REJECTED"
-                  ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
-                  : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
+                    ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300"
+                    : refund.status === "REJECTED"
+                      ? "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300"
+                      : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
               }`}
             >
               {refund.status.replace("_", " ")}
             </span>
           </div>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Registered on {new Date(refund.requestedAt).toLocaleString()} by {refund.requestedBy}
+            Registered on {new Date(refund.requestedAt).toLocaleString()} by{" "}
+            {refund.requestedBy}
           </p>
         </div>
 
@@ -233,21 +269,29 @@ export default function RefundDetailPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <div className="text-xs text-slate-500">Original Invoice Payment</div>
+                <div className="text-xs text-slate-500">
+                  Original Invoice Payment
+                </div>
                 <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                   {formatMoney(refund.originalPaymentAmount)}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-slate-500">Requested Refund Amount</div>
+                <div className="text-xs text-slate-500">
+                  Requested Refund Amount
+                </div>
                 <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
                   {formatMoney(refund.requestedAmount)}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-slate-500">Sanctioned Payout Amount</div>
+                <div className="text-xs text-slate-500">
+                  Sanctioned Payout Amount
+                </div>
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-                  {refund.approvedAmount ? formatMoney(refund.approvedAmount) : "Pending"}
+                  {refund.approvedAmount
+                    ? formatMoney(refund.approvedAmount)
+                    : "Pending"}
                 </div>
               </div>
             </div>
@@ -283,7 +327,10 @@ export default function RefundDetailPage() {
             <div className="space-y-4">
               {refund.timeline && refund.timeline.length > 0 ? (
                 refund.timeline.map((item, idx) => (
-                  <div key={item.id || idx} className="flex items-start gap-3 text-xs">
+                  <div
+                    key={item.id || idx}
+                    className="flex items-start gap-3 text-xs"
+                  >
                     <div className="mt-0.5 p-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
@@ -292,7 +339,8 @@ export default function RefundDetailPage() {
                         {item.action.replace("_", " ")}
                       </div>
                       <div className="text-slate-500">
-                        By {item.actor} • {new Date(item.timestamp).toLocaleString()}
+                        By {item.actor} •{" "}
+                        {new Date(item.timestamp).toLocaleString()}
                       </div>
                       {item.notes && (
                         <div className="mt-1 text-slate-700 dark:text-slate-300 bg-slate-50 p-2 rounded border border-slate-100 dark:bg-slate-800 dark:border-slate-700">
@@ -303,7 +351,9 @@ export default function RefundDetailPage() {
                   </div>
                 ))
               ) : (
-                <div className="text-xs text-slate-500">Timeline unavailable.</div>
+                <div className="text-xs text-slate-500">
+                  Timeline unavailable.
+                </div>
               )}
             </div>
           </div>
@@ -346,14 +396,19 @@ export default function RefundDetailPage() {
               Zero-Mutation Audit Policy
             </div>
             <p className="text-emerald-800/90 dark:text-emerald-400 leading-relaxed">
-              Approved refunds do not silently erase past receipts. A dedicated counter-credit and electronic disbursement voucher are logged into the general register.
+              Approved refunds do not silently erase past receipts. A dedicated
+              counter-credit and electronic disbursement voucher are logged into
+              the general register.
             </p>
           </div>
         </div>
       </div>
 
       {/* Review Dialog */}
-      <Dialog open={actionType !== null} onOpenChange={(open) => !open && setActionType(null)}>
+      <Dialog
+        open={actionType !== null}
+        onOpenChange={(open) => !open && setActionType(null)}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg font-bold">
@@ -394,7 +449,9 @@ export default function RefundDetailPage() {
 
             <div>
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                {actionType === "APPROVE" ? "Sanction Audit Notes" : "Rejection Rationale"}{" "}
+                {actionType === "APPROVE"
+                  ? "Sanction Audit Notes"
+                  : "Rejection Rationale"}{" "}
                 <span className="text-rose-500">*</span>
               </label>
               <Input
@@ -433,8 +490,8 @@ export default function RefundDetailPage() {
                 {submitting
                   ? "Committing..."
                   : actionType === "APPROVE"
-                  ? "Confirm Approval"
-                  : "Confirm Rejection"}
+                    ? "Confirm Approval"
+                    : "Confirm Rejection"}
               </Button>
             </DialogFooter>
           </div>

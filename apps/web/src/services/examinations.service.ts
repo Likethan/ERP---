@@ -111,7 +111,9 @@ class ExaminationsService {
   private examinations: Examination[] = [...MOCK_EXAMINATIONS];
   private assessments: Assessment[] = [...MOCK_CANONICAL_ASSESSMENTS];
   private schedules: ExamSchedule[] = [...MOCK_CANONICAL_EXAM_SCHEDULES];
-  private eligibilityRecords: ExamEligibility[] = [...MOCK_EXAM_ELIGIBILITY_RECORDS];
+  private eligibilityRecords: ExamEligibility[] = [
+    ...MOCK_EXAM_ELIGIBILITY_RECORDS,
+  ];
   private marks: Mark[] = [...MOCK_CANONICAL_MARKS];
   private corrections: MarkCorrection[] = [...MOCK_MARK_CORRECTIONS];
   private gradeScales: GradeScale[] = [DEFAULT_GRADE_SCALE];
@@ -133,15 +135,31 @@ class ExaminationsService {
     const distribution = calculateGradeDistribution(this.results);
     const summary: ExamDashboardSummary = {
       ...MOCK_EXAM_OPERATIONS_SUMMARY,
-      activeExaminationsCount: this.examinations.filter((e) => e.status === "ONGOING" || e.status === "SCHEDULED").length,
-      upcomingExamsCount: this.schedules.filter((s) => s.status === "CONFIRMED" || s.status === "SCHEDULED").length,
+      activeExaminationsCount: this.examinations.filter(
+        (e) => e.status === "ONGOING" || e.status === "SCHEDULED",
+      ).length,
+      upcomingExamsCount: this.schedules.filter(
+        (s) => s.status === "CONFIRMED" || s.status === "SCHEDULED",
+      ).length,
       totalAssessmentsCount: this.assessments.length,
       pendingMarksCount: this.assessments.filter((a) => !a.isFinalized).length,
-      marksAwaitingReviewCount: this.corrections.filter((c) => c.status === "PENDING").length,
-      eligibleStudentsCount: this.eligibilityRecords.filter((e) => e.eligibilityStatus === "ELIGIBLE" || e.eligibilityStatus === "CONDITIONALLY_ELIGIBLE").length,
-      ineligibleStudentsCount: this.eligibilityRecords.filter((e) => e.eligibilityStatus === "INELIGIBLE").length,
-      resultsAwaitingFinalizationCount: this.results.filter((r) => !r.isFinalized).length,
-      resultsAwaitingPublicationCount: this.publications.filter((p) => p.status === "READY").length,
+      marksAwaitingReviewCount: this.corrections.filter(
+        (c) => c.status === "PENDING",
+      ).length,
+      eligibleStudentsCount: this.eligibilityRecords.filter(
+        (e) =>
+          e.eligibilityStatus === "ELIGIBLE" ||
+          e.eligibilityStatus === "CONDITIONALLY_ELIGIBLE",
+      ).length,
+      ineligibleStudentsCount: this.eligibilityRecords.filter(
+        (e) => e.eligibilityStatus === "INELIGIBLE",
+      ).length,
+      resultsAwaitingFinalizationCount: this.results.filter(
+        (r) => !r.isFinalized,
+      ).length,
+      resultsAwaitingPublicationCount: this.publications.filter(
+        (p) => p.status === "READY",
+      ).length,
       publishedResultsCount: this.results.filter((r) => r.isPublished).length,
       gradeDistribution: distribution,
     };
@@ -150,22 +168,31 @@ class ExaminationsService {
   }
 
   // Legacy dashboard support
-  async getDashboard(): Promise<ApiResponse<{
-    active_terms_count: number;
-    assessments_pending_marks: number;
-    results_awaiting_publication_count: number;
-    total_published_results_count: number;
-    recent_assessments?: Assessment[];
-    upcoming_schedules?: ExamSchedule[];
-  }>> {
+  async getDashboard(): Promise<
+    ApiResponse<{
+      active_terms_count: number;
+      assessments_pending_marks: number;
+      results_awaiting_publication_count: number;
+      total_published_results_count: number;
+      recent_assessments?: Assessment[];
+      upcoming_schedules?: ExamSchedule[];
+    }>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: {
-        active_terms_count: this.examinations.filter((e) => e.status === "ONGOING" || e.status === "SCHEDULED").length,
-        assessments_pending_marks: this.assessments.filter((a) => !a.isFinalized).length,
-        results_awaiting_publication_count: this.publications.filter((p) => p.status === "READY").length,
-        total_published_results_count: this.results.filter((r) => r.isPublished).length,
+        active_terms_count: this.examinations.filter(
+          (e) => e.status === "ONGOING" || e.status === "SCHEDULED",
+        ).length,
+        assessments_pending_marks: this.assessments.filter(
+          (a) => !a.isFinalized,
+        ).length,
+        results_awaiting_publication_count: this.publications.filter(
+          (p) => p.status === "READY",
+        ).length,
+        total_published_results_count: this.results.filter((r) => r.isPublished)
+          .length,
         recent_assessments: this.assessments.slice(0, 5),
         upcoming_schedules: this.schedules.slice(0, 5),
       },
@@ -176,7 +203,10 @@ class ExaminationsService {
   // 2. Examination Cycles
   // ==========================================
 
-  async getExaminations(filters?: { status?: string; semester?: number }): Promise<ApiResponse<Examination[]>> {
+  async getExaminations(filters?: {
+    status?: string;
+    semester?: number;
+  }): Promise<ApiResponse<Examination[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.examinations];
     if (filters?.status && filters.status !== "ALL") {
@@ -197,7 +227,9 @@ class ExaminationsService {
     return { success: true, data: found };
   }
 
-  async createExamination(data: Partial<Examination>): Promise<ApiResponse<Examination>> {
+  async createExamination(
+    data: Partial<Examination>,
+  ): Promise<ApiResponse<Examination>> {
     await new Promise((r) => setTimeout(r, 80));
     const newExam: Examination = {
       id: `exam-${Date.now()}`,
@@ -206,7 +238,9 @@ class ExaminationsService {
       semester: data.semester || 5,
       type: data.type || "END_SEMESTER",
       startDate: data.startDate || new Date().toISOString().split("T")[0],
-      endDate: data.endDate || new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
+      endDate:
+        data.endDate ||
+        new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
       status: data.status || "SCHEDULED",
       totalSubjects: data.totalSubjects || 6,
       totalCandidates: data.totalCandidates || 180,
@@ -221,16 +255,23 @@ class ExaminationsService {
   // 3. Assessment Schemes & Components
   // ==========================================
 
-  async getAssessments(filters?: AssessmentFilters | number): Promise<ApiResponse<Assessment[]>> {
+  async getAssessments(
+    filters?: AssessmentFilters | number,
+  ): Promise<ApiResponse<Assessment[]>> {
     await new Promise((r) => setTimeout(r, 40));
     // Support legacy number semester parameter
     if (typeof filters === "number") {
-      return { success: true, data: this.assessments.filter((a) => a.semester === filters) };
+      return {
+        success: true,
+        data: this.assessments.filter((a) => a.semester === filters),
+      };
     }
 
     let items = [...this.assessments];
     if (filters?.courseOfferingId) {
-      items = items.filter((a) => a.courseOfferingId === filters.courseOfferingId);
+      items = items.filter(
+        (a) => a.courseOfferingId === filters.courseOfferingId,
+      );
     }
     if (filters?.department && filters.department !== "ALL") {
       items = items.filter((a) => a.department === filters.department);
@@ -251,7 +292,7 @@ class ExaminationsService {
           a.name.toLowerCase().includes(q) ||
           a.courseCode.toLowerCase().includes(q) ||
           a.courseName.toLowerCase().includes(q) ||
-          a.facultyName.toLowerCase().includes(q)
+          a.facultyName.toLowerCase().includes(q),
       );
     }
     return { success: true, data: items };
@@ -266,7 +307,9 @@ class ExaminationsService {
     return { success: true, data: found };
   }
 
-  async createAssessment(data: Partial<Assessment>): Promise<ApiResponse<Assessment>> {
+  async createAssessment(
+    data: Partial<Assessment>,
+  ): Promise<ApiResponse<Assessment>> {
     await new Promise((r) => setTimeout(r, 80));
 
     const components: AssessmentComponent[] = data.components || [
@@ -281,7 +324,8 @@ class ExaminationsService {
       },
     ];
 
-    const { totalMaxMarks, totalWeightage } = calculateAssessmentTotal(components);
+    const { totalMaxMarks, totalWeightage } =
+      calculateAssessmentTotal(components);
 
     const newAsm: Assessment = {
       id: `asm-${Date.now()}`,
@@ -333,7 +377,10 @@ class ExaminationsService {
     return { success: true, data: newAsm };
   }
 
-  async updateAssessment(id: string, updates: Partial<Assessment>): Promise<ApiResponse<Assessment>> {
+  async updateAssessment(
+    id: string,
+    updates: Partial<Assessment>,
+  ): Promise<ApiResponse<Assessment>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.assessments.findIndex((a) => a.id === id);
     if (idx === -1) {
@@ -355,7 +402,9 @@ class ExaminationsService {
     const associatedMarks = this.marks.filter((m) => m.assessmentId === id);
     const unentered = associatedMarks.filter((m) => m.status === "NOT_ENTERED");
     if (unentered.length > 0) {
-      throw new Error(`Cannot finalize: ${unentered.length} student marks have not been entered or accounted for.`);
+      throw new Error(
+        `Cannot finalize: ${unentered.length} student marks have not been entered or accounted for.`,
+      );
     }
 
     asm.isFinalized = true;
@@ -374,7 +423,9 @@ class ExaminationsService {
   // 4. Examination Timetable & Schedules
   // ==========================================
 
-  async getSchedules(filters?: ScheduleFilters): Promise<ApiResponse<ExamSchedule[]>> {
+  async getSchedules(
+    filters?: ScheduleFilters,
+  ): Promise<ApiResponse<ExamSchedule[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.schedules];
 
@@ -397,7 +448,7 @@ class ExaminationsService {
           s.courseCode.toLowerCase().includes(q) ||
           s.courseName.toLowerCase().includes(q) ||
           s.room.toLowerCase().includes(q) ||
-          s.facultyName.toLowerCase().includes(q)
+          s.facultyName.toLowerCase().includes(q),
       );
     }
     return { success: true, data: items };
@@ -431,7 +482,7 @@ class ExaminationsService {
       (s) =>
         s.date === candidate.date &&
         s.id !== candidate.excludeScheduleId &&
-        s.status !== "CANCELLED"
+        s.status !== "CANCELLED",
     );
 
     // Room collision
@@ -449,7 +500,9 @@ class ExaminationsService {
     }
 
     // Section clash
-    const sectionConflict = matches.find((s) => s.section === candidate.section);
+    const sectionConflict = matches.find(
+      (s) => s.section === candidate.section,
+    );
     if (sectionConflict) {
       return {
         success: true,
@@ -463,7 +516,9 @@ class ExaminationsService {
     }
 
     // Faculty invigilator overlap
-    const facultyConflict = matches.find((s) => s.facultyId === candidate.facultyId);
+    const facultyConflict = matches.find(
+      (s) => s.facultyId === candidate.facultyId,
+    );
     if (facultyConflict) {
       return {
         success: true,
@@ -484,13 +539,16 @@ class ExaminationsService {
     };
   }
 
-  async createSchedule(data: Partial<ExamSchedule>): Promise<ApiResponse<ExamSchedule>> {
+  async createSchedule(
+    data: Partial<ExamSchedule>,
+  ): Promise<ApiResponse<ExamSchedule>> {
     await new Promise((r) => setTimeout(r, 80));
 
     const newSch: ExamSchedule = {
       id: `sch-${Date.now()}`,
       examinationId: data.examinationId || "exam-2026-ese",
-      examinationName: data.examinationName || "End Semester Examinations Nov/Dec 2026",
+      examinationName:
+        data.examinationName || "End Semester Examinations Nov/Dec 2026",
       assessmentId: data.assessmentId,
       assessmentTitle: data.assessmentTitle || "Semester Written Paper",
       courseOfferingId: data.courseOfferingId || "co-cs301-a",
@@ -508,7 +566,9 @@ class ExaminationsService {
       facultyName: data.facultyName || "Dr. Ramesh Sundaram",
       totalCandidates: data.totalCandidates || 68,
       status: data.status || "CONFIRMED",
-      invigilatorNotes: data.invigilatorNotes || "General university closed book exam guidelines apply.",
+      invigilatorNotes:
+        data.invigilatorNotes ||
+        "General university closed book exam guidelines apply.",
       createdAt: new Date().toISOString(),
     };
 
@@ -516,7 +576,10 @@ class ExaminationsService {
     return { success: true, data: newSch };
   }
 
-  async updateSchedule(id: string, updates: Partial<ExamSchedule>): Promise<ApiResponse<ExamSchedule>> {
+  async updateSchedule(
+    id: string,
+    updates: Partial<ExamSchedule>,
+  ): Promise<ApiResponse<ExamSchedule>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.schedules.findIndex((s) => s.id === id);
     if (idx === -1) {
@@ -531,7 +594,9 @@ class ExaminationsService {
   // 5. Student Eligibility Evaluations
   // ==========================================
 
-  async getEligibility(filters?: EligibilityFilters): Promise<ApiResponse<ExamEligibility[]>> {
+  async getEligibility(
+    filters?: EligibilityFilters,
+  ): Promise<ApiResponse<ExamEligibility[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.eligibilityRecords];
 
@@ -539,7 +604,9 @@ class ExaminationsService {
       items = items.filter((e) => e.examinationId === filters.examinationId);
     }
     if (filters?.courseOfferingId) {
-      items = items.filter((e) => e.courseOfferingId === filters.courseOfferingId);
+      items = items.filter(
+        (e) => e.courseOfferingId === filters.courseOfferingId,
+      );
     }
     if (filters?.department && filters.department !== "ALL") {
       items = items.filter((e) => e.department === filters.department);
@@ -553,7 +620,7 @@ class ExaminationsService {
         (e) =>
           e.studentName.toLowerCase().includes(q) ||
           e.rollNumber.toLowerCase().includes(q) ||
-          e.courseCode.toLowerCase().includes(q)
+          e.courseCode.toLowerCase().includes(q),
       );
     }
     return { success: true, data: items };
@@ -562,7 +629,7 @@ class ExaminationsService {
   async reviewEligibility(
     id: string,
     action: "APPROVE_EXCEPTION" | "REJECT_EXCEPTION" | "FLAG_FOR_REVIEW",
-    overrideReason?: string
+    overrideReason?: string,
   ): Promise<ApiResponse<ExamEligibility>> {
     await new Promise((r) => setTimeout(r, 70));
     const record = this.eligibilityRecords.find((e) => e.id === id);
@@ -573,12 +640,15 @@ class ExaminationsService {
     if (action === "APPROVE_EXCEPTION") {
       record.eligibilityStatus = "CONDITIONALLY_ELIGIBLE";
       record.isOverridden = true;
-      record.overrideReason = overrideReason || "Sanctioned by HOD Academic Council.";
+      record.overrideReason =
+        overrideReason || "Sanctioned by HOD Academic Council.";
       record.overriddenBy = "Dr. Anita Roy (HOD)";
     } else if (action === "REJECT_EXCEPTION") {
       record.eligibilityStatus = "INELIGIBLE";
       record.isOverridden = false;
-      record.reason = overrideReason || "Condonation denied; attendance below critical boundary.";
+      record.reason =
+        overrideReason ||
+        "Condonation denied; attendance below critical boundary.";
     } else {
       record.eligibilityStatus = "PENDING_REVIEW";
     }
@@ -598,27 +668,38 @@ class ExaminationsService {
 
   async saveMarks(
     assessmentId: string,
-    marksList: { studentId: string; marksObtained: number | null; status: MarkStatus; remarks?: string }[]
+    marksList: {
+      studentId: string;
+      marksObtained: number | null;
+      status: MarkStatus;
+      remarks?: string;
+    }[],
   ): Promise<ApiResponse<{ updatedCount: number }>> {
     await new Promise((r) => setTimeout(r, 80));
 
     const asm = this.assessments.find((a) => a.id === assessmentId);
     if (asm?.isFinalized) {
-      throw new Error("This assessment is locked and finalized. Submit a Mark Correction request instead.");
+      throw new Error(
+        "This assessment is locked and finalized. Submit a Mark Correction request instead.",
+      );
     }
 
     let updatedCount = 0;
     marksList.forEach((input) => {
       const existing = this.marks.find(
-        (m) => m.assessmentId === assessmentId && m.studentId === input.studentId
+        (m) =>
+          m.assessmentId === assessmentId && m.studentId === input.studentId,
       );
 
       if (existing) {
         // Validation: bounds check
         if (input.marksObtained !== null) {
-          if (input.marksObtained < 0 || input.marksObtained > existing.maxMarks) {
+          if (
+            input.marksObtained < 0 ||
+            input.marksObtained > existing.maxMarks
+          ) {
             throw new Error(
-              `Invalid mark for ${existing.studentName}: must be between 0 and ${existing.maxMarks}`
+              `Invalid mark for ${existing.studentName}: must be between 0 and ${existing.maxMarks}`,
             );
           }
         }
@@ -634,7 +715,7 @@ class ExaminationsService {
 
     if (asm) {
       const enteredCount = this.marks.filter(
-        (m) => m.assessmentId === assessmentId && m.status !== "NOT_ENTERED"
+        (m) => m.assessmentId === assessmentId && m.status !== "NOT_ENTERED",
       ).length;
       asm.totalEntered = enteredCount;
       if (enteredCount === asm.totalEnrolled) {
@@ -646,9 +727,14 @@ class ExaminationsService {
   }
 
   // Legacy marks roster compatibility
-  async getMarksRoster(_courseOfferingId: string, assessmentId: string): Promise<ApiResponse<MarksRosterData>> {
+  async getMarksRoster(
+    _courseOfferingId: string,
+    assessmentId: string,
+  ): Promise<ApiResponse<MarksRosterData>> {
     await new Promise((r) => setTimeout(r, 60));
-    const currentAsm = this.legacyAssessments.find((a) => a.id === assessmentId) || this.legacyAssessments[0];
+    const currentAsm =
+      this.legacyAssessments.find((a) => a.id === assessmentId) ||
+      this.legacyAssessments[0];
     const rosterEntries: MarksRosterEntry[] = MOCK_STUDENTS.map((stu, i) => ({
       id: `mark-${stu.id}-${assessmentId}`,
       student_id: stu.id,
@@ -671,20 +757,28 @@ class ExaminationsService {
     };
   }
 
-  async submitMarks(assessmentId: string, marksData: Record<string, unknown>): Promise<ApiResponse<{ count: number }>> {
+  async submitMarks(
+    assessmentId: string,
+    marksData: Record<string, unknown>,
+  ): Promise<ApiResponse<{ count: number }>> {
     await new Promise((r) => setTimeout(r, 100));
     const asm = this.assessments.find((a) => a.id === assessmentId);
     if (asm) {
       asm.status = "COMPLETED";
     }
-    return { success: true, data: { count: Object.keys(marksData || {}).length } };
+    return {
+      success: true,
+      data: { count: Object.keys(marksData || {}).length },
+    };
   }
 
   // ==========================================
   // 7. Supervised Mark Corrections
   // ==========================================
 
-  async getMarkCorrections(filters?: { status?: string }): Promise<ApiResponse<MarkCorrection[]>> {
+  async getMarkCorrections(filters?: {
+    status?: string;
+  }): Promise<ApiResponse<MarkCorrection[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.corrections];
     if (filters?.status && filters.status !== "ALL") {
@@ -744,7 +838,7 @@ class ExaminationsService {
   async reviewMarkCorrection(
     correctionId: string,
     action: "APPROVED" | "REJECTED",
-    reviewerNotes: string
+    reviewerNotes: string,
   ): Promise<ApiResponse<MarkCorrection>> {
     await new Promise((r) => setTimeout(r, 80));
 
@@ -760,7 +854,8 @@ class ExaminationsService {
 
     corr.timeline.push({
       timestamp: new Date().toLocaleString(),
-      action: action === "APPROVED" ? "CORRECTION_APPROVED" : "CORRECTION_REJECTED",
+      action:
+        action === "APPROVED" ? "CORRECTION_APPROVED" : "CORRECTION_REJECTED",
       actor: "Dr. Anita Roy (HOD)",
       notes: reviewerNotes,
     });
@@ -790,14 +885,18 @@ class ExaminationsService {
   // 8. Results & Calculations
   // ==========================================
 
-  async getResults(filters?: ResultFilters | string): Promise<ApiResponse<Result[]>> {
+  async getResults(
+    filters?: ResultFilters | string,
+  ): Promise<ApiResponse<Result[]>> {
     await new Promise((r) => setTimeout(r, 40));
 
     // Support legacy string program parameter
     if (typeof filters === "string") {
       return {
         success: true,
-        data: this.results.filter((res) => res.program.toLowerCase().includes(filters.toLowerCase())),
+        data: this.results.filter((res) =>
+          res.program.toLowerCase().includes(filters.toLowerCase()),
+        ),
       };
     }
 
@@ -806,7 +905,9 @@ class ExaminationsService {
       items = items.filter((r) => r.examinationId === filters.examinationId);
     }
     if (filters?.courseOfferingId) {
-      items = items.filter((r) => r.courseOfferingId === filters.courseOfferingId);
+      items = items.filter(
+        (r) => r.courseOfferingId === filters.courseOfferingId,
+      );
     }
     if (filters?.studentId) {
       items = items.filter((r) => r.studentId === filters.studentId);
@@ -823,7 +924,7 @@ class ExaminationsService {
         (r) =>
           r.studentName.toLowerCase().includes(q) ||
           r.rollNumber.toLowerCase().includes(q) ||
-          r.courseCode.toLowerCase().includes(q)
+          r.courseCode.toLowerCase().includes(q),
       );
     }
     return { success: true, data: items };
@@ -841,7 +942,9 @@ class ExaminationsService {
   async getStudentResults(studentId: string): Promise<ApiResponse<Result[]>> {
     await new Promise((r) => setTimeout(r, 40));
     // Filter to published results only for student view
-    const items = this.results.filter((r) => r.studentId === studentId && r.isPublished);
+    const items = this.results.filter(
+      (r) => r.studentId === studentId && r.isPublished,
+    );
     return { success: true, data: items };
   }
 
@@ -856,11 +959,13 @@ class ExaminationsService {
     return { success: true, data: target };
   }
 
-  async finalizeResults(examinationId: string): Promise<ApiResponse<{ finalizedCount: number }>> {
+  async finalizeResults(
+    examinationId: string,
+  ): Promise<ApiResponse<{ finalizedCount: number }>> {
     await new Promise((r) => setTimeout(r, 100));
 
     const pendingResults = this.results.filter(
-      (r) => r.examinationId === examinationId && !r.isFinalized
+      (r) => r.examinationId === examinationId && !r.isFinalized,
     );
 
     const now = new Date().toISOString();
@@ -876,11 +981,15 @@ class ExaminationsService {
   // 9. Result Publications
   // ==========================================
 
-  async getPublications(filters?: { status?: string }): Promise<ApiResponse<ResultPublication[]>> {
+  async getPublications(filters?: {
+    status?: string;
+  }): Promise<ApiResponse<ResultPublication[]>> {
     return this.getResultPublications(filters);
   }
 
-  async getResultPublications(filters?: { status?: string }): Promise<ApiResponse<ResultPublication[]>> {
+  async getResultPublications(filters?: {
+    status?: string;
+  }): Promise<ApiResponse<ResultPublication[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.publications];
     if (filters?.status && filters.status !== "ALL") {
@@ -889,21 +998,27 @@ class ExaminationsService {
     return { success: true, data: items };
   }
 
-  async createPublication(data: Partial<ResultPublication>): Promise<ApiResponse<ResultPublication>> {
+  async createPublication(
+    data: Partial<ResultPublication>,
+  ): Promise<ApiResponse<ResultPublication>> {
     await new Promise((r) => setTimeout(r, 80));
 
     const newPub: ResultPublication = {
       id: `pub-${Date.now()}`,
       batchNumber: `PUB-2026-S${data.semester || 5}-${Date.now().toString().slice(-4)}`,
       examinationId: data.examinationId || "exam-2026-ese",
-      examinationName: data.examinationName || "End Semester Examinations Nov/Dec 2026",
+      examinationName:
+        data.examinationName || "End Semester Examinations Nov/Dec 2026",
       academicYear: data.academicYear || "2026-2027",
       semester: data.semester || 5,
       program: data.program || "B.Tech Computer Science & Engineering",
       department: data.department || "Computer Science & Engineering",
-      publicationDate: data.publicationDate || new Date().toISOString().split("T")[0],
+      publicationDate:
+        data.publicationDate || new Date().toISOString().split("T")[0],
       status: "READY",
-      resultCount: this.results.filter((r) => r.examinationId === data.examinationId).length || 68,
+      resultCount:
+        this.results.filter((r) => r.examinationId === data.examinationId)
+          .length || 68,
       notes: data.notes || "Ratified by Academic Standing Council.",
     };
 
@@ -911,7 +1026,9 @@ class ExaminationsService {
     return { success: true, data: newPub };
   }
 
-  async publishResults(publicationId: string): Promise<ApiResponse<ResultPublication>> {
+  async publishResults(
+    publicationId: string,
+  ): Promise<ApiResponse<ResultPublication>> {
     await new Promise((r) => setTimeout(r, 100));
     const pub = this.publications.find((p) => p.id === publicationId);
     if (!pub) {
@@ -933,7 +1050,10 @@ class ExaminationsService {
     return { success: true, data: pub };
   }
 
-  async revokePublication(publicationId: string, notes?: string): Promise<ApiResponse<ResultPublication>> {
+  async revokePublication(
+    publicationId: string,
+    notes?: string,
+  ): Promise<ApiResponse<ResultPublication>> {
     await new Promise((r) => setTimeout(r, 80));
     const pub = this.publications.find((p) => p.id === publicationId);
     if (!pub) {
@@ -966,12 +1086,14 @@ class ExaminationsService {
   // 11. Reports Generator
   // ==========================================
 
-  async generateReport(filter: ExamReportFilter): Promise<ApiResponse<{
-    title: string;
-    generatedAt: string;
-    totalRecords: number;
-    rows: Record<string, string | number>[];
-  }>> {
+  async generateReport(filter: ExamReportFilter): Promise<
+    ApiResponse<{
+      title: string;
+      generatedAt: string;
+      totalRecords: number;
+      rows: Record<string, string | number>[];
+    }>
+  > {
     await new Promise((r) => setTimeout(r, 120));
 
     let title = "Examination Report";
@@ -1032,7 +1154,8 @@ class ExaminationsService {
           Requirement: `${e.minimumRequirement}%`,
           Status: e.eligibilityStatus,
           Overridden: e.isOverridden ? "YES" : "NO",
-          Reason: e.reason || e.overrideReason || "Satisfies attendance threshold",
+          Reason:
+            e.reason || e.overrideReason || "Satisfies attendance threshold",
         }));
         break;
 

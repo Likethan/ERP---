@@ -27,7 +27,8 @@ export default function ScholarshipDetailPage() {
   const scholarshipId = params?.id as string;
   const { hasPermission } = useAuth();
   const { showToast } = useToast();
-  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+  const notify = (title: string, type: ToastType = "info") =>
+    showToast({ title, type });
 
   const [scholarship, setScholarship] = useState<Scholarship | null>(null);
   const [recipients, setRecipients] = useState<StudentScholarship[]>([]);
@@ -35,7 +36,9 @@ export default function ScholarshipDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [approving, setApproving] = useState(false);
 
-  const canApprove = hasPermission("finance.manage_scholarships") || hasPermission("scholarships:approve");
+  const canApprove =
+    hasPermission("finance.manage_scholarships") ||
+    hasPermission("scholarships:approve");
 
   const loadData = async () => {
     if (!scholarshipId) return;
@@ -48,11 +51,15 @@ export default function ScholarshipDetailPage() {
       ]);
       setScholarship(schRes.data);
       const matched = recRes.data.filter(
-        (r) => r.scholarshipId === scholarshipId || r.scholarshipName === schRes.data.name
+        (r) =>
+          r.scholarshipId === scholarshipId ||
+          r.scholarshipName === schRes.data.name,
       );
       setRecipients(matched);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Scholarship scheme not found.");
+      setError(
+        err instanceof Error ? err.message : "Scholarship scheme not found.",
+      );
     } finally {
       setLoading(false);
     }
@@ -70,7 +77,8 @@ export default function ScholarshipDetailPage() {
       notify("Scholarship scheme approved and activated!", "success");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to approve scholarship.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to approve scholarship.";
       notify(msg, "error");
     } finally {
       setApproving(false);
@@ -89,7 +97,9 @@ export default function ScholarshipDetailPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-sm text-slate-500">Loading scholarship scheme profile...</div>
+        <div className="text-sm text-slate-500">
+          Loading scholarship scheme profile...
+        </div>
       </div>
     );
   }
@@ -105,7 +115,9 @@ export default function ScholarshipDetailPage() {
         </Link>
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-300">
           <h2 className="text-lg font-bold">Scheme Not Found</h2>
-          <p className="mt-1 text-sm">{error || "Requested scheme does not exist."}</p>
+          <p className="mt-1 text-sm">
+            {error || "Requested scheme does not exist."}
+          </p>
         </div>
       </div>
     );
@@ -117,11 +129,17 @@ export default function ScholarshipDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <Link href="/app/finance/scholarships" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance/scholarships"
+              className="hover:text-emerald-600 transition"
+            >
               Scholarships
             </Link>
             <span>/</span>
@@ -215,7 +233,9 @@ export default function ScholarshipDetailPage() {
           <div>
             <span className="text-slate-500">Maximum Ceiling:</span>
             <p className="font-semibold text-slate-900 dark:text-white mt-0.5">
-              {scholarship.maxDiscountAmount ? formatMoney(scholarship.maxDiscountAmount) : "Uncapped"}
+              {scholarship.maxDiscountAmount
+                ? formatMoney(scholarship.maxDiscountAmount)
+                : "Uncapped"}
             </p>
           </div>
           <div className="col-span-2">
@@ -227,7 +247,8 @@ export default function ScholarshipDetailPage() {
           <div className="col-span-2">
             <span className="text-slate-500">Eligibility Regulations:</span>
             <p className="font-medium text-slate-900 dark:text-white mt-0.5">
-              {scholarship.eligibilityCriteria || "Satisfies institutional academic criteria"}
+              {scholarship.eligibilityCriteria ||
+                "Satisfies institutional academic criteria"}
             </p>
           </div>
         </div>
@@ -266,7 +287,9 @@ export default function ScholarshipDetailPage() {
                     <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
                       {rec.studentName}
                     </td>
-                    <td className="px-4 py-3 font-mono text-slate-500">{rec.rollNumber}</td>
+                    <td className="px-4 py-3 font-mono text-slate-500">
+                      {rec.rollNumber}
+                    </td>
                     <td className="px-4 py-3 text-right text-slate-500">
                       {formatMoney(rec.originalFee)}
                     </td>
@@ -276,7 +299,9 @@ export default function ScholarshipDetailPage() {
                     <td className="px-4 py-3 text-right font-bold text-slate-900 dark:text-white">
                       {formatMoney(rec.adjustedFee)}
                     </td>
-                    <td className="px-4 py-3 text-slate-500">{rec.grantedDate}</td>
+                    <td className="px-4 py-3 text-slate-500">
+                      {rec.grantedDate}
+                    </td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                         {rec.status}
@@ -286,7 +311,10 @@ export default function ScholarshipDetailPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
+                  <td
+                    colSpan={7}
+                    className="px-4 py-8 text-center text-slate-500"
+                  >
                     No students currently assigned to this scholarship scheme.
                   </td>
                 </tr>

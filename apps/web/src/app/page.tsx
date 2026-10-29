@@ -259,7 +259,9 @@ export default function CampusOSPortalPage() {
 
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="flex items-center space-x-2 text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50">
-              <span className="text-slate-500 hidden md:inline">API Gateway:</span>
+              <span className="text-slate-500 hidden md:inline">
+                API Gateway:
+              </span>
               {apiHealth.status === "checking" && (
                 <span className="flex items-center text-slate-500">
                   <span className="h-2 w-2 rounded-full bg-slate-400 animate-pulse mr-1.5" />
@@ -314,8 +316,9 @@ export default function CampusOSPortalPage() {
               Enterprise Digital Operating System for Modern Colleges
             </h1>
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              CampusOS unifies academic operations, student governance, attendance tracking, 
-              examination workflows, fee ledgers, placements, residential infrastructure, and executive intelligence 
+              CampusOS unifies academic operations, student governance,
+              attendance tracking, examination workflows, fee ledgers,
+              placements, residential infrastructure, and executive intelligence
               into a single high-performance enterprise interface.
             </p>
 
@@ -400,7 +403,8 @@ export default function CampusOSPortalPage() {
                 1-Click Role Experience Launchpad
               </h2>
               <p className="text-xs sm:text-sm text-slate-500">
-                Jump directly into CampusOS with tailored views and role permissions.
+                Jump directly into CampusOS with tailored views and role
+                permissions.
               </p>
             </div>
             <Link
@@ -420,12 +424,22 @@ export default function CampusOSPortalPage() {
                 className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-white hover:border-indigo-400 hover:shadow-md transition-all text-left group"
               >
                 <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors shrink-0">
-                  {persona.role === "SUPER_ADMIN" && <ShieldCheck className="h-5 w-5" />}
+                  {persona.role === "SUPER_ADMIN" && (
+                    <ShieldCheck className="h-5 w-5" />
+                  )}
                   {persona.role === "HOD" && <Building className="h-5 w-5" />}
-                  {persona.role === "FACULTY" && <UserCheck className="h-5 w-5" />}
-                  {persona.role === "STUDENT" && <GraduationCap className="h-5 w-5" />}
-                  {persona.role === "ACCOUNTS" && <Landmark className="h-5 w-5" />}
-                  {persona.role === "PLACEMENT_OFFICER" && <Briefcase className="h-5 w-5" />}
+                  {persona.role === "FACULTY" && (
+                    <UserCheck className="h-5 w-5" />
+                  )}
+                  {persona.role === "STUDENT" && (
+                    <GraduationCap className="h-5 w-5" />
+                  )}
+                  {persona.role === "ACCOUNTS" && (
+                    <Landmark className="h-5 w-5" />
+                  )}
+                  {persona.role === "PLACEMENT_OFFICER" && (
+                    <Briefcase className="h-5 w-5" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
@@ -457,7 +471,8 @@ export default function CampusOSPortalPage() {
                 12 Enterprise Domain Modules
               </h2>
               <p className="text-xs sm:text-sm text-slate-500">
-                Every operational domain is built with interactive tables, forms, filters, drawers, and mock services.
+                Every operational domain is built with interactive tables,
+                forms, filters, drawers, and mock services.
               </p>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 bg-slate-200 text-slate-800 rounded-md self-start sm:self-auto">
@@ -519,32 +534,42 @@ export default function CampusOSPortalPage() {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed">
-            The frontend application is structured with a decoupled service adapter layer (`apps/web/src/services`),
-            typed data models from `@campusos/types`, and unified canonical entities. When the backend FastAPI & PostgreSQL
-            engines are connected, services swap cleanly to HTTP calls without UI rewrites.
+            The frontend application is structured with a decoupled service
+            adapter layer (`apps/web/src/services`), typed data models from
+            `@campusos/types`, and unified canonical entities. When the backend
+            FastAPI & PostgreSQL engines are connected, services swap cleanly to
+            HTTP calls without UI rewrites.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50">
-              <span className="font-bold text-slate-900 block">Single Truth Entity Model</span>
+              <span className="font-bold text-slate-900 block">
+                Single Truth Entity Model
+              </span>
               <span className="text-slate-500 mt-1 block">
                 Student, Faculty, Course records never duplicate across modules.
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50">
-              <span className="font-bold text-slate-900 block">Role-Aware Authorization</span>
+              <span className="font-bold text-slate-900 block">
+                Role-Aware Authorization
+              </span>
               <span className="text-slate-500 mt-1 block">
                 Client auth context mirrors backend RBAC/PBAC scopes.
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50">
-              <span className="font-bold text-slate-900 block">Strict Typing & Linting</span>
+              <span className="font-bold text-slate-900 block">
+                Strict Typing & Linting
+              </span>
               <span className="text-slate-500 mt-1 block">
                 Next.js 15.1 + React 19 + TypeScript 5.7 zero error build.
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50">
-              <span className="font-bold text-slate-900 block">AI & Intelligence Layer</span>
+              <span className="font-bold text-slate-900 block">
+                AI & Intelligence Layer
+              </span>
               <span className="text-slate-500 mt-1 block">
                 Deterministic tool-invoking assistant bounded by permissions.
               </span>

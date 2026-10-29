@@ -17,7 +17,7 @@ import {
 
 export function checkProgramEligibility(
   studentProgram: string,
-  targetPrograms: string[]
+  targetPrograms: string[],
 ): RuleEvaluationResult {
   if (!targetPrograms || targetPrograms.length === 0) {
     return {
@@ -34,7 +34,7 @@ export function checkProgramEligibility(
     (p) =>
       p.toLowerCase().trim() === studentProgram.toLowerCase().trim() ||
       studentProgram.toLowerCase().includes(p.toLowerCase()) ||
-      p.toLowerCase().includes(studentProgram.toLowerCase())
+      p.toLowerCase().includes(studentProgram.toLowerCase()),
   );
 
   return {
@@ -51,7 +51,7 @@ export function checkProgramEligibility(
 
 export function checkGraduationYearEligibility(
   studentGradYear: number,
-  targetGradYear: number
+  targetGradYear: number,
 ): RuleEvaluationResult {
   if (!targetGradYear) {
     return {
@@ -79,7 +79,7 @@ export function checkGraduationYearEligibility(
 
 export function checkCgpaEligibility(
   studentCgpa: number,
-  minCgpa: number
+  minCgpa: number,
 ): RuleEvaluationResult {
   const passed = studentCgpa >= (minCgpa || 0);
   return {
@@ -96,7 +96,7 @@ export function checkCgpaEligibility(
 
 export function checkBacklogEligibility(
   activeBacklogs: number,
-  maxBacklogs: number
+  maxBacklogs: number,
 ): RuleEvaluationResult {
   const allowed = maxBacklogs !== undefined ? maxBacklogs : 0;
   const passed = activeBacklogs <= allowed;
@@ -114,7 +114,7 @@ export function checkBacklogEligibility(
 
 export function checkAttendanceEligibility(
   attendancePercent: number,
-  minAttendancePercent?: number
+  minAttendancePercent?: number,
 ): RuleEvaluationResult {
   if (!minAttendancePercent || minAttendancePercent <= 0) {
     return {
@@ -142,7 +142,7 @@ export function checkAttendanceEligibility(
 
 export function checkSkillEligibility(
   studentSkills: string[],
-  requiredSkills: string[]
+  requiredSkills: string[],
 ): RuleEvaluationResult {
   if (!requiredSkills || requiredSkills.length === 0) {
     return {
@@ -158,8 +158,8 @@ export function checkSkillEligibility(
   const lowerStudentSkills = studentSkills.map((s) => s.toLowerCase().trim());
   const matched = requiredSkills.filter((req) =>
     lowerStudentSkills.some(
-      (s) => s === req.toLowerCase().trim() || s.includes(req.toLowerCase())
-    )
+      (s) => s === req.toLowerCase().trim() || s.includes(req.toLowerCase()),
+    ),
   );
 
   const passed = matched.length >= Math.ceil(requiredSkills.length * 0.5); // at least 50% match
@@ -181,7 +181,7 @@ export function checkSkillEligibility(
 
 export function calculateEligibility(
   student: StudentPlacementProfile,
-  position: Position
+  position: Position,
 ): EligibilitySnapshot {
   // Combine all student technical and programming skills
   const allStudentSkills = [
@@ -191,21 +191,27 @@ export function calculateEligibility(
     ...(student.skills?.domains || []),
   ];
 
-  const progRule = checkProgramEligibility(student.program, position.targetPrograms);
+  const progRule = checkProgramEligibility(
+    student.program,
+    position.targetPrograms,
+  );
   const gradRule = checkGraduationYearEligibility(
     student.graduationYear,
-    position.graduationYear
+    position.graduationYear,
   );
   const cgpaRule = checkCgpaEligibility(student.cgpa, position.minCgpa);
   const backlogRule = checkBacklogEligibility(
     student.activeBacklogs,
-    position.maxBacklogs
+    position.maxBacklogs,
   );
   const attRule = checkAttendanceEligibility(
     student.attendancePercent,
-    position.minAttendancePercent
+    position.minAttendancePercent,
   );
-  const skillRule = checkSkillEligibility(allStudentSkills, position.requiredSkills);
+  const skillRule = checkSkillEligibility(
+    allStudentSkills,
+    position.requiredSkills,
+  );
 
   const rules: RuleEvaluationResult[] = [
     progRule,
@@ -221,7 +227,7 @@ export function calculateEligibility(
 
   // Critical barriers: Program, Grad Year, CGPA, Backlogs
   const criticalFails = [progRule, gradRule, cgpaRule, backlogRule].filter(
-    (r) => !r.passed
+    (r) => !r.passed,
   );
 
   if (criticalFails.length > 0) {
@@ -248,7 +254,7 @@ export function calculateEligibility(
 
 export function calculatePlacementRate(
   placedCount: number,
-  eligibleCount: number
+  eligibleCount: number,
 ): number {
   if (!eligibleCount || eligibleCount <= 0) return 0;
   return Math.min(100, Math.round((placedCount / eligibleCount) * 100));
@@ -256,7 +262,7 @@ export function calculatePlacementRate(
 
 export function calculateOfferRate(
   offersCount: number,
-  eligibleCount: number
+  eligibleCount: number,
 ): number {
   if (!eligibleCount || eligibleCount <= 0) return 0;
   return Math.min(100, Math.round((offersCount / eligibleCount) * 100));
@@ -264,15 +270,18 @@ export function calculateOfferRate(
 
 export function calculateShortlistRate(
   shortlistedCount: number,
-  applicationsCount: number
+  applicationsCount: number,
 ): number {
   if (!applicationsCount || applicationsCount <= 0) return 0;
-  return Math.min(100, Math.round((shortlistedCount / applicationsCount) * 100));
+  return Math.min(
+    100,
+    Math.round((shortlistedCount / applicationsCount) * 100),
+  );
 }
 
 export function calculateApplicationConversion(
   placedCount: number,
-  applicationsCount: number
+  applicationsCount: number,
 ): number {
   if (!applicationsCount || applicationsCount <= 0) return 0;
   return Math.min(100, Math.round((placedCount / applicationsCount) * 100));

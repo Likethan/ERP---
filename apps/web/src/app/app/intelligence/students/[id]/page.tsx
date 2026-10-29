@@ -33,14 +33,17 @@ export default function StudentIntelligence360Page() {
   const params = useParams();
   const studentId = params?.id as string;
 
-  const [profile, setProfile] = useState<StudentIntelligenceProfile | null>(null);
+  const [profile, setProfile] = useState<StudentIntelligenceProfile | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const res = await intelligenceService.getStudentIntelligenceProfile(studentId);
+        const res =
+          await intelligenceService.getStudentIntelligenceProfile(studentId);
         if (res.success && res.data) {
           setProfile(res.data);
         }
@@ -63,7 +66,9 @@ export default function StudentIntelligence360Page() {
   if (!profile) {
     return (
       <div className="p-12 text-center bg-white rounded-xl border border-slate-200 space-y-4">
-        <p className="text-sm text-slate-500">Student intelligence profile not found for ID {studentId}.</p>
+        <p className="text-sm text-slate-500">
+          Student intelligence profile not found for ID {studentId}.
+        </p>
         <Link href="/app/students">
           <Button size="sm" variant="outline">
             Return to Students Roster
@@ -88,7 +93,11 @@ export default function StudentIntelligence360Page() {
           />
           <div className="flex items-center gap-2 mt-1">
             <Link href={`/app/students/${profile.studentId}`}>
-              <Button variant="ghost" size="sm" className="p-1 h-7 w-7 text-slate-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1 h-7 w-7 text-slate-500"
+              >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             </Link>
@@ -97,7 +106,8 @@ export default function StudentIntelligence360Page() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            {profile.rollNumber} • {profile.program} • Semester {profile.semester}
+            {profile.rollNumber} • {profile.program} • Semester{" "}
+            {profile.semester}
           </p>
         </div>
 
@@ -108,8 +118,13 @@ export default function StudentIntelligence360Page() {
               Core Student Profile
             </Button>
           </Link>
-          <Link href={`/app/intelligence/assistant?q=Summarize%20attendance%20and%20academic%20standing%20for%20${profile.studentName}`}>
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+          <Link
+            href={`/app/intelligence/assistant?q=Summarize%20attendance%20and%20academic%20standing%20for%20${profile.studentName}`}
+          >
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Ask AI about Student
             </Button>
@@ -121,34 +136,44 @@ export default function StudentIntelligence360Page() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Attendance Risk */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Attendance Risk</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Attendance Risk
+          </span>
           <Badge
             variant={
               profile.attendanceRisk === "LOW"
                 ? "success"
                 : profile.attendanceRisk === "MEDIUM"
-                ? "warning"
-                : "danger"
+                  ? "warning"
+                  : "danger"
             }
             className="text-xs font-bold"
           >
             {profile.attendanceRisk}
           </Badge>
-          <p className="text-xs font-semibold text-slate-900 pt-1">{profile.attendancePercentage}%</p>
+          <p className="text-xs font-semibold text-slate-900 pt-1">
+            {profile.attendancePercentage}%
+          </p>
         </div>
 
         {/* Academic Trend */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Academic Trend</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Academic Trend
+          </span>
           <Badge variant="info" className="text-xs font-semibold">
             {profile.academicTrend}
           </Badge>
-          <p className="text-xs font-semibold text-slate-900 pt-1">CGPA {profile.cgpa}</p>
+          <p className="text-xs font-semibold text-slate-900 pt-1">
+            CGPA {profile.cgpa}
+          </p>
         </div>
 
         {/* Finance Status */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Finance Status</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Finance Status
+          </span>
           <Badge
             variant={profile.financeStatus === "CLEAR" ? "success" : "danger"}
             className="text-xs font-bold"
@@ -156,13 +181,17 @@ export default function StudentIntelligence360Page() {
             {profile.financeStatus}
           </Badge>
           <p className="text-xs font-semibold text-slate-900 pt-1">
-            {profile.outstandingBalance > 0 ? `₹${profile.outstandingBalance.toLocaleString()}` : "Dues Clear"}
+            {profile.outstandingBalance > 0
+              ? `₹${profile.outstandingBalance.toLocaleString()}`
+              : "Dues Clear"}
           </p>
         </div>
 
         {/* Placement Readiness */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Placement Status</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Placement Status
+          </span>
           <Badge variant="neutral" className="text-xs font-semibold">
             {profile.placementReadiness}
           </Badge>
@@ -171,20 +200,29 @@ export default function StudentIntelligence360Page() {
 
         {/* Document Completion */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Records Compliant</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Records Compliant
+          </span>
           <Badge variant="success" className="text-xs font-bold">
             {profile.documentCompletionRate}%
           </Badge>
-          <p className="text-xs text-slate-500 pt-1">{profile.missingDocumentsCount} Missing</p>
+          <p className="text-xs text-slate-500 pt-1">
+            {profile.missingDocumentsCount} Missing
+          </p>
         </div>
 
         {/* Campus Engagement */}
         <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block truncate">Engagement</span>
+          <span className="text-[11px] font-semibold text-slate-500 block truncate">
+            Engagement
+          </span>
           <Badge variant="info" className="text-xs font-semibold">
             {profile.campusEngagement}
           </Badge>
-          <p className="text-xs text-slate-500 pt-1">{profile.clubMemberships} Clubs • {profile.eventParticipations} Fests</p>
+          <p className="text-xs text-slate-500 pt-1">
+            {profile.clubMemberships} Clubs • {profile.eventParticipations}{" "}
+            Fests
+          </p>
         </div>
       </div>
 
@@ -199,7 +237,10 @@ export default function StudentIntelligence360Page() {
         <CardContent className="p-4">
           <ul className="space-y-2.5 text-xs text-slate-700">
             {profile.recommendedActions.map((act, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+              <li
+                key={idx}
+                className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200"
+              >
                 <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <span className="leading-relaxed font-medium">{act}</span>
               </li>

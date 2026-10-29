@@ -3,8 +3,18 @@
 import React from "react";
 import Link from "next/link";
 import { Alert, AlertStatus } from "@campusos/types";
-import { SeverityBadge, AlertStatusBadge, DomainBadge } from "./intelligence-badge";
-import { ArrowRight, CheckCircle2, Eye, ShieldAlert, Clock } from "lucide-react";
+import {
+  SeverityBadge,
+  AlertStatusBadge,
+  DomainBadge,
+} from "./intelligence-badge";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  ShieldAlert,
+  Clock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AlertCardProps {
@@ -36,26 +46,39 @@ export function AlertCard({
             {alert.title}
           </h3>
         </Link>
-        <p className="text-xs text-slate-600 line-clamp-2 mb-2">{alert.reason}</p>
+        <p className="text-xs text-slate-600 line-clamp-2 mb-2">
+          {alert.reason}
+        </p>
 
         <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-3">
           <span className="font-medium">Source: {alert.sourceDomain}</span>
           <span>•</span>
           <span className="inline-flex items-center gap-1">
             <Clock className="w-3 h-3 text-slate-400" />
-            {new Date(alert.detectedAt).toLocaleDateString([], { month: "short", day: "numeric" })}
+            {new Date(alert.detectedAt).toLocaleDateString([], {
+              month: "short",
+              day: "numeric",
+            })}
           </span>
         </div>
 
         <div className="p-2.5 rounded-lg bg-amber-50/50 border border-amber-200/60 text-xs text-slate-700 mb-3">
-          <span className="font-semibold text-amber-900 block mb-0.5">Recommended:</span>
-          <p className="line-clamp-2 text-slate-700">{alert.recommendedAction}</p>
+          <span className="font-semibold text-amber-900 block mb-0.5">
+            Recommended:
+          </span>
+          <p className="line-clamp-2 text-slate-700">
+            {alert.recommendedAction}
+          </p>
         </div>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
         <Link href={`/app/intelligence/alerts/${alert.id}`}>
-          <Button variant="ghost" size="sm" className="text-xs gap-1 text-slate-600 hover:text-slate-900 px-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs gap-1 text-slate-600 hover:text-slate-900 px-2"
+          >
             <Eye className="w-3.5 h-3.5" /> View Alert
           </Button>
         </Link>
@@ -85,7 +108,11 @@ export function AlertCard({
 
           {alert.recommendedActionHref && (
             <Link href={alert.recommendedActionHref}>
-              <Button size="sm" variant="outline" className="text-xs gap-1 px-2.5">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs gap-1 px-2.5"
+              >
                 Resolve in Module <ArrowRight className="w-3 h-3" />
               </Button>
             </Link>

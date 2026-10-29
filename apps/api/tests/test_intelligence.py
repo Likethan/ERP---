@@ -17,7 +17,6 @@ Covers:
 - Tool registry inspection
 """
 
-from datetime import UTC, datetime
 import uuid
 
 import pytest
@@ -29,14 +28,10 @@ from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
 from app.models.core import Institution
 from app.models.intelligence import (
-    Alert,
-    Conversation,
-    Insight,
-    Message,
-    SavedInsight,
     AIActivity,
+    Conversation,
 )
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import Role, User, UserRoleAssignment
 
 
 def make_auth_headers(

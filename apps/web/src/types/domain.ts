@@ -7,6 +7,7 @@ export * from "@campusos/types";
 export * from "./people";
 export * from "./campus";
 export * from "./infrastructure";
+export * from "./sports";
 export type { DocumentCategory } from "@campusos/types";
 export type { EventCategory, EventStatus, NotificationItem } from "./campus";
 import {
@@ -34,7 +35,9 @@ export type RoleName =
   | "STAFF"
   | "WARDEN"
   | "TRANSPORT_OFFICER"
-  | "FACILITY_OFFICER";
+  | "FACILITY_OFFICER"
+  | "SPORTS_OFFICER"
+  | "COACH";
 
 export interface DemoPersona {
   id: string;
@@ -59,7 +62,13 @@ export interface StudentComprehensiveDetail {
   gender: string;
   dateOfBirth: string;
   bloodGroup: string;
-  status: "ACTIVE" | "ADMITTED" | "SUSPENDED" | "GRADUATED" | "ON_LEAVE" | "WITHDRAWN";
+  status:
+    | "ACTIVE"
+    | "ADMITTED"
+    | "SUSPENDED"
+    | "GRADUATED"
+    | "ON_LEAVE"
+    | "WITHDRAWN";
   admissionDate: string;
   program: {
     id: string;

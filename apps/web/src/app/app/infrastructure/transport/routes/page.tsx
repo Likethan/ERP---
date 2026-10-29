@@ -65,7 +65,8 @@ export default function TransportRoutesListPage() {
 
   const handleCreateRoute = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!createForm.routeCode || !createForm.name || !createForm.startPoint) return;
+    if (!createForm.routeCode || !createForm.name || !createForm.startPoint)
+      return;
 
     await transportRoutesService.createRoute({
       ...createForm,
@@ -90,9 +91,15 @@ export default function TransportRoutesListPage() {
 
   // KPIs
   const totalCapacity = routes.reduce((acc, r) => acc + (r.capacity || 0), 0);
-  const totalAllocated = routes.reduce((acc, r) => acc + (r.allocatedStudents || 0), 0);
-  const avgUtil = totalCapacity > 0 ? Math.round((totalAllocated / totalCapacity) * 100) : 0;
-  const activeRoutes = routes.filter((r) => r.status === RouteStatus.ACTIVE).length;
+  const totalAllocated = routes.reduce(
+    (acc, r) => acc + (r.allocatedStudents || 0),
+    0,
+  );
+  const avgUtil =
+    totalCapacity > 0 ? Math.round((totalAllocated / totalCapacity) * 100) : 0;
+  const activeRoutes = routes.filter(
+    (r) => r.status === RouteStatus.ACTIVE,
+  ).length;
 
   const columns: ColumnDef<TransportRoute>[] = useMemo(
     () => [
@@ -150,7 +157,9 @@ export default function TransportRoutesListPage() {
               <Bus className="w-3 h-3 text-emerald-400" />
               {r.vehicleNumber || "Unassigned"}
             </div>
-            <div className="text-slate-400 mt-0.5">{r.driverName || "No driver assigned"}</div>
+            <div className="text-slate-400 mt-0.5">
+              {r.driverName || "No driver assigned"}
+            </div>
           </div>
         ),
       },
@@ -158,7 +167,10 @@ export default function TransportRoutesListPage() {
         id: "utilization",
         header: "Seats & Utilization",
         cell: (r) => {
-          const util = r.capacity > 0 ? Math.round((r.allocatedStudents / r.capacity) * 100) : 0;
+          const util =
+            r.capacity > 0
+              ? Math.round((r.allocatedStudents / r.capacity) * 100)
+              : 0;
           return (
             <div className="w-36 space-y-1">
               <div className="flex justify-between text-xs">
@@ -167,7 +179,11 @@ export default function TransportRoutesListPage() {
                 </span>
                 <span
                   className={`font-semibold ${
-                    util >= 90 ? "text-red-400" : util >= 75 ? "text-amber-400" : "text-emerald-400"
+                    util >= 90
+                      ? "text-red-400"
+                      : util >= 75
+                        ? "text-amber-400"
+                        : "text-emerald-400"
                   }`}
                 >
                   {util}%
@@ -176,7 +192,11 @@ export default function TransportRoutesListPage() {
               <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full ${
-                    util >= 90 ? "bg-red-500" : util >= 75 ? "bg-amber-500" : "bg-blue-500"
+                    util >= 90
+                      ? "bg-red-500"
+                      : util >= 75
+                        ? "bg-amber-500"
+                        : "bg-blue-500"
                   }`}
                   style={{ width: `${Math.min(util, 100)}%` }}
                 />
@@ -207,14 +227,18 @@ export default function TransportRoutesListPage() {
         header: "Actions",
         cell: (r) => (
           <Link href={`/app/infrastructure/transport/routes/${r.id}`}>
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+            >
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -238,7 +262,8 @@ export default function TransportRoutesListPage() {
             Bus Transit Corridors
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Manage arterial college bus lines, morning pickups, evening runs, and passenger loads.
+            Manage arterial college bus lines, morning pickups, evening runs,
+            and passenger loads.
           </p>
         </div>
 
@@ -254,20 +279,36 @@ export default function TransportRoutesListPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Total Corridors</div>
-          <div className="text-2xl font-bold text-white mt-1">{routes.length}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Total Corridors
+          </div>
+          <div className="text-2xl font-bold text-white mt-1">
+            {routes.length}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Active Services</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{activeRoutes}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Active Services
+          </div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {activeRoutes}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Fleet Capacity</div>
-          <div className="text-2xl font-bold text-blue-400 mt-1">{totalCapacity} seats</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Fleet Capacity
+          </div>
+          <div className="text-2xl font-bold text-blue-400 mt-1">
+            {totalCapacity} seats
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Seat Utilization</div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{avgUtil}%</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Seat Utilization
+          </div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">
+            {avgUtil}%
+          </div>
         </div>
       </div>
 
@@ -335,7 +376,12 @@ export default function TransportRoutesListPage() {
                     required
                     placeholder="e.g. RT-05"
                     value={createForm.routeCode}
-                    onChange={(e) => setCreateForm({ ...createForm, routeCode: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        routeCode: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -350,7 +396,10 @@ export default function TransportRoutesListPage() {
                     max={100}
                     value={createForm.capacity}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, capacity: parseInt(e.target.value) || 52 })
+                      setCreateForm({
+                        ...createForm,
+                        capacity: parseInt(e.target.value) || 52,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
@@ -366,7 +415,9 @@ export default function TransportRoutesListPage() {
                   required
                   placeholder="e.g. Whitefield Express Transit"
                   value={createForm.name}
-                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, name: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
@@ -381,7 +432,12 @@ export default function TransportRoutesListPage() {
                     required
                     placeholder="e.g. Hope Farm Junction"
                     value={createForm.startPoint}
-                    onChange={(e) => setCreateForm({ ...createForm, startPoint: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        startPoint: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -394,7 +450,9 @@ export default function TransportRoutesListPage() {
                     required
                     placeholder="e.g. Main Engineering Campus"
                     value={createForm.endPoint}
-                    onChange={(e) => setCreateForm({ ...createForm, endPoint: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, endPoint: e.target.value })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -409,7 +467,12 @@ export default function TransportRoutesListPage() {
                     type="text"
                     placeholder="07:15 AM"
                     value={createForm.morningStartTime}
-                    onChange={(e) => setCreateForm({ ...createForm, morningStartTime: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        morningStartTime: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -421,7 +484,12 @@ export default function TransportRoutesListPage() {
                     type="text"
                     placeholder="05:15 PM"
                     value={createForm.eveningReturnTime}
-                    onChange={(e) => setCreateForm({ ...createForm, eveningReturnTime: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        eveningReturnTime: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -435,7 +503,12 @@ export default function TransportRoutesListPage() {
                   rows={2}
                   placeholder="Notes regarding stops, highway routing, tollway clearance..."
                   value={createForm.description}
-                  onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({
+                      ...createForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
@@ -449,7 +522,10 @@ export default function TransportRoutesListPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-500 text-white"
+                >
                   Create Route
                 </Button>
               </div>

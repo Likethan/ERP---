@@ -19,7 +19,9 @@ import {
 
 export default function PeopleOverviewPage() {
   const [metrics, setMetrics] = useState<PeopleSummaryMetrics | null>(null);
-  const [departments, setDepartments] = useState<DepartmentPeopleDistribution[]>([]);
+  const [departments, setDepartments] = useState<
+    DepartmentPeopleDistribution[]
+  >([]);
 
   useEffect(() => {
     async function loadData() {
@@ -46,13 +48,18 @@ export default function PeopleOverviewPage() {
             People Management & Canonical Directory
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Centralized registry uniting Students, Faculty, Support Staff, and Departmental personnel.
+            Centralized registry uniting Students, Faculty, Support Staff, and
+            Departmental personnel.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <Link href="/app/students">
-            <Button variant="primary" size="sm" rightIcon={<ArrowRight className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+            >
               Open Students Directory
             </Button>
           </Link>
@@ -84,7 +91,9 @@ export default function PeopleOverviewPage() {
         />
         <StatCard
           label="Pending Scrutiny"
-          value={metrics ? metrics.pendingDocumentVerifications.toString() : "..."}
+          value={
+            metrics ? metrics.pendingDocumentVerifications.toString() : "..."
+          }
           description="Certificates awaiting verification"
           variant="amber"
           icon={<FileText className="h-5 w-5" />}
@@ -105,7 +114,8 @@ export default function PeopleOverviewPage() {
               Student Master Registry
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Search, filter, admit, and inspect 360-degree profiles, guardians, credentials, and achievements.
+              Search, filter, admit, and inspect 360-degree profiles, guardians,
+              credentials, and achievements.
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400 font-medium">
               <span>{metrics?.totalStudents || 1420} Enrolled Records</span>
@@ -126,7 +136,8 @@ export default function PeopleOverviewPage() {
               Professorial Faculty Roster
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Professorial workload allocations, laboratory supervisory duties, scholarly publications, and appointments.
+              Professorial workload allocations, laboratory supervisory duties,
+              scholarly publications, and appointments.
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-purple-600 dark:text-purple-400 font-medium">
               <span>{metrics?.totalFaculty || 84} Faculty Appointed</span>
@@ -147,7 +158,8 @@ export default function PeopleOverviewPage() {
               Support Staff Operations
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Operational shifts, technical laboratory staff, facility maintenance, and leave workflows.
+              Operational shifts, technical laboratory staff, facility
+              maintenance, and leave workflows.
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-medium">
               <span>{metrics?.totalStaff || 48} Staff Members</span>
@@ -165,7 +177,8 @@ export default function PeopleOverviewPage() {
               Departmental People Distribution
             </h3>
             <p className="text-xs text-slate-500">
-              Student cohort enrollment, faculty strength, and administrative staff allocated per department.
+              Student cohort enrollment, faculty strength, and administrative
+              staff allocated per department.
             </p>
           </div>
         </div>
@@ -184,7 +197,10 @@ export default function PeopleOverviewPage() {
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {departments.map((dept) => (
-              <tr key={dept.departmentId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+              <tr
+                key={dept.departmentId}
+                className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition"
+              >
                 <td className="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                   {dept.departmentCode}
                 </td>

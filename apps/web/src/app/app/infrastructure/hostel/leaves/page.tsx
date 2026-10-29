@@ -70,7 +70,9 @@ export default function HostelLeavesPage() {
     e.preventDefault();
     await hostelLeavesService.submitHostelLeave({
       studentId: isStudent ? "stu-24cse0101" : "stu-24cse0101",
-      studentName: isStudent ? `${user?.first_name} ${user?.last_name}` : "Aarav Patel",
+      studentName: isStudent
+        ? `${user?.first_name} ${user?.last_name}`
+        : "Aarav Patel",
       registerNumber: "24CSE0101",
       hostelId: "hst-raman",
       hostelName: "Sir C. V. Raman Hall of Residence",
@@ -114,7 +116,9 @@ export default function HostelLeavesPage() {
         id: "hostel",
         header: "Hostel",
         accessorKey: "hostelName",
-        cell: (l) => <span className="text-xs text-slate-300">{l.hostelName}</span>,
+        cell: (l) => (
+          <span className="text-xs text-slate-300">{l.hostelName}</span>
+        ),
       },
       {
         id: "dates",
@@ -129,14 +133,19 @@ export default function HostelLeavesPage() {
         id: "destination",
         header: "Destination",
         accessorKey: "destination",
-        cell: (l) => <span className="text-xs text-white">{l.destination}</span>,
+        cell: (l) => (
+          <span className="text-xs text-white">{l.destination}</span>
+        ),
       },
       {
         id: "reason",
         header: "Reason",
         accessorKey: "reason",
         cell: (l) => (
-          <span className="text-xs text-slate-300 truncate max-w-[200px] block" title={l.reason}>
+          <span
+            className="text-xs text-slate-300 truncate max-w-[200px] block"
+            title={l.reason}
+          >
             {l.reason}
           </span>
         ),
@@ -147,7 +156,8 @@ export default function HostelLeavesPage() {
         accessorKey: "approvalStatus",
         cell: (l) => {
           const map: Record<string, string> = {
-            APPROVED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+            APPROVED:
+              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
             PENDING: "bg-amber-500/10 text-amber-400 border-amber-500/20",
             REJECTED: "bg-rose-500/10 text-rose-400 border-rose-500/20",
             COMPLETED: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
@@ -165,7 +175,11 @@ export default function HostelLeavesPage() {
         header: "Actions",
         cell: (l) => (
           <Link href={`/app/infrastructure/hostel/leaves/${l.id}`}>
-            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               Review
             </Button>
@@ -173,7 +187,7 @@ export default function HostelLeavesPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -186,7 +200,10 @@ export default function HostelLeavesPage() {
               Infrastructure
             </Link>
             <span>/</span>
-            <Link href="/app/infrastructure/hostel" className="hover:text-white">
+            <Link
+              href="/app/infrastructure/hostel"
+              className="hover:text-white"
+            >
               Hostel
             </Link>
             <span>/</span>
@@ -261,17 +278,23 @@ export default function HostelLeavesPage() {
         <form onSubmit={handleSubmitLeave} className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Departure Date *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Departure Date *
+              </label>
               <Input
                 type="date"
                 required
                 value={form.startDate}
-                onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, startDate: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Expected Return Date *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Expected Return Date *
+              </label>
               <Input
                 type="date"
                 required
@@ -283,18 +306,24 @@ export default function HostelLeavesPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Destination Location *</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Destination Location *
+            </label>
             <Input
               required
               placeholder="e.g. Mysuru, Karnataka"
               value={form.destination}
-              onChange={(e) => setForm({ ...form, destination: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, destination: e.target.value })
+              }
               className="bg-slate-900 border-slate-700 text-xs"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Reason for Leave *</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Reason for Leave *
+            </label>
             <Input
               required
               placeholder="e.g. Family wedding / medical appointment"
@@ -305,29 +334,43 @@ export default function HostelLeavesPage() {
           </div>
 
           <div className="border-t border-slate-800 pt-3 space-y-3">
-            <h4 className="text-xs font-bold text-slate-300 uppercase">Emergency Parent / Guardian Contact</h4>
+            <h4 className="text-xs font-bold text-slate-300 uppercase">
+              Emergency Parent / Guardian Contact
+            </h4>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Contact Name</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Contact Name
+                </label>
                 <Input
                   value={form.emergencyName}
-                  onChange={(e) => setForm({ ...form, emergencyName: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, emergencyName: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Relationship</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Relationship
+                </label>
                 <Input
                   value={form.emergencyRelation}
-                  onChange={(e) => setForm({ ...form, emergencyRelation: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, emergencyRelation: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Phone Number</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Phone Number
+                </label>
                 <Input
                   value={form.emergencyPhone}
-                  onChange={(e) => setForm({ ...form, emergencyPhone: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, emergencyPhone: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
@@ -343,7 +386,10 @@ export default function HostelLeavesPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Submit Gate Pass Request
             </Button>
           </div>

@@ -1,11 +1,9 @@
-from contextvars import ContextVar
-import json
 import logging
 import sys
-from typing import Any
+from contextvars import ContextVar
 
 from app.core.config import settings
-from app.core.sanitizer import mask_sensitive_dict, mask_sensitive_string
+from app.core.sanitizer import mask_sensitive_string
 
 # Context variable for request correlation ID across async execution flows
 correlation_id_ctx: ContextVar[str] = ContextVar("correlation_id", default="-")

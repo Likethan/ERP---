@@ -9,8 +9,36 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Registrar & Chief Institutional Officer",
     department: "Institutional Administration",
     avatarInitials: "AS",
-    description: "Complete institution-wide governance, system parameters, audit trails, and security settings.",
+    description:
+      "Complete institution-wide governance, system parameters, audit trails, and security settings.",
     permissions: ["*"],
+  },
+  {
+    id: "user-vice-principal-01",
+    name: "Dr. Meenakshi Sundaram",
+    email: "vp.academics@campusos.edu",
+    role: "PRINCIPAL",
+    roleTitle: "Vice Principal (Academic & Institutional Operations)",
+    department: "Executive Administration",
+    avatarInitials: "MS",
+    description:
+      "Institutional academic operations, faculty workloads, accreditation metrics (NAAC/NIRF), multi-department oversight, and statutory approvals.",
+    permissions: [
+      "academics:subjects:read",
+      "academics:subjects:write",
+      "people:students:read",
+      "people:faculty:read",
+      "attendance:read",
+      "examinations:read",
+      "examinations:approve",
+      "placement:drives:read",
+      "finance:read",
+      "infrastructure:facilities:read",
+      "campus.view",
+      "campus.manage_events",
+      "campus.publish_events",
+      "campus.view_reports",
+    ],
   },
   {
     id: "user-hod-cse-01",
@@ -20,7 +48,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Head of Department — Computer Science & Engineering",
     department: "Computer Science & Engineering",
     avatarInitials: "KA",
-    description: "Departmental academic performance, faculty teaching workloads, attendance oversight, and curriculum approvals.",
+    description:
+      "Departmental academic performance, faculty teaching workloads, attendance oversight, and curriculum approvals.",
     permissions: [
       "academics:subjects:read",
       "academics:subjects:write",
@@ -50,7 +79,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Professor of Systems & Dean Academics",
     department: "Computer Science & Engineering",
     avatarInitials: "RS",
-    description: "Assigned course offerings, daily class timetable, attendance marking, internal marks grading, and syllabus tracking.",
+    description:
+      "Assigned course offerings, daily class timetable, attendance marking, internal marks grading, and syllabus tracking.",
     permissions: [
       "academics:subjects:read",
       "attendance:sessions:create",
@@ -76,7 +106,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Student — B.Tech CSE (Year 3 / Sem 5)",
     department: "Computer Science & Engineering",
     avatarInitials: "AP",
-    description: "Personal timetable, attendance percentages, examination results, pending fees, job drives, hostel room, and document vault.",
+    description:
+      "Personal timetable, attendance percentages, examination results, pending fees, job drives, hostel room, and document vault.",
     permissions: [
       "student:portal:access",
       "attendance:self:read",
@@ -102,7 +133,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Bursar & Chief Financial Comptroller",
     department: "Finance & Accounts",
     avatarInitials: "PN",
-    description: "Fee structures, student invoicing, offline/online payments, receipt generation, scholarship allocations, and refunds.",
+    description:
+      "Fee structures, student invoicing, offline/online payments, receipt generation, scholarship allocations, and refunds.",
     permissions: [
       "finance:read",
       "finance:write",
@@ -119,7 +151,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Head of Corporate Relations & Placements",
     department: "Career Development Cell",
     avatarInitials: "VS",
-    description: "Corporate directory, recruitment drives, eligibility rules, candidate shortlisting, interview schedules, and job offers.",
+    description:
+      "Corporate directory, recruitment drives, eligibility rules, candidate shortlisting, interview schedules, and job offers.",
     permissions: [
       "placement:companies:write",
       "placement:drives:write",
@@ -136,7 +169,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Chief Warden — Residential Hostels",
     department: "Hostel Administration",
     avatarInitials: "SP",
-    description: "Hostel blocks, room allocations, bed availability, resident welfare, gate passes/leaves, and complaints resolution.",
+    description:
+      "Hostel blocks, room allocations, bed availability, resident welfare, gate passes/leaves, and complaints resolution.",
     permissions: [
       "infrastructure:hostel:read",
       "infrastructure:hostel:write",
@@ -155,7 +189,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Chief Transport & Fleet Officer",
     department: "Transport Operations",
     avatarInitials: "MN",
-    description: "Bus routes, intermediate stops, fleet vehicle fitness, driver schedules, student bus passes, and route capacity utilization.",
+    description:
+      "Bus routes, intermediate stops, fleet vehicle fitness, driver schedules, student bus passes, and route capacity utilization.",
     permissions: [
       "infrastructure:transport:read",
       "infrastructure:transport:write",
@@ -174,7 +209,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     roleTitle: "Chief Estate & Facilities Engineer",
     department: "Estate & Physical Infrastructure",
     avatarInitials: "RS",
-    description: "Campus buildings, auditoriums, laboratory infrastructure, preventive maintenance work orders, and emergency repairs.",
+    description:
+      "Campus buildings, auditoriums, laboratory infrastructure, preventive maintenance work orders, and emergency repairs.",
     permissions: [
       "infrastructure:facilities:read",
       "infrastructure:facilities:write",
@@ -184,4 +220,3 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     ],
   },
 ];
-

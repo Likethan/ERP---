@@ -7,12 +7,12 @@ Implements:
 - Dispatches summarized digest notifications via the unified NotificationOrchestrationService.
 """
 
-from datetime import UTC, datetime, timedelta
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, func, select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.campus import Notification
@@ -20,7 +20,6 @@ from app.models.case_management import HumanTask, TaskStatus
 from app.models.notification import (
     DigestType,
     NotificationDigestRun,
-    NotificationEvent,
     UserNotificationProfile,
 )
 from app.repositories.notification_repository import NotificationRepository

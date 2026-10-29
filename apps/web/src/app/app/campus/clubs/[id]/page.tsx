@@ -58,7 +58,12 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([]);
 
   const [activeTab, setActiveTab] = useState<
-    "overview" | "members" | "events" | "announcements" | "leadership" | "history"
+    | "overview"
+    | "members"
+    | "events"
+    | "announcements"
+    | "leadership"
+    | "history"
   >("overview");
 
   // Actions
@@ -105,7 +110,11 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
   const handleApprove = async (memberId: string) => {
     try {
       setActionLoading(true);
-      await campusService.approveMembership(clubId, memberId, user?.first_name || "Coordinator");
+      await campusService.approveMembership(
+        clubId,
+        memberId,
+        user?.first_name || "Coordinator",
+      );
       setActionMessage("Member approved and added to active roster!");
       loadClubData();
     } finally {
@@ -121,7 +130,7 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
         clubId,
         rejectMember.id,
         rejectReason || "Does not meet cohort criteria",
-        user?.first_name || "Coordinator"
+        user?.first_name || "Coordinator",
       );
       setRejectMember(null);
       setRejectReason("");
@@ -140,7 +149,7 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
         clubId,
         roleMember.id,
         selectedRole,
-        user?.first_name || "Coordinator"
+        user?.first_name || "Coordinator",
       );
       setRoleMember(null);
       setActionMessage(`Member role updated to ${selectedRole}!`);
@@ -165,7 +174,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
       });
 
       if (res.success) {
-        setActionMessage("Join request submitted. Pending coordinator verification.");
+        setActionMessage(
+          "Join request submitted. Pending coordinator verification.",
+        );
         loadClubData();
       } else {
         alert(res.error || "Could not submit request.");
@@ -176,13 +187,22 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
   };
 
   const handleStudentLeave = async () => {
-    const myMembership = members.find((m) => m.studentId === user?.id && m.status === "ACTIVE");
+    const myMembership = members.find(
+      (m) => m.studentId === user?.id && m.status === "ACTIVE",
+    );
     if (!myMembership) return;
-    if (!confirm("Are you sure you want to resign your membership in this club?")) return;
+    if (
+      !confirm("Are you sure you want to resign your membership in this club?")
+    )
+      return;
 
     try {
       setActionLoading(true);
-      await campusService.leaveClub(clubId, myMembership.id, user?.first_name || "Student");
+      await campusService.leaveClub(
+        clubId,
+        myMembership.id,
+        user?.first_name || "Student",
+      );
       setActionMessage("You have resigned from this club.");
       loadClubData();
     } finally {
@@ -206,7 +226,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
       <div className="p-8 text-center space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 max-w-xl mx-auto my-12">
         <AlertTriangle className="h-10 w-10 text-rose-400 mx-auto" />
         <h2 className="text-base font-bold text-white">Club Not Found</h2>
-        <p className="text-xs text-slate-400">{error || "Requested club does not exist."}</p>
+        <p className="text-xs text-slate-400">
+          {error || "Requested club does not exist."}
+        </p>
         <Link href="/app/campus/clubs">
           <Button variant="outline" size="sm">
             Back to Clubs Directory
@@ -229,7 +251,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
     "EVENT_COORDINATOR",
   ];
 
-  const leaders = members.filter((m) => leadershipRoles.includes(m.role) && m.status === "ACTIVE");
+  const leaders = members.filter(
+    (m) => leadershipRoles.includes(m.role) && m.status === "ACTIVE",
+  );
 
   return (
     <div className="space-y-6 animate-fade-in pb-16">
@@ -264,7 +288,8 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
           {myMembership?.status === "ACTIVE" && (
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Member ({myMembership.role})
+                <CheckCircle2 className="h-3.5 w-3.5" /> Member (
+                {myMembership.role})
               </span>
               <Button
                 variant="outline"
@@ -282,7 +307,10 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
       {actionMessage && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setActionMessage(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -308,34 +336,60 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
           </span>
         </div>
 
-        <h1 className="text-2xl font-black text-white tracking-tight">{club.name}</h1>
-        <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">{club.description}</p>
+        <h1 className="text-2xl font-black text-white tracking-tight">
+          {club.name}
+        </h1>
+        <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
+          {club.description}
+        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2 text-xs">
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-            <span className="text-[10px] text-slate-500 uppercase block">Faculty Coordinator</span>
-            <span className="font-semibold text-white mt-0.5 block">{club.facultyCoordinator}</span>
-            <span className="text-[10px] text-slate-500 font-mono">{club.facultyCoordinatorEmail}</span>
+            <span className="text-[10px] text-slate-500 uppercase block">
+              Faculty Coordinator
+            </span>
+            <span className="font-semibold text-white mt-0.5 block">
+              {club.facultyCoordinator}
+            </span>
+            <span className="text-[10px] text-slate-500 font-mono">
+              {club.facultyCoordinatorEmail}
+            </span>
           </div>
 
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-            <span className="text-[10px] text-slate-500 uppercase block">Student Lead</span>
-            <span className="font-semibold text-white mt-0.5 block">{club.studentLead}</span>
-            <span className="text-[10px] text-slate-500 font-mono">{club.studentLeadRollNo}</span>
+            <span className="text-[10px] text-slate-500 uppercase block">
+              Student Lead
+            </span>
+            <span className="font-semibold text-white mt-0.5 block">
+              {club.studentLead}
+            </span>
+            <span className="text-[10px] text-slate-500 font-mono">
+              {club.studentLeadRollNo}
+            </span>
           </div>
 
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-            <span className="text-[10px] text-slate-500 uppercase block">Meeting Schedule</span>
-            <span className="font-medium text-slate-300 mt-0.5 block">{club.meetingSchedule}</span>
-            <span className="text-[10px] text-slate-500">Venue: {club.meetingVenue}</span>
+            <span className="text-[10px] text-slate-500 uppercase block">
+              Meeting Schedule
+            </span>
+            <span className="font-medium text-slate-300 mt-0.5 block">
+              {club.meetingSchedule}
+            </span>
+            <span className="text-[10px] text-slate-500">
+              Venue: {club.meetingVenue}
+            </span>
           </div>
 
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-            <span className="text-[10px] text-slate-500 uppercase block">Charter History</span>
+            <span className="text-[10px] text-slate-500 uppercase block">
+              Charter History
+            </span>
             <span className="font-mono text-cyan-400 mt-0.5 block font-bold">
               Est. {club.establishedYear}
             </span>
-            <span className="text-[10px] text-slate-500">{activeMembers.length} active members</span>
+            <span className="text-[10px] text-slate-500">
+              {activeMembers.length} active members
+            </span>
           </div>
         </div>
       </div>
@@ -346,7 +400,10 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
           { id: "overview", label: "Overview" },
           { id: "members", label: `Members (${activeMembers.length})` },
           { id: "events", label: `Club Events (${events.length})` },
-          { id: "announcements", label: `Announcements (${announcements.length})` },
+          {
+            id: "announcements",
+            label: `Announcements (${announcements.length})`,
+          },
           { id: "leadership", label: `Leadership (${leaders.length})` },
           { id: "history", label: "History & Charter" },
         ].map((tab) => (
@@ -369,7 +426,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 space-y-3">
-              <h3 className="text-sm font-bold text-white">Guild Charter & Mission</h3>
+              <h3 className="text-sm font-bold text-white">
+                Guild Charter & Mission
+              </h3>
               <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
                 {club.description}
               </p>
@@ -378,8 +437,12 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
             {/* Referenced Events */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-sm font-bold text-white">Organized Campus Events</h3>
-                <span className="text-xs text-slate-400">{events.length} events scheduled</span>
+                <h3 className="text-sm font-bold text-white">
+                  Organized Campus Events
+                </h3>
+                <span className="text-xs text-slate-400">
+                  {events.length} events scheduled
+                </span>
               </div>
 
               <div className="space-y-3">
@@ -390,9 +453,12 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
                     className="p-4 rounded-xl border border-slate-800 bg-slate-950/70 hover:border-slate-700 flex items-center justify-between transition-colors block"
                   >
                     <div>
-                      <div className="text-xs font-bold text-white">{e.title}</div>
+                      <div className="text-xs font-bold text-white">
+                        {e.title}
+                      </div>
                       <div className="text-[11px] text-slate-400 mt-1">
-                        {e.startDate} • {e.venue} • {e.registeredCount} / {e.capacity} participants
+                        {e.startDate} • {e.venue} • {e.registeredCount} /{" "}
+                        {e.capacity} participants
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-slate-500" />
@@ -405,19 +471,27 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
           <div className="space-y-6">
             {/* Quick Metrics */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 space-y-3">
-              <h3 className="text-sm font-bold text-white">Membership Snapshot</h3>
+              <h3 className="text-sm font-bold text-white">
+                Membership Snapshot
+              </h3>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Active Members:</span>
-                  <span className="font-mono font-bold text-cyan-400">{activeMembers.length}</span>
+                  <span className="font-mono font-bold text-cyan-400">
+                    {activeMembers.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Pending Requests:</span>
-                  <span className="font-mono font-bold text-amber-400">{pendingMembers.length}</span>
+                  <span className="font-mono font-bold text-amber-400">
+                    {pendingMembers.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Total Charter Size:</span>
-                  <span className="font-mono font-bold text-white">{members.length}</span>
+                  <span className="font-mono font-bold text-white">
+                    {members.length}
+                  </span>
                 </div>
               </div>
             </div>
@@ -430,7 +504,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
             <div>
-              <h3 className="text-sm font-bold text-white">Official Membership Roster</h3>
+              <h3 className="text-sm font-bold text-white">
+                Official Membership Roster
+              </h3>
               <p className="text-xs text-slate-400 mt-0.5">
                 Role designations and membership authorization states
               </p>
@@ -446,9 +522,14 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
               </h4>
               <div className="divide-y divide-amber-900/40">
                 {pendingMembers.map((m) => (
-                  <div key={m.id} className="py-2.5 flex items-center justify-between gap-4 text-xs">
+                  <div
+                    key={m.id}
+                    className="py-2.5 flex items-center justify-between gap-4 text-xs"
+                  >
                     <div>
-                      <span className="font-bold text-white">{m.studentName}</span>
+                      <span className="font-bold text-white">
+                        {m.studentName}
+                      </span>
                       <span className="text-slate-400 font-mono ml-2">
                         {m.rollNumber} • {m.department}
                       </span>
@@ -489,19 +570,29 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
                   <th className="p-3">Role</th>
                   <th className="p-3">Joined Date</th>
                   <th className="p-3">Status</th>
-                  {canManageMembers && <th className="p-3 text-right">Actions</th>}
+                  {canManageMembers && (
+                    <th className="p-3 text-right">Actions</th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {activeMembers.map((m) => (
                   <tr key={m.id} className="hover:bg-slate-800/30">
-                    <td className="p-3 font-semibold text-white">{m.studentName}</td>
-                    <td className="p-3 font-mono text-slate-300">{m.rollNumber}</td>
+                    <td className="p-3 font-semibold text-white">
+                      {m.studentName}
+                    </td>
+                    <td className="p-3 font-mono text-slate-300">
+                      {m.rollNumber}
+                    </td>
                     <td className="p-3 text-slate-400">{m.department}</td>
                     <td className="p-3">
-                      <span className="font-bold text-cyan-300">{m.role.replace("_", " ")}</span>
+                      <span className="font-bold text-cyan-300">
+                        {m.role.replace("_", " ")}
+                      </span>
                     </td>
-                    <td className="p-3 text-slate-500 font-mono">{m.joinedDate}</td>
+                    <td className="p-3 text-slate-500 font-mono">
+                      {m.joinedDate}
+                    </td>
                     <td className="p-3">
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">
                         {m.status}
@@ -532,7 +623,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
       {activeTab === "events" && (
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h3 className="text-sm font-bold text-white">Club Calendar & Competitions</h3>
+            <h3 className="text-sm font-bold text-white">
+              Club Calendar & Competitions
+            </h3>
             <Link
               href="/app/campus/events/create"
               className="text-xs font-semibold text-indigo-400 hover:text-indigo-300"
@@ -552,14 +645,25 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
                       {e.category}
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-400">{e.status}</span>
+                    <span className="text-[10px] font-bold text-emerald-400">
+                      {e.status}
+                    </span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mt-1.5">{e.title}</h4>
-                  <p className="text-xs text-slate-400 line-clamp-2 mt-1">{e.description}</p>
+                  <h4 className="text-sm font-bold text-white mt-1.5">
+                    {e.title}
+                  </h4>
+                  <p className="text-xs text-slate-400 line-clamp-2 mt-1">
+                    {e.description}
+                  </p>
                 </div>
                 <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>{e.startDate} • {e.venue}</span>
-                  <Link href={`/app/campus/events/${e.id}`} className="text-indigo-400 hover:text-indigo-300 font-semibold">
+                  <span>
+                    {e.startDate} • {e.venue}
+                  </span>
+                  <Link
+                    href={`/app/campus/events/${e.id}`}
+                    className="text-indigo-400 hover:text-indigo-300 font-semibold"
+                  >
                     Inspect →
                   </Link>
                 </div>
@@ -583,8 +687,12 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
               <span className="text-[10px] font-mono font-bold text-indigo-300 uppercase">
                 Faculty Coordinator
               </span>
-              <div className="text-sm font-bold text-white">{club.facultyCoordinator}</div>
-              <div className="text-xs text-slate-400">{club.facultyCoordinatorEmail}</div>
+              <div className="text-sm font-bold text-white">
+                {club.facultyCoordinator}
+              </div>
+              <div className="text-xs text-slate-400">
+                {club.facultyCoordinatorEmail}
+              </div>
               <div className="text-[10px] text-indigo-400 pt-2 border-t border-indigo-900/40">
                 Institutional Oversight & Approval Authority
               </div>
@@ -602,7 +710,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
                   </span>
                   <Award className="h-4 w-4 text-cyan-400" />
                 </div>
-                <div className="text-sm font-bold text-white">{leader.studentName}</div>
+                <div className="text-sm font-bold text-white">
+                  {leader.studentName}
+                </div>
                 <div className="text-xs text-slate-400">
                   {leader.rollNumber} • {leader.department}
                 </div>
@@ -618,11 +728,16 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
       {/* TAB: ANNOUNCEMENTS */}
       {activeTab === "announcements" && (
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white">Club Announcements & Dispatches</h3>
+          <h3 className="text-sm font-bold text-white">
+            Club Announcements & Dispatches
+          </h3>
           <div className="space-y-3">
             {announcements.length > 0 ? (
               announcements.map((a) => (
-                <div key={a.id} className="p-4 rounded-xl border border-slate-800 bg-slate-950 space-y-1 text-xs">
+                <div
+                  key={a.id}
+                  className="p-4 rounded-xl border border-slate-800 bg-slate-950 space-y-1 text-xs"
+                >
                   <div className="font-bold text-white">{a.title}</div>
                   <p className="text-slate-400">{a.content}</p>
                   <div className="text-[10px] text-slate-500 font-mono pt-1">
@@ -653,7 +768,9 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
                 <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-cyan-500 ring-4 ring-slate-950" />
                 <div className="font-bold text-white">{entry.action}</div>
                 <div className="text-slate-400">Actor: {entry.actor}</div>
-                <div className="text-[10px] text-slate-500 font-mono">{entry.timestamp}</div>
+                <div className="text-[10px] text-slate-500 font-mono">
+                  {entry.timestamp}
+                </div>
               </div>
             ))}
           </div>
@@ -669,7 +786,8 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
         {roleMember && (
           <div className="space-y-4">
             <p className="text-xs text-slate-300">
-              Assign a new leadership or organizational role to <strong>{roleMember.studentName}</strong>:
+              Assign a new leadership or organizational role to{" "}
+              <strong>{roleMember.studentName}</strong>:
             </p>
             <select
               value={selectedRole}
@@ -683,7 +801,11 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
               ))}
             </select>
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setRoleMember(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setRoleMember(null)}
+              >
                 Cancel
               </Button>
               <Button
@@ -718,7 +840,11 @@ export default function ClubDetailPage({ params }: ClubDetailPageProps) {
             className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white"
           />
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" size="sm" onClick={() => setRejectMember(null)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setRejectMember(null)}
+            >
               Cancel
             </Button>
             <Button

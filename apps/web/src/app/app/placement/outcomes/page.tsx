@@ -29,7 +29,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
 import { formatLPA } from "@/services/placement-calculator";
-import { PlacementOutcome, PlacementStatus, StudentPlacementProfile } from "@/types/placement";
+import {
+  PlacementOutcome,
+  PlacementStatus,
+  StudentPlacementProfile,
+} from "@/types/placement";
 
 export default function PlacementOutcomesPage() {
   const { showToast } = useToast();
@@ -44,7 +48,8 @@ export default function PlacementOutcomesPage() {
 
   // Outcome Confirmation Modal
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedOutcome, setSelectedOutcome] = useState<PlacementOutcome | null>(null);
+  const [selectedOutcome, setSelectedOutcome] =
+    useState<PlacementOutcome | null>(null);
   const [confirmData, setConfirmData] = useState({
     companyName: "",
     positionTitle: "",
@@ -109,10 +114,14 @@ export default function PlacementOutcomesPage() {
     const notPlaced = outcomes.filter((o) => o.status === "NOT_PLACED").length;
     const rate = total > 0 ? Math.round((placed / total) * 100) : 0;
 
-    const placedPackages = outcomes.filter((o) => o.status === "PLACED" && o.ctcLpa > 0);
+    const placedPackages = outcomes.filter(
+      (o) => o.status === "PLACED" && o.ctcLpa > 0,
+    );
     const totalCtc = placedPackages.reduce((acc, curr) => acc + curr.ctcLpa, 0);
     const avgCtc =
-      placedPackages.length > 0 ? (totalCtc / placedPackages.length).toFixed(2) : "0.00";
+      placedPackages.length > 0
+        ? (totalCtc / placedPackages.length).toFixed(2)
+        : "0.00";
     const maxCtc =
       placedPackages.length > 0
         ? Math.max(...placedPackages.map((o) => o.ctcLpa)).toFixed(2)
@@ -129,7 +138,8 @@ export default function PlacementOutcomesPage() {
       ctcLpa: item.ctcLpa || 15.0,
       joiningDate: item.joiningDate || "2027-07-01",
       status: "PLACED",
-      notes: item.notes || "Official placement confirmed by Placement Directorate",
+      notes:
+        item.notes || "Official placement confirmed by Placement Directorate",
     });
     setShowConfirmModal(true);
   };
@@ -161,7 +171,8 @@ export default function PlacementOutcomesPage() {
         await loadData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to record outcome";
+      const msg =
+        err instanceof Error ? err.message : "Failed to record outcome";
       showToast({
         title: "Action Failed",
         message: msg,
@@ -205,11 +216,16 @@ export default function PlacementOutcomesPage() {
       `"${o.confirmedBy || "N/A"}"`,
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `CampusOS_Placement_Outcomes_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `CampusOS_Placement_Outcomes_${new Date().toISOString().split("T")[0]}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -292,7 +308,9 @@ export default function PlacementOutcomesPage() {
       cell: (item) => (
         <div className="flex flex-col text-xs">
           <span className="font-medium text-foreground">{item.program}</span>
-          <span className="text-muted-foreground">Class of {item.graduationYear}</span>
+          <span className="text-muted-foreground">
+            Class of {item.graduationYear}
+          </span>
         </div>
       ),
     },
@@ -315,7 +333,9 @@ export default function PlacementOutcomesPage() {
               </span>
             </>
           ) : (
-            <span className="text-xs text-muted-foreground italic">No company assigned</span>
+            <span className="text-xs text-muted-foreground italic">
+              No company assigned
+            </span>
           )}
         </div>
       ),
@@ -364,7 +384,9 @@ export default function PlacementOutcomesPage() {
                 {item.confirmedBy}
               </span>
               <span className="text-muted-foreground">
-                {item.confirmedAt ? new Date(item.confirmedAt).toLocaleDateString() : ""}
+                {item.confirmedAt
+                  ? new Date(item.confirmedAt).toLocaleDateString()
+                  : ""}
               </span>
             </>
           ) : (
@@ -411,7 +433,8 @@ export default function PlacementOutcomesPage() {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Institutional ledger of final graduate appointments, corporate placements, and verified CTC compensation.
+            Institutional ledger of final graduate appointments, corporate
+            placements, and verified CTC compensation.
           </p>
         </div>
 
@@ -474,8 +497,14 @@ export default function PlacementOutcomesPage() {
             className="w-44 h-9 text-xs"
             options={[
               { value: "ALL", label: "All Departments" },
-              { value: "Computer Science and Engineering", label: "Computer Science (CSE)" },
-              { value: "Electronics & Communication Engineering", label: "Electronics (ECE)" },
+              {
+                value: "Computer Science and Engineering",
+                label: "Computer Science (CSE)",
+              },
+              {
+                value: "Electronics & Communication Engineering",
+                label: "Electronics (ECE)",
+              },
               { value: "Mechanical Engineering", label: "Mechanical" },
               { value: "Information Technology", label: "Information Tech" },
             ]}
@@ -535,7 +564,8 @@ export default function PlacementOutcomesPage() {
                   Record Placement Outcome
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Confirm official institutional outcome for {selectedOutcome.studentName} ({selectedOutcome.rollNumber})
+                  Confirm official institutional outcome for{" "}
+                  {selectedOutcome.studentName} ({selectedOutcome.rollNumber})
                 </p>
               </div>
               <button
@@ -563,9 +593,15 @@ export default function PlacementOutcomesPage() {
                     className="w-full text-xs"
                     options={[
                       { value: "PLACED", label: "Placed (Confirmed)" },
-                      { value: "IN_PROCESS", label: "In Process / Interviewing" },
+                      {
+                        value: "IN_PROCESS",
+                        label: "In Process / Interviewing",
+                      },
                       { value: "NOT_PLACED", label: "Not Placed" },
-                      { value: "WITHDRAWN", label: "Withdrawn from Placements" },
+                      {
+                        value: "WITHDRAWN",
+                        label: "Withdrawn from Placements",
+                      },
                       { value: "DEFERRED", label: "Deferred (Higher Studies)" },
                     ]}
                   />
@@ -578,7 +614,10 @@ export default function PlacementOutcomesPage() {
                   <Input
                     value={confirmData.companyName}
                     onChange={(e) =>
-                      setConfirmData({ ...confirmData, companyName: e.target.value })
+                      setConfirmData({
+                        ...confirmData,
+                        companyName: e.target.value,
+                      })
                     }
                     className="h-9 text-xs"
                     placeholder="e.g. Cisco Systems"
@@ -594,7 +633,10 @@ export default function PlacementOutcomesPage() {
                   <Input
                     value={confirmData.positionTitle}
                     onChange={(e) =>
-                      setConfirmData({ ...confirmData, positionTitle: e.target.value })
+                      setConfirmData({
+                        ...confirmData,
+                        positionTitle: e.target.value,
+                      })
                     }
                     className="h-9 text-xs"
                     placeholder="e.g. Software Engineer"
@@ -630,7 +672,10 @@ export default function PlacementOutcomesPage() {
                   type="date"
                   value={confirmData.joiningDate}
                   onChange={(e) =>
-                    setConfirmData({ ...confirmData, joiningDate: e.target.value })
+                    setConfirmData({
+                      ...confirmData,
+                      joiningDate: e.target.value,
+                    })
                   }
                   className="h-9 text-xs"
                 />
@@ -643,7 +688,9 @@ export default function PlacementOutcomesPage() {
                 <textarea
                   rows={2}
                   value={confirmData.notes}
-                  onChange={(e) => setConfirmData({ ...confirmData, notes: e.target.value })}
+                  onChange={(e) =>
+                    setConfirmData({ ...confirmData, notes: e.target.value })
+                  }
                   className="w-full text-xs p-2 rounded-lg border bg-background text-foreground"
                   placeholder="e.g. Verified with signed acceptance letter"
                 />

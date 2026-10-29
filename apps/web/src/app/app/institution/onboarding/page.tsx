@@ -19,13 +19,23 @@ export default function TenantOnboardingPage() {
   const { hasPermission } = useAuth();
   const [institution, setInstitution] = useState<Institution | null>(null);
   const [plan, setPlan] = useState<TenantOnboardingPlanModel | null>(null);
-  const [checklist, setChecklist] = useState<OnboardingChecklistItemModel[]>([]);
-  const [readiness, setReadiness] = useState<ReadinessEvaluationResult | null>(null);
-  const [migrations, setMigrations] = useState<OnboardingMigrationJobModel[]>([]);
-  const [uatScenarios, setUatScenarios] = useState<OnboardingUATScenarioModel[]>([]);
+  const [checklist, setChecklist] = useState<OnboardingChecklistItemModel[]>(
+    [],
+  );
+  const [readiness, setReadiness] = useState<ReadinessEvaluationResult | null>(
+    null,
+  );
+  const [migrations, setMigrations] = useState<OnboardingMigrationJobModel[]>(
+    [],
+  );
+  const [uatScenarios, setUatScenarios] = useState<
+    OnboardingUATScenarioModel[]
+  >([]);
   const [approvals, setApprovals] = useState<OnboardingApprovalModel[]>([]);
 
-  const [activeTab, setActiveTab] = useState<"readiness" | "migration" | "uat" | "approvals" | "golive">("readiness");
+  const [activeTab, setActiveTab] = useState<
+    "readiness" | "migration" | "uat" | "approvals" | "golive"
+  >("readiness");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
@@ -33,7 +43,10 @@ export default function TenantOnboardingPage() {
   // Category filter
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
-  const canManage = hasPermission("core:institutions:manage") || hasPermission("platform:tenants:manage") || true;
+  const canManage =
+    hasPermission("core:institutions:manage") ||
+    hasPermission("platform:tenants:manage") ||
+    true;
 
   const loadData = async () => {
     try {
@@ -44,23 +57,38 @@ export default function TenantOnboardingPage() {
 
       if (instRes.data?.id) {
         // Fetch or create onboarding plan
-        const planRes = await apiFetch<TenantOnboardingPlanModel>(`/api/v1/onboarding/plans/${instRes.data.id}`).catch(async () => {
+        const planRes = await apiFetch<TenantOnboardingPlanModel>(
+          `/api/v1/onboarding/plans/${instRes.data.id}`,
+        ).catch(async () => {
           // If not created yet, create it
-          return await apiFetch<TenantOnboardingPlanModel>("/api/v1/onboarding/plans", {
-            method: "POST",
-            body: JSON.stringify({ tenant_id: instRes.data.id }),
-          });
+          return await apiFetch<TenantOnboardingPlanModel>(
+            "/api/v1/onboarding/plans",
+            {
+              method: "POST",
+              body: JSON.stringify({ tenant_id: instRes.data.id }),
+            },
+          );
         });
 
         setPlan(planRes.data);
 
         // Fetch checklist, readiness, migration, uat, approvals
         const [chkRes, readyRes, migRes, uatRes, appRes] = await Promise.all([
-          apiFetch<OnboardingChecklistItemModel[]>(`/api/v1/onboarding/plans/${instRes.data.id}/checklist`),
-          apiFetch<ReadinessEvaluationResult>(`/api/v1/onboarding/plans/${instRes.data.id}/readiness`),
-          apiFetch<OnboardingMigrationJobModel[]>(`/api/v1/onboarding/plans/${instRes.data.id}/migration`),
-          apiFetch<OnboardingUATScenarioModel[]>(`/api/v1/onboarding/plans/${instRes.data.id}/uat`),
-          apiFetch<OnboardingApprovalModel[]>(`/api/v1/onboarding/plans/${instRes.data.id}/approvals`),
+          apiFetch<OnboardingChecklistItemModel[]>(
+            `/api/v1/onboarding/plans/${instRes.data.id}/checklist`,
+          ),
+          apiFetch<ReadinessEvaluationResult>(
+            `/api/v1/onboarding/plans/${instRes.data.id}/readiness`,
+          ),
+          apiFetch<OnboardingMigrationJobModel[]>(
+            `/api/v1/onboarding/plans/${instRes.data.id}/migration`,
+          ),
+          apiFetch<OnboardingUATScenarioModel[]>(
+            `/api/v1/onboarding/plans/${instRes.data.id}/uat`,
+          ),
+          apiFetch<OnboardingApprovalModel[]>(
+            `/api/v1/onboarding/plans/${instRes.data.id}/approvals`,
+          ),
         ]);
 
         setChecklist(chkRes.data || []);
@@ -70,7 +98,11 @@ export default function TenantOnboardingPage() {
         setApprovals(appRes.data || []);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load onboarding orchestration data");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load onboarding orchestration data",
+      );
     } finally {
       setLoading(false);
     }
@@ -83,18 +115,25 @@ export default function TenantOnboardingPage() {
   const handleUpdateChecklist = async (itemCode: string, newStatus: string) => {
     if (!institution) return;
     try {
-      await apiFetch(`/api/v1/onboarding/plans/${institution.id}/checklist/${itemCode}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          status: newStatus,
-          evidence_ref: `manual_attestation:${new Date().toISOString()}`,
-          responsible_owner: "institution_admin",
-        }),
-      });
-      setActionSuccess(`Checklist criterion ${itemCode} updated to ${newStatus}`);
+      await apiFetch(
+        `/api/v1/onboarding/plans/${institution.id}/checklist/${itemCode}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            status: newStatus,
+            evidence_ref: `manual_attestation:${new Date().toISOString()}`,
+            responsible_owner: "institution_admin",
+          }),
+        },
+      );
+      setActionSuccess(
+        `Checklist criterion ${itemCode} updated to ${newStatus}`,
+      );
       await loadData();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to update checklist item");
+      setError(
+        err instanceof Error ? err.message : "Failed to update checklist item",
+      );
     }
   };
 
@@ -103,19 +142,26 @@ export default function TenantOnboardingPage() {
     const confirmed = window.confirm(
       isDryRun
         ? "Execute dry-run simulation of the 10-step go-live launch sequence?"
-        : "CRITICAL: You are about to certify and activate this institution LIVE. Proceed?"
+        : "CRITICAL: You are about to certify and activate this institution LIVE. Proceed?",
     );
     if (!confirmed) return;
 
     try {
-      await apiFetch(`/api/v1/onboarding/plans/${institution.id}/golive/execute`, {
-        method: "POST",
-        body: JSON.stringify({
-          is_dry_run: isDryRun,
-          idempotency_key: `launch_${Date.now()}`,
-        }),
-      });
-      setActionSuccess(isDryRun ? "Dry-run launch sequence validated successfully." : "Institution ACTIVATED LIVE! Hypercare initiated.");
+      await apiFetch(
+        `/api/v1/onboarding/plans/${institution.id}/golive/execute`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            is_dry_run: isDryRun,
+            idempotency_key: `launch_${Date.now()}`,
+          }),
+        },
+      );
+      setActionSuccess(
+        isDryRun
+          ? "Dry-run launch sequence validated successfully."
+          : "Institution ACTIVATED LIVE! Hypercare initiated.",
+      );
       await loadData();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Go-live execution failed");
@@ -124,9 +170,13 @@ export default function TenantOnboardingPage() {
 
   const handleRollback = async () => {
     if (!institution) return;
-    const reason = window.prompt("Enter documented reason for initiating emergency rollback:");
+    const reason = window.prompt(
+      "Enter documented reason for initiating emergency rollback:",
+    );
     if (!reason || reason.trim().length < 10) {
-      alert("Rollback requires a documented reason with at least 10 characters.");
+      alert(
+        "Rollback requires a documented reason with at least 10 characters.",
+      );
       return;
     }
 
@@ -138,7 +188,9 @@ export default function TenantOnboardingPage() {
           preserve_imported_data: true,
         }),
       });
-      setActionSuccess("Emergency rollback executed. Tenant suspended safely and data preserved.");
+      setActionSuccess(
+        "Emergency rollback executed. Tenant suspended safely and data preserved.",
+      );
       await loadData();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Rollback failed");
@@ -148,7 +200,9 @@ export default function TenantOnboardingPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-sm text-slate-400">Loading onboarding and go-live status...</div>
+        <div className="text-sm text-slate-400">
+          Loading onboarding and go-live status...
+        </div>
       </div>
     );
   }
@@ -173,14 +227,16 @@ export default function TenantOnboardingPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight text-white">
-                {institution?.legal_name || "Institution"} — Go-Live Orchestration
+                {institution?.legal_name || "Institution"} — Go-Live
+                Orchestration
               </h1>
               <span className="rounded-md bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-400 border border-indigo-500/20">
                 {plan?.current_state || "DRAFT"}
               </span>
             </div>
             <p className="mt-1 text-sm text-slate-400">
-              Controlled onboarding, explainable readiness certification, data migration reconciliation, and launch orchestration.
+              Controlled onboarding, explainable readiness certification, data
+              migration reconciliation, and launch orchestration.
             </p>
           </div>
 
@@ -229,8 +285,8 @@ export default function TenantOnboardingPage() {
             readiness.overall_status === "READY"
               ? "border-emerald-800 bg-emerald-950/20"
               : readiness.overall_status === "BLOCKED"
-              ? "border-rose-800 bg-rose-950/20"
-              : "border-amber-800 bg-amber-950/20"
+                ? "border-rose-800 bg-rose-950/20"
+                : "border-amber-800 bg-amber-950/20"
           }`}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -244,14 +300,15 @@ export default function TenantOnboardingPage() {
                     readiness.overall_status === "READY"
                       ? "text-emerald-400"
                       : readiness.overall_status === "BLOCKED"
-                      ? "text-rose-400"
-                      : "text-amber-400"
+                        ? "text-rose-400"
+                        : "text-amber-400"
                   }`}
                 >
                   {readiness.overall_status}
                 </span>
                 <span className="text-xs text-slate-400">
-                  ({readiness.passed_checks}/{readiness.total_checks} criteria verified, {readiness.waived_checks} waived)
+                  ({readiness.passed_checks}/{readiness.total_checks} criteria
+                  verified, {readiness.waived_checks} waived)
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-300">
@@ -261,8 +318,12 @@ export default function TenantOnboardingPage() {
               </p>
             </div>
             <div className="text-right">
-              <span className="text-xs text-slate-400">Current Lifecycle Stage:</span>
-              <div className="text-sm font-semibold text-white">{readiness.current_state}</div>
+              <span className="text-xs text-slate-400">
+                Current Lifecycle Stage:
+              </span>
+              <div className="text-sm font-semibold text-white">
+                {readiness.current_state}
+              </div>
             </div>
           </div>
 
@@ -272,9 +333,11 @@ export default function TenantOnboardingPage() {
                 Active Blockers ({readiness.blocking_reasons.length}):
               </h4>
               <ul className="mt-1.5 list-disc pl-5 text-xs text-slate-300 space-y-1">
-                {readiness.blocking_reasons.map((reason: string, idx: number) => (
-                  <li key={idx}>{reason}</li>
-                ))}
+                {readiness.blocking_reasons.map(
+                  (reason: string, idx: number) => (
+                    <li key={idx}>{reason}</li>
+                  ),
+                )}
               </ul>
             </div>
           )}
@@ -334,7 +397,16 @@ export default function TenantOnboardingPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              {["ALL", "PLATFORM_SETUP", "IDENTITY_ACCESS", "ACADEMIC_CONFIG", "FINANCE", "DATA_MIGRATION", "INTEGRATIONS_COMMS", "SECURITY_OPERATIONS"].map((cat) => (
+              {[
+                "ALL",
+                "PLATFORM_SETUP",
+                "IDENTITY_ACCESS",
+                "ACADEMIC_CONFIG",
+                "FINANCE",
+                "DATA_MIGRATION",
+                "INTEGRATIONS_COMMS",
+                "SECURITY_OPERATIONS",
+              ].map((cat) => (
                 <button
                   key={cat}
                   type="button"
@@ -366,7 +438,9 @@ export default function TenantOnboardingPage() {
               <tbody className="divide-y divide-slate-800/60">
                 {filteredChecklist.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-800/20">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-200">{item.item_code}</td>
+                    <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-200">
+                      {item.item_code}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="font-medium text-white flex items-center gap-2">
                         {item.title}
@@ -376,32 +450,40 @@ export default function TenantOnboardingPage() {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400 mt-0.5">{item.description}</div>
+                      <div className="text-xs text-slate-400 mt-0.5">
+                        {item.description}
+                      </div>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-400">{item.category}</td>
+                    <td className="px-4 py-3 text-xs text-slate-400">
+                      {item.category}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-md px-2 py-0.5 text-xs font-medium border ${
                           item.status === "PASSED"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : item.status === "WAIVED"
-                            ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                            : item.status === "FAILED"
-                            ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                            : item.status === "BLOCKED"
-                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                            : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                              ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                              : item.status === "FAILED"
+                                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                                : item.status === "BLOCKED"
+                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                  : "bg-slate-500/10 text-slate-400 border-slate-500/20"
                         }`}
                       >
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-400">{item.verification_method}</td>
+                    <td className="px-4 py-3 text-xs text-slate-400">
+                      {item.verification_method}
+                    </td>
                     <td className="px-4 py-3 text-right">
                       {item.status !== "PASSED" && (
                         <button
                           type="button"
-                          onClick={() => handleUpdateChecklist(item.item_code, "PASSED")}
+                          onClick={() =>
+                            handleUpdateChecklist(item.item_code, "PASSED")
+                          }
                           className="rounded bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-indigo-500"
                         >
                           Verify & Pass
@@ -420,9 +502,12 @@ export default function TenantOnboardingPage() {
       {activeTab === "migration" && (
         <div className="space-y-4">
           <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-            <h3 className="text-sm font-semibold text-white">Migration Reconciliation Log</h3>
+            <h3 className="text-sm font-semibold text-white">
+              Migration Reconciliation Log
+            </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Deterministic reconciliation between uploaded source files and operational records. Discrepancy count must equal 0.
+              Deterministic reconciliation between uploaded source files and
+              operational records. Discrepancy count must equal 0.
             </p>
           </div>
 
@@ -441,25 +526,41 @@ export default function TenantOnboardingPage() {
               <tbody className="divide-y divide-slate-800/60">
                 {migrations.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-xs text-slate-500">
+                    <td
+                      colSpan={6}
+                      className="px-4 py-8 text-center text-xs text-slate-500"
+                    >
                       No data migration jobs recorded yet.
                     </td>
                   </tr>
                 ) : (
                   migrations.map((job) => (
                     <tr key={job.id} className="hover:bg-slate-800/20">
-                      <td className="px-4 py-3 font-semibold text-white">{job.domain_name}</td>
-                      <td className="px-4 py-3 font-mono text-xs text-slate-300">{job.source_filename}</td>
-                      <td className="px-4 py-3 text-xs">{job.source_record_count}</td>
+                      <td className="px-4 py-3 font-semibold text-white">
+                        {job.domain_name}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs text-slate-300">
+                        {job.source_filename}
+                      </td>
                       <td className="px-4 py-3 text-xs">
-                        <span className="text-emerald-400">{job.accepted_record_count}</span> /{" "}
-                        <span className="text-rose-400">{job.rejected_record_count}</span>
+                        {job.source_record_count}
+                      </td>
+                      <td className="px-4 py-3 text-xs">
+                        <span className="text-emerald-400">
+                          {job.accepted_record_count}
+                        </span>{" "}
+                        /{" "}
+                        <span className="text-rose-400">
+                          {job.rejected_record_count}
+                        </span>
                       </td>
                       <td className="px-4 py-3 text-xs font-semibold">
                         {job.reconciliation_diff_count === 0 ? (
                           <span className="text-emerald-400">0 (Match)</span>
                         ) : (
-                          <span className="text-rose-400">{job.reconciliation_diff_count} diff</span>
+                          <span className="text-rose-400">
+                            {job.reconciliation_diff_count} diff
+                          </span>
                         )}
                       </td>
                       <td className="px-4 py-3">
@@ -493,10 +594,14 @@ export default function TenantOnboardingPage() {
               <tbody className="divide-y divide-slate-800/60">
                 {uatScenarios.map((sc) => (
                   <tr key={sc.id} className="hover:bg-slate-800/20">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-200">{sc.scenario_code}</td>
+                    <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-200">
+                      {sc.scenario_code}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="font-medium text-white">{sc.title}</div>
-                      <div className="text-xs text-slate-400">{sc.expected_outcome}</div>
+                      <div className="text-xs text-slate-400">
+                        {sc.expected_outcome}
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -504,8 +609,8 @@ export default function TenantOnboardingPage() {
                           sc.status === "PASSED"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : sc.status === "FAILED"
-                            ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                            : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                              ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              : "bg-slate-500/10 text-slate-400 border-slate-500/20"
                         }`}
                       >
                         {sc.status}
@@ -513,7 +618,9 @@ export default function TenantOnboardingPage() {
                     </td>
                     <td className="px-4 py-3 text-xs text-slate-400">
                       {sc.defect_severity !== "NONE" ? (
-                        <span className="text-rose-400 font-semibold">{sc.defect_severity}</span>
+                        <span className="text-rose-400 font-semibold">
+                          {sc.defect_severity}
+                        </span>
                       ) : (
                         "None"
                       )}
@@ -545,25 +652,31 @@ export default function TenantOnboardingPage() {
               <tbody className="divide-y divide-slate-800/60">
                 {approvals.map((app) => (
                   <tr key={app.id} className="hover:bg-slate-800/20">
-                    <td className="px-4 py-3 font-semibold text-white">{app.role.replace(/_/g, " ")}</td>
+                    <td className="px-4 py-3 font-semibold text-white">
+                      {app.role.replace(/_/g, " ")}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-md px-2 py-0.5 text-xs font-medium border ${
                           app.decision === "APPROVED"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : app.decision === "REJECTED"
-                            ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                            : app.decision === "INVALIDATED"
-                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                            : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                              ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              : app.decision === "INVALIDATED"
+                                ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                : "bg-slate-500/10 text-slate-400 border-slate-500/20"
                         }`}
                       >
                         {app.decision}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-300">{app.approver_email || "Pending Assignment"}</td>
+                    <td className="px-4 py-3 text-xs text-slate-300">
+                      {app.approver_email || "Pending Assignment"}
+                    </td>
                     <td className="px-4 py-3 text-xs text-slate-400">
-                      {app.decision_at ? new Date(app.decision_at).toLocaleString() : "—"}
+                      {app.decision_at
+                        ? new Date(app.decision_at).toLocaleString()
+                        : "—"}
                     </td>
                   </tr>
                 ))}

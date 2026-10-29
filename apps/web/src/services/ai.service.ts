@@ -18,7 +18,10 @@ export interface AiAssistantContext {
 }
 
 export interface IAiService {
-  sendMessage(message: string, context?: AiAssistantContext): Promise<ApiResponse<AiChatMessage>>;
+  sendMessage(
+    message: string,
+    context?: AiAssistantContext,
+  ): Promise<ApiResponse<AiChatMessage>>;
   getPresetPrompts(role?: string): string[];
 }
 
@@ -63,7 +66,10 @@ class MockAiService implements IAiService {
     }
   }
 
-  async sendMessage(message: string, context?: AiAssistantContext): Promise<ApiResponse<AiChatMessage>> {
+  async sendMessage(
+    message: string,
+    context?: AiAssistantContext,
+  ): Promise<ApiResponse<AiChatMessage>> {
     await new Promise((r) => setTimeout(r, 600)); // Natural simulated latency
 
     const lower = message.toLowerCase();
@@ -76,29 +82,45 @@ class MockAiService implements IAiService {
         { label: "Open Attendance Dashboard", href: "/app/attendance" },
         { label: "Inspect Low Attendance Roster", href: "/app/attendance" },
       ];
-    } else if (lower.includes("fee") || lower.includes("due") || lower.includes("revenue")) {
+    } else if (
+      lower.includes("fee") ||
+      lower.includes("due") ||
+      lower.includes("revenue")
+    ) {
       reply = `Financial summary as of today: Total annual billed tuition & residential fees is **₹31.2 Cr**, with **92.4%** successfully cleared. Outstanding student receivables stand at **₹2.56 Cr** across 84 installment invoices.`;
       actions = [
         { label: "View Fee Invoices", href: "/app/finance/invoices" },
         { label: "Fee Structures", href: "/app/finance/fee-structures" },
       ];
-    } else if (lower.includes("placement") || lower.includes("drive") || lower.includes("cisco") || lower.includes("offer")) {
+    } else if (
+      lower.includes("placement") ||
+      lower.includes("drive") ||
+      lower.includes("cisco") ||
+      lower.includes("offer")
+    ) {
       reply = `Career & Corporate Placement Cell Status: **3 active drives** currently in progress (Cisco Systems, Microsoft India R&D, TCS Digital). Overall 2026–27 Tier-1/2 placement rate is **84.2%** with highest verified package of **₹24.0 LPA** (Microsoft Cloud).`;
       actions = [
         { label: "Placement Dashboard", href: "/app/placement" },
         { label: "Inspect Candidate Shortlists", href: "/app/placement" },
       ];
-    } else if (lower.includes("exam") || lower.includes("cia") || lower.includes("schedule") || lower.includes("test")) {
+    } else if (
+      lower.includes("exam") ||
+      lower.includes("cia") ||
+      lower.includes("schedule") ||
+      lower.includes("test")
+    ) {
       reply = `Examinations & Evaluation Update: The Continuous Internal Assessment 1 (CIA-1) begins on **12th October 2026**. Seating allocations for 5th Semester CSE have been generated in Auditorium Hall A. CIA-1 marks entry windows will open on 15th October.`;
       actions = [
         { label: "View Exam Schedules", href: "/app/examinations/schedules" },
         { label: "Semester Results", href: "/app/examinations/results" },
       ];
-    } else if (lower.includes("hostel") || lower.includes("room") || lower.includes("bed")) {
+    } else if (
+      lower.includes("hostel") ||
+      lower.includes("room") ||
+      lower.includes("bed")
+    ) {
       reply = `Residential Infrastructure: Campus hostels are operating at **94.2% occupancy** (468 of 500 beds allocated). Sir C. V. Raman Hall (Boys) has 14 beds available; Kalpana Chawla Hall (Girls) has 12 beds available.`;
-      actions = [
-        { label: "Hostel Overview", href: "/app/hostel" },
-      ];
+      actions = [{ label: "Hostel Overview", href: "/app/hostel" }];
     } else {
       const roleNotice = context?.role ? ` for ${context.role} role` : "";
       reply = `[CampusOS AI Assistant${roleNotice}]: Received query: "${message}". In the connected production environment, this query is processed via the CampusOS Institutional Knowledge Engine with granular Role-Based Access Control (PBAC), surfacing real-time verified data directly from PostgreSQL.`;
@@ -112,7 +134,10 @@ class MockAiService implements IAiService {
       id: `ai-msg-${Date.now()}`,
       sender: "assistant",
       content: reply,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       suggestedActions: actions,
     };
 

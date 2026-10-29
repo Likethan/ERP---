@@ -9,9 +9,9 @@ Enforces:
 - Bounded, predictable preview generation.
 """
 
-from datetime import UTC, datetime
 import html
 import re
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -26,8 +26,6 @@ from app.models.notification import (
 from app.repositories.notification_repository import NotificationRepository
 from app.schemas.notification import (
     NotificationTemplateCreate,
-    NotificationTemplateUpdate,
-    NotificationTemplateVersionCreate,
     TemplatePreviewRequest,
     TemplatePreviewResponse,
 )

@@ -30,11 +30,19 @@ export interface StudentFilterParams {
 
 class StudentsService {
   private students: StudentComprehensiveDetail[] = [...MOCK_STUDENTS];
-  private guardiansPool: Record<string, GuardianRecord[]> = { ...MOCK_GUARDIANS_POOL };
-  private documentsPool: Record<string, PersonDocument[]> = { ...MOCK_STUDENT_DOCUMENTS };
-  private milestonesPool: Record<string, AcademicMilestone[]> = { ...MOCK_ACADEMIC_MILESTONES };
+  private guardiansPool: Record<string, GuardianRecord[]> = {
+    ...MOCK_GUARDIANS_POOL,
+  };
+  private documentsPool: Record<string, PersonDocument[]> = {
+    ...MOCK_STUDENT_DOCUMENTS,
+  };
+  private milestonesPool: Record<string, AcademicMilestone[]> = {
+    ...MOCK_ACADEMIC_MILESTONES,
+  };
 
-  async list(params?: StudentFilterParams): Promise<PaginatedResponse<StudentComprehensiveDetail>> {
+  async list(
+    params?: StudentFilterParams,
+  ): Promise<PaginatedResponse<StudentComprehensiveDetail>> {
     await new Promise((r) => setTimeout(r, 60));
 
     let filtered = [...this.students];
@@ -47,16 +55,24 @@ class StudentsService {
           s.lastName.toLowerCase().includes(q) ||
           s.rollNumber.toLowerCase().includes(q) ||
           s.registrationNumber.toLowerCase().includes(q) ||
-          s.email.toLowerCase().includes(q)
+          s.email.toLowerCase().includes(q),
       );
     }
 
     if (params?.department && params.department !== "ALL") {
-      filtered = filtered.filter((s) => s.program.department.toLowerCase() === params.department?.toLowerCase());
+      filtered = filtered.filter(
+        (s) =>
+          s.program.department.toLowerCase() ===
+          params.department?.toLowerCase(),
+      );
     }
 
     if (params?.program && params.program !== "ALL") {
-      filtered = filtered.filter((s) => s.program.code === params.program || s.program.name.includes(params.program!));
+      filtered = filtered.filter(
+        (s) =>
+          s.program.code === params.program ||
+          s.program.name.includes(params.program!),
+      );
     }
 
     if (params?.status && params.status !== "ALL") {
@@ -64,7 +80,9 @@ class StudentsService {
     }
 
     if (params?.gender && params.gender !== "ALL") {
-      filtered = filtered.filter((s) => s.gender.toLowerCase() === params.gender?.toLowerCase());
+      filtered = filtered.filter(
+        (s) => s.gender.toLowerCase() === params.gender?.toLowerCase(),
+      );
     }
 
     if (params?.section && params.section !== "ALL") {
@@ -72,7 +90,9 @@ class StudentsService {
     }
 
     if (params?.semester && !isNaN(Number(params.semester))) {
-      filtered = filtered.filter((s) => s.currentSemester === Number(params.semester));
+      filtered = filtered.filter(
+        (s) => s.currentSemester === Number(params.semester),
+      );
     }
 
     if (params?.academicYear && params.academicYear !== "ALL") {
@@ -103,10 +123,12 @@ class StudentsService {
     };
   }
 
-  async getById(id: string): Promise<ApiResponse<StudentComprehensiveDetail | null>> {
+  async getById(
+    id: string,
+  ): Promise<ApiResponse<StudentComprehensiveDetail | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const student = this.students.find(
-      (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase()
+      (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );
 
     if (!student) {
@@ -116,19 +138,23 @@ class StudentsService {
     // Attach relational collections
     const fullStudent: StudentComprehensiveDetail = {
       ...student,
-      guardians: this.guardiansPool[student.id] || (student.guardian ? [
-        {
-          id: `grd-${student.id}-1`,
-          name: student.guardian.name,
-          relation: "FATHER",
-          relationLabel: student.guardian.relation,
-          phone: student.guardian.phone,
-          email: student.guardian.email,
-          occupation: student.guardian.occupation,
-          isPrimary: true,
-          isEmergencyContact: true,
-        },
-      ] : []),
+      guardians:
+        this.guardiansPool[student.id] ||
+        (student.guardian
+          ? [
+              {
+                id: `grd-${student.id}-1`,
+                name: student.guardian.name,
+                relation: "FATHER",
+                relationLabel: student.guardian.relation,
+                phone: student.guardian.phone,
+                email: student.guardian.email,
+                occupation: student.guardian.occupation,
+                isPrimary: true,
+                isEmergencyContact: true,
+              },
+            ]
+          : []),
       documentsVault: this.documentsPool[student.id] || [],
       milestones: this.milestonesPool[student.id] || [],
     };
@@ -139,7 +165,9 @@ class StudentsService {
     };
   }
 
-  async create(data: Partial<StudentComprehensiveDetail>): Promise<ApiResponse<StudentComprehensiveDetail>> {
+  async create(
+    data: Partial<StudentComprehensiveDetail>,
+  ): Promise<ApiResponse<StudentComprehensiveDetail>> {
     await new Promise((r) => setTimeout(r, 100));
     const newStudent: StudentComprehensiveDetail = {
       id: `stu-${Date.now()}`,
@@ -153,7 +181,8 @@ class StudentsService {
       dateOfBirth: data.dateOfBirth || "2004-01-01",
       bloodGroup: data.bloodGroup || "O+",
       status: data.status || "ACTIVE",
-      admissionDate: data.admissionDate || new Date().toISOString().split("T")[0],
+      admissionDate:
+        data.admissionDate || new Date().toISOString().split("T")[0],
       program: data.program || {
         id: "prog-cse-btech",
         code: "BTECH-CSE",
@@ -206,7 +235,8 @@ class StudentsService {
       recentActivity: [
         {
           id: `act-${Date.now()}`,
-          action: "Student record formally registered into CampusOS People Registry",
+          action:
+            "Student record formally registered into CampusOS People Registry",
           timestamp: "Just now",
           domain: "Admissions",
           actor: "Registrar Office",
@@ -251,10 +281,13 @@ class StudentsService {
     };
   }
 
-  async update(id: string, data: Partial<StudentComprehensiveDetail>): Promise<ApiResponse<StudentComprehensiveDetail>> {
+  async update(
+    id: string,
+    data: Partial<StudentComprehensiveDetail>,
+  ): Promise<ApiResponse<StudentComprehensiveDetail>> {
     await new Promise((r) => setTimeout(r, 80));
     const idx = this.students.findIndex(
-      (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase()
+      (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );
     if (idx === -1) {
       throw new Error(`Student not found with ID ${id}`);
@@ -270,7 +303,9 @@ class StudentsService {
   // Guardian Sub-Service Methods
   // ==========================================
 
-  async getGuardians(studentId: string): Promise<ApiResponse<GuardianRecord[]>> {
+  async getGuardians(
+    studentId: string,
+  ): Promise<ApiResponse<GuardianRecord[]>> {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -278,7 +313,10 @@ class StudentsService {
     };
   }
 
-  async addGuardian(studentId: string, data: Partial<GuardianRecord>): Promise<ApiResponse<GuardianRecord>> {
+  async addGuardian(
+    studentId: string,
+    data: Partial<GuardianRecord>,
+  ): Promise<ApiResponse<GuardianRecord>> {
     await new Promise((r) => setTimeout(r, 60));
     const newGrd: GuardianRecord = {
       id: `grd-${Date.now()}`,
@@ -301,7 +339,11 @@ class StudentsService {
     return { success: true, data: newGrd };
   }
 
-  async updateGuardian(studentId: string, guardianId: string, data: Partial<GuardianRecord>): Promise<ApiResponse<GuardianRecord>> {
+  async updateGuardian(
+    studentId: string,
+    guardianId: string,
+    data: Partial<GuardianRecord>,
+  ): Promise<ApiResponse<GuardianRecord>> {
     await new Promise((r) => setTimeout(r, 60));
     const list = this.guardiansPool[studentId] || [];
     const idx = list.findIndex((g) => g.id === guardianId);
@@ -310,10 +352,15 @@ class StudentsService {
     return { success: true, data: list[idx] };
   }
 
-  async deleteGuardian(studentId: string, guardianId: string): Promise<ApiResponse<boolean>> {
+  async deleteGuardian(
+    studentId: string,
+    guardianId: string,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 50));
     if (this.guardiansPool[studentId]) {
-      this.guardiansPool[studentId] = this.guardiansPool[studentId].filter((g) => g.id !== guardianId);
+      this.guardiansPool[studentId] = this.guardiansPool[studentId].filter(
+        (g) => g.id !== guardianId,
+      );
     }
     return { success: true, data: true };
   }
@@ -322,7 +369,9 @@ class StudentsService {
   // Document Vault Sub-Service Methods
   // ==========================================
 
-  async getDocuments(studentId: string): Promise<ApiResponse<PersonDocument[]>> {
+  async getDocuments(
+    studentId: string,
+  ): Promise<ApiResponse<PersonDocument[]>> {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -330,7 +379,10 @@ class StudentsService {
     };
   }
 
-  async uploadDocument(studentId: string, data: Partial<PersonDocument>): Promise<ApiResponse<PersonDocument>> {
+  async uploadDocument(
+    studentId: string,
+    data: Partial<PersonDocument>,
+  ): Promise<ApiResponse<PersonDocument>> {
     await new Promise((r) => setTimeout(r, 80));
     const newDoc: PersonDocument = {
       id: `doc-${Date.now()}`,
@@ -350,7 +402,11 @@ class StudentsService {
     return { success: true, data: newDoc };
   }
 
-  async verifyDocument(studentId: string, documentId: string, verifierName = "Verification Officer"): Promise<ApiResponse<PersonDocument>> {
+  async verifyDocument(
+    studentId: string,
+    documentId: string,
+    verifierName = "Verification Officer",
+  ): Promise<ApiResponse<PersonDocument>> {
     await new Promise((r) => setTimeout(r, 60));
     const list = this.documentsPool[studentId] || [];
     const doc = list.find((d) => d.id === documentId);
@@ -361,7 +417,11 @@ class StudentsService {
     return { success: true, data: doc };
   }
 
-  async rejectDocument(studentId: string, documentId: string, reason: string): Promise<ApiResponse<PersonDocument>> {
+  async rejectDocument(
+    studentId: string,
+    documentId: string,
+    reason: string,
+  ): Promise<ApiResponse<PersonDocument>> {
     await new Promise((r) => setTimeout(r, 60));
     const list = this.documentsPool[studentId] || [];
     const doc = list.find((d) => d.id === documentId);
@@ -371,10 +431,15 @@ class StudentsService {
     return { success: true, data: doc };
   }
 
-  async deleteDocument(studentId: string, documentId: string): Promise<ApiResponse<boolean>> {
+  async deleteDocument(
+    studentId: string,
+    documentId: string,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 50));
     if (this.documentsPool[studentId]) {
-      this.documentsPool[studentId] = this.documentsPool[studentId].filter((d) => d.id !== documentId);
+      this.documentsPool[studentId] = this.documentsPool[studentId].filter(
+        (d) => d.id !== documentId,
+      );
     }
     return { success: true, data: true };
   }
@@ -383,7 +448,9 @@ class StudentsService {
   // Milestone Timeline Sub-Service Methods
   // ==========================================
 
-  async getMilestones(studentId: string): Promise<ApiResponse<AcademicMilestone[]>> {
+  async getMilestones(
+    studentId: string,
+  ): Promise<ApiResponse<AcademicMilestone[]>> {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -391,7 +458,10 @@ class StudentsService {
     };
   }
 
-  async addMilestone(studentId: string, data: Partial<AcademicMilestone>): Promise<ApiResponse<AcademicMilestone>> {
+  async addMilestone(
+    studentId: string,
+    data: Partial<AcademicMilestone>,
+  ): Promise<ApiResponse<AcademicMilestone>> {
     await new Promise((r) => setTimeout(r, 60));
     const newMls: AcademicMilestone = {
       id: `mls-${Date.now()}`,
@@ -399,7 +469,8 @@ class StudentsService {
       category: data.category || "ACHIEVEMENT",
       date: data.date || new Date().toISOString().split("T")[0],
       semester: data.semester || 1,
-      description: data.description || "Official milestone recorded in CampusOS Registry.",
+      description:
+        data.description || "Official milestone recorded in CampusOS Registry.",
       status: data.status || "COMPLETED",
       awardedBy: data.awardedBy,
       certificateRef: data.certificateRef,

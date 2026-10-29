@@ -71,11 +71,19 @@ class AttendanceService {
   private policies: AttendancePolicy[] = [...MOCK_ATTENDANCE_POLICIES];
   private sessions: AttendanceSession[] = [...MOCK_CANONICAL_SESSIONS];
   private records: AttendanceRecord[] = [...MOCK_ATTENDANCE_RECORDS];
-  private studentSummaries: AttendanceStudentSummary[] = [...MOCK_ATTENDANCE_STUDENT_SUMMARIES];
-  private courseSummaries: AttendanceCourseSummary[] = [...MOCK_ATTENDANCE_COURSE_SUMMARIES];
+  private studentSummaries: AttendanceStudentSummary[] = [
+    ...MOCK_ATTENDANCE_STUDENT_SUMMARIES,
+  ];
+  private courseSummaries: AttendanceCourseSummary[] = [
+    ...MOCK_ATTENDANCE_COURSE_SUMMARIES,
+  ];
   private leaves: AttendanceLeave[] = [...MOCK_ATTENDANCE_LEAVES];
-  private corrections: AttendanceCorrection[] = [...MOCK_ATTENDANCE_CORRECTIONS_DETAIL];
-  private operationsSummary: AttendanceSummary = { ...MOCK_ATTENDANCE_OPERATIONS_SUMMARY };
+  private corrections: AttendanceCorrection[] = [
+    ...MOCK_ATTENDANCE_CORRECTIONS_DETAIL,
+  ];
+  private operationsSummary: AttendanceSummary = {
+    ...MOCK_ATTENDANCE_OPERATIONS_SUMMARY,
+  };
 
   // ==========================================
   // 1. OPERATIONS DASHBOARD & SUMMARY
@@ -84,12 +92,20 @@ class AttendanceService {
   async getDashboardSummary(): Promise<ApiResponse<AttendanceSummary>> {
     await new Promise((r) => setTimeout(r, 40));
     // Dynamically calculate pending items
-    const pendingLeaves = this.leaves.filter((l) => l.status === "PENDING").length;
-    const pendingCorrections = this.corrections.filter((c) => c.status === "PENDING").length;
+    const pendingLeaves = this.leaves.filter(
+      (l) => l.status === "PENDING",
+    ).length;
+    const pendingCorrections = this.corrections.filter(
+      (c) => c.status === "PENDING",
+    ).length;
     const today = "2026-10-02";
     const todaySessions = this.sessions.filter((s) => s.date === today);
-    const todayCompleted = todaySessions.filter((s) => s.status === "COMPLETED").length;
-    const todayPending = todaySessions.filter((s) => s.status !== "COMPLETED" && s.status !== "CANCELLED").length;
+    const todayCompleted = todaySessions.filter(
+      (s) => s.status === "COMPLETED",
+    ).length;
+    const todayPending = todaySessions.filter(
+      (s) => s.status !== "COMPLETED" && s.status !== "CANCELLED",
+    ).length;
 
     return {
       success: true,
@@ -105,14 +121,16 @@ class AttendanceService {
   }
 
   // Legacy getDashboard() method
-  async getDashboard(): Promise<ApiResponse<{
-    todaySessionsCount: number;
-    sessionsMarkedToday: number;
-    overallAttendancePercentage: number;
-    studentsBelowThresholdCount: number;
-    pendingLeaveRequestsCount: number;
-    pendingCorrectionsCount: number;
-  }>> {
+  async getDashboard(): Promise<
+    ApiResponse<{
+      todaySessionsCount: number;
+      sessionsMarkedToday: number;
+      overallAttendancePercentage: number;
+      studentsBelowThresholdCount: number;
+      pendingLeaveRequestsCount: number;
+      pendingCorrectionsCount: number;
+    }>
+  > {
     const res = await this.getDashboardSummary();
     return {
       success: true,
@@ -143,7 +161,10 @@ class AttendanceService {
     return { success: true, data: policy };
   }
 
-  async updatePolicy(id: string, updates: Partial<AttendancePolicy>): Promise<ApiResponse<AttendancePolicy>> {
+  async updatePolicy(
+    id: string,
+    updates: Partial<AttendancePolicy>,
+  ): Promise<ApiResponse<AttendancePolicy>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.policies.findIndex((p) => p.id === id);
     if (idx === -1) throw new Error("Policy not found");
@@ -151,7 +172,9 @@ class AttendanceService {
     return { success: true, data: this.policies[idx] };
   }
 
-  async createPolicy(policyData: Omit<AttendancePolicy, "id">): Promise<ApiResponse<AttendancePolicy>> {
+  async createPolicy(
+    policyData: Omit<AttendancePolicy, "id">,
+  ): Promise<ApiResponse<AttendancePolicy>> {
     await new Promise((r) => setTimeout(r, 70));
     const newPolicy: AttendancePolicy = {
       ...policyData,
@@ -165,7 +188,9 @@ class AttendanceService {
   // 3. ATTENDANCE SESSIONS
   // ==========================================
 
-  async getSessions(filters?: SessionFilters): Promise<ApiResponse<AttendanceSession[]>> {
+  async getSessions(
+    filters?: SessionFilters,
+  ): Promise<ApiResponse<AttendanceSession[]>> {
     await new Promise((r) => setTimeout(r, 50));
     let items = [...this.sessions];
 
@@ -173,16 +198,30 @@ class AttendanceService {
       items = items.filter((s) => s.date === filters.date);
     }
     if (filters?.department && filters.department !== "ALL") {
-      items = items.filter((s) => s.department.toLowerCase().includes(filters.department!.toLowerCase()));
+      items = items.filter((s) =>
+        s.department.toLowerCase().includes(filters.department!.toLowerCase()),
+      );
     }
     if (filters?.section && filters.section !== "ALL") {
-      items = items.filter((s) => s.section.toLowerCase().includes(filters.section!.toLowerCase()));
+      items = items.filter((s) =>
+        s.section.toLowerCase().includes(filters.section!.toLowerCase()),
+      );
     }
     if (filters?.facultyId && filters.facultyId !== "ALL") {
-      items = items.filter((s) => s.facultyId === filters.facultyId || s.facultyName.toLowerCase().includes(filters.facultyId!.toLowerCase()));
+      items = items.filter(
+        (s) =>
+          s.facultyId === filters.facultyId ||
+          s.facultyName
+            .toLowerCase()
+            .includes(filters.facultyId!.toLowerCase()),
+      );
     }
     if (filters?.subject && filters.subject !== "ALL") {
-      items = items.filter((s) => s.courseCode === filters.subject || s.courseName.toLowerCase().includes(filters.subject!.toLowerCase()));
+      items = items.filter(
+        (s) =>
+          s.courseCode === filters.subject ||
+          s.courseName.toLowerCase().includes(filters.subject!.toLowerCase()),
+      );
     }
     if (filters?.status && (filters.status as string) !== "ALL") {
       items = items.filter((s) => s.status === filters.status);
@@ -195,20 +234,24 @@ class AttendanceService {
           s.courseName.toLowerCase().includes(q) ||
           s.section.toLowerCase().includes(q) ||
           s.facultyName.toLowerCase().includes(q) ||
-          s.room.toLowerCase().includes(q)
+          s.room.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getSessionById(id: string): Promise<ApiResponse<AttendanceSession | null>> {
+  async getSessionById(
+    id: string,
+  ): Promise<ApiResponse<AttendanceSession | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const session = this.sessions.find((s) => s.id === id) || null;
     return { success: true, data: session };
   }
 
-  async createSession(data: Partial<AttendanceSession>): Promise<ApiResponse<AttendanceSession>> {
+  async createSession(
+    data: Partial<AttendanceSession>,
+  ): Promise<ApiResponse<AttendanceSession>> {
     await new Promise((r) => setTimeout(r, 80));
     const newSession: AttendanceSession = {
       id: `att-sess-${Date.now()}`,
@@ -239,7 +282,10 @@ class AttendanceService {
     return { success: true, data: newSession };
   }
 
-  async updateSession(id: string, updates: Partial<AttendanceSession>): Promise<ApiResponse<AttendanceSession>> {
+  async updateSession(
+    id: string,
+    updates: Partial<AttendanceSession>,
+  ): Promise<ApiResponse<AttendanceSession>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.sessions.findIndex((s) => s.id === id);
     if (idx === -1) throw new Error("Session not found");
@@ -251,7 +297,9 @@ class AttendanceService {
   // 4. ATTENDANCE RECORDING & ROSTER
   // ==========================================
 
-  async getSessionRoster(sessionId: string): Promise<ApiResponse<AttendanceRecord[]>> {
+  async getSessionRoster(
+    sessionId: string,
+  ): Promise<ApiResponse<AttendanceRecord[]>> {
     await new Promise((r) => setTimeout(r, 50));
     const existing = this.records.filter((r) => r.sessionId === sessionId);
     if (existing.length > 0) {
@@ -282,7 +330,11 @@ class AttendanceService {
 
   async submitSessionAttendance(
     sessionId: string,
-    records: { studentId: string; status: AttendanceStatus; remarks?: string }[]
+    records: {
+      studentId: string;
+      status: AttendanceStatus;
+      remarks?: string;
+    }[],
   ): Promise<ApiResponse<{ updatedCount: number }>> {
     await new Promise((r) => setTimeout(r, 100));
     const session = this.sessions.find((s) => s.id === sessionId);
@@ -318,7 +370,9 @@ class AttendanceService {
         id: `rec-${sessionId}-${rec.studentId}`,
         sessionId,
         studentId: rec.studentId,
-        studentName: student ? `${student.firstName} ${student.lastName}` : "Student",
+        studentName: student
+          ? `${student.firstName} ${student.lastName}`
+          : "Student",
         rollNumber: student?.rollNumber || "24CSE0000",
         courseOfferingId: session.courseOfferingId,
         courseCode: session.courseCode,
@@ -337,15 +391,17 @@ class AttendanceService {
   // Legacy submitAttendance() alias
   async submitAttendance(
     sessionId: string,
-    records: StudentAttendanceSheetEntry[]
+    records: StudentAttendanceSheetEntry[],
   ): Promise<ApiResponse<{ updatedCount: number }>> {
     return this.submitSessionAttendance(
       sessionId,
       records.map((r) => ({
         studentId: r.studentId,
-        status: (r.status === "ON_LEAVE" || r.status === "ON_DUTY" ? "EXCUSED" : r.status) as AttendanceStatus,
+        status: (r.status === "ON_LEAVE" || r.status === "ON_DUTY"
+          ? "EXCUSED"
+          : r.status) as AttendanceStatus,
         remarks: r.remarks,
-      }))
+      })),
     );
   }
 
@@ -353,7 +409,9 @@ class AttendanceService {
   // 5. ATTENDANCE RECORDS DIRECTORY
   // ==========================================
 
-  async getRecords(filters?: RecordFilters): Promise<ApiResponse<AttendanceRecord[]>> {
+  async getRecords(
+    filters?: RecordFilters,
+  ): Promise<ApiResponse<AttendanceRecord[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.records];
 
@@ -361,13 +419,19 @@ class AttendanceService {
       items = items.filter((r) => r.sessionId === filters.sessionId);
     }
     if (filters?.studentId && filters.studentId !== "ALL") {
-      items = items.filter((r) => r.studentId === filters.studentId || r.rollNumber === filters.studentId);
+      items = items.filter(
+        (r) =>
+          r.studentId === filters.studentId ||
+          r.rollNumber === filters.studentId,
+      );
     }
     if (filters?.courseCode && filters.courseCode !== "ALL") {
       items = items.filter((r) => r.courseCode === filters.courseCode);
     }
     if (filters?.section && filters.section !== "ALL") {
-      items = items.filter((r) => r.section.toLowerCase().includes(filters.section!.toLowerCase()));
+      items = items.filter((r) =>
+        r.section.toLowerCase().includes(filters.section!.toLowerCase()),
+      );
     }
     if (filters?.status && (filters.status as string) !== "ALL") {
       items = items.filter((r) => r.status === filters.status);
@@ -379,7 +443,7 @@ class AttendanceService {
           r.studentName.toLowerCase().includes(q) ||
           r.rollNumber.toLowerCase().includes(q) ||
           r.courseCode.toLowerCase().includes(q) ||
-          r.courseName.toLowerCase().includes(q)
+          r.courseName.toLowerCase().includes(q),
       );
     }
 
@@ -390,10 +454,14 @@ class AttendanceService {
   // 6. STUDENT ATTENDANCE 360 & SUMMARIES
   // ==========================================
 
-  async getStudentAttendanceSummary(studentId: string): Promise<ApiResponse<AttendanceStudentSummary>> {
+  async getStudentAttendanceSummary(
+    studentId: string,
+  ): Promise<ApiResponse<AttendanceStudentSummary>> {
     await new Promise((r) => setTimeout(r, 50));
     const found = this.studentSummaries.find(
-      (s) => s.studentId === studentId || s.rollNumber.toLowerCase() === studentId.toLowerCase()
+      (s) =>
+        s.studentId === studentId ||
+        s.rollNumber.toLowerCase() === studentId.toLowerCase(),
     );
     if (found) {
       return { success: true, data: found };
@@ -401,7 +469,9 @@ class AttendanceService {
 
     // Fallback: Build synthetic summary for any student from MOCK_STUDENTS
     const student = MOCK_STUDENTS.find(
-      (s) => s.id === studentId || s.rollNumber.toLowerCase() === studentId.toLowerCase()
+      (s) =>
+        s.id === studentId ||
+        s.rollNumber.toLowerCase() === studentId.toLowerCase(),
     );
     if (!student) throw new Error("Student not found");
 
@@ -422,8 +492,34 @@ class AttendanceService {
       percentage: 86.1,
       riskLevel: "HEALTHY",
       courseSummaries: [
-        { courseOfferingId: "off-cs301-a", courseCode: "CS301", courseName: "Data Structures & Algorithms", section: student.section, facultyName: "Dr. Rajesh Sharma", totalSessions: 42, presentCount: 37, absentCount: 4, lateCount: 1, excusedCount: 0, percentage: 89.2, riskLevel: "HEALTHY" },
-        { courseOfferingId: "off-cs302-a", courseCode: "CS302", courseName: "Database Management Systems", section: student.section, facultyName: "Dr. K. S. Anand", totalSessions: 40, presentCount: 35, absentCount: 4, lateCount: 1, excusedCount: 0, percentage: 88.7, riskLevel: "HEALTHY" },
+        {
+          courseOfferingId: "off-cs301-a",
+          courseCode: "CS301",
+          courseName: "Data Structures & Algorithms",
+          section: student.section,
+          facultyName: "Dr. Rajesh Sharma",
+          totalSessions: 42,
+          presentCount: 37,
+          absentCount: 4,
+          lateCount: 1,
+          excusedCount: 0,
+          percentage: 89.2,
+          riskLevel: "HEALTHY",
+        },
+        {
+          courseOfferingId: "off-cs302-a",
+          courseCode: "CS302",
+          courseName: "Database Management Systems",
+          section: student.section,
+          facultyName: "Dr. K. S. Anand",
+          totalSessions: 40,
+          presentCount: 35,
+          absentCount: 4,
+          lateCount: 1,
+          excusedCount: 0,
+          percentage: 88.7,
+          riskLevel: "HEALTHY",
+        },
       ],
       trend: [
         { period: "Week 1", percentage: 90.0, present: 18, total: 20 },
@@ -436,18 +532,27 @@ class AttendanceService {
     return { success: true, data: fallback };
   }
 
-  async listStudentSummaries(filters?: StudentAttendanceFilters): Promise<ApiResponse<AttendanceStudentSummary[]>> {
+  async listStudentSummaries(
+    filters?: StudentAttendanceFilters,
+  ): Promise<ApiResponse<AttendanceStudentSummary[]>> {
     await new Promise((r) => setTimeout(r, 50));
     let items = [...this.studentSummaries];
 
     if (filters?.department && filters.department !== "ALL") {
-      items = items.filter((s) => s.department.toLowerCase().includes(filters.department!.toLowerCase()));
+      items = items.filter((s) =>
+        s.department.toLowerCase().includes(filters.department!.toLowerCase()),
+      );
     }
-    if (filters?.semester && (filters.semester as unknown as string) !== "ALL") {
+    if (
+      filters?.semester &&
+      (filters.semester as unknown as string) !== "ALL"
+    ) {
       items = items.filter((s) => s.semester === Number(filters.semester));
     }
     if (filters?.section && filters.section !== "ALL") {
-      items = items.filter((s) => s.section.toLowerCase() === filters.section!.toLowerCase());
+      items = items.filter(
+        (s) => s.section.toLowerCase() === filters.section!.toLowerCase(),
+      );
     }
     if (filters?.riskLevel && (filters.riskLevel as string) !== "ALL") {
       items = items.filter((s) => s.riskLevel === filters.riskLevel);
@@ -458,7 +563,7 @@ class AttendanceService {
         (s) =>
           s.studentName.toLowerCase().includes(q) ||
           s.rollNumber.toLowerCase().includes(q) ||
-          s.program.toLowerCase().includes(q)
+          s.program.toLowerCase().includes(q),
       );
     }
 
@@ -469,10 +574,14 @@ class AttendanceService {
   // 7. COURSE ATTENDANCE SUMMARIES
   // ==========================================
 
-  async getCourseAttendanceSummary(courseOfferingId: string): Promise<ApiResponse<AttendanceCourseSummary>> {
+  async getCourseAttendanceSummary(
+    courseOfferingId: string,
+  ): Promise<ApiResponse<AttendanceCourseSummary>> {
     await new Promise((r) => setTimeout(r, 40));
     const found = this.courseSummaries.find(
-      (c) => c.courseOfferingId === courseOfferingId || c.courseCode.toLowerCase() === courseOfferingId.toLowerCase()
+      (c) =>
+        c.courseOfferingId === courseOfferingId ||
+        c.courseCode.toLowerCase() === courseOfferingId.toLowerCase(),
     );
     if (!found) {
       // Default placeholder course summary
@@ -500,7 +609,9 @@ class AttendanceService {
     return { success: true, data: found };
   }
 
-  async listCourseSummaries(filters?: CourseAttendanceFilters): Promise<ApiResponse<AttendanceCourseSummary[]>> {
+  async listCourseSummaries(
+    filters?: CourseAttendanceFilters,
+  ): Promise<ApiResponse<AttendanceCourseSummary[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.courseSummaries];
 
@@ -508,7 +619,9 @@ class AttendanceService {
       items = items.filter((c) => c.riskLevel === filters.riskLevel);
     }
     if (filters?.section && filters.section !== "ALL") {
-      items = items.filter((c) => c.section.toLowerCase() === filters.section!.toLowerCase());
+      items = items.filter(
+        (c) => c.section.toLowerCase() === filters.section!.toLowerCase(),
+      );
     }
     if (filters?.search) {
       const q = filters.search.toLowerCase();
@@ -516,7 +629,7 @@ class AttendanceService {
         (c) =>
           c.courseCode.toLowerCase().includes(q) ||
           c.courseName.toLowerCase().includes(q) ||
-          c.facultyName.toLowerCase().includes(q)
+          c.facultyName.toLowerCase().includes(q),
       );
     }
 
@@ -527,7 +640,9 @@ class AttendanceService {
   // 8. LOW ATTENDANCE & RISK ALERTS
   // ==========================================
 
-  async getLowAttendanceAlerts(): Promise<ApiResponse<LowAttendanceAlertItem[]>> {
+  async getLowAttendanceAlerts(): Promise<
+    ApiResponse<LowAttendanceAlertItem[]>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...MOCK_LOW_ATTENDANCE_ALERTS] };
   }
@@ -536,18 +651,28 @@ class AttendanceService {
   // 9. LEAVE WORKFLOW
   // ==========================================
 
-  async getLeaves(filters?: { studentId?: string; status?: string; department?: string }): Promise<ApiResponse<AttendanceLeave[]>> {
+  async getLeaves(filters?: {
+    studentId?: string;
+    status?: string;
+    department?: string;
+  }): Promise<ApiResponse<AttendanceLeave[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.leaves];
 
     if (filters?.studentId && filters.studentId !== "ALL") {
-      items = items.filter((l) => l.studentId === filters.studentId || l.rollNumber === filters.studentId);
+      items = items.filter(
+        (l) =>
+          l.studentId === filters.studentId ||
+          l.rollNumber === filters.studentId,
+      );
     }
     if (filters?.status && (filters.status as string) !== "ALL") {
       items = items.filter((l) => l.status === filters.status);
     }
     if (filters?.department && filters.department !== "ALL") {
-      items = items.filter((l) => l.department.toLowerCase().includes(filters.department!.toLowerCase()));
+      items = items.filter((l) =>
+        l.department.toLowerCase().includes(filters.department!.toLowerCase()),
+      );
     }
 
     return { success: true, data: items };
@@ -560,7 +685,9 @@ class AttendanceService {
     return { success: true, data: leave };
   }
 
-  async submitLeave(data: Partial<AttendanceLeave>): Promise<ApiResponse<AttendanceLeave>> {
+  async submitLeave(
+    data: Partial<AttendanceLeave>,
+  ): Promise<ApiResponse<AttendanceLeave>> {
     await new Promise((r) => setTimeout(r, 80));
     const newLeave: AttendanceLeave = {
       id: `leave-${Date.now()}`,
@@ -588,7 +715,7 @@ class AttendanceService {
     id: string,
     status: AttendanceLeaveStatus,
     reviewerNotes?: string,
-    reviewerName: string = "Dr. K. S. Anand (HOD - CSE)"
+    reviewerName: string = "Dr. K. S. Anand (HOD - CSE)",
   ): Promise<ApiResponse<AttendanceLeave>> {
     await new Promise((r) => setTimeout(r, 70));
     const leave = this.leaves.find((l) => l.id === id);
@@ -606,7 +733,11 @@ class AttendanceService {
   // 10. ATTENDANCE CORRECTIONS WORKFLOW
   // ==========================================
 
-  async getCorrections(filters?: { status?: string; studentId?: string; courseCode?: string }): Promise<ApiResponse<AttendanceCorrection[]>> {
+  async getCorrections(filters?: {
+    status?: string;
+    studentId?: string;
+    courseCode?: string;
+  }): Promise<ApiResponse<AttendanceCorrection[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.corrections];
 
@@ -614,7 +745,11 @@ class AttendanceService {
       items = items.filter((c) => c.status === filters.status);
     }
     if (filters?.studentId && filters.studentId !== "ALL") {
-      items = items.filter((c) => c.studentId === filters.studentId || c.rollNumber === filters.studentId);
+      items = items.filter(
+        (c) =>
+          c.studentId === filters.studentId ||
+          c.rollNumber === filters.studentId,
+      );
     }
     if (filters?.courseCode && filters.courseCode !== "ALL") {
       items = items.filter((c) => c.courseCode === filters.courseCode);
@@ -623,7 +758,9 @@ class AttendanceService {
     return { success: true, data: items };
   }
 
-  async submitCorrection(data: Partial<AttendanceCorrection>): Promise<ApiResponse<AttendanceCorrection>> {
+  async submitCorrection(
+    data: Partial<AttendanceCorrection>,
+  ): Promise<ApiResponse<AttendanceCorrection>> {
     await new Promise((r) => setTimeout(r, 80));
     const newCorr: AttendanceCorrection = {
       id: `corr-${Date.now()}`,
@@ -637,7 +774,8 @@ class AttendanceService {
       sessionDate: data.sessionDate || new Date().toISOString().split("T")[0],
       originalStatus: data.originalStatus || "ABSENT",
       requestedStatus: data.requestedStatus || "PRESENT",
-      reason: data.reason || "Student attended class; error in biometric punch.",
+      reason:
+        data.reason || "Student attended class; error in biometric punch.",
       requestedBy: data.requestedBy || "Dr. Rajesh Sharma",
       requestedRole: data.requestedRole || "FACULTY",
       requestedAt: new Date().toISOString(),
@@ -659,7 +797,7 @@ class AttendanceService {
     id: string,
     status: AttendanceCorrectionStatus,
     reviewerNotes?: string,
-    reviewerName: string = "Dr. K. S. Anand (HOD - CSE)"
+    reviewerName: string = "Dr. K. S. Anand (HOD - CSE)",
   ): Promise<ApiResponse<AttendanceCorrection>> {
     await new Promise((r) => setTimeout(r, 80));
     const corr = this.corrections.find((c) => c.id === id);
@@ -697,26 +835,28 @@ class AttendanceService {
   // 11. REPORTS GENERATION
   // ==========================================
 
-  async generateReport(filter: AttendanceReportFilter): Promise<ApiResponse<{
-    title: string;
-    generatedAt: string;
-    totalRows: number;
-    rows: Record<string, unknown>[];
-  }>> {
+  async generateReport(filter: AttendanceReportFilter): Promise<
+    ApiResponse<{
+      title: string;
+      generatedAt: string;
+      totalRows: number;
+      rows: Record<string, unknown>[];
+    }>
+  > {
     await new Promise((r) => setTimeout(r, 70));
 
     if (filter.reportType === "LOW_ATTENDANCE") {
       const rows = MOCK_LOW_ATTENDANCE_ALERTS.map((a) => ({
         "Student Name": a.studentName,
         "Roll Number": a.rollNumber,
-        "Department": a.department,
-        "Semester": a.semester,
-        "Section": a.section,
-        "Course": `${a.courseCode} — ${a.courseName}`,
+        Department: a.department,
+        Semester: a.semester,
+        Section: a.section,
+        Course: `${a.courseCode} — ${a.courseName}`,
         "Attendance %": `${a.attendancePercentage}%`,
         "Required %": `${a.requiredPercentage}%`,
         "Sessions Needed": a.sessionsNeededToRecover,
-        "Risk": a.riskLevel,
+        Risk: a.riskLevel,
       }));
       return {
         success: true,
@@ -733,12 +873,12 @@ class AttendanceService {
       const rows = this.courseSummaries.map((c) => ({
         "Course Code": c.courseCode,
         "Course Title": c.courseName,
-        "Section": c.section,
-        "Faculty": c.facultyName,
+        Section: c.section,
+        Faculty: c.facultyName,
         "Total Sessions": c.totalSessions,
         "Average Attendance": `${c.percentage}%`,
         "Students at Risk": c.studentsAtRiskCount || 0,
-        "Status": c.riskLevel,
+        Status: c.riskLevel,
       }));
       return {
         success: true,
@@ -755,11 +895,11 @@ class AttendanceService {
     const rows = this.studentSummaries.map((s) => ({
       "Student Name": s.studentName,
       "Roll Number": s.rollNumber,
-      "Department": s.department,
-      "Semester": s.semester,
-      "Section": s.section,
+      Department: s.department,
+      Semester: s.semester,
+      Section: s.section,
       "Total Sessions": s.totalSessions,
-      "Attended": s.attendedSessions,
+      Attended: s.attendedSessions,
       "Overall %": `${s.percentage}%`,
       "Risk Level": s.riskLevel,
     }));

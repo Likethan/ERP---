@@ -9,12 +9,19 @@
  * POST /api/v1/infrastructure/allocations/:id/vacate
  */
 
-import { ApiResponse, HostelAllocation, AllocationStatus, BedStatus } from "@campusos/types";
+import {
+  ApiResponse,
+  HostelAllocation,
+  AllocationStatus,
+  BedStatus,
+} from "@campusos/types";
 import { MOCK_HOSTEL_ALLOCATIONS } from "@/mocks/infrastructure.mock";
 import { hostelRoomsService } from "./hostel-rooms.service";
 
 class HostelAllocationsService {
-  private allocations: HostelAllocation[] = JSON.parse(JSON.stringify(MOCK_HOSTEL_ALLOCATIONS));
+  private allocations: HostelAllocation[] = JSON.parse(
+    JSON.stringify(MOCK_HOSTEL_ALLOCATIONS),
+  );
 
   async listHostelAllocations(filters?: {
     hostelId?: string;
@@ -50,14 +57,16 @@ class HostelAllocationsService {
           a.studentName.toLowerCase().includes(q) ||
           a.registerNumber.toLowerCase().includes(q) ||
           a.roomNumber.toLowerCase().includes(q) ||
-          a.hostelName.toLowerCase().includes(q)
+          a.hostelName.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getAllocationById(id: string): Promise<ApiResponse<HostelAllocation | null>> {
+  async getAllocationById(
+    id: string,
+  ): Promise<ApiResponse<HostelAllocation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const alloc = this.allocations.find((a) => a.id === id) || null;
     return { success: true, data: alloc };
@@ -107,7 +116,8 @@ class HostelAllocationsService {
       roomNumber: payload.roomNumber,
       bedId: payload.bedId,
       bedNumber: payload.bedNumber,
-      allocatedDate: payload.allocatedDate || new Date().toISOString().split("T")[0],
+      allocatedDate:
+        payload.allocatedDate || new Date().toISOString().split("T")[0],
       expectedEndDate: payload.expectedEndDate || "2027-05-30",
       status: AllocationStatus.ALLOCATED,
       financeRefId: `INV-HOSTEL-${Date.now().toString().slice(-4)}`,
@@ -126,11 +136,16 @@ class HostelAllocationsService {
     };
 
     // Update bed status in room inventory
-    await hostelRoomsService.updateBedStatus(payload.roomId, payload.bedId, BedStatus.ALLOCATED, {
-      studentId: payload.studentId,
-      studentName: payload.studentName,
-      studentRollNumber: payload.registerNumber,
-    });
+    await hostelRoomsService.updateBedStatus(
+      payload.roomId,
+      payload.bedId,
+      BedStatus.ALLOCATED,
+      {
+        studentId: payload.studentId,
+        studentName: payload.studentName,
+        studentRollNumber: payload.registerNumber,
+      },
+    );
 
     this.allocations.unshift(newAlloc);
     return { success: true, data: newAlloc };
@@ -150,21 +165,30 @@ class HostelAllocationsService {
       bedNumber: string;
       reason: string;
       transferredBy?: string;
-    }
+    },
   ): Promise<ApiResponse<HostelAllocation | null>> {
     await new Promise((r) => setTimeout(r, 60));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };
 
     // Release old bed
-    await hostelRoomsService.updateBedStatus(alloc.roomId, alloc.bedId, BedStatus.AVAILABLE);
+    await hostelRoomsService.updateBedStatus(
+      alloc.roomId,
+      alloc.bedId,
+      BedStatus.AVAILABLE,
+    );
 
     // Book new bed
-    await hostelRoomsService.updateBedStatus(transferTo.roomId, transferTo.bedId, BedStatus.ALLOCATED, {
-      studentId: alloc.studentId,
-      studentName: alloc.studentName,
-      studentRollNumber: alloc.registerNumber,
-    });
+    await hostelRoomsService.updateBedStatus(
+      transferTo.roomId,
+      transferTo.bedId,
+      BedStatus.ALLOCATED,
+      {
+        studentId: alloc.studentId,
+        studentName: alloc.studentName,
+        studentRollNumber: alloc.registerNumber,
+      },
+    );
 
     const previousLocation = `${alloc.hostelName}, Room ${alloc.roomNumber} ${alloc.bedNumber}`;
     alloc.hostelId = transferTo.hostelId;
@@ -194,14 +218,18 @@ class HostelAllocationsService {
   async vacateHostelAllocation(
     id: string,
     reason?: string,
-    vacatedBy?: string
+    vacatedBy?: string,
   ): Promise<ApiResponse<HostelAllocation | null>> {
     await new Promise((r) => setTimeout(r, 60));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };
 
     // Free the bed
-    await hostelRoomsService.updateBedStatus(alloc.roomId, alloc.bedId, BedStatus.AVAILABLE);
+    await hostelRoomsService.updateBedStatus(
+      alloc.roomId,
+      alloc.bedId,
+      BedStatus.AVAILABLE,
+    );
 
     alloc.status = AllocationStatus.VACATED;
     alloc.vacatedDate = new Date().toISOString().split("T")[0];

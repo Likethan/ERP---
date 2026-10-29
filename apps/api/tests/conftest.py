@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.asyncio import (
@@ -73,6 +73,20 @@ async def setup_test_database():
 
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+
+
+@pytest.fixture(autouse=True)
+async def cleanup_outbox_events():
+    """Ensure outbox table is cleaned up after each test to prevent cross-test batch pollution."""
+    yield
+    async with TestingSessionLocal() as session:
+        try:
+            from app.models.workflow import OutboxEvent
+            await session.execute(delete(OutboxEvent))
+            await session.commit()
+        except Exception:
+            pass
+
 
 
 @pytest.fixture

@@ -44,6 +44,8 @@ export type DocumentFilterState = {
   reviewerId?: string;
 };
 
-export type UploadStep = "OWNER" | "CATEGORY" | "TYPE" | "METADATA" | "FILE" | "REVIEW" | "COMPLETED";
+export type UploadStep =
+  "OWNER" | "CATEGORY" | "TYPE" | "METADATA" | "FILE" | "REVIEW" | "COMPLETED";
 
-export type MockUploadState = "IDLE" | "SELECTED" | "UPLOADING" | "UPLOADED" | "FAILED";
+export type MockUploadState =
+  "IDLE" | "SELECTED" | "UPLOADING" | "UPLOADED" | "FAILED";

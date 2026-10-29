@@ -1,7 +1,7 @@
 """Comprehensive Test Suite for Placement and Career Engine."""
 
 import uuid
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -11,11 +11,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
-from app.models.core import AcademicYear, Batch, Campus, Department, Institution, Program, Regulation
+from app.models.core import (
+    AcademicYear,
+    Batch,
+    Campus,
+    Department,
+    Institution,
+    Program,
+    Regulation,
+)
 from app.models.examination import SemesterExamResult
 from app.models.people import Role, StudentProfile, User, UserRoleAssignment
 from app.models.placement import (
-    PlacementOffer,
     PlacementOutcome,
 )
 
@@ -297,7 +304,7 @@ async def test_job_drive_and_positions_creation(
     )
     company_id = comp_res.json()["data"]["id"]
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     drive_payload = {
         "company_id": company_id,
         "academic_year_id": str(ay.id),
@@ -394,7 +401,7 @@ async def test_automated_eligibility_and_application_workflow(
     )
     comp_id = comp_res.json()["data"]["id"]
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     drive_res = await client.post(
         "/api/v1/placement/drives",
         json={
@@ -552,7 +559,7 @@ async def test_interview_pipeline_and_offer_lifecycle(
     )
     comp_id = comp_res.json()["data"]["id"]
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     drive_res = await client.post(
         "/api/v1/placement/drives",
         json={

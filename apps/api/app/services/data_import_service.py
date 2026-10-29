@@ -13,25 +13,22 @@ Central service managing:
 - Downloadable formula-escaped CSV error reports
 """
 
-from datetime import UTC, date, datetime
-from decimal import Decimal
 import io
-import json
 import logging
 import re
-from typing import Any, Optional
-from uuid import UUID, uuid4
+from datetime import UTC, date, datetime
+from decimal import Decimal
+from typing import Any
+from uuid import UUID
 
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.exceptions import (
     BadRequestException,
-    ConflictException,
     ImportApprovalRequiredException,
-    ImportExecutionBlockedException,
     ImportJobNotFoundException,
     ImportTemplateNotFoundException,
     ImportValidationFailedException,
@@ -42,7 +39,7 @@ from app.core.exceptions import (
 )
 from app.core.storage import get_document_storage
 from app.models.academics import Subject
-from app.models.core import Batch, Department, Institution, Program, Regulation
+from app.models.core import Batch, Department, Program, Regulation
 from app.models.data_import import (
     ConflictResolutionAction,
     ImportConflictRecord,
@@ -65,7 +62,7 @@ from app.schemas.data_import import (
     ImportJobCreateRequest,
     ImportMappingUpdateRequest,
 )
-from app.services.data_import_parser import DataImportParser, escape_formula_injection
+from app.services.data_import_parser import DataImportParser
 
 logger = logging.getLogger("campusos.services.data_import")
 
@@ -792,7 +789,7 @@ class DataImportService:
             # Enum validations
             if "gender" in transformed and transformed["gender"]:
                 if transformed["gender"].upper() not in ("MALE", "FEMALE", "OTHER"):
-                    err = {"field": "gender", "code": "INVALID_ENUM_VALUE", "message": f"Gender must be MALE, FEMALE, or OTHER."}
+                    err = {"field": "gender", "code": "INVALID_ENUM_VALUE", "message": "Gender must be MALE, FEMALE, or OTHER."}
                     row_errors.append(err)
                     errors_by_field["gender"] = errors_by_field.get("gender", 0) + 1
 

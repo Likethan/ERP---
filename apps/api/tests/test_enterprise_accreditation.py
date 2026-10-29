@@ -52,7 +52,6 @@ from app.schemas.accreditation import (
     AccreditationCriterionCreate,
     AccreditationCycleCreate,
     AccreditationEvidenceCreate,
-    AccreditationEvidenceMapCreate,
     AccreditationEvidenceVerify,
     AccreditationFrameworkCreate,
     AccreditationFrameworkPublish,

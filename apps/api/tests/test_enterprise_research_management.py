@@ -18,15 +18,14 @@ Comprehensive automated test suite covering:
 15. End-to-end FastAPI REST API endpoints via AsyncClient.
 """
 
-from datetime import UTC, date, datetime, timedelta
-from uuid import UUID, uuid4
+from datetime import date, timedelta
+from uuid import UUID
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    ResearchAwardNotFoundException,
     ResearchBudgetExceededException,
     ResearchConfidentialAccessDeniedException,
     ResearchEthicsApprovalRequiredException,
@@ -63,7 +62,6 @@ from app.schemas.research import (
     ResearchEthicsApprovalDecision,
     ResearchFacilityReferenceCreate,
     ResearchFundingOpportunityCreate,
-    ResearchFundingOpportunityUpdate,
     ResearchGrantApplicationCreate,
     ResearchGrantAwardCreate,
     ResearchGrantExternalSubmissionConfirm,

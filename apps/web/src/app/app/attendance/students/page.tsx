@@ -3,7 +3,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceStudentSummary, AttendanceRiskLevel } from "@/types/attendance";
+import {
+  AttendanceStudentSummary,
+  AttendanceRiskLevel,
+} from "@/types/attendance";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { ColumnDef } from "@/components/data-grid/data-grid.types";
 import { Badge } from "@/components/ui/badge";
@@ -43,7 +46,11 @@ export default function StudentAttendanceDirectoryPage() {
       }
     } catch (err) {
       console.error("Failed to load student summaries", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load student attendance directory." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load student attendance directory.",
+      });
     } finally {
       setLoading(false);
     }
@@ -53,9 +60,15 @@ export default function StudentAttendanceDirectoryPage() {
     loadData();
   }, [riskFilter, departmentFilter, sectionFilter]);
 
-  const healthyCount = summaries.filter((s) => s.riskLevel === "HEALTHY").length;
-  const warningCount = summaries.filter((s) => s.riskLevel === "WARNING").length;
-  const criticalCount = summaries.filter((s) => s.riskLevel === "CRITICAL").length;
+  const healthyCount = summaries.filter(
+    (s) => s.riskLevel === "HEALTHY",
+  ).length;
+  const warningCount = summaries.filter(
+    (s) => s.riskLevel === "WARNING",
+  ).length;
+  const criticalCount = summaries.filter(
+    (s) => s.riskLevel === "CRITICAL",
+  ).length;
 
   const getRiskBadge = (risk: AttendanceRiskLevel) => {
     switch (risk) {
@@ -125,8 +138,8 @@ export default function StudentAttendanceDirectoryPage() {
                   row.percentage >= 80
                     ? "text-emerald-600 dark:text-emerald-400"
                     : row.percentage >= 75
-                    ? "text-amber-600 dark:text-amber-400"
-                    : "text-rose-600 dark:text-rose-400"
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-rose-600 dark:text-rose-400"
                 }`}
               >
                 {row.percentage}%
@@ -138,8 +151,8 @@ export default function StudentAttendanceDirectoryPage() {
                   row.percentage >= 80
                     ? "bg-emerald-500"
                     : row.percentage >= 75
-                    ? "bg-amber-500"
-                    : "bg-rose-500"
+                      ? "bg-amber-500"
+                      : "bg-rose-500"
                 }`}
                 style={{ width: `${row.percentage}%` }}
               />
@@ -169,7 +182,7 @@ export default function StudentAttendanceDirectoryPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -181,13 +194,16 @@ export default function StudentAttendanceDirectoryPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
               Student Directory
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Attendance Monitoring</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Attendance Monitoring
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Student Attendance Directory
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Track student attendance percentages, detect shortage risks, and audit subject-level delivery compliance.
+            Track student attendance percentages, detect shortage risks, and
+            audit subject-level delivery compliance.
           </p>
         </div>
       </div>
@@ -255,7 +271,9 @@ export default function StudentAttendanceDirectoryPage() {
           <option value="B">Section B</option>
         </select>
 
-        {(riskFilter !== "ALL" || departmentFilter !== "ALL" || sectionFilter !== "ALL") && (
+        {(riskFilter !== "ALL" ||
+          departmentFilter !== "ALL" ||
+          sectionFilter !== "ALL") && (
           <Button
             size="sm"
             variant="ghost"

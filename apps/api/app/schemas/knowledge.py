@@ -7,16 +7,11 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.knowledge import (
-    KnowledgeCategoryCode,
     KnowledgeConfidentiality,
-    KnowledgeItemStatus,
     KnowledgeRelationshipType,
     KnowledgeReviewDecision,
-    KnowledgeReviewScheduleStatus,
-    KnowledgeReviewScheduleType,
     KnowledgeScopeType,
 )
-
 
 # =============================================================================
 # BASE CONFIG

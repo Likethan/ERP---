@@ -1,7 +1,7 @@
 """Pydantic DTO Schemas for Enterprise Data Import, Bulk Migration & Reconciliation (Step 40)."""
 
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field

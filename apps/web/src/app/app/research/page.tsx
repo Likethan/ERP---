@@ -80,17 +80,26 @@ export default function ResearchManagementConsolePage() {
   >("overview");
 
   // Master Data & Analytics State
-  const [analytics, setAnalytics] = useState<ResearchAnalyticsSummaryModel | null>(null);
+  const [analytics, setAnalytics] =
+    useState<ResearchAnalyticsSummaryModel | null>(null);
   const [projects, setProjects] = useState<ResearchProjectModel[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
-  const [opportunities, setOpportunities] = useState<ResearchFundingOpportunityModel[]>([]);
-  const [applications, setApplications] = useState<ResearchGrantApplicationModel[]>([]);
+  const [opportunities, setOpportunities] = useState<
+    ResearchFundingOpportunityModel[]
+  >([]);
+  const [applications, setApplications] = useState<
+    ResearchGrantApplicationModel[]
+  >([]);
   const [awards, setAwards] = useState<ResearchGrantAwardModel[]>([]);
   const [budgetPlans, setBudgetPlans] = useState<ResearchBudgetPlanModel[]>([]);
   const [milestones, setMilestones] = useState<ResearchMilestoneModel[]>([]);
-  const [ethicsApprovals, setEthicsApprovals] = useState<ResearchEthicsApprovalModel[]>([]);
+  const [ethicsApprovals, setEthicsApprovals] = useState<
+    ResearchEthicsApprovalModel[]
+  >([]);
   const [publications, setPublications] = useState<ResearchOutputModel[]>([]);
-  const [disclosures, setDisclosures] = useState<ResearchInventionDisclosureModel[]>([]);
+  const [disclosures, setDisclosures] = useState<
+    ResearchInventionDisclosureModel[]
+  >([]);
   const [risks, setRisks] = useState<ResearchProjectRiskModel[]>([]);
 
   // UI state
@@ -98,20 +107,30 @@ export default function ResearchManagementConsolePage() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [actionSuccessMessage, setActionSuccessMessage] = useState<string | null>(null);
-  const [actionErrorMessage, setActionErrorMessage] = useState<string | null>(null);
+  const [actionSuccessMessage, setActionSuccessMessage] = useState<
+    string | null
+  >(null);
+  const [actionErrorMessage, setActionErrorMessage] = useState<string | null>(
+    null,
+  );
 
   // Modals
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
-  const [projectToTransition, setProjectToTransition] = useState<ResearchProjectModel | null>(null);
-  const [transitionTargetStatus, setTransitionTargetStatus] = useState<string>("SUBMITTED");
+  const [projectToTransition, setProjectToTransition] =
+    useState<ResearchProjectModel | null>(null);
+  const [transitionTargetStatus, setTransitionTargetStatus] =
+    useState<string>("SUBMITTED");
   const [transitionReason, setTransitionReason] = useState("");
 
-  const [isNewOpportunityModalOpen, setIsNewOpportunityModalOpen] = useState(false);
-  const [isNewApplicationModalOpen, setIsNewApplicationModalOpen] = useState(false);
-  const [isNewPublicationModalOpen, setIsNewPublicationModalOpen] = useState(false);
-  const [isNewDisclosureModalOpen, setIsNewDisclosureModalOpen] = useState(false);
+  const [isNewOpportunityModalOpen, setIsNewOpportunityModalOpen] =
+    useState(false);
+  const [isNewApplicationModalOpen, setIsNewApplicationModalOpen] =
+    useState(false);
+  const [isNewPublicationModalOpen, setIsNewPublicationModalOpen] =
+    useState(false);
+  const [isNewDisclosureModalOpen, setIsNewDisclosureModalOpen] =
+    useState(false);
 
   // Form input state for New Project
   const [newProjectForm, setNewProjectForm] = useState({
@@ -134,7 +153,9 @@ export default function ResearchManagementConsolePage() {
     research_domains: "Autonomous Systems, Cloud",
     min_amount: 50000,
     max_amount: 250000,
-    closing_date: new Date(Date.now() + 60 * 86400000).toISOString().split("T")[0],
+    closing_date: new Date(Date.now() + 60 * 86400000)
+      .toISOString()
+      .split("T")[0],
     opportunity_url: "https://grants.gov/opportunity",
   });
 
@@ -172,13 +193,25 @@ export default function ResearchManagementConsolePage() {
         pubsRes,
         discRes,
       ] = await Promise.allSettled([
-        apiFetch<ResearchAnalyticsSummaryModel>("/api/v1/research/analytics/summary"),
-        apiFetch<{ items: ResearchProjectModel[]; total: number }>("/api/v1/research/projects?limit=50"),
-        apiFetch<{ items: ResearchFundingOpportunityModel[]; total: number }>("/api/v1/research/opportunities?limit=50"),
-        apiFetch<{ items: ResearchGrantApplicationModel[]; total: number }>("/api/v1/research/grant-applications?limit=50"),
-        apiFetch<{ items: ResearchGrantAwardModel[]; total: number }>("/api/v1/research/awards?limit=50"),
+        apiFetch<ResearchAnalyticsSummaryModel>(
+          "/api/v1/research/analytics/summary",
+        ),
+        apiFetch<{ items: ResearchProjectModel[]; total: number }>(
+          "/api/v1/research/projects?limit=50",
+        ),
+        apiFetch<{ items: ResearchFundingOpportunityModel[]; total: number }>(
+          "/api/v1/research/opportunities?limit=50",
+        ),
+        apiFetch<{ items: ResearchGrantApplicationModel[]; total: number }>(
+          "/api/v1/research/grant-applications?limit=50",
+        ),
+        apiFetch<{ items: ResearchGrantAwardModel[]; total: number }>(
+          "/api/v1/research/awards?limit=50",
+        ),
         apiFetch<ResearchOutputModel[]>("/api/v1/research/outputs?limit=50"),
-        apiFetch<ResearchInventionDisclosureModel[]>("/api/v1/research/intellectual-property?limit=50"),
+        apiFetch<ResearchInventionDisclosureModel[]>(
+          "/api/v1/research/intellectual-property?limit=50",
+        ),
       ]);
 
       if (analyticsRes.status === "fulfilled" && analyticsRes.value?.data) {
@@ -211,31 +244,46 @@ export default function ResearchManagementConsolePage() {
         });
       }
 
-      if (projectsRes.status === "fulfilled" && projectsRes.value?.data?.items) {
-        setProjects(projectsRes.value.data.items);
-        if (projectsRes.value.data.items.length > 0 && !selectedProjectId) {
-          setSelectedProjectId(projectsRes.value.data.items[0].id);
+      const extractArray = (val: any) => {
+        if (!val?.data) return [];
+        if (Array.isArray(val.data)) return val.data;
+        if (Array.isArray(val.data.items)) return val.data.items;
+        return [];
+      };
+
+      if (projectsRes.status === "fulfilled") {
+        const items = extractArray(projectsRes.value);
+        if (items.length > 0) {
+          setProjects(items);
+          if (!selectedProjectId) {
+            setSelectedProjectId(items[0].id);
+          }
         }
       }
 
-      if (oppsRes.status === "fulfilled" && oppsRes.value?.data?.items) {
-        setOpportunities(oppsRes.value.data.items);
+      if (oppsRes.status === "fulfilled") {
+        const items = extractArray(oppsRes.value);
+        if (items.length > 0) setOpportunities(items);
       }
 
-      if (appsRes.status === "fulfilled" && appsRes.value?.data?.items) {
-        setApplications(appsRes.value.data.items);
+      if (appsRes.status === "fulfilled") {
+        const items = extractArray(appsRes.value);
+        if (items.length > 0) setApplications(items);
       }
 
-      if (awardsRes.status === "fulfilled" && awardsRes.value?.data?.items) {
-        setAwards(awardsRes.value.data.items);
+      if (awardsRes.status === "fulfilled") {
+        const items = extractArray(awardsRes.value);
+        if (items.length > 0) setAwards(items);
       }
 
-      if (pubsRes.status === "fulfilled" && pubsRes.value?.data) {
-        setPublications(Array.isArray(pubsRes.value.data) ? pubsRes.value.data : []);
+      if (pubsRes.status === "fulfilled") {
+        const items = extractArray(pubsRes.value);
+        if (items.length > 0) setPublications(items);
       }
 
-      if (discRes.status === "fulfilled" && discRes.value?.data) {
-        setDisclosures(Array.isArray(discRes.value.data) ? discRes.value.data : []);
+      if (discRes.status === "fulfilled") {
+        const items = extractArray(discRes.value);
+        if (items.length > 0) setDisclosures(items);
       }
     } catch (err: any) {
       console.error("Failed to load research console data:", err);
@@ -255,17 +303,29 @@ export default function ResearchManagementConsolePage() {
     const fetchProjectDetails = async () => {
       try {
         const [msRes, ethRes, riskRes] = await Promise.allSettled([
-          apiFetch<ResearchMilestoneModel[]>(`/api/v1/research/projects/${selectedProjectId}/milestones`),
-          apiFetch<ResearchEthicsApprovalModel[]>(`/api/v1/research/projects/${selectedProjectId}/ethics-approvals`),
-          apiFetch<ResearchProjectRiskModel[]>(`/api/v1/research/projects/${selectedProjectId}/risks`),
+          apiFetch<ResearchMilestoneModel[]>(
+            `/api/v1/research/projects/${selectedProjectId}/milestones`,
+          ),
+          apiFetch<ResearchEthicsApprovalModel[]>(
+            `/api/v1/research/projects/${selectedProjectId}/ethics-approvals`,
+          ),
+          apiFetch<ResearchProjectRiskModel[]>(
+            `/api/v1/research/projects/${selectedProjectId}/risks`,
+          ),
         ]);
         if (msRes.status === "fulfilled" && Array.isArray(msRes.value?.data)) {
           setMilestones(msRes.value.data);
         }
-        if (ethRes.status === "fulfilled" && Array.isArray(ethRes.value?.data)) {
+        if (
+          ethRes.status === "fulfilled" &&
+          Array.isArray(ethRes.value?.data)
+        ) {
           setEthicsApprovals(ethRes.value.data);
         }
-        if (riskRes.status === "fulfilled" && Array.isArray(riskRes.value?.data)) {
+        if (
+          riskRes.status === "fulfilled" &&
+          Array.isArray(riskRes.value?.data)
+        ) {
           setRisks(riskRes.value.data);
         }
       } catch (e) {
@@ -280,18 +340,23 @@ export default function ResearchManagementConsolePage() {
     try {
       setActionSuccessMessage(null);
       setActionErrorMessage(null);
-      const res = await apiFetch<ResearchDeadlineSweepModel>("/api/v1/research/compliance/sweep-deadlines", {
-        method: "POST",
-      });
+      const res = await apiFetch<ResearchDeadlineSweepModel>(
+        "/api/v1/research/compliance/sweep-deadlines",
+        {
+          method: "POST",
+        },
+      );
       const sweep = res.data;
       setActionSuccessMessage(
         `Audit sweep executed: ${sweep.expiring_ethics_approvals_flagged} ethics approvals, ` +
-        `${sweep.overdue_milestones_flagged} overdue milestones, and ` +
-        `${sweep.closing_opportunities_flagged} closing opportunities evaluated.`
+          `${sweep.overdue_milestones_flagged} overdue milestones, and ` +
+          `${sweep.closing_opportunities_flagged} closing opportunities evaluated.`,
       );
       fetchData();
     } catch (err: any) {
-      setActionErrorMessage(err.message || "Failed to execute compliance sweep.");
+      setActionErrorMessage(
+        err.message || "Failed to execute compliance sweep.",
+      );
     }
   };
 
@@ -302,22 +367,27 @@ export default function ResearchManagementConsolePage() {
     try {
       setActionSuccessMessage(null);
       setActionErrorMessage(null);
-      const res = await apiFetch<ResearchProjectModel>("/api/v1/research/projects", {
-        method: "POST",
-        body: JSON.stringify({
-          project_code: newProjectForm.project_code,
-          title: newProjectForm.title,
-          research_domain: newProjectForm.research_domain,
-          category: newProjectForm.category,
-          proposed_budget: Number(newProjectForm.proposed_budget),
-          currency: newProjectForm.currency,
-          requires_ethics_approval: newProjectForm.requires_ethics_approval,
-          principal_investigator_id: user?.id,
-          abstract: newProjectForm.abstract,
-        }),
-      });
+      const res = await apiFetch<ResearchProjectModel>(
+        "/api/v1/research/projects",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            project_code: newProjectForm.project_code,
+            title: newProjectForm.title,
+            research_domain: newProjectForm.research_domain,
+            category: newProjectForm.category,
+            proposed_budget: Number(newProjectForm.proposed_budget),
+            currency: newProjectForm.currency,
+            requires_ethics_approval: newProjectForm.requires_ethics_approval,
+            principal_investigator_id: user?.id,
+            abstract: newProjectForm.abstract,
+          }),
+        },
+      );
       const created = res.data;
-      setActionSuccessMessage(`Research Project '${created.project_code}' created successfully.`);
+      setActionSuccessMessage(
+        `Research Project '${created.project_code}' created successfully.`,
+      );
       setIsNewProjectModalOpen(false);
       setNewProjectForm({
         project_code: `RES-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
@@ -347,20 +417,24 @@ export default function ResearchManagementConsolePage() {
           method: "POST",
           body: JSON.stringify({
             target_status: transitionTargetStatus,
-            reason: transitionReason || `Status transitioned to ${transitionTargetStatus}`,
+            reason:
+              transitionReason ||
+              `Status transitioned to ${transitionTargetStatus}`,
           }),
-        }
+        },
       );
       const updated = res.data;
       setActionSuccessMessage(
-        `Project ${updated.project_code} transitioned to status ${updated.status}.`
+        `Project ${updated.project_code} transitioned to status ${updated.status}.`,
       );
       setIsTransitionModalOpen(false);
       setProjectToTransition(null);
       setTransitionReason("");
       fetchData();
     } catch (err: any) {
-      setActionErrorMessage(err.message || "Failed to transition project status.");
+      setActionErrorMessage(
+        err.message || "Failed to transition project status.",
+      );
     }
   };
 
@@ -371,26 +445,35 @@ export default function ResearchManagementConsolePage() {
     try {
       setActionSuccessMessage(null);
       setActionErrorMessage(null);
-      const res = await apiFetch<ResearchFundingOpportunityModel>("/api/v1/research/opportunities", {
-        method: "POST",
-        body: JSON.stringify({
-          opportunity_code: newOppForm.opportunity_code,
-          title: newOppForm.title,
-          funding_organization: newOppForm.funding_organization,
-          category: newOppForm.category,
-          research_domains: newOppForm.research_domains.split(",").map((s) => s.trim()),
-          min_amount: Number(newOppForm.min_amount),
-          max_amount: Number(newOppForm.max_amount),
-          closing_date: newOppForm.closing_date,
-          opportunity_url: newOppForm.opportunity_url,
-        }),
-      });
+      const res = await apiFetch<ResearchFundingOpportunityModel>(
+        "/api/v1/research/opportunities",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            opportunity_code: newOppForm.opportunity_code,
+            title: newOppForm.title,
+            funding_organization: newOppForm.funding_organization,
+            category: newOppForm.category,
+            research_domains: newOppForm.research_domains
+              .split(",")
+              .map((s) => s.trim()),
+            min_amount: Number(newOppForm.min_amount),
+            max_amount: Number(newOppForm.max_amount),
+            closing_date: newOppForm.closing_date,
+            opportunity_url: newOppForm.opportunity_url,
+          }),
+        },
+      );
       const opp = res.data;
-      setActionSuccessMessage(`Funding opportunity '${opp.opportunity_code || opp.title}' cataloged successfully.`);
+      setActionSuccessMessage(
+        `Funding opportunity '${opp.opportunity_code || opp.title}' cataloged successfully.`,
+      );
       setIsNewOpportunityModalOpen(false);
       fetchData();
     } catch (err: any) {
-      setActionErrorMessage(err.message || "Failed to catalog funding opportunity.");
+      setActionErrorMessage(
+        err.message || "Failed to catalog funding opportunity.",
+      );
     }
   };
 
@@ -401,24 +484,29 @@ export default function ResearchManagementConsolePage() {
     try {
       setActionSuccessMessage(null);
       setActionErrorMessage(null);
-      const res = await apiFetch<ResearchOutputModel>("/api/v1/research/outputs", {
-        method: "POST",
-        body: JSON.stringify({
-          title: newPubForm.title,
-          output_type: newPubForm.output_type,
-          publication_venue: newPubForm.publication_venue,
-          doi_or_urn: newPubForm.doi_or_urn,
-          citation_count: Number(newPubForm.citation_count),
-          open_access_status: newPubForm.open_access_status,
-          project_id: selectedProjectId || undefined,
-        }),
-      });
+      const res = await apiFetch<ResearchOutputModel>(
+        "/api/v1/research/outputs",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            title: newPubForm.title,
+            output_type: newPubForm.output_type,
+            publication_venue: newPubForm.publication_venue,
+            doi_or_urn: newPubForm.doi_or_urn,
+            citation_count: Number(newPubForm.citation_count),
+            open_access_status: newPubForm.open_access_status,
+            project_id: selectedProjectId || undefined,
+          }),
+        },
+      );
       const pub = res.data;
       setActionSuccessMessage(`Publication '${pub.title}' registered.`);
       setIsNewPublicationModalOpen(false);
       fetchData();
     } catch (err: any) {
-      setActionErrorMessage(err.message || "Failed to register scholarly output.");
+      setActionErrorMessage(
+        err.message || "Failed to register scholarly output.",
+      );
     }
   };
 
@@ -429,25 +517,35 @@ export default function ResearchManagementConsolePage() {
     try {
       setActionSuccessMessage(null);
       setActionErrorMessage(null);
-      const res = await apiFetch<ResearchInventionDisclosureModel>("/api/v1/research/intellectual-property", {
-        method: "POST",
-        body: JSON.stringify({
-          disclosure_code: newDisclosureForm.disclosure_code,
-          title: newDisclosureForm.title,
-          technical_description: newDisclosureForm.technical_description,
-          confidentiality_level: newDisclosureForm.confidentiality_level,
-          patent_filing_status: newDisclosureForm.patent_filing_status,
-          patent_application_number: newDisclosureForm.patent_application_number,
-          institutional_ownership_percentage: Number(newDisclosureForm.institutional_ownership_percentage),
-          project_id: selectedProjectId || undefined,
-        }),
-      });
+      const res = await apiFetch<ResearchInventionDisclosureModel>(
+        "/api/v1/research/intellectual-property",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            disclosure_code: newDisclosureForm.disclosure_code,
+            title: newDisclosureForm.title,
+            technical_description: newDisclosureForm.technical_description,
+            confidentiality_level: newDisclosureForm.confidentiality_level,
+            patent_filing_status: newDisclosureForm.patent_filing_status,
+            patent_application_number:
+              newDisclosureForm.patent_application_number,
+            institutional_ownership_percentage: Number(
+              newDisclosureForm.institutional_ownership_percentage,
+            ),
+            project_id: selectedProjectId || undefined,
+          }),
+        },
+      );
       const disc = res.data;
-      setActionSuccessMessage(`Invention disclosure '${disc.disclosure_code}' recorded securely.`);
+      setActionSuccessMessage(
+        `Invention disclosure '${disc.disclosure_code}' recorded securely.`,
+      );
       setIsNewDisclosureModalOpen(false);
       fetchData();
     } catch (err: any) {
-      setActionErrorMessage(err.message || "Failed to record invention disclosure.");
+      setActionErrorMessage(
+        err.message || "Failed to record invention disclosure.",
+      );
     }
   };
 
@@ -456,8 +554,12 @@ export default function ResearchManagementConsolePage() {
     return projects.filter((p) => {
       const matchesSearch =
         (p.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (p.project_code || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (p.research_domain || "").toLowerCase().includes(searchQuery.toLowerCase());
+        (p.project_code || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        (p.research_domain || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "ALL" || p.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -465,7 +567,9 @@ export default function ResearchManagementConsolePage() {
 
   // Selected project object
   const currentProject = useMemo(() => {
-    return projects.find((p) => p.id === selectedProjectId) || projects[0] || null;
+    return (
+      projects.find((p) => p.id === selectedProjectId) || projects[0] || null
+    );
   }, [projects, selectedProjectId]);
 
   return (
@@ -485,8 +589,9 @@ export default function ResearchManagementConsolePage() {
                 </span>
               </h1>
               <p className="text-sm text-slate-400">
-                Authoritative governance of institutional research projects, sponsored grants, ethics compliance,
-                scholarly publications, and intellectual property.
+                Authoritative governance of institutional research projects,
+                sponsored grants, ethics compliance, scholarly publications, and
+                intellectual property.
               </p>
             </div>
           </div>
@@ -508,7 +613,9 @@ export default function ResearchManagementConsolePage() {
             className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
             title="Refresh Data"
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin text-emerald-400" : ""}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${isRefreshing ? "animate-spin text-emerald-400" : ""}`}
+            />
           </button>
 
           <button
@@ -528,7 +635,10 @@ export default function ResearchManagementConsolePage() {
             <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
             <span>{actionSuccessMessage}</span>
           </div>
-          <button onClick={() => setActionSuccessMessage(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setActionSuccessMessage(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -540,7 +650,10 @@ export default function ResearchManagementConsolePage() {
             <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0" />
             <span>{actionErrorMessage}</span>
           </div>
-          <button onClick={() => setActionErrorMessage(null)} className="text-rose-400 hover:text-white">
+          <button
+            onClick={() => setActionErrorMessage(null)}
+            className="text-rose-400 hover:text-white"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -596,7 +709,9 @@ export default function ResearchManagementConsolePage() {
               <div className="flex-1 bg-slate-800 rounded-full h-1.5 overflow-hidden">
                 <div
                   className="bg-teal-400 h-full rounded-full"
-                  style={{ width: `${Math.min(100, analytics.budget_utilization_rate)}%` }}
+                  style={{
+                    width: `${Math.min(100, analytics.budget_utilization_rate)}%`,
+                  }}
                 />
               </div>
               <span className="text-[11px] text-slate-400 font-medium">
@@ -616,7 +731,8 @@ export default function ResearchManagementConsolePage() {
               </span>
             </div>
             <div className="mt-2 text-xs text-sky-400 font-medium">
-              {analytics.approved_grant_applications} / {analytics.total_grant_applications} awards
+              {analytics.approved_grant_applications} /{" "}
+              {analytics.total_grant_applications} awards
             </div>
           </div>
 
@@ -652,7 +768,8 @@ export default function ResearchManagementConsolePage() {
               </span>
             </div>
             <div className="mt-2 text-xs text-amber-400 font-medium">
-              ${(analytics.commercialization_revenue / 1000).toFixed(0)}k license revenue
+              ${(analytics.commercialization_revenue / 1000).toFixed(0)}k
+              license revenue
             </div>
           </div>
         </div>
@@ -663,12 +780,24 @@ export default function ResearchManagementConsolePage() {
         {[
           { key: "overview", label: "Overview & Analytics", icon: BarChart3 },
           { key: "projects", label: "Projects Registry", icon: FlaskConical },
-          { key: "opportunities", label: "Funding Opportunities", icon: Sparkles },
+          {
+            key: "opportunities",
+            label: "Funding Opportunities",
+            icon: Sparkles,
+          },
           { key: "applications", label: "Grant Applications", icon: FileText },
-          { key: "awards_budgets", label: "Awards & Budgets", icon: DollarSign },
+          {
+            key: "awards_budgets",
+            label: "Awards & Budgets",
+            icon: DollarSign,
+          },
           { key: "milestones", label: "Milestones", icon: CheckCircle2 },
           { key: "ethics", label: "Ethics Approvals", icon: ShieldCheck },
-          { key: "publications", label: "Publications & Outputs", icon: BookOpen },
+          {
+            key: "publications",
+            label: "Publications & Outputs",
+            icon: BookOpen,
+          },
           { key: "ip_patents", label: "IP & Disclosures", icon: Lightbulb },
           { key: "risks", label: "Project Risks", icon: AlertTriangle },
         ].map((tab) => {
@@ -684,7 +813,9 @@ export default function ResearchManagementConsolePage() {
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
               }`}
             >
-              <Icon className={`h-4 w-4 ${isActive ? "text-emerald-400" : ""}`} />
+              <Icon
+                className={`h-4 w-4 ${isActive ? "text-emerald-400" : ""}`}
+              />
               {tab.label}
             </button>
           );
@@ -732,7 +863,12 @@ export default function ResearchManagementConsolePage() {
                       <div className="flex items-center gap-3 text-xs text-slate-400">
                         <span>{proj.research_domain}</span>
                         <span>•</span>
-                        <span>Budget: ${Number(proj.approved_budget || proj.proposed_budget || 0).toLocaleString()}</span>
+                        <span>
+                          Budget: $
+                          {Number(
+                            proj.approved_budget || proj.proposed_budget || 0,
+                          ).toLocaleString()}
+                        </span>
                         {proj.requires_ethics_approval && (
                           <>
                             <span>•</span>
@@ -750,10 +886,11 @@ export default function ResearchManagementConsolePage() {
                           proj.status === "ACTIVE"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : proj.status === "COMPLETED"
-                            ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
-                            : proj.status === "SUBMITTED" || proj.status === "UNDER_REVIEW"
-                            ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-                            : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                              ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
+                              : proj.status === "SUBMITTED" ||
+                                  proj.status === "UNDER_REVIEW"
+                                ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+                                : "bg-slate-500/10 text-slate-400 border-slate-500/20"
                         }`}
                       >
                         {proj.status}
@@ -775,31 +912,44 @@ export default function ResearchManagementConsolePage() {
               <div className="space-y-3">
                 <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-300">Ethics Approvals (IRB/Animal)</span>
-                    <span className="text-emerald-400 font-semibold">{analytics?.ethics_approvals_count} active</span>
+                    <span className="font-medium text-slate-300">
+                      Ethics Approvals (IRB/Animal)
+                    </span>
+                    <span className="text-emerald-400 font-semibold">
+                      {analytics?.ethics_approvals_count} active
+                    </span>
                   </div>
                   <p className="text-xs text-slate-400">
-                    All protocols are vetted by institutional review boards before clinical/biological trials.
+                    All protocols are vetted by institutional review boards
+                    before clinical/biological trials.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-300">Intellectual Property & Patents</span>
-                    <span className="text-amber-400 font-semibold">{analytics?.patents_filed_or_granted} recorded</span>
+                    <span className="font-medium text-slate-300">
+                      Intellectual Property & Patents
+                    </span>
+                    <span className="text-amber-400 font-semibold">
+                      {analytics?.patents_filed_or_granted} recorded
+                    </span>
                   </div>
                   <p className="text-xs text-slate-400">
-                    Trade secret disclosures and patent rights are protected with audited inventor attribution.
+                    Trade secret disclosures and patent rights are protected
+                    with audited inventor attribution.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-300">Grant Separation of Duties</span>
+                    <span className="font-medium text-slate-300">
+                      Grant Separation of Duties
+                    </span>
                     <span className="text-sky-400 font-semibold">Enforced</span>
                   </div>
                   <p className="text-xs text-slate-400">
-                    Principal Investigators cannot review or approve their own sponsored research submissions.
+                    Principal Investigators cannot review or approve their own
+                    sponsored research submissions.
                   </p>
                 </div>
               </div>
@@ -840,7 +990,8 @@ export default function ResearchManagementConsolePage() {
             </div>
 
             <div className="text-xs text-slate-400">
-              Showing {filteredProjects.length} of {projects.length} registered projects
+              Showing {filteredProjects.length} of {projects.length} registered
+              projects
             </div>
           </div>
 
@@ -878,16 +1029,23 @@ export default function ResearchManagementConsolePage() {
                         <div className="font-medium text-white">{p.title}</div>
                         {p.requires_ethics_approval && (
                           <span className="text-[11px] text-amber-400 flex items-center gap-1 mt-0.5">
-                            <ShieldCheck className="h-3 w-3" /> IRB Review Required
+                            <ShieldCheck className="h-3 w-3" /> IRB Review
+                            Required
                           </span>
                         )}
                       </td>
                       <td className="py-3 px-4 text-xs text-slate-400">
                         <div>{p.research_domain}</div>
-                        <div className="text-[11px] text-slate-500">{p.research_category}</div>
+                        <div className="text-[11px] text-slate-500">
+                          {p.research_category}
+                        </div>
                       </td>
                       <td className="py-3 px-4 font-mono text-xs text-slate-300">
-                        ${Number(p.approved_budget || p.proposed_budget || 0).toLocaleString()} {p.currency}
+                        $
+                        {Number(
+                          p.approved_budget || p.proposed_budget || 0,
+                        ).toLocaleString()}{" "}
+                        {p.currency}
                       </td>
                       <td className="py-3 px-4">
                         <span
@@ -895,10 +1053,11 @@ export default function ResearchManagementConsolePage() {
                             p.status === "ACTIVE"
                               ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                               : p.status === "COMPLETED"
-                              ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
-                              : p.status === "SUBMITTED" || p.status === "UNDER_REVIEW"
-                              ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
-                              : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                                ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
+                                : p.status === "SUBMITTED" ||
+                                    p.status === "UNDER_REVIEW"
+                                  ? "bg-sky-500/10 text-sky-400 border-sky-500/20"
+                                  : "bg-slate-500/10 text-slate-400 border-slate-500/20"
                           }`}
                         >
                           {p.status}
@@ -959,7 +1118,10 @@ export default function ResearchManagementConsolePage() {
               </div>
             ) : (
               opportunities.map((opp) => (
-                <div key={opp.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div
+                  key={opp.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-emerald-400">
                       {opp.opportunity_code}
@@ -970,20 +1132,27 @@ export default function ResearchManagementConsolePage() {
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-white text-sm line-clamp-2">{opp.title}</h4>
-                    <p className="text-xs text-slate-400 mt-1">{opp.funding_organization}</p>
+                    <h4 className="font-medium text-white text-sm line-clamp-2">
+                      {opp.title}
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {opp.funding_organization}
+                    </p>
                   </div>
 
                   <div className="text-xs text-slate-400 space-y-1 border-t border-slate-800/80 pt-2">
                     <div className="flex justify-between">
                       <span>Funding Range:</span>
                       <span className="text-slate-200 font-mono">
-                        ${Number(opp.min_amount || 0).toLocaleString()} - ${Number(opp.max_amount || 0).toLocaleString()}
+                        ${Number(opp.min_amount || 0).toLocaleString()} - $
+                        {Number(opp.max_amount || 0).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Closing Date:</span>
-                      <span className="text-slate-200 font-mono">{opp.closing_date}</span>
+                      <span className="text-slate-200 font-mono">
+                        {opp.closing_date}
+                      </span>
                     </div>
                   </div>
 
@@ -1014,7 +1183,8 @@ export default function ResearchManagementConsolePage() {
                 Sponsored Grant Applications & Review Pipeline
               </h3>
               <p className="text-xs text-slate-400">
-                Institutional review enforces separation of duties: PIs cannot review their own submissions.
+                Institutional review enforces separation of duties: PIs cannot
+                review their own submissions.
               </p>
             </div>
           </div>
@@ -1039,15 +1209,21 @@ export default function ResearchManagementConsolePage() {
                   </tr>
                 ) : (
                   applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={app.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3 px-4 font-mono text-xs font-semibold text-sky-400">
                         {app.application_code}
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-medium text-white">{app.title}</div>
+                        <div className="font-medium text-white">
+                          {app.title}
+                        </div>
                       </td>
                       <td className="py-3 px-4 font-mono text-xs text-slate-300">
-                        ${Number(app.proposed_budget || 0).toLocaleString()} {app.currency}
+                        ${Number(app.proposed_budget || 0).toLocaleString()}{" "}
+                        {app.currency}
                       </td>
                       <td className="py-3 px-4">
                         <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">
@@ -1085,19 +1261,27 @@ export default function ResearchManagementConsolePage() {
               </div>
             ) : (
               awards.map((award) => (
-                <div key={award.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div
+                  key={award.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       {award.award_code}
                     </span>
-                    <span className="text-xs text-slate-400">{award.award_date}</span>
+                    <span className="text-xs text-slate-400">
+                      {award.award_date}
+                    </span>
                   </div>
 
                   <div>
                     <h4 className="font-semibold text-white text-base">
-                      ${Number(award.award_amount || 0).toLocaleString()} {award.currency}
+                      ${Number(award.award_amount || 0).toLocaleString()}{" "}
+                      {award.currency}
                     </h4>
-                    <p className="text-xs text-slate-400">Awarded by {award.funding_organization}</p>
+                    <p className="text-xs text-slate-400">
+                      Awarded by {award.funding_organization}
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 text-center text-xs">
@@ -1138,7 +1322,10 @@ export default function ResearchManagementConsolePage() {
               </h3>
               {currentProject && (
                 <p className="text-xs text-slate-400">
-                  Showing deliverables for project: <span className="text-emerald-400 font-medium">{currentProject.project_code} - {currentProject.title}</span>
+                  Showing deliverables for project:{" "}
+                  <span className="text-emerald-400 font-medium">
+                    {currentProject.project_code} - {currentProject.title}
+                  </span>
                 </p>
               )}
             </div>
@@ -1164,7 +1351,10 @@ export default function ResearchManagementConsolePage() {
                   </tr>
                 ) : (
                   milestones.map((m) => (
-                    <tr key={m.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={m.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3 px-4 font-mono text-xs font-semibold text-emerald-400">
                         {m.id.substring(0, 8)}
                       </td>
@@ -1187,7 +1377,9 @@ export default function ResearchManagementConsolePage() {
                               style={{ width: `${m.completion_percentage}%` }}
                             />
                           </div>
-                          <span className="text-xs font-mono text-slate-400">{m.completion_percentage}%</span>
+                          <span className="text-xs font-mono text-slate-400">
+                            {m.completion_percentage}%
+                          </span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -1211,10 +1403,12 @@ export default function ResearchManagementConsolePage() {
             <div>
               <h3 className="font-semibold text-white flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                Institutional Ethics & Safety Approvals (IRB / Animal / Biosafety)
+                Institutional Ethics & Safety Approvals (IRB / Animal /
+                Biosafety)
               </h3>
               <p className="text-xs text-slate-400">
-                Formal review committees oversee high-impact research compliance and confidentiality.
+                Formal review committees oversee high-impact research compliance
+                and confidentiality.
               </p>
             </div>
           </div>
@@ -1226,7 +1420,10 @@ export default function ResearchManagementConsolePage() {
               </div>
             ) : (
               ethicsApprovals.map((eth) => (
-                <div key={eth.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div
+                  key={eth.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                       {eth.application_reference}
@@ -1243,19 +1440,27 @@ export default function ResearchManagementConsolePage() {
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-white text-sm">{eth.approval_type}</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">Committee: {eth.committee_name}</p>
+                    <h4 className="font-medium text-white text-sm">
+                      {eth.approval_type}
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Committee: {eth.committee_name}
+                    </p>
                   </div>
 
                   <div className="text-xs text-slate-400 space-y-1 border-t border-slate-800/80 pt-2">
                     <div className="flex justify-between">
                       <span>Governing Policy:</span>
-                      <span className="text-slate-300">{eth.governing_policy}</span>
+                      <span className="text-slate-300">
+                        {eth.governing_policy}
+                      </span>
                     </div>
                     {eth.expiry_date && (
                       <div className="flex justify-between">
                         <span>Approval Expiry:</span>
-                        <span className="text-amber-400 font-mono">{eth.expiry_date}</span>
+                        <span className="text-amber-400 font-mono">
+                          {eth.expiry_date}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -1290,7 +1495,10 @@ export default function ResearchManagementConsolePage() {
               </div>
             ) : (
               publications.map((pub) => (
-                <div key={pub.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div
+                  key={pub.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <span className="text-xs px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">
                       {pub.output_type}
@@ -1303,13 +1511,21 @@ export default function ResearchManagementConsolePage() {
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-white text-sm">{pub.title}</h4>
-                    <p className="text-xs text-slate-400 mt-1">{pub.publication_venue}</p>
+                    <h4 className="font-medium text-white text-sm">
+                      {pub.title}
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {pub.publication_venue}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-2">
-                    <span className="font-mono text-slate-300">DOI: {pub.doi_or_urn || "N/A"}</span>
-                    <span className="text-purple-400 font-semibold">{pub.citation_count} Citations</span>
+                    <span className="font-mono text-slate-300">
+                      DOI: {pub.doi_or_urn || "N/A"}
+                    </span>
+                    <span className="text-purple-400 font-semibold">
+                      {pub.citation_count} Citations
+                    </span>
                   </div>
                 </div>
               ))
@@ -1328,7 +1544,8 @@ export default function ResearchManagementConsolePage() {
                 Intellectual Property & Invention Disclosures
               </h3>
               <p className="text-xs text-slate-400">
-                Confidential trade secret registrations, patent tracking, and licensing royalties.
+                Confidential trade secret registrations, patent tracking, and
+                licensing royalties.
               </p>
             </div>
             <button
@@ -1347,35 +1564,49 @@ export default function ResearchManagementConsolePage() {
               </div>
             ) : (
               disclosures.map((disc) => (
-                <div key={disc.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div
+                  key={disc.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-bold text-amber-400 px-2 py-0.5 rounded bg-slate-800">
                       {disc.disclosure_code}
                     </span>
                     <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                      <Lock className="h-3 w-3 text-amber-400" /> {disc.confidentiality_level}
+                      <Lock className="h-3 w-3 text-amber-400" />{" "}
+                      {disc.confidentiality_level}
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-white text-sm">{disc.title}</h4>
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">{disc.technical_description}</p>
+                    <h4 className="font-medium text-white text-sm">
+                      {disc.title}
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                      {disc.technical_description}
+                    </p>
                   </div>
 
                   <div className="text-xs text-slate-400 space-y-1 border-t border-slate-800/80 pt-2">
                     <div className="flex justify-between">
                       <span>Patent Status:</span>
-                      <span className="text-slate-200 font-medium">{disc.patent_filing_status}</span>
+                      <span className="text-slate-200 font-medium">
+                        {disc.patent_filing_status}
+                      </span>
                     </div>
                     {disc.patent_application_number && (
                       <div className="flex justify-between">
                         <span>Application #:</span>
-                        <span className="text-slate-200 font-mono">{disc.patent_application_number}</span>
+                        <span className="text-slate-200 font-mono">
+                          {disc.patent_application_number}
+                        </span>
                       </div>
                     )}
                     <div className="flex justify-between">
                       <span>Institutional Ownership:</span>
-                      <span className="text-slate-200">{disc.institutional_ownership_percentage}%</span>
+                      <span className="text-slate-200">
+                        {disc.institutional_ownership_percentage}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1415,16 +1646,24 @@ export default function ResearchManagementConsolePage() {
                   </tr>
                 ) : (
                   risks.map((r) => (
-                    <tr key={r.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3 px-4 font-medium text-white">{r.risk_title}</td>
-                      <td className="py-3 px-4 text-xs text-slate-400">{r.risk_category}</td>
+                    <tr
+                      key={r.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
+                      <td className="py-3 px-4 font-medium text-white">
+                        {r.risk_title}
+                      </td>
+                      <td className="py-3 px-4 text-xs text-slate-400">
+                        {r.risk_category}
+                      </td>
                       <td className="py-3 px-4 text-xs text-slate-300 font-mono">
                         {r.likelihood} x {r.impact}
                       </td>
                       <td className="py-3 px-4">
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            r.calculated_risk_level === "CRITICAL" || r.calculated_risk_level === "HIGH"
+                            r.calculated_risk_level === "CRITICAL" ||
+                            r.calculated_risk_level === "HIGH"
                               ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                               : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                           }`}
@@ -1463,72 +1702,118 @@ export default function ResearchManagementConsolePage() {
 
             <form onSubmit={handleCreateProject} className="space-y-3 text-sm">
               <div>
-                <label className="text-xs text-slate-400 font-medium">Project Code</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Project Code
+                </label>
                 <input
                   type="text"
                   required
                   value={newProjectForm.project_code}
-                  onChange={(e) => setNewProjectForm({ ...newProjectForm, project_code: e.target.value })}
+                  onChange={(e) =>
+                    setNewProjectForm({
+                      ...newProjectForm,
+                      project_code: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Project Title</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Project Title
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., Deep Learning in Autonomous Drone Swarms"
                   value={newProjectForm.title}
-                  onChange={(e) => setNewProjectForm({ ...newProjectForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewProjectForm({
+                      ...newProjectForm,
+                      title: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Research Domain</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Research Domain
+                  </label>
                   <input
                     type="text"
                     required
                     value={newProjectForm.research_domain}
-                    onChange={(e) => setNewProjectForm({ ...newProjectForm, research_domain: e.target.value })}
+                    onChange={(e) =>
+                      setNewProjectForm({
+                        ...newProjectForm,
+                        research_domain: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Category</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Category
+                  </label>
                   <select
                     value={newProjectForm.category}
-                    onChange={(e) => setNewProjectForm({ ...newProjectForm, category: e.target.value })}
+                    onChange={(e) =>
+                      setNewProjectForm({
+                        ...newProjectForm,
+                        category: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                   >
                     <option value="BASIC_RESEARCH">Basic Research</option>
                     <option value="APPLIED_RESEARCH">Applied Research</option>
-                    <option value="EXPERIMENTAL_DEVELOPMENT">Experimental Dev</option>
+                    <option value="EXPERIMENTAL_DEVELOPMENT">
+                      Experimental Dev
+                    </option>
                     <option value="CLINICAL_TRIAL">Clinical Trial</option>
-                    <option value="INNOVATION_INCUBATION">Innovation / Startup</option>
+                    <option value="INNOVATION_INCUBATION">
+                      Innovation / Startup
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Proposed Budget</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Proposed Budget
+                  </label>
                   <input
                     type="number"
                     min="0"
                     value={newProjectForm.proposed_budget}
-                    onChange={(e) => setNewProjectForm({ ...newProjectForm, proposed_budget: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewProjectForm({
+                        ...newProjectForm,
+                        proposed_budget: Number(e.target.value),
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Currency</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Currency
+                  </label>
                   <input
                     type="text"
                     value={newProjectForm.currency}
-                    onChange={(e) => setNewProjectForm({ ...newProjectForm, currency: e.target.value })}
+                    onChange={(e) =>
+                      setNewProjectForm({
+                        ...newProjectForm,
+                        currency: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -1539,11 +1824,20 @@ export default function ResearchManagementConsolePage() {
                   type="checkbox"
                   id="requires_ethics"
                   checked={newProjectForm.requires_ethics_approval}
-                  onChange={(e) => setNewProjectForm({ ...newProjectForm, requires_ethics_approval: e.target.checked })}
+                  onChange={(e) =>
+                    setNewProjectForm({
+                      ...newProjectForm,
+                      requires_ethics_approval: e.target.checked,
+                    })
+                  }
                   className="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0"
                 />
-                <label htmlFor="requires_ethics" className="text-xs text-slate-300 font-medium cursor-pointer">
-                  Requires Formal Ethics Review (Human participants / Animal / Biosafety)
+                <label
+                  htmlFor="requires_ethics"
+                  className="text-xs text-slate-300 font-medium cursor-pointer"
+                >
+                  Requires Formal Ethics Review (Human participants / Animal /
+                  Biosafety)
                 </label>
               </div>
 
@@ -1572,7 +1866,9 @@ export default function ResearchManagementConsolePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-semibold text-white">Transition Lifecycle Status</h3>
+              <h3 className="font-semibold text-white">
+                Transition Lifecycle Status
+              </h3>
               <button
                 onClick={() => setIsTransitionModalOpen(false)}
                 className="text-slate-400 hover:text-white"
@@ -1583,16 +1879,24 @@ export default function ResearchManagementConsolePage() {
 
             <div className="text-xs text-slate-400 space-y-1">
               <div>
-                Project: <span className="text-white font-mono">{projectToTransition.project_code}</span>
+                Project:{" "}
+                <span className="text-white font-mono">
+                  {projectToTransition.project_code}
+                </span>
               </div>
               <div>
-                Current Status: <span className="text-emerald-400 font-semibold">{projectToTransition.status}</span>
+                Current Status:{" "}
+                <span className="text-emerald-400 font-semibold">
+                  {projectToTransition.status}
+                </span>
               </div>
             </div>
 
             <div className="space-y-3 text-sm">
               <div>
-                <label className="text-xs text-slate-400 font-medium">Target Status</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Target Status
+                </label>
                 <select
                   value={transitionTargetStatus}
                   onChange={(e) => setTransitionTargetStatus(e.target.value)}
@@ -1609,7 +1913,9 @@ export default function ResearchManagementConsolePage() {
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Transition Reason / Decision Notes</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Transition Reason / Decision Notes
+                </label>
                 <textarea
                   rows={3}
                   placeholder="Justification for audited transition..."
@@ -1657,48 +1963,76 @@ export default function ResearchManagementConsolePage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateOpportunity} className="space-y-3 text-sm">
+            <form
+              onSubmit={handleCreateOpportunity}
+              className="space-y-3 text-sm"
+            >
               <div>
-                <label className="text-xs text-slate-400 font-medium">Opportunity Code / RFP ID</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Opportunity Code / RFP ID
+                </label>
                 <input
                   type="text"
                   required
                   value={newOppForm.opportunity_code}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, opportunity_code: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({
+                      ...newOppForm,
+                      opportunity_code: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Opportunity Title</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Opportunity Title
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., NSF Clean Energy Transition Grant"
                   value={newOppForm.title}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({ ...newOppForm, title: e.target.value })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Funding Agency</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Funding Agency
+                  </label>
                   <input
                     type="text"
                     required
                     value={newOppForm.funding_organization}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, funding_organization: e.target.value })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        funding_organization: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Closing Date</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Closing Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={newOppForm.closing_date}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, closing_date: e.target.value })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        closing_date: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -1706,20 +2040,34 @@ export default function ResearchManagementConsolePage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Min Funding ($)</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Min Funding ($)
+                  </label>
                   <input
                     type="number"
                     value={newOppForm.min_amount}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, min_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        min_amount: Number(e.target.value),
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Max Funding ($)</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Max Funding ($)
+                  </label>
                   <input
                     type="number"
                     value={newOppForm.max_amount}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, max_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        max_amount: Number(e.target.value),
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -1762,25 +2110,39 @@ export default function ResearchManagementConsolePage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreatePublication} className="space-y-3 text-sm">
+            <form
+              onSubmit={handleCreatePublication}
+              className="space-y-3 text-sm"
+            >
               <div>
-                <label className="text-xs text-slate-400 font-medium">Output Title</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Output Title
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., Scalable Distributed Consensus on Directed Acyclic Graphs"
                   value={newPubForm.title}
-                  onChange={(e) => setNewPubForm({ ...newPubForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewPubForm({ ...newPubForm, title: e.target.value })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Output Type</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Output Type
+                  </label>
                   <select
                     value={newPubForm.output_type}
-                    onChange={(e) => setNewPubForm({ ...newPubForm, output_type: e.target.value })}
+                    onChange={(e) =>
+                      setNewPubForm({
+                        ...newPubForm,
+                        output_type: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-purple-500"
                   >
                     <option value="JOURNAL_ARTICLE">Journal Article</option>
@@ -1791,25 +2153,36 @@ export default function ResearchManagementConsolePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Publication Venue</label>
+                  <label className="text-xs text-slate-400 font-medium">
+                    Publication Venue
+                  </label>
                   <input
                     type="text"
                     required
                     value={newPubForm.publication_venue}
-                    onChange={(e) => setNewPubForm({ ...newPubForm, publication_venue: e.target.value })}
+                    onChange={(e) =>
+                      setNewPubForm({
+                        ...newPubForm,
+                        publication_venue: e.target.value,
+                      })
+                    }
                     className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">DOI or URN Identifier</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  DOI or URN Identifier
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="10.1016/..."
                   value={newPubForm.doi_or_urn}
-                  onChange={(e) => setNewPubForm({ ...newPubForm, doi_or_urn: e.target.value })}
+                  onChange={(e) =>
+                    setNewPubForm({ ...newPubForm, doi_or_urn: e.target.value })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-purple-500"
                 />
               </div>
@@ -1851,51 +2224,88 @@ export default function ResearchManagementConsolePage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateDisclosure} className="space-y-3 text-sm">
+            <form
+              onSubmit={handleCreateDisclosure}
+              className="space-y-3 text-sm"
+            >
               <div>
-                <label className="text-xs text-slate-400 font-medium">Disclosure Code</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Disclosure Code
+                </label>
                 <input
                   type="text"
                   required
                   value={newDisclosureForm.disclosure_code}
-                  onChange={(e) => setNewDisclosureForm({ ...newDisclosureForm, disclosure_code: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosureForm({
+                      ...newDisclosureForm,
+                      disclosure_code: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Invention Title</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Invention Title
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., Solid-State Nanocomposite Electrolyte Formulation"
                   value={newDisclosureForm.title}
-                  onChange={(e) => setNewDisclosureForm({ ...newDisclosureForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosureForm({
+                      ...newDisclosureForm,
+                      title: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Confidentiality Level</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Confidentiality Level
+                </label>
                 <select
                   value={newDisclosureForm.confidentiality_level}
-                  onChange={(e) => setNewDisclosureForm({ ...newDisclosureForm, confidentiality_level: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosureForm({
+                      ...newDisclosureForm,
+                      confidentiality_level: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-amber-500"
                 >
-                  <option value="INTERNAL_CONFIDENTIAL">Internal Confidential (Researchers + IP Office)</option>
-                  <option value="STRICTLY_CONFIDENTIAL">Strictly Confidential (Named Inventors Only)</option>
-                  <option value="PUBLIC_DISCLOSURE">Public Disclosure (Post-Filing / Published)</option>
+                  <option value="INTERNAL_CONFIDENTIAL">
+                    Internal Confidential (Researchers + IP Office)
+                  </option>
+                  <option value="STRICTLY_CONFIDENTIAL">
+                    Strictly Confidential (Named Inventors Only)
+                  </option>
+                  <option value="PUBLIC_DISCLOSURE">
+                    Public Disclosure (Post-Filing / Published)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Technical Description / Abstract</label>
+                <label className="text-xs text-slate-400 font-medium">
+                  Technical Description / Abstract
+                </label>
                 <textarea
                   rows={3}
                   required
                   placeholder="Confidential synthesis procedure or technical specification..."
                   value={newDisclosureForm.technical_description}
-                  onChange={(e) => setNewDisclosureForm({ ...newDisclosureForm, technical_description: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosureForm({
+                      ...newDisclosureForm,
+                      technical_description: e.target.value,
+                    })
+                  }
                   className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white text-xs focus:outline-none focus:border-amber-500"
                 />
               </div>

@@ -8,8 +8,7 @@ retries, credential isolation, and idempotent synchronization.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -28,9 +27,9 @@ class ConnectorBatchResult:
     """Batch of records pulled from an external provider."""
 
     records: list[dict[str, Any]]
-    next_cursor: Optional[str] = None
+    next_cursor: str | None = None
     has_more: bool = False
-    error: Optional[str] = None
+    error: str | None = None
 
 
 @dataclass
@@ -38,9 +37,9 @@ class ConnectorPushResult:
     """Outcome of pushing a single CampusOS record to an external provider."""
 
     success: bool
-    external_id: Optional[str] = None
+    external_id: str | None = None
     status: str = "SUCCESS"
-    error: Optional[str] = None
+    error: str | None = None
     details: dict[str, Any] = field(default_factory=dict)
 
 
@@ -73,7 +72,7 @@ class BaseMarketplaceConnector(ABC):
         config: dict[str, Any],
         credentials: dict[str, Any],
         entity_type: str,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
         limit: int = 50,
     ) -> ConnectorBatchResult:
         """Fetch a page of remote records for the specified entity type."""

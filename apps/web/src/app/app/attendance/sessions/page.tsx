@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceSession, AttendanceSessionStatus, SessionType } from "@/types/attendance";
+import {
+  AttendanceSession,
+  AttendanceSessionStatus,
+  SessionType,
+} from "@/types/attendance";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { ColumnDef } from "@/components/data-grid/data-grid.types";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +76,11 @@ export default function AttendanceSessionsPage() {
       }
     } catch (err) {
       console.error("Failed to load sessions", err);
-      showToast({ type: "error", title: "Load Error", message: "Unable to retrieve attendance sessions." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Unable to retrieve attendance sessions.",
+      });
     } finally {
       setLoading(false);
     }
@@ -88,14 +96,22 @@ export default function AttendanceSessionsPage() {
       setSaving(true);
       const res = await attendanceService.createSession(formData);
       if (res.success) {
-        showToast({ type: "success", title: "Session Created", message: `Session for ${res.data.courseCode} scheduled successfully.` });
+        showToast({
+          type: "success",
+          title: "Session Created",
+          message: `Session for ${res.data.courseCode} scheduled successfully.`,
+        });
         setCreateModalOpen(false);
         await loadSessions();
         router.push(`/app/attendance/sessions/${res.data.id}`);
       }
     } catch (err) {
       console.error("Failed to create session", err);
-      showToast({ type: "error", title: "Creation Failed", message: "Could not schedule session." });
+      showToast({
+        type: "error",
+        title: "Creation Failed",
+        message: "Could not schedule session.",
+      });
     } finally {
       setSaving(false);
     }
@@ -210,8 +226,8 @@ export default function AttendanceSessionsPage() {
                     row.attendancePercentage >= 85
                       ? "bg-emerald-500"
                       : row.attendancePercentage >= 75
-                      ? "bg-amber-500"
-                      : "bg-rose-500"
+                        ? "bg-amber-500"
+                        : "bg-rose-500"
                   }`}
                   style={{ width: `${row.attendancePercentage}%` }}
                 />
@@ -244,7 +260,7 @@ export default function AttendanceSessionsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -256,13 +272,16 @@ export default function AttendanceSessionsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
               Timetable Registers
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Class Attendance</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Class Attendance
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Attendance Sessions & Rosters
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Schedule lecture periods, open real-time biometric or manual student rosters, and audit signed registers.
+            Schedule lecture periods, open real-time biometric or manual student
+            rosters, and audit signed registers.
           </p>
         </div>
 
@@ -332,7 +351,10 @@ export default function AttendanceSessionsPage() {
           <option value="Sec B">Section B</option>
         </select>
 
-        {(statusFilter !== "ALL" || departmentFilter !== "ALL" || sectionFilter !== "ALL" || dateFilter !== "") && (
+        {(statusFilter !== "ALL" ||
+          departmentFilter !== "ALL" ||
+          sectionFilter !== "ALL" ||
+          dateFilter !== "") && (
           <Button
             size="sm"
             variant="ghost"
@@ -368,7 +390,8 @@ export default function AttendanceSessionsPage() {
       >
         <form onSubmit={handleCreateSession} className="space-y-4">
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Connect an academic course offering with a timetable slot and classroom venue.
+            Connect an academic course offering with a timetable slot and
+            classroom venue.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -408,9 +431,15 @@ export default function AttendanceSessionsPage() {
                 }}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="CS301">CS301 — Data Structures & Algorithms</option>
-                <option value="CS302">CS302 — Database Management Systems</option>
-                <option value="CS303">CS303 — Operating Systems & Concurrency</option>
+                <option value="CS301">
+                  CS301 — Data Structures & Algorithms
+                </option>
+                <option value="CS302">
+                  CS302 — Database Management Systems
+                </option>
+                <option value="CS303">
+                  CS303 — Operating Systems & Concurrency
+                </option>
               </select>
             </div>
 
@@ -420,7 +449,9 @@ export default function AttendanceSessionsPage() {
               </label>
               <select
                 value={formData.section}
-                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, section: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value="5th Sem CSE — Sec A">5th Sem CSE — Sec A</option>
@@ -436,10 +467,11 @@ export default function AttendanceSessionsPage() {
                 type="date"
                 required
                 value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-              >
-              </input>
+              ></input>
             </div>
 
             <div>
@@ -448,7 +480,12 @@ export default function AttendanceSessionsPage() {
               </label>
               <select
                 value={formData.sessionType}
-                onChange={(e) => setFormData({ ...formData, sessionType: e.target.value as SessionType })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    sessionType: e.target.value as SessionType,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value="THEORY">Theory Lecture</option>
@@ -465,7 +502,9 @@ export default function AttendanceSessionsPage() {
               <input
                 type="text"
                 value={formData.startTime}
-                onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, startTime: e.target.value })
+                }
                 placeholder="09:30 AM"
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
@@ -478,7 +517,9 @@ export default function AttendanceSessionsPage() {
               <input
                 type="text"
                 value={formData.endTime}
-                onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, endTime: e.target.value })
+                }
                 placeholder="10:30 AM"
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
@@ -491,7 +532,9 @@ export default function AttendanceSessionsPage() {
               <input
                 type="text"
                 value={formData.room}
-                onChange={(e) => setFormData({ ...formData, room: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, room: e.target.value })
+                }
                 placeholder="Hall 302, Academic Block A"
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
@@ -504,7 +547,9 @@ export default function AttendanceSessionsPage() {
               <input
                 type="text"
                 value={formData.topicCovered}
-                onChange={(e) => setFormData({ ...formData, topicCovered: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, topicCovered: e.target.value })
+                }
                 placeholder="e.g. Red-Black Trees Insertion and Balancing Operations"
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />

@@ -17,7 +17,6 @@ from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.events import OutboxService
 from app.core.jobs import JobExecutionRecord, TenantJobContext, TenantJobRunner
-from app.services.workflow_service import WorkflowService
 
 logging.basicConfig(
     level=logging.INFO,

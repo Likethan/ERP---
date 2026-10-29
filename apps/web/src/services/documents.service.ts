@@ -13,7 +13,9 @@ import { DocumentFilterState } from "@/types/documents";
 class DocumentsService {
   private documents: DocumentItem[] = [...MOCK_DOCUMENTS];
 
-  async listDocuments(filters?: DocumentFilterState): Promise<ApiResponse<DocumentItem[]>> {
+  async listDocuments(
+    filters?: DocumentFilterState,
+  ): Promise<ApiResponse<DocumentItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.documents];
 
@@ -25,8 +27,9 @@ class DocumentsService {
             d.name.toLowerCase().includes(q) ||
             d.documentType.toLowerCase().includes(q) ||
             d.ownerName.toLowerCase().includes(q) ||
-            (d.ownerRollNumber && d.ownerRollNumber.toLowerCase().includes(q)) ||
-            (d.documentNumber && d.documentNumber.toLowerCase().includes(q))
+            (d.ownerRollNumber &&
+              d.ownerRollNumber.toLowerCase().includes(q)) ||
+            (d.documentNumber && d.documentNumber.toLowerCase().includes(q)),
         );
       }
       if (filters.category && filters.category !== "ALL") {
@@ -48,7 +51,9 @@ class DocumentsService {
         items = items.filter((d) => d.priority === filters.priority);
       }
       if (filters.reviewerId && filters.reviewerId !== "ALL") {
-        items = items.filter((d) => d.assignedReviewerId === filters.reviewerId);
+        items = items.filter(
+          (d) => d.assignedReviewerId === filters.reviewerId,
+        );
       }
     }
 
@@ -61,13 +66,17 @@ class DocumentsService {
     return { success: true, data: doc };
   }
 
-  async getDocumentsByOwner(ownerId: string): Promise<ApiResponse<DocumentItem[]>> {
+  async getDocumentsByOwner(
+    ownerId: string,
+  ): Promise<ApiResponse<DocumentItem[]>> {
     await new Promise((r) => setTimeout(r, 40));
     const items = this.documents.filter((d) => d.ownerId === ownerId);
     return { success: true, data: items };
   }
 
-  async uploadDocument(data: Partial<DocumentItem>): Promise<ApiResponse<DocumentItem>> {
+  async uploadDocument(
+    data: Partial<DocumentItem>,
+  ): Promise<ApiResponse<DocumentItem>> {
     await new Promise((r) => setTimeout(r, 80));
     const newDoc: DocumentItem = {
       id: `doc-${Date.now()}`,
@@ -109,7 +118,7 @@ class DocumentsService {
 
   async updateDocumentMetadata(
     id: string,
-    metadata: Partial<DocumentItem>
+    metadata: Partial<DocumentItem>,
   ): Promise<ApiResponse<DocumentItem>> {
     await new Promise((r) => setTimeout(r, 50));
     const doc = this.documents.find((d) => d.id === id);
@@ -150,7 +159,10 @@ class DocumentsService {
     return { success: true, data: doc };
   }
 
-  async deleteDocument(studentIdOrDocId: string, documentId?: string): Promise<ApiResponse<boolean>> {
+  async deleteDocument(
+    studentIdOrDocId: string,
+    documentId?: string,
+  ): Promise<ApiResponse<boolean>> {
     await new Promise((r) => setTimeout(r, 50));
     if (documentId) {
       const { studentsService } = await import("./students.service");
@@ -180,7 +192,11 @@ class DocumentsService {
     return studentsService.uploadDocument(studentId, data);
   }
 
-  async verifyDocument(studentId: string, documentId: string, verifierName?: string) {
+  async verifyDocument(
+    studentId: string,
+    documentId: string,
+    verifierName?: string,
+  ) {
     const { studentsService } = await import("./students.service");
     return studentsService.verifyDocument(studentId, documentId, verifierName);
   }

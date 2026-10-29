@@ -44,7 +44,11 @@ export default function FinanceReportsPage() {
       const res = await financeService.generateReport({ reportType: type });
       setReportData(res.data);
     } catch {
-      showToast({ title: "Error", message: "Error generating financial audit report.", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Error generating financial audit report.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -56,7 +60,11 @@ export default function FinanceReportsPage() {
 
   const handleExportCSV = () => {
     if (!reportData || reportData.rows.length === 0) {
-      showToast({ title: "Export Failed", message: "No data to export.", type: "error" });
+      showToast({
+        title: "Export Failed",
+        message: "No data to export.",
+        type: "error",
+      });
       return;
     }
 
@@ -67,22 +75,32 @@ export default function FinanceReportsPage() {
         headers
           .map((h) => {
             const val = row[h];
-            const str = typeof val === "object" ? JSON.stringify(val) : String(val ?? "");
+            const str =
+              typeof val === "object" ? JSON.stringify(val) : String(val ?? "");
             return `"${str.replace(/"/g, '""')}"`;
           })
-          .join(",")
+          .join(","),
       ),
     ];
 
-    const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `campusos_${reportType.toLowerCase()}_report_${Date.now()}.csv`);
+    link.setAttribute(
+      "download",
+      `campusos_${reportType.toLowerCase()}_report_${Date.now()}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast({ title: "Downloaded", message: "Report CSV downloaded.", type: "success" });
+    showToast({
+      title: "Downloaded",
+      message: "Report CSV downloaded.",
+      type: "success",
+    });
   };
 
   // Filtered rows for current view
@@ -92,7 +110,7 @@ export default function FinanceReportsPage() {
 
     const q = searchQuery.toLowerCase();
     return reportData.rows.filter((row) =>
-      Object.values(row).some((val) => String(val).toLowerCase().includes(q))
+      Object.values(row).some((val) => String(val).toLowerCase().includes(q)),
     );
   }, [reportData, searchQuery]);
 
@@ -102,17 +120,23 @@ export default function FinanceReportsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Reports</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Reports
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Finance & Revenue Intelligence Reports
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Realization ledgers, aging analyses, payment distribution, and fee concession audits.
+            Realization ledgers, aging analyses, payment distribution, and fee
+            concession audits.
           </p>
         </div>
 
@@ -142,7 +166,9 @@ export default function FinanceReportsPage() {
             onChange={(e) => setReportType(e.target.value as ReportType)}
             className="text-xs h-9 w-64 font-semibold"
           >
-            <option value="COLLECTION">Fee Collection & Realization Ledger</option>
+            <option value="COLLECTION">
+              Fee Collection & Realization Ledger
+            </option>
             <option value="OUTSTANDING">Outstanding & Overdue Register</option>
             <option value="AGING">Debt Aging & Recovery Analysis</option>
             <option value="PAYMENT_METHOD">Payment Method Distribution</option>
@@ -291,7 +317,10 @@ export default function FinanceReportsPage() {
                   <thead className="bg-slate-50 uppercase font-semibold text-slate-500 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800">
                     <tr>
                       {Object.keys(filteredRows[0]).map((headerKey) => (
-                        <th key={headerKey} className="px-4 py-3 whitespace-nowrap">
+                        <th
+                          key={headerKey}
+                          className="px-4 py-3 whitespace-nowrap"
+                        >
                           {headerKey.replace(/([A-Z])/g, " $1").trim()}
                         </th>
                       ))}
@@ -299,7 +328,10 @@ export default function FinanceReportsPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {filteredRows.map((row, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
+                      <tr
+                        key={idx}
+                        className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
+                      >
                         {Object.entries(row).map(([key, val], cellIdx) => {
                           const isMoney =
                             typeof val === "number" &&
@@ -310,7 +342,10 @@ export default function FinanceReportsPage() {
                               key.toLowerCase().includes("discount"));
 
                           return (
-                            <td key={cellIdx} className="px-4 py-3 whitespace-nowrap">
+                            <td
+                              key={cellIdx}
+                              className="px-4 py-3 whitespace-nowrap"
+                            >
                               {isMoney ? (
                                 <span className="font-semibold text-slate-900 dark:text-white">
                                   {formatMoney(val as number)}

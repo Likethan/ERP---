@@ -8,7 +8,10 @@ export function Table({
   return (
     <div className="relative w-full overflow-auto rounded-lg border border-slate-800 bg-slate-900/40">
       <table
-        className={cn("w-full caption-bottom text-sm text-left text-slate-200", className)}
+        className={cn(
+          "w-full caption-bottom text-sm text-left text-slate-200",
+          className,
+        )}
         {...props}
       />
     </div>
@@ -21,7 +24,10 @@ export function TableHeader({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={cn("border-b border-slate-800 bg-slate-950/70 text-xs font-semibold uppercase tracking-wider text-slate-400", className)}
+      className={cn(
+        "border-b border-slate-800 bg-slate-950/70 text-xs font-semibold uppercase tracking-wider text-slate-400",
+        className,
+      )}
       {...props}
     />
   );
@@ -33,7 +39,10 @@ export function TableBody({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tbody
-      className={cn("[&_tr:last-child]:border-0 divide-y divide-slate-800/60", className)}
+      className={cn(
+        "[&_tr:last-child]:border-0 divide-y divide-slate-800/60",
+        className,
+      )}
       {...props}
     />
   );
@@ -47,7 +56,7 @@ export function TableRow({
     <tr
       className={cn(
         "transition-colors hover:bg-slate-800/40 data-[state=selected]:bg-slate-800/60",
-        className
+        className,
       )}
       {...props}
     />
@@ -62,7 +71,7 @@ export function TableHead({
     <th
       className={cn(
         "h-10 px-4 text-left align-middle font-medium text-slate-400 whitespace-nowrap",
-        className
+        className,
       )}
       {...props}
     />
@@ -98,14 +107,17 @@ export function TablePagination({
   onPageChange,
   className,
 }: TablePaginationProps) {
-  const startRecord = Math.min((currentPage - 1) * pageSize + 1, totalRecords || 0);
+  const startRecord = Math.min(
+    (currentPage - 1) * pageSize + 1,
+    totalRecords || 0,
+  );
   const endRecord = Math.min(currentPage * pageSize, totalRecords || 0);
 
   return (
     <div
       className={cn(
         "flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-800 text-xs text-slate-400 bg-slate-950/40",
-        className
+        className,
       )}
     >
       <div>
@@ -116,7 +128,9 @@ export function TablePagination({
             <strong className="text-slate-200">{totalRecords}</strong> entries
           </span>
         ) : (
-          <span>Page {currentPage} of {totalPages}</span>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
         )}
       </div>
 

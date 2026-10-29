@@ -82,13 +82,17 @@ export default function SavedInsightsPage() {
             Saved Insights & Responses
           </h1>
           <p className="text-sm text-slate-500">
-            Bookmarked AI responses, strategic operational insights, and customized analytics views.
+            Bookmarked AI responses, strategic operational insights, and
+            customized analytics views.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Ask AI Assistant
             </Button>
@@ -143,7 +147,10 @@ export default function SavedInsightsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-40 rounded-xl bg-slate-100 animate-pulse" />
+            <div
+              key={i}
+              className="h-40 rounded-xl bg-slate-100 animate-pulse"
+            />
           ))
         ) : savedItems.length === 0 ? (
           <div className="col-span-full p-12 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500 space-y-3">
@@ -189,9 +196,19 @@ export default function SavedInsightsPage() {
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-400 mt-2">
-                <span>Saved on {new Date(item.savedAt).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
+                <span>
+                  Saved on{" "}
+                  {new Date(item.savedAt).toLocaleDateString([], {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
                 <Link href={item.href}>
-                  <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1 p-0 h-auto hover:bg-transparent">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs text-blue-600 gap-1 p-0 h-auto hover:bg-transparent"
+                  >
                     Open <ArrowRight className="w-3 h-3" />
                   </Button>
                 </Link>

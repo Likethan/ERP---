@@ -6,14 +6,22 @@ import { apiFetch } from "@/lib/api-client";
 import type { NotificationPreference } from "@campusos/types";
 
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  ACADEMIC: "Curriculum updates, grade card publications, and semester registration deadlines.",
-  ATTENDANCE: "Attendance shortfall warnings, daily session records, and leave approvals.",
-  FINANCE: "Fee invoice notifications, payment confirmation receipts, and dues reminders.",
-  PLACEMENT: "Placement drive announcements, interview schedules, and offer letters.",
-  EVENTS: "Collegiate symposiums, hackathon invitations, and registration confirmations.",
-  CLUBS: "Society membership decisions, club event bulletins, and committee circulars.",
-  ANNOUNCEMENTS: "Official campus circulars, holiday notices, and general broadcasts.",
-  SECURITY: "Account sign-in security alerts, password resets, and critical statutory warnings (Mandatory).",
+  ACADEMIC:
+    "Curriculum updates, grade card publications, and semester registration deadlines.",
+  ATTENDANCE:
+    "Attendance shortfall warnings, daily session records, and leave approvals.",
+  FINANCE:
+    "Fee invoice notifications, payment confirmation receipts, and dues reminders.",
+  PLACEMENT:
+    "Placement drive announcements, interview schedules, and offer letters.",
+  EVENTS:
+    "Collegiate symposiums, hackathon invitations, and registration confirmations.",
+  CLUBS:
+    "Society membership decisions, club event bulletins, and committee circulars.",
+  ANNOUNCEMENTS:
+    "Official campus circulars, holiday notices, and general broadcasts.",
+  SECURITY:
+    "Account sign-in security alerts, password resets, and critical statutory warnings (Mandatory).",
 };
 
 export default function NotificationPreferencesPage() {
@@ -28,10 +36,14 @@ export default function NotificationPreferencesPage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await apiFetch<NotificationPreference[]>("/api/v1/notifications/preferences");
+        const res = await apiFetch<NotificationPreference[]>(
+          "/api/v1/notifications/preferences",
+        );
         setPreferences(res.data || []);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Failed to load preferences.");
+        setError(
+          err instanceof Error ? err.message : "Failed to load preferences.",
+        );
       } finally {
         setLoading(false);
       }
@@ -48,7 +60,7 @@ export default function NotificationPreferencesPage() {
           return { ...p, is_enabled: !p.is_enabled };
         }
         return p;
-      })
+      }),
     );
   };
 
@@ -71,7 +83,9 @@ export default function NotificationPreferencesPage() {
 
       setSuccess("Your notification channel preferences have been updated.");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save preferences.");
+      setError(
+        err instanceof Error ? err.message : "Failed to save preferences.",
+      );
     } finally {
       setSaving(false);
     }
@@ -88,8 +102,18 @@ export default function NotificationPreferencesPage() {
             href="/app/notifications"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-2"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+              />
             </svg>
             Back to Notification Center
           </Link>
@@ -97,7 +121,8 @@ export default function NotificationPreferencesPage() {
             Notification Channel Preferences
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Customize which institutional communication categories you receive across in-app and email channels.
+            Customize which institutional communication categories you receive
+            across in-app and email channels.
           </p>
         </div>
 
@@ -137,15 +162,25 @@ export default function NotificationPreferencesPage() {
 
           {/* Category Rows */}
           {categories.map((cat) => {
-            const inAppPref = preferences.find((p) => p.category === cat && p.channel === "IN_APP");
-            const emailPref = preferences.find((p) => p.category === cat && p.channel === "EMAIL");
-            const isMandatory = inAppPref?.is_mandatory || emailPref?.is_mandatory;
+            const inAppPref = preferences.find(
+              (p) => p.category === cat && p.channel === "IN_APP",
+            );
+            const emailPref = preferences.find(
+              (p) => p.category === cat && p.channel === "EMAIL",
+            );
+            const isMandatory =
+              inAppPref?.is_mandatory || emailPref?.is_mandatory;
 
             return (
-              <div key={cat} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-900/80 transition-colors">
+              <div
+                key={cat}
+                className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-900/80 transition-colors"
+              >
                 <div className="col-span-8 space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white">{cat}</span>
+                    <span className="text-sm font-semibold text-white">
+                      {cat}
+                    </span>
                     {isMandatory && (
                       <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-950/70 border border-amber-800/60 px-1.5 py-0.2 rounded">
                         Mandatory
@@ -153,7 +188,8 @@ export default function NotificationPreferencesPage() {
                     )}
                   </div>
                   <p className="text-xs text-slate-400">
-                    {CATEGORY_DESCRIPTIONS[cat] || "Collegiate updates and communications."}
+                    {CATEGORY_DESCRIPTIONS[cat] ||
+                      "Collegiate updates and communications."}
                   </p>
                 </div>
 
@@ -169,7 +205,9 @@ export default function NotificationPreferencesPage() {
                   >
                     <span
                       className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        inAppPref?.is_enabled ? "translate-x-4" : "translate-x-0"
+                        inAppPref?.is_enabled
+                          ? "translate-x-4"
+                          : "translate-x-0"
                       }`}
                     />
                   </button>
@@ -187,7 +225,9 @@ export default function NotificationPreferencesPage() {
                   >
                     <span
                       className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        emailPref?.is_enabled ? "translate-x-4" : "translate-x-0"
+                        emailPref?.is_enabled
+                          ? "translate-x-4"
+                          : "translate-x-0"
                       }`}
                     />
                   </button>

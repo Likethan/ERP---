@@ -24,18 +24,23 @@ interface AnnouncementDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function AnnouncementDetailPage({ params }: AnnouncementDetailPageProps) {
+export default function AnnouncementDetailPage({
+  params,
+}: AnnouncementDetailPageProps) {
   const resolvedParams = use(params);
   const announcementId = resolvedParams.id;
   const { user, hasPermission } = useAuth();
 
-  const [announcement, setAnnouncement] = useState<AnnouncementItem | null>(null);
+  const [announcement, setAnnouncement] = useState<AnnouncementItem | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const canManage = hasPermission("campus.create_announcements") || hasPermission("*");
+  const canManage =
+    hasPermission("campus.create_announcements") || hasPermission("*");
 
   const loadData = async () => {
     try {
@@ -61,7 +66,10 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
   const handlePublish = async () => {
     try {
       setActionLoading(true);
-      await campusService.publishAnnouncement(announcementId, user?.first_name || "Administrator");
+      await campusService.publishAnnouncement(
+        announcementId,
+        user?.first_name || "Administrator",
+      );
       setFeedback("Announcement published successfully.");
       loadData();
     } finally {
@@ -72,7 +80,10 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
   const handleArchive = async () => {
     try {
       setActionLoading(true);
-      await campusService.archiveAnnouncement(announcementId, user?.first_name || "Administrator");
+      await campusService.archiveAnnouncement(
+        announcementId,
+        user?.first_name || "Administrator",
+      );
       setFeedback("Announcement archived.");
       loadData();
     } finally {
@@ -95,8 +106,12 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
     return (
       <div className="p-8 text-center space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 max-w-xl mx-auto my-12">
         <AlertTriangle className="h-10 w-10 text-rose-400 mx-auto" />
-        <h2 className="text-base font-bold text-white">Announcement Not Found</h2>
-        <p className="text-xs text-slate-400">{error || "Requested announcement does not exist."}</p>
+        <h2 className="text-base font-bold text-white">
+          Announcement Not Found
+        </h2>
+        <p className="text-xs text-slate-400">
+          {error || "Requested announcement does not exist."}
+        </p>
         <Link href="/app/campus/announcements">
           <Button variant="outline" size="sm">
             Back to Announcement Board
@@ -148,7 +163,10 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -166,8 +184,8 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
                 announcement.priority === "URGENT"
                   ? "bg-rose-500/20 text-rose-300 border-rose-500/30 font-black"
                   : announcement.priority === "HIGH"
-                  ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
-                  : "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                    ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                    : "bg-blue-500/20 text-blue-300 border-blue-500/30"
               }`}
             >
               Priority: {announcement.priority}
@@ -180,7 +198,10 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
           </div>
 
           <div className="text-xs text-slate-400 font-mono">
-            Status: <span className="font-bold text-white uppercase">{announcement.status}</span>
+            Status:{" "}
+            <span className="font-bold text-white uppercase">
+              {announcement.status}
+            </span>
           </div>
         </div>
 
@@ -191,24 +212,39 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
         {/* Metadata Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
           <div>
-            <span className="text-[10px] text-slate-500 uppercase font-mono block">Published By</span>
-            <span className="font-bold text-white mt-0.5 block">{announcement.publisher}</span>
-            <span className="text-[11px] text-slate-400">{announcement.publisherRole}</span>
+            <span className="text-[10px] text-slate-500 uppercase font-mono block">
+              Published By
+            </span>
+            <span className="font-bold text-white mt-0.5 block">
+              {announcement.publisher}
+            </span>
+            <span className="text-[11px] text-slate-400">
+              {announcement.publisherRole}
+            </span>
           </div>
 
           <div>
-            <span className="text-[10px] text-slate-500 uppercase font-mono block">Target Audience</span>
+            <span className="text-[10px] text-slate-500 uppercase font-mono block">
+              Target Audience
+            </span>
             <span className="font-bold text-indigo-400 mt-0.5 block">
               {announcement.audience.type.replace("_", " ")}
             </span>
             <span className="text-[11px] text-slate-400">
-              ~{announcement.audience.estimatedRecipientCount?.toLocaleString() || 150} verified recipients
+              ~
+              {announcement.audience.estimatedRecipientCount?.toLocaleString() ||
+                150}{" "}
+              verified recipients
             </span>
           </div>
 
           <div>
-            <span className="text-[10px] text-slate-500 uppercase font-mono block">Timeline</span>
-            <span className="font-mono text-slate-300 mt-0.5 block">{announcement.publishDate}</span>
+            <span className="text-[10px] text-slate-500 uppercase font-mono block">
+              Timeline
+            </span>
+            <span className="font-mono text-slate-300 mt-0.5 block">
+              {announcement.publishDate}
+            </span>
             <span className="text-[11px] text-slate-500">
               Expires: {announcement.expiryDate || "Indefinite"}
             </span>
@@ -225,8 +261,12 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
             <span className="text-slate-300">
-              Delivered across <strong>In-App</strong> and <strong>Email</strong> to{" "}
-              <strong className="text-white">{announcement.deliveredCount.toLocaleString()}</strong> users.
+              Delivered across <strong>In-App</strong> and{" "}
+              <strong>Email</strong> to{" "}
+              <strong className="text-white">
+                {announcement.deliveredCount.toLocaleString()}
+              </strong>{" "}
+              users.
             </span>
           </div>
           <span className="text-slate-500 font-mono text-[11px]">
@@ -248,8 +288,14 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
               <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-indigo-500 ring-4 ring-slate-950" />
               <div className="font-bold text-white">{entry.action}</div>
               <div className="text-slate-400">Actor: {entry.actor}</div>
-              {entry.details && <div className="text-slate-400 text-[11px]">{entry.details}</div>}
-              <div className="text-[10px] text-slate-500 font-mono">{entry.timestamp}</div>
+              {entry.details && (
+                <div className="text-slate-400 text-[11px]">
+                  {entry.details}
+                </div>
+              )}
+              <div className="text-[10px] text-slate-500 font-mono">
+                {entry.timestamp}
+              </div>
             </div>
           ))}
         </div>

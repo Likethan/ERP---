@@ -50,21 +50,29 @@ export default function MaintenanceOperationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
   // Selected for View / Update
-  const [selectedOrder, setSelectedOrder] = useState<MaintenanceRequest | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<MaintenanceRequest | null>(
+    null,
+  );
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
   // Status transition form state
-  const [newStatus, setNewStatus] = useState<MaintenanceStatus>(MaintenanceStatus.IN_PROGRESS);
+  const [newStatus, setNewStatus] = useState<MaintenanceStatus>(
+    MaintenanceStatus.IN_PROGRESS,
+  );
   const [statusNotes, setStatusNotes] = useState("");
   const [resolutionSummary, setResolutionSummary] = useState("");
-  const [actualCostInr, setActualCostInr] = useState<number | undefined>(undefined);
+  const [actualCostInr, setActualCostInr] = useState<number | undefined>(
+    undefined,
+  );
 
   // Assignment form state
   const [assigneeName, setAssigneeName] = useState("");
-  const [assigneeDept, setAssigneeDept] = useState("Estate & Maintenance Directorate");
+  const [assigneeDept, setAssigneeDept] = useState(
+    "Estate & Maintenance Directorate",
+  );
   const [assigneePhone, setAssigneePhone] = useState("");
 
   // Create form state
@@ -112,7 +120,8 @@ export default function MaintenanceOperationsPage() {
     if (!createForm.title.trim() || !createForm.assetOrFacilityName.trim()) {
       toast({
         title: "Validation Error",
-        description: "Please specify work order title and target asset/facility.",
+        description:
+          "Please specify work order title and target asset/facility.",
         variant: "error",
       });
       return;
@@ -125,8 +134,13 @@ export default function MaintenanceOperationsPage() {
         assetOrFacilityId: "asset-custom-01",
         reportedBy: {
           userId: user?.id || "usr-admin",
-          name: (user as any)?.name || (user?.first_name ? `${user.first_name} ${user.last_name}` : "Maintenance Desk Administrator"),
-          role: (user as any)?.role || user?.roles?.[0]?.name || "FACILITY_OFFICER",
+          name:
+            (user as any)?.name ||
+            (user?.first_name
+              ? `${user.first_name} ${user.last_name}`
+              : "Maintenance Desk Administrator"),
+          role:
+            (user as any)?.role || user?.roles?.[0]?.name || "FACILITY_OFFICER",
           phone: "+91 94480 00000",
         },
       });
@@ -162,13 +176,20 @@ export default function MaintenanceOperationsPage() {
 
     setActionLoading(true);
     try {
-      const res = await maintenanceService.updateMaintenanceStatus(selectedOrder.id, {
-        status: newStatus,
-        changedBy: (user as any)?.name || (user?.first_name ? `${user.first_name} ${user.last_name}` : "Estate Supervisor"),
-        notes: statusNotes,
-        resolutionSummary: resolutionSummary || undefined,
-        actualCostInr: actualCostInr || undefined,
-      });
+      const res = await maintenanceService.updateMaintenanceStatus(
+        selectedOrder.id,
+        {
+          status: newStatus,
+          changedBy:
+            (user as any)?.name ||
+            (user?.first_name
+              ? `${user.first_name} ${user.last_name}`
+              : "Estate Supervisor"),
+          notes: statusNotes,
+          resolutionSummary: resolutionSummary || undefined,
+          actualCostInr: actualCostInr || undefined,
+        },
+      );
 
       if (res.success) {
         toast({
@@ -193,12 +214,15 @@ export default function MaintenanceOperationsPage() {
 
     setActionLoading(true);
     try {
-      const res = await maintenanceService.assignMaintenanceTechnician(selectedOrder.id, {
-        staffId: `stf-tech-${Date.now().toString().slice(-4)}`,
-        name: assigneeName,
-        department: assigneeDept,
-        phone: assigneePhone || "+91 94480 99999",
-      });
+      const res = await maintenanceService.assignMaintenanceTechnician(
+        selectedOrder.id,
+        {
+          staffId: `stf-tech-${Date.now().toString().slice(-4)}`,
+          name: assigneeName,
+          department: assigneeDept,
+          phone: assigneePhone || "+91 94480 99999",
+        },
+      );
 
       if (res.success) {
         toast({
@@ -219,13 +243,21 @@ export default function MaintenanceOperationsPage() {
   const stats = useMemo(() => {
     const total = requests.length;
     const open = requests.filter(
-      (r) => r.status !== MaintenanceStatus.RESOLVED && r.status !== MaintenanceStatus.CLOSED && r.status !== MaintenanceStatus.CANCELLED
+      (r) =>
+        r.status !== MaintenanceStatus.RESOLVED &&
+        r.status !== MaintenanceStatus.CLOSED &&
+        r.status !== MaintenanceStatus.CANCELLED,
     ).length;
     const critical = requests.filter(
-      (r) => r.priority === MaintenancePriority.CRITICAL && r.status !== MaintenanceStatus.CLOSED
+      (r) =>
+        r.priority === MaintenancePriority.CRITICAL &&
+        r.status !== MaintenanceStatus.CLOSED,
     ).length;
     const slaBreached = requests.filter((r) => r.isSlaBreached).length;
-    const totalEstimatedCost = requests.reduce((acc, r) => acc + (r.estimatedCostInr || 0), 0);
+    const totalEstimatedCost = requests.reduce(
+      (acc, r) => acc + (r.estimatedCostInr || 0),
+      0,
+    );
 
     return { total, open, critical, slaBreached, totalEstimatedCost };
   }, [requests]);
@@ -233,7 +265,11 @@ export default function MaintenanceOperationsPage() {
   const getPriorityBadge = (priority: MaintenancePriority) => {
     switch (priority) {
       case MaintenancePriority.CRITICAL:
-        return <Badge variant="danger" className="animate-pulse">CRITICAL SLA</Badge>;
+        return (
+          <Badge variant="danger" className="animate-pulse">
+            CRITICAL SLA
+          </Badge>
+        );
       case MaintenancePriority.HIGH:
         return <Badge variant="warning">High Priority</Badge>;
       case MaintenancePriority.MEDIUM:
@@ -278,14 +314,18 @@ export default function MaintenanceOperationsPage() {
               Infrastructure
             </Link>
             <span className="text-xs text-slate-600">/</span>
-            <span className="text-xs text-indigo-400 font-medium">Work Orders</span>
+            <span className="text-xs text-indigo-400 font-medium">
+              Work Orders
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mt-1">
             <Wrench className="h-6 w-6 text-indigo-400" />
             Infrastructure Maintenance & Work Orders
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Preventive & corrective work orders, SLA tracking, civil/electrical/HVAC repair logs, and estate contractor assignments.
+            Preventive & corrective work orders, SLA tracking,
+            civil/electrical/HVAC repair logs, and estate contractor
+            assignments.
           </p>
         </div>
 
@@ -318,7 +358,11 @@ export default function MaintenanceOperationsPage() {
         <StatCard
           title="Critical Emergencies"
           value={stats.critical.toString()}
-          description={stats.critical > 0 ? "Immediate technician dispatch" : "Zero critical issues"}
+          description={
+            stats.critical > 0
+              ? "Immediate technician dispatch"
+              : "Zero critical issues"
+          }
           icon={<AlertTriangle className="h-5 w-5 text-rose-400" />}
         />
         <StatCard
@@ -349,7 +393,9 @@ export default function MaintenanceOperationsPage() {
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">Category:</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Category:
+            </span>
             <Select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -367,7 +413,9 @@ export default function MaintenanceOperationsPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">Priority:</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Priority:
+            </span>
             <Select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
@@ -403,7 +451,10 @@ export default function MaintenanceOperationsPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
+            <div
+              key={i}
+              className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center"
+            >
               <Skeleton className="h-6 w-48" />
               <Skeleton className="h-6 w-24" />
             </div>
@@ -412,9 +463,12 @@ export default function MaintenanceOperationsPage() {
       ) : requests.length === 0 ? (
         <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-12 text-center space-y-3">
           <Wrench className="h-12 w-12 text-slate-600 mx-auto" />
-          <h3 className="text-base font-semibold text-white">No Work Orders Matching Filter</h3>
+          <h3 className="text-base font-semibold text-white">
+            No Work Orders Matching Filter
+          </h3>
           <p className="text-sm text-slate-400 max-w-md mx-auto">
-            All equipment, hostel blocks, and academic facilities are in optimal operational order.
+            All equipment, hostel blocks, and academic facilities are in optimal
+            operational order.
           </p>
         </div>
       ) : (
@@ -448,17 +502,24 @@ export default function MaintenanceOperationsPage() {
                 <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
                   <span className="flex items-center gap-1">
                     <Building2 className="h-3.5 w-3.5 text-slate-500" />
-                    <span className="text-slate-300 font-medium">{order.assetOrFacilityName}</span>
+                    <span className="text-slate-300 font-medium">
+                      {order.assetOrFacilityName}
+                    </span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5 text-slate-500" /> {order.location}
+                    <MapPin className="h-3.5 w-3.5 text-slate-500" />{" "}
+                    {order.location}
                   </span>
                   <span className="font-mono text-slate-400">
-                    Est: <span className="text-white font-semibold">₹{order.estimatedCostInr.toLocaleString()}</span>
+                    Est:{" "}
+                    <span className="text-white font-semibold">
+                      ₹{order.estimatedCostInr.toLocaleString()}
+                    </span>
                   </span>
                   {order.assignedTo ? (
                     <span className="flex items-center gap-1 text-emerald-400">
-                      <UserCheck className="h-3.5 w-3.5" /> {order.assignedTo.name}
+                      <UserCheck className="h-3.5 w-3.5" />{" "}
+                      {order.assignedTo.name}
                     </span>
                   ) : (
                     <span className="text-amber-400 flex items-center gap-1">
@@ -477,19 +538,20 @@ export default function MaintenanceOperationsPage() {
                 >
                   View Details
                 </Button>
-                {order.status !== MaintenanceStatus.CLOSED && order.status !== MaintenanceStatus.CANCELLED && (
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setNewStatus(order.status);
-                      setStatusModalOpen(true);
-                    }}
-                    className="text-xs h-8 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700"
-                  >
-                    Update Status
-                  </Button>
-                )}
+                {order.status !== MaintenanceStatus.CLOSED &&
+                  order.status !== MaintenanceStatus.CANCELLED && (
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setNewStatus(order.status);
+                        setStatusModalOpen(true);
+                      }}
+                      className="text-xs h-8 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700"
+                    >
+                      Update Status
+                    </Button>
+                  )}
               </div>
             </div>
           ))}
@@ -509,20 +571,28 @@ export default function MaintenanceOperationsPage() {
               <div className="flex items-center gap-2">
                 {getPriorityBadge(selectedOrder.priority)}
                 {getStatusBadge(selectedOrder.status)}
-                <span className="font-mono text-slate-400">• SLA Target: {selectedOrder.slaTargetHours} hrs</span>
+                <span className="font-mono text-slate-400">
+                  • SLA Target: {selectedOrder.slaTargetHours} hrs
+                </span>
               </div>
-              <span className="font-mono text-slate-400 text-[11px]">{selectedOrder.createdAt}</span>
+              <span className="font-mono text-slate-400 text-[11px]">
+                {selectedOrder.createdAt}
+              </span>
             </div>
 
             <div>
-              <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Issue Title</h4>
+              <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                Issue Title
+              </h4>
               <p className="text-sm font-semibold text-white bg-slate-950 p-3 rounded-lg border border-slate-800">
                 {selectedOrder.title}
               </p>
             </div>
 
             <div>
-              <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Description</h4>
+              <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                Description
+              </h4>
               <p className="text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800">
                 {selectedOrder.description}
               </p>
@@ -530,13 +600,21 @@ export default function MaintenanceOperationsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-slate-500 font-medium">Asset / Facility</span>
-                <p className="font-semibold text-white text-xs">{selectedOrder.assetOrFacilityName}</p>
-                <span className="text-[11px] text-slate-400">{selectedOrder.location}</span>
+                <span className="text-slate-500 font-medium">
+                  Asset / Facility
+                </span>
+                <p className="font-semibold text-white text-xs">
+                  {selectedOrder.assetOrFacilityName}
+                </p>
+                <span className="text-[11px] text-slate-400">
+                  {selectedOrder.location}
+                </span>
               </div>
 
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-slate-500 font-medium">Estimated vs Actual Cost</span>
+                <span className="text-slate-500 font-medium">
+                  Estimated vs Actual Cost
+                </span>
                 <p className="font-mono text-white text-xs">
                   Est: ₹{selectedOrder.estimatedCostInr.toLocaleString()}{" "}
                   {selectedOrder.actualCostInr ? (
@@ -544,7 +622,9 @@ export default function MaintenanceOperationsPage() {
                       • Act: ₹{selectedOrder.actualCostInr.toLocaleString()}
                     </span>
                   ) : (
-                    <span className="text-slate-500 ml-1">• Final cost pending</span>
+                    <span className="text-slate-500 ml-1">
+                      • Final cost pending
+                    </span>
                   )}
                 </p>
               </div>
@@ -553,16 +633,27 @@ export default function MaintenanceOperationsPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
                 <span className="text-slate-500 font-medium">Reported By</span>
-                <p className="font-semibold text-white">{selectedOrder.reportedBy.name}</p>
-                <span className="text-[11px] text-slate-400">{selectedOrder.reportedBy.role} ({selectedOrder.reportedBy.phone})</span>
+                <p className="font-semibold text-white">
+                  {selectedOrder.reportedBy.name}
+                </p>
+                <span className="text-[11px] text-slate-400">
+                  {selectedOrder.reportedBy.role} (
+                  {selectedOrder.reportedBy.phone})
+                </span>
               </div>
 
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-slate-500 font-medium">Assigned Technician</span>
+                <span className="text-slate-500 font-medium">
+                  Assigned Technician
+                </span>
                 {selectedOrder.assignedTo ? (
                   <div>
-                    <p className="font-semibold text-emerald-400">{selectedOrder.assignedTo.name}</p>
-                    <span className="text-[11px] text-slate-400">{selectedOrder.assignedTo.department}</span>
+                    <p className="font-semibold text-emerald-400">
+                      {selectedOrder.assignedTo.name}
+                    </p>
+                    <span className="text-[11px] text-slate-400">
+                      {selectedOrder.assignedTo.department}
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between">
@@ -583,21 +674,31 @@ export default function MaintenanceOperationsPage() {
             {selectedOrder.history && selectedOrder.history.length > 0 && (
               <div>
                 <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <History className="h-3.5 w-3.5" /> Work Order Lifecycle Timeline
+                  <History className="h-3.5 w-3.5" /> Work Order Lifecycle
+                  Timeline
                 </h4>
                 <div className="space-y-2 bg-slate-950 p-3 rounded-lg border border-slate-800 divide-y divide-slate-800/80">
                   {selectedOrder.history.map((h) => (
-                    <div key={h.id} className="pt-2 first:pt-0 space-y-0.5 text-[11px]">
+                    <div
+                      key={h.id}
+                      className="pt-2 first:pt-0 space-y-0.5 text-[11px]"
+                    >
                       <div className="flex items-center justify-between font-mono">
                         <span className="font-semibold text-white">
-                          {h.fromStatus} → <span className="text-indigo-400">{h.toStatus}</span>
+                          {h.fromStatus} →{" "}
+                          <span className="text-indigo-400">{h.toStatus}</span>
                         </span>
                         <span className="text-slate-500">{h.timestamp}</span>
                       </div>
                       <div className="text-slate-400">
-                        <span className="text-slate-500">By:</span> {h.changedBy}
+                        <span className="text-slate-500">By:</span>{" "}
+                        {h.changedBy}
                       </div>
-                      {h.notes && <p className="text-slate-300 italic text-[11px]">"{h.notes}"</p>}
+                      {h.notes && (
+                        <p className="text-slate-300 italic text-[11px]">
+                          "{h.notes}"
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -605,7 +706,11 @@ export default function MaintenanceOperationsPage() {
             )}
 
             <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
-              <Button variant="ghost" size="sm" onClick={() => setSelectedOrder(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedOrder(null)}
+              >
                 Close
               </Button>
               {selectedOrder.status !== MaintenanceStatus.CLOSED && (
@@ -646,14 +751,20 @@ export default function MaintenanceOperationsPage() {
         >
           <form onSubmit={handleUpdateStatus} className="space-y-4 text-xs">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">New Workflow Status</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                New Workflow Status
+              </label>
               <Select
                 value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value as MaintenanceStatus)}
+                onChange={(e) =>
+                  setNewStatus(e.target.value as MaintenanceStatus)
+                }
                 className="bg-slate-950 border-slate-800 text-white text-xs w-full"
               >
                 <option value={MaintenanceStatus.ASSIGNED}>ASSIGNED</option>
-                <option value={MaintenanceStatus.IN_PROGRESS}>IN_PROGRESS</option>
+                <option value={MaintenanceStatus.IN_PROGRESS}>
+                  IN_PROGRESS
+                </option>
                 <option value={MaintenanceStatus.ON_HOLD}>ON_HOLD</option>
                 <option value={MaintenanceStatus.RESOLVED}>RESOLVED</option>
                 <option value={MaintenanceStatus.CLOSED}>CLOSED</option>
@@ -662,7 +773,9 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Audit Transition Notes *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Audit Transition Notes *
+              </label>
               <Textarea
                 value={statusNotes}
                 onChange={(e) => setStatusNotes(e.target.value)}
@@ -673,10 +786,13 @@ export default function MaintenanceOperationsPage() {
               />
             </div>
 
-            {(newStatus === MaintenanceStatus.RESOLVED || newStatus === MaintenanceStatus.CLOSED) && (
+            {(newStatus === MaintenanceStatus.RESOLVED ||
+              newStatus === MaintenanceStatus.CLOSED) && (
               <>
                 <div>
-                  <label className="text-slate-300 font-medium block mb-1">Resolution Summary</label>
+                  <label className="text-slate-300 font-medium block mb-1">
+                    Resolution Summary
+                  </label>
                   <Textarea
                     value={resolutionSummary}
                     onChange={(e) => setResolutionSummary(e.target.value)}
@@ -687,11 +803,15 @@ export default function MaintenanceOperationsPage() {
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-medium block mb-1">Actual Incurred Cost (₹)</label>
+                  <label className="text-slate-300 font-medium block mb-1">
+                    Actual Incurred Cost (₹)
+                  </label>
                   <Input
                     type="number"
                     value={actualCostInr || ""}
-                    onChange={(e) => setActualCostInr(parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      setActualCostInr(parseFloat(e.target.value) || 0)
+                    }
                     placeholder="e.g. 4200"
                     className="bg-slate-950 border-slate-800 text-white text-xs font-mono"
                   />
@@ -700,10 +820,20 @@ export default function MaintenanceOperationsPage() {
             )}
 
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
-              <Button type="button" variant="ghost" size="sm" onClick={() => setStatusModalOpen(false)}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setStatusModalOpen(false)}
+              >
                 Back
               </Button>
-              <Button type="submit" size="sm" isLoading={actionLoading} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+              <Button
+                type="submit"
+                size="sm"
+                isLoading={actionLoading}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white"
+              >
                 Save Status
               </Button>
             </div>
@@ -721,7 +851,9 @@ export default function MaintenanceOperationsPage() {
         >
           <form onSubmit={handleAssignTechnician} className="space-y-4 text-xs">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Technician / Contractor Name *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Technician / Contractor Name *
+              </label>
               <Input
                 value={assigneeName}
                 onChange={(e) => setAssigneeName(e.target.value)}
@@ -732,7 +864,9 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Department / Unit</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Department / Unit
+              </label>
               <Input
                 value={assigneeDept}
                 onChange={(e) => setAssigneeDept(e.target.value)}
@@ -742,7 +876,9 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Contact Phone</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Contact Phone
+              </label>
               <Input
                 value={assigneePhone}
                 onChange={(e) => setAssigneePhone(e.target.value)}
@@ -752,10 +888,20 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
-              <Button type="button" variant="ghost" size="sm" onClick={() => setAssignModalOpen(false)}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setAssignModalOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" size="sm" isLoading={actionLoading} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+              <Button
+                type="submit"
+                size="sm"
+                isLoading={actionLoading}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white"
+              >
                 Confirm Assignment
               </Button>
             </div>
@@ -772,10 +918,14 @@ export default function MaintenanceOperationsPage() {
       >
         <form onSubmit={handleCreateOrder} className="space-y-4 text-xs">
           <div>
-            <label className="text-slate-300 font-medium block mb-1">Work Order Title *</label>
+            <label className="text-slate-300 font-medium block mb-1">
+              Work Order Title *
+            </label>
             <Input
               value={createForm.title}
-              onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, title: e.target.value })
+              }
               placeholder="e.g. Precision AC Unit 2 tripping on high pressure fault"
               required
               className="bg-slate-950 border-slate-800 text-white text-xs"
@@ -784,10 +934,17 @@ export default function MaintenanceOperationsPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Target Asset or Facility *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Target Asset or Facility *
+              </label>
               <Input
                 value={createForm.assetOrFacilityName}
-                onChange={(e) => setCreateForm({ ...createForm, assetOrFacilityName: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    assetOrFacilityName: e.target.value,
+                  })
+                }
                 placeholder="e.g. Turing Advanced Computing & AI Lab"
                 required
                 className="bg-slate-950 border-slate-800 text-white text-xs"
@@ -795,10 +952,14 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Precise Location *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Precise Location *
+              </label>
               <Input
                 value={createForm.location}
-                onChange={(e) => setCreateForm({ ...createForm, location: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, location: e.target.value })
+                }
                 placeholder="e.g. Academic Block A, 3rd Floor East"
                 required
                 className="bg-slate-950 border-slate-800 text-white text-xs"
@@ -808,10 +969,17 @@ export default function MaintenanceOperationsPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Category</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Category
+              </label>
               <Select
                 value={createForm.category}
-                onChange={(e) => setCreateForm({ ...createForm, category: e.target.value as any })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    category: e.target.value as any,
+                  })
+                }
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               >
                 <option value="CIVIL">Civil</option>
@@ -826,13 +994,22 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Priority</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Priority
+              </label>
               <Select
                 value={createForm.priority}
-                onChange={(e) => setCreateForm({ ...createForm, priority: e.target.value as MaintenancePriority })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    priority: e.target.value as MaintenancePriority,
+                  })
+                }
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               >
-                <option value={MaintenancePriority.CRITICAL}>Critical (Immediate)</option>
+                <option value={MaintenancePriority.CRITICAL}>
+                  Critical (Immediate)
+                </option>
                 <option value={MaintenancePriority.HIGH}>High (12-24h)</option>
                 <option value={MaintenancePriority.MEDIUM}>Medium (48h)</option>
                 <option value={MaintenancePriority.LOW}>Low (Routine)</option>
@@ -840,11 +1017,18 @@ export default function MaintenanceOperationsPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-medium block mb-1">SLA Target (Hours)</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                SLA Target (Hours)
+              </label>
               <Input
                 type="number"
                 value={createForm.slaTargetHours}
-                onChange={(e) => setCreateForm({ ...createForm, slaTargetHours: parseInt(e.target.value) || 24 })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    slaTargetHours: parseInt(e.target.value) || 24,
+                  })
+                }
                 min={1}
                 className="bg-slate-950 border-slate-800 text-white text-xs font-mono"
               />
@@ -852,20 +1036,31 @@ export default function MaintenanceOperationsPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 font-medium block mb-1">Estimated Budget (₹)</label>
+            <label className="text-slate-300 font-medium block mb-1">
+              Estimated Budget (₹)
+            </label>
             <Input
               type="number"
               value={createForm.estimatedCostInr}
-              onChange={(e) => setCreateForm({ ...createForm, estimatedCostInr: parseFloat(e.target.value) || 0 })}
+              onChange={(e) =>
+                setCreateForm({
+                  ...createForm,
+                  estimatedCostInr: parseFloat(e.target.value) || 0,
+                })
+              }
               className="bg-slate-950 border-slate-800 text-white text-xs font-mono"
             />
           </div>
 
           <div>
-            <label className="text-slate-300 font-medium block mb-1">Detailed Description *</label>
+            <label className="text-slate-300 font-medium block mb-1">
+              Detailed Description *
+            </label>
             <Textarea
               value={createForm.description}
-              onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, description: e.target.value })
+              }
               rows={3}
               placeholder="Describe technical symptoms, failure causes, immediate risk, and recommended parts..."
               required
@@ -874,10 +1069,20 @@ export default function MaintenanceOperationsPage() {
           </div>
 
           <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
-            <Button type="button" variant="ghost" size="sm" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" size="sm" isLoading={actionLoading} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+            <Button
+              type="submit"
+              size="sm"
+              isLoading={actionLoading}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white"
+            >
               Issue Work Order
             </Button>
           </div>

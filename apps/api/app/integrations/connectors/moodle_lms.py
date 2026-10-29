@@ -1,11 +1,9 @@
 """Moodle LMS Marketplace Connector."""
 
-import hashlib
-import hmac
 import json
 import logging
 import time
-from typing import Any, Optional
+from typing import Any
 
 from app.integrations.connectors.base import (
     BaseMarketplaceConnector,
@@ -63,7 +61,7 @@ class MoodleLMSConnector(BaseMarketplaceConnector):
         config: dict[str, Any],
         credentials: dict[str, Any],
         entity_type: str,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
         limit: int = 50,
     ) -> ConnectorBatchResult:
         entity = entity_type.lower()

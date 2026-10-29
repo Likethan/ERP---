@@ -1,6 +1,6 @@
 """Finance, Fees & Billing Engine authoritative service layer."""
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
@@ -15,7 +15,7 @@ from app.core.exceptions import (
     ValidationException,
 )
 from app.models.audit import AuditLog
-from app.models.core import AcademicYear, Program, Semester
+from app.models.core import AcademicYear, Program
 from app.models.finance import (
     FeeCategory,
     FeeItem,
@@ -30,34 +30,18 @@ from app.models.finance import (
     StudentFeeAssignment,
     StudentFeeConcession,
 )
-from app.models.people import StudentProfile as Student, User
+from app.models.people import StudentProfile as Student
 from app.schemas.finance import (
     FeeCategoryCreate,
     FeeCategoryUpdate,
-    FeeItemCreate,
     FeeStructureCreate,
-    FeeStructureResponse,
-    FeeStructureUpdate,
     FinancialAdjustmentCreate,
     InvoiceCreate,
-    InvoiceLineCreate,
-    InvoiceLineResponse,
-    InvoiceResponse,
-    InvoiceUpdate,
-    PaymentAllocationItem,
-    PaymentAllocationResponse,
     PaymentCreate,
-    PaymentResponse,
-    ReceiptResponse,
     RefundCreate,
-    RefundResponse,
     ScholarshipCreate,
-    ScholarshipResponse,
     StudentFeeAssignmentCreate,
-    StudentFeeAssignmentResponse,
-    StudentFinancialSummary,
 )
-
 
 DEFAULT_FEE_CATEGORIES = [
     {"code": "TUITION", "name": "Tuition Fee", "is_refundable": False, "description": "Core academic tuition charges"},
@@ -120,7 +104,7 @@ class FinanceService:
     @staticmethod
     async def generate_invoice_number(db: AsyncSession, tenant_id: UUID) -> str:
         """Generate human-readable sequence INV-YYYY-XXXXXX unique to tenant."""
-        year = datetime.now(timezone.utc).year
+        year = datetime.now(UTC).year
         stmt = (
             select(func.count(Invoice.id))
             .where(Invoice.tenant_id == tenant_id)
@@ -132,7 +116,7 @@ class FinanceService:
     @staticmethod
     async def generate_payment_number(db: AsyncSession, tenant_id: UUID) -> str:
         """Generate human-readable sequence PAY-YYYY-XXXXXX unique to tenant."""
-        year = datetime.now(timezone.utc).year
+        year = datetime.now(UTC).year
         stmt = (
             select(func.count(PaymentTransaction.id))
             .where(PaymentTransaction.tenant_id == tenant_id)
@@ -144,7 +128,7 @@ class FinanceService:
     @staticmethod
     async def generate_receipt_number(db: AsyncSession, tenant_id: UUID) -> str:
         """Generate human-readable sequence RCP-YYYY-XXXXXX unique to tenant."""
-        year = datetime.now(timezone.utc).year
+        year = datetime.now(UTC).year
         stmt = (
             select(func.count(Receipt.id))
             .where(Receipt.tenant_id == tenant_id)
@@ -776,7 +760,7 @@ class FinanceService:
             raise ConflictException(f"Payment with transaction reference '{ref_clean}' has already been recorded.")
 
         payment_number = await cls.generate_payment_number(db, tenant_id)
-        payment_date = data.payment_date or datetime.now(timezone.utc)
+        payment_date = data.payment_date or datetime.now(UTC)
 
         payment = PaymentTransaction(
             tenant_id=tenant_id,
@@ -829,7 +813,7 @@ class FinanceService:
                     payment_id=payment.id,
                     invoice_id=inv.id,
                     allocated_amount=alloc_amt,
-                    allocated_at=datetime.now(timezone.utc),
+                    allocated_at=datetime.now(UTC),
                 )
                 db.add(allocation)
                 total_allocated += alloc_amt
@@ -846,7 +830,7 @@ class FinanceService:
             tenant_id=tenant_id,
             payment_id=payment.id,
             receipt_number=receipt_number,
-            issue_date=datetime.now(timezone.utc),
+            issue_date=datetime.now(UTC),
             is_cancelled=False,
         )
         db.add(receipt)
@@ -1245,7 +1229,7 @@ class FinanceService:
             raise ValidationException(f"Cannot process refund in '{refund.status}' state. Must be APPROVED first.")
 
         refund.status = "PROCESSED"
-        refund.processed_at = datetime.now(timezone.utc)
+        refund.processed_at = datetime.now(UTC)
         if refund_reference:
             refund.refund_reference = refund_reference.strip()
 

@@ -69,11 +69,7 @@ export interface FeeItem {
 // ==========================================
 
 export type FeeStructureStatus =
-  | "DRAFT"
-  | "PENDING_APPROVAL"
-  | "APPROVED"
-  | "ACTIVE"
-  | "RETIRED";
+  "DRAFT" | "PENDING_APPROVAL" | "APPROVED" | "ACTIVE" | "RETIRED";
 
 export interface FeeStructureComponent {
   id: string;
@@ -110,7 +106,8 @@ export interface FeeStructure {
 // 3. Student Fee Assignments
 // ==========================================
 
-export type FeeAssignmentStatus = "ACTIVE" | "EXEMPTED" | "ADJUSTED" | "CANCELLED";
+export type FeeAssignmentStatus =
+  "ACTIVE" | "EXEMPTED" | "ADJUSTED" | "CANCELLED";
 
 export interface StudentFeeAssignment {
   id: string;
@@ -141,12 +138,7 @@ export interface StudentFeeAssignment {
 // ==========================================
 
 export type InvoiceStatus =
-  | "DRAFT"
-  | "ISSUED"
-  | "PARTIALLY_PAID"
-  | "PAID"
-  | "OVERDUE"
-  | "CANCELLED";
+  "DRAFT" | "ISSUED" | "PARTIALLY_PAID" | "PAID" | "OVERDUE" | "CANCELLED";
 
 export interface InvoiceLine {
   id: string;
@@ -195,13 +187,7 @@ export interface Invoice {
 // ==========================================
 
 export type PaymentMethod =
-  | "CASH"
-  | "UPI"
-  | "CARD"
-  | "BANK_TRANSFER"
-  | "CHEQUE"
-  | "ONLINE"
-  | "OTHER";
+  "CASH" | "UPI" | "CARD" | "BANK_TRANSFER" | "CHEQUE" | "ONLINE" | "OTHER";
 
 export type PaymentStatus = "PENDING" | "SUCCESS" | "FAILED" | "REVERSED";
 
@@ -275,11 +261,7 @@ export type ScholarshipType =
   | "SPECIAL_WAIVER";
 
 export type ScholarshipStatus =
-  | "DRAFT"
-  | "PENDING_APPROVAL"
-  | "APPROVED"
-  | "REJECTED"
-  | "EXPIRED";
+  "DRAFT" | "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | "EXPIRED";
 
 export interface Scholarship {
   id: string;
@@ -321,7 +303,8 @@ export interface StudentScholarship {
 // 8. Financial Adjustments
 // ==========================================
 
-export type AdjustmentType = "DISCOUNT" | "WAIVER" | "CREDIT" | "DEBIT" | "CORRECTION";
+export type AdjustmentType =
+  "DISCOUNT" | "WAIVER" | "CREDIT" | "DEBIT" | "CORRECTION";
 
 export interface FinancialAdjustment {
   id: string;
@@ -344,11 +327,7 @@ export interface FinancialAdjustment {
 // ==========================================
 
 export type RefundStatus =
-  | "REQUESTED"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "PROCESSED"
-  | "REJECTED";
+  "REQUESTED" | "UNDER_REVIEW" | "APPROVED" | "PROCESSED" | "REJECTED";
 
 export interface Refund {
   id: string;
@@ -379,11 +358,7 @@ export interface Refund {
 // ==========================================
 
 export type AgingBucket =
-  | "CURRENT"
-  | "DAYS_1_30"
-  | "DAYS_31_60"
-  | "DAYS_61_90"
-  | "DAYS_90_PLUS";
+  "CURRENT" | "DAYS_1_30" | "DAYS_31_60" | "DAYS_61_90" | "DAYS_90_PLUS";
 
 export interface AgingBucketSummary {
   bucket: AgingBucket;
@@ -453,7 +428,8 @@ export interface FinanceDashboardSummary {
   };
 }
 
-export type ReportType = "COLLECTION" | "OUTSTANDING" | "AGING" | "PAYMENT_METHOD" | "SCHOLARSHIP";
+export type ReportType =
+  "COLLECTION" | "OUTSTANDING" | "AGING" | "PAYMENT_METHOD" | "SCHOLARSHIP";
 
 export interface FinanceReportFilter {
   reportType: ReportType;

@@ -5,11 +5,11 @@ schemas, supported authentication mechanisms, and capability metadata.
 Prevents hardcoding vendor endpoints or arbitrary unvalidated parameters.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.exceptions import ValidationException
 from app.models.integration import ConnectorType, CredentialAuthType

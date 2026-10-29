@@ -11,8 +11,8 @@ Enforces tenant-configurable policies:
 - Multi-factor authentication enforcement levels
 """
 
-from datetime import datetime, timedelta, timezone
 import re
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID
 
@@ -20,9 +20,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    ConflictException,
     ForbiddenException,
-    NotFoundException,
     ValidationException,
 )
 from app.core.security import AuthenticationException
@@ -125,11 +123,11 @@ class TenantIdentityPolicyService:
     def check_account_lockout(cls, user: User) -> None:
         """Check if account is temporarily locked due to failed authentication attempts."""
         if user.locked_until:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             # Handle tz-aware comparison
             locked_until = user.locked_until
             if locked_until.tzinfo is None:
-                locked_until = locked_until.replace(tzinfo=timezone.utc)
+                locked_until = locked_until.replace(tzinfo=UTC)
 
             if locked_until > now:
                 remaining_seconds = int((locked_until - now).total_seconds())
@@ -154,7 +152,7 @@ class TenantIdentityPolicyService:
         is_locked = False
 
         if user.failed_login_attempts >= policy.lockout_threshold:
-            lockout_expiry = datetime.now(timezone.utc) + timedelta(minutes=policy.lockout_duration_minutes)
+            lockout_expiry = datetime.now(UTC) + timedelta(minutes=policy.lockout_duration_minutes)
             user.locked_until = lockout_expiry
             is_locked = True
 

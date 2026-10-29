@@ -7,15 +7,15 @@ Enforces:
 - Tenant isolation: inbound requests derive tenant strictly from connector registry.
 """
 
-from datetime import UTC, datetime, timedelta
 import json
 import logging
 import random
 import time
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, select, update
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
@@ -24,7 +24,6 @@ from app.core.exceptions import (
 )
 from app.core.security import AuthenticationException
 from app.integrations.circuit_breaker import (
-    CircuitBreakerOpenException,
     circuit_breaker_engine,
 )
 from app.integrations.events import IntegrationEventEnvelope
@@ -40,7 +39,6 @@ from app.models.integration import (
     CircuitBreakerState,
     ConnectorStatus,
     IntegrationConnector,
-    IntegrationHealth,
     IntegrationHealthStatus,
     IntegrationIdempotencyKey,
     IntegrationLog,

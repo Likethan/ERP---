@@ -13,7 +13,10 @@ export interface ColumnDef<T> {
   id: string;
   header: string | React.ReactNode;
   accessorKey?: keyof T;
-  cell?: (item: T & { row: T; index?: number }, index?: number) => React.ReactNode;
+  cell?: (
+    item: T & { row: T; index?: number },
+    index?: number,
+  ) => React.ReactNode;
   sortable?: boolean;
   enableHiding?: boolean;
   defaultHidden?: boolean;
@@ -67,5 +70,9 @@ export interface DataGridProps<T> {
   onEmptyAction?: () => void;
   // Layout
   className?: string;
-  mobileCardRender?: (item: T, isSelected: boolean, onToggle: () => void) => React.ReactNode;
+  mobileCardRender?: (
+    item: T,
+    isSelected: boolean,
+    onToggle: () => void,
+  ) => React.ReactNode;
 }

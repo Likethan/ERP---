@@ -24,12 +24,16 @@ interface NotificationDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function NotificationDetailPage({ params }: NotificationDetailPageProps) {
+export default function NotificationDetailPage({
+  params,
+}: NotificationDetailPageProps) {
   const resolvedParams = use(params);
   const notificationId = resolvedParams.id;
   const { user } = useAuth();
 
-  const [notification, setNotification] = useState<NotificationItem | null>(null);
+  const [notification, setNotification] = useState<NotificationItem | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -85,7 +89,9 @@ export default function NotificationDetailPage({ params }: NotificationDetailPag
       <div className="p-8 text-center space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 max-w-xl mx-auto my-12">
         <AlertTriangle className="h-10 w-10 text-rose-400 mx-auto" />
         <h2 className="text-base font-bold text-white">Alert Not Found</h2>
-        <p className="text-xs text-slate-400">{error || "Requested notification does not exist."}</p>
+        <p className="text-xs text-slate-400">
+          {error || "Requested notification does not exist."}
+        </p>
         <Link href="/app/campus/notifications">
           <Button variant="outline" size="sm">
             Back to Notifications Inbox
@@ -135,7 +141,10 @@ export default function NotificationDetailPage({ params }: NotificationDetailPag
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -152,10 +161,14 @@ export default function NotificationDetailPage({ params }: NotificationDetailPag
               {notification.status}
             </span>
           </div>
-          <span className="text-xs text-slate-500 font-mono">{notification.timestamp}</span>
+          <span className="text-xs text-slate-500 font-mono">
+            {notification.timestamp}
+          </span>
         </div>
 
-        <h1 className="text-xl font-bold text-white tracking-tight">{notification.title}</h1>
+        <h1 className="text-xl font-bold text-white tracking-tight">
+          {notification.title}
+        </h1>
 
         <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
           {notification.message}

@@ -27,7 +27,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
 import { formatLPA } from "@/services/placement-calculator";
-import { Company, JobDrive, Application, Interview, Offer } from "@/types/placement";
+import {
+  Company,
+  JobDrive,
+  Application,
+  Interview,
+  Offer,
+} from "@/types/placement";
 
 export default function CompanyDetailPage() {
   const params = useParams();
@@ -53,17 +59,31 @@ export default function CompanyDetailPage() {
       ]);
 
       if (!compRes.data) {
-        showToast({ title: "Not Found", message: "Company profile not found", type: "error" });
+        showToast({
+          title: "Not Found",
+          message: "Company profile not found",
+          type: "error",
+        });
         router.push("/app/placement/companies");
         return;
       }
 
       setCompany(compRes.data);
-      setDrives((drivesRes.data || []).filter((d) => d.companyId === compRes.data?.id));
-      setApplications((appsRes.data || []).filter((a) => a.companyId === compRes.data?.id));
-      setOffers((ofrRes.data || []).filter((o) => o.companyId === compRes.data?.id));
+      setDrives(
+        (drivesRes.data || []).filter((d) => d.companyId === compRes.data?.id),
+      );
+      setApplications(
+        (appsRes.data || []).filter((a) => a.companyId === compRes.data?.id),
+      );
+      setOffers(
+        (ofrRes.data || []).filter((o) => o.companyId === compRes.data?.id),
+      );
     } catch {
-      showToast({ title: "Error", message: "Failed to load company 360 profile", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load company 360 profile",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -80,7 +100,9 @@ export default function CompanyDetailPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500">Loading corporate partner profile...</p>
+          <p className="text-xs text-slate-500">
+            Loading corporate partner profile...
+          </p>
         </div>
       </div>
     );
@@ -114,10 +136,17 @@ export default function CompanyDetailPage() {
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                   {company.name}
                 </h1>
-                <Badge variant={company.status === "ACTIVE" ? "success" : "secondary"} dot>
+                <Badge
+                  variant={
+                    company.status === "ACTIVE" ? "success" : "secondary"
+                  }
+                  dot
+                >
                   {company.status}
                 </Badge>
-                <Badge variant="outline">{company.tier.replace(/_/g, " ")}</Badge>
+                <Badge variant="outline">
+                  {company.tier.replace(/_/g, " ")}
+                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5">
@@ -159,9 +188,13 @@ export default function CompanyDetailPage() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-slate-100 p-1 dark:bg-slate-800">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts ({company.contacts.length})</TabsTrigger>
+          <TabsTrigger value="contacts">
+            Contacts ({company.contacts.length})
+          </TabsTrigger>
           <TabsTrigger value="drives">Job Drives ({drives.length})</TabsTrigger>
-          <TabsTrigger value="applications">Applications ({applications.length})</TabsTrigger>
+          <TabsTrigger value="applications">
+            Applications ({applications.length})
+          </TabsTrigger>
           <TabsTrigger value="offers">Offers ({offers.length})</TabsTrigger>
           <TabsTrigger value="history">Engagement History</TabsTrigger>
         </TabsList>
@@ -216,7 +249,9 @@ export default function CompanyDetailPage() {
               </div>
 
               <div>
-                <span className="text-slate-500">University Relationship Status:</span>
+                <span className="text-slate-500">
+                  University Relationship Status:
+                </span>
                 <p className="font-semibold text-indigo-600 dark:text-indigo-400 mt-1">
                   {company.relationshipStatus.replace("_", " ")}
                 </p>
@@ -225,8 +260,12 @@ export default function CompanyDetailPage() {
 
             {company.notes && (
               <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-100 dark:bg-slate-800/40 dark:border-slate-700 text-xs">
-                <span className="font-medium text-slate-500">Placement Cell Notes:</span>
-                <p className="text-slate-700 dark:text-slate-300 mt-1">{company.notes}</p>
+                <span className="font-medium text-slate-500">
+                  Placement Cell Notes:
+                </span>
+                <p className="text-slate-700 dark:text-slate-300 mt-1">
+                  {company.notes}
+                </p>
               </div>
             )}
           </div>
@@ -254,12 +293,17 @@ export default function CompanyDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 font-medium">{contact.role}</p>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {contact.role}
+                  </p>
 
                   <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 space-y-1 text-xs">
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                       <Mail className="w-3.5 h-3.5 text-slate-400" />
-                      <a href={`mailto:${contact.email}`} className="hover:underline">
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="hover:underline"
+                      >
                         {contact.email}
                       </a>
                     </div>
@@ -283,7 +327,10 @@ export default function CompanyDetailPage() {
             {drives.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {drives.map((d) => (
-                  <div key={d.id} className="py-4 flex items-center justify-between">
+                  <div
+                    key={d.id}
+                    className="py-4 flex items-center justify-between"
+                  >
                     <div>
                       <Link
                         href={`/app/placement/drives/${d.id}`}
@@ -303,7 +350,9 @@ export default function CompanyDetailPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <Badge variant={d.status === "OPEN" ? "success" : "secondary"}>
+                      <Badge
+                        variant={d.status === "OPEN" ? "success" : "secondary"}
+                      >
                         {d.status}
                       </Badge>
                       <Link href={`/app/placement/drives/${d.id}`}>
@@ -316,7 +365,9 @@ export default function CompanyDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No recruitment drives recorded for this partner.</p>
+              <p className="text-xs text-slate-500">
+                No recruitment drives recorded for this partner.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -330,23 +381,33 @@ export default function CompanyDetailPage() {
             {applications.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {applications.map((app) => (
-                  <div key={app.id} className="py-3 flex items-center justify-between">
+                  <div
+                    key={app.id}
+                    className="py-3 flex items-center justify-between"
+                  >
                     <div>
                       <span className="font-semibold text-xs text-slate-900 dark:text-white">
                         {app.studentName} ({app.rollNumber})
                       </span>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        Applied for {app.positionTitle} on {app.appliedDate.split("T")[0]}
+                        Applied for {app.positionTitle} on{" "}
+                        {app.appliedDate.split("T")[0]}
                       </p>
                     </div>
-                    <Badge variant={app.status === "SELECTED" ? "success" : "secondary"}>
+                    <Badge
+                      variant={
+                        app.status === "SELECTED" ? "success" : "secondary"
+                      }
+                    >
                       {app.status}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No candidate applications recorded.</p>
+              <p className="text-xs text-slate-500">
+                No candidate applications recorded.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -375,14 +436,20 @@ export default function CompanyDetailPage() {
                         {formatLPA(ofr.ctcLpa)}
                       </p>
                     </div>
-                    <Badge variant={ofr.status === "ACCEPTED" ? "success" : "warning"}>
+                    <Badge
+                      variant={
+                        ofr.status === "ACCEPTED" ? "success" : "warning"
+                      }
+                    >
                       {ofr.status}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No offers released by this partner yet.</p>
+              <p className="text-xs text-slate-500">
+                No offers released by this partner yet.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -401,7 +468,8 @@ export default function CompanyDetailPage() {
                     {entry.action}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    By {entry.actor} • {new Date(entry.timestamp).toLocaleString()}
+                    By {entry.actor} •{" "}
+                    {new Date(entry.timestamp).toLocaleString()}
                   </div>
                 </div>
               ))}

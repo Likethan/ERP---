@@ -22,7 +22,11 @@ import {
   Lock,
 } from "lucide-react";
 
-export function DocumentStatusBadge({ status }: { status: DocumentStatus | string }) {
+export function DocumentStatusBadge({
+  status,
+}: {
+  status: DocumentStatus | string;
+}) {
   switch (status) {
     case DocumentStatus.VERIFIED:
       return (
@@ -96,7 +100,11 @@ export function DocumentStatusBadge({ status }: { status: DocumentStatus | strin
   }
 }
 
-export function ConfidentialityBadge({ level }: { level: ConfidentialityLevel | string }) {
+export function ConfidentialityBadge({
+  level,
+}: {
+  level: ConfidentialityLevel | string;
+}) {
   switch (level) {
     case ConfidentialityLevel.PUBLIC:
       return (
@@ -135,7 +143,11 @@ export function ConfidentialityBadge({ level }: { level: ConfidentialityLevel | 
   }
 }
 
-export function ExpiryStatusBadge({ status }: { status: DocumentExpiryStatus }) {
+export function ExpiryStatusBadge({
+  status,
+}: {
+  status: DocumentExpiryStatus;
+}) {
   switch (status) {
     case DocumentExpiryStatus.EXPIRED:
       return (
@@ -182,7 +194,11 @@ export function ExpiryStatusBadge({ status }: { status: DocumentExpiryStatus }) 
   }
 }
 
-export function CertificateRequestStatusBadge({ status }: { status: CertificateRequestStatus | string }) {
+export function CertificateRequestStatusBadge({
+  status,
+}: {
+  status: CertificateRequestStatus | string;
+}) {
   switch (status) {
     case CertificateRequestStatus.ISSUED:
       return (

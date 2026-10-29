@@ -15,66 +15,44 @@ Validates:
 12. Background Maintenance Jobs: Credential expiry, quota reset, usage cleanup.
 """
 
+import uuid
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
-import json
-import uuid
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.governance_registry import mask_email, mask_phone
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
-from app.models.academics import Subject
-from app.models.campus import CampusEvent
-from app.models.core import Institution, TenantMembership
-from app.models.examination import SemesterExamResult
-from app.models.finance import Invoice, PaymentTransaction
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.core import Institution
+from app.models.finance import Invoice
+from app.models.people import StudentProfile, User
 from app.platform_api.auth import (
     generate_api_key_credentials,
     is_credential_valid_for_auth,
     verify_credential_secret,
 )
 from app.platform_api.catalog import catalog_service
-from app.platform_api.idempotency import idempotency_engine
 from app.platform_api.jobs import api_platform_jobs
 from app.platform_api.models import (
     ApplicationCredential,
     ApplicationEnvironment,
-    ApplicationScopeGrant,
     ApplicationStatus,
     CredentialStatus,
-    CredentialType,
-    DeveloperApplication,
-    QuotaStatus,
-    QuotaTier,
-    RateLimitTier,
-    ScopeGrantStatus,
 )
-from app.platform_api.quotas import QuotaExceededException, quota_service
 from app.platform_api.rate_limits import app_rate_limiter
 from app.platform_api.schemas import (
     ApplicationCreate,
-    ApplicationUpdate,
     CredentialCreate,
 )
 from app.platform_api.scopes import (
-    SCOPE_ACADEMICS_READ,
-    SCOPE_ATTENDANCE_READ,
-    SCOPE_EVENTS_READ,
-    SCOPE_EXAMINATIONS_READ,
-    SCOPE_FINANCE_READ,
     SCOPE_FINANCE_WRITE,
     SCOPE_STUDENTS_READ,
-    SCOPE_STUDENTS_WRITE,
     scope_resolver,
 )
 from app.platform_api.service import platform_service
-from app.platform_api.usage import anonymize_ip_address, usage_metering_service
+from app.platform_api.usage import anonymize_ip_address
 
 
 def make_admin_headers(user: User, tenant_id: uuid.UUID) -> dict[str, str]:

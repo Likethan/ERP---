@@ -7,19 +7,31 @@ import { studentsService } from "./students.service";
  * Provides canonical guardian relationship mutations and queries.
  */
 class GuardiansService {
-  async getGuardians(studentId: string): Promise<ApiResponse<GuardianRecord[]>> {
+  async getGuardians(
+    studentId: string,
+  ): Promise<ApiResponse<GuardianRecord[]>> {
     return studentsService.getGuardians(studentId);
   }
 
-  async addGuardian(studentId: string, data: Partial<GuardianRecord>): Promise<ApiResponse<GuardianRecord>> {
+  async addGuardian(
+    studentId: string,
+    data: Partial<GuardianRecord>,
+  ): Promise<ApiResponse<GuardianRecord>> {
     return studentsService.addGuardian(studentId, data);
   }
 
-  async updateGuardian(studentId: string, guardianId: string, data: Partial<GuardianRecord>): Promise<ApiResponse<GuardianRecord>> {
+  async updateGuardian(
+    studentId: string,
+    guardianId: string,
+    data: Partial<GuardianRecord>,
+  ): Promise<ApiResponse<GuardianRecord>> {
     return studentsService.updateGuardian(studentId, guardianId, data);
   }
 
-  async removeGuardian(studentId: string, guardianId: string): Promise<ApiResponse<boolean>> {
+  async removeGuardian(
+    studentId: string,
+    guardianId: string,
+  ): Promise<ApiResponse<boolean>> {
     return studentsService.deleteGuardian(studentId, guardianId);
   }
 }

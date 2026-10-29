@@ -39,7 +39,11 @@ export default function ReceiptsPage() {
       const res = await financeService.getReceipts();
       setReceipts(res.data);
     } catch {
-      showToast({ title: "Error", message: "Error loading official receipts", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Error loading official receipts",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -63,7 +67,8 @@ export default function ReceiptsPage() {
         r.transactionRef.toLowerCase().includes(searchQuery.toLowerCase()) ||
         r.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesMethod = methodFilter === "ALL" || r.paymentMethod === methodFilter;
+      const matchesMethod =
+        methodFilter === "ALL" || r.paymentMethod === methodFilter;
 
       return matchesSearch && matchesMethod;
     });
@@ -91,8 +96,12 @@ export default function ReceiptsPage() {
       sortable: true,
       cell: ({ row }) => (
         <div>
-          <div className="font-medium text-slate-900 dark:text-white">{row.studentName}</div>
-          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+          <div className="font-medium text-slate-900 dark:text-white">
+            {row.studentName}
+          </div>
+          <div className="text-xs text-slate-500 font-mono">
+            {row.rollNumber}
+          </div>
         </div>
       ),
     },
@@ -126,7 +135,9 @@ export default function ReceiptsPage() {
       accessorKey: "date",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-xs text-slate-600 dark:text-slate-300">{row.date}</span>
+        <span className="text-xs text-slate-600 dark:text-slate-300">
+          {row.date}
+        </span>
       ),
     },
     {
@@ -178,17 +189,23 @@ export default function ReceiptsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Receipts</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Receipts
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Official Receipts Archive & Vouchers
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Immutable financial payment vouchers with unique audit numbers and payment tracking.
+            Immutable financial payment vouchers with unique audit numbers and
+            payment tracking.
           </p>
         </div>
       </div>

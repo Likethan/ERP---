@@ -6,12 +6,12 @@ issuance and revocation, institutional governance records, storage integration,
 expiry engine, and database aggregations.
 """
 
-from datetime import UTC, datetime, timedelta
 import hashlib
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, case, func, or_, select, update
+from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -54,7 +54,6 @@ from app.schemas.documents import (
     DocumentCategoryUpdate,
     DocumentCreate,
     DocumentRequirementCreate,
-    DocumentRequirementUpdate,
     DocumentTypeCreate,
     DocumentTypeUpdate,
     DocumentUpdate,
@@ -1649,7 +1648,7 @@ class DocumentService:
         cert_num = f"CAMPUSOS/CERT/{year}/{count + 1:04d}"
 
         # Generate cryptographic verification hash & QR URL
-        hash_payload = f"{tenant_id}:{cert_num}:{req.student_id}:{year}".encode("utf-8")
+        hash_payload = f"{tenant_id}:{cert_num}:{req.student_id}:{year}".encode()
         verification_hash = hashlib.sha256(hash_payload).hexdigest()
         qr_url = f"https://verify.campusos.edu/cert/{cert_num}"
 

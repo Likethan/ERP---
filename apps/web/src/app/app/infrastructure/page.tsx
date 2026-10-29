@@ -92,19 +92,25 @@ export default function InfrastructureDashboardPage() {
               Campus Operations & Logistics
             </span>
             <span className="text-slate-500 text-xs">•</span>
-            <span className="text-xs text-slate-400">Institutional Infrastructure Hub</span>
+            <span className="text-xs text-slate-400">
+              Institutional Infrastructure Hub
+            </span>
           </div>
           <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
             <Building2 className="h-7 w-7 text-indigo-400" />
             Infrastructure Operations Center
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Live telemetry, residential hostel capacity, campus transit routes, facility work orders, and preventive maintenance records.
+            Live telemetry, residential hostel capacity, campus transit routes,
+            facility work orders, and preventive maintenance records.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
           <Link href="/app/infrastructure/reports">
-            <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-slate-300">
+            <Button
+              variant="outline"
+              className="border-slate-700 hover:bg-slate-800 text-slate-300"
+            >
               <TrendingUp className="h-4 w-4 mr-1.5 text-indigo-400" />
               View Reports
             </Button>
@@ -217,7 +223,10 @@ export default function InfrastructureDashboardPage() {
               <div className="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                 <BedDouble className="h-6 w-6" />
               </div>
-              <Badge variant="default" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+              <Badge
+                variant="default"
+                className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+              >
                 {d.hostelOccupancyPercentage}% Occupancy
               </Badge>
             </div>
@@ -225,7 +234,9 @@ export default function InfrastructureDashboardPage() {
               Hostel & Residential Dormitories
             </h3>
             <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Multi-tier hierarchy from Campuses down to Blocks, Floors, Rooms, and individual Beds. Allocation pipelines, gate pass leaves, and student complaints.
+              Multi-tier hierarchy from Campuses down to Blocks, Floors, Rooms,
+              and individual Beds. Allocation pipelines, gate pass leaves, and
+              student complaints.
             </p>
             <div className="mt-4 space-y-1.5 text-xs text-slate-300 font-mono">
               <div className="flex justify-between py-1 border-b border-slate-800/80">
@@ -234,11 +245,15 @@ export default function InfrastructureDashboardPage() {
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Available Beds:</span>
-                <span className="text-emerald-400 font-semibold">{d.availableBeds}</span>
+                <span className="text-emerald-400 font-semibold">
+                  {d.availableBeds}
+                </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-400">Open Complaints:</span>
-                <span className="text-yellow-400">{d.openComplaints} Pending</span>
+                <span className="text-yellow-400">
+                  {d.openComplaints} Pending
+                </span>
               </div>
             </div>
           </div>
@@ -250,11 +265,17 @@ export default function InfrastructureDashboardPage() {
               Explore Hostels <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <div className="flex gap-2">
-              <Link href="/app/infrastructure/hostel/rooms" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/hostel/rooms"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Rooms
               </Link>
               <span className="text-slate-600">•</span>
-              <Link href="/app/infrastructure/hostel/allocations" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/hostel/allocations"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Allocations
               </Link>
             </div>
@@ -268,7 +289,10 @@ export default function InfrastructureDashboardPage() {
               <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 <Bus className="h-6 w-6" />
               </div>
-              <Badge variant="default" className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+              <Badge
+                variant="default"
+                className="bg-amber-500/20 text-amber-400 border-amber-500/30"
+              >
                 {d.activeTransportRoutes} Active Routes
               </Badge>
             </div>
@@ -276,7 +300,9 @@ export default function InfrastructureDashboardPage() {
               Fleet Transport & Routes
             </h3>
             <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Campus bus routes, sequenced pickup/drop stops, vehicle fitness and insurance records, commercial drivers, and student bus pass allocations.
+              Campus bus routes, sequenced pickup/drop stops, vehicle fitness
+              and insurance records, commercial drivers, and student bus pass
+              allocations.
             </p>
             <div className="mt-4 space-y-1.5 text-xs text-slate-300 font-mono">
               <div className="flex justify-between py-1 border-b border-slate-800/80">
@@ -285,7 +311,9 @@ export default function InfrastructureDashboardPage() {
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Allocated Students:</span>
-                <span className="text-teal-400 font-semibold">{d.studentsUsingTransport}</span>
+                <span className="text-teal-400 font-semibold">
+                  {d.studentsUsingTransport}
+                </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-400">Route Utilization:</span>
@@ -301,11 +329,17 @@ export default function InfrastructureDashboardPage() {
               Transport Hub <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <div className="flex gap-2">
-              <Link href="/app/infrastructure/transport/routes" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/transport/routes"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Routes
               </Link>
               <span className="text-slate-600">•</span>
-              <Link href="/app/infrastructure/transport/vehicles" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/transport/vehicles"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Vehicles
               </Link>
             </div>
@@ -319,7 +353,10 @@ export default function InfrastructureDashboardPage() {
               <div className="p-2.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
                 <Wrench className="h-6 w-6" />
               </div>
-              <Badge variant="default" className="bg-rose-500/20 text-rose-400 border-rose-500/30">
+              <Badge
+                variant="default"
+                className="bg-rose-500/20 text-rose-400 border-rose-500/30"
+              >
                 {d.openMaintenanceRequests} Work Orders
               </Badge>
             </div>
@@ -327,12 +364,16 @@ export default function InfrastructureDashboardPage() {
               Physical Facilities & Maintenance
             </h3>
             <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Auditoriums, research laboratories, seminar halls, sports complexes, equipment tracking, and unified maintenance requests with INR cost ledgers.
+              Auditoriums, research laboratories, seminar halls, sports
+              complexes, equipment tracking, and unified maintenance requests
+              with INR cost ledgers.
             </p>
             <div className="mt-4 space-y-1.5 text-xs text-slate-300 font-mono">
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Critical Maintenance:</span>
-                <span className="text-red-400 font-semibold">{d.criticalMaintenance} Urgency</span>
+                <span className="text-red-400 font-semibold">
+                  {d.criticalMaintenance} Urgency
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Facilities Status:</span>
@@ -352,11 +393,17 @@ export default function InfrastructureDashboardPage() {
               Work Orders <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <div className="flex gap-2">
-              <Link href="/app/infrastructure/facilities" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/facilities"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Facilities
               </Link>
               <span className="text-slate-600">•</span>
-              <Link href="/app/infrastructure/reports" className="text-[11px] text-slate-400 hover:text-white">
+              <Link
+                href="/app/infrastructure/reports"
+                className="text-[11px] text-slate-400 hover:text-white"
+              >
                 Reports
               </Link>
             </div>
@@ -378,48 +425,72 @@ export default function InfrastructureDashboardPage() {
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <DoorOpen className="h-4 w-4 text-sky-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Rooms & Beds</div>
-              <div className="text-[10px] text-slate-400">Floor-wise inventory</div>
+              <div className="text-xs font-semibold text-white">
+                Rooms & Beds
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Floor-wise inventory
+              </div>
             </Link>
             <Link
               href="/app/infrastructure/hostel/allocations"
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <UserCheck className="h-4 w-4 text-emerald-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Hostel Allocations</div>
-              <div className="text-[10px] text-slate-400">Student bed assignment</div>
+              <div className="text-xs font-semibold text-white">
+                Hostel Allocations
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Student bed assignment
+              </div>
             </Link>
             <Link
               href="/app/infrastructure/hostel/leaves"
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <FileCheck2 className="h-4 w-4 text-purple-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Hostel Leaves</div>
-              <div className="text-[10px] text-slate-400">Gate pass approvals</div>
+              <div className="text-xs font-semibold text-white">
+                Hostel Leaves
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Gate pass approvals
+              </div>
             </Link>
             <Link
               href="/app/infrastructure/transport/routes"
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <Compass className="h-4 w-4 text-amber-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Routes & Stops</div>
-              <div className="text-[10px] text-slate-400">Corridor sequences</div>
+              <div className="text-xs font-semibold text-white">
+                Routes & Stops
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Corridor sequences
+              </div>
             </Link>
             <Link
               href="/app/infrastructure/transport/drivers"
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <Users className="h-4 w-4 text-orange-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Fleet Drivers</div>
-              <div className="text-[10px] text-slate-400">Commercial licenses</div>
+              <div className="text-xs font-semibold text-white">
+                Fleet Drivers
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Commercial licenses
+              </div>
             </Link>
             <Link
               href="/app/infrastructure/facilities"
               className="p-3 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 hover:border-slate-700 transition-colors text-left"
             >
               <Building2 className="h-4 w-4 text-rose-400 mb-1.5" />
-              <div className="text-xs font-semibold text-white">Campus Facilities</div>
-              <div className="text-[10px] text-slate-400">Auditoriums & Labs</div>
+              <div className="text-xs font-semibold text-white">
+                Campus Facilities
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Auditoriums & Labs
+              </div>
             </Link>
           </div>
         </div>
@@ -436,9 +507,12 @@ export default function InfrastructureDashboardPage() {
                 <CheckCircle2 className="h-4 w-4" />
               </span>
               <div>
-                <div className="text-xs font-semibold text-white">Hierarchical Room & Bed Inventory</div>
+                <div className="text-xs font-semibold text-white">
+                  Hierarchical Room & Bed Inventory
+                </div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  Institution → Campus → Hostel → Block → Floor → Room → Bed → Student Allocation.
+                  Institution → Campus → Hostel → Block → Floor → Room → Bed →
+                  Student Allocation.
                 </div>
               </div>
             </div>
@@ -447,9 +521,13 @@ export default function InfrastructureDashboardPage() {
                 <Compass className="h-4 w-4" />
               </span>
               <div>
-                <div className="text-xs font-semibold text-white">Administrative Transport Management</div>
+                <div className="text-xs font-semibold text-white">
+                  Administrative Transport Management
+                </div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  Structured route stops with scheduled pickup/drop times, vehicle capacity enforcement, and verified student transit passes.
+                  Structured route stops with scheduled pickup/drop times,
+                  vehicle capacity enforcement, and verified student transit
+                  passes.
                 </div>
               </div>
             </div>
@@ -458,9 +536,12 @@ export default function InfrastructureDashboardPage() {
                 <Wrench className="h-4 w-4" />
               </span>
               <div>
-                <div className="text-xs font-semibold text-white">SLA-Monitored Unified Maintenance</div>
+                <div className="text-xs font-semibold text-white">
+                  SLA-Monitored Unified Maintenance
+                </div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  Critical requests resolved within 4 hours; high priority in 12 hours. Transparent INR (₹) expenditure tracking.
+                  Critical requests resolved within 4 hours; high priority in 12
+                  hours. Transparent INR (₹) expenditure tracking.
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
@@ -11,7 +11,6 @@ from app.core.tenant import TenantContext
 from app.identity.mfa_service import MfaService
 from app.identity.policy_service import TenantIdentityPolicyService
 from app.identity.schemas import (
-    MfaChallengeResponse,
     MfaChallengeVerifyRequest,
     MfaStatusResponse,
     TotpEnrollResponse,

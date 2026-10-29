@@ -6,9 +6,8 @@ Enforces:
 - Protection against cascade failures and thread/connection exhaustion.
 """
 
-from datetime import UTC, datetime, timedelta
 import logging
-from typing import Any
+from datetime import UTC, datetime
 from uuid import UUID
 
 from app.core.exceptions import CampusOSException

@@ -9,15 +9,7 @@ import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  MapPin,
-  Plus,
-  Search,
-  Eye,
-  Clock,
-  Compass,
-  Users,
-} from "lucide-react";
+import { MapPin, Plus, Search, Eye, Clock, Compass, Users } from "lucide-react";
 
 export default function TransportStopsListPage() {
   const [stops, setStops] = useState<TransportStop[]>([]);
@@ -126,8 +118,12 @@ export default function TransportStopsListPage() {
         header: "Transit Line",
         cell: (s) => (
           <div className="text-xs">
-            <span className="font-mono font-bold text-blue-400">{s.routeCode || "R-01"}</span>
-            <span className="text-slate-400 block">{s.routeName || "Corridor Route"}</span>
+            <span className="font-mono font-bold text-blue-400">
+              {s.routeCode || "R-01"}
+            </span>
+            <span className="text-slate-400 block">
+              {s.routeName || "Corridor Route"}
+            </span>
           </div>
         ),
       },
@@ -145,8 +141,14 @@ export default function TransportStopsListPage() {
         header: "Boarding Times",
         cell: (s) => (
           <div className="text-xs space-y-0.5 text-slate-300">
-            <div>Pickup: <span className="font-mono text-white">{s.pickupTime}</span></div>
-            <div>Drop: <span className="font-mono text-slate-400">{s.dropTime}</span></div>
+            <div>
+              Pickup:{" "}
+              <span className="font-mono text-white">{s.pickupTime}</span>
+            </div>
+            <div>
+              Drop:{" "}
+              <span className="font-mono text-slate-400">{s.dropTime}</span>
+            </div>
           </div>
         ),
       },
@@ -156,7 +158,9 @@ export default function TransportStopsListPage() {
         cell: (s) => (
           <div className="flex items-center gap-1.5 text-xs">
             <Users className="w-3.5 h-3.5 text-violet-400" />
-            <span className="font-semibold text-white">{s.studentCount || 0}</span>
+            <span className="font-semibold text-white">
+              {s.studentCount || 0}
+            </span>
             <span className="text-slate-500">students</span>
           </div>
         ),
@@ -183,14 +187,18 @@ export default function TransportStopsListPage() {
         header: "Actions",
         cell: (s) => (
           <Link href={`/app/infrastructure/transport/stops/${s.id}`}>
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+            >
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -214,7 +222,8 @@ export default function TransportStopsListPage() {
             Designated Boarding Stops
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Configure pickup points, sequence markers, morning and evening arrival times.
+            Configure pickup points, sequence markers, morning and evening
+            arrival times.
           </p>
         </div>
 
@@ -303,7 +312,9 @@ export default function TransportStopsListPage() {
                     required
                     placeholder="e.g. HBL-02"
                     value={createForm.code}
-                    onChange={(e) => setCreateForm({ ...createForm, code: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, code: e.target.value })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
@@ -317,7 +328,10 @@ export default function TransportStopsListPage() {
                     min={1}
                     value={createForm.sequence}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, sequence: parseInt(e.target.value) || 1 })
+                      setCreateForm({
+                        ...createForm,
+                        sequence: parseInt(e.target.value) || 1,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
@@ -333,7 +347,9 @@ export default function TransportStopsListPage() {
                   required
                   placeholder="e.g. Nagawara Junction Ring Road"
                   value={createForm.name}
-                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, name: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
               </div>
@@ -344,7 +360,9 @@ export default function TransportStopsListPage() {
                 </label>
                 <select
                   value={createForm.routeId}
-                  onChange={(e) => setCreateForm({ ...createForm, routeId: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, routeId: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                 >
                   {routes.map((r) => (
@@ -363,7 +381,9 @@ export default function TransportStopsListPage() {
                   type="text"
                   placeholder="e.g. Near Petrol Bunk, opposite bus shelter"
                   value={createForm.landmark}
-                  onChange={(e) => setCreateForm({ ...createForm, landmark: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, landmark: e.target.value })
+                  }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
               </div>
@@ -377,7 +397,12 @@ export default function TransportStopsListPage() {
                     type="text"
                     placeholder="07:30 AM"
                     value={createForm.pickupTime}
-                    onChange={(e) => setCreateForm({ ...createForm, pickupTime: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        pickupTime: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
@@ -389,7 +414,9 @@ export default function TransportStopsListPage() {
                     type="text"
                     placeholder="05:40 PM"
                     value={createForm.dropTime}
-                    onChange={(e) => setCreateForm({ ...createForm, dropTime: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, dropTime: e.target.value })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
@@ -404,7 +431,10 @@ export default function TransportStopsListPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   Add Stop
                 </Button>
               </div>

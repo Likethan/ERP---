@@ -4,7 +4,13 @@ import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { hostelRoomsService } from "@/services/hostel-rooms.service";
 import { hostelsService } from "@/services/hostels.service";
-import { HostelRoom, Hostel, RoomStatus, RoomType, BedStatus } from "@campusos/types";
+import {
+  HostelRoom,
+  Hostel,
+  RoomStatus,
+  RoomType,
+  BedStatus,
+} from "@campusos/types";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -114,7 +120,9 @@ export default function RoomsListPage() {
         header: "Hostel & Block",
         cell: (r) => (
           <div>
-            <div className="text-xs font-medium text-slate-200">{r.hostelName}</div>
+            <div className="text-xs font-medium text-slate-200">
+              {r.hostelName}
+            </div>
             <div className="text-[11px] text-slate-400">
               {r.blockName} • Floor {r.floor}
             </div>
@@ -135,16 +143,24 @@ export default function RoomsListPage() {
         id: "capacity",
         header: "Capacity",
         accessorKey: "capacity",
-        cell: (r) => <span className="text-xs font-semibold text-white">{r.capacity} Beds</span>,
+        cell: (r) => (
+          <span className="text-xs font-semibold text-white">
+            {r.capacity} Beds
+          </span>
+        ),
       },
       {
         id: "occupancy",
         header: "Occupied / Available",
         cell: (r) => (
           <div className="text-xs">
-            <span className="text-indigo-400 font-semibold">{r.occupied} occ</span>
+            <span className="text-indigo-400 font-semibold">
+              {r.occupied} occ
+            </span>
             <span className="text-slate-500 mx-1">/</span>
-            <span className="text-emerald-400 font-semibold">{r.available} avail</span>
+            <span className="text-emerald-400 font-semibold">
+              {r.available} avail
+            </span>
           </div>
         ),
       },
@@ -160,10 +176,12 @@ export default function RoomsListPage() {
         accessorKey: "status",
         cell: (r) => {
           const map: Record<string, string> = {
-            AVAILABLE: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+            AVAILABLE:
+              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
             PARTIALLY_OCCUPIED: "bg-sky-500/10 text-sky-400 border-sky-500/20",
             FULL: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-            MAINTENANCE: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+            MAINTENANCE:
+              "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
             BLOCKED: "bg-slate-500/10 text-slate-400 border-slate-500/20",
           };
           return (
@@ -178,7 +196,11 @@ export default function RoomsListPage() {
         header: "Actions",
         cell: (r) => (
           <Link href={`/app/infrastructure/hostel/rooms/${r.id}`}>
-            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               View Beds
             </Button>
@@ -186,7 +208,7 @@ export default function RoomsListPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -199,7 +221,10 @@ export default function RoomsListPage() {
               Infrastructure
             </Link>
             <span>/</span>
-            <Link href="/app/infrastructure/hostel" className="hover:text-white">
+            <Link
+              href="/app/infrastructure/hostel"
+              className="hover:text-white"
+            >
               Hostel
             </Link>
             <span>/</span>
@@ -210,7 +235,8 @@ export default function RoomsListPage() {
             Rooms & Bed Inventory
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Operational floor-level room inventory with bed-level status indicators and occupancy metrics.
+            Operational floor-level room inventory with bed-level status
+            indicators and occupancy metrics.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -299,10 +325,14 @@ export default function RoomsListPage() {
         <form onSubmit={handleCreateRoom} className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Hostel *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Hostel *
+              </label>
               <select
                 value={createForm.hostelId}
-                onChange={(e) => setCreateForm({ ...createForm, hostelId: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, hostelId: e.target.value })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 {hostels.map((h) => (
@@ -313,11 +343,15 @@ export default function RoomsListPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Block Name</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Block Name
+              </label>
               <Input
                 placeholder="Block A"
                 value={createForm.blockName}
-                onChange={(e) => setCreateForm({ ...createForm, blockName: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, blockName: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
@@ -325,33 +359,51 @@ export default function RoomsListPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Floor</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Floor
+              </label>
               <Input
                 type="number"
                 min={1}
                 value={createForm.floor}
-                onChange={(e) => setCreateForm({ ...createForm, floor: Number(e.target.value) })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    floor: Number(e.target.value),
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Room Number *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Room Number *
+              </label>
               <Input
                 required
                 placeholder="e.g. 204"
                 value={createForm.roomNumber}
-                onChange={(e) => setCreateForm({ ...createForm, roomNumber: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, roomNumber: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Bed Capacity</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Bed Capacity
+              </label>
               <Input
                 type="number"
                 min={1}
                 max={10}
                 value={createForm.capacity}
-                onChange={(e) => setCreateForm({ ...createForm, capacity: Number(e.target.value) })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    capacity: Number(e.target.value),
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
@@ -359,10 +411,17 @@ export default function RoomsListPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Room Type</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Room Type
+              </label>
               <select
                 value={createForm.roomType}
-                onChange={(e) => setCreateForm({ ...createForm, roomType: e.target.value as RoomType })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    roomType: e.target.value as RoomType,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="SINGLE">Single</option>
@@ -373,10 +432,17 @@ export default function RoomsListPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Gender</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Gender
+              </label>
               <select
                 value={createForm.gender}
-                onChange={(e) => setCreateForm({ ...createForm, gender: e.target.value as any })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    gender: e.target.value as any,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="MALE">Male</option>
@@ -395,7 +461,10 @@ export default function RoomsListPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Confirm & Create Room
             </Button>
           </div>

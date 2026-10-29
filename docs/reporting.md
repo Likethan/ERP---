@@ -26,7 +26,7 @@ CampusOS provides an enterprise-grade, multi-tenant reporting architecture desig
                                           │
                                           ▼
                                  Result Normalization
-                                          │
+                        j                  │
                         ┌─────────────────┼─────────────────┐
                         ▼                 ▼                 ▼
                     Chart Series      Table Rows        Forensic Audit

@@ -64,12 +64,15 @@ export default function CampusEventsListPage() {
   const [publishEventId, setPublishEventId] = useState<string | null>(null);
   const [cancelEventId, setCancelEventId] = useState<string | null>(null);
   const [cancelReason, setCancelReason] = useState("");
-  const [registerEvent, setRegisterEvent] = useState<CampusEventItem | null>(null);
+  const [registerEvent, setRegisterEvent] = useState<CampusEventItem | null>(
+    null,
+  );
   const [actionLoading, setActionLoading] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
   const canCreate = hasPermission("campus.manage_events") || hasPermission("*");
-  const canPublish = hasPermission("campus.publish_events") || hasPermission("*");
+  const canPublish =
+    hasPermission("campus.publish_events") || hasPermission("*");
 
   const loadEvents = async () => {
     try {
@@ -96,7 +99,10 @@ export default function CampusEventsListPage() {
     if (!publishEventId) return;
     try {
       setActionLoading(true);
-      await campusService.publishEvent(publishEventId, user?.first_name || "Administrator");
+      await campusService.publishEvent(
+        publishEventId,
+        user?.first_name || "Administrator",
+      );
       setPublishEventId(null);
       setFeedbackMessage("Event has been successfully published!");
       loadEvents();
@@ -109,7 +115,11 @@ export default function CampusEventsListPage() {
     if (!cancelEventId) return;
     try {
       setActionLoading(true);
-      await campusService.cancelEvent(cancelEventId, cancelReason, user?.first_name || "Administrator");
+      await campusService.cancelEvent(
+        cancelEventId,
+        cancelReason,
+        user?.first_name || "Administrator",
+      );
       setCancelEventId(null);
       setCancelReason("");
       setFeedbackMessage("Event has been cancelled.");
@@ -148,7 +158,8 @@ export default function CampusEventsListPage() {
   // Filtered dataset
   const filteredEvents = useMemo(() => {
     return events.filter((e) => {
-      const matchCat = categoryFilter === "ALL" || e.category === categoryFilter;
+      const matchCat =
+        categoryFilter === "ALL" || e.category === categoryFilter;
       const matchStatus = statusFilter === "ALL" || e.status === statusFilter;
       const matchSearch =
         searchQuery === "" ||
@@ -174,7 +185,9 @@ export default function CampusEventsListPage() {
           >
             {row.title}
           </Link>
-          <div className="text-[11px] text-slate-400 line-clamp-1">{row.description}</div>
+          <div className="text-[11px] text-slate-400 line-clamp-1">
+            {row.description}
+          </div>
         </div>
       ),
     },
@@ -196,8 +209,12 @@ export default function CampusEventsListPage() {
       sortable: true,
       cell: (row) => (
         <div className="text-xs text-slate-300">
-          <span className="font-medium block truncate max-w-[160px]">{row.organizer}</span>
-          <span className="text-[10px] text-slate-500 capitalize">{row.organizerType.toLowerCase()}</span>
+          <span className="font-medium block truncate max-w-[160px]">
+            {row.organizer}
+          </span>
+          <span className="text-[10px] text-slate-500 capitalize">
+            {row.organizerType.toLowerCase()}
+          </span>
         </div>
       ),
     },
@@ -225,12 +242,17 @@ export default function CampusEventsListPage() {
       accessorFn: (row: CampusEventItem) => row.venue,
       sortable: true,
       cell: (row) => (
-        <div className="text-xs text-slate-300 max-w-[140px] truncate" title={row.venue}>
+        <div
+          className="text-xs text-slate-300 max-w-[140px] truncate"
+          title={row.venue}
+        >
           <div className="flex items-center gap-1 truncate">
             <MapPin className="h-3 w-3 text-slate-500 shrink-0" />
             <span className="truncate">{row.venue}</span>
           </div>
-          <span className="text-[10px] text-slate-500 block">Cap: {row.capacity}</span>
+          <span className="text-[10px] text-slate-500 block">
+            Cap: {row.capacity}
+          </span>
         </div>
       ),
     },
@@ -240,7 +262,8 @@ export default function CampusEventsListPage() {
       accessorFn: (row: CampusEventItem) => row.targetAudience.type,
       cell: (row) => (
         <span className="text-[11px] text-slate-400 block max-w-[120px] truncate">
-          {row.targetAudience.departmentName || row.targetAudience.type.replace("_", " ")}
+          {row.targetAudience.departmentName ||
+            row.targetAudience.type.replace("_", " ")}
         </span>
       ),
     },
@@ -254,7 +277,9 @@ export default function CampusEventsListPage() {
         return (
           <div className="text-xs space-y-1">
             <div className="flex items-center justify-between font-mono text-[11px]">
-              <span className="text-white font-bold">{row.registeredCount}</span>
+              <span className="text-white font-bold">
+                {row.registeredCount}
+              </span>
               <span className="text-slate-500">/ {row.capacity}</span>
             </div>
             <div className="h-1.5 w-20 rounded-full bg-slate-800 overflow-hidden">
@@ -263,8 +288,8 @@ export default function CampusEventsListPage() {
                   usage >= 100
                     ? "bg-rose-500"
                     : usage >= 80
-                    ? "bg-amber-500"
-                    : "bg-indigo-500"
+                      ? "bg-amber-500"
+                      : "bg-indigo-500"
                 }`}
                 style={{ width: `${Math.min(100, usage)}%` }}
               />
@@ -284,7 +309,9 @@ export default function CampusEventsListPage() {
         }
         return (
           <div className="text-xs font-mono">
-            <span className="text-emerald-400 font-bold">{row.attendedCount}</span>
+            <span className="text-emerald-400 font-bold">
+              {row.attendedCount}
+            </span>
             {row.registeredCount > 0 && (
               <span className="text-[10px] text-slate-500 ml-1">
                 ({Math.round((row.attendedCount / row.registeredCount) * 100)}%)
@@ -302,11 +329,15 @@ export default function CampusEventsListPage() {
       cell: (row) => {
         const statusColors: Record<EventStatus, string> = {
           DRAFT: "bg-slate-800 text-slate-400 border-slate-700",
-          PENDING_APPROVAL: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+          PENDING_APPROVAL:
+            "bg-amber-500/20 text-amber-300 border-amber-500/30",
           PUBLISHED: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-          REGISTRATION_OPEN: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-          REGISTRATION_CLOSED: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-          ONGOING: "bg-rose-500/20 text-rose-300 border-rose-500/30 animate-pulse",
+          REGISTRATION_OPEN:
+            "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+          REGISTRATION_CLOSED:
+            "bg-purple-500/20 text-purple-300 border-purple-500/30",
+          ONGOING:
+            "bg-rose-500/20 text-rose-300 border-rose-500/30 animate-pulse",
           COMPLETED: "bg-slate-800/80 text-slate-300 border-slate-700",
           CANCELLED: "bg-rose-950/40 text-rose-400 border-rose-900/50",
         };
@@ -344,25 +375,28 @@ export default function CampusEventsListPage() {
             </button>
           )}
 
-          {canPublish && (row.status === "DRAFT" || row.status === "PENDING_APPROVAL") && (
-            <button
-              onClick={() => setPublishEventId(row.id)}
-              className="p-1 rounded-lg text-emerald-400 hover:bg-emerald-950/50 transition-colors"
-              title="Publish Event"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-            </button>
-          )}
+          {canPublish &&
+            (row.status === "DRAFT" || row.status === "PENDING_APPROVAL") && (
+              <button
+                onClick={() => setPublishEventId(row.id)}
+                className="p-1 rounded-lg text-emerald-400 hover:bg-emerald-950/50 transition-colors"
+                title="Publish Event"
+              >
+                <CheckCircle2 className="h-4 w-4" />
+              </button>
+            )}
 
-          {canCreate && row.status !== "CANCELLED" && row.status !== "COMPLETED" && (
-            <button
-              onClick={() => setCancelEventId(row.id)}
-              className="p-1 rounded-lg text-rose-400 hover:bg-rose-950/50 transition-colors"
-              title="Cancel Event"
-            >
-              <XCircle className="h-4 w-4" />
-            </button>
-          )}
+          {canCreate &&
+            row.status !== "CANCELLED" &&
+            row.status !== "COMPLETED" && (
+              <button
+                onClick={() => setCancelEventId(row.id)}
+                className="p-1 rounded-lg text-rose-400 hover:bg-rose-950/50 transition-colors"
+                title="Cancel Event"
+              >
+                <XCircle className="h-4 w-4" />
+              </button>
+            )}
         </div>
       ),
     },
@@ -381,14 +415,17 @@ export default function CampusEventsListPage() {
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Events Directory</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Events Directory
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <PartyPopper className="h-6 w-6 text-indigo-400" />
             University Events Management
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Enterprise DataGrid controlling university event lifecycles, capacities, and registrations.
+            Enterprise DataGrid controlling university event lifecycles,
+            capacities, and registrations.
           </p>
         </div>
 
@@ -456,7 +493,9 @@ export default function CampusEventsListPage() {
             </select>
           </div>
 
-          {(categoryFilter !== "ALL" || statusFilter !== "ALL" || searchQuery !== "") && (
+          {(categoryFilter !== "ALL" ||
+            statusFilter !== "ALL" ||
+            searchQuery !== "") && (
             <button
               onClick={() => {
                 setCategoryFilter("ALL");
@@ -471,8 +510,10 @@ export default function CampusEventsListPage() {
         </div>
 
         <div className="text-xs text-slate-400 font-mono">
-          Showing <span className="font-bold text-white">{filteredEvents.length}</span> of{" "}
-          <span className="font-bold text-white">{events.length}</span> events
+          Showing{" "}
+          <span className="font-bold text-white">{filteredEvents.length}</span>{" "}
+          of <span className="font-bold text-white">{events.length}</span>{" "}
+          events
         </div>
       </div>
 
@@ -502,11 +543,16 @@ export default function CampusEventsListPage() {
       >
         <div className="space-y-4">
           <p className="text-xs text-slate-300 leading-relaxed">
-            Publishing this event will transition its status to <strong>REGISTRATION_OPEN</strong>,
-            generate student notifications, and add the event to the university calendar.
+            Publishing this event will transition its status to{" "}
+            <strong>REGISTRATION_OPEN</strong>, generate student notifications,
+            and add the event to the university calendar.
           </p>
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" size="sm" onClick={() => setPublishEventId(null)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPublishEventId(null)}
+            >
               Cancel
             </Button>
             <Button
@@ -540,7 +586,11 @@ export default function CampusEventsListPage() {
             className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-rose-500"
           />
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" size="sm" onClick={() => setCancelEventId(null)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCancelEventId(null)}
+            >
               Abort
             </Button>
             <Button
@@ -566,14 +616,24 @@ export default function CampusEventsListPage() {
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
               <div className="font-bold text-white">{registerEvent.title}</div>
               <div className="text-slate-400">Venue: {registerEvent.venue}</div>
-              <div className="text-slate-400">Date: {registerEvent.startDate} ({registerEvent.startTime})</div>
+              <div className="text-slate-400">
+                Date: {registerEvent.startDate} ({registerEvent.startTime})
+              </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Register as <strong>{user?.first_name} {user?.last_name}</strong> ({user?.email})?
-              Your entry ticket code will be generated immediately.
+              Register as{" "}
+              <strong>
+                {user?.first_name} {user?.last_name}
+              </strong>{" "}
+              ({user?.email})? Your entry ticket code will be generated
+              immediately.
             </p>
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setRegisterEvent(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setRegisterEvent(null)}
+              >
                 Cancel
               </Button>
               <Button

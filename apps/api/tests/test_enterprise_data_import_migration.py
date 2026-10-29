@@ -17,8 +17,6 @@ Validates:
 14. End-to-End REST API Lifecycles
 """
 
-from datetime import UTC, datetime, timedelta
-import io
 import uuid
 
 import pytest
@@ -27,11 +25,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    BadRequestException,
     ImportApprovalRequiredException,
     ImportJobNotFoundException,
-    InvalidImportStateException,
-    NotFoundException,
     PermissionDeniedException,
     ValidationException,
 )
@@ -39,22 +34,15 @@ from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.academics import Subject
 from app.models.core import Batch, Department, Institution, Program, Regulation
 from app.models.data_import import (
-    ConflictResolutionAction,
-    ImportConflictRecord,
-    ImportConflictType,
     ImportExecutionPolicy,
-    ImportJob,
     ImportJobStatus,
-    ImportMappingDefinition,
     ImportRecordResult,
     ImportRecordStatus,
-    ImportTemplate,
     ReconciliationStatus,
 )
-from app.models.people import FacultyProfile, StudentProfile, User
+from app.models.people import StudentProfile, User
 from app.schemas.data_import import (
     ImportApprovalRequest,
-    ImportConflictResolutionRequest,
     ImportExecutionRequest,
     ImportJobCreateRequest,
     ImportMappingUpdateRequest,

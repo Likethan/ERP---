@@ -1,0 +1,32 @@
+# Dependencies & Build Outputs
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+.turbo/
+.cache/
+
+# Python & Virtual Environments
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Database, Storage & Backups
+.pgdata/
+local_storage/
+storage/
+*.db
+*.sqlite3
+*.dump*
+backups/
+
+# Reports & Logs
+*.log
+*.json
+*.md
+
+# Migrations
+apps/api/migrations/

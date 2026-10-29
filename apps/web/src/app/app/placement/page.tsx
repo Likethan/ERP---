@@ -49,10 +49,14 @@ export default function PlacementOperationsDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   // Active View Mode: Operational Dashboard vs Student "My Placement"
-  const [viewMode, setViewMode] = useState<"OPERATIONS" | "STUDENT_PORTAL">("OPERATIONS");
+  const [viewMode, setViewMode] = useState<"OPERATIONS" | "STUDENT_PORTAL">(
+    "OPERATIONS",
+  );
 
   // Operations Data
-  const [summary, setSummary] = useState<PlacementDashboardSummary | null>(null);
+  const [summary, setSummary] = useState<PlacementDashboardSummary | null>(
+    null,
+  );
   const [drives, setDrives] = useState<JobDrive[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
@@ -72,24 +76,34 @@ export default function PlacementOperationsDashboardPage() {
   // Student Offer Response modal
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [respondingOffer, setRespondingOffer] = useState<Offer | null>(null);
-  const [offerAction, setOfferAction] = useState<"ACCEPT" | "DECLINE">("ACCEPT");
+  const [offerAction, setOfferAction] = useState<"ACCEPT" | "DECLINE">(
+    "ACCEPT",
+  );
   const [offerNotes, setOfferNotes] = useState("");
   const [processingOffer, setProcessingOffer] = useState(false);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const [sumRes, drivesRes, posRes, appsRes, intvRes, ofrRes, outRes, profsRes] =
-        await Promise.all([
-          placementService.getPlacementSummary(),
-          placementService.getJobDrives(),
-          placementService.getPositions(),
-          placementService.getApplications(),
-          placementService.getInterviews(),
-          placementService.getOffers(),
-          placementService.getPlacementOutcomes(),
-          placementService.getPlacementStudents(),
-        ]);
+      const [
+        sumRes,
+        drivesRes,
+        posRes,
+        appsRes,
+        intvRes,
+        ofrRes,
+        outRes,
+        profsRes,
+      ] = await Promise.all([
+        placementService.getPlacementSummary(),
+        placementService.getJobDrives(),
+        placementService.getPositions(),
+        placementService.getApplications(),
+        placementService.getInterviews(),
+        placementService.getOffers(),
+        placementService.getPlacementOutcomes(),
+        placementService.getPlacementStudents(),
+      ]);
 
       if (sumRes.success && sumRes.data) setSummary(sumRes.data);
       if (drivesRes.success && drivesRes.data) setDrives(drivesRes.data);
@@ -116,7 +130,11 @@ export default function PlacementOperationsDashboardPage() {
 
   // Selected Student Dossier
   const currentStudent = useMemo(() => {
-    return profiles.find((p) => p.studentId === currentStudentId) || profiles[0] || null;
+    return (
+      profiles.find((p) => p.studentId === currentStudentId) ||
+      profiles[0] ||
+      null
+    );
   }, [profiles, currentStudentId]);
 
   // Student-specific data slices
@@ -143,7 +161,8 @@ export default function PlacementOperationsDashboardPage() {
   }, [drives, currentStudent]);
 
   // Helpers for drive positions and CTC
-  const getDrivePositions = (driveId: string) => positions.filter((p) => p.driveId === driveId);
+  const getDrivePositions = (driveId: string) =>
+    positions.filter((p) => p.driveId === driveId);
   const getDriveMaxCtc = (driveId: string) => {
     const dPos = getDrivePositions(driveId);
     if (dPos.length === 0) return 12.0;
@@ -199,7 +218,10 @@ export default function PlacementOperationsDashboardPage() {
           type: "success",
         });
       } else {
-        await placementService.declineOffer(respondingOffer.id, offerNotes || "Offer declined by student");
+        await placementService.declineOffer(
+          respondingOffer.id,
+          offerNotes || "Offer declined by student",
+        );
         showToast({
           title: "Offer Declined",
           message: `Offer from ${respondingOffer.companyName} has been declined.`,
@@ -224,7 +246,9 @@ export default function PlacementOperationsDashboardPage() {
     return (
       <div className="p-12 flex flex-col items-center justify-center min-h-[400px]">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-muted-foreground mt-3">Loading Placement Operations Center...</p>
+        <p className="text-sm text-muted-foreground mt-3">
+          Loading Placement Operations Center...
+        </p>
       </div>
     );
   }
@@ -244,7 +268,8 @@ export default function PlacementOperationsDashboardPage() {
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            End-to-end institutional corporate placement lifecycle, candidate workflows, eligibility engine, and compensation intelligence.
+            End-to-end institutional corporate placement lifecycle, candidate
+            workflows, eligibility engine, and compensation intelligence.
           </p>
         </div>
 
@@ -283,15 +308,60 @@ export default function PlacementOperationsDashboardPage() {
           {/* Quick Submodule Navigation Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-2">
             {[
-              { label: "Students", href: "/app/placement/students", count: summary.eligibleStudentsCount, icon: Users },
-              { label: "Companies", href: "/app/placement/companies", count: summary.activeCompaniesCount, icon: Building2 },
-              { label: "Drives", href: "/app/placement/drives", count: summary.openDrivesCount, icon: Calendar },
-              { label: "Positions", href: "/app/placement/positions", count: 8, icon: Briefcase },
-              { label: "Applications", href: "/app/placement/applications", count: summary.applicationsCount, icon: FileText },
-              { label: "Interviews", href: "/app/placement/interviews", count: summary.interviewsCount, icon: Clock },
-              { label: "Offers", href: "/app/placement/offers", count: summary.offersCount, icon: Award },
-              { label: "Outcomes", href: "/app/placement/outcomes", count: summary.placedStudentsCount, icon: CheckCircle2 },
-              { label: "Reports", href: "/app/placement/reports", count: "Audit", icon: BarChart3 },
+              {
+                label: "Students",
+                href: "/app/placement/students",
+                count: summary.eligibleStudentsCount,
+                icon: Users,
+              },
+              {
+                label: "Companies",
+                href: "/app/placement/companies",
+                count: summary.activeCompaniesCount,
+                icon: Building2,
+              },
+              {
+                label: "Drives",
+                href: "/app/placement/drives",
+                count: summary.openDrivesCount,
+                icon: Calendar,
+              },
+              {
+                label: "Positions",
+                href: "/app/placement/positions",
+                count: 8,
+                icon: Briefcase,
+              },
+              {
+                label: "Applications",
+                href: "/app/placement/applications",
+                count: summary.applicationsCount,
+                icon: FileText,
+              },
+              {
+                label: "Interviews",
+                href: "/app/placement/interviews",
+                count: summary.interviewsCount,
+                icon: Clock,
+              },
+              {
+                label: "Offers",
+                href: "/app/placement/offers",
+                count: summary.offersCount,
+                icon: Award,
+              },
+              {
+                label: "Outcomes",
+                href: "/app/placement/outcomes",
+                count: summary.placedStudentsCount,
+                icon: CheckCircle2,
+              },
+              {
+                label: "Reports",
+                href: "/app/placement/reports",
+                count: "Audit",
+                icon: BarChart3,
+              },
             ].map((mod) => {
               const Icon = mod.icon;
               return (
@@ -301,7 +371,9 @@ export default function PlacementOperationsDashboardPage() {
                   className="bg-card border rounded-xl p-3 flex flex-col items-center text-center hover:border-primary/50 hover:bg-muted/40 transition-all group shadow-xs"
                 >
                   <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors mb-1" />
-                  <span className="text-xs font-semibold text-foreground">{mod.label}</span>
+                  <span className="text-xs font-semibold text-foreground">
+                    {mod.label}
+                  </span>
                   <span className="text-[10px] text-muted-foreground mt-0.5 font-mono">
                     {mod.count} records
                   </span>
@@ -318,44 +390,92 @@ export default function PlacementOperationsDashboardPage() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Active Companies</span>
-                <div className="text-xl font-bold text-foreground">{summary.activeCompaniesCount}</div>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">Tier 1 & 2 Partners</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Active Companies
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.activeCompaniesCount}
+                </div>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">
+                  Tier 1 & 2 Partners
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Open Drives</span>
-                <div className="text-xl font-bold text-foreground">{summary.openDrivesCount}</div>
-                <span className="text-[10px] text-blue-600 dark:text-blue-400">Accepting apps</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Open Drives
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.openDrivesCount}
+                </div>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400">
+                  Accepting apps
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Eligible Cohort</span>
-                <div className="text-xl font-bold text-foreground">{summary.eligibleStudentsCount}</div>
-                <span className="text-[10px] text-muted-foreground">Class of 2026</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Eligible Cohort
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.eligibleStudentsCount}
+                </div>
+                <span className="text-[10px] text-muted-foreground">
+                  Class of 2026
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Applications</span>
-                <div className="text-xl font-bold text-foreground">{summary.applicationsCount}</div>
-                <span className="text-[10px] text-muted-foreground">Logged submissions</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Applications
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.applicationsCount}
+                </div>
+                <span className="text-[10px] text-muted-foreground">
+                  Logged submissions
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Shortlisted</span>
-                <div className="text-xl font-bold text-foreground">{summary.shortlistedCount}</div>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400">Round 1 qualified</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Shortlisted
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.shortlistedCount}
+                </div>
+                <span className="text-[10px] text-purple-600 dark:text-purple-400">
+                  Round 1 qualified
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Interviews</span>
-                <div className="text-xl font-bold text-foreground">{summary.interviewsCount}</div>
-                <span className="text-[10px] text-amber-600 dark:text-amber-400">Scheduled / Done</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Interviews
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.interviewsCount}
+                </div>
+                <span className="text-[10px] text-amber-600 dark:text-amber-400">
+                  Scheduled / Done
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1">
-                <span className="text-[11px] text-muted-foreground">Offers Released</span>
-                <div className="text-xl font-bold text-foreground">{summary.offersCount}</div>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">Extended CTCs</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Offers Released
+                </span>
+                <div className="text-xl font-bold text-foreground">
+                  {summary.offersCount}
+                </div>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400">
+                  Extended CTCs
+                </span>
               </div>
               <div className="bg-card border rounded-xl p-3.5 space-y-1 bg-emerald-500/5 border-emerald-500/20">
-                <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">Placed Students</span>
-                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400">{summary.placedStudentsCount}</div>
-                <span className="text-[10px] text-emerald-600">{summary.placementRate}% overall rate</span>
+                <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">
+                  Placed Students
+                </span>
+                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400">
+                  {summary.placedStudentsCount}
+                </div>
+                <span className="text-[10px] text-emerald-600">
+                  {summary.placementRate}% overall rate
+                </span>
               </div>
             </div>
           </div>
@@ -398,7 +518,9 @@ export default function PlacementOperationsDashboardPage() {
                     <Clock className="w-4 h-4 text-primary" />
                     Operational Action Queues
                   </span>
-                  <Badge variant="outline" className="text-[10px]">Action Required</Badge>
+                  <Badge variant="outline" className="text-[10px]">
+                    Action Required
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4 space-y-3">
@@ -429,7 +551,8 @@ export default function PlacementOperationsDashboardPage() {
                   },
                   {
                     label: "Offers Awaiting Candidate Response",
-                    count: summary.operationalQueues.offersAwaitingResponseCount,
+                    count:
+                      summary.operationalQueues.offersAwaitingResponseCount,
                     href: "/app/placement/offers",
                     color: "text-rose-500",
                   },
@@ -449,7 +572,9 @@ export default function PlacementOperationsDashboardPage() {
                       {queue.label}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className={`font-bold font-mono text-sm ${queue.color}`}>
+                      <span
+                        className={`font-bold font-mono text-sm ${queue.color}`}
+                      >
                         {queue.count}
                       </span>
                       <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
@@ -467,7 +592,11 @@ export default function PlacementOperationsDashboardPage() {
                   Department Placement Performance Audit
                 </CardTitle>
                 <Link href="/app/placement/reports">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                  >
                     Full Report
                     <ArrowRight className="w-3 h-3" />
                   </Button>
@@ -477,20 +606,38 @@ export default function PlacementOperationsDashboardPage() {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/40 border-b">
                     <tr>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Department</th>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Eligible</th>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Placed</th>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Rate</th>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Avg Package</th>
-                      <th className="px-3 py-2 font-semibold text-muted-foreground">Highest</th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Department
+                      </th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Eligible
+                      </th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Placed
+                      </th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Rate
+                      </th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Avg Package
+                      </th>
+                      <th className="px-3 py-2 font-semibold text-muted-foreground">
+                        Highest
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {summary.departmentStats.map((ds) => (
                       <tr key={ds.department} className="hover:bg-muted/20">
-                        <td className="px-3 py-2.5 font-medium text-foreground">{ds.department}</td>
-                        <td className="px-3 py-2.5 text-muted-foreground">{ds.totalStudents}</td>
-                        <td className="px-3 py-2.5 font-semibold text-foreground">{ds.placedStudents}</td>
+                        <td className="px-3 py-2.5 font-medium text-foreground">
+                          {ds.department}
+                        </td>
+                        <td className="px-3 py-2.5 text-muted-foreground">
+                          {ds.totalStudents}
+                        </td>
+                        <td className="px-3 py-2.5 font-semibold text-foreground">
+                          {ds.placedStudents}
+                        </td>
                         <td className="px-3 py-2.5">
                           <Badge
                             variant="outline"
@@ -535,12 +682,16 @@ export default function PlacementOperationsDashboardPage() {
                   className="bg-muted/30 border rounded-xl p-4 space-y-2 relative overflow-hidden"
                 >
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-semibold text-foreground">{bucket.range}</span>
+                    <span className="text-xs font-semibold text-foreground">
+                      {bucket.range}
+                    </span>
                     <Badge variant="outline" className="text-[10px] font-mono">
                       {bucket.percentage}%
                     </Badge>
                   </div>
-                  <div className="text-2xl font-bold text-foreground">{bucket.count} offers</div>
+                  <div className="text-2xl font-bold text-foreground">
+                    {bucket.count} offers
+                  </div>
                   <div className="w-full bg-border h-1.5 rounded-full overflow-hidden">
                     <div
                       className="bg-primary h-full rounded-full transition-all"
@@ -584,14 +735,18 @@ export default function PlacementOperationsDashboardPage() {
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {currentStudent?.program} • {currentStudent?.department} • CGPA: {currentStudent?.cgpa} • Backlogs: {currentStudent?.activeBacklogs}
+                  {currentStudent?.program} • {currentStudent?.department} •
+                  CGPA: {currentStudent?.cgpa} • Backlogs:{" "}
+                  {currentStudent?.activeBacklogs}
                 </p>
               </div>
             </div>
 
             {/* Candidate Simulator Dropdown */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Switch Candidate Dossier:</span>
+              <span className="text-xs text-muted-foreground">
+                Switch Candidate Dossier:
+              </span>
               <select
                 value={currentStudentId}
                 onChange={(e) => setCurrentStudentId(e.target.value)}
@@ -609,7 +764,9 @@ export default function PlacementOperationsDashboardPage() {
           {/* Student KPIs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
             <div className="bg-card border rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] text-muted-foreground">Profile Status</span>
+              <span className="text-[11px] text-muted-foreground">
+                Profile Status
+              </span>
               <div className="text-base font-bold text-foreground flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                 {currentStudent?.status}
@@ -619,36 +776,61 @@ export default function PlacementOperationsDashboardPage() {
               </span>
             </div>
             <div className="bg-card border rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] text-muted-foreground">Resume Dossier</span>
+              <span className="text-[11px] text-muted-foreground">
+                Resume Dossier
+              </span>
               <div className="text-base font-bold text-foreground">
                 <Badge variant="outline" className="text-[10px]">
                   {currentStudent?.resumeStatus}
                 </Badge>
               </div>
-              <span className="text-[10px] text-muted-foreground">Verified by Placement Office</span>
+              <span className="text-[10px] text-muted-foreground">
+                Verified by Placement Office
+              </span>
             </div>
             <div className="bg-card border rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] text-muted-foreground">Eligible Drives</span>
-              <div className="text-base font-bold text-primary">{eligibleDrives.length}</div>
-              <span className="text-[10px] text-muted-foreground">Open for submission</span>
+              <span className="text-[11px] text-muted-foreground">
+                Eligible Drives
+              </span>
+              <div className="text-base font-bold text-primary">
+                {eligibleDrives.length}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                Open for submission
+              </span>
             </div>
             <div className="bg-card border rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] text-muted-foreground">Applications</span>
-              <div className="text-base font-bold text-foreground">{studentApplications.length}</div>
-              <span className="text-[10px] text-muted-foreground">In active pipeline</span>
+              <span className="text-[11px] text-muted-foreground">
+                Applications
+              </span>
+              <div className="text-base font-bold text-foreground">
+                {studentApplications.length}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                In active pipeline
+              </span>
             </div>
             <div className="bg-card border rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] text-muted-foreground">Interviews</span>
-              <div className="text-base font-bold text-foreground">{studentInterviews.length}</div>
-              <span className="text-[10px] text-muted-foreground">Rounds scheduled</span>
+              <span className="text-[11px] text-muted-foreground">
+                Interviews
+              </span>
+              <div className="text-base font-bold text-foreground">
+                {studentInterviews.length}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                Rounds scheduled
+              </span>
             </div>
             <div className="bg-card border rounded-xl p-3.5 space-y-1 bg-emerald-500/5 border-emerald-500/20">
-              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">Corporate Offers</span>
+              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">
+                Corporate Offers
+              </span>
               <div className="text-base font-bold text-emerald-700 dark:text-emerald-400">
                 {studentOffers.length}
               </div>
               <span className="text-[10px] text-emerald-600">
-                {studentOffers.filter((o) => o.status === "ACCEPTED").length} accepted
+                {studentOffers.filter((o) => o.status === "ACCEPTED").length}{" "}
+                accepted
               </span>
             </div>
           </div>
@@ -661,13 +843,16 @@ export default function PlacementOperationsDashboardPage() {
                 Eligible Recruitment Drives (Apply Now)
               </h3>
               <span className="text-xs text-muted-foreground">
-                Matches program, CGPA ({currentStudent?.cgpa}), and backlog criteria
+                Matches program, CGPA ({currentStudent?.cgpa}), and backlog
+                criteria
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {eligibleDrives.map((drive) => {
-                const alreadyApplied = studentApplications.some((a) => a.driveId === drive.id);
+                const alreadyApplied = studentApplications.some(
+                  (a) => a.driveId === drive.id,
+                );
                 const dPos = getDrivePositions(drive.id);
                 const maxCtc = getDriveMaxCtc(drive.id);
                 return (
@@ -682,7 +867,9 @@ export default function PlacementOperationsDashboardPage() {
                             <Building2 className="w-3.5 h-3.5 text-primary" />
                             {drive.companyName}
                           </span>
-                          <h4 className="text-sm font-bold text-foreground mt-0.5">{drive.title}</h4>
+                          <h4 className="text-sm font-bold text-foreground mt-0.5">
+                            {drive.title}
+                          </h4>
                         </div>
                         <Badge
                           variant="outline"
@@ -696,7 +883,8 @@ export default function PlacementOperationsDashboardPage() {
                         <div className="flex justify-between">
                           <span>Positions:</span>
                           <span className="font-medium text-foreground">
-                            {dPos.map((p) => p.title).join(", ") || "General Engineering"}
+                            {dPos.map((p) => p.title).join(", ") ||
+                              "General Engineering"}
                           </span>
                         </div>
                         <div className="flex justify-between">
@@ -707,21 +895,30 @@ export default function PlacementOperationsDashboardPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Deadline:</span>
-                          <span className="font-medium text-foreground">{drive.applicationDeadline}</span>
+                          <span className="font-medium text-foreground">
+                            {drive.applicationDeadline}
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     <div className="pt-2 border-t flex items-center justify-between">
                       <Link href={`/app/placement/drives/${drive.id}`}>
-                        <Button variant="ghost" size="sm" className="h-8 text-xs gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 text-xs gap-1"
+                        >
                           Drive Details
                           <ChevronRight className="w-3.5 h-3.5" />
                         </Button>
                       </Link>
 
                       {alreadyApplied ? (
-                        <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-xs">
+                        <Badge
+                          variant="outline"
+                          className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-xs"
+                        >
                           Applied
                         </Badge>
                       ) : (
@@ -752,28 +949,45 @@ export default function PlacementOperationsDashboardPage() {
 
             {studentApplications.length === 0 ? (
               <div className="bg-card border rounded-xl p-8 text-center text-xs text-muted-foreground">
-                No job applications submitted yet. Browse the eligible drives above to submit an application.
+                No job applications submitted yet. Browse the eligible drives
+                above to submit an application.
               </div>
             ) : (
               <div className="bg-card border rounded-xl overflow-hidden shadow-sm">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/40 border-b">
                     <tr>
-                      <th className="px-4 py-3 font-semibold text-muted-foreground">Company & Role</th>
-                      <th className="px-4 py-3 font-semibold text-muted-foreground">Applied Date</th>
-                      <th className="px-4 py-3 font-semibold text-muted-foreground">Status</th>
-                      <th className="px-4 py-3 font-semibold text-muted-foreground">Current Stage</th>
-                      <th className="px-4 py-3 font-semibold text-muted-foreground text-right">Action</th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
+                        Company & Role
+                      </th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
+                        Applied Date
+                      </th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
+                        Current Stage
+                      </th>
+                      <th className="px-4 py-3 font-semibold text-muted-foreground text-right">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {studentApplications.map((app) => (
                       <tr key={app.id} className="hover:bg-muted/20">
                         <td className="px-4 py-3">
-                          <div className="font-semibold text-foreground">{app.companyName}</div>
-                          <span className="text-[11px] text-muted-foreground">{app.positionTitle}</span>
+                          <div className="font-semibold text-foreground">
+                            {app.companyName}
+                          </div>
+                          <span className="text-[11px] text-muted-foreground">
+                            {app.positionTitle}
+                          </span>
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground">{app.appliedDate}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {app.appliedDate}
+                        </td>
                         <td className="px-4 py-3">
                           <Badge variant="outline" className="text-[11px]">
                             {app.status}
@@ -784,7 +998,11 @@ export default function PlacementOperationsDashboardPage() {
                         </td>
                         <td className="px-4 py-3 text-right">
                           <Link href={`/app/placement/applications/${app.id}`}>
-                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 text-xs gap-1"
+                            >
                               View Snapshot
                               <ChevronRight className="w-3 h-3" />
                             </Button>
@@ -807,7 +1025,8 @@ export default function PlacementOperationsDashboardPage() {
 
             {studentOffers.length === 0 ? (
               <div className="bg-card border rounded-xl p-8 text-center text-xs text-muted-foreground">
-                No formal job offers released yet. Keep completing your interview stages.
+                No formal job offers released yet. Keep completing your
+                interview stages.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -818,20 +1037,24 @@ export default function PlacementOperationsDashboardPage() {
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-xs text-muted-foreground font-mono">{offer.offerCode}</span>
+                        <span className="text-xs text-muted-foreground font-mono">
+                          {offer.offerCode}
+                        </span>
                         <h4 className="text-base font-bold text-foreground flex items-center gap-1.5 mt-0.5">
                           <Building2 className="w-4 h-4 text-primary" />
                           {offer.companyName}
                         </h4>
-                        <span className="text-xs text-muted-foreground">{offer.positionTitle}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {offer.positionTitle}
+                        </span>
                       </div>
                       <Badge
                         className={
                           offer.status === "ACCEPTED"
                             ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30"
                             : offer.status === "RELEASED"
-                            ? "bg-blue-500/15 text-blue-600 border-blue-500/30"
-                            : "bg-rose-500/15 text-rose-600 border-rose-500/30"
+                              ? "bg-blue-500/15 text-blue-600 border-blue-500/30"
+                              : "bg-rose-500/15 text-rose-600 border-rose-500/30"
                         }
                       >
                         {offer.status}
@@ -840,13 +1063,17 @@ export default function PlacementOperationsDashboardPage() {
 
                     <div className="bg-muted/30 p-3 rounded-lg flex justify-between items-center text-xs">
                       <div>
-                        <span className="text-muted-foreground">Total Package (CTC)</span>
+                        <span className="text-muted-foreground">
+                          Total Package (CTC)
+                        </span>
                         <div className="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">
                           {formatLPA(offer.ctcLpa)}
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="text-muted-foreground">Base Fixed</span>
+                        <span className="text-muted-foreground">
+                          Base Fixed
+                        </span>
                         <div className="font-semibold text-foreground">
                           {formatLPA(offer.baseSalaryLpa)}
                         </div>
@@ -906,7 +1133,8 @@ export default function PlacementOperationsDashboardPage() {
                   Submit Recruitment Application
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Review requirements and submit dossier to {applyingDrive.companyName}
+                  Review requirements and submit dossier to{" "}
+                  {applyingDrive.companyName}
                 </p>
               </div>
               <button
@@ -919,15 +1147,22 @@ export default function PlacementOperationsDashboardPage() {
 
             <div className="space-y-3 text-xs">
               <div className="p-3 bg-muted/30 rounded-lg space-y-1.5 border">
-                <div className="font-semibold text-foreground">Drive & Role Details:</div>
+                <div className="font-semibold text-foreground">
+                  Drive & Role Details:
+                </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Corporate Partner:</span>
-                  <span className="font-medium text-foreground">{applyingDrive.companyName}</span>
+                  <span className="text-muted-foreground">
+                    Corporate Partner:
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {applyingDrive.companyName}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Position:</span>
                   <span className="font-medium text-foreground">
-                    {getDrivePositions(applyingDrive.id)[0]?.title || applyingDrive.title}
+                    {getDrivePositions(applyingDrive.id)[0]?.title ||
+                      applyingDrive.title}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -937,8 +1172,12 @@ export default function PlacementOperationsDashboardPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Application Deadline:</span>
-                  <span className="font-medium text-foreground">{applyingDrive.applicationDeadline}</span>
+                  <span className="text-muted-foreground">
+                    Application Deadline:
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {applyingDrive.applicationDeadline}
+                  </span>
                 </div>
               </div>
 
@@ -948,7 +1187,9 @@ export default function PlacementOperationsDashboardPage() {
                   Eligibility Status: Verified
                 </div>
                 <p className="text-muted-foreground text-[11px]">
-                  Your academic record (CGPA {currentStudent.cgpa}, Backlogs: {currentStudent.activeBacklogs}) meets the criteria for this recruitment event.
+                  Your academic record (CGPA {currentStudent.cgpa}, Backlogs:{" "}
+                  {currentStudent.activeBacklogs}) meets the criteria for this
+                  recruitment event.
                 </p>
               </div>
             </div>
@@ -967,7 +1208,9 @@ export default function PlacementOperationsDashboardPage() {
                 disabled={submittingApp}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
-                {submittingApp ? "Submitting..." : "Confirm & Submit Application"}
+                {submittingApp
+                  ? "Submitting..."
+                  : "Confirm & Submit Application"}
               </Button>
             </div>
           </div>
@@ -982,7 +1225,9 @@ export default function PlacementOperationsDashboardPage() {
           <div className="bg-card border rounded-xl shadow-2xl max-w-md w-full p-6 space-y-5">
             <div className="flex items-center justify-between border-b pb-3">
               <h2 className="text-base font-bold text-foreground">
-                {offerAction === "ACCEPT" ? "Accept Appointment Offer" : "Decline Appointment Offer"}
+                {offerAction === "ACCEPT"
+                  ? "Accept Appointment Offer"
+                  : "Decline Appointment Offer"}
               </h2>
               <button
                 onClick={() => setShowOfferModal(false)}
@@ -994,14 +1239,23 @@ export default function PlacementOperationsDashboardPage() {
 
             <div className="text-xs space-y-2">
               <div className="p-3 bg-muted/40 rounded-lg border space-y-1">
-                <div className="text-muted-foreground"><strong>Company:</strong> {respondingOffer.companyName}</div>
-                <div className="text-muted-foreground"><strong>Position:</strong> {respondingOffer.positionTitle}</div>
-                <div className="text-muted-foreground"><strong>Compensation:</strong> {formatLPA(respondingOffer.ctcLpa)}</div>
+                <div className="text-muted-foreground">
+                  <strong>Company:</strong> {respondingOffer.companyName}
+                </div>
+                <div className="text-muted-foreground">
+                  <strong>Position:</strong> {respondingOffer.positionTitle}
+                </div>
+                <div className="text-muted-foreground">
+                  <strong>Compensation:</strong>{" "}
+                  {formatLPA(respondingOffer.ctcLpa)}
+                </div>
               </div>
 
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-foreground">
-                  {offerAction === "ACCEPT" ? "Remarks / Acceptance Note" : "Reason for Declining"}
+                  {offerAction === "ACCEPT"
+                    ? "Remarks / Acceptance Note"
+                    : "Reason for Declining"}
                 </label>
                 <textarea
                   rows={3}
@@ -1035,7 +1289,11 @@ export default function PlacementOperationsDashboardPage() {
                     : "bg-rose-600 hover:bg-rose-700 text-white"
                 }
               >
-                {processingOffer ? "Processing..." : offerAction === "ACCEPT" ? "Confirm Acceptance" : "Confirm Decline"}
+                {processingOffer
+                  ? "Processing..."
+                  : offerAction === "ACCEPT"
+                    ? "Confirm Acceptance"
+                    : "Confirm Decline"}
               </Button>
             </div>
           </div>

@@ -16,25 +16,18 @@ from uuid import UUID
 from fastapi import (
     APIRouter,
     Depends,
-    Header,
     Query,
     Request,
-    Response,
     status,
 )
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import (
-    get_current_active_user,
-    get_current_user,
     require_permission,
-    resolve_user_permissions,
 )
 from app.core.exceptions import NotFoundException, ValidationException
-from app.core.tenant import get_optional_tenant_context
-from app.integrations.health import IntegrationHealthService
 from app.integrations.webhooks import InboundWebhookReceiver
 from app.models.integration import (
     ConnectorStatus,
@@ -51,13 +44,11 @@ from app.schemas.integration import (
     CredentialResponse,
     DataMappingCreate,
     DataMappingResponse,
-    DataMappingUpdate,
     IntegrationHealthResponse,
     IntegrationLogResponse,
     ProviderResponse,
     SyncConfigCreate,
     SyncConfigResponse,
-    SyncConfigUpdate,
     SyncRunResponse,
     WebhookDeliveryResponse,
     WebhookSubscriptionCreate,

@@ -1,7 +1,7 @@
 """SQLAlchemy Models for the CampusOS Documents & Digital Records Domain."""
 
 from datetime import datetime
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
@@ -19,7 +19,6 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import SoftDeleteMixin, TenantScopedModel
-
 
 # =============================================================================
 # 1. DOCUMENT CATEGORY & TYPE

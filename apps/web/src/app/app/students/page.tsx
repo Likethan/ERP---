@@ -52,14 +52,17 @@ export default function StudentsDirectoryPage() {
   const [newLastName, setNewLastName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [newDepartment, setNewDepartment] = useState("Computer Science & Engineering");
+  const [newDepartment, setNewDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [newSemester, setNewSemester] = useState("1");
   const [newGender, setNewGender] = useState("Male");
   const [newQuota, setNewQuota] = useState("MERIT");
 
   // Bulk Status Modal
   const [bulkStatusModalOpen, setBulkStatusModalOpen] = useState(false);
-  const [targetBulkStatus, setTargetBulkStatus] = useState<StudentComprehensiveDetail["status"]>("ACTIVE");
+  const [targetBulkStatus, setTargetBulkStatus] =
+    useState<StudentComprehensiveDetail["status"]>("ACTIVE");
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -68,7 +71,8 @@ export default function StudentsDirectoryPage() {
         search: debouncedSearch.trim() || undefined,
         department: selectedDept !== "ALL" ? selectedDept : undefined,
         status: selectedStatus !== "ALL" ? selectedStatus : undefined,
-        semester: selectedSemester !== "ALL" ? Number(selectedSemester) : undefined,
+        semester:
+          selectedSemester !== "ALL" ? Number(selectedSemester) : undefined,
         gender: selectedGender !== "ALL" ? selectedGender : undefined,
         page: currentPage,
         pageSize,
@@ -87,7 +91,16 @@ export default function StudentsDirectoryPage() {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, selectedDept, selectedStatus, selectedSemester, selectedGender, currentPage, pageSize, showToast]);
+  }, [
+    debouncedSearch,
+    selectedDept,
+    selectedStatus,
+    selectedSemester,
+    selectedGender,
+    currentPage,
+    pageSize,
+    showToast,
+  ]);
 
   useEffect(() => {
     loadData();
@@ -182,135 +195,145 @@ export default function StudentsDirectoryPage() {
   ];
 
   // Column definitions for Enterprise Data Grid
-  const columns: ColumnDef<StudentComprehensiveDetail>[] = useMemo(() => [
-    {
-      id: "rollNumber",
-      header: "Roll Number",
-      accessorKey: "rollNumber",
-      sortable: true,
-      cell: (item) => (
-        <div className="flex flex-col">
-          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-            {item.rollNumber}
-          </span>
-          <span className="text-[10px] font-mono text-slate-400">
-            {item.registrationNumber}
-          </span>
-        </div>
-      ),
-    },
-    {
-      id: "name",
-      header: "Student Identity",
-      sortable: true,
-      accessorFn: (item) => `${item.firstName} ${item.lastName}`,
-      cell: (item) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-300 font-bold text-xs shrink-0 border border-indigo-500/20">
-            {item.firstName[0]}
-            {item.lastName[0]}
+  const columns: ColumnDef<StudentComprehensiveDetail>[] = useMemo(
+    () => [
+      {
+        id: "rollNumber",
+        header: "Roll Number",
+        accessorKey: "rollNumber",
+        sortable: true,
+        cell: (item) => (
+          <div className="flex flex-col">
+            <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+              {item.rollNumber}
+            </span>
+            <span className="text-[10px] font-mono text-slate-400">
+              {item.registrationNumber}
+            </span>
           </div>
-          <div>
-            <Link
-              href={`/app/students/${item.id}`}
-              className="font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-            >
-              {item.firstName} {item.lastName}
-            </Link>
-            <div className="text-[11px] text-slate-400 flex items-center gap-2">
-              <span>{item.email}</span>
-              <span>&bull;</span>
-              <span>{item.gender}</span>
+        ),
+      },
+      {
+        id: "name",
+        header: "Student Identity",
+        sortable: true,
+        accessorFn: (item) => `${item.firstName} ${item.lastName}`,
+        cell: (item) => (
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-300 font-bold text-xs shrink-0 border border-indigo-500/20">
+              {item.firstName[0]}
+              {item.lastName[0]}
+            </div>
+            <div>
+              <Link
+                href={`/app/students/${item.id}`}
+                className="font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+              >
+                {item.firstName} {item.lastName}
+              </Link>
+              <div className="text-[11px] text-slate-400 flex items-center gap-2">
+                <span>{item.email}</span>
+                <span>&bull;</span>
+                <span>{item.gender}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: "program",
-      header: "Academic Program",
-      sortable: true,
-      accessorFn: (item) => item.program.name,
-      cell: (item) => (
-        <div>
-          <span className="text-xs font-medium text-slate-800 dark:text-slate-200">
-            {item.program.code}
-          </span>
-          <p className="text-[11px] text-slate-400 truncate max-w-[200px]">
-            {item.program.department}
-          </p>
-        </div>
-      ),
-    },
-    {
-      id: "progression",
-      header: "Sem & Sec",
-      sortable: true,
-      accessorFn: (item) => item.currentSemester,
-      cell: (item) => (
-        <div className="flex items-center gap-1.5">
-          <span className="rounded bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs font-mono font-medium text-slate-700 dark:text-slate-300">
-            Sem {item.currentSemester}
-          </span>
-          <span className="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono text-slate-500">
-            {item.section}
-          </span>
-        </div>
-      ),
-    },
-    {
-      id: "academics",
-      header: "CGPA / Attnd",
-      sortable: true,
-      accessorFn: (item) => item.academicStats?.cgpa || 0,
-      cell: (item) => (
-        <div className="text-xs">
-          <div className="flex items-center gap-1.5 font-mono font-semibold text-slate-900 dark:text-white">
-            <span>CGPA: {item.academicStats?.cgpa?.toFixed(2) || "N/A"}</span>
-          </div>
-          <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">
-            {item.attendanceSummary?.overallPercentage}% Attnd
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "status",
-      header: "Status",
-      sortable: true,
-      accessorKey: "status",
-      cell: (item) => {
-        const variantMap: Record<string, "success" | "warning" | "destructive" | "secondary"> = {
-          ACTIVE: "success",
-          ADMITTED: "secondary",
-          SUSPENDED: "destructive",
-          GRADUATED: "secondary",
-          ON_LEAVE: "warning",
-          WITHDRAWN: "destructive",
-        };
-        return (
-          <Badge variant={variantMap[item.status] || "secondary"} dot>
-            {item.status}
-          </Badge>
-        );
+        ),
       },
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      align: "right",
-      enableHiding: false,
-      cell: (item) => (
-        <div className="flex items-center justify-end gap-1.5">
-          <Link href={`/app/students/${item.id}`}>
-            <Button size="sm" variant="ghost" leftIcon={<Eye className="h-3.5 w-3.5" />}>
-              Profile
-            </Button>
-          </Link>
-        </div>
-      ),
-    },
-  ], []);
+      {
+        id: "program",
+        header: "Academic Program",
+        sortable: true,
+        accessorFn: (item) => item.program.name,
+        cell: (item) => (
+          <div>
+            <span className="text-xs font-medium text-slate-800 dark:text-slate-200">
+              {item.program.code}
+            </span>
+            <p className="text-[11px] text-slate-400 truncate max-w-[200px]">
+              {item.program.department}
+            </p>
+          </div>
+        ),
+      },
+      {
+        id: "progression",
+        header: "Sem & Sec",
+        sortable: true,
+        accessorFn: (item) => item.currentSemester,
+        cell: (item) => (
+          <div className="flex items-center gap-1.5">
+            <span className="rounded bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs font-mono font-medium text-slate-700 dark:text-slate-300">
+              Sem {item.currentSemester}
+            </span>
+            <span className="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono text-slate-500">
+              {item.section}
+            </span>
+          </div>
+        ),
+      },
+      {
+        id: "academics",
+        header: "CGPA / Attnd",
+        sortable: true,
+        accessorFn: (item) => item.academicStats?.cgpa || 0,
+        cell: (item) => (
+          <div className="text-xs">
+            <div className="flex items-center gap-1.5 font-mono font-semibold text-slate-900 dark:text-white">
+              <span>CGPA: {item.academicStats?.cgpa?.toFixed(2) || "N/A"}</span>
+            </div>
+            <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">
+              {item.attendanceSummary?.overallPercentage}% Attnd
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "status",
+        header: "Status",
+        sortable: true,
+        accessorKey: "status",
+        cell: (item) => {
+          const variantMap: Record<
+            string,
+            "success" | "warning" | "destructive" | "secondary"
+          > = {
+            ACTIVE: "success",
+            ADMITTED: "secondary",
+            SUSPENDED: "destructive",
+            GRADUATED: "secondary",
+            ON_LEAVE: "warning",
+            WITHDRAWN: "destructive",
+          };
+          return (
+            <Badge variant={variantMap[item.status] || "secondary"} dot>
+              {item.status}
+            </Badge>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        align: "right",
+        enableHiding: false,
+        cell: (item) => (
+          <div className="flex items-center justify-end gap-1.5">
+            <Link href={`/app/students/${item.id}`}>
+              <Button
+                size="sm"
+                variant="ghost"
+                leftIcon={<Eye className="h-3.5 w-3.5" />}
+              >
+                Profile
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
 
   // Custom filter slot in the DataGrid toolbar
   const customFilterSlot = (
@@ -378,7 +401,8 @@ export default function StudentsDirectoryPage() {
             Student Management & 360 Registry
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Canonical university student directory, admissions lifecycle, and academic identity records.
+            Canonical university student directory, admissions lifecycle, and
+            academic identity records.
           </p>
         </div>
 
@@ -628,7 +652,8 @@ export default function StudentsDirectoryPage() {
       >
         <div className="space-y-4 pt-2">
           <p className="text-xs text-slate-500">
-            Select the new enrollment lifecycle status to apply across all currently checked student records.
+            Select the new enrollment lifecycle status to apply across all
+            currently checked student records.
           </p>
           <div>
             <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
@@ -636,13 +661,21 @@ export default function StudentsDirectoryPage() {
             </label>
             <select
               value={targetBulkStatus}
-              onChange={(e) => setTargetBulkStatus(e.target.value as StudentStatus)}
+              onChange={(e) =>
+                setTargetBulkStatus(e.target.value as StudentStatus)
+              }
               className="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-800 dark:text-slate-200"
             >
               <option value="ACTIVE">ACTIVE — In Good Academic Standing</option>
-              <option value="ON_LEAVE">ON_LEAVE — Approved Sabbatical / Medical</option>
-              <option value="SUSPENDED">SUSPENDED — Administrative / Disciplinary</option>
-              <option value="GRADUATED">GRADUATED — Course Credits Completed</option>
+              <option value="ON_LEAVE">
+                ON_LEAVE — Approved Sabbatical / Medical
+              </option>
+              <option value="SUSPENDED">
+                SUSPENDED — Administrative / Disciplinary
+              </option>
+              <option value="GRADUATED">
+                GRADUATED — Course Credits Completed
+              </option>
             </select>
           </div>
 

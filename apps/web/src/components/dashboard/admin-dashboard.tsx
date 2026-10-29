@@ -3,11 +3,21 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { intelligenceService } from "@/services/intelligence.service";
-import { CampusMetricCard, OperationalAlertItem, DepartmentKpiItem } from "@/mocks/intelligence.mock";
+import {
+  CampusMetricCard,
+  OperationalAlertItem,
+  DepartmentKpiItem,
+} from "@/mocks/intelligence.mock";
 import {
   GraduationCap,
   DollarSign,
@@ -29,7 +39,9 @@ export function AdminDashboard() {
   useEffect(() => {
     intelligenceService.getMetrics().then((res) => setMetrics(res.data));
     intelligenceService.getAlerts().then((res) => setAlerts(res.data));
-    intelligenceService.getDepartmentKpis().then((res) => setDepartmentKpis(res.data));
+    intelligenceService
+      .getDepartmentKpis()
+      .then((res) => setDepartmentKpis(res.data));
   }, []);
 
   return (
@@ -45,7 +57,8 @@ export function AdminDashboard() {
             CampusOS Master Executive Overview
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Real-time operations, attendance compliance, financial collections, and academic analytics for VSB Campus.
+            Real-time operations, attendance compliance, financial collections,
+            and academic analytics for VSB Campus.
           </p>
         </div>
 
@@ -103,13 +116,20 @@ export function AdminDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Departmental Performance & Compliance Matrix</CardTitle>
+                <CardTitle>
+                  Departmental Performance & Compliance Matrix
+                </CardTitle>
                 <CardDescription>
-                  Cross-domain metrics evaluated against institutional accreditation benchmarks.
+                  Cross-domain metrics evaluated against institutional
+                  accreditation benchmarks.
                 </CardDescription>
               </div>
               <Link href="/app/departments">
-                <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-slate-400 hover:text-white"
+                >
                   View All <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </Link>
@@ -129,7 +149,10 @@ export function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {departmentKpis.map((dept) => (
-                      <tr key={dept.department} className="hover:bg-slate-800/40 transition-colors">
+                      <tr
+                        key={dept.department}
+                        className="hover:bg-slate-800/40 transition-colors"
+                      >
                         <td className="px-5 py-3.5 font-medium text-white">
                           {dept.department}
                         </td>
@@ -154,7 +177,9 @@ export function AdminDashboard() {
                           {dept.avgCgpa.toFixed(2)}
                         </td>
                         <td className="px-4 py-3.5">
-                          <Badge variant="success">{dept.placementRatePercent}%</Badge>
+                          <Badge variant="success">
+                            {dept.placementRatePercent}%
+                          </Badge>
                         </td>
                       </tr>
                     ))}
@@ -174,7 +199,9 @@ export function AdminDashboard() {
               <div className="text-xs font-semibold text-white group-hover:text-indigo-300">
                 Master Timetable
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Hall & Room slots</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Hall & Room slots
+              </div>
             </Link>
 
             <Link
@@ -185,7 +212,9 @@ export function AdminDashboard() {
               <div className="text-xs font-semibold text-white group-hover:text-emerald-300">
                 Exam Results
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">GPA & Rank lists</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                GPA & Rank lists
+              </div>
             </Link>
 
             <Link
@@ -196,7 +225,9 @@ export function AdminDashboard() {
               <div className="text-xs font-semibold text-white group-hover:text-amber-300">
                 Fee Ledger
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Dues & receipts</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Dues & receipts
+              </div>
             </Link>
 
             <Link
@@ -207,7 +238,9 @@ export function AdminDashboard() {
               <div className="text-xs font-semibold text-white group-hover:text-purple-300">
                 Hostels & Transport
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Beds & fleet routes</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Beds & fleet routes
+              </div>
             </Link>
           </div>
         </div>
@@ -221,7 +254,8 @@ export function AdminDashboard() {
                 Operational System Alerts
               </CardTitle>
               <CardDescription>
-                Urgent institutional attention items requiring administrative intervention.
+                Urgent institutional attention items requiring administrative
+                intervention.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -236,8 +270,8 @@ export function AdminDashboard() {
                         alert.level === "CRITICAL"
                           ? "destructive"
                           : alert.level === "WARNING"
-                          ? "warning"
-                          : "info"
+                            ? "warning"
+                            : "info"
                       }
                       dot
                     >
@@ -259,7 +293,8 @@ export function AdminDashboard() {
                         href={alert.actionHref}
                         className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1"
                       >
-                        {alert.actionText || "Inspect"} <ArrowRight className="h-3 w-3" />
+                        {alert.actionText || "Inspect"}{" "}
+                        <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
                   )}

@@ -173,6 +173,25 @@ PLACEMENT_ANALYTICS_READ: Final[str] = "placement:analytics:read"
 PLACEMENT_PROFILE_READ: Final[str] = "placement:profile:read"
 PLACEMENT_PROFILE_UPDATE: Final[str] = "placement:profile:update"
 
+# --- Career Development & Internship Management (Step 64) ---
+CAREER_DASHBOARD_READ: Final[str] = "career:dashboard:read"
+CAREER_OPPORTUNITIES_READ: Final[str] = "career:opportunities:read"
+CAREER_OPPORTUNITIES_MANAGE: Final[str] = "career:opportunities:manage"
+CAREER_APPLICATIONS_APPLY: Final[str] = "career:applications:apply"
+CAREER_APPLICATIONS_READ: Final[str] = "career:applications:read"
+CAREER_APPLICATIONS_REVIEW: Final[str] = "career:applications:review"
+CAREER_ONBOARDING_MANAGE: Final[str] = "career:onboarding:manage"
+CAREER_SUPERVISION_MANAGE: Final[str] = "career:supervision:manage"
+CAREER_EVALUATIONS_SUBMIT: Final[str] = "career:evaluations:submit"
+CAREER_EVALUATIONS_APPROVE: Final[str] = "career:evaluations:approve"
+CAREER_GOALS_MANAGE: Final[str] = "career:goals:manage"
+CAREER_PARTNERSHIPS_MANAGE: Final[str] = "career:partnerships:manage"
+CAREER_EVENTS_MANAGE: Final[str] = "career:events:manage"
+CAREER_EVENTS_REGISTER: Final[str] = "career:events:register"
+CAREER_FEEDBACK_MANAGE: Final[str] = "career:feedback:manage"
+CAREER_ANALYTICS_READ: Final[str] = "career:analytics:read"
+
+
 # --- Campus Events Domain Permissions ---
 EVENTS_READ: Final[str] = "events:read"
 EVENTS_CREATE: Final[str] = "events:create"
@@ -917,9 +936,634 @@ ADMISSIONS_ONBOARDING_MANAGE_DOT: Final[str] = "admissions.onboarding.manage"
 ADMISSIONS_REPORTS_READ_DOT: Final[str] = "admissions.reports.read"
 ADMISSIONS_APPLICANT_SELF_DOT: Final[str] = "admissions.applicant_self.manage"
 
+# --- Step 49: Enterprise Timetable, Resource Scheduling & Conflict Resolution Engine ---
+TIMETABLE_READ: Final[str] = "timetable:read"
+TIMETABLE_MANAGE: Final[str] = "timetable:manage"
+TIMETABLE_GENERATE: Final[str] = "timetable:generate"
+TIMETABLE_APPROVE: Final[str] = "timetable:approve"
+TIMETABLE_PUBLISH: Final[str] = "timetable:publish"
+TIMETABLE_CHANGES_REQUEST: Final[str] = "timetable:changes:request"
+TIMETABLE_CHANGES_APPROVE: Final[str] = "timetable:changes:approve"
+TIMETABLE_RESOURCES_MANAGE: Final[str] = "timetable:resources:manage"
+TIMETABLE_FACULTY_AVAILABILITY: Final[str] = "timetable:faculty_availability:manage"
+TIMETABLE_REPORTS_READ: Final[str] = "timetable:reports:read"
+TIMETABLE_STUDENT_SELF_READ: Final[str] = "timetable:student_self:read"
+
+TIMETABLE_READ_DOT: Final[str] = "timetable.read"
+TIMETABLE_MANAGE_DOT: Final[str] = "timetable.manage"
+TIMETABLE_GENERATE_DOT: Final[str] = "timetable.generate"
+TIMETABLE_APPROVE_DOT: Final[str] = "timetable.approve"
+TIMETABLE_PUBLISH_DOT: Final[str] = "timetable.publish"
+TIMETABLE_CHANGES_REQUEST_DOT: Final[str] = "timetable.changes.request"
+TIMETABLE_CHANGES_APPROVE_DOT: Final[str] = "timetable.changes.approve"
+TIMETABLE_RESOURCES_MANAGE_DOT: Final[str] = "timetable.resources.manage"
+TIMETABLE_FACULTY_AVAILABILITY_DOT: Final[str] = "timetable.faculty_availability.manage"
+TIMETABLE_REPORTS_READ_DOT: Final[str] = "timetable.reports.read"
+TIMETABLE_STUDENT_SELF_READ_DOT: Final[str] = "timetable.student_self.read"
+
+# --- Step 50: Enterprise Procurement, Vendor Management & Inventory Control ---
+PROCUREMENT_READ: Final[str] = "procurement:read"
+PROCUREMENT_MANAGE: Final[str] = "procurement:manage"
+PROCUREMENT_VENDORS_MANAGE: Final[str] = "procurement:vendors:manage"
+PROCUREMENT_REQUISITIONS_CREATE: Final[str] = "procurement:requisitions:create"
+PROCUREMENT_REQUISITIONS_APPROVE: Final[str] = "procurement:requisitions:approve"
+PROCUREMENT_QUOTATIONS_MANAGE: Final[str] = "procurement:quotations:manage"
+PROCUREMENT_ORDERS_CREATE: Final[str] = "procurement:orders:create"
+PROCUREMENT_ORDERS_APPROVE: Final[str] = "procurement:orders:approve"
+PROCUREMENT_RECEIVING_MANAGE: Final[str] = "procurement:receiving:manage"
+PROCUREMENT_INVENTORY_MANAGE: Final[str] = "procurement:inventory:manage"
+PROCUREMENT_INVENTORY_READ: Final[str] = "procurement:inventory:read"
+PROCUREMENT_INVOICE_MATCH: Final[str] = "procurement:invoice_match:manage"
+PROCUREMENT_REPORTS_READ: Final[str] = "procurement:reports:read"
+
+PROCUREMENT_READ_DOT: Final[str] = "procurement.read"
+PROCUREMENT_MANAGE_DOT: Final[str] = "procurement.manage"
+PROCUREMENT_VENDORS_MANAGE_DOT: Final[str] = "procurement.vendors.manage"
+PROCUREMENT_REQUISITIONS_CREATE_DOT: Final[str] = "procurement.requisitions.create"
+PROCUREMENT_REQUISITIONS_APPROVE_DOT: Final[str] = "procurement.requisitions.approve"
+PROCUREMENT_QUOTATIONS_MANAGE_DOT: Final[str] = "procurement.quotations.manage"
+PROCUREMENT_ORDERS_CREATE_DOT: Final[str] = "procurement.orders.create"
+PROCUREMENT_ORDERS_APPROVE_DOT: Final[str] = "procurement.orders.approve"
+PROCUREMENT_RECEIVING_MANAGE_DOT: Final[str] = "procurement.receiving.manage"
+PROCUREMENT_INVENTORY_MANAGE_DOT: Final[str] = "procurement.inventory.manage"
+PROCUREMENT_INVENTORY_READ_DOT: Final[str] = "procurement.inventory.read"
+PROCUREMENT_INVOICE_MATCH_DOT: Final[str] = "procurement.invoice_match.manage"
+PROCUREMENT_REPORTS_READ_DOT: Final[str] = "procurement.reports.read"
+
+# --- Step 51: Enterprise Workforce Management, Staff Lifecycle, Leave & Workload Administration ---
+WORKFORCE_READ: Final[str] = "workforce:read"
+WORKFORCE_MANAGE: Final[str] = "workforce:manage"
+WORKFORCE_EMPLOYEE_READ: Final[str] = "workforce:employees:read"
+WORKFORCE_EMPLOYEE_MANAGE: Final[str] = "workforce:employees:manage"
+WORKFORCE_LIFECYCLE_MANAGE: Final[str] = "workforce:lifecycle:manage"
+WORKFORCE_LEAVE_POLICY_MANAGE: Final[str] = "workforce:leave:policies:manage"
+WORKFORCE_LEAVE_READ: Final[str] = "workforce:leave:read"
+WORKFORCE_LEAVE_SUBMIT: Final[str] = "workforce:leave:submit"
+WORKFORCE_LEAVE_APPROVE: Final[str] = "workforce:leave:approve"
+WORKFORCE_LEAVE_BALANCE_MANAGE: Final[str] = "workforce:leave:balances:manage"
+WORKFORCE_AVAILABILITY_READ: Final[str] = "workforce:availability:read"
+WORKFORCE_WORKLOAD_READ: Final[str] = "workforce:workload:read"
+WORKFORCE_WORKLOAD_MANAGE: Final[str] = "workforce:workload:manage"
+WORKFORCE_HR_CASE_READ: Final[str] = "workforce:hr_cases:read"
+WORKFORCE_HR_CASE_MANAGE: Final[str] = "workforce:hr_cases:manage"
+WORKFORCE_REPORTS_READ: Final[str] = "workforce:reports:read"
+
+WORKFORCE_READ_DOT: Final[str] = "workforce.read"
+WORKFORCE_MANAGE_DOT: Final[str] = "workforce.manage"
+WORKFORCE_EMPLOYEE_READ_DOT: Final[str] = "workforce.employees.read"
+WORKFORCE_EMPLOYEE_MANAGE_DOT: Final[str] = "workforce.employees.manage"
+WORKFORCE_LIFECYCLE_MANAGE_DOT: Final[str] = "workforce.lifecycle.manage"
+WORKFORCE_LEAVE_POLICY_MANAGE_DOT: Final[str] = "workforce.leave.policies.manage"
+WORKFORCE_LEAVE_READ_DOT: Final[str] = "workforce.leave.read"
+WORKFORCE_LEAVE_SUBMIT_DOT: Final[str] = "workforce.leave.submit"
+WORKFORCE_LEAVE_APPROVE_DOT: Final[str] = "workforce.leave.approve"
+WORKFORCE_LEAVE_BALANCE_MANAGE_DOT: Final[str] = "workforce.leave.balances.manage"
+WORKFORCE_AVAILABILITY_READ_DOT: Final[str] = "workforce.availability.read"
+WORKFORCE_WORKLOAD_READ_DOT: Final[str] = "workforce.workload.read"
+WORKFORCE_WORKLOAD_MANAGE_DOT: Final[str] = "workforce.workload.manage"
+WORKFORCE_HR_CASE_READ_DOT: Final[str] = "workforce.hr_cases.read"
+WORKFORCE_HR_CASE_MANAGE_DOT: Final[str] = "workforce.hr_cases.manage"
+WORKFORCE_REPORTS_READ_DOT: Final[str] = "workforce.reports.read"
+
+# --- Step 52: Enterprise Payroll, Compensation, Benefits & Statutory Compliance ---
+PAYROLL_COMPENSATION_READ: Final[str] = "payroll:compensation:read"
+PAYROLL_COMPENSATION_MANAGE: Final[str] = "payroll:compensation:manage"
+PAYROLL_CALENDAR_MANAGE: Final[str] = "payroll:calendar:manage"
+PAYROLL_RUN_CREATE: Final[str] = "payroll:run:create"
+PAYROLL_RUN_CALCULATE: Final[str] = "payroll:run:calculate"
+PAYROLL_RUN_REVIEW: Final[str] = "payroll:run:review"
+PAYROLL_RUN_APPROVE: Final[str] = "payroll:run:approve"
+PAYROLL_RUN_POST: Final[str] = "payroll:run:post"
+PAYROLL_PAYMENT_MANAGE: Final[str] = "payroll:payment:manage"
+PAYROLL_RECONCILIATION_MANAGE: Final[str] = "payroll:reconciliation:manage"
+PAYROLL_COMPLIANCE_MANAGE: Final[str] = "payroll:compliance:manage"
+PAYROLL_PAYSLIP_READ_OWN: Final[str] = "payroll:payslip:read_own"
+PAYROLL_PAYSLIP_READ_AUTH: Final[str] = "payroll:payslip:read_authorized"
+PAYROLL_REPORTS_READ: Final[str] = "payroll:reports:read"
+
+PAYROLL_COMPENSATION_READ_DOT: Final[str] = "payroll.compensation.read"
+PAYROLL_COMPENSATION_MANAGE_DOT: Final[str] = "payroll.compensation.manage"
+PAYROLL_CALENDAR_MANAGE_DOT: Final[str] = "payroll.calendar.manage"
+PAYROLL_RUN_CREATE_DOT: Final[str] = "payroll.run.create"
+PAYROLL_RUN_CALCULATE_DOT: Final[str] = "payroll.run.calculate"
+PAYROLL_RUN_REVIEW_DOT: Final[str] = "payroll.run.review"
+PAYROLL_RUN_APPROVE_DOT: Final[str] = "payroll.run.approve"
+PAYROLL_RUN_POST_DOT: Final[str] = "payroll.run.post"
+PAYROLL_PAYMENT_MANAGE_DOT: Final[str] = "payroll.payment.manage"
+PAYROLL_RECONCILIATION_MANAGE_DOT: Final[str] = "payroll.reconciliation.manage"
+PAYROLL_COMPLIANCE_MANAGE_DOT: Final[str] = "payroll.compliance.manage"
+PAYROLL_PAYSLIP_READ_OWN_DOT: Final[str] = "payroll.payslip.read_own"
+PAYROLL_PAYSLIP_READ_AUTH_DOT: Final[str] = "payroll.payslip.read_authorized"
+PAYROLL_REPORTS_READ_DOT: Final[str] = "payroll.reports.read"
+
+# --- Step 53: Enterprise Asset Lifecycle, Maintenance, Facilities & Equipment Management ---
+ASSETS_READ: Final[str] = "assets:read"
+ASSETS_CREATE: Final[str] = "assets:create"
+ASSETS_MANAGE: Final[str] = "assets:manage"
+ASSETS_ASSIGN: Final[str] = "assets:assign"
+ASSETS_TRANSFER: Final[str] = "assets:transfer"
+ASSETS_LIFECYCLE_MANAGE: Final[str] = "assets:lifecycle:manage"
+ASSETS_MAINTENANCE_READ: Final[str] = "assets:maintenance:read"
+ASSETS_MAINTENANCE_MANAGE: Final[str] = "assets:maintenance:manage"
+ASSETS_INSPECTION_MANAGE: Final[str] = "assets:inspection:manage"
+ASSETS_AUDIT_MANAGE: Final[str] = "assets:audit:manage"
+ASSETS_RETIREMENT_REQUEST: Final[str] = "assets:retirement:request"
+ASSETS_RETIREMENT_APPROVE: Final[str] = "assets:retirement:approve"
+ASSETS_FINANCIAL_READ: Final[str] = "assets:financial:read"
+ASSETS_REPORT_READ: Final[str] = "assets:report:read"
+
+ASSETS_READ_DOT: Final[str] = "assets.read"
+ASSETS_CREATE_DOT: Final[str] = "assets.create"
+ASSETS_MANAGE_DOT: Final[str] = "assets.manage"
+ASSETS_ASSIGN_DOT: Final[str] = "assets.assign"
+ASSETS_TRANSFER_DOT: Final[str] = "assets.transfer"
+ASSETS_LIFECYCLE_MANAGE_DOT: Final[str] = "assets.lifecycle.manage"
+ASSETS_MAINTENANCE_READ_DOT: Final[str] = "assets.maintenance.read"
+ASSETS_MAINTENANCE_MANAGE_DOT: Final[str] = "assets.maintenance.manage"
+ASSETS_INSPECTION_MANAGE_DOT: Final[str] = "assets.inspection.manage"
+ASSETS_AUDIT_MANAGE_DOT: Final[str] = "assets.audit.manage"
+ASSETS_RETIREMENT_REQUEST_DOT: Final[str] = "assets.retirement.request"
+ASSETS_RETIREMENT_APPROVE_DOT: Final[str] = "assets.retirement.approve"
+ASSETS_FINANCIAL_READ_DOT: Final[str] = "assets.financial.read"
+ASSETS_REPORT_READ_DOT: Final[str] = "assets.report.read"
+
+# --- Step 54: Enterprise Hostel, Residential Life, Room Allocation & Student Accommodation Management ---
+RESIDENTIAL_HOSTEL_READ: Final[str] = "residential:hostel:read"
+RESIDENTIAL_HOSTEL_MANAGE: Final[str] = "residential:hostel:manage"
+RESIDENTIAL_ROOM_MANAGE: Final[str] = "residential:room:manage"
+RESIDENTIAL_APPLICATION_SUBMIT_OWN: Final[str] = "residential:application:submit_own"
+RESIDENTIAL_APPLICATION_REVIEW: Final[str] = "residential:application:review"
+RESIDENTIAL_ALLOCATION_MANAGE: Final[str] = "residential:allocation:manage"
+RESIDENTIAL_CHECKIN_MANAGE: Final[str] = "residential:checkin:manage"
+RESIDENTIAL_CHECKOUT_MANAGE: Final[str] = "residential:checkout:manage"
+RESIDENTIAL_FEES_READ: Final[str] = "residential:fees:read"
+RESIDENTIAL_FEES_MANAGE: Final[str] = "residential:fees:manage"
+RESIDENTIAL_MOVEMENT_MANAGE: Final[str] = "residential:movement:manage"
+RESIDENTIAL_VISITOR_MANAGE: Final[str] = "residential:visitor:manage"
+RESIDENTIAL_MAINTENANCE_SUBMIT: Final[str] = "residential:maintenance:submit"
+RESIDENTIAL_INCIDENT_READ_AUTHORIZED: Final[str] = "residential:incident:read_authorized"
+RESIDENTIAL_INCIDENT_MANAGE: Final[str] = "residential:incident:manage"
+RESIDENTIAL_REPORT_READ: Final[str] = "residential:report:read"
+
+RESIDENTIAL_HOSTEL_READ_DOT: Final[str] = "residential.hostel.read"
+RESIDENTIAL_HOSTEL_MANAGE_DOT: Final[str] = "residential.hostel.manage"
+RESIDENTIAL_ROOM_MANAGE_DOT: Final[str] = "residential.room.manage"
+RESIDENTIAL_APPLICATION_SUBMIT_OWN_DOT: Final[str] = "residential.application.submit_own"
+RESIDENTIAL_APPLICATION_REVIEW_DOT: Final[str] = "residential.application.review"
+RESIDENTIAL_ALLOCATION_MANAGE_DOT: Final[str] = "residential.allocation.manage"
+RESIDENTIAL_CHECKIN_MANAGE_DOT: Final[str] = "residential.checkin.manage"
+RESIDENTIAL_CHECKOUT_MANAGE_DOT: Final[str] = "residential.checkout.manage"
+RESIDENTIAL_FEES_READ_DOT: Final[str] = "residential.fees.read"
+RESIDENTIAL_FEES_MANAGE_DOT: Final[str] = "residential.fees.manage"
+RESIDENTIAL_MOVEMENT_MANAGE_DOT: Final[str] = "residential.movement.manage"
+RESIDENTIAL_VISITOR_MANAGE_DOT: Final[str] = "residential.visitor.manage"
+RESIDENTIAL_MAINTENANCE_SUBMIT_DOT: Final[str] = "residential.maintenance.submit"
+RESIDENTIAL_INCIDENT_READ_AUTHORIZED_DOT: Final[str] = "residential.incident.read_authorized"
+RESIDENTIAL_INCIDENT_MANAGE_DOT: Final[str] = "residential.incident.manage"
+RESIDENTIAL_REPORT_READ_DOT: Final[str] = "residential.report.read"
+
+# --- Step 55: Enterprise Transport, Fleet, Routes & Student Mobility Management ---
+TRANSPORT_SERVICE_READ: Final[str] = "transport:service:read"
+TRANSPORT_SERVICE_MANAGE: Final[str] = "transport:service:manage"
+TRANSPORT_VEHICLE_READ: Final[str] = "transport:vehicle:read"
+TRANSPORT_VEHICLE_MANAGE: Final[str] = "transport:vehicle:manage"
+TRANSPORT_DRIVER_MANAGE: Final[str] = "transport:driver:manage"
+TRANSPORT_ROUTE_READ: Final[str] = "transport:route:read"
+TRANSPORT_ROUTE_MANAGE: Final[str] = "transport:route:manage"
+TRANSPORT_APPLICATION_SUBMIT_OWN: Final[str] = "transport:application:submit_own"
+TRANSPORT_APPLICATION_REVIEW: Final[str] = "transport:application:review"
+TRANSPORT_SUBSCRIPTION_MANAGE: Final[str] = "transport:subscription:manage"
+TRANSPORT_ALLOCATION_MANAGE: Final[str] = "transport:allocation:manage"
+TRANSPORT_TRIP_READ: Final[str] = "transport:trip:read"
+TRANSPORT_TRIP_DISPATCH: Final[str] = "transport:trip:dispatch"
+TRANSPORT_BOARDING_RECORD: Final[str] = "transport:boarding:record"
+TRANSPORT_TRACKING_READ_AUTHORIZED: Final[str] = "transport:tracking:read_authorized"
+TRANSPORT_INCIDENT_MANAGE: Final[str] = "transport:incident:manage"
+TRANSPORT_FINANCE_READ_AUTHORIZED: Final[str] = "transport:finance:read_authorized"
+TRANSPORT_REPORT_READ: Final[str] = "transport:report:read"
+
+TRANSPORT_SERVICE_READ_DOT: Final[str] = "transport.service.read"
+TRANSPORT_SERVICE_MANAGE_DOT: Final[str] = "transport.service.manage"
+TRANSPORT_VEHICLE_READ_DOT: Final[str] = "transport.vehicle.read"
+TRANSPORT_VEHICLE_MANAGE_DOT: Final[str] = "transport.vehicle.manage"
+TRANSPORT_DRIVER_MANAGE_DOT: Final[str] = "transport.driver.manage"
+TRANSPORT_ROUTE_READ_DOT: Final[str] = "transport.route.read"
+TRANSPORT_ROUTE_MANAGE_DOT: Final[str] = "transport.route.manage"
+TRANSPORT_APPLICATION_SUBMIT_OWN_DOT: Final[str] = "transport.application.submit_own"
+TRANSPORT_APPLICATION_REVIEW_DOT: Final[str] = "transport.application.review"
+TRANSPORT_SUBSCRIPTION_MANAGE_DOT: Final[str] = "transport.subscription.manage"
+TRANSPORT_ALLOCATION_MANAGE_DOT: Final[str] = "transport.allocation.manage"
+TRANSPORT_TRIP_READ_DOT: Final[str] = "transport.trip.read"
+TRANSPORT_TRIP_DISPATCH_DOT: Final[str] = "transport.trip.dispatch"
+TRANSPORT_BOARDING_RECORD_DOT: Final[str] = "transport.boarding.record"
+TRANSPORT_TRACKING_READ_AUTHORIZED_DOT: Final[str] = "transport.tracking.read_authorized"
+TRANSPORT_INCIDENT_MANAGE_DOT: Final[str] = "transport.incident.manage"
+TRANSPORT_FINANCE_READ_AUTHORIZED_DOT: Final[str] = "transport.finance.read_authorized"
+# --- Step 57: Enterprise Sports, Athletics, Recreation & Student Fitness Management ---
+SPORTS_DEPARTMENT_READ: Final[str] = "sports:department:read"
+SPORTS_DEPARTMENT_MANAGE: Final[str] = "sports:department:manage"
+SPORTS_FACILITY_READ: Final[str] = "sports:facility:read"
+SPORTS_FACILITY_MANAGE: Final[str] = "sports:facility:manage"
+SPORTS_BOOKING_CREATE: Final[str] = "sports:booking:create"
+SPORTS_BOOKING_MANAGE: Final[str] = "sports:booking:manage"
+SPORTS_PARTICIPANT_READ: Final[str] = "sports:participant:read"
+SPORTS_PARTICIPANT_REGISTER_SELF: Final[str] = "sports:participant:register_self"
+SPORTS_PARTICIPANT_MANAGE: Final[str] = "sports:participant:manage"
+SPORTS_TEAM_READ: Final[str] = "sports:team:read"
+SPORTS_TEAM_MANAGE: Final[str] = "sports:team:manage"
+SPORTS_COACH_MANAGE: Final[str] = "sports:coach:manage"
+SPORTS_TRAINING_READ: Final[str] = "sports:training:read"
+SPORTS_TRAINING_MANAGE: Final[str] = "sports:training:manage"
+SPORTS_ATTENDANCE_RECORD: Final[str] = "sports:attendance:record"
+SPORTS_COMPETITION_READ: Final[str] = "sports:competition:read"
+SPORTS_COMPETITION_MANAGE: Final[str] = "sports:competition:manage"
+SPORTS_MATCH_SCHEDULE: Final[str] = "sports:match:schedule"
+SPORTS_RESULT_RECORD: Final[str] = "sports:result:record"
+SPORTS_RESULT_VERIFY: Final[str] = "sports:result:verify"
+SPORTS_EQUIPMENT_MANAGE: Final[str] = "sports:equipment:manage"
+SPORTS_FINANCE_MANAGE: Final[str] = "sports:finance:manage"
+SPORTS_REPORT_READ: Final[str] = "sports:report:read"
+SPORTS_BOOKING_CANCEL: Final[str] = "sports:booking:cancel"
+SPORTS_ROSTER_MANAGE: Final[str] = "sports:roster:manage"
+SPORTS_COMPETITION_REGISTER: Final[str] = "sports:competition:register"
+SPORTS_MATCH_OFFICIATE: Final[str] = "sports:match:officiate"
+SPORTS_EQUIPMENT_READ: Final[str] = "sports:equipment:read"
+
+SPORTS_DEPARTMENT_READ_DOT: Final[str] = "sports.department.read"
+SPORTS_DEPARTMENT_MANAGE_DOT: Final[str] = "sports.department.manage"
+SPORTS_FACILITY_READ_DOT: Final[str] = "sports.facility.read"
+SPORTS_FACILITY_MANAGE_DOT: Final[str] = "sports.facility.manage"
+SPORTS_BOOKING_CREATE_DOT: Final[str] = "sports.booking.create"
+SPORTS_BOOKING_MANAGE_DOT: Final[str] = "sports.booking.manage"
+SPORTS_BOOKING_CANCEL_DOT: Final[str] = "sports.booking.cancel"
+SPORTS_PARTICIPANT_READ_DOT: Final[str] = "sports.participant.read"
+SPORTS_PARTICIPANT_REGISTER_SELF_DOT: Final[str] = "sports.participant.register_self"
+SPORTS_PARTICIPANT_MANAGE_DOT: Final[str] = "sports.participant.manage"
+SPORTS_TEAM_READ_DOT: Final[str] = "sports.team.read"
+SPORTS_TEAM_MANAGE_DOT: Final[str] = "sports.team.manage"
+SPORTS_ROSTER_MANAGE_DOT: Final[str] = "sports.roster.manage"
+SPORTS_COACH_MANAGE_DOT: Final[str] = "sports.coach.manage"
+SPORTS_TRAINING_READ_DOT: Final[str] = "sports.training.read"
+SPORTS_TRAINING_MANAGE_DOT: Final[str] = "sports.training.manage"
+SPORTS_ATTENDANCE_RECORD_DOT: Final[str] = "sports.attendance.record"
+SPORTS_COMPETITION_READ_DOT: Final[str] = "sports.competition.read"
+SPORTS_COMPETITION_MANAGE_DOT: Final[str] = "sports.competition.manage"
+SPORTS_COMPETITION_REGISTER_DOT: Final[str] = "sports.competition.register"
+SPORTS_MATCH_SCHEDULE_DOT: Final[str] = "sports.match.schedule"
+SPORTS_MATCH_OFFICIATE_DOT: Final[str] = "sports.match.officiate"
+SPORTS_RESULT_RECORD_DOT: Final[str] = "sports.result.record"
+SPORTS_RESULT_VERIFY_DOT: Final[str] = "sports.result.verify"
+SPORTS_EQUIPMENT_READ_DOT: Final[str] = "sports.equipment.read"
+SPORTS_EQUIPMENT_MANAGE_DOT: Final[str] = "sports.equipment.manage"
+SPORTS_FINANCE_MANAGE_DOT: Final[str] = "sports.finance.manage"
+SPORTS_REPORT_READ_DOT: Final[str] = "sports.report.read"
+
+# --- Enterprise Student Affairs, Grievance Redressal & Disciplinary Case Management (Step 58) ---
+SA_OFFICE_READ: Final[str] = "student_affairs:office:read"
+SA_OFFICE_MANAGE: Final[str] = "student_affairs:office:manage"
+SA_CATEGORY_READ: Final[str] = "student_affairs:category:read"
+SA_CATEGORY_MANAGE: Final[str] = "student_affairs:category:manage"
+SA_CASE_SUBMIT_OWN: Final[str] = "student_affairs:case:submit_own"
+SA_CASE_READ_OWN: Final[str] = "student_affairs:case:read_own"
+SA_CASE_READ_ASSIGNED: Final[str] = "student_affairs:case:read_assigned"
+SA_CASE_READ_ALL: Final[str] = "student_affairs:case:read_all"
+SA_CASE_ASSIGN: Final[str] = "student_affairs:case:assign"
+SA_CASE_UPDATE: Final[str] = "student_affairs:case:update"
+SA_CASE_CONFIDENTIAL_READ: Final[str] = "student_affairs:case:confidential_read"
+SA_DISCIPLINARY_MANAGE: Final[str] = "student_affairs:disciplinary:manage"
+SA_EVIDENCE_READ: Final[str] = "student_affairs:evidence:read"
+SA_EVIDENCE_UPLOAD: Final[str] = "student_affairs:evidence:upload"
+SA_EVIDENCE_REDACT: Final[str] = "student_affairs:evidence:redact"
+SA_MEETING_MANAGE: Final[str] = "student_affairs:meeting:manage"
+SA_RESOLUTION_PROPOSE: Final[str] = "student_affairs:resolution:propose"
+SA_RESOLUTION_APPROVE: Final[str] = "student_affairs:resolution:approve"
+SA_APPEAL_FILE: Final[str] = "student_affairs:appeal:file"
+SA_APPEAL_REVIEW: Final[str] = "student_affairs:appeal:review"
+SA_ESCALATION_MANAGE: Final[str] = "student_affairs:escalation:manage"
+SA_COMMUNICATION_SEND: Final[str] = "student_affairs:communication:send"
+SA_REPORT_READ: Final[str] = "student_affairs:report:read"
+SA_POLICY_MANAGE: Final[str] = "student_affairs:policy:manage"
+
+SA_OFFICE_READ_DOT: Final[str] = "student_affairs.office.read"
+SA_OFFICE_MANAGE_DOT: Final[str] = "student_affairs.office.manage"
+SA_CATEGORY_READ_DOT: Final[str] = "student_affairs.category.read"
+SA_CATEGORY_MANAGE_DOT: Final[str] = "student_affairs.category.manage"
+SA_CASE_SUBMIT_OWN_DOT: Final[str] = "student_affairs.case.submit_own"
+SA_CASE_READ_OWN_DOT: Final[str] = "student_affairs.case.read_own"
+SA_CASE_READ_ASSIGNED_DOT: Final[str] = "student_affairs.case.read_assigned"
+SA_CASE_READ_ALL_DOT: Final[str] = "student_affairs.case.read_all"
+SA_CASE_ASSIGN_DOT: Final[str] = "student_affairs.case.assign"
+SA_CASE_UPDATE_DOT: Final[str] = "student_affairs.case.update"
+SA_CASE_CONFIDENTIAL_READ_DOT: Final[str] = "student_affairs.case.confidential_read"
+SA_DISCIPLINARY_MANAGE_DOT: Final[str] = "student_affairs.disciplinary.manage"
+SA_EVIDENCE_READ_DOT: Final[str] = "student_affairs.evidence.read"
+SA_EVIDENCE_UPLOAD_DOT: Final[str] = "student_affairs.evidence.upload"
+SA_EVIDENCE_REDACT_DOT: Final[str] = "student_affairs.evidence.redact"
+SA_MEETING_MANAGE_DOT: Final[str] = "student_affairs.meeting.manage"
+SA_RESOLUTION_PROPOSE_DOT: Final[str] = "student_affairs.resolution.propose"
+SA_RESOLUTION_APPROVE_DOT: Final[str] = "student_affairs.resolution.approve"
+SA_APPEAL_FILE_DOT: Final[str] = "student_affairs.appeal.file"
+SA_APPEAL_REVIEW_DOT: Final[str] = "student_affairs.appeal.review"
+SA_ESCALATION_MANAGE_DOT: Final[str] = "student_affairs.escalation.manage"
+SA_COMMUNICATION_SEND_DOT: Final[str] = "student_affairs.communication.send"
+SA_REPORT_READ_DOT: Final[str] = "student_affairs.report.read"
+SA_POLICY_MANAGE_DOT: Final[str] = "student_affairs.policy.manage"
+
+# --- Enterprise Student Counselling, Mentoring & Personal Development Management (Step 59) ---
+MENTOR_ASSIGNMENT_READ: Final[str] = "student_support:mentor_assignment:read"
+MENTOR_ASSIGNMENT_MANAGE: Final[str] = "student_support:mentor_assignment:manage"
+MENTORING_SESSION_READ: Final[str] = "student_support:mentoring_session:read"
+MENTORING_SESSION_MANAGE: Final[str] = "student_support:mentoring_session:manage"
+MENTORING_SESSION_PARTICIPATE: Final[str] = "student_support:mentoring_session:participate"
+COUNSELLING_APPOINTMENT_REQUEST: Final[str] = "student_support:counselling_appointment:request"
+COUNSELLING_APPOINTMENT_READ: Final[str] = "student_support:counselling_appointment:read"
+COUNSELLING_APPOINTMENT_MANAGE: Final[str] = "student_support:counselling_appointment:manage"
+COUNSELLING_CONFIDENTIAL_READ: Final[str] = "student_support:counselling_confidential:read"
+COUNSELLING_CONFIDENTIAL_WRITE: Final[str] = "student_support:counselling_confidential:write"
+DEVELOPMENT_PLAN_READ: Final[str] = "student_support:development_plan:read"
+DEVELOPMENT_PLAN_MANAGE: Final[str] = "student_support:development_plan:manage"
+DEVELOPMENT_PLAN_UPDATE_OWN: Final[str] = "student_support:development_plan:update_own"
+SUPPORT_REFERRAL_CREATE: Final[str] = "student_support:support_referral:create"
+SUPPORT_REFERRAL_READ: Final[str] = "student_support:support_referral:read"
+SUPPORT_REFERRAL_MANAGE: Final[str] = "student_support:support_referral:manage"
+SUPPORT_FOLLOWUP_MANAGE: Final[str] = "student_support:support_followup:manage"
+SUPPORT_REPORT_READ: Final[str] = "student_support:report:read"
+SUPPORT_CONFIG_MANAGE: Final[str] = "student_support:config:manage"
+
+MENTOR_ASSIGNMENT_READ_DOT: Final[str] = "student_support.mentor_assignment.read"
+MENTOR_ASSIGNMENT_MANAGE_DOT: Final[str] = "student_support.mentor_assignment.manage"
+MENTORING_SESSION_READ_DOT: Final[str] = "student_support.mentoring_session.read"
+MENTORING_SESSION_MANAGE_DOT: Final[str] = "student_support.mentoring_session.manage"
+MENTORING_SESSION_PARTICIPATE_DOT: Final[str] = "student_support.mentoring_session.participate"
+COUNSELLING_APPOINTMENT_REQUEST_DOT: Final[str] = "student_support.counselling_appointment.request"
+COUNSELLING_APPOINTMENT_READ_DOT: Final[str] = "student_support.counselling_appointment.read"
+COUNSELLING_APPOINTMENT_MANAGE_DOT: Final[str] = "student_support.counselling_appointment.manage"
+COUNSELLING_CONFIDENTIAL_READ_DOT: Final[str] = "student_support.counselling_confidential.read"
+COUNSELLING_CONFIDENTIAL_WRITE_DOT: Final[str] = "student_support.counselling_confidential.write"
+DEVELOPMENT_PLAN_READ_DOT: Final[str] = "student_support.development_plan.read"
+DEVELOPMENT_PLAN_MANAGE_DOT: Final[str] = "student_support.development_plan.manage"
+DEVELOPMENT_PLAN_UPDATE_OWN_DOT: Final[str] = "student_support.development_plan.update_own"
+SUPPORT_REFERRAL_CREATE_DOT: Final[str] = "student_support.support_referral.create"
+SUPPORT_REFERRAL_READ_DOT: Final[str] = "student_support.support_referral.read"
+SUPPORT_REFERRAL_MANAGE_DOT: Final[str] = "student_support.support_referral.manage"
+SUPPORT_FOLLOWUP_MANAGE_DOT: Final[str] = "student_support.support_followup.manage"
+SUPPORT_REPORT_READ_DOT: Final[str] = "student_support.report.read"
+SUPPORT_CONFIG_MANAGE_DOT: Final[str] = "student_support.config.manage"
+
+# --- Enterprise International Relations, Student Exchange & Global Mobility Management (Step 60) ---
+INTL_PARTNER_READ: Final[str] = "international:partner:read"
+INTL_PARTNER_MANAGE: Final[str] = "international:partner:manage"
+INTL_AGREEMENT_READ: Final[str] = "international:agreement:read"
+INTL_AGREEMENT_MANAGE: Final[str] = "international:agreement:manage"
+INTL_PROGRAM_READ: Final[str] = "international:program:read"
+INTL_PROGRAM_MANAGE: Final[str] = "international:program:manage"
+MOBILITY_APPLICATION_APPLY: Final[str] = "international:application:apply"
+MOBILITY_APPLICATION_READ: Final[str] = "international:application:read"
+MOBILITY_APPLICATION_REVIEW: Final[str] = "international:application:review"
+MOBILITY_APPLICATION_NOMINATE: Final[str] = "international:application:nominate"
+MOBILITY_INBOUND_MANAGE: Final[str] = "international:inbound:manage"
+FACULTY_MOBILITY_READ: Final[str] = "international:faculty_mobility:read"
+FACULTY_MOBILITY_MANAGE: Final[str] = "international:faculty_mobility:manage"
+CREDIT_EQUIVALENCY_READ: Final[str] = "international:credit_equivalency:read"
+CREDIT_EQUIVALENCY_EVALUATE: Final[str] = "international:credit_equivalency:evaluate"
+CREDIT_TRANSFER_APPROVE: Final[str] = "international:credit_transfer:approve"
+MOBILITY_DOCUMENT_VERIFY: Final[str] = "international:document:verify"
+MOBILITY_FUNDING_MANAGE: Final[str] = "international:funding:manage"
+INTL_REPORT_READ: Final[str] = "international:report:read"
+INTL_CONFIG_MANAGE: Final[str] = "international:config:manage"
+
+INTL_PARTNER_READ_DOT: Final[str] = "international.partner.read"
+INTL_PARTNER_MANAGE_DOT: Final[str] = "international.partner.manage"
+INTL_AGREEMENT_READ_DOT: Final[str] = "international.agreement.read"
+INTL_AGREEMENT_MANAGE_DOT: Final[str] = "international.agreement.manage"
+INTL_PROGRAM_READ_DOT: Final[str] = "international.program.read"
+INTL_PROGRAM_MANAGE_DOT: Final[str] = "international.program.manage"
+MOBILITY_APPLICATION_APPLY_DOT: Final[str] = "international.application.apply"
+MOBILITY_APPLICATION_READ_DOT: Final[str] = "international.application.read"
+MOBILITY_APPLICATION_REVIEW_DOT: Final[str] = "international.application.review"
+MOBILITY_APPLICATION_NOMINATE_DOT: Final[str] = "international.application.nominate"
+MOBILITY_INBOUND_MANAGE_DOT: Final[str] = "international.inbound.manage"
+FACULTY_MOBILITY_READ_DOT: Final[str] = "international.faculty_mobility.read"
+FACULTY_MOBILITY_MANAGE_DOT: Final[str] = "international.faculty_mobility.manage"
+CREDIT_EQUIVALENCY_READ_DOT: Final[str] = "international.credit_equivalency.read"
+CREDIT_EQUIVALENCY_EVALUATE_DOT: Final[str] = "international.credit_equivalency.evaluate"
+CREDIT_TRANSFER_APPROVE_DOT: Final[str] = "international.credit_transfer.approve"
+MOBILITY_DOCUMENT_VERIFY_DOT: Final[str] = "international.document.verify"
+MOBILITY_FUNDING_MANAGE_DOT: Final[str] = "international.funding.manage"
+INTL_REPORT_READ_DOT: Final[str] = "international.report.read"
+INTL_CONFIG_MANAGE_DOT: Final[str] = "international.config.manage"
+
+# --- Step 62: Enterprise Legal Affairs, Contract Lifecycle, Policy Compliance & Institutional Risk Management ---
+LEGAL_OPERATIONS_READ: Final[str] = "legal:operations:read"
+LEGAL_CONTRACTS_READ: Final[str] = "legal:contracts:read"
+LEGAL_CONTRACTS_MANAGE: Final[str] = "legal:contracts:manage"
+LEGAL_CONTRACTS_APPROVE: Final[str] = "legal:contracts:approve"
+LEGAL_CONTRACTS_EXECUTE: Final[str] = "legal:contracts:execute"
+LEGAL_OBLIGATIONS_READ: Final[str] = "legal:obligations:read"
+LEGAL_OBLIGATIONS_MANAGE: Final[str] = "legal:obligations:manage"
+LEGAL_MATTERS_READ: Final[str] = "legal:matters:read"
+LEGAL_MATTERS_MANAGE: Final[str] = "legal:matters:manage"
+LEGAL_MATTERS_CONFIDENTIAL: Final[str] = "legal:matters:confidential"
+LEGAL_POLICIES_MANAGE: Final[str] = "legal:policies:manage"
+LEGAL_POLICIES_APPROVE: Final[str] = "legal:policies:approve"
+LEGAL_COMPLIANCE_READ: Final[str] = "legal:compliance:read"
+LEGAL_COMPLIANCE_MANAGE: Final[str] = "legal:compliance:manage"
+LEGAL_RISKS_READ: Final[str] = "legal:risks:read"
+LEGAL_RISKS_MANAGE: Final[str] = "legal:risks:manage"
+
+LEGAL_OPERATIONS_READ_DOT: Final[str] = "legal.operations.read"
+LEGAL_CONTRACTS_READ_DOT: Final[str] = "legal.contracts.read"
+LEGAL_CONTRACTS_MANAGE_DOT: Final[str] = "legal.contracts.manage"
+LEGAL_CONTRACTS_APPROVE_DOT: Final[str] = "legal.contracts.approve"
+LEGAL_CONTRACTS_EXECUTE_DOT: Final[str] = "legal.contracts.execute"
+LEGAL_OBLIGATIONS_READ_DOT: Final[str] = "legal.obligations.read"
+LEGAL_OBLIGATIONS_MANAGE_DOT: Final[str] = "legal.obligations.manage"
+LEGAL_MATTERS_READ_DOT: Final[str] = "legal.matters.read"
+LEGAL_MATTERS_MANAGE_DOT: Final[str] = "legal.matters.manage"
+LEGAL_MATTERS_CONFIDENTIAL_DOT: Final[str] = "legal.matters.confidential"
+LEGAL_POLICIES_MANAGE_DOT: Final[str] = "legal.policies.manage"
+LEGAL_POLICIES_APPROVE_DOT: Final[str] = "legal.policies.approve"
+LEGAL_COMPLIANCE_READ_DOT: Final[str] = "legal.compliance.read"
+LEGAL_COMPLIANCE_MANAGE_DOT: Final[str] = "legal.compliance.manage"
+LEGAL_RISKS_READ_DOT: Final[str] = "legal.risks.read"
+LEGAL_RISKS_MANAGE_DOT: Final[str] = "legal.risks.manage"
+
+# --- Step 65: Enterprise Student Engagement, Community Service, Volunteering & Civic Impact Management ---
+ENGAGEMENT_PROGRAMS_READ: Final[str] = "engagement:programs:read"
+ENGAGEMENT_PROGRAMS_MANAGE: Final[str] = "engagement:programs:manage"
+ENGAGEMENT_PROGRAMS_APPROVE: Final[str] = "engagement:programs:approve"
+ENGAGEMENT_PROGRAMS_PUBLISH: Final[str] = "engagement:programs:publish"
+ENGAGEMENT_PARTNERS_READ: Final[str] = "engagement:partners:read"
+ENGAGEMENT_PARTNERS_MANAGE: Final[str] = "engagement:partners:manage"
+ENGAGEMENT_OPPORTUNITIES_READ: Final[str] = "engagement:opportunities:read"
+ENGAGEMENT_OPPORTUNITIES_MANAGE: Final[str] = "engagement:opportunities:manage"
+ENGAGEMENT_APPLICATIONS_APPLY: Final[str] = "engagement:applications:apply"
+ENGAGEMENT_APPLICATIONS_READ: Final[str] = "engagement:applications:read"
+ENGAGEMENT_APPLICATIONS_MANAGE: Final[str] = "engagement:applications:manage"
+ENGAGEMENT_SHIFTS_MANAGE: Final[str] = "engagement:shifts:manage"
+ENGAGEMENT_ATTENDANCE_RECORD: Final[str] = "engagement:attendance:record"
+ENGAGEMENT_HOURS_SUBMIT: Final[str] = "engagement:hours:submit"
+ENGAGEMENT_HOURS_VERIFY: Final[str] = "engagement:hours:verify"
+ENGAGEMENT_REFLECTIONS_SUBMIT: Final[str] = "engagement:reflections:submit"
+ENGAGEMENT_REFLECTIONS_REVIEW: Final[str] = "engagement:reflections:review"
+ENGAGEMENT_CERTIFICATES_ISSUE: Final[str] = "engagement:certificates:issue"
+ENGAGEMENT_CERTIFICATES_REVOKE: Final[str] = "engagement:certificates:revoke"
+ENGAGEMENT_SAFETY_MANAGE: Final[str] = "engagement:safety:manage"
+ENGAGEMENT_ANALYTICS_READ: Final[str] = "engagement:analytics:read"
+ENGAGEMENT_POLICIES_MANAGE: Final[str] = "engagement:policies:manage"
+
+ENGAGEMENT_PROGRAMS_READ_DOT: Final[str] = "engagement.programs.read"
+ENGAGEMENT_PROGRAMS_MANAGE_DOT: Final[str] = "engagement.programs.manage"
+ENGAGEMENT_PROGRAMS_APPROVE_DOT: Final[str] = "engagement.programs.approve"
+ENGAGEMENT_PROGRAMS_PUBLISH_DOT: Final[str] = "engagement.programs.publish"
+ENGAGEMENT_PARTNERS_READ_DOT: Final[str] = "engagement.partners.read"
+ENGAGEMENT_PARTNERS_MANAGE_DOT: Final[str] = "engagement.partners.manage"
+ENGAGEMENT_OPPORTUNITIES_READ_DOT: Final[str] = "engagement.opportunities.read"
+ENGAGEMENT_OPPORTUNITIES_MANAGE_DOT: Final[str] = "engagement.opportunities.manage"
+ENGAGEMENT_APPLICATIONS_APPLY_DOT: Final[str] = "engagement.applications.apply"
+ENGAGEMENT_APPLICATIONS_READ_DOT: Final[str] = "engagement.applications.read"
+ENGAGEMENT_APPLICATIONS_MANAGE_DOT: Final[str] = "engagement.applications.manage"
+ENGAGEMENT_SHIFTS_MANAGE_DOT: Final[str] = "engagement.shifts.manage"
+ENGAGEMENT_ATTENDANCE_RECORD_DOT: Final[str] = "engagement.attendance.record"
+ENGAGEMENT_HOURS_SUBMIT_DOT: Final[str] = "engagement.hours.submit"
+ENGAGEMENT_HOURS_VERIFY_DOT: Final[str] = "engagement.hours.verify"
+ENGAGEMENT_REFLECTIONS_SUBMIT_DOT: Final[str] = "engagement.reflections.submit"
+ENGAGEMENT_REFLECTIONS_REVIEW_DOT: Final[str] = "engagement.reflections.review"
+ENGAGEMENT_CERTIFICATES_ISSUE_DOT: Final[str] = "engagement.certificates.issue"
+ENGAGEMENT_CERTIFICATES_REVOKE_DOT: Final[str] = "engagement.certificates.revoke"
+ENGAGEMENT_SAFETY_MANAGE_DOT: Final[str] = "engagement.safety.manage"
+ENGAGEMENT_ANALYTICS_READ_DOT: Final[str] = "engagement.analytics.read"
+ENGAGEMENT_POLICIES_MANAGE_DOT: Final[str] = "engagement.policies.manage"
 
 
-# Comprehensive Registry
+# --- Step 66: Enterprise Student Housing, Off-Campus Accommodation, Landlord Partnerships & Residential Compliance Management ---
+HOUSING_PROPERTY_READ: Final[str] = "housing:property:read"
+HOUSING_PROPERTY_MANAGE: Final[str] = "housing:property:manage"
+HOUSING_PROPERTY_APPROVE: Final[str] = "housing:property:approve"
+HOUSING_PROVIDER_READ: Final[str] = "housing:provider:read"
+HOUSING_PROVIDER_MANAGE: Final[str] = "housing:provider:manage"
+HOUSING_PROVIDER_PORTAL: Final[str] = "housing:provider:portal"
+HOUSING_REQUEST_SUBMIT_OWN: Final[str] = "housing:request:submit_own"
+HOUSING_REQUEST_READ: Final[str] = "housing:request:read"
+HOUSING_REQUEST_REVIEW: Final[str] = "housing:request:review"
+HOUSING_OFFER_MANAGE: Final[str] = "housing:offer:manage"
+HOUSING_ASSIGNMENT_MANAGE: Final[str] = "housing:assignment:manage"
+HOUSING_AGREEMENT_READ: Final[str] = "housing:agreement:read"
+HOUSING_AGREEMENT_MANAGE: Final[str] = "housing:agreement:manage"
+HOUSING_CHECKIN_MANAGE: Final[str] = "housing:checkin:manage"
+HOUSING_INSPECTION_READ: Final[str] = "housing:inspection:read"
+HOUSING_INSPECTION_MANAGE: Final[str] = "housing:inspection:manage"
+HOUSING_MAINTENANCE_SUBMIT: Final[str] = "housing:maintenance:submit"
+HOUSING_MAINTENANCE_MANAGE: Final[str] = "housing:maintenance:manage"
+HOUSING_ANALYTICS_READ: Final[str] = "housing:analytics:read"
+
+HOUSING_PROPERTY_READ_DOT: Final[str] = "housing.property.read"
+HOUSING_PROPERTY_MANAGE_DOT: Final[str] = "housing.property.manage"
+HOUSING_PROPERTY_APPROVE_DOT: Final[str] = "housing.property.approve"
+HOUSING_PROVIDER_READ_DOT: Final[str] = "housing.provider.read"
+HOUSING_PROVIDER_MANAGE_DOT: Final[str] = "housing.provider.manage"
+HOUSING_PROVIDER_PORTAL_DOT: Final[str] = "housing.provider.portal"
+HOUSING_REQUEST_SUBMIT_OWN_DOT: Final[str] = "housing.request.submit_own"
+HOUSING_REQUEST_READ_DOT: Final[str] = "housing.request.read"
+HOUSING_REQUEST_REVIEW_DOT: Final[str] = "housing.request.review"
+HOUSING_OFFER_MANAGE_DOT: Final[str] = "housing.offer.manage"
+HOUSING_ASSIGNMENT_MANAGE_DOT: Final[str] = "housing.assignment.manage"
+HOUSING_AGREEMENT_READ_DOT: Final[str] = "housing.agreement.read"
+HOUSING_AGREEMENT_MANAGE_DOT: Final[str] = "housing.agreement.manage"
+HOUSING_CHECKIN_MANAGE_DOT: Final[str] = "housing.checkin.manage"
+HOUSING_INSPECTION_READ_DOT: Final[str] = "housing.inspection.read"
+HOUSING_INSPECTION_MANAGE_DOT: Final[str] = "housing.inspection.manage"
+HOUSING_MAINTENANCE_SUBMIT_DOT: Final[str] = "housing.maintenance.submit"
+HOUSING_MAINTENANCE_MANAGE_DOT: Final[str] = "housing.maintenance.manage"
+HOUSING_ANALYTICS_READ_DOT: Final[str] = "housing.analytics.read"
+
+# --- Step 67: Enterprise Campus Sustainability, Energy Management, Environmental Compliance & Carbon Intelligence Platform ---
+SUSTAINABILITY_TARGET_READ: Final[str] = "sustainability:target:read"
+SUSTAINABILITY_TARGET_MANAGE: Final[str] = "sustainability:target:manage"
+SUSTAINABILITY_ENERGY_READ: Final[str] = "sustainability:energy:read"
+SUSTAINABILITY_ENERGY_MANAGE: Final[str] = "sustainability:energy:manage"
+SUSTAINABILITY_WATER_READ: Final[str] = "sustainability:water:read"
+SUSTAINABILITY_WATER_MANAGE: Final[str] = "sustainability:water:manage"
+SUSTAINABILITY_WASTE_READ: Final[str] = "sustainability:waste:read"
+SUSTAINABILITY_WASTE_MANAGE: Final[str] = "sustainability:waste:manage"
+SUSTAINABILITY_WASTE_HAZARDOUS: Final[str] = "sustainability:waste:hazardous"
+SUSTAINABILITY_EMISSIONS_READ: Final[str] = "sustainability:emissions:read"
+SUSTAINABILITY_EMISSIONS_CALCULATE: Final[str] = "sustainability:emissions:calculate"
+SUSTAINABILITY_EMISSIONS_FACTOR_MANAGE: Final[str] = "sustainability:emissions_factor:manage"
+SUSTAINABILITY_INITIATIVE_READ: Final[str] = "sustainability:initiative:read"
+SUSTAINABILITY_INITIATIVE_MANAGE: Final[str] = "sustainability:initiative:manage"
+SUSTAINABILITY_COMPLIANCE_READ: Final[str] = "sustainability:compliance:read"
+SUSTAINABILITY_COMPLIANCE_MANAGE: Final[str] = "sustainability:compliance:manage"
+SUSTAINABILITY_IOT_INGEST: Final[str] = "sustainability:iot:ingest"
+SUSTAINABILITY_DATA_IMPORT: Final[str] = "sustainability:data:import"
+SUSTAINABILITY_ANALYTICS_READ: Final[str] = "sustainability:analytics:read"
+
+SUSTAINABILITY_TARGET_READ_DOT: Final[str] = "sustainability.target.read"
+SUSTAINABILITY_TARGET_MANAGE_DOT: Final[str] = "sustainability.target.manage"
+SUSTAINABILITY_ENERGY_READ_DOT: Final[str] = "sustainability.energy.read"
+SUSTAINABILITY_ENERGY_MANAGE_DOT: Final[str] = "sustainability.energy.manage"
+SUSTAINABILITY_WATER_READ_DOT: Final[str] = "sustainability.water.read"
+SUSTAINABILITY_WATER_MANAGE_DOT: Final[str] = "sustainability.water.manage"
+SUSTAINABILITY_WASTE_READ_DOT: Final[str] = "sustainability.waste.read"
+SUSTAINABILITY_WASTE_MANAGE_DOT: Final[str] = "sustainability.waste.manage"
+SUSTAINABILITY_WASTE_HAZARDOUS_DOT: Final[str] = "sustainability.waste.hazardous"
+SUSTAINABILITY_EMISSIONS_READ_DOT: Final[str] = "sustainability.emissions.read"
+SUSTAINABILITY_EMISSIONS_CALCULATE_DOT: Final[str] = "sustainability.emissions.calculate"
+SUSTAINABILITY_EMISSIONS_FACTOR_MANAGE_DOT: Final[str] = "sustainability.emissions_factor.manage"
+SUSTAINABILITY_INITIATIVE_READ_DOT: Final[str] = "sustainability.initiative.read"
+SUSTAINABILITY_INITIATIVE_MANAGE_DOT: Final[str] = "sustainability.initiative.manage"
+SUSTAINABILITY_COMPLIANCE_READ_DOT: Final[str] = "sustainability.compliance.read"
+SUSTAINABILITY_COMPLIANCE_MANAGE_DOT: Final[str] = "sustainability.compliance.manage"
+SUSTAINABILITY_IOT_INGEST_DOT: Final[str] = "sustainability.iot.ingest"
+SUSTAINABILITY_DATA_IMPORT_DOT: Final[str] = "sustainability.data.import"
+SUSTAINABILITY_ANALYTICS_READ_DOT: Final[str] = "sustainability.analytics.read"
+
+# Enterprise Campus Security, Visitor Management & Emergency Response (Step 68)
+CAMPUS_SECURITY_CONFIG_READ: Final[str] = "campus_security:config:read"
+CAMPUS_SECURITY_CONFIG_MANAGE: Final[str] = "campus_security:config:manage"
+CAMPUS_SECURITY_VISITOR_READ: Final[str] = "campus_security:visitor:read"
+CAMPUS_SECURITY_VISITOR_REQUEST: Final[str] = "campus_security:visitor:request"
+CAMPUS_SECURITY_VISITOR_APPROVE: Final[str] = "campus_security:visitor:approve"
+CAMPUS_SECURITY_GATE_CHECKIN: Final[str] = "campus_security:gate:checkin"
+CAMPUS_SECURITY_GATE_CHECKOUT: Final[str] = "campus_security:gate:checkout"
+CAMPUS_SECURITY_PASS_REVOKE: Final[str] = "campus_security:pass:revoke"
+CAMPUS_SECURITY_CONTRACTOR_READ: Final[str] = "campus_security:contractor:read"
+CAMPUS_SECURITY_CONTRACTOR_MANAGE: Final[str] = "campus_security:contractor:manage"
+CAMPUS_SECURITY_ACCESS_ZONE_READ: Final[str] = "campus_security:access_zone:read"
+CAMPUS_SECURITY_ACCESS_ZONE_MANAGE: Final[str] = "campus_security:access_zone:manage"
+CAMPUS_SECURITY_ACCESS_GRANT_MANAGE: Final[str] = "campus_security:access_grant:manage"
+CAMPUS_SECURITY_INCIDENT_READ: Final[str] = "campus_security:incident:read"
+CAMPUS_SECURITY_INCIDENT_REPORT: Final[str] = "campus_security:incident:report"
+CAMPUS_SECURITY_INCIDENT_MANAGE: Final[str] = "campus_security:incident:manage"
+CAMPUS_SECURITY_EMERGENCY_READ: Final[str] = "campus_security:emergency:read"
+CAMPUS_SECURITY_EMERGENCY_MANAGE: Final[str] = "campus_security:emergency:manage"
+CAMPUS_SECURITY_PATROL_READ: Final[str] = "campus_security:patrol:read"
+CAMPUS_SECURITY_PATROL_MANAGE: Final[str] = "campus_security:patrol:manage"
+CAMPUS_SECURITY_ANALYTICS_READ: Final[str] = "campus_security:analytics:read"
+
+CAMPUS_SECURITY_CONFIG_READ_DOT: Final[str] = "campus_security.config.read"
+CAMPUS_SECURITY_CONFIG_MANAGE_DOT: Final[str] = "campus_security.config.manage"
+CAMPUS_SECURITY_VISITOR_READ_DOT: Final[str] = "campus_security.visitor.read"
+CAMPUS_SECURITY_VISITOR_REQUEST_DOT: Final[str] = "campus_security.visitor.request"
+CAMPUS_SECURITY_VISITOR_APPROVE_DOT: Final[str] = "campus_security.visitor.approve"
+CAMPUS_SECURITY_GATE_CHECKIN_DOT: Final[str] = "campus_security.gate.checkin"
+CAMPUS_SECURITY_GATE_CHECKOUT_DOT: Final[str] = "campus_security.gate.checkout"
+CAMPUS_SECURITY_PASS_REVOKE_DOT: Final[str] = "campus_security.pass.revoke"
+CAMPUS_SECURITY_CONTRACTOR_READ_DOT: Final[str] = "campus_security.contractor.read"
+CAMPUS_SECURITY_CONTRACTOR_MANAGE_DOT: Final[str] = "campus_security.contractor.manage"
+CAMPUS_SECURITY_ACCESS_ZONE_READ_DOT: Final[str] = "campus_security.access_zone.read"
+CAMPUS_SECURITY_ACCESS_ZONE_MANAGE_DOT: Final[str] = "campus_security.access_zone.manage"
+CAMPUS_SECURITY_ACCESS_GRANT_MANAGE_DOT: Final[str] = "campus_security.access_grant.manage"
+CAMPUS_SECURITY_INCIDENT_READ_DOT: Final[str] = "campus_security.incident.read"
+CAMPUS_SECURITY_INCIDENT_REPORT_DOT: Final[str] = "campus_security.incident.report"
+CAMPUS_SECURITY_INCIDENT_MANAGE_DOT: Final[str] = "campus_security.incident.manage"
+CAMPUS_SECURITY_EMERGENCY_READ_DOT: Final[str] = "campus_security.emergency.read"
+CAMPUS_SECURITY_EMERGENCY_MANAGE_DOT: Final[str] = "campus_security.emergency.manage"
+CAMPUS_SECURITY_PATROL_READ_DOT: Final[str] = "campus_security.patrol.read"
+CAMPUS_SECURITY_PATROL_MANAGE_DOT: Final[str] = "campus_security.patrol.manage"
+CAMPUS_SECURITY_ANALYTICS_READ_DOT: Final[str] = "campus_security.analytics.read"
+
+
 ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
 
     # Core
@@ -1700,6 +2344,307 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
     PermissionDefinition(ADMISSIONS_ONBOARDING_MANAGE, "admissions", "Coordinate post-enrollment student onboarding checklists and tasks"),
     PermissionDefinition(ADMISSIONS_REPORTS_READ, "admissions", "View admissions funnel analytics, conversion rates, and seat utilization"),
     PermissionDefinition(ADMISSIONS_APPLICANT_SELF, "admissions", "Applicant self-service portal to submit applications and view offers"),
+    # Timetable & Scheduling
+    PermissionDefinition(TIMETABLE_READ, "timetable", "View master timetables, schedule grids, and sessions"),
+    PermissionDefinition(TIMETABLE_MANAGE, "timetable", "Create, edit, clone, and configure timetable schedules"),
+    PermissionDefinition(TIMETABLE_GENERATE, "timetable", "Run constraint-based automated timetable generation jobs"),
+    PermissionDefinition(TIMETABLE_APPROVE, "timetable", "Review and approve timetable draft versions"),
+    PermissionDefinition(TIMETABLE_PUBLISH, "timetable", "Publish approved timetables and synchronize canonical slots"),
+    PermissionDefinition(TIMETABLE_CHANGES_REQUEST, "timetable", "Submit schedule change, reschedule, or room swap requests"),
+    PermissionDefinition(TIMETABLE_CHANGES_APPROVE, "timetable", "Review and approve schedule change requests and emergency updates"),
+    PermissionDefinition(TIMETABLE_RESOURCES_MANAGE, "timetable", "Manage room reservations, maintenance windows, and equipment suitability"),
+    PermissionDefinition(TIMETABLE_FACULTY_AVAILABILITY, "timetable", "Configure faculty availability windows and workload preferences"),
+    PermissionDefinition(TIMETABLE_REPORTS_READ, "timetable", "View timetable coverage, room utilization, and faculty workload analytics"),
+    PermissionDefinition(TIMETABLE_STUDENT_SELF_READ, "timetable", "Student view of published cohort class timetable"),
+    # Step 50: Enterprise Procurement, Vendor Management & Inventory Control
+    PermissionDefinition(PROCUREMENT_READ, "procurement", "View procurement vendors, requisitions, purchase orders, and stock"),
+    PermissionDefinition(PROCUREMENT_MANAGE, "procurement", "Manage vendor onboarding, purchase orders, and procurement configuration"),
+    PermissionDefinition(PROCUREMENT_VENDORS_MANAGE, "procurement", "Register, verify, and evaluate supplier/vendor organizations"),
+    PermissionDefinition(PROCUREMENT_REQUISITIONS_CREATE, "procurement", "Create and submit departmental purchase requisitions"),
+    PermissionDefinition(PROCUREMENT_REQUISITIONS_APPROVE, "procurement", "Review, return, or approve purchase requisitions"),
+    PermissionDefinition(PROCUREMENT_QUOTATIONS_MANAGE, "procurement", "Manage RFQs, quotation submissions, and vendor evaluation scores"),
+    PermissionDefinition(PROCUREMENT_ORDERS_CREATE, "procurement", "Draft and amend institutional purchase orders"),
+    PermissionDefinition(PROCUREMENT_ORDERS_APPROVE, "procurement", "Approve and issue binding purchase orders"),
+    PermissionDefinition(PROCUREMENT_RECEIVING_MANAGE, "procurement", "Record goods receipts, quality inspection, and returns (RTV)"),
+    PermissionDefinition(PROCUREMENT_INVENTORY_MANAGE, "procurement", "Manage inventory locations, items, stock adjustments, and transfers"),
+    PermissionDefinition(PROCUREMENT_INVENTORY_READ, "procurement", "View inventory item catalogue, availability, and movement history"),
+    PermissionDefinition(PROCUREMENT_INVOICE_MATCH, "procurement", "Perform three-way invoice matching and resolve variance overrides"),
+    PermissionDefinition(PROCUREMENT_REPORTS_READ, "procurement", "View procurement spend, order fulfillment, and inventory analytics"),
+    # Step 51: Enterprise Workforce Management, Staff Lifecycle, Leave & Workload Administration
+    PermissionDefinition(WORKFORCE_READ, "workforce", "View workforce directory, leave, and workload"),
+    PermissionDefinition(WORKFORCE_MANAGE, "workforce", "Manage workforce configuration and administration"),
+    PermissionDefinition(WORKFORCE_EMPLOYEE_READ, "workforce", "View workforce employee profiles and employment history"),
+    PermissionDefinition(WORKFORCE_EMPLOYEE_MANAGE, "workforce", "Create, update, and transfer employee records"),
+    PermissionDefinition(WORKFORCE_LIFECYCLE_MANAGE, "workforce", "Manage staff onboarding, offboarding, and clearance tasks"),
+    PermissionDefinition(WORKFORCE_LEAVE_POLICY_MANAGE, "workforce", "Configure leave types, policies, and accrual rules"),
+    PermissionDefinition(WORKFORCE_LEAVE_READ, "workforce", "View leave requests, balances, and calendar"),
+    PermissionDefinition(WORKFORCE_LEAVE_SUBMIT, "workforce", "Submit employee leave requests"),
+    PermissionDefinition(WORKFORCE_LEAVE_APPROVE, "workforce", "Review, approve, or reject leave applications"),
+    PermissionDefinition(WORKFORCE_LEAVE_BALANCE_MANAGE, "workforce", "Adjust, grant, and reconcile employee leave balances"),
+    PermissionDefinition(WORKFORCE_AVAILABILITY_READ, "workforce", "Check staff availability and timetable scheduling conflicts"),
+    PermissionDefinition(WORKFORCE_WORKLOAD_READ, "workforce", "View staff workload targets, allocations, and summaries"),
+    PermissionDefinition(WORKFORCE_WORKLOAD_MANAGE, "workforce", "Define workload targets, adjust hours, and manage assignments"),
+    PermissionDefinition(WORKFORCE_HR_CASE_READ, "workforce", "View employee self-service requests and HR service cases"),
+    PermissionDefinition(WORKFORCE_HR_CASE_MANAGE, "workforce", "Assign, update, and resolve HR service cases"),
+    PermissionDefinition(WORKFORCE_REPORTS_READ, "workforce", "View workforce headcount, leave utilization, and capacity reports"),
+    # Step 52: Enterprise Payroll, Compensation, Benefits & Statutory Compliance
+    PermissionDefinition(PAYROLL_COMPENSATION_READ, "payroll", "View salary structures, compensation grades, and employee assignments"),
+    PermissionDefinition(PAYROLL_COMPENSATION_MANAGE, "payroll", "Configure salary structures, pay grades, and employee compensation packages"),
+    PermissionDefinition(PAYROLL_CALENDAR_MANAGE, "payroll", "Manage payroll calendars, pay cycles, and cutoff schedules"),
+    PermissionDefinition(PAYROLL_RUN_CREATE, "payroll", "Create and initiate payroll processing batches"),
+    PermissionDefinition(PAYROLL_RUN_CALCULATE, "payroll", "Trigger payroll calculation engine and view computation breakdown"),
+    PermissionDefinition(PAYROLL_RUN_REVIEW, "payroll", "Review pre-payroll summaries, exceptions, and reconciliation items"),
+    PermissionDefinition(PAYROLL_RUN_APPROVE, "payroll", "Approve or reject calculated payroll runs"),
+    PermissionDefinition(PAYROLL_RUN_POST, "payroll", "Post finalized payroll runs to financial general ledger journals"),
+    PermissionDefinition(PAYROLL_PAYMENT_MANAGE, "payroll", "Prepare and export payment disbursement files and bank instructions"),
+    PermissionDefinition(PAYROLL_RECONCILIATION_MANAGE, "payroll", "Reconcile payment transactions with bank statements and clear anomalies"),
+    PermissionDefinition(PAYROLL_COMPLIANCE_MANAGE, "payroll", "Configure and maintain versioned statutory compliance rules and contributions"),
+    PermissionDefinition(PAYROLL_PAYSLIP_READ_OWN, "payroll", "Access personal finalized payslips and annual compensation summaries"),
+    PermissionDefinition(PAYROLL_PAYSLIP_READ_AUTH, "payroll", "Access employee payslips for institutional audits and administration"),
+    PermissionDefinition(PAYROLL_REPORTS_READ, "payroll", "Generate and export payroll registers, statutory reports, and tax audits"),
+    # Step 53: Enterprise Asset Lifecycle, Maintenance, Facilities & Equipment Management
+    PermissionDefinition(ASSETS_READ, "assets", "View registered institutional assets, custody, and lifecycle status"),
+    PermissionDefinition(ASSETS_CREATE, "assets", "Register new institutional assets, equipment, and facilities"),
+    PermissionDefinition(ASSETS_MANAGE, "assets", "Configure asset categories, policies, and edit asset records"),
+    PermissionDefinition(ASSETS_ASSIGN, "assets", "Assign asset custody, temporary loans, and process handovers"),
+    PermissionDefinition(ASSETS_TRANSFER, "assets", "Initiate and approve inter-campus or departmental asset transfers"),
+    PermissionDefinition(ASSETS_LIFECYCLE_MANAGE, "assets", "Execute lifecycle transitions, state changes, and decommissioning"),
+    PermissionDefinition(ASSETS_MAINTENANCE_READ, "assets", "View maintenance plans, schedules, and work orders"),
+    PermissionDefinition(ASSETS_MAINTENANCE_MANAGE, "assets", "Create, dispatch, update, and close maintenance work orders and consume parts"),
+    PermissionDefinition(ASSETS_INSPECTION_MANAGE, "assets", "Execute periodic inspections, record safety findings, and apply restrictions"),
+    PermissionDefinition(ASSETS_AUDIT_MANAGE, "assets", "Create audit campaigns, conduct tag verification scans, and reconcile discrepancies"),
+    PermissionDefinition(ASSETS_RETIREMENT_REQUEST, "assets", "Submit formal asset retirement and disposal requests"),
+    PermissionDefinition(ASSETS_RETIREMENT_APPROVE, "assets", "Approve asset retirement, condemnation, and certified disposal"),
+    PermissionDefinition(ASSETS_FINANCIAL_READ, "assets", "Access fixed-asset depreciation schedules, book values, and finance references"),
+    PermissionDefinition(ASSETS_REPORT_READ, "assets", "Generate enterprise asset, maintenance, and compliance analytics reports"),
+    # Step 54: Enterprise Hostel, Residential Life, Room Allocation & Student Accommodation Management
+    PermissionDefinition(RESIDENTIAL_HOSTEL_READ, "residential", "View hostels, buildings, floors, rooms, and bed inventory"),
+    PermissionDefinition(RESIDENTIAL_HOSTEL_MANAGE, "residential", "Configure hostels, blocks, floors, rooms, amenities, and policies"),
+    PermissionDefinition(RESIDENTIAL_ROOM_MANAGE, "residential", "Manage room inventory, temporary bed blocks, and capacity"),
+    PermissionDefinition(RESIDENTIAL_APPLICATION_SUBMIT_OWN, "residential", "Submit own accommodation application and preferences"),
+    PermissionDefinition(RESIDENTIAL_APPLICATION_REVIEW, "residential", "Review, score, approve, waitlist, or reject accommodation applications"),
+    PermissionDefinition(RESIDENTIAL_ALLOCATION_MANAGE, "residential", "Manage bed allocations, reservations, transfers, and waitlists"),
+    PermissionDefinition(RESIDENTIAL_CHECKIN_MANAGE, "residential", "Process resident check-in, key handover, and facility condition acknowledgement"),
+    PermissionDefinition(RESIDENTIAL_CHECKOUT_MANAGE, "residential", "Execute resident check-out, room handover inspection, and damage charge assessment"),
+    PermissionDefinition(RESIDENTIAL_FEES_READ, "residential", "View residential fee plans, meal plan charges, and payment summaries"),
+    PermissionDefinition(RESIDENTIAL_FEES_MANAGE, "residential", "Configure hostel fee plans, meal plan rates, and generate residential invoices"),
+    PermissionDefinition(RESIDENTIAL_MOVEMENT_MANAGE, "residential", "Authorize, track, and verify student outings, leave passes, and roll-calls"),
+    PermissionDefinition(RESIDENTIAL_VISITOR_MANAGE, "residential", "Register, approve, and verify hostel visitors and security gate passes"),
+    PermissionDefinition(RESIDENTIAL_MAINTENANCE_SUBMIT, "residential", "Submit hostel service requests, room repair tickets, and feedback"),
+    PermissionDefinition(RESIDENTIAL_INCIDENT_READ_AUTHORIZED, "residential", "Access restricted residential safety and disciplinary incident reports"),
+    PermissionDefinition(RESIDENTIAL_INCIDENT_MANAGE, "residential", "Log, investigate, escalate, and resolve residential safety incidents and inspections"),
+    PermissionDefinition(RESIDENTIAL_REPORT_READ, "residential", "Generate residential occupancy dashboards, vacancy summaries, and compliance reports"),
+    # Step 55: Enterprise Transport, Fleet, Routes & Student Mobility Management
+    PermissionDefinition(TRANSPORT_SERVICE_READ, "transport", "View transport service configurations, zones, and schedules"),
+    PermissionDefinition(TRANSPORT_SERVICE_MANAGE, "transport", "Configure transport service policies, operating calendars, and capacity limits"),
+    PermissionDefinition(TRANSPORT_VEHICLE_READ, "transport", "View institutional vehicle fleet, specs, and status"),
+    PermissionDefinition(TRANSPORT_VEHICLE_MANAGE, "transport", "Manage institutional fleet vehicles, compliance certificates, and safety checks"),
+    PermissionDefinition(TRANSPORT_DRIVER_MANAGE, "transport", "Manage driver assignments, driving license compliance, and shifts"),
+    PermissionDefinition(TRANSPORT_ROUTE_READ, "transport", "View transit routes, itineraries, stops, and schedules"),
+    PermissionDefinition(TRANSPORT_ROUTE_MANAGE, "transport", "Create, edit, suspend, or retire transport routes and ordered stops"),
+    PermissionDefinition(TRANSPORT_APPLICATION_SUBMIT_OWN, "transport", "Submit own transport pass application and route preferences"),
+    PermissionDefinition(TRANSPORT_APPLICATION_REVIEW, "transport", "Review, score, approve, waitlist, or reject student transport applications"),
+    PermissionDefinition(TRANSPORT_SUBSCRIPTION_MANAGE, "transport", "Manage transport subscriptions, renewals, suspensions, and passes"),
+    PermissionDefinition(TRANSPORT_ALLOCATION_MANAGE, "transport", "Execute seat allocations, route transfers, and waitlist allocations"),
+    PermissionDefinition(TRANSPORT_TRIP_READ, "transport", "View scheduled and operational transport trips and manifests"),
+    PermissionDefinition(TRANSPORT_TRIP_DISPATCH, "transport", "Dispatch trips, assign substitute drivers/vehicles, and log operational deviations"),
+    PermissionDefinition(TRANSPORT_BOARDING_RECORD, "transport", "Record and verify student boarding and drop-off attendance on trips"),
+    PermissionDefinition(TRANSPORT_TRACKING_READ_AUTHORIZED, "transport", "Access live or telemetry vehicle tracking with privacy controls"),
+    PermissionDefinition(TRANSPORT_INCIDENT_MANAGE, "transport", "Log, investigate, and resolve transport safety incidents and breakdowns"),
+    PermissionDefinition(TRANSPORT_FINANCE_READ_AUTHORIZED, "transport", "Access transport pricing plans, fee structures, and invoice reconciliations"),
+    PermissionDefinition(TRANSPORT_REPORT_READ, "transport", "Generate transport route utilization, passenger manifest, and compliance analytics reports"),
+    # Step 57: Enterprise Sports, Athletics, Recreation & Student Fitness Management
+    PermissionDefinition(SPORTS_DEPARTMENT_READ, "sports", "View sports departments, recreation centers, and policies"),
+    PermissionDefinition(SPORTS_DEPARTMENT_MANAGE, "sports", "Configure sports departments, staff assignments, and operating schedules"),
+    PermissionDefinition(SPORTS_FACILITY_READ, "sports", "View campus sports grounds, courts, and bookable facilities"),
+    PermissionDefinition(SPORTS_FACILITY_MANAGE, "sports", "Register and configure sports facilities, operating hours, and maintenance closures"),
+    PermissionDefinition(SPORTS_BOOKING_CREATE, "sports", "Reserve sports facilities and courts for training, recreation, or events"),
+    PermissionDefinition(SPORTS_BOOKING_MANAGE, "sports", "Manage, approve, or cancel facility reservations and conflict overrides"),
+    PermissionDefinition(SPORTS_PARTICIPANT_READ, "sports", "View student athlete and participant sports profiles and clearance status"),
+    PermissionDefinition(SPORTS_PARTICIPANT_REGISTER_SELF, "sports", "Self-service registration for sports activities, teams, and fitness camps"),
+    PermissionDefinition(SPORTS_PARTICIPANT_MANAGE, "sports", "Manage participant eligibility, clearance verification, and consent records"),
+    PermissionDefinition(SPORTS_TEAM_READ, "sports", "View institutional sports teams, divisions, and rosters"),
+    PermissionDefinition(SPORTS_TEAM_MANAGE, "sports", "Create and govern sports teams, roster capacity, and membership approvals"),
+    PermissionDefinition(SPORTS_COACH_MANAGE, "sports", "Assign and manage coaches, trainers, and coordinators for teams and programs"),
+    PermissionDefinition(SPORTS_TRAINING_READ, "sports", "View training programs, fitness camps, and session schedules"),
+    PermissionDefinition(SPORTS_TRAINING_MANAGE, "sports", "Create training programs, schedule sessions, and manage camp enrollment"),
+    PermissionDefinition(SPORTS_ATTENDANCE_RECORD, "sports", "Record and verify student athlete attendance at training sessions"),
+    PermissionDefinition(SPORTS_COMPETITION_READ, "sports", "View tournaments, leagues, sports meets, and fixtures"),
+    PermissionDefinition(SPORTS_COMPETITION_MANAGE, "sports", "Organize tournaments, generate fixtures, and configure competition rules"),
+    PermissionDefinition(SPORTS_MATCH_SCHEDULE, "sports", "Schedule, reschedule, and assign venues and officials to matches"),
+    PermissionDefinition(SPORTS_RESULT_RECORD, "sports", "Input match scores, results, and game events"),
+    PermissionDefinition(SPORTS_RESULT_VERIFY, "sports", "Verify and publish official match outcomes, standings, and rankings"),
+    PermissionDefinition(SPORTS_EQUIPMENT_MANAGE, "sports", "Manage sports gear checkout, returns, and inventory damage tracking"),
+    PermissionDefinition(SPORTS_FINANCE_MANAGE, "sports", "Configure tournament entry fees, program pricing, and invoice generation"),
+    PermissionDefinition(SPORTS_REPORT_READ, "sports", "Access sports participation, facility utilization, and competition reports"),
+    # Step 58: Enterprise Student Affairs, Grievance Redressal & Disciplinary Case Management
+    PermissionDefinition(SA_OFFICE_READ, "student_affairs", "View student affairs offices, policies, and grievance categories"),
+    PermissionDefinition(SA_OFFICE_MANAGE, "student_affairs", "Configure student affairs offices, staff assignments, and campus settings"),
+    PermissionDefinition(SA_CATEGORY_READ, "student_affairs", "View institutional grievance categories and SLA rules"),
+    PermissionDefinition(SA_CATEGORY_MANAGE, "student_affairs", "Manage grievance categories, SLA hours, and confidentiality requirements"),
+    PermissionDefinition(SA_CASE_SUBMIT_OWN, "student_affairs", "Submit student grievances, complaints, and requests for resolution"),
+    PermissionDefinition(SA_CASE_READ_OWN, "student_affairs", "View status, receipts, and communication history for own submitted cases"),
+    PermissionDefinition(SA_CASE_READ_ASSIGNED, "student_affairs", "View and process cases specifically assigned to case officer or investigator"),
+    PermissionDefinition(SA_CASE_READ_ALL, "student_affairs", "Access all student affairs cases across campus with role-based restrictions"),
+    PermissionDefinition(SA_CASE_ASSIGN, "student_affairs", "Assign and reassign case officers and investigators with conflict tracking"),
+    PermissionDefinition(SA_CASE_UPDATE, "student_affairs", "Update case classification, status transitions, and procedural milestones"),
+    PermissionDefinition(SA_CASE_CONFIDENTIAL_READ, "student_affairs", "Access confidential and restricted safeguarding case records"),
+    PermissionDefinition(SA_DISCIPLINARY_MANAGE, "student_affairs", "Manage formal disciplinary proceedings, notices, findings, and sanctions"),
+    PermissionDefinition(SA_EVIDENCE_READ, "student_affairs", "Review evidence attachments, witness statements, and procedural documents"),
+    PermissionDefinition(SA_EVIDENCE_UPLOAD, "student_affairs", "Upload evidence files, incident reports, and case documentation"),
+    PermissionDefinition(SA_EVIDENCE_REDACT, "student_affairs", "Redact sensitive personal data from evidence files while preserving originals"),
+    PermissionDefinition(SA_MEETING_MANAGE, "student_affairs", "Schedule and manage hearings, mediation sessions, and case conferences"),
+    PermissionDefinition(SA_RESOLUTION_PROPOSE, "student_affairs", "Propose resolutions, corrective actions, and restitution terms"),
+    PermissionDefinition(SA_RESOLUTION_APPROVE, "student_affairs", "Authorize formal case resolutions, agreed remedies, and closures"),
+    PermissionDefinition(SA_APPEAL_FILE, "student_affairs", "File formal appeals against disciplinary decisions within policy windows"),
+    PermissionDefinition(SA_APPEAL_REVIEW, "student_affairs", "Review appeals under separation-of-duties governance and issue final determinations"),
+    PermissionDefinition(SA_ESCALATION_MANAGE, "student_affairs", "Manage urgent safeguarding escalations, threat evaluations, and safety referrals"),
+    PermissionDefinition(SA_COMMUNICATION_SEND, "student_affairs", "Send confidential messages and information requests within authorized case threads"),
+    PermissionDefinition(SA_REPORT_READ, "student_affairs", "Access student affairs analytics, grievance SLA tracking, and resolution reports"),
+    PermissionDefinition(SA_POLICY_MANAGE, "student_affairs", "Configure institutional student affairs policies, SLA targets, and appeal rules"),
+    # Student Counselling, Mentoring & Personal Development (Step 59)
+    PermissionDefinition(MENTOR_ASSIGNMENT_READ, "student_support", "View student-mentor assignments and coverage"),
+    PermissionDefinition(MENTOR_ASSIGNMENT_MANAGE, "student_support", "Create, update, and reassign faculty mentors"),
+    PermissionDefinition(MENTORING_SESSION_READ, "student_support", "View scheduled and completed mentoring sessions"),
+    PermissionDefinition(MENTORING_SESSION_MANAGE, "student_support", "Schedule, update, and record mentoring session summaries"),
+    PermissionDefinition(MENTORING_SESSION_PARTICIPATE, "student_support", "Participate in mentoring sessions and record reflections"),
+    PermissionDefinition(COUNSELLING_APPOINTMENT_REQUEST, "student_support", "Request or book counselling appointments"),
+    PermissionDefinition(COUNSELLING_APPOINTMENT_READ, "student_support", "View counselling appointment schedule and status"),
+    PermissionDefinition(COUNSELLING_APPOINTMENT_MANAGE, "student_support", "Confirm, reschedule, or cancel counselling appointments"),
+    PermissionDefinition(COUNSELLING_CONFIDENTIAL_READ, "student_support", "Access restricted confidential clinical counselling records"),
+    PermissionDefinition(COUNSELLING_CONFIDENTIAL_WRITE, "student_support", "Record and update restricted clinical counselling notes"),
+    PermissionDefinition(DEVELOPMENT_PLAN_READ, "student_support", "View student individual development plans"),
+    PermissionDefinition(DEVELOPMENT_PLAN_MANAGE, "student_support", "Create and manage student development plans and goals"),
+    PermissionDefinition(DEVELOPMENT_PLAN_UPDATE_OWN, "student_support", "Update self-development progress and reflections"),
+    PermissionDefinition(SUPPORT_REFERRAL_CREATE, "student_support", "Create referrals across student support services"),
+    PermissionDefinition(SUPPORT_REFERRAL_READ, "student_support", "View student support referrals and statuses"),
+    PermissionDefinition(SUPPORT_REFERRAL_MANAGE, "student_support", "Process, accept, or close student support referrals"),
+    PermissionDefinition(SUPPORT_FOLLOWUP_MANAGE, "student_support", "Coordinate and complete support follow-up deadlines"),
+    PermissionDefinition(SUPPORT_REPORT_READ, "student_support", "Access aggregate mentoring and non-confidential support analytics"),
+    PermissionDefinition(SUPPORT_CONFIG_MANAGE, "student_support", "Configure mentoring limits, booking windows, and support policies"),
+    # International Relations, Student Exchange & Global Mobility (Step 60)
+    PermissionDefinition(INTL_PARTNER_READ, "international", "View international partners and universities"),
+    PermissionDefinition(INTL_PARTNER_MANAGE, "international", "Register, update, and manage international partner institutions"),
+    PermissionDefinition(INTL_AGREEMENT_READ, "international", "View institutional MoUs, bilateral agreements, and renewal terms"),
+    PermissionDefinition(INTL_AGREEMENT_MANAGE, "international", "Draft, approve, and manage international partnership agreements"),
+    PermissionDefinition(INTL_PROGRAM_READ, "international", "Browse published exchange and study-abroad programs"),
+    PermissionDefinition(INTL_PROGRAM_MANAGE, "international", "Configure and publish international mobility programs"),
+    PermissionDefinition(MOBILITY_APPLICATION_APPLY, "international", "Apply for study abroad and exchange programs"),
+    PermissionDefinition(MOBILITY_APPLICATION_READ, "international", "View student mobility applications and status"),
+    PermissionDefinition(MOBILITY_APPLICATION_REVIEW, "international", "Review and evaluate student exchange applications"),
+    PermissionDefinition(MOBILITY_APPLICATION_NOMINATE, "international", "Nominate approved students to partner institutions"),
+    PermissionDefinition(MOBILITY_INBOUND_MANAGE, "international", "Manage inbound exchange students, arrival, and orientation"),
+    PermissionDefinition(FACULTY_MOBILITY_READ, "international", "View faculty mobility and visiting scholar records"),
+    PermissionDefinition(FACULTY_MOBILITY_MANAGE, "international", "Coordinate outbound faculty exchange and visiting scholar visits"),
+    PermissionDefinition(CREDIT_EQUIVALENCY_READ, "international", "View course equivalency mappings"),
+    PermissionDefinition(CREDIT_EQUIVALENCY_EVALUATE, "international", "Evaluate international course syllabi and proposed equivalencies"),
+    PermissionDefinition(CREDIT_TRANSFER_APPROVE, "international", "Approve formal academic credit transfer determinations"),
+    PermissionDefinition(MOBILITY_DOCUMENT_VERIFY, "international", "Verify international mobility checklists and uploaded documents"),
+    PermissionDefinition(MOBILITY_FUNDING_MANAGE, "international", "Coordinate mobility scholarships, grants, and funding requests"),
+    PermissionDefinition(INTL_REPORT_READ, "international", "Access global mobility and partnership health analytics"),
+    PermissionDefinition(INTL_CONFIG_MANAGE, "international", "Configure international mobility policies and workflows"),
+    # Legal Affairs, Contract Lifecycle & Risk (Step 62)
+    PermissionDefinition(LEGAL_OPERATIONS_READ, "legal", "Access unified institutional legal operations dashboard"),
+    PermissionDefinition(LEGAL_CONTRACTS_READ, "legal", "View institutional contract registry and status"),
+    PermissionDefinition(LEGAL_CONTRACTS_MANAGE, "legal", "Create, edit, and transition institutional contracts"),
+    PermissionDefinition(LEGAL_CONTRACTS_APPROVE, "legal", "Approve institutional contracts through workflow"),
+    PermissionDefinition(LEGAL_CONTRACTS_EXECUTE, "legal", "Record execution and external signature of contracts"),
+    PermissionDefinition(LEGAL_OBLIGATIONS_READ, "legal", "View contractual commitments and obligations"),
+    PermissionDefinition(LEGAL_OBLIGATIONS_MANAGE, "legal", "Manage, fulfill, verify, or waive contract obligations"),
+    PermissionDefinition(LEGAL_MATTERS_READ, "legal", "View authorized institutional legal matters and cases"),
+    PermissionDefinition(LEGAL_MATTERS_MANAGE, "legal", "Create and manage institutional legal matters"),
+    PermissionDefinition(LEGAL_MATTERS_CONFIDENTIAL, "legal", "Access restricted attorney-client privileged legal notes"),
+    PermissionDefinition(LEGAL_POLICIES_MANAGE, "legal", "Draft, update, and manage institutional policies"),
+    PermissionDefinition(LEGAL_POLICIES_APPROVE, "legal", "Approve and publish institutional policies"),
+    PermissionDefinition(LEGAL_COMPLIANCE_READ, "legal", "View compliance obligations and assessments"),
+    PermissionDefinition(LEGAL_COMPLIANCE_MANAGE, "legal", "Manage compliance obligations, evidence, and corrective actions"),
+    PermissionDefinition(LEGAL_RISKS_READ, "legal", "View enterprise risk register and 5x5 scoring matrix"),
+    PermissionDefinition(LEGAL_RISKS_MANAGE, "legal", "Assess, mitigate, and record accepted institutional risks"),
+    # Student Engagement, Community Service, Volunteering & Civic Impact (Step 65)
+    PermissionDefinition(ENGAGEMENT_PROGRAMS_READ, "engagement", "View community service and engagement programs"),
+    PermissionDefinition(ENGAGEMENT_PROGRAMS_MANAGE, "engagement", "Create, edit, and coordinate community engagement programs"),
+    PermissionDefinition(ENGAGEMENT_PROGRAMS_APPROVE, "engagement", "Approve community engagement programs"),
+    PermissionDefinition(ENGAGEMENT_PROGRAMS_PUBLISH, "engagement", "Publish approved community engagement programs"),
+    PermissionDefinition(ENGAGEMENT_PARTNERS_READ, "engagement", "View community partners and collaborative organizations"),
+    PermissionDefinition(ENGAGEMENT_PARTNERS_MANAGE, "engagement", "Manage partner organizations and partnership agreements"),
+    PermissionDefinition(ENGAGEMENT_OPPORTUNITIES_READ, "engagement", "Discover and view volunteering opportunities"),
+    PermissionDefinition(ENGAGEMENT_OPPORTUNITIES_MANAGE, "engagement", "Create and manage volunteering opportunities and shifts"),
+    PermissionDefinition(ENGAGEMENT_APPLICATIONS_APPLY, "engagement", "Apply for volunteering opportunities"),
+    PermissionDefinition(ENGAGEMENT_APPLICATIONS_READ, "engagement", "View volunteer participation applications"),
+    PermissionDefinition(ENGAGEMENT_APPLICATIONS_MANAGE, "engagement", "Review, approve, waitlist, or reject participation applications"),
+    PermissionDefinition(ENGAGEMENT_SHIFTS_MANAGE, "engagement", "Create shifts and manage participant rosters"),
+    PermissionDefinition(ENGAGEMENT_ATTENDANCE_RECORD, "engagement", "Record check-in, check-out and participation attendance"),
+    PermissionDefinition(ENGAGEMENT_HOURS_SUBMIT, "engagement", "Submit service hours for verification"),
+    PermissionDefinition(ENGAGEMENT_HOURS_VERIFY, "engagement", "Verify, adjust, and approve student service hours"),
+    PermissionDefinition(ENGAGEMENT_REFLECTIONS_SUBMIT, "engagement", "Submit reflections, learning outcomes and evidence"),
+    PermissionDefinition(ENGAGEMENT_REFLECTIONS_REVIEW, "engagement", "Review and grade student reflection submissions"),
+    PermissionDefinition(ENGAGEMENT_CERTIFICATES_ISSUE, "engagement", "Issue verifiable engagement and civic service certificates"),
+    PermissionDefinition(ENGAGEMENT_CERTIFICATES_REVOKE, "engagement", "Revoke or reissue engagement certificates"),
+    PermissionDefinition(ENGAGEMENT_SAFETY_MANAGE, "engagement", "Manage safety briefings, consent records, and risk clearance"),
+    PermissionDefinition(ENGAGEMENT_ANALYTICS_READ, "engagement", "Access civic engagement and impact analytics"),
+    PermissionDefinition(ENGAGEMENT_POLICIES_MANAGE, "engagement", "Configure community engagement guidelines and policies"),
+    # Step 66: Enterprise Student Housing, Off-Campus Accommodation & Landlord Partnerships
+    PermissionDefinition(HOUSING_PROPERTY_READ, "housing", "View approved accommodation properties and housing options"),
+    PermissionDefinition(HOUSING_PROPERTY_MANAGE, "housing", "Create, update, and manage student housing properties"),
+    PermissionDefinition(HOUSING_PROPERTY_APPROVE, "housing", "Review and approve/suspend accommodation properties"),
+    PermissionDefinition(HOUSING_PROVIDER_READ, "housing", "View registered accommodation providers and landlords"),
+    PermissionDefinition(HOUSING_PROVIDER_MANAGE, "housing", "Manage landlord partnerships, MoUs, and provider records"),
+    PermissionDefinition(HOUSING_PROVIDER_PORTAL, "housing", "Access provider and landlord self-service portal"),
+    PermissionDefinition(HOUSING_REQUEST_SUBMIT_OWN, "housing", "Submit own student housing and accommodation request"),
+    PermissionDefinition(HOUSING_REQUEST_READ, "housing", "View student housing requests across institution/campus"),
+    PermissionDefinition(HOUSING_REQUEST_REVIEW, "housing", "Review, evaluate, and approve/reject housing requests"),
+    PermissionDefinition(HOUSING_OFFER_MANAGE, "housing", "Issue, modify, or revoke accommodation offers"),
+    PermissionDefinition(HOUSING_ASSIGNMENT_MANAGE, "housing", "Allocate, transfer, and manage student room assignments"),
+    PermissionDefinition(HOUSING_AGREEMENT_READ, "housing", "View housing agreements, leases, and deposit terms"),
+    PermissionDefinition(HOUSING_AGREEMENT_MANAGE, "housing", "Create and execute accommodation agreements and leases"),
+    PermissionDefinition(HOUSING_CHECKIN_MANAGE, "housing", "Process check-in/out, inventory checklists, and damage assessments"),
+    PermissionDefinition(HOUSING_INSPECTION_READ, "housing", "View property safety, fire, and hygiene inspection reports"),
+    PermissionDefinition(HOUSING_INSPECTION_MANAGE, "housing", "Schedule and conduct residential compliance inspections"),
+    PermissionDefinition(HOUSING_MAINTENANCE_SUBMIT, "housing", "Submit accommodation maintenance and repair requests"),
+    PermissionDefinition(HOUSING_MAINTENANCE_MANAGE, "housing", "Coordinate, assign, and resolve housing maintenance work orders"),
+    PermissionDefinition(HOUSING_ANALYTICS_READ, "housing", "Access housing occupancy, capacity, and compliance analytics"),
+    # Step 67: Enterprise Campus Sustainability, Energy Management, Environmental Compliance & Carbon Intelligence Platform
+    PermissionDefinition(SUSTAINABILITY_TARGET_READ, "sustainability", "View sustainability targets, baselines, and KPI configurations"),
+    PermissionDefinition(SUSTAINABILITY_TARGET_MANAGE, "sustainability", "Configure and update campus sustainability targets"),
+    PermissionDefinition(SUSTAINABILITY_ENERGY_READ, "sustainability", "View energy consumption and renewable generation data"),
+    PermissionDefinition(SUSTAINABILITY_ENERGY_MANAGE, "sustainability", "Record energy readings, fuels, and investigate peak anomalies"),
+    PermissionDefinition(SUSTAINABILITY_WATER_READ, "sustainability", "View water consumption, borewell, rainwater, and recycling logs"),
+    PermissionDefinition(SUSTAINABILITY_WATER_MANAGE, "sustainability", "Record water utility logs, detect leak anomalies, and coordinate fixes"),
+    PermissionDefinition(SUSTAINABILITY_WASTE_READ, "sustainability", "View solid, organic, and recyclable waste audit records"),
+    PermissionDefinition(SUSTAINABILITY_WASTE_MANAGE, "sustainability", "Record and manage waste manifests and vendor recycling certificates"),
+    PermissionDefinition(SUSTAINABILITY_WASTE_HAZARDOUS, "sustainability", "Authorize, manifest, and verify hazardous and e-waste disposals"),
+    PermissionDefinition(SUSTAINABILITY_EMISSIONS_READ, "sustainability", "View Scope 1, 2, and 3 carbon accounting balances"),
+    PermissionDefinition(SUSTAINABILITY_EMISSIONS_CALCULATE, "sustainability", "Execute carbon calculation runs and emission recalculations"),
+    PermissionDefinition(SUSTAINABILITY_EMISSIONS_FACTOR_MANAGE, "sustainability", "Maintain emission factor registries, versions, and warming potentials"),
+    PermissionDefinition(SUSTAINABILITY_INITIATIVE_READ, "sustainability", "View campus green initiatives, programs, and milestones"),
+    PermissionDefinition(SUSTAINABILITY_INITIATIVE_MANAGE, "sustainability", "Create and track sustainability programs, investments, and budgets"),
+    PermissionDefinition(SUSTAINABILITY_COMPLIANCE_READ, "sustainability", "View environmental compliance obligations, permits, and inspection audits"),
+    PermissionDefinition(SUSTAINABILITY_COMPLIANCE_MANAGE, "sustainability", "Manage environmental licenses, NOC renewals, and corrective actions"),
+    PermissionDefinition(SUSTAINABILITY_IOT_INGEST, "sustainability", "Ingest and process smart meter and IoT environmental sensor telemetry"),
+    PermissionDefinition(SUSTAINABILITY_DATA_IMPORT, "sustainability", "Bulk import utility invoices, meter spreadsheets, and historical datasets"),
+    PermissionDefinition(SUSTAINABILITY_ANALYTICS_READ, "sustainability", "Access campus sustainability dashboards, ESG metrics, and net-zero projections"),
+    PermissionDefinition(CAMPUS_SECURITY_CONFIG_READ, "campus_security", "View campus security gates, zones, and operating policies"),
+    PermissionDefinition(CAMPUS_SECURITY_CONFIG_MANAGE, "campus_security", "Configure campus checkpoints, security zones, and visit policies"),
+    PermissionDefinition(CAMPUS_SECURITY_VISITOR_READ, "campus_security", "View visitor pre-registrations and visit logs"),
+    PermissionDefinition(CAMPUS_SECURITY_VISITOR_REQUEST, "campus_security", "Submit visitor pre-registration and host requests"),
+    PermissionDefinition(CAMPUS_SECURITY_VISITOR_APPROVE, "campus_security", "Approve or reject visitor requests"),
+    PermissionDefinition(CAMPUS_SECURITY_GATE_CHECKIN, "campus_security", "Process visitor gate check-in and issue visitor passes"),
+    PermissionDefinition(CAMPUS_SECURITY_GATE_CHECKOUT, "campus_security", "Process visitor gate check-out"),
+    PermissionDefinition(CAMPUS_SECURITY_PASS_REVOKE, "campus_security", "Revoke active visitor pass or access token"),
+    PermissionDefinition(CAMPUS_SECURITY_CONTRACTOR_READ, "campus_security", "View contractor organization profiles and work permits"),
+    PermissionDefinition(CAMPUS_SECURITY_CONTRACTOR_MANAGE, "campus_security", "Manage contractor profiles, safety training, and badges"),
+    PermissionDefinition(CAMPUS_SECURITY_ACCESS_ZONE_READ, "campus_security", "View security access zones and clearance levels"),
+    PermissionDefinition(CAMPUS_SECURITY_ACCESS_ZONE_MANAGE, "campus_security", "Configure security access zones and restrictions"),
+    PermissionDefinition(CAMPUS_SECURITY_ACCESS_GRANT_MANAGE, "campus_security", "Grant, extend, or revoke time-limited zone access"),
+    PermissionDefinition(CAMPUS_SECURITY_INCIDENT_READ, "campus_security", "View campus physical security incident reports"),
+    PermissionDefinition(CAMPUS_SECURITY_INCIDENT_REPORT, "campus_security", "Report physical security incidents or safety hazards"),
+    PermissionDefinition(CAMPUS_SECURITY_INCIDENT_MANAGE, "campus_security", "Assign, investigate, escalate, and resolve security incidents"),
+    PermissionDefinition(CAMPUS_SECURITY_EMERGENCY_READ, "campus_security", "View active emergency events and coordination workspaces"),
+    PermissionDefinition(CAMPUS_SECURITY_EMERGENCY_MANAGE, "campus_security", "Initiate emergency events, dispatch tasks, and post after-action reports"),
+    PermissionDefinition(CAMPUS_SECURITY_PATROL_READ, "campus_security", "View security patrol plans and checkpoint logs"),
+    PermissionDefinition(CAMPUS_SECURITY_PATROL_MANAGE, "campus_security", "Create patrol routes, record rounds, and review completion"),
+    PermissionDefinition(CAMPUS_SECURITY_ANALYTICS_READ, "campus_security", "Access campus security analytics and gate operations dashboards"),
+
 ]
 
 
@@ -1707,6 +2652,312 @@ ALL_PERMISSIONS: Final[list[PermissionDefinition]] = [
 DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
     "SUPER_ADMIN": [p.code for p in ALL_PERMISSIONS],
     "INSTITUTION_ADMIN": [
+        # Legal Affairs, Contract Lifecycle, Compliance & Risk (Step 62)
+        LEGAL_OPERATIONS_READ,
+        LEGAL_CONTRACTS_READ,
+        LEGAL_CONTRACTS_MANAGE,
+        LEGAL_CONTRACTS_APPROVE,
+        LEGAL_CONTRACTS_EXECUTE,
+        LEGAL_OBLIGATIONS_READ,
+        LEGAL_OBLIGATIONS_MANAGE,
+        LEGAL_MATTERS_READ,
+        LEGAL_MATTERS_MANAGE,
+        LEGAL_POLICIES_MANAGE,
+        LEGAL_POLICIES_APPROVE,
+        LEGAL_COMPLIANCE_READ,
+        LEGAL_COMPLIANCE_MANAGE,
+        LEGAL_RISKS_READ,
+        LEGAL_RISKS_MANAGE,
+        SUSTAINABILITY_COMPLIANCE_READ,
+        SUSTAINABILITY_COMPLIANCE_MANAGE,
+        SUSTAINABILITY_TARGET_READ,
+        SUSTAINABILITY_ANALYTICS_READ,
+        CAMPUS_SECURITY_CONFIG_READ,
+        CAMPUS_SECURITY_CONFIG_MANAGE,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_APPROVE,
+        CAMPUS_SECURITY_GATE_CHECKIN,
+        CAMPUS_SECURITY_GATE_CHECKOUT,
+        CAMPUS_SECURITY_PASS_REVOKE,
+        CAMPUS_SECURITY_CONTRACTOR_READ,
+        CAMPUS_SECURITY_CONTRACTOR_MANAGE,
+        CAMPUS_SECURITY_ACCESS_ZONE_READ,
+        CAMPUS_SECURITY_ACCESS_ZONE_MANAGE,
+        CAMPUS_SECURITY_ACCESS_GRANT_MANAGE,
+        CAMPUS_SECURITY_INCIDENT_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        CAMPUS_SECURITY_INCIDENT_MANAGE,
+        CAMPUS_SECURITY_EMERGENCY_READ,
+        CAMPUS_SECURITY_EMERGENCY_MANAGE,
+        CAMPUS_SECURITY_PATROL_READ,
+        CAMPUS_SECURITY_PATROL_MANAGE,
+        CAMPUS_SECURITY_ANALYTICS_READ,
+        # Student Engagement, Community Service, Volunteering & Civic Impact (Step 65)
+        ENGAGEMENT_PROGRAMS_READ,
+        ENGAGEMENT_PROGRAMS_MANAGE,
+        ENGAGEMENT_PROGRAMS_APPROVE,
+        ENGAGEMENT_PROGRAMS_PUBLISH,
+        ENGAGEMENT_PARTNERS_READ,
+        ENGAGEMENT_PARTNERS_MANAGE,
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_OPPORTUNITIES_MANAGE,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_APPLICATIONS_MANAGE,
+        ENGAGEMENT_SHIFTS_MANAGE,
+        ENGAGEMENT_ATTENDANCE_RECORD,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_REFLECTIONS_REVIEW,
+        ENGAGEMENT_CERTIFICATES_ISSUE,
+        ENGAGEMENT_CERTIFICATES_REVOKE,
+        ENGAGEMENT_SAFETY_MANAGE,
+        ENGAGEMENT_ANALYTICS_READ,
+        ENGAGEMENT_POLICIES_MANAGE,
+        # Student Housing & Off-Campus Accommodation (Step 66)
+        HOUSING_PROPERTY_READ,
+        HOUSING_PROPERTY_MANAGE,
+        HOUSING_PROPERTY_APPROVE,
+        HOUSING_PROVIDER_READ,
+        HOUSING_PROVIDER_MANAGE,
+        HOUSING_PROVIDER_PORTAL,
+        HOUSING_REQUEST_SUBMIT_OWN,
+        HOUSING_REQUEST_READ,
+        HOUSING_REQUEST_REVIEW,
+        HOUSING_OFFER_MANAGE,
+        HOUSING_ASSIGNMENT_MANAGE,
+        HOUSING_AGREEMENT_READ,
+        HOUSING_AGREEMENT_MANAGE,
+        HOUSING_CHECKIN_MANAGE,
+        HOUSING_INSPECTION_READ,
+        HOUSING_INSPECTION_MANAGE,
+        HOUSING_MAINTENANCE_SUBMIT,
+        HOUSING_MAINTENANCE_MANAGE,
+        HOUSING_ANALYTICS_READ,
+        # Campus Sustainability, Energy & Carbon Intelligence (Step 67)
+        SUSTAINABILITY_TARGET_READ,
+        SUSTAINABILITY_TARGET_MANAGE,
+        SUSTAINABILITY_ENERGY_READ,
+        SUSTAINABILITY_ENERGY_MANAGE,
+        SUSTAINABILITY_WATER_READ,
+        SUSTAINABILITY_WATER_MANAGE,
+        SUSTAINABILITY_WASTE_READ,
+        SUSTAINABILITY_WASTE_MANAGE,
+        SUSTAINABILITY_WASTE_HAZARDOUS,
+        SUSTAINABILITY_EMISSIONS_READ,
+        SUSTAINABILITY_EMISSIONS_CALCULATE,
+        SUSTAINABILITY_EMISSIONS_FACTOR_MANAGE,
+        SUSTAINABILITY_INITIATIVE_READ,
+        SUSTAINABILITY_INITIATIVE_MANAGE,
+        SUSTAINABILITY_COMPLIANCE_READ,
+        SUSTAINABILITY_COMPLIANCE_MANAGE,
+        SUSTAINABILITY_IOT_INGEST,
+        SUSTAINABILITY_DATA_IMPORT,
+        SUSTAINABILITY_ANALYTICS_READ,
+        # Campus Security, Visitor Management & Emergency Response (Step 68)
+        CAMPUS_SECURITY_CONFIG_READ,
+        CAMPUS_SECURITY_CONFIG_MANAGE,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_APPROVE,
+        CAMPUS_SECURITY_GATE_CHECKIN,
+        CAMPUS_SECURITY_GATE_CHECKOUT,
+        CAMPUS_SECURITY_PASS_REVOKE,
+        CAMPUS_SECURITY_CONTRACTOR_READ,
+        CAMPUS_SECURITY_CONTRACTOR_MANAGE,
+        CAMPUS_SECURITY_ACCESS_ZONE_READ,
+        CAMPUS_SECURITY_ACCESS_ZONE_MANAGE,
+        CAMPUS_SECURITY_ACCESS_GRANT_MANAGE,
+        CAMPUS_SECURITY_INCIDENT_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        CAMPUS_SECURITY_INCIDENT_MANAGE,
+        CAMPUS_SECURITY_EMERGENCY_READ,
+        CAMPUS_SECURITY_EMERGENCY_MANAGE,
+        CAMPUS_SECURITY_PATROL_READ,
+        CAMPUS_SECURITY_PATROL_MANAGE,
+        CAMPUS_SECURITY_ANALYTICS_READ,
+        # International Relations, Student Exchange & Global Mobility (Step 60)
+        INTL_PARTNER_READ,
+        INTL_PARTNER_MANAGE,
+        INTL_AGREEMENT_READ,
+        INTL_AGREEMENT_MANAGE,
+        INTL_PROGRAM_READ,
+        INTL_PROGRAM_MANAGE,
+        MOBILITY_APPLICATION_READ,
+        MOBILITY_APPLICATION_REVIEW,
+        MOBILITY_APPLICATION_NOMINATE,
+        MOBILITY_INBOUND_MANAGE,
+        FACULTY_MOBILITY_READ,
+        FACULTY_MOBILITY_MANAGE,
+        CREDIT_EQUIVALENCY_READ,
+        CREDIT_EQUIVALENCY_EVALUATE,
+        CREDIT_TRANSFER_APPROVE,
+        MOBILITY_DOCUMENT_VERIFY,
+        MOBILITY_FUNDING_MANAGE,
+        INTL_REPORT_READ,
+        INTL_CONFIG_MANAGE,
+        # Student Counselling, Mentoring & Personal Development (Step 59)
+        # Note: CONFIDENTIAL counselling records are intentionally excluded from institutional admins
+        MENTOR_ASSIGNMENT_READ,
+        MENTOR_ASSIGNMENT_MANAGE,
+        MENTORING_SESSION_READ,
+        MENTORING_SESSION_MANAGE,
+        COUNSELLING_APPOINTMENT_READ,
+        COUNSELLING_APPOINTMENT_MANAGE,
+        DEVELOPMENT_PLAN_READ,
+        DEVELOPMENT_PLAN_MANAGE,
+        SUPPORT_REFERRAL_READ,
+        SUPPORT_REFERRAL_MANAGE,
+        SUPPORT_FOLLOWUP_MANAGE,
+        SUPPORT_REPORT_READ,
+        SUPPORT_CONFIG_MANAGE,
+        # Student Affairs & Grievance Domain (Step 58)
+        SA_OFFICE_READ,
+        SA_OFFICE_MANAGE,
+        SA_CATEGORY_READ,
+        SA_CATEGORY_MANAGE,
+        SA_CASE_READ_ALL,
+        SA_CASE_ASSIGN,
+        SA_CASE_UPDATE,
+        SA_CASE_CONFIDENTIAL_READ,
+        SA_DISCIPLINARY_MANAGE,
+        SA_EVIDENCE_READ,
+        SA_EVIDENCE_UPLOAD,
+        SA_EVIDENCE_REDACT,
+        SA_MEETING_MANAGE,
+        SA_RESOLUTION_PROPOSE,
+        SA_RESOLUTION_APPROVE,
+        SA_APPEAL_REVIEW,
+        SA_ESCALATION_MANAGE,
+        SA_COMMUNICATION_SEND,
+        SA_REPORT_READ,
+        SA_POLICY_MANAGE,
+        # Sports & Athletics Domain (Step 57)
+        SPORTS_DEPARTMENT_READ,
+        SPORTS_DEPARTMENT_MANAGE,
+        SPORTS_FACILITY_READ,
+        SPORTS_FACILITY_MANAGE,
+        SPORTS_BOOKING_CREATE,
+        SPORTS_BOOKING_MANAGE,
+        SPORTS_PARTICIPANT_READ,
+        SPORTS_PARTICIPANT_MANAGE,
+        SPORTS_TEAM_READ,
+        SPORTS_TEAM_MANAGE,
+        SPORTS_COACH_MANAGE,
+        SPORTS_TRAINING_READ,
+        SPORTS_TRAINING_MANAGE,
+        SPORTS_ATTENDANCE_RECORD,
+        SPORTS_COMPETITION_READ,
+        SPORTS_COMPETITION_MANAGE,
+        SPORTS_MATCH_SCHEDULE,
+        SPORTS_RESULT_RECORD,
+        SPORTS_RESULT_VERIFY,
+        SPORTS_EQUIPMENT_MANAGE,
+        SPORTS_FINANCE_MANAGE,
+        SPORTS_REPORT_READ,
+        # Transport & Fleet Domain (Step 55)
+        TRANSPORT_SERVICE_READ,
+        TRANSPORT_SERVICE_MANAGE,
+        TRANSPORT_VEHICLE_READ,
+        TRANSPORT_VEHICLE_MANAGE,
+        TRANSPORT_DRIVER_MANAGE,
+        TRANSPORT_ROUTE_READ,
+        TRANSPORT_ROUTE_MANAGE,
+        TRANSPORT_APPLICATION_REVIEW,
+        TRANSPORT_SUBSCRIPTION_MANAGE,
+        TRANSPORT_ALLOCATION_MANAGE,
+        TRANSPORT_TRIP_READ,
+        TRANSPORT_TRIP_DISPATCH,
+        TRANSPORT_BOARDING_RECORD,
+        TRANSPORT_TRACKING_READ_AUTHORIZED,
+        TRANSPORT_INCIDENT_MANAGE,
+        TRANSPORT_FINANCE_READ_AUTHORIZED,
+        TRANSPORT_REPORT_READ,
+        # Residential Life Domain (Step 54)
+        RESIDENTIAL_HOSTEL_READ,
+        RESIDENTIAL_HOSTEL_MANAGE,
+        RESIDENTIAL_ROOM_MANAGE,
+        RESIDENTIAL_APPLICATION_REVIEW,
+        RESIDENTIAL_ALLOCATION_MANAGE,
+        RESIDENTIAL_CHECKIN_MANAGE,
+        RESIDENTIAL_CHECKOUT_MANAGE,
+        RESIDENTIAL_FEES_READ,
+        RESIDENTIAL_FEES_MANAGE,
+        RESIDENTIAL_MOVEMENT_MANAGE,
+        RESIDENTIAL_VISITOR_MANAGE,
+        RESIDENTIAL_MAINTENANCE_SUBMIT,
+        RESIDENTIAL_INCIDENT_READ_AUTHORIZED,
+        RESIDENTIAL_INCIDENT_MANAGE,
+        RESIDENTIAL_REPORT_READ,
+        # Assets & Maintenance Domain (Step 53)
+        ASSETS_READ,
+        ASSETS_CREATE,
+        ASSETS_MANAGE,
+        ASSETS_ASSIGN,
+        ASSETS_TRANSFER,
+        ASSETS_LIFECYCLE_MANAGE,
+        ASSETS_MAINTENANCE_READ,
+        ASSETS_MAINTENANCE_MANAGE,
+        ASSETS_INSPECTION_MANAGE,
+        ASSETS_AUDIT_MANAGE,
+        ASSETS_RETIREMENT_REQUEST,
+        ASSETS_RETIREMENT_APPROVE,
+        ASSETS_FINANCIAL_READ,
+        ASSETS_REPORT_READ,
+        PROCUREMENT_READ,
+        PROCUREMENT_MANAGE,
+        PROCUREMENT_VENDORS_MANAGE,
+        PROCUREMENT_REQUISITIONS_CREATE,
+        PROCUREMENT_REQUISITIONS_APPROVE,
+        PROCUREMENT_QUOTATIONS_MANAGE,
+        PROCUREMENT_ORDERS_CREATE,
+        PROCUREMENT_ORDERS_APPROVE,
+        PROCUREMENT_RECEIVING_MANAGE,
+        PROCUREMENT_INVENTORY_MANAGE,
+        PROCUREMENT_INVENTORY_READ,
+        PROCUREMENT_INVOICE_MATCH,
+        PROCUREMENT_REPORTS_READ,
+        # Workforce Domain
+        WORKFORCE_READ,
+        WORKFORCE_MANAGE,
+        WORKFORCE_EMPLOYEE_READ,
+        WORKFORCE_EMPLOYEE_MANAGE,
+        WORKFORCE_LIFECYCLE_MANAGE,
+        WORKFORCE_LEAVE_POLICY_MANAGE,
+        WORKFORCE_LEAVE_READ,
+        WORKFORCE_LEAVE_SUBMIT,
+        WORKFORCE_LEAVE_APPROVE,
+        WORKFORCE_LEAVE_BALANCE_MANAGE,
+        WORKFORCE_AVAILABILITY_READ,
+        WORKFORCE_WORKLOAD_READ,
+        WORKFORCE_WORKLOAD_MANAGE,
+        WORKFORCE_HR_CASE_READ,
+        WORKFORCE_HR_CASE_MANAGE,
+        WORKFORCE_REPORTS_READ,
+        # Payroll Domain
+        PAYROLL_COMPENSATION_READ,
+        PAYROLL_COMPENSATION_MANAGE,
+        PAYROLL_CALENDAR_MANAGE,
+        PAYROLL_RUN_CREATE,
+        PAYROLL_RUN_CALCULATE,
+        PAYROLL_RUN_REVIEW,
+        PAYROLL_RUN_APPROVE,
+        PAYROLL_RUN_POST,
+        PAYROLL_PAYMENT_MANAGE,
+        PAYROLL_RECONCILIATION_MANAGE,
+        PAYROLL_COMPLIANCE_MANAGE,
+        PAYROLL_PAYSLIP_READ_OWN,
+        PAYROLL_PAYSLIP_READ_AUTH,
+        PAYROLL_REPORTS_READ,
+        TIMETABLE_READ,
+        TIMETABLE_MANAGE,
+        TIMETABLE_GENERATE,
+        TIMETABLE_APPROVE,
+        TIMETABLE_PUBLISH,
+        TIMETABLE_CHANGES_REQUEST,
+        TIMETABLE_CHANGES_APPROVE,
+        TIMETABLE_RESOURCES_MANAGE,
+        TIMETABLE_FACULTY_AVAILABILITY,
+        TIMETABLE_REPORTS_READ,
         ADMISSIONS_CYCLE_READ,
         ADMISSIONS_CYCLE_MANAGE,
         ADMISSIONS_APPLICANT_READ,
@@ -2153,6 +3404,18 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         INTELLIGENCE_EVALUATE,
     ],
     "PRINCIPAL": [
+        # Student Engagement, Community Service & Civic Impact (Step 65)
+        ENGAGEMENT_PROGRAMS_READ,
+        ENGAGEMENT_PROGRAMS_APPROVE,
+        ENGAGEMENT_PROGRAMS_PUBLISH,
+        ENGAGEMENT_PARTNERS_READ,
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_REFLECTIONS_REVIEW,
+        ENGAGEMENT_CERTIFICATES_ISSUE,
+        ENGAGEMENT_CERTIFICATES_REVOKE,
+        ENGAGEMENT_ANALYTICS_READ,
         CORE_INSTITUTION_READ,
         CORE_CAMPUSES_READ,
         CORE_DEPARTMENTS_READ,
@@ -2163,6 +3426,11 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         PEOPLE_STUDENTS_READ,
         PEOPLE_FACULTY_READ,
         PEOPLE_STAFF_READ,
+        # Student Support & Mentoring (Step 59)
+        MENTOR_ASSIGNMENT_READ,
+        MENTORING_SESSION_READ,
+        DEVELOPMENT_PLAN_READ,
+        SUPPORT_REPORT_READ,
         ACADEMICS_SUBJECTS_READ,
         ACADEMICS_CURRICULUM_READ,
         ACADEMICS_COURSES_READ,
@@ -2239,6 +3507,14 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANALYTICS_BACKFILL_DOT,
     ],
     "HOD": [
+        # Student Engagement, Community Service & Civic Impact (Step 65)
+        ENGAGEMENT_PROGRAMS_READ,
+        ENGAGEMENT_PROGRAMS_APPROVE,
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_REFLECTIONS_REVIEW,
+        ENGAGEMENT_ANALYTICS_READ,
         CORE_INSTITUTION_READ,
         CORE_DEPARTMENTS_READ,
         CORE_PROGRAMS_READ,
@@ -2247,10 +3523,45 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         PEOPLE_STUDENTS_READ,
         PEOPLE_FACULTY_READ,
         PEOPLE_STAFF_READ,
+        # Student Support & Mentoring (Step 59)
+        MENTOR_ASSIGNMENT_READ,
+        MENTOR_ASSIGNMENT_MANAGE,
+        MENTORING_SESSION_READ,
+        DEVELOPMENT_PLAN_READ,
+        SUPPORT_REFERRAL_CREATE,
+        SUPPORT_REFERRAL_READ,
+        SUPPORT_REPORT_READ,
         ACADEMICS_SUBJECTS_READ,
         ACADEMICS_SUBJECTS_MANAGE,
         ACADEMICS_CURRICULUM_READ,
         ACADEMICS_CURRICULUM_MANAGE,
+        PROCUREMENT_READ,
+        PROCUREMENT_REQUISITIONS_CREATE,
+        PROCUREMENT_REQUISITIONS_APPROVE,
+        PROCUREMENT_INVENTORY_READ,
+        PROCUREMENT_REPORTS_READ,
+        WORKFORCE_READ,
+        WORKFORCE_EMPLOYEE_READ,
+        WORKFORCE_LEAVE_READ,
+        WORKFORCE_LEAVE_SUBMIT,
+        WORKFORCE_LEAVE_APPROVE,
+        WORKFORCE_AVAILABILITY_READ,
+        WORKFORCE_WORKLOAD_READ,
+        WORKFORCE_WORKLOAD_MANAGE,
+        WORKFORCE_HR_CASE_READ,
+        PAYROLL_PAYSLIP_READ_OWN,
+        ASSETS_READ,
+        ASSETS_MAINTENANCE_READ,
+        ASSETS_ASSIGN,
+        ASSETS_TRANSFER,
+        ASSETS_RETIREMENT_REQUEST,
+        TIMETABLE_READ,
+        TIMETABLE_MANAGE,
+        TIMETABLE_GENERATE,
+        TIMETABLE_CHANGES_REQUEST,
+        TIMETABLE_RESOURCES_MANAGE,
+        TIMETABLE_FACULTY_AVAILABILITY,
+        TIMETABLE_REPORTS_READ,
         ACADEMICS_COURSES_READ,
         ACADEMICS_COURSES_MANAGE,
         ACADEMICS_ENROLLMENTS_READ,
@@ -2350,6 +3661,22 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANALYTICS_BACKFILL_DOT,
     ],
     "FACULTY": [
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        # Student Engagement, Community Service & Civic Impact (Step 65)
+        ENGAGEMENT_PROGRAMS_READ,
+        ENGAGEMENT_PROGRAMS_MANAGE,
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_OPPORTUNITIES_MANAGE,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_APPLICATIONS_MANAGE,
+        ENGAGEMENT_SHIFTS_MANAGE,
+        ENGAGEMENT_ATTENDANCE_RECORD,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_REFLECTIONS_REVIEW,
+        ENGAGEMENT_SAFETY_MANAGE,
+        ENGAGEMENT_ANALYTICS_READ,
         LIBRARY_BRANCHES_READ,
         LIBRARY_CATALOG_READ,
         LIBRARY_CIRCULATION_RENEW,
@@ -2366,11 +3693,23 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         CORE_ACADEMIC_YEARS_READ,
         CORE_SECTIONS_READ,
         PEOPLE_STUDENTS_READ,
+        # Student Support & Mentoring (Step 59)
+        MENTOR_ASSIGNMENT_READ,
+        MENTORING_SESSION_READ,
+        MENTORING_SESSION_MANAGE,
+        DEVELOPMENT_PLAN_READ,
+        DEVELOPMENT_PLAN_MANAGE,
+        SUPPORT_REFERRAL_CREATE,
+        SUPPORT_REFERRAL_READ,
+        SUPPORT_FOLLOWUP_MANAGE,
         ACADEMICS_SUBJECTS_READ,
         ACADEMICS_CURRICULUM_READ,
         ACADEMICS_COURSES_READ,
         ACADEMICS_ENROLLMENTS_READ,
         ACADEMICS_TIMETABLE_READ,
+        TIMETABLE_READ,
+        TIMETABLE_CHANGES_REQUEST,
+        TIMETABLE_FACULTY_AVAILABILITY,
         ACADEMICS_ROOMS_READ,
         ATTENDANCE_SESSIONS_READ,
         ATTENDANCE_RECORDS_READ,
@@ -2400,6 +3739,12 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         EVENTS_MANAGE_ATTENDANCE,
         EVENTS_MANAGE_REGISTRATIONS,
         CLUBS_READ,
+        WORKFORCE_LEAVE_READ,
+        WORKFORCE_LEAVE_SUBMIT,
+        WORKFORCE_AVAILABILITY_READ,
+        WORKFORCE_WORKLOAD_READ,
+        WORKFORCE_HR_CASE_READ,
+        PAYROLL_PAYSLIP_READ_OWN,
         CLUBS_MANAGE_MEMBERSHIPS,
         ANNOUNCEMENTS_READ,
         ANNOUNCEMENTS_CREATE,
@@ -2457,6 +3802,12 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         INTELLIGENCE_ALERTS_READ,
         INTELLIGENCE_ANALYTICS_READ,
         INTELLIGENCE_SAVED_MANAGE,
+        PAYROLL_COMPENSATION_READ,
+        PAYROLL_RUN_REVIEW,
+        PAYROLL_RUN_POST,
+        PAYROLL_PAYMENT_MANAGE,
+        PAYROLL_RECONCILIATION_MANAGE,
+        PAYROLL_REPORTS_READ,
     ],
     "PLACEMENT_OFFICER": [
         CORE_INSTITUTION_READ,
@@ -2485,7 +3836,34 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         INTELLIGENCE_SAVED_MANAGE,
     ],
     "STUDENT": [
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        # Student Engagement, Community Service & Civic Impact (Step 65)
+        ENGAGEMENT_PROGRAMS_READ,
+        # Housing & Accommodation (Step 66)
+        HOUSING_PROPERTY_READ,
+        HOUSING_REQUEST_SUBMIT_OWN,
+        HOUSING_AGREEMENT_READ,
+        HOUSING_MAINTENANCE_SUBMIT,
+
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_APPLICATIONS_APPLY,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_ATTENDANCE_RECORD,
+        ENGAGEMENT_HOURS_SUBMIT,
+        ENGAGEMENT_REFLECTIONS_SUBMIT,
+        ENGAGEMENT_ANALYTICS_READ,
         STUDENT_SUCCESS_STUDENT_SELF_READ,
+        # Student Support, Counselling & Mentoring (Step 59)
+        MENTOR_ASSIGNMENT_READ,
+        MENTORING_SESSION_READ,
+        MENTORING_SESSION_PARTICIPATE,
+        COUNSELLING_APPOINTMENT_REQUEST,
+        COUNSELLING_APPOINTMENT_READ,
+        DEVELOPMENT_PLAN_READ,
+        DEVELOPMENT_PLAN_UPDATE_OWN,
+        SUPPORT_REFERRAL_READ,
         LIBRARY_BRANCHES_READ,
         LIBRARY_CATALOG_READ,
         LIBRARY_CIRCULATION_RENEW,
@@ -2499,6 +3877,8 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         CORE_SECTIONS_READ,
         ACADEMICS_COURSES_READ,
         ACADEMICS_ENROLL_SELF,
+        TIMETABLE_READ,
+        TIMETABLE_STUDENT_SELF_READ,
         ATTENDANCE_RECORDS_READ,
         ATTENDANCE_LEAVE_APPLY,
         ATTENDANCE_READ,
@@ -2551,6 +3931,25 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         CASES_READ,
         CASES_CREATE,
         CASES_COMMENT,
+        # Step 54 Residential Life
+        RESIDENTIAL_APPLICATION_SUBMIT_OWN,
+        RESIDENTIAL_HOSTEL_READ,
+        RESIDENTIAL_MAINTENANCE_SUBMIT,
+        RESIDENTIAL_MOVEMENT_MANAGE,
+        RESIDENTIAL_FEES_READ,
+        # Step 55 Transport & Fleet
+        TRANSPORT_APPLICATION_SUBMIT_OWN,
+        TRANSPORT_ROUTE_READ,
+        TRANSPORT_TRACKING_READ_AUTHORIZED,
+        # Step 57 Sports & Athletics
+        SPORTS_DEPARTMENT_READ,
+        SPORTS_FACILITY_READ,
+        SPORTS_BOOKING_CREATE,
+        SPORTS_PARTICIPANT_REGISTER_SELF,
+        SPORTS_TEAM_READ,
+        SPORTS_TRAINING_READ,
+        SPORTS_COMPETITION_READ,
+        SPORTS_REPORT_READ,
     ],
     "PARENT": [
         CORE_INSTITUTION_READ,
@@ -2565,13 +3964,23 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         ANNOUNCEMENTS_READ,
         NOTIFICATIONS_SELF_READ,
         NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        # Step 55 Transport Tracking
+        TRANSPORT_ROUTE_READ,
+        TRANSPORT_TRACKING_READ_AUTHORIZED,
     ],
     "STAFF": [
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
         CORE_INSTITUTION_READ,
         CORE_DEPARTMENTS_READ,
         PEOPLE_STAFF_READ,
         INFRASTRUCTURE_HOSTEL_MANAGE,
         INFRASTRUCTURE_TRANSPORT_MANAGE,
+        # Step 55 Transport
+        TRANSPORT_ROUTE_READ,
+        TRANSPORT_VEHICLE_READ,
+        TRANSPORT_APPLICATION_SUBMIT_OWN,
         DOCUMENTS_MANAGE,
         EVENTS_READ,
         EVENTS_MANAGE_ATTENDANCE,
@@ -2594,6 +4003,227 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         TASKS_READ,
         TASKS_CLAIM,
         TASKS_COMPLETE,
+        WORKFORCE_LEAVE_READ,
+        WORKFORCE_LEAVE_SUBMIT,
+        WORKFORCE_AVAILABILITY_READ,
+        WORKFORCE_HR_CASE_READ,
+        PAYROLL_PAYSLIP_READ_OWN,
+        ASSETS_READ,
+        ASSETS_MAINTENANCE_READ,
+        # Step 54 Residential Life
+        RESIDENTIAL_HOSTEL_READ,
+        RESIDENTIAL_HOSTEL_MANAGE,
+        RESIDENTIAL_ROOM_MANAGE,
+        RESIDENTIAL_APPLICATION_REVIEW,
+        RESIDENTIAL_ALLOCATION_MANAGE,
+        RESIDENTIAL_CHECKIN_MANAGE,
+        RESIDENTIAL_CHECKOUT_MANAGE,
+        RESIDENTIAL_FEES_READ,
+        RESIDENTIAL_MOVEMENT_MANAGE,
+        RESIDENTIAL_VISITOR_MANAGE,
+        RESIDENTIAL_MAINTENANCE_SUBMIT,
+        RESIDENTIAL_INCIDENT_READ_AUTHORIZED,
+        RESIDENTIAL_INCIDENT_MANAGE,
+        RESIDENTIAL_REPORT_READ,
+    ],
+    "TRANSPORT_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        INFRASTRUCTURE_TRANSPORT_MANAGE,
+        TRANSPORT_SERVICE_READ,
+        TRANSPORT_SERVICE_MANAGE,
+        TRANSPORT_VEHICLE_READ,
+        TRANSPORT_VEHICLE_MANAGE,
+        TRANSPORT_DRIVER_MANAGE,
+        TRANSPORT_ROUTE_READ,
+        TRANSPORT_ROUTE_MANAGE,
+        TRANSPORT_APPLICATION_REVIEW,
+        TRANSPORT_SUBSCRIPTION_MANAGE,
+        TRANSPORT_ALLOCATION_MANAGE,
+        TRANSPORT_TRIP_READ,
+        TRANSPORT_TRIP_DISPATCH,
+        TRANSPORT_BOARDING_RECORD,
+        TRANSPORT_TRACKING_READ_AUTHORIZED,
+        TRANSPORT_INCIDENT_MANAGE,
+        TRANSPORT_FINANCE_READ_AUTHORIZED,
+        TRANSPORT_REPORT_READ,
+        ASSETS_READ,
+        ASSETS_MAINTENANCE_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+    ],
+    "WARDEN": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        INFRASTRUCTURE_HOSTEL_MANAGE,
+        RESIDENTIAL_HOSTEL_READ,
+        RESIDENTIAL_HOSTEL_MANAGE,
+        RESIDENTIAL_ROOM_MANAGE,
+        RESIDENTIAL_APPLICATION_REVIEW,
+        RESIDENTIAL_ALLOCATION_MANAGE,
+        RESIDENTIAL_CHECKIN_MANAGE,
+        RESIDENTIAL_CHECKOUT_MANAGE,
+        RESIDENTIAL_FEES_READ,
+        RESIDENTIAL_FEES_MANAGE,
+        RESIDENTIAL_MOVEMENT_MANAGE,
+        RESIDENTIAL_VISITOR_MANAGE,
+        RESIDENTIAL_MAINTENANCE_SUBMIT,
+        RESIDENTIAL_INCIDENT_READ_AUTHORIZED,
+        RESIDENTIAL_INCIDENT_MANAGE,
+        RESIDENTIAL_REPORT_READ,
+        # Student Housing & Residential (Step 66)
+        HOUSING_PROPERTY_READ,
+        HOUSING_PROPERTY_MANAGE,
+        HOUSING_REQUEST_READ,
+        HOUSING_REQUEST_REVIEW,
+        HOUSING_OFFER_MANAGE,
+        HOUSING_ASSIGNMENT_MANAGE,
+        HOUSING_AGREEMENT_READ,
+        HOUSING_CHECKIN_MANAGE,
+        HOUSING_INSPECTION_READ,
+        HOUSING_INSPECTION_MANAGE,
+        HOUSING_MAINTENANCE_SUBMIT,
+        HOUSING_MAINTENANCE_MANAGE,
+        HOUSING_ANALYTICS_READ,
+
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+    ],
+    "SPORTS_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STAFF_READ,
+        SPORTS_DEPARTMENT_READ,
+        SPORTS_DEPARTMENT_MANAGE,
+        SPORTS_FACILITY_READ,
+        SPORTS_FACILITY_MANAGE,
+        SPORTS_BOOKING_CREATE,
+        SPORTS_BOOKING_MANAGE,
+        SPORTS_PARTICIPANT_READ,
+        SPORTS_PARTICIPANT_MANAGE,
+        SPORTS_TEAM_READ,
+        SPORTS_TEAM_MANAGE,
+        SPORTS_COACH_MANAGE,
+        SPORTS_TRAINING_READ,
+        SPORTS_TRAINING_MANAGE,
+        SPORTS_ATTENDANCE_RECORD,
+        SPORTS_COMPETITION_READ,
+        SPORTS_COMPETITION_MANAGE,
+        SPORTS_MATCH_SCHEDULE,
+        SPORTS_RESULT_RECORD,
+        SPORTS_RESULT_VERIFY,
+        SPORTS_EQUIPMENT_MANAGE,
+        SPORTS_FINANCE_MANAGE,
+        SPORTS_REPORT_READ,
+        ASSETS_READ,
+        ASSETS_MAINTENANCE_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+    ],
+    "COACH": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        SPORTS_DEPARTMENT_READ,
+        SPORTS_FACILITY_READ,
+        SPORTS_BOOKING_CREATE,
+        SPORTS_PARTICIPANT_READ,
+        SPORTS_TEAM_READ,
+        SPORTS_TEAM_MANAGE,
+        SPORTS_TRAINING_READ,
+        SPORTS_TRAINING_MANAGE,
+        SPORTS_ATTENDANCE_RECORD,
+        SPORTS_COMPETITION_READ,
+        SPORTS_MATCH_SCHEDULE,
+        SPORTS_RESULT_RECORD,
+        SPORTS_EQUIPMENT_MANAGE,
+        SPORTS_REPORT_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "STUDENT_AFFAIRS_ADMIN": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STAFF_READ,
+        SA_OFFICE_READ,
+        SA_OFFICE_MANAGE,
+        SA_CATEGORY_READ,
+        SA_CATEGORY_MANAGE,
+        SA_CASE_READ_ALL,
+        SA_CASE_ASSIGN,
+        SA_CASE_UPDATE,
+        SA_CASE_CONFIDENTIAL_READ,
+        SA_DISCIPLINARY_MANAGE,
+        SA_EVIDENCE_READ,
+        SA_EVIDENCE_UPLOAD,
+        SA_EVIDENCE_REDACT,
+        SA_MEETING_MANAGE,
+        SA_RESOLUTION_PROPOSE,
+        SA_RESOLUTION_APPROVE,
+        SA_APPEAL_REVIEW,
+        SA_ESCALATION_MANAGE,
+        SA_COMMUNICATION_SEND,
+        SA_REPORT_READ,
+        SA_POLICY_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+        CASES_READ,
+        CASES_CREATE,
+        CASES_UPDATE,
+        CASES_COMMENT,
+    ],
+    "CASE_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        SA_OFFICE_READ,
+        SA_CATEGORY_READ,
+        SA_CASE_READ_ASSIGNED,
+        SA_CASE_UPDATE,
+        SA_EVIDENCE_READ,
+        SA_EVIDENCE_UPLOAD,
+        SA_MEETING_MANAGE,
+        SA_RESOLUTION_PROPOSE,
+        SA_COMMUNICATION_SEND,
+        SA_REPORT_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "INVESTIGATOR": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        SA_OFFICE_READ,
+        SA_CASE_READ_ASSIGNED,
+        SA_CASE_CONFIDENTIAL_READ,
+        SA_DISCIPLINARY_MANAGE,
+        SA_EVIDENCE_READ,
+        SA_EVIDENCE_UPLOAD,
+        SA_EVIDENCE_REDACT,
+        SA_MEETING_MANAGE,
+        SA_COMMUNICATION_SEND,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
     ],
     "PLATFORM_OPERATOR": [
         PLATFORM_TENANTS_READ,
@@ -2624,5 +4254,224 @@ DEFAULT_ROLE_PERMISSIONS: Final[dict[str, list[str]]] = {
         PLATFORM_RELIABILITY_READ,
         SECURITY_INCIDENTS_READ,
         SECURITY_PLATFORM_READ,
+    ],
+    "COUNSELLOR": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        PEOPLE_STUDENTS_READ,
+        COUNSELLING_APPOINTMENT_READ,
+        COUNSELLING_APPOINTMENT_MANAGE,
+        COUNSELLING_CONFIDENTIAL_READ,
+        COUNSELLING_CONFIDENTIAL_WRITE,
+        SUPPORT_REFERRAL_READ,
+        SUPPORT_REFERRAL_MANAGE,
+        SUPPORT_FOLLOWUP_MANAGE,
+        SUPPORT_REPORT_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "STUDENT_SUPPORT_ADMIN": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        CORE_PROGRAMS_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STAFF_READ,
+        PEOPLE_FACULTY_READ,
+        MENTOR_ASSIGNMENT_READ,
+        MENTOR_ASSIGNMENT_MANAGE,
+        MENTORING_SESSION_READ,
+        MENTORING_SESSION_MANAGE,
+        COUNSELLING_APPOINTMENT_READ,
+        COUNSELLING_APPOINTMENT_MANAGE,
+        DEVELOPMENT_PLAN_READ,
+        DEVELOPMENT_PLAN_MANAGE,
+        SUPPORT_REFERRAL_CREATE,
+        SUPPORT_REFERRAL_READ,
+        SUPPORT_REFERRAL_MANAGE,
+        SUPPORT_FOLLOWUP_MANAGE,
+        SUPPORT_REPORT_READ,
+        SUPPORT_CONFIG_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "INTERNATIONAL_OFFICE_ADMIN": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        CORE_PROGRAMS_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STAFF_READ,
+        PEOPLE_FACULTY_READ,
+        INTL_PARTNER_READ,
+        INTL_PARTNER_MANAGE,
+        INTL_AGREEMENT_READ,
+        INTL_AGREEMENT_MANAGE,
+        INTL_PROGRAM_READ,
+        INTL_PROGRAM_MANAGE,
+        MOBILITY_APPLICATION_READ,
+        MOBILITY_APPLICATION_REVIEW,
+        MOBILITY_APPLICATION_NOMINATE,
+        MOBILITY_INBOUND_MANAGE,
+        FACULTY_MOBILITY_READ,
+        FACULTY_MOBILITY_MANAGE,
+        CREDIT_EQUIVALENCY_READ,
+        CREDIT_EQUIVALENCY_EVALUATE,
+        CREDIT_TRANSFER_APPROVE,
+        MOBILITY_DOCUMENT_VERIFY,
+        MOBILITY_FUNDING_MANAGE,
+        INTL_REPORT_READ,
+        INTL_CONFIG_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "LEGAL_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STAFF_READ,
+        PEOPLE_FACULTY_READ,
+        LEGAL_OPERATIONS_READ,
+        LEGAL_CONTRACTS_READ,
+        LEGAL_CONTRACTS_MANAGE,
+        LEGAL_CONTRACTS_APPROVE,
+        LEGAL_CONTRACTS_EXECUTE,
+        LEGAL_OBLIGATIONS_READ,
+        LEGAL_OBLIGATIONS_MANAGE,
+        LEGAL_MATTERS_READ,
+        LEGAL_MATTERS_MANAGE,
+        LEGAL_MATTERS_CONFIDENTIAL,
+        LEGAL_POLICIES_MANAGE,
+        LEGAL_POLICIES_APPROVE,
+        LEGAL_COMPLIANCE_READ,
+        LEGAL_COMPLIANCE_MANAGE,
+        LEGAL_RISKS_READ,
+        LEGAL_RISKS_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "COMPLIANCE_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        LEGAL_OPERATIONS_READ,
+        LEGAL_CONTRACTS_READ,
+        LEGAL_OBLIGATIONS_READ,
+        LEGAL_POLICIES_MANAGE,
+        LEGAL_COMPLIANCE_READ,
+        LEGAL_COMPLIANCE_MANAGE,
+        LEGAL_RISKS_READ,
+        LEGAL_RISKS_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "ENGAGEMENT_COORDINATOR": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        PEOPLE_USERS_READ,
+        PEOPLE_STUDENTS_READ,
+        PEOPLE_FACULTY_READ,
+        ENGAGEMENT_PROGRAMS_READ,
+        ENGAGEMENT_PROGRAMS_MANAGE,
+        ENGAGEMENT_PROGRAMS_PUBLISH,
+        ENGAGEMENT_PARTNERS_READ,
+        ENGAGEMENT_PARTNERS_MANAGE,
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_OPPORTUNITIES_MANAGE,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_APPLICATIONS_MANAGE,
+        ENGAGEMENT_SHIFTS_MANAGE,
+        ENGAGEMENT_ATTENDANCE_RECORD,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_REFLECTIONS_REVIEW,
+        ENGAGEMENT_CERTIFICATES_ISSUE,
+        ENGAGEMENT_SAFETY_MANAGE,
+        ENGAGEMENT_ANALYTICS_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+    "COMMUNITY_PARTNER": [
+        ENGAGEMENT_OPPORTUNITIES_READ,
+        ENGAGEMENT_APPLICATIONS_READ,
+        ENGAGEMENT_ATTENDANCE_RECORD,
+        ENGAGEMENT_HOURS_VERIFY,
+        ENGAGEMENT_ANALYTICS_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
+    ],
+        "SECURITY_OFFICER": [
+        CORE_INSTITUTION_READ,
+        CAMPUS_SECURITY_CONFIG_READ,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_GATE_CHECKIN,
+        CAMPUS_SECURITY_GATE_CHECKOUT,
+        CAMPUS_SECURITY_PASS_REVOKE,
+        CAMPUS_SECURITY_CONTRACTOR_READ,
+        CAMPUS_SECURITY_ACCESS_ZONE_READ,
+        CAMPUS_SECURITY_INCIDENT_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        CAMPUS_SECURITY_INCIDENT_MANAGE,
+        CAMPUS_SECURITY_EMERGENCY_READ,
+        CAMPUS_SECURITY_PATROL_READ,
+        CAMPUS_SECURITY_PATROL_MANAGE,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_MANAGE_PREFERENCES,
+    ],
+    "SECURITY_SUPERVISOR": [
+        CORE_INSTITUTION_READ,
+        CAMPUS_SECURITY_CONFIG_READ,
+        CAMPUS_SECURITY_CONFIG_MANAGE,
+        CAMPUS_SECURITY_VISITOR_READ,
+        CAMPUS_SECURITY_VISITOR_REQUEST,
+        CAMPUS_SECURITY_VISITOR_APPROVE,
+        CAMPUS_SECURITY_GATE_CHECKIN,
+        CAMPUS_SECURITY_GATE_CHECKOUT,
+        CAMPUS_SECURITY_PASS_REVOKE,
+        CAMPUS_SECURITY_CONTRACTOR_READ,
+        CAMPUS_SECURITY_CONTRACTOR_MANAGE,
+        CAMPUS_SECURITY_ACCESS_ZONE_READ,
+        CAMPUS_SECURITY_ACCESS_ZONE_MANAGE,
+        CAMPUS_SECURITY_ACCESS_GRANT_MANAGE,
+        CAMPUS_SECURITY_INCIDENT_READ,
+        CAMPUS_SECURITY_INCIDENT_REPORT,
+        CAMPUS_SECURITY_INCIDENT_MANAGE,
+        CAMPUS_SECURITY_EMERGENCY_READ,
+        CAMPUS_SECURITY_EMERGENCY_MANAGE,
+        CAMPUS_SECURITY_PATROL_READ,
+        CAMPUS_SECURITY_PATROL_MANAGE,
+        CAMPUS_SECURITY_ANALYTICS_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_MANAGE_PREFERENCES,
+    ],
+    "SUSTAINABILITY_COORDINATOR": [
+        CORE_INSTITUTION_READ,
+        CORE_CAMPUSES_READ,
+        CORE_DEPARTMENTS_READ,
+        SUSTAINABILITY_TARGET_READ,
+        SUSTAINABILITY_TARGET_MANAGE,
+        SUSTAINABILITY_ENERGY_READ,
+        SUSTAINABILITY_ENERGY_MANAGE,
+        SUSTAINABILITY_WATER_READ,
+        SUSTAINABILITY_WATER_MANAGE,
+        SUSTAINABILITY_WASTE_READ,
+        SUSTAINABILITY_WASTE_MANAGE,
+        SUSTAINABILITY_WASTE_HAZARDOUS,
+        SUSTAINABILITY_EMISSIONS_READ,
+        SUSTAINABILITY_EMISSIONS_CALCULATE,
+        SUSTAINABILITY_EMISSIONS_FACTOR_MANAGE,
+        SUSTAINABILITY_INITIATIVE_READ,
+        SUSTAINABILITY_INITIATIVE_MANAGE,
+        SUSTAINABILITY_COMPLIANCE_READ,
+        SUSTAINABILITY_COMPLIANCE_MANAGE,
+        SUSTAINABILITY_IOT_INGEST,
+        SUSTAINABILITY_DATA_IMPORT,
+        SUSTAINABILITY_ANALYTICS_READ,
+        NOTIFICATIONS_SELF_READ,
+        NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
     ],
 }

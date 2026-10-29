@@ -26,10 +26,17 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-identity",
     name: "Identity & Citizenship",
     code: DocumentCategoryCode.IDENTITY,
-    description: "Official government-issued identity cards, citizenship documents, and proof of residence.",
+    description:
+      "Official government-issued identity cards, citizenship documents, and proof of residence.",
     required: true,
     applicableRoles: ["STUDENT", "FACULTY", "STAFF"],
-    applicableDocumentTypes: ["Aadhaar Card", "Passport", "Voter ID Card", "PAN Card", "Driving License"],
+    applicableDocumentTypes: [
+      "Aadhaar Card",
+      "Passport",
+      "Voter ID Card",
+      "PAN Card",
+      "Driving License",
+    ],
     verificationRequired: true,
     expiryRequired: true,
     isActive: true,
@@ -43,7 +50,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
         action: "Category Verified",
         performedBy: "Dr. Arvind Swaminathan (Registrar)",
         timestamp: "2026-06-01T09:00:00Z",
-        details: "Policy updated to require government IDs for all fresh admissions.",
+        details:
+          "Policy updated to require government IDs for all fresh admissions.",
       },
     ],
   },
@@ -51,10 +59,15 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-academic",
     name: "Academic Credentials",
     code: DocumentCategoryCode.ACADEMIC,
-    description: "Secondary, higher secondary, semester grade sheets, degree certificates, and official transcripts.",
+    description:
+      "Secondary, higher secondary, semester grade sheets, degree certificates, and official transcripts.",
     required: true,
     applicableRoles: ["STUDENT", "FACULTY"],
-    applicablePrograms: ["B.Tech Computer Science & Engineering", "B.Tech Electronics & Communication", "MBA"],
+    applicablePrograms: [
+      "B.Tech Computer Science & Engineering",
+      "B.Tech Electronics & Communication",
+      "MBA",
+    ],
     applicableDocumentTypes: [
       "10th Standard Marksheet",
       "12th Standard Marksheet",
@@ -76,7 +89,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
         action: "Requirements Updated",
         performedBy: "Dr. Rajesh Sharma (Dean Academics)",
         timestamp: "2026-07-10T14:30:00Z",
-        details: "Added Migration Certificate as mandatory requirement for out-of-state candidates.",
+        details:
+          "Added Migration Certificate as mandatory requirement for out-of-state candidates.",
       },
     ],
   },
@@ -84,7 +98,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-admission",
     name: "Admission & Enrollment",
     code: DocumentCategoryCode.ADMISSION,
-    description: "Allotment orders, seat matrix confirmation, anti-ragging undertakings, and campus affidavits.",
+    description:
+      "Allotment orders, seat matrix confirmation, anti-ragging undertakings, and campus affidavits.",
     required: true,
     applicableRoles: ["STUDENT"],
     applicableDocumentTypes: [
@@ -105,7 +120,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-financial",
     name: "Financial & Fee Records",
     code: DocumentCategoryCode.FINANCIAL,
-    description: "Tuition receipts, scholarship entitlement letters, bank loan vouchers, and caution deposits.",
+    description:
+      "Tuition receipts, scholarship entitlement letters, bank loan vouchers, and caution deposits.",
     required: false,
     applicableRoles: ["STUDENT", "STAFF"],
     applicableDocumentTypes: [
@@ -127,7 +143,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-placement",
     name: "Career & Placement",
     code: DocumentCategoryCode.PLACEMENT,
-    description: "Verified student resumes, corporate offer letters, internship certificates, and NDA forms.",
+    description:
+      "Verified student resumes, corporate offer letters, internship certificates, and NDA forms.",
     required: false,
     applicableRoles: ["STUDENT"],
     applicableDocumentTypes: [
@@ -148,7 +165,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-hostel",
     name: "Hostel & Residential",
     code: DocumentCategoryCode.HOSTEL,
-    description: "Hostel admission forms, local guardian undertakings, room inventory checklists, and gate passes.",
+    description:
+      "Hostel admission forms, local guardian undertakings, room inventory checklists, and gate passes.",
     required: false,
     applicableRoles: ["STUDENT"],
     applicableDocumentTypes: [
@@ -169,7 +187,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-transport",
     name: "Transport & Logistics",
     code: DocumentCategoryCode.TRANSPORT,
-    description: "Bus pass passes, driver heavy commercial licenses, vehicle fitness certificates, and insurance policies.",
+    description:
+      "Bus pass passes, driver heavy commercial licenses, vehicle fitness certificates, and insurance policies.",
     required: false,
     applicableRoles: ["STUDENT", "STAFF"],
     applicableDocumentTypes: [
@@ -191,7 +210,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-medical",
     name: "Medical & Health Records",
     code: DocumentCategoryCode.MEDICAL,
-    description: "Medical fitness certificates, chronic health declarations, emergency blood group records, and vaccination cards.",
+    description:
+      "Medical fitness certificates, chronic health declarations, emergency blood group records, and vaccination cards.",
     required: true,
     applicableRoles: ["STUDENT", "FACULTY", "STAFF"],
     applicableDocumentTypes: [
@@ -212,7 +232,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-administrative",
     name: "Administrative & Faculty Service",
     code: DocumentCategoryCode.ADMINISTRATIVE,
-    description: "Staff appointment orders, service agreements, promotion letters, relieving letters, and annual appraisal files.",
+    description:
+      "Staff appointment orders, service agreements, promotion letters, relieving letters, and annual appraisal files.",
     required: true,
     applicableRoles: ["FACULTY", "STAFF"],
     applicableDocumentTypes: [
@@ -233,7 +254,8 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-certificate",
     name: "Institutional Certificates",
     code: DocumentCategoryCode.CERTIFICATE,
-    description: "System-generated and counter-signed official certificates, transcripts, and credentials.",
+    description:
+      "System-generated and counter-signed official certificates, transcripts, and credentials.",
     required: false,
     applicableRoles: ["STUDENT", "FACULTY"],
     applicableDocumentTypes: [
@@ -255,10 +277,16 @@ export const MOCK_DOCUMENT_CATEGORIES: DocumentCategory[] = [
     id: "cat-other",
     name: "Miscellaneous Records",
     code: DocumentCategoryCode.OTHER,
-    description: "Extracurricular awards, patent certificates, community service documents, and general declarations.",
+    description:
+      "Extracurricular awards, patent certificates, community service documents, and general declarations.",
     required: false,
     applicableRoles: ["STUDENT", "FACULTY", "STAFF"],
-    applicableDocumentTypes: ["Extracurricular Award", "Paper Publication Reprints", "Patent Grant Document", "General Undertaking"],
+    applicableDocumentTypes: [
+      "Extracurricular Award",
+      "Paper Publication Reprints",
+      "Patent Grant Document",
+      "General Undertaking",
+    ],
     verificationRequired: false,
     expiryRequired: false,
     isActive: true,
@@ -299,10 +327,30 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.NORMAL,
     verificationChecklist: [
-      { id: "chk-1", label: "Candidate name matches enrollment record", checked: true, required: true },
-      { id: "chk-2", label: "Date of birth matches official declaration", checked: true, required: true },
-      { id: "chk-3", label: "Minimum eligibility percentage criterion satisfied (>= 60%)", checked: true, required: true },
-      { id: "chk-4", label: "Official board seal and signature present", checked: true, required: true },
+      {
+        id: "chk-1",
+        label: "Candidate name matches enrollment record",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-2",
+        label: "Date of birth matches official declaration",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-3",
+        label: "Minimum eligibility percentage criterion satisfied (>= 60%)",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-4",
+        label: "Official board seal and signature present",
+        checked: true,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -360,9 +408,24 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.NORMAL,
     verificationChecklist: [
-      { id: "chk-a1", label: "UIDAI QR code visible and readable", checked: true, required: true },
-      { id: "chk-a2", label: "Full legal name and guardian name verified", checked: true, required: true },
-      { id: "chk-a3", label: "Address matches local residential declaration", checked: true, required: true },
+      {
+        id: "chk-a1",
+        label: "UIDAI QR code visible and readable",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-a2",
+        label: "Full legal name and guardian name verified",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-a3",
+        label: "Address matches local residential declaration",
+        checked: true,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -413,10 +476,30 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.HIGH,
     verificationChecklist: [
-      { id: "chk-res1", label: "Cumulative CGPA matches academic registry (8.84)", checked: true, required: true },
-      { id: "chk-res2", label: "Zero active standing arrears verified", checked: true, required: true },
-      { id: "chk-res3", label: "Internship & projects endorsed by faculty guide", checked: true, required: true },
-      { id: "chk-res4", label: "Standard institutional resume template adhered to", checked: true, required: true },
+      {
+        id: "chk-res1",
+        label: "Cumulative CGPA matches academic registry (8.84)",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-res2",
+        label: "Zero active standing arrears verified",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-res3",
+        label: "Internship & projects endorsed by faculty guide",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-res4",
+        label: "Standard institutional resume template adhered to",
+        checked: true,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -468,16 +551,37 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.URGENT,
     verificationChecklist: [
-      { id: "chk-off1", label: "Letterhead authenticity and corporate domain verified", checked: true, required: true },
-      { id: "chk-off2", label: "Stipend / CTC terms explicitly detailed", checked: true, required: true },
-      { id: "chk-off3", label: "Dates compliant with academic semester calendar", checked: false, required: true },
-      { id: "chk-off4", label: "No objection certificate requirement noted", checked: false, required: true },
+      {
+        id: "chk-off1",
+        label: "Letterhead authenticity and corporate domain verified",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-off2",
+        label: "Stipend / CTC terms explicitly detailed",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-off3",
+        label: "Dates compliant with academic semester calendar",
+        checked: false,
+        required: true,
+      },
+      {
+        id: "chk-off4",
+        label: "No objection certificate requirement noted",
+        checked: false,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
         id: "act-off1",
         action: "Document Uploaded",
-        description: "Offer uploaded by student requesting institutional NOC endorsement",
+        description:
+          "Offer uploaded by student requesting institutional NOC endorsement",
         performedBy: "Aarav Patel",
         role: "STUDENT",
         timestamp: "2026-09-29T16:20:00Z",
@@ -485,7 +589,8 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
       {
         id: "act-off2",
         action: "Review Started",
-        description: "Assigned to Placement Officer for verification checklist review",
+        description:
+          "Assigned to Placement Officer for verification checklist review",
         performedBy: "Vikram Sen",
         role: "PLACEMENT_OFFICER",
         timestamp: "2026-09-30T10:00:00Z",
@@ -522,8 +627,18 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.NORMAL,
     verificationChecklist: [
-      { id: "chk-f1", label: "Transaction reference reconciled with gateway ledger", checked: true, required: true },
-      { id: "chk-f2", label: "Tuition dues cleared for Odd Semester 2026-27", checked: true, required: true },
+      {
+        id: "chk-f1",
+        label: "Transaction reference reconciled with gateway ledger",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-f2",
+        label: "Tuition dues cleared for Odd Semester 2026-27",
+        checked: true,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -567,9 +682,24 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.NORMAL,
     verificationChecklist: [
-      { id: "chk-med1", label: "Registered Medical Practitioner registration number present", checked: false, required: true },
-      { id: "chk-med2", label: "Blood group confirmed with lab report", checked: false, required: true },
-      { id: "chk-med3", label: "Emergency contact and allergy declarations documented", checked: false, required: true },
+      {
+        id: "chk-med1",
+        label: "Registered Medical Practitioner registration number present",
+        checked: false,
+        required: true,
+      },
+      {
+        id: "chk-med2",
+        label: "Blood group confirmed with lab report",
+        checked: false,
+        required: true,
+      },
+      {
+        id: "chk-med3",
+        label: "Emergency contact and allergy declarations documented",
+        checked: false,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -604,7 +734,8 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     uploadedAt: "2026-09-18T15:30:00Z",
     verifiedAt: "2026-09-20T10:15:00Z",
     verifiedBy: "Dr. Arvind Swaminathan (Registrar)",
-    rejectionReason: "Official Revenue Taluk seal and Tehsildar signature are completely blurred. Please re-upload a clean, high-resolution color scan.",
+    rejectionReason:
+      "Official Revenue Taluk seal and Tehsildar signature are completely blurred. Please re-upload a clean, high-resolution color scan.",
     documentNumber: "REV-KL-2026-0182",
     issuingAuthority: "Revenue Department, Government of Kerala",
     issueDate: "2026-04-10",
@@ -613,9 +744,24 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "image/jpeg",
     priority: VerificationPriority.HIGH,
     verificationChecklist: [
-      { id: "chk-inc1", label: "Certificate within current financial year validity", checked: true, required: true },
-      { id: "chk-inc2", label: "Official Tehsildar seal and digital signature legible", checked: false, required: true },
-      { id: "chk-inc3", label: "Annual family income figure verifiable", checked: false, required: true },
+      {
+        id: "chk-inc1",
+        label: "Certificate within current financial year validity",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-inc2",
+        label: "Official Tehsildar seal and digital signature legible",
+        checked: false,
+        required: true,
+      },
+      {
+        id: "chk-inc3",
+        label: "Annual family income figure verifiable",
+        checked: false,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -629,7 +775,8 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
       {
         id: "act-rej2",
         action: "Verification Rejected",
-        description: "Rejection notice dispatched: Seal blurred, re-upload requested.",
+        description:
+          "Rejection notice dispatched: Seal blurred, re-upload requested.",
         performedBy: "Dr. Arvind Swaminathan",
         role: "REGISTRAR",
         timestamp: "2026-09-20T10:15:00Z",
@@ -668,8 +815,18 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
     fileType: "application/pdf",
     priority: VerificationPriority.NORMAL,
     verificationChecklist: [
-      { id: "chk-tr1", label: "Pickup stop (Hope College) verified with route chart", checked: true, required: true },
-      { id: "chk-tr2", label: "Transport fee receipt cleared in Accounts", checked: true, required: true },
+      {
+        id: "chk-tr1",
+        label: "Pickup stop (Hope College) verified with route chart",
+        checked: true,
+        required: true,
+      },
+      {
+        id: "chk-tr2",
+        label: "Transport fee receipt cleared in Accounts",
+        checked: true,
+        required: true,
+      },
     ],
     activityTimeline: [
       {
@@ -791,7 +948,8 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
       {
         id: "act-pcc1",
         action: "Annual Verification Expired",
-        description: "Certificate validity lapsed on 2026-08-01. Mandatory renewal triggered.",
+        description:
+          "Certificate validity lapsed on 2026-08-01. Mandatory renewal triggered.",
         performedBy: "System",
         timestamp: "2026-08-02T00:00:00Z",
       },
@@ -831,7 +989,8 @@ export const MOCK_DOCUMENTS: DocumentItem[] = [
       {
         id: "act-cert1",
         action: "Certificate Issued",
-        description: "Bonafide for SBI Education Loan Renewal generated and digitally signed",
+        description:
+          "Bonafide for SBI Education Loan Renewal generated and digitally signed",
         performedBy: "Dr. Arvind Swaminathan",
         role: "REGISTRAR",
         timestamp: "2026-09-29T11:05:00Z",
@@ -854,7 +1013,8 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     id: "tmpl-bonafide-01",
     templateName: "Institutional Student Bonafide Certificate",
     certificateType: CertificateType.BONAFIDE,
-    description: "Standard bonafide certification confirming active student enrollment, program, roll number, and academic year.",
+    description:
+      "Standard bonafide certification confirming active student enrollment, program, roll number, and academic year.",
     applicableAudience: ["STUDENT"],
     status: CertificateTemplateStatus.ACTIVE,
     version: "2.1",
@@ -862,26 +1022,84 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     lastUpdated: "2026-07-15",
     usageCount: 428,
     fields: [
-      { id: "f-1", name: "student_name", label: "Student Full Legal Name", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.name" },
-      { id: "f-2", name: "roll_number", label: "Roll / Register Number", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.rollNumber" },
-      { id: "f-3", name: "program", label: "Degree Program", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.program" },
-      { id: "f-4", name: "academic_year", label: "Academic Session", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "session.currentYear" },
-      { id: "f-5", name: "purpose", label: "Specific Purpose of Request", type: "TEXT", required: true },
-      { id: "f-6", name: "authorized_signatory", label: "Signatory Title", type: "TEXT", required: true, defaultValue: "Registrar" },
+      {
+        id: "f-1",
+        name: "student_name",
+        label: "Student Full Legal Name",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.name",
+      },
+      {
+        id: "f-2",
+        name: "roll_number",
+        label: "Roll / Register Number",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.rollNumber",
+      },
+      {
+        id: "f-3",
+        name: "program",
+        label: "Degree Program",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.program",
+      },
+      {
+        id: "f-4",
+        name: "academic_year",
+        label: "Academic Session",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "session.currentYear",
+      },
+      {
+        id: "f-5",
+        name: "purpose",
+        label: "Specific Purpose of Request",
+        type: "TEXT",
+        required: true,
+      },
+      {
+        id: "f-6",
+        name: "authorized_signatory",
+        label: "Signatory Title",
+        type: "TEXT",
+        required: true,
+        defaultValue: "Registrar",
+      },
     ],
     versionHistory: [
-      { version: "2.1", publishedAt: "2026-07-15T10:00:00Z", publishedBy: "Dr. Arvind Swaminathan", changelog: "Added dynamic QR code verification token" },
-      { version: "2.0", publishedAt: "2025-11-01T12:00:00Z", publishedBy: "Dr. Arvind Swaminathan", changelog: "Migrated to CampusOS unified format" },
+      {
+        version: "2.1",
+        publishedAt: "2026-07-15T10:00:00Z",
+        publishedBy: "Dr. Arvind Swaminathan",
+        changelog: "Added dynamic QR code verification token",
+      },
+      {
+        version: "2.0",
+        publishedAt: "2025-11-01T12:00:00Z",
+        publishedBy: "Dr. Arvind Swaminathan",
+        changelog: "Migrated to CampusOS unified format",
+      },
     ],
     activity: [
-      { id: "act-tmpl-1", action: "Template Published", performedBy: "Dr. Arvind Swaminathan", timestamp: "2026-07-15T10:00:00Z", notes: "v2.1 approved for AY 2026-27" },
+      {
+        id: "act-tmpl-1",
+        action: "Template Published",
+        performedBy: "Dr. Arvind Swaminathan",
+        timestamp: "2026-07-15T10:00:00Z",
+        notes: "v2.1 approved for AY 2026-27",
+      },
     ],
   },
   {
     id: "tmpl-course-comp-01",
     templateName: "Course & Curriculum Completion Certificate",
     certificateType: CertificateType.COURSE_COMPLETION,
-    description: "Issued to graduating students certifying completion of all prescribed coursework and credits.",
+    description:
+      "Issued to graduating students certifying completion of all prescribed coursework and credits.",
     applicableAudience: ["STUDENT"],
     status: CertificateTemplateStatus.ACTIVE,
     version: "1.4",
@@ -889,24 +1107,68 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     lastUpdated: "2026-06-20",
     usageCount: 215,
     fields: [
-      { id: "fc-1", name: "student_name", label: "Student Name", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.name" },
-      { id: "fc-2", name: "register_number", label: "Register Number", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.rollNumber" },
-      { id: "fc-3", name: "degree_title", label: "Degree Title", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.program" },
-      { id: "fc-4", name: "completion_month_year", label: "Completion Date", type: "DATE", required: true },
-      { id: "fc-5", name: "cgpa", label: "Cumulative Grade Point Average", type: "NUMBER", required: true },
+      {
+        id: "fc-1",
+        name: "student_name",
+        label: "Student Name",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.name",
+      },
+      {
+        id: "fc-2",
+        name: "register_number",
+        label: "Register Number",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.rollNumber",
+      },
+      {
+        id: "fc-3",
+        name: "degree_title",
+        label: "Degree Title",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.program",
+      },
+      {
+        id: "fc-4",
+        name: "completion_month_year",
+        label: "Completion Date",
+        type: "DATE",
+        required: true,
+      },
+      {
+        id: "fc-5",
+        name: "cgpa",
+        label: "Cumulative Grade Point Average",
+        type: "NUMBER",
+        required: true,
+      },
     ],
     versionHistory: [
-      { version: "1.4", publishedAt: "2026-06-20T11:00:00Z", publishedBy: "Dr. K. S. Anand", changelog: "Grading scale alignment with Anna University regulations" },
+      {
+        version: "1.4",
+        publishedAt: "2026-06-20T11:00:00Z",
+        publishedBy: "Dr. K. S. Anand",
+        changelog: "Grading scale alignment with Anna University regulations",
+      },
     ],
     activity: [
-      { id: "act-tmpl-2", action: "Updated", performedBy: "Dr. K. S. Anand", timestamp: "2026-06-20T11:00:00Z" },
+      {
+        id: "act-tmpl-2",
+        action: "Updated",
+        performedBy: "Dr. K. S. Anand",
+        timestamp: "2026-06-20T11:00:00Z",
+      },
     ],
   },
   {
     id: "tmpl-internship-noc-01",
     templateName: "No Objection Certificate for Corporate Internship",
     certificateType: CertificateType.INTERNSHIP,
-    description: "NOC permitting full-time or part-time summer/semester internship engagement with corporate sponsors.",
+    description:
+      "NOC permitting full-time or part-time summer/semester internship engagement with corporate sponsors.",
     applicableAudience: ["STUDENT"],
     status: CertificateTemplateStatus.ACTIVE,
     version: "1.8",
@@ -914,24 +1176,66 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     lastUpdated: "2026-08-01",
     usageCount: 180,
     fields: [
-      { id: "fi-1", name: "student_name", label: "Student Name", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.name" },
-      { id: "fi-2", name: "company_name", label: "Corporate Sponsor Name", type: "TEXT", required: true },
-      { id: "fi-3", name: "internship_duration", label: "Internship Duration (Weeks)", type: "NUMBER", required: true },
-      { id: "fi-4", name: "start_date", label: "Start Date", type: "DATE", required: true },
-      { id: "fi-5", name: "end_date", label: "End Date", type: "DATE", required: true },
+      {
+        id: "fi-1",
+        name: "student_name",
+        label: "Student Name",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.name",
+      },
+      {
+        id: "fi-2",
+        name: "company_name",
+        label: "Corporate Sponsor Name",
+        type: "TEXT",
+        required: true,
+      },
+      {
+        id: "fi-3",
+        name: "internship_duration",
+        label: "Internship Duration (Weeks)",
+        type: "NUMBER",
+        required: true,
+      },
+      {
+        id: "fi-4",
+        name: "start_date",
+        label: "Start Date",
+        type: "DATE",
+        required: true,
+      },
+      {
+        id: "fi-5",
+        name: "end_date",
+        label: "End Date",
+        type: "DATE",
+        required: true,
+      },
     ],
     versionHistory: [
-      { version: "1.8", publishedAt: "2026-08-01T09:00:00Z", publishedBy: "Vikram Sen", changelog: "Added mandatory attendance clearance check threshold (75%)" },
+      {
+        version: "1.8",
+        publishedAt: "2026-08-01T09:00:00Z",
+        publishedBy: "Vikram Sen",
+        changelog: "Added mandatory attendance clearance check threshold (75%)",
+      },
     ],
     activity: [
-      { id: "act-tmpl-3", action: "Threshold Updated", performedBy: "Vikram Sen", timestamp: "2026-08-01T09:00:00Z" },
+      {
+        id: "act-tmpl-3",
+        action: "Threshold Updated",
+        performedBy: "Vikram Sen",
+        timestamp: "2026-08-01T09:00:00Z",
+      },
     ],
   },
   {
     id: "tmpl-conduct-01",
     templateName: "Institutional Conduct & Character Certificate",
     certificateType: CertificateType.CONDUCT,
-    description: "Official testimonial attesting to exemplary discipline, character, and institutional standing.",
+    description:
+      "Official testimonial attesting to exemplary discipline, character, and institutional standing.",
     applicableAudience: ["STUDENT"],
     status: CertificateTemplateStatus.ACTIVE,
     version: "1.2",
@@ -939,22 +1243,54 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     lastUpdated: "2026-05-10",
     usageCount: 142,
     fields: [
-      { id: "fcd-1", name: "student_name", label: "Student Name", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.name" },
-      { id: "fcd-2", name: "roll_number", label: "Roll Number", type: "SYSTEM_VARIABLE", required: true, systemVariableMapping: "student.rollNumber" },
-      { id: "fcd-3", name: "character_rating", label: "Attested Character", type: "TEXT", required: true, defaultValue: "Good" },
+      {
+        id: "fcd-1",
+        name: "student_name",
+        label: "Student Name",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.name",
+      },
+      {
+        id: "fcd-2",
+        name: "roll_number",
+        label: "Roll Number",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+        systemVariableMapping: "student.rollNumber",
+      },
+      {
+        id: "fcd-3",
+        name: "character_rating",
+        label: "Attested Character",
+        type: "TEXT",
+        required: true,
+        defaultValue: "Good",
+      },
     ],
     versionHistory: [
-      { version: "1.2", publishedAt: "2026-05-10T14:00:00Z", publishedBy: "Dr. Arvind Swaminathan", changelog: "Integrated disciplinary records check" },
+      {
+        version: "1.2",
+        publishedAt: "2026-05-10T14:00:00Z",
+        publishedBy: "Dr. Arvind Swaminathan",
+        changelog: "Integrated disciplinary records check",
+      },
     ],
     activity: [
-      { id: "act-tmpl-4", action: "Published", performedBy: "Dr. Arvind Swaminathan", timestamp: "2026-05-10T14:00:00Z" },
+      {
+        id: "act-tmpl-4",
+        action: "Published",
+        performedBy: "Dr. Arvind Swaminathan",
+        timestamp: "2026-05-10T14:00:00Z",
+      },
     ],
   },
   {
     id: "tmpl-transfer-01",
     templateName: "Transfer Certificate (TC) & Migration",
     certificateType: CertificateType.TRANSFER,
-    description: "Statutory Transfer Certificate issued upon program completion or authorized institutional migration.",
+    description:
+      "Statutory Transfer Certificate issued upon program completion or authorized institutional migration.",
     applicableAudience: ["STUDENT"],
     status: CertificateTemplateStatus.DRAFT,
     version: "0.9",
@@ -962,15 +1298,43 @@ export const MOCK_CERTIFICATE_TEMPLATES: CertificateTemplate[] = [
     lastUpdated: "2026-09-25",
     usageCount: 0,
     fields: [
-      { id: "ftc-1", name: "student_name", label: "Student Name", type: "SYSTEM_VARIABLE", required: true },
-      { id: "ftc-2", name: "date_of_leaving", label: "Date of Leaving", type: "DATE", required: true },
-      { id: "ftc-3", name: "reason_for_leaving", label: "Reason for Leaving", type: "TEXT", required: true },
+      {
+        id: "ftc-1",
+        name: "student_name",
+        label: "Student Name",
+        type: "SYSTEM_VARIABLE",
+        required: true,
+      },
+      {
+        id: "ftc-2",
+        name: "date_of_leaving",
+        label: "Date of Leaving",
+        type: "DATE",
+        required: true,
+      },
+      {
+        id: "ftc-3",
+        name: "reason_for_leaving",
+        label: "Reason for Leaving",
+        type: "TEXT",
+        required: true,
+      },
     ],
     versionHistory: [
-      { version: "0.9", publishedAt: "2026-09-25T11:00:00Z", publishedBy: "Dr. Arvind Swaminathan", changelog: "Draft under review by Legal Affairs" },
+      {
+        version: "0.9",
+        publishedAt: "2026-09-25T11:00:00Z",
+        publishedBy: "Dr. Arvind Swaminathan",
+        changelog: "Draft under review by Legal Affairs",
+      },
     ],
     activity: [
-      { id: "act-tmpl-5", action: "Draft Created", performedBy: "Dr. Arvind Swaminathan", timestamp: "2026-09-25T11:00:00Z" },
+      {
+        id: "act-tmpl-5",
+        action: "Draft Created",
+        performedBy: "Dr. Arvind Swaminathan",
+        timestamp: "2026-09-25T11:00:00Z",
+      },
     ],
   },
 ];
@@ -991,7 +1355,8 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     certificateType: CertificateType.BONAFIDE,
     templateId: "tmpl-bonafide-01",
     templateName: "Institutional Student Bonafide Certificate",
-    purpose: "Application for Education Loan Renewal at State Bank of India, Main Branch",
+    purpose:
+      "Application for Education Loan Renewal at State Bank of India, Main Branch",
     requestedDate: "2026-09-28T09:30:00Z",
     requiredByDate: "2026-10-05",
     status: CertificateRequestStatus.ISSUED,
@@ -1002,10 +1367,30 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     issuedDate: "2026-09-29T11:05:00Z",
     financeReferenceId: "rec-2026-0912",
     validationChecks: [
-      { id: "chk-r1", title: "Active Enrollment Status", passed: true, details: "Enrolled in Semester 5 (Full-Time)" },
-      { id: "chk-r2", title: "Fee Clearance Check", passed: true, details: "Tuition & hostel dues cleared through 2026-27" },
-      { id: "chk-r3", title: "Disciplinary Standing", passed: true, details: "Zero disciplinary remarks or inquiries" },
-      { id: "chk-r4", title: "Minimum Attendance Check", passed: true, details: "Current cumulative attendance: 88.5%" },
+      {
+        id: "chk-r1",
+        title: "Active Enrollment Status",
+        passed: true,
+        details: "Enrolled in Semester 5 (Full-Time)",
+      },
+      {
+        id: "chk-r2",
+        title: "Fee Clearance Check",
+        passed: true,
+        details: "Tuition & hostel dues cleared through 2026-27",
+      },
+      {
+        id: "chk-r3",
+        title: "Disciplinary Standing",
+        passed: true,
+        details: "Zero disciplinary remarks or inquiries",
+      },
+      {
+        id: "chk-r4",
+        title: "Minimum Attendance Check",
+        passed: true,
+        details: "Current cumulative attendance: 88.5%",
+      },
     ],
     timeline: [
       {
@@ -1051,7 +1436,8 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     certificateType: CertificateType.INTERNSHIP,
     templateId: "tmpl-internship-noc-01",
     templateName: "No Objection Certificate for Corporate Internship",
-    purpose: "Winter Research Internship at Microsoft IDC Hyderabad (Jan - Jun 2027)",
+    purpose:
+      "Winter Research Internship at Microsoft IDC Hyderabad (Jan - Jun 2027)",
     requestedDate: "2026-09-30T14:15:00Z",
     requiredByDate: "2026-10-10",
     status: CertificateRequestStatus.UNDER_REVIEW,
@@ -1059,10 +1445,30 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     reviewerName: "Vikram Sen",
     reviewedAt: "2026-10-01T10:00:00Z",
     validationChecks: [
-      { id: "chk-r21", title: "Academic Arrear Clearance", passed: true, details: "0 active backlogs, CGPA 8.84" },
-      { id: "chk-r22", title: "Semester Credit Requirements", passed: true, details: "Core electives completed in fast-track mode" },
-      { id: "chk-r23", title: "Corporate Offer Authenticity", passed: true, details: "Official Microsoft letter verified" },
-      { id: "chk-r24", title: "HOD Academic Concurrence", passed: true, details: "Endorsed by Dr. K. S. Anand" },
+      {
+        id: "chk-r21",
+        title: "Academic Arrear Clearance",
+        passed: true,
+        details: "0 active backlogs, CGPA 8.84",
+      },
+      {
+        id: "chk-r22",
+        title: "Semester Credit Requirements",
+        passed: true,
+        details: "Core electives completed in fast-track mode",
+      },
+      {
+        id: "chk-r23",
+        title: "Corporate Offer Authenticity",
+        passed: true,
+        details: "Official Microsoft letter verified",
+      },
+      {
+        id: "chk-r24",
+        title: "HOD Academic Concurrence",
+        passed: true,
+        details: "Endorsed by Dr. K. S. Anand",
+      },
     ],
     timeline: [
       {
@@ -1098,9 +1504,24 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     requiredByDate: "2026-10-06",
     status: CertificateRequestStatus.SUBMITTED,
     validationChecks: [
-      { id: "chk-r31", title: "Active Enrollment Status", passed: true, details: "Semester 5 Full-Time" },
-      { id: "chk-r32", title: "Identity Record On File", passed: true, details: "Aadhaar authenticated" },
-      { id: "chk-r33", title: "Fee Clearance Check", passed: true, details: "No outstanding balances" },
+      {
+        id: "chk-r31",
+        title: "Active Enrollment Status",
+        passed: true,
+        details: "Semester 5 Full-Time",
+      },
+      {
+        id: "chk-r32",
+        title: "Identity Record On File",
+        passed: true,
+        details: "Aadhaar authenticated",
+      },
+      {
+        id: "chk-r33",
+        title: "Fee Clearance Check",
+        passed: true,
+        details: "No outstanding balances",
+      },
     ],
     timeline: [
       {
@@ -1130,8 +1551,18 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     reviewerName: "Dr. Arvind Swaminathan",
     reviewedAt: "2026-09-24T15:30:00Z",
     validationChecks: [
-      { id: "chk-r41", title: "Disciplinary Record Clearance", passed: true, details: "Clear conduct record" },
-      { id: "chk-r42", title: "Library Dues Cleared", passed: true, details: "Zero overdue books" },
+      {
+        id: "chk-r41",
+        title: "Disciplinary Record Clearance",
+        passed: true,
+        details: "Clear conduct record",
+      },
+      {
+        id: "chk-r42",
+        title: "Library Dues Cleared",
+        passed: true,
+        details: "Zero overdue books",
+      },
     ],
     timeline: [
       {
@@ -1168,9 +1599,15 @@ export const MOCK_CERTIFICATE_REQUESTS: CertificateRequest[] = [
     reviewerId: "user-faculty-01",
     reviewerName: "Dr. Rajesh Sharma",
     reviewedAt: "2026-09-12T14:00:00Z",
-    rejectionReason: "Course Completion Certificate cannot be issued until all Semester 8 end-semester examinations and project viva-voce have concluded.",
+    rejectionReason:
+      "Course Completion Certificate cannot be issued until all Semester 8 end-semester examinations and project viva-voce have concluded.",
     validationChecks: [
-      { id: "chk-r51", title: "Semester Standing", passed: false, details: "Candidate currently in Semester 5 (incomplete credits)" },
+      {
+        id: "chk-r51",
+        title: "Semester Standing",
+        passed: false,
+        details: "Candidate currently in Semester 5 (incomplete credits)",
+      },
     ],
     timeline: [
       {
@@ -1212,7 +1649,8 @@ export const MOCK_ISSUED_CERTIFICATES: IssuedCertificate[] = [
     issueDate: "2026-09-29",
     status: IssuedCertificateStatus.ISSUED,
     qrVerificationUrl: "https://verify.campusos.edu/cert/CAMPUSOS-2026-0041",
-    digitalSignatureHash: "SHA256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
+    digitalSignatureHash:
+      "SHA256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
     downloadUrl: "#mock-download-cert-0041",
   },
   {
@@ -1230,7 +1668,8 @@ export const MOCK_ISSUED_CERTIFICATES: IssuedCertificate[] = [
     issueDate: "2026-07-15",
     status: IssuedCertificateStatus.ISSUED,
     qrVerificationUrl: "https://verify.campusos.edu/cert/CAMPUSOS-2026-0019",
-    digitalSignatureHash: "SHA256:cb837617c0a76ef48cfef49c8112d7d8e6a10065b3240e34c1b183fd8b53cf52",
+    digitalSignatureHash:
+      "SHA256:cb837617c0a76ef48cfef49c8112d7d8e6a10065b3240e34c1b183fd8b53cf52",
     downloadUrl: "#mock-download-cert-0019",
   },
   {
@@ -1248,9 +1687,11 @@ export const MOCK_ISSUED_CERTIFICATES: IssuedCertificate[] = [
     issueDate: "2026-08-10",
     status: IssuedCertificateStatus.REVOKED,
     qrVerificationUrl: "https://verify.campusos.edu/cert/CAMPUSOS-2026-0008",
-    digitalSignatureHash: "SHA256:9a32c45167b09de215689104fa281b671923cb81992ad871821034981fa81622",
+    digitalSignatureHash:
+      "SHA256:9a32c45167b09de215689104fa281b671923cb81992ad871821034981fa81622",
     revokedDate: "2026-08-25",
-    revocationReason: "Student opted out of external internship to undertake campus sponsored DRDO research project.",
+    revocationReason:
+      "Student opted out of external internship to undertake campus sponsored DRDO research project.",
   },
 ];
 
@@ -1261,7 +1702,8 @@ export const MOCK_ISSUED_CERTIFICATES: IssuedCertificate[] = [
 export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
   {
     id: "rec-inst-001",
-    recordName: "National Board of Accreditation (NBA) Tier-1 Outcome & Approval",
+    recordName:
+      "National Board of Accreditation (NBA) Tier-1 Outcome & Approval",
     code: "NBA-CSE-2024-2027",
     category: "Accreditation Records",
     ownerDepartment: "Computer Science & Engineering",
@@ -1271,13 +1713,24 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     validUntil: "2027-06-30",
     issuingAuthority: "National Board of Accreditation (NBA), New Delhi",
     referenceNumber: "F.No. 33-14/2010-NBA",
-    description: "Full accreditation under Washington Accord Tier-1 for B.Tech Computer Science & Engineering program for AY 2024-25 through 2026-27.",
+    description:
+      "Full accreditation under Washington Accord Tier-1 for B.Tech Computer Science & Engineering program for AY 2024-25 through 2026-27.",
     fileType: "application/pdf",
     fileSize: "4.8 MB",
     relatedDocumentIds: ["doc-001"],
     relatedDocuments: [
-      { id: "rd-1", name: "NBA Peer Team Evaluation Report.pdf", fileType: "PDF", fileSize: "3.2 MB" },
-      { id: "rd-2", name: "Executive Committee Resolution.pdf", fileType: "PDF", fileSize: "1.6 MB" },
+      {
+        id: "rd-1",
+        name: "NBA Peer Team Evaluation Report.pdf",
+        fileType: "PDF",
+        fileSize: "3.2 MB",
+      },
+      {
+        id: "rd-2",
+        name: "Executive Committee Resolution.pdf",
+        fileType: "PDF",
+        fileSize: "1.6 MB",
+      },
     ],
     activity: [
       {
@@ -1285,7 +1738,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
         action: "Accreditation Registered",
         performedBy: "Dr. Arvind Swaminathan",
         timestamp: "2024-07-02T10:00:00Z",
-        details: "Score achieved: 785/1000 — 3 years full accreditation granted.",
+        details:
+          "Score achieved: 785/1000 — 3 years full accreditation granted.",
       },
     ],
   },
@@ -1299,9 +1753,11 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     status: InstitutionalRecordStatus.ACTIVE,
     createdDate: "2026-05-15",
     validUntil: "2027-06-30",
-    issuingAuthority: "All India Council for Technical Education, Southern Regional Office",
+    issuingAuthority:
+      "All India Council for Technical Education, Southern Regional Office",
     referenceNumber: "AICTE/SRO/1-98741029/2026/EOA",
-    description: "Statutory annual extension of approval for sanctioned intakes across Engineering, Technology, and Management programs.",
+    description:
+      "Statutory annual extension of approval for sanctioned intakes across Engineering, Technology, and Management programs.",
     fileType: "application/pdf",
     fileSize: "2.1 MB",
     activity: [
@@ -1316,7 +1772,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
   },
   {
     id: "rec-inst-003",
-    recordName: "Institutional Code of Conduct, Academic Integrity & Ethics Policy",
+    recordName:
+      "Institutional Code of Conduct, Academic Integrity & Ethics Policy",
     code: "POL-ETH-2026-V3",
     category: "Policies & Governance",
     ownerDepartment: "Internal Quality Assurance Cell (IQAC)",
@@ -1326,7 +1783,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     validUntil: "2028-12-31",
     issuingAuthority: "Academic Council & Governing Body",
     referenceNumber: "GOV-AC-2026-01",
-    description: "Statutory code governing academic integrity, non-discrimination, anti-harassment, research ethics, and digital records stewardship.",
+    description:
+      "Statutory code governing academic integrity, non-discrimination, anti-harassment, research ethics, and digital records stewardship.",
     fileType: "application/pdf",
     fileSize: "1.9 MB",
     activity: [
@@ -1349,7 +1807,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     createdDate: "2026-08-20",
     issuingAuthority: "Office of the Chairman & Board of Trustees",
     referenceNumber: "GC/RES/48/2026",
-    description: "Strategic investment in AI campus supercomputing cluster, capital budget approvals for hostel modernization, and professorial appointments.",
+    description:
+      "Strategic investment in AI campus supercomputing cluster, capital budget approvals for hostel modernization, and professorial appointments.",
     fileType: "application/pdf",
     fileSize: "5.4 MB",
     activity: [
@@ -1364,7 +1823,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
   },
   {
     id: "rec-inst-005",
-    recordName: "National Institutional Ranking Framework (NIRF 2026) Data Declaration",
+    recordName:
+      "National Institutional Ranking Framework (NIRF 2026) Data Declaration",
     code: "NIRF-DATA-2026",
     category: "Regulatory Approvals",
     ownerDepartment: "Internal Quality Assurance Cell (IQAC)",
@@ -1374,7 +1834,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     validUntil: "2027-02-10",
     issuingAuthority: "Ministry of Education, Government of India",
     referenceNumber: "NIRF/ENGG/2026/CAMPUSOS",
-    description: "Public disclosure of student enrollment, faculty cadre, sponsored research grants, consultancy, and median placement compensation.",
+    description:
+      "Public disclosure of student enrollment, faculty cadre, sponsored research grants, consultancy, and median placement compensation.",
     fileType: "application/pdf",
     fileSize: "3.6 MB",
     activity: [
@@ -1388,7 +1849,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
   },
   {
     id: "rec-inst-006",
-    recordName: "National Assessment & Accreditation Council (NAAC) Cycle-2 Certificate",
+    recordName:
+      "National Assessment & Accreditation Council (NAAC) Cycle-2 Certificate",
     code: "NAAC-A-PLUS-2023-28",
     category: "Accreditation Records",
     ownerDepartment: "Institutional Administration",
@@ -1398,7 +1860,8 @@ export const MOCK_INSTITUTIONAL_RECORDS: InstitutionalRecord[] = [
     validUntil: "2028-04-11",
     issuingAuthority: "NAAC, Bengaluru",
     referenceNumber: "NAAC/DO/2023/341",
-    description: "Accredited with Cumulative Grade Point Average (CGPA) of 3.68 on a four-point scale at A++ Grade.",
+    description:
+      "Accredited with Cumulative Grade Point Average (CGPA) of 3.68 on a four-point scale at A++ Grade.",
     fileType: "application/pdf",
     fileSize: "2.8 MB",
     activity: [

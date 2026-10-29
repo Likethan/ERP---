@@ -15,49 +15,37 @@ Comprehensive test suite verifying:
 12. End-to-end FastAPI REST API integration testing via AsyncClient.
 """
 
-from datetime import UTC, datetime, timedelta
-from typing import Any
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
     KnowledgeCycleDetectedException,
     KnowledgeOptimisticLockException,
     KnowledgeSeparationOfDutiesException,
-    PermissionDeniedException,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.core import Institution
 from app.models.knowledge import (
-    KnowledgeCategory,
     KnowledgeCategoryCode,
     KnowledgeConfidentiality,
-    KnowledgeItem,
     KnowledgeItemStatus,
-    KnowledgeItemVersion,
-    KnowledgeRelationship,
     KnowledgeRelationshipType,
     KnowledgeReviewDecision,
     KnowledgeScopeType,
-    KnowledgeUserAcknowledgement,
 )
-from app.models.people import Role, User, UserRoleAssignment
+from app.models.people import User
 from app.schemas.knowledge import (
     KnowledgeAcknowledgementRequirementCreate,
     KnowledgeCategoryCreate,
     KnowledgeItemCreate,
     KnowledgeItemDraftUpdate,
-    KnowledgeItemMetadataUpdate,
     KnowledgePublishRequest,
-    KnowledgeRelationshipCreate,
-    KnowledgeRetireRequest,
     KnowledgeReviewActionRequest,
     KnowledgeReviewSubmitRequest,
-    KnowledgeSchedulePublicationRequest,
     KnowledgeSearchFilter,
     KnowledgeSection,
     KnowledgeUserAcknowledgementCreate,

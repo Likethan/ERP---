@@ -54,7 +54,8 @@ export default function StudentPlacementProfileDetailPage() {
 
   // Resume status update modal
   const [showResumeModal, setShowResumeModal] = useState(false);
-  const [newResumeStatus, setNewResumeStatus] = useState<ResumeStatus>("VERIFIED");
+  const [newResumeStatus, setNewResumeStatus] =
+    useState<ResumeStatus>("VERIFIED");
   const [resumeReviewNotes, setResumeReviewNotes] = useState("");
 
   const loadData = async () => {
@@ -69,7 +70,11 @@ export default function StudentPlacementProfileDetailPage() {
       ]);
 
       if (!profRes.data) {
-        showToast({ title: "Not Found", message: "Student placement profile not found", type: "error" });
+        showToast({
+          title: "Not Found",
+          message: "Student placement profile not found",
+          type: "error",
+        });
         router.push("/app/placement/students");
         return;
       }
@@ -80,7 +85,11 @@ export default function StudentPlacementProfileDetailPage() {
       setOffers(ofrRes.data || []);
       setOutcome(outRes.data || null);
     } catch {
-      showToast({ title: "Error", message: "Failed to load student placement 360 profile", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load student placement 360 profile",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -95,12 +104,24 @@ export default function StudentPlacementProfileDetailPage() {
   const handleUpdateResume = async () => {
     if (!profile) return;
     try {
-      await placementService.updateResumeStatus(profile.studentId, newResumeStatus, resumeReviewNotes);
-      showToast({ title: "Updated", message: `Resume status updated to ${newResumeStatus}`, type: "success" });
+      await placementService.updateResumeStatus(
+        profile.studentId,
+        newResumeStatus,
+        resumeReviewNotes,
+      );
+      showToast({
+        title: "Updated",
+        message: `Resume status updated to ${newResumeStatus}`,
+        type: "success",
+      });
       setShowResumeModal(false);
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to update resume status", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to update resume status",
+        type: "error",
+      });
     }
   };
 
@@ -109,7 +130,9 @@ export default function StudentPlacementProfileDetailPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500">Loading student placement 360° dossier...</p>
+          <p className="text-xs text-slate-500">
+            Loading student placement 360° dossier...
+          </p>
         </div>
       </div>
     );
@@ -159,11 +182,16 @@ export default function StudentPlacementProfileDetailPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5">
-                <span className="font-mono font-medium">{profile.rollNumber}</span>
+                <span className="font-mono font-medium">
+                  {profile.rollNumber}
+                </span>
                 <span>•</span>
                 <span>{profile.program}</span>
                 <span>•</span>
-                <span>Class of {profile.graduationYear} (Semester {profile.currentSemester})</span>
+                <span>
+                  Class of {profile.graduationYear} (Semester{" "}
+                  {profile.currentSemester})
+                </span>
                 <span>•</span>
                 <span>{profile.email}</span>
               </div>
@@ -201,8 +229,12 @@ export default function StudentPlacementProfileDetailPage() {
           <TabsTrigger value="academic">Academic & Eligibility</TabsTrigger>
           <TabsTrigger value="skills">Technical Skills</TabsTrigger>
           <TabsTrigger value="resume">Resume Verification</TabsTrigger>
-          <TabsTrigger value="applications">Applications ({applications.length})</TabsTrigger>
-          <TabsTrigger value="interviews">Interviews ({interviews.length})</TabsTrigger>
+          <TabsTrigger value="applications">
+            Applications ({applications.length})
+          </TabsTrigger>
+          <TabsTrigger value="interviews">
+            Interviews ({interviews.length})
+          </TabsTrigger>
           <TabsTrigger value="offers">Offers ({offers.length})</TabsTrigger>
           <TabsTrigger value="timeline">Audit Timeline</TabsTrigger>
         </TabsList>
@@ -232,7 +264,11 @@ export default function StudentPlacementProfileDetailPage() {
               title="Offers Received"
               value={profile.offersCount}
               icon={<Award className="w-5 h-5 text-emerald-500" />}
-              description={profile.placedPackageLpa ? `Highest: ${formatLPA(profile.placedPackageLpa)}` : "Awaiting final offers"}
+              description={
+                profile.placedPackageLpa
+                  ? `Highest: ${formatLPA(profile.placedPackageLpa)}`
+                  : "Awaiting final offers"
+              }
             />
           </div>
 
@@ -249,7 +285,8 @@ export default function StudentPlacementProfileDetailPage() {
                   </h3>
                   <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-1">
                     Formal offer letter accepted. Compensation:{" "}
-                    <strong>{formatLPA(profile.placedPackageLpa || 0)}</strong>. Target joining date scheduled for July 2027.
+                    <strong>{formatLPA(profile.placedPackageLpa || 0)}</strong>.
+                    Target joining date scheduled for July 2027.
                   </p>
                 </div>
               </div>
@@ -263,7 +300,9 @@ export default function StudentPlacementProfileDetailPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <span className="text-xs font-semibold text-slate-500">Programming Languages:</span>
+                <span className="text-xs font-semibold text-slate-500">
+                  Programming Languages:
+                </span>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {profile.skills.programmingLanguages.map((l) => (
                     <span
@@ -277,7 +316,9 @@ export default function StudentPlacementProfileDetailPage() {
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-slate-500">Technical Domains & Frameworks:</span>
+                <span className="text-xs font-semibold text-slate-500">
+                  Technical Domains & Frameworks:
+                </span>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {profile.skills.technical.map((t) => (
                     <span
@@ -309,7 +350,9 @@ export default function StudentPlacementProfileDetailPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div className="space-y-1">
-                <span className="text-xs text-slate-500">Cumulative GPA (CGPA)</span>
+                <span className="text-xs text-slate-500">
+                  Cumulative GPA (CGPA)
+                </span>
                 <p className="text-lg font-bold text-slate-900 dark:text-white font-mono">
                   {profile.cgpa.toFixed(2)}
                 </p>
@@ -320,24 +363,34 @@ export default function StudentPlacementProfileDetailPage() {
                 <span className="text-xs text-slate-500">Active Backlogs</span>
                 <p
                   className={`text-lg font-bold font-mono ${
-                    profile.activeBacklogs === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+                    profile.activeBacklogs === 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-rose-600 dark:text-rose-400"
                   }`}
                 >
                   {profile.activeBacklogs} Backlogs
                 </p>
-                <p className="text-[11px] text-slate-500">Historical Backlogs: {profile.historyBacklogs}</p>
+                <p className="text-[11px] text-slate-500">
+                  Historical Backlogs: {profile.historyBacklogs}
+                </p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-xs text-slate-500">Academic Attendance</span>
+                <span className="text-xs text-slate-500">
+                  Academic Attendance
+                </span>
                 <p
                   className={`text-lg font-bold font-mono ${
-                    profile.attendancePercent >= 75 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                    profile.attendancePercent >= 75
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-amber-600 dark:text-amber-400"
                   }`}
                 >
                   {profile.attendancePercent}%
                 </p>
-                <p className="text-[11px] text-slate-500">Institutional Threshold: 75%</p>
+                <p className="text-[11px] text-slate-500">
+                  Institutional Threshold: 75%
+                </p>
               </div>
             </div>
           </div>
@@ -398,11 +451,15 @@ export default function StudentPlacementProfileDetailPage() {
                       className="flex items-center gap-2 text-xs p-2.5 rounded-lg bg-slate-50 border border-slate-100 dark:bg-slate-800/60 dark:border-slate-700"
                     >
                       <Award className="w-4 h-4 text-amber-500" />
-                      <span className="font-medium text-slate-800 dark:text-slate-200">{cert}</span>
+                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                        {cert}
+                      </span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-slate-500">No certifications recorded.</p>
+                  <p className="text-xs text-slate-500">
+                    No certifications recorded.
+                  </p>
                 )}
               </div>
             </div>
@@ -425,8 +482,8 @@ export default function StudentPlacementProfileDetailPage() {
                     {profile.studentName.replace(/\s+/g, "_")}_Resume_2026.pdf
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                    Last updated: {profile.resumeUpdatedAt || "Recently"} • Status:{" "}
-                    <strong>{profile.resumeStatus}</strong>
+                    Last updated: {profile.resumeUpdatedAt || "Recently"} •
+                    Status: <strong>{profile.resumeStatus}</strong>
                   </p>
                   {profile.resumeNotes && (
                     <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 italic">
@@ -460,7 +517,10 @@ export default function StudentPlacementProfileDetailPage() {
             {applications.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {applications.map((app) => (
-                  <div key={app.id} className="py-3 flex items-center justify-between">
+                  <div
+                    key={app.id}
+                    className="py-3 flex items-center justify-between"
+                  >
                     <div>
                       <Link
                         href={`/app/placement/applications/${app.id}`}
@@ -469,7 +529,8 @@ export default function StudentPlacementProfileDetailPage() {
                         {app.companyName} — {app.positionTitle}
                       </Link>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        Code: {app.applicationCode} • Applied: {app.appliedDate.split("T")[0]}
+                        Code: {app.applicationCode} • Applied:{" "}
+                        {app.appliedDate.split("T")[0]}
                       </p>
                     </div>
 
@@ -479,16 +540,20 @@ export default function StudentPlacementProfileDetailPage() {
                           app.status === "SELECTED"
                             ? "success"
                             : app.status === "SHORTLISTED"
-                            ? "info"
-                            : app.status === "REJECTED"
-                            ? "destructive"
-                            : "secondary"
+                              ? "info"
+                              : app.status === "REJECTED"
+                                ? "destructive"
+                                : "secondary"
                         }
                       >
                         {app.status}
                       </Badge>
                       <Link href={`/app/placement/applications/${app.id}`}>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs"
+                        >
                           Inspect
                         </Button>
                       </Link>
@@ -497,7 +562,9 @@ export default function StudentPlacementProfileDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No applications submitted yet.</p>
+              <p className="text-xs text-slate-500">
+                No applications submitted yet.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -518,26 +585,29 @@ export default function StudentPlacementProfileDetailPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-xs text-slate-900 dark:text-white">
-                          {intv.companyName} ({intv.stage} Round {intv.roundNumber})
+                          {intv.companyName} ({intv.stage} Round{" "}
+                          {intv.roundNumber})
                         </span>
                         <Badge
                           variant={
                             intv.status === "COMPLETED"
                               ? "success"
                               : intv.status === "SCHEDULED"
-                              ? "warning"
-                              : "secondary"
+                                ? "warning"
+                                : "secondary"
                           }
                         >
                           {intv.status}
                         </Badge>
                       </div>
                       <p className="text-xs text-slate-500 mt-1">
-                        {intv.date} at {intv.time} • Panel: {intv.interviewerName}
+                        {intv.date} at {intv.time} • Panel:{" "}
+                        {intv.interviewerName}
                       </p>
                       {intv.evaluation && (
                         <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1 font-medium">
-                          Result: {intv.evaluation.overallRecommendation} — "{intv.evaluation.notes}"
+                          Result: {intv.evaluation.overallRecommendation} — "
+                          {intv.evaluation.notes}"
                         </p>
                       )}
                     </div>
@@ -551,7 +621,9 @@ export default function StudentPlacementProfileDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No interviews scheduled yet.</p>
+              <p className="text-xs text-slate-500">
+                No interviews scheduled yet.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -579,8 +651,8 @@ export default function StudentPlacementProfileDetailPage() {
                             ofr.status === "ACCEPTED"
                               ? "success"
                               : ofr.status === "RELEASED"
-                              ? "warning"
-                              : "secondary"
+                                ? "warning"
+                                : "secondary"
                           }
                         >
                           {ofr.status}
@@ -590,7 +662,8 @@ export default function StudentPlacementProfileDetailPage() {
                         Role: {ofr.positionTitle} • Joining: {ofr.joiningDate}
                       </p>
                       <p className="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
-                        {formatLPA(ofr.ctcLpa)} (Base: {formatLPA(ofr.baseSalaryLpa)})
+                        {formatLPA(ofr.ctcLpa)} (Base:{" "}
+                        {formatLPA(ofr.baseSalaryLpa)})
                       </p>
                     </div>
 
@@ -622,7 +695,8 @@ export default function StudentPlacementProfileDetailPage() {
                     {entry.action}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                    By {entry.actor} • {new Date(entry.timestamp).toLocaleString()}
+                    By {entry.actor} •{" "}
+                    {new Date(entry.timestamp).toLocaleString()}
                   </div>
                   {entry.details && (
                     <div className="text-xs text-slate-600 dark:text-slate-300 mt-1 bg-slate-50 dark:bg-slate-800 p-2 rounded">
@@ -640,27 +714,41 @@ export default function StudentPlacementProfileDetailPage() {
       {showResumeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
           <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Review & Verify Resume</h3>
+            <h3 className="text-base font-bold text-white">
+              Review & Verify Resume
+            </h3>
             <p className="text-xs text-slate-400">
               Set candidate resume status and add placement cell review notes.
             </p>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-slate-300 font-medium">Resume Verification Decision</label>
+                <label className="text-slate-300 font-medium">
+                  Resume Verification Decision
+                </label>
                 <select
                   value={newResumeStatus}
-                  onChange={(e) => setNewResumeStatus(e.target.value as ResumeStatus)}
+                  onChange={(e) =>
+                    setNewResumeStatus(e.target.value as ResumeStatus)
+                  }
                   className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-white"
                 >
-                  <option value="VERIFIED">VERIFIED (Approved for Job Drives)</option>
-                  <option value="UNDER_REVIEW">UNDER REVIEW (Pending revisions)</option>
-                  <option value="REJECTED">REJECTED (Requires formatting resubmission)</option>
+                  <option value="VERIFIED">
+                    VERIFIED (Approved for Job Drives)
+                  </option>
+                  <option value="UNDER_REVIEW">
+                    UNDER REVIEW (Pending revisions)
+                  </option>
+                  <option value="REJECTED">
+                    REJECTED (Requires formatting resubmission)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="text-slate-300 font-medium">Reviewer Feedback Notes</label>
+                <label className="text-slate-300 font-medium">
+                  Reviewer Feedback Notes
+                </label>
                 <textarea
                   value={resumeReviewNotes}
                   onChange={(e) => setResumeReviewNotes(e.target.value)}
@@ -672,7 +760,11 @@ export default function StudentPlacementProfileDetailPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setShowResumeModal(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowResumeModal(false)}
+              >
                 Cancel
               </Button>
               <Button variant="primary" size="sm" onClick={handleUpdateResume}>

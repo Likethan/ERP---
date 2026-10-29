@@ -10,12 +10,12 @@ Implements:
 - Cryptographic Provider Webhook Callbacks (/notifications/callbacks/{provider_key})
 """
 
-from datetime import UTC, datetime
 import logging
+from datetime import UTC, datetime
 from typing import Annotated, Any
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, Header, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import build_audit_entry
@@ -35,12 +35,9 @@ from app.core.permissions import (
     NOTIFICATION_RULES_MANAGE,
     NOTIFICATION_TEMPLATES_MANAGE,
     NOTIFICATION_TEMPLATES_READ,
-    NOTIFICATIONS_MANAGE_PREFERENCES,
-    NOTIFICATIONS_READ,
 )
 from app.core.tenant import TenantContext
 from app.models.notification import (
-    NotificationDeliveryAttempt,
     NotificationRule,
     ProviderHealthStatus,
 )
@@ -48,14 +45,11 @@ from app.models.people import User
 from app.repositories.notification_repository import NotificationRepository
 from app.schemas.campus import (
     NotificationListResponse,
-    NotificationPreferenceItem,
-    NotificationPreferenceUpdate,
     NotificationResponse,
     UnreadCountResponse,
 )
 from app.schemas.common import ApiResponse
 from app.schemas.notification import (
-    DeliveryAttemptResponse,
     DeliveryCancelRequest,
     DeliveryDetailResponse,
     DeliveryListResponse,
@@ -69,7 +63,6 @@ from app.schemas.notification import (
     NotificationRuleUpdate,
     NotificationTemplateCreate,
     NotificationTemplateResponse,
-    NotificationTemplateUpdate,
     NotificationTemplateVersionResponse,
     ProviderHealthItem,
     ProviderHealthResponse,

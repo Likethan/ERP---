@@ -3,10 +3,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { academicsService } from "@/services/academics.service";
-import {
-  CurriculumScheme,
-  CurriculumStatus,
-} from "@/types/academics";
+import { CurriculumScheme, CurriculumStatus } from "@/types/academics";
 import { DepartmentItem, ProgramItem } from "@/mocks/academics.mock";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,9 +48,13 @@ export default function CurriculaDirectoryPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Form Fields
-  const [programName, setProgramName] = useState("B.Tech Computer Science & Engineering");
+  const [programName, setProgramName] = useState(
+    "B.Tech Computer Science & Engineering",
+  );
   const [programCode, setProgramCode] = useState("B.Tech CSE");
-  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [department, setDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [regulation, setRegulation] = useState("R-2026");
   const [version, setVersion] = useState("v1.0");
   const [academicYear, setAcademicYear] = useState("2026-2027");
@@ -92,7 +93,10 @@ export default function CurriculaDirectoryPage() {
   // Filtering
   const filteredCurricula = useMemo(() => {
     return curricula.filter((c) => {
-      if (selectedDept !== "ALL" && !c.department.toLowerCase().includes(selectedDept.toLowerCase())) {
+      if (
+        selectedDept !== "ALL" &&
+        !c.department.toLowerCase().includes(selectedDept.toLowerCase())
+      ) {
         return false;
       }
       if (selectedStatus !== "ALL" && c.status !== selectedStatus) {
@@ -123,10 +127,13 @@ export default function CurriculaDirectoryPage() {
   const validateForm = () => {
     const errors: Record<string, string> = {};
     if (!programName.trim()) errors.programName = "Program name is required";
-    if (!regulation.trim()) errors.regulation = "Regulation is required (e.g. R-2026)";
+    if (!regulation.trim())
+      errors.regulation = "Regulation is required (e.g. R-2026)";
     if (!version.trim()) errors.version = "Version is required (e.g. v1.0)";
-    if (totalCredits < 1) errors.totalCredits = "Total credits must be positive";
-    if (totalSemesters < 1 || totalSemesters > 12) errors.totalSemesters = "Semesters must be between 1 and 12";
+    if (totalCredits < 1)
+      errors.totalCredits = "Total credits must be positive";
+    if (totalSemesters < 1 || totalSemesters > 12)
+      errors.totalSemesters = "Semesters must be between 1 and 12";
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -169,7 +176,11 @@ export default function CurriculaDirectoryPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Failed to create curriculum", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to create curriculum",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -183,9 +194,14 @@ export default function CurriculaDirectoryPage() {
       icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
       onClick: async (items) => {
         for (const item of items) {
-          await academicsService.updateCurriculumScheme(item.id, { status: "APPROVED" });
+          await academicsService.updateCurriculumScheme(item.id, {
+            status: "APPROVED",
+          });
         }
-        showToast({ title: `Updated ${items.length} schemes to APPROVED`, type: "success" });
+        showToast({
+          title: `Updated ${items.length} schemes to APPROVED`,
+          type: "success",
+        });
         setSelectedKeys(new Set());
         loadData();
       },
@@ -214,7 +230,9 @@ export default function CurriculaDirectoryPage() {
               )}
             </Link>
             <div className="flex items-center gap-2 text-xs text-slate-400">
-              <span className="font-mono text-slate-300 font-medium">{item.regulation}</span>
+              <span className="font-mono text-slate-300 font-medium">
+                {item.regulation}
+              </span>
               <span>•</span>
               <span className="font-mono text-slate-400">{item.version}</span>
               <span>•</span>
@@ -228,7 +246,9 @@ export default function CurriculaDirectoryPage() {
         header: "Department",
         sortable: true,
         accessorKey: "department",
-        cell: (item) => <span className="text-xs text-slate-300">{item.department}</span>,
+        cell: (item) => (
+          <span className="text-xs text-slate-300">{item.department}</span>
+        ),
       },
       {
         id: "semesters",
@@ -237,7 +257,8 @@ export default function CurriculaDirectoryPage() {
           <div className="text-xs font-mono text-slate-300">
             <div>{item.totalSemesters} Semesters</div>
             <div className="text-[11px] text-slate-500">
-              {item.semesters.reduce((acc, s) => acc + s.subjects.length, 0)} Subjects mapped
+              {item.semesters.reduce((acc, s) => acc + s.subjects.length, 0)}{" "}
+              Subjects mapped
             </div>
           </div>
         ),
@@ -259,7 +280,10 @@ export default function CurriculaDirectoryPage() {
         sortable: true,
         accessorKey: "status",
         cell: (item) => {
-          const statusMap: Record<CurriculumStatus, "success" | "warning" | "destructive" | "info" | "secondary"> = {
+          const statusMap: Record<
+            CurriculumStatus,
+            "success" | "warning" | "destructive" | "info" | "secondary"
+          > = {
             PUBLISHED: "success",
             APPROVED: "info",
             UNDER_REVIEW: "warning",
@@ -280,7 +304,12 @@ export default function CurriculaDirectoryPage() {
         cell: (item) => (
           <div className="flex items-center justify-end gap-1.5">
             <Link href={`/app/academics/curricula/${item.id}`}>
-              <Button size="sm" variant="ghost" className="h-7 text-xs" leftIcon={<Eye className="h-3 w-3" />}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-xs"
+                leftIcon={<Eye className="h-3 w-3" />}
+              >
                 Builder
               </Button>
             </Link>
@@ -288,7 +317,7 @@ export default function CurriculaDirectoryPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   // Custom filter slot
@@ -350,7 +379,10 @@ export default function CurriculaDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
@@ -360,7 +392,8 @@ export default function CurriculaDirectoryPage() {
             Curricula Schemes & Versioning
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Degree regulations, CBCS program structures, semester credit distributions, and elective groupings.
+            Degree regulations, CBCS program structures, semester credit
+            distributions, and elective groupings.
           </p>
         </div>
 
@@ -401,7 +434,11 @@ export default function CurriculaDirectoryPage() {
         />
         <StatCard
           label="Drafts / Under Review"
-          value={curricula.filter((c) => c.status === "DRAFT" || c.status === "UNDER_REVIEW").length}
+          value={
+            curricula.filter(
+              (c) => c.status === "DRAFT" || c.status === "UNDER_REVIEW",
+            ).length
+          }
           description="Pending Academic Council sign-off"
           variant="amber"
           icon={<ShieldCheck className="h-4 w-4" />}
@@ -490,7 +527,9 @@ export default function CurriculaDirectoryPage() {
                 className={formErrors.regulation ? "border-red-500" : ""}
               />
               {formErrors.regulation && (
-                <span className="text-[11px] text-red-400">{formErrors.regulation}</span>
+                <span className="text-[11px] text-red-400">
+                  {formErrors.regulation}
+                </span>
               )}
             </div>
 
@@ -505,7 +544,9 @@ export default function CurriculaDirectoryPage() {
                 className={formErrors.version ? "border-red-500" : ""}
               />
               {formErrors.version && (
-                <span className="text-[11px] text-red-400">{formErrors.version}</span>
+                <span className="text-[11px] text-red-400">
+                  {formErrors.version}
+                </span>
               )}
             </div>
           </div>

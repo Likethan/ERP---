@@ -10,17 +10,15 @@ Guarantees:
 - Comprehensive audit trails for backup lifecycle events
 """
 
-import asyncio
-from datetime import UTC, datetime, timedelta
 import hashlib
 import json
 import logging
 import os
-from pathlib import Path
 import re
 import subprocess
 import time
-from typing import Any
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
@@ -193,7 +191,7 @@ class BackupService:
                     f"-- Database: {db_info['dbname']}\n"
                     f"-- Created: {now.isoformat()}\n"
                     f"SELECT 1;\n"
-                ).encode("utf-8")
+                ).encode()
                 backup_path.write_bytes(fallback_content)
 
             # Compute SHA-256 and file size

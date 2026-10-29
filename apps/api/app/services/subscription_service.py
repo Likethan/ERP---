@@ -11,15 +11,15 @@ Centralized domain service managing:
 - Scheduled lifecycle sweepers (trials, grace periods, auto-renewals, override expiries)
 """
 
-from datetime import UTC, datetime, timedelta
-from decimal import Decimal
 import hashlib
 import hmac
 import logging
+from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -31,12 +31,9 @@ from app.core.exceptions import (
     EntitlementExceededException,
     FeatureNotEntitledException,
     NotFoundException,
-    PermissionDeniedException,
     QuotaExceededException,
-    ValidationException,
 )
 from app.models.core import Institution
-from app.models.people import User
 from app.models.subscription import (
     BillingInterval,
     CustomerHealthStatus,
@@ -1442,7 +1439,7 @@ class SubscriptionService:
         # 4. Adoption Score (Step 37 integration)
         adoption_score = 85
         try:
-            from app.models.adoption import UserJourneyProgress, UserJourneyState
+            from app.models.adoption import UserJourneyProgress
             j_stmt = select(
                 func.count(UserJourneyProgress.id),
                 func.avg(UserJourneyProgress.progress_percentage),

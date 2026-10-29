@@ -4,10 +4,9 @@ Orchestrates institutional data governance policies, immutable policy versioning
 administrative & legal holds, and regulatory access review campaigns.
 """
 
-from datetime import UTC, datetime
 import logging
 import re
-from typing import Any
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import and_, func, or_, select
@@ -29,7 +28,6 @@ from app.models.governance import (
     AccessReviewStatus,
     GovernanceHold,
     GovernancePolicy,
-    GovernancePolicyCategory,
     GovernancePolicyStatus,
     GovernancePolicyVersion,
     HoldStatus,
@@ -37,7 +35,7 @@ from app.models.governance import (
     PrivacyRequestStatus,
     RetentionPolicy,
 )
-from app.models.people import Role, User, UserRoleAssignment
+from app.models.people import Role, UserRoleAssignment
 from app.schemas.governance import (
     AccessReviewCreate,
     AccessReviewItemDecide,

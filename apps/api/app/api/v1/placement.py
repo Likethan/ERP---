@@ -14,10 +14,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, get_tenant_context, require_permission
-from app.core.exceptions import NotFoundException, PermissionDeniedException, ValidationException
+from app.core.exceptions import NotFoundException
 from app.core.permissions import (
     PLACEMENT_ANALYTICS_READ,
-    PLACEMENT_APPLICATIONS_READ,
     PLACEMENT_APPLICATIONS_REVIEW,
     PLACEMENT_APPLY_SELF,
     PLACEMENT_COMPANIES_MANAGE,
@@ -32,14 +31,11 @@ from app.core.permissions import (
     PLACEMENT_OFFERS_RESPOND,
     PLACEMENT_OUTCOMES_MANAGE,
     PLACEMENT_POSITIONS_MANAGE,
-    PLACEMENT_PROFILE_READ,
-    PLACEMENT_PROFILE_UPDATE,
 )
 from app.core.tenant import TenantContext
 from app.models.people import StudentProfile, User
 from app.schemas.common import ApiResponse, PaginatedMeta, PaginatedResponse
 from app.schemas.placement import (
-    ApplicationHistoryResponse,
     ApplicationStatusUpdate,
     CompanyContactCreate,
     CompanyContactResponse,
@@ -63,7 +59,6 @@ from app.schemas.placement import (
     JobPositionCreate,
     JobPositionDetailResponse,
     JobPositionResponse,
-    JobPositionUpdate,
     OfferDecisionRequest,
     PlacementAnalyticsSummary,
     PlacementApplicationCreate,

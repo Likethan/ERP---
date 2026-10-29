@@ -66,7 +66,10 @@ export default function AiAssistantPage() {
       id: `usr-msg-${Date.now()}`,
       sender: "user",
       content: textToSend,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -86,7 +89,8 @@ export default function AiAssistantPage() {
     } catch {
       toast({
         title: "Assistant Communication Error",
-        description: "Unable to reach the CampusOS Reasoning Engine. Please try again.",
+        description:
+          "Unable to reach the CampusOS Reasoning Engine. Please try again.",
         variant: "error",
       });
     } finally {
@@ -133,11 +137,7 @@ export default function AiAssistantPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      <Breadcrumbs
-        customSegments={[
-          { label: "CampusOS AI Assistant" },
-        ]}
-      />
+      <Breadcrumbs customSegments={[{ label: "CampusOS AI Assistant" }]} />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -149,12 +149,16 @@ export default function AiAssistantPage() {
             <h1 className="text-2xl font-bold tracking-tight text-white">
               CampusOS AI Assistant
             </h1>
-            <Badge variant="outline" className="border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs">
+            <Badge
+              variant="outline"
+              className="border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs"
+            >
               Context-Aware RAG
             </Badge>
           </div>
           <p className="mt-1 text-sm text-slate-400">
-            Natural-language queries over academic records, attendance telemetry, fee ledgers, and placement funnels.
+            Natural-language queries over academic records, attendance
+            telemetry, fee ledgers, and placement funnels.
           </p>
         </div>
 
@@ -192,9 +196,13 @@ export default function AiAssistantPage() {
               <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-semibold text-white">Reasoning Agent</span>
               <span className="text-slate-500">|</span>
-              <span className="text-slate-400 font-mono">Scope: {selectedRole}</span>
+              <span className="text-slate-400 font-mono">
+                Scope: {selectedRole}
+              </span>
             </div>
-            <span className="text-[11px] text-slate-500 font-mono">Academic Term 2026-27</span>
+            <span className="text-[11px] text-slate-500 font-mono">
+              Academic Term 2026-27
+            </span>
           </div>
 
           {/* Messages Stream */}
@@ -223,22 +231,24 @@ export default function AiAssistantPage() {
                       {m.content}
                     </div>
 
-                    {isAssistant && m.suggestedActions && m.suggestedActions.length > 0 && (
-                      <div className="pt-2 mt-2 border-t border-slate-800/80 flex flex-wrap gap-2">
-                        {m.suggestedActions.map((act, i) => (
-                          <Link key={i} href={act.href}>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-6 text-[11px] px-2.5 border-slate-700 bg-slate-900 text-indigo-300 hover:bg-slate-800 hover:text-white"
-                            >
-                              {act.label}
-                              <ArrowRight className="ml-1 h-3 w-3" />
-                            </Button>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                    {isAssistant &&
+                      m.suggestedActions &&
+                      m.suggestedActions.length > 0 && (
+                        <div className="pt-2 mt-2 border-t border-slate-800/80 flex flex-wrap gap-2">
+                          {m.suggestedActions.map((act, i) => (
+                            <Link key={i} href={act.href}>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-6 text-[11px] px-2.5 border-slate-700 bg-slate-900 text-indigo-300 hover:bg-slate-800 hover:text-white"
+                              >
+                                {act.label}
+                                <ArrowRight className="ml-1 h-3 w-3" />
+                              </Button>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
 
                     <div className="flex items-center justify-between pt-1 text-[10px] text-slate-500">
                       <span>{m.timestamp}</span>
@@ -325,7 +335,10 @@ export default function AiAssistantPage() {
               </Button>
             </div>
             <div className="mt-1.5 flex items-center justify-between px-1 text-[10px] text-slate-500">
-              <span>Press <strong>Enter</strong> to send, <strong>Shift+Enter</strong> for new line</span>
+              <span>
+                Press <strong>Enter</strong> to send,{" "}
+                <strong>Shift+Enter</strong> for new line
+              </span>
               <span className="flex items-center gap-1">
                 <Shield className="h-3 w-3 text-emerald-400" />
                 Audited &amp; PBAC Enforced
@@ -346,7 +359,8 @@ export default function AiAssistantPage() {
             </CardHeader>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs text-slate-400 leading-relaxed">
-                CampusOS AI enforces contextual privacy. Change scope to preview persona-tailored responses:
+                CampusOS AI enforces contextual privacy. Change scope to preview
+                persona-tailored responses:
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {[
@@ -386,35 +400,45 @@ export default function AiAssistantPage() {
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Student Dossiers &amp; Curricula
                 </span>
-                <span className="font-mono text-[11px] text-slate-500">2,280 Records</span>
+                <span className="font-mono text-[11px] text-slate-500">
+                  2,280 Records
+                </span>
               </div>
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Attendance Registry
                 </span>
-                <span className="font-mono text-[11px] text-slate-500">Live (87.6%)</span>
+                <span className="font-mono text-[11px] text-slate-500">
+                  Live (87.6%)
+                </span>
               </div>
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Continuous Evaluation (CIE)
                 </span>
-                <span className="font-mono text-[11px] text-slate-500">CIA-1 Active</span>
+                <span className="font-mono text-[11px] text-slate-500">
+                  CIA-1 Active
+                </span>
               </div>
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Fee Ledgers &amp; Invoices
                 </span>
-                <span className="font-mono text-[11px] text-slate-500">₹31.2 Cr Synced</span>
+                <span className="font-mono text-[11px] text-slate-500">
+                  ₹31.2 Cr Synced
+                </span>
               </div>
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Campus Housing &amp; Transport
                 </span>
-                <span className="font-mono text-[11px] text-slate-500">94.2% Occupancy</span>
+                <span className="font-mono text-[11px] text-slate-500">
+                  94.2% Occupancy
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -426,7 +450,10 @@ export default function AiAssistantPage() {
               Institutional Privacy &amp; Governance
             </div>
             <p className="leading-relaxed text-[11px]">
-              Every query is cryptographically attributed to the logged-in session. Responses only surface verified data from institutionally authenticated tables; generative speculation is strictly prohibited.
+              Every query is cryptographically attributed to the logged-in
+              session. Responses only surface verified data from institutionally
+              authenticated tables; generative speculation is strictly
+              prohibited.
             </p>
           </div>
         </div>

@@ -4,8 +4,8 @@ Ensures that passwords, tokens, API keys, and sensitive institutional records
 are never leaked in structured logs, exceptions, audit records, or API responses.
 """
 
-from collections.abc import Mapping
 import re
+from collections.abc import Mapping
 from typing import Any
 
 SENSITIVE_FIELD_NAMES: set[str] = {

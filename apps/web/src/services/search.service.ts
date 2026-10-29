@@ -22,7 +22,12 @@ import {
   MOCK_CANONICAL_SCHOLARSHIPS,
   MOCK_CANONICAL_REFUNDS,
 } from "@/mocks/finance.mock";
-import { MOCK_EVENTS, MOCK_CLUBS, MOCK_ANNOUNCEMENTS, MOCK_VENUES } from "@/mocks/campus.mock";
+import {
+  MOCK_EVENTS,
+  MOCK_CLUBS,
+  MOCK_ANNOUNCEMENTS,
+  MOCK_VENUES,
+} from "@/mocks/campus.mock";
 import {
   MOCK_DOCUMENTS,
   MOCK_DOCUMENT_CATEGORIES,
@@ -140,11 +145,16 @@ class SearchService {
     });
 
     // Search Attendance Hub & Sessions
-    if ("attendance".includes(q) || "today's sessions".includes(q) || "sessions".includes(q)) {
+    if (
+      "attendance".includes(q) ||
+      "today's sessions".includes(q) ||
+      "sessions".includes(q)
+    ) {
       results.push({
         id: "nav-att-overview",
         title: "Attendance Operations Hub",
-        subtitle: "Real-time registers, course attendance analytics, leave approvals",
+        subtitle:
+          "Real-time registers, course attendance analytics, leave approvals",
         category: "Attendance",
         href: "/app/attendance",
       });
@@ -158,7 +168,11 @@ class SearchService {
         href: "/app/attendance/reports",
       });
     }
-    if ("low attendance".includes(q) || "shortage".includes(q) || "risk".includes(q)) {
+    if (
+      "low attendance".includes(q) ||
+      "shortage".includes(q) ||
+      "risk".includes(q)
+    ) {
       results.push({
         id: "nav-att-shortage",
         title: "Low Attendance Risk Roster",
@@ -206,34 +220,53 @@ class SearchService {
     });
 
     // Search Examination Hub & Modules
-    if ("examinations".includes(q) || "exams".includes(q) || "assessment".includes(q)) {
+    if (
+      "examinations".includes(q) ||
+      "exams".includes(q) ||
+      "assessment".includes(q)
+    ) {
       results.push({
         id: "nav-exam-overview",
         title: "Examination & Assessment Hub",
-        subtitle: "Course evaluation schemes, timetable schedules, marks scoring",
+        subtitle:
+          "Course evaluation schemes, timetable schedules, marks scoring",
         category: "Examination",
         href: "/app/examinations",
       });
     }
-    if ("marks entry".includes(q) || "enter marks".includes(q) || "marks".includes(q)) {
+    if (
+      "marks entry".includes(q) ||
+      "enter marks".includes(q) ||
+      "marks".includes(q)
+    ) {
       results.push({
         id: "nav-exam-marks",
         title: "Marks Entry & Grading Matrix",
-        subtitle: "Class roster scoring, draft auto-saves, and locked finalization",
+        subtitle:
+          "Class roster scoring, draft auto-saves, and locked finalization",
         category: "Examination",
         href: "/app/examinations/marks",
       });
     }
-    if ("exam schedule".includes(q) || "exam timetable".includes(q) || "schedules".includes(q)) {
+    if (
+      "exam schedule".includes(q) ||
+      "exam timetable".includes(q) ||
+      "schedules".includes(q)
+    ) {
       results.push({
         id: "nav-exam-schedules",
         title: "Exam Schedules & Timetables",
-        subtitle: "Conflict-free paper scheduling and invigilator hall allocations",
+        subtitle:
+          "Conflict-free paper scheduling and invigilator hall allocations",
         category: "Examination",
         href: "/app/examinations/schedules",
       });
     }
-    if ("exam eligibility".includes(q) || "eligibility".includes(q) || "debarment".includes(q)) {
+    if (
+      "exam eligibility".includes(q) ||
+      "eligibility".includes(q) ||
+      "debarment".includes(q)
+    ) {
       results.push({
         id: "nav-exam-eligibility",
         title: "Student Examination Eligibility",
@@ -300,11 +333,17 @@ class SearchService {
     });
 
     // Placement Hub Navigation
-    if ("placement".includes(q) || "career".includes(q) || "jobs".includes(q) || "hiring".includes(q)) {
+    if (
+      "placement".includes(q) ||
+      "career".includes(q) ||
+      "jobs".includes(q) ||
+      "hiring".includes(q)
+    ) {
       results.push({
         id: "nav-placement-hub",
         title: "Placement Operations Hub",
-        subtitle: "Corporate partners, recruitment drives, candidate shortlisting & offers",
+        subtitle:
+          "Corporate partners, recruitment drives, candidate shortlisting & offers",
         category: "Placement",
         href: "/app/placement",
       });
@@ -406,7 +445,8 @@ class SearchService {
       results.push({
         id: "nav-fin-overview",
         title: "Finance & Billing Operations Hub",
-        subtitle: "Fee schedules, student invoicing, payment records & revenue metrics",
+        subtitle:
+          "Fee schedules, student invoicing, payment records & revenue metrics",
         category: "Finance",
         href: "/app/finance",
       });
@@ -415,7 +455,8 @@ class SearchService {
       results.push({
         id: "nav-fin-structures",
         title: "Fee Structures Directory",
-        subtitle: "Configured academic, lab, hostel & examination fee schedules",
+        subtitle:
+          "Configured academic, lab, hostel & examination fee schedules",
         category: "Finance",
         href: "/app/finance/fee-structures",
       });
@@ -424,7 +465,8 @@ class SearchService {
       results.push({
         id: "nav-fin-categories",
         title: "Fee Categories & Heads",
-        subtitle: "Tuition, examination, lab, library, hostel, and transport fee heads",
+        subtitle:
+          "Tuition, examination, lab, library, hostel, and transport fee heads",
         category: "Finance",
         href: "/app/finance/fee-categories",
       });
@@ -433,12 +475,17 @@ class SearchService {
       results.push({
         id: "nav-fin-assignments",
         title: "Student Fee Assignments",
-        subtitle: "Link student cohorts to fee structures with scholarship deductions",
+        subtitle:
+          "Link student cohorts to fee structures with scholarship deductions",
         category: "Finance",
         href: "/app/finance/assignments",
       });
     }
-    if ("payments".includes(q) || "pay".includes(q) || "transactions".includes(q)) {
+    if (
+      "payments".includes(q) ||
+      "pay".includes(q) ||
+      "transactions".includes(q)
+    ) {
       results.push({
         id: "nav-fin-payments",
         title: "Payment Transactions Ledger",
@@ -456,11 +503,16 @@ class SearchService {
         href: "/app/finance/receipts",
       });
     }
-    if ("scholarships".includes(q) || "concessions".includes(q) || "waiver".includes(q)) {
+    if (
+      "scholarships".includes(q) ||
+      "concessions".includes(q) ||
+      "waiver".includes(q)
+    ) {
       results.push({
         id: "nav-fin-scholarships",
         title: "Scholarship & Fee Concession Schemes",
-        subtitle: "Merit, fellowship, and need-based tuition assistance schemes",
+        subtitle:
+          "Merit, fellowship, and need-based tuition assistance schemes",
         category: "Scholarship",
         href: "/app/finance/scholarships",
       });
@@ -469,7 +521,8 @@ class SearchService {
       results.push({
         id: "nav-fin-refunds",
         title: "Fee Refund Applications Ledger",
-        subtitle: "Review, approve, and process student caution and fee reimbursements",
+        subtitle:
+          "Review, approve, and process student caution and fee reimbursements",
         category: "Finance",
         href: "/app/finance/refunds",
       });
@@ -584,38 +637,58 @@ class SearchService {
     });
 
     // Search Campus Navigation
-    if ("campus".includes(q) || "campus hub".includes(q) || "student engagement".includes(q)) {
+    if (
+      "campus".includes(q) ||
+      "campus hub".includes(q) ||
+      "student engagement".includes(q)
+    ) {
       results.push({
         id: "nav-campus-hub",
         title: "Campus Operations & Engagement Hub",
-        subtitle: "Events, clubs directory, institutional communication, and calendar",
+        subtitle:
+          "Events, clubs directory, institutional communication, and calendar",
         category: "Campus",
         href: "/app/campus",
       });
     }
-    if ("events".includes(q) || "hackathon".includes(q) || "workshop".includes(q)) {
+    if (
+      "events".includes(q) ||
+      "hackathon".includes(q) ||
+      "workshop".includes(q)
+    ) {
       results.push({
         id: "nav-campus-events",
         title: "Campus Events Management",
-        subtitle: "Browse university events, hackathons, symposiums, and registrations",
+        subtitle:
+          "Browse university events, hackathons, symposiums, and registrations",
         category: "Campus",
         href: "/app/campus/events",
       });
     }
-    if ("clubs".includes(q) || "societies".includes(q) || "organizations".includes(q)) {
+    if (
+      "clubs".includes(q) ||
+      "societies".includes(q) ||
+      "organizations".includes(q)
+    ) {
       results.push({
         id: "nav-campus-clubs",
         title: "Clubs & Student Organizations",
-        subtitle: "Explore student societies, leadership rosters, and memberships",
+        subtitle:
+          "Explore student societies, leadership rosters, and memberships",
         category: "Campus",
         href: "/app/campus/clubs",
       });
     }
-    if ("announcements".includes(q) || "notices".includes(q) || "circulars".includes(q)) {
+    if (
+      "announcements".includes(q) ||
+      "notices".includes(q) ||
+      "circulars".includes(q)
+    ) {
       results.push({
         id: "nav-campus-announcements",
         title: "Campus Announcements & Dispatches",
-        subtitle: "Official circulars, exam notices, and institutional advisories",
+        subtitle:
+          "Official circulars, exam notices, and institutional advisories",
         category: "Campus",
         href: "/app/campus/announcements",
       });
@@ -698,7 +771,10 @@ class SearchService {
 
     // Search Documents
     MOCK_DOCUMENTS.forEach((doc) => {
-      if (doc.name.toLowerCase().includes(q) || doc.ownerName.toLowerCase().includes(q)) {
+      if (
+        doc.name.toLowerCase().includes(q) ||
+        doc.ownerName.toLowerCase().includes(q)
+      ) {
         results.push({
           id: doc.id,
           title: doc.name,
@@ -711,7 +787,11 @@ class SearchService {
 
     // Search Infrastructure — Hostels
     MOCK_HOSTELS.forEach((h) => {
-      if (h.name.toLowerCase().includes(q) || h.code.toLowerCase().includes(q) || h.wardenName.toLowerCase().includes(q)) {
+      if (
+        h.name.toLowerCase().includes(q) ||
+        h.code.toLowerCase().includes(q) ||
+        h.wardenName.toLowerCase().includes(q)
+      ) {
         results.push({
           id: h.id,
           title: h.name,
@@ -725,7 +805,10 @@ class SearchService {
 
     // Search Rooms
     MOCK_HOSTEL_ROOMS.forEach((r) => {
-      if (r.roomNumber.toLowerCase().includes(q) || r.hostelName.toLowerCase().includes(q)) {
+      if (
+        r.roomNumber.toLowerCase().includes(q) ||
+        r.hostelName.toLowerCase().includes(q)
+      ) {
         results.push({
           id: r.id,
           title: `Room ${r.roomNumber} (${r.hostelName})`,
@@ -739,7 +822,11 @@ class SearchService {
 
     // Search Hostel Allocations
     MOCK_HOSTEL_ALLOCATIONS.forEach((a) => {
-      if (a.studentName.toLowerCase().includes(q) || a.registerNumber.toLowerCase().includes(q) || a.roomNumber.toLowerCase().includes(q)) {
+      if (
+        a.studentName.toLowerCase().includes(q) ||
+        a.registerNumber.toLowerCase().includes(q) ||
+        a.roomNumber.toLowerCase().includes(q)
+      ) {
         results.push({
           id: a.id,
           title: `${a.studentName} (${a.registerNumber})`,
@@ -753,7 +840,11 @@ class SearchService {
 
     // Search Hostel Complaints
     MOCK_HOSTEL_COMPLAINTS.forEach((c) => {
-      if (c.title.toLowerCase().includes(q) || c.ticketNumber.toLowerCase().includes(q) || c.studentName.toLowerCase().includes(q)) {
+      if (
+        c.title.toLowerCase().includes(q) ||
+        c.ticketNumber.toLowerCase().includes(q) ||
+        c.studentName.toLowerCase().includes(q)
+      ) {
         results.push({
           id: c.id,
           title: `${c.ticketNumber} — ${c.title}`,
@@ -767,7 +858,12 @@ class SearchService {
 
     // Search Transport Routes
     MOCK_TRANSPORT_ROUTES.forEach((rt) => {
-      if (rt.name.toLowerCase().includes(q) || rt.routeCode.toLowerCase().includes(q) || rt.startPoint.toLowerCase().includes(q) || rt.endPoint.toLowerCase().includes(q)) {
+      if (
+        rt.name.toLowerCase().includes(q) ||
+        rt.routeCode.toLowerCase().includes(q) ||
+        rt.startPoint.toLowerCase().includes(q) ||
+        rt.endPoint.toLowerCase().includes(q)
+      ) {
         results.push({
           id: rt.id,
           title: `${rt.routeCode}: ${rt.name}`,
@@ -781,7 +877,11 @@ class SearchService {
 
     // Search Transport Stops
     MOCK_TRANSPORT_STOPS.forEach((st) => {
-      if (st.name.toLowerCase().includes(q) || st.code.toLowerCase().includes(q) || st.routeCode.toLowerCase().includes(q)) {
+      if (
+        st.name.toLowerCase().includes(q) ||
+        st.code.toLowerCase().includes(q) ||
+        st.routeCode.toLowerCase().includes(q)
+      ) {
         results.push({
           id: st.id,
           title: `${st.name} (${st.code})`,
@@ -794,7 +894,11 @@ class SearchService {
 
     // Search Transport Vehicles
     MOCK_TRANSPORT_VEHICLES.forEach((v) => {
-      if (v.registrationNumber.toLowerCase().includes(q) || v.vehicleNumber.toLowerCase().includes(q) || v.makeModel.toLowerCase().includes(q)) {
+      if (
+        v.registrationNumber.toLowerCase().includes(q) ||
+        v.vehicleNumber.toLowerCase().includes(q) ||
+        v.makeModel.toLowerCase().includes(q)
+      ) {
         results.push({
           id: v.id,
           title: `${v.vehicleNumber} — ${v.registrationNumber}`,
@@ -808,7 +912,11 @@ class SearchService {
 
     // Search Transport Drivers
     MOCK_TRANSPORT_DRIVERS.forEach((d) => {
-      if (d.name.toLowerCase().includes(q) || d.employeeId.toLowerCase().includes(q) || d.licenseNumber.toLowerCase().includes(q)) {
+      if (
+        d.name.toLowerCase().includes(q) ||
+        d.employeeId.toLowerCase().includes(q) ||
+        d.licenseNumber.toLowerCase().includes(q)
+      ) {
         results.push({
           id: d.id,
           title: `${d.name} (${d.employeeId})`,
@@ -822,7 +930,11 @@ class SearchService {
 
     // Search Facilities
     MOCK_FACILITIES.forEach((f) => {
-      if (f.name.toLowerCase().includes(q) || f.code.toLowerCase().includes(q) || f.building.toLowerCase().includes(q)) {
+      if (
+        f.name.toLowerCase().includes(q) ||
+        f.code.toLowerCase().includes(q) ||
+        f.building.toLowerCase().includes(q)
+      ) {
         results.push({
           id: f.id,
           title: f.name,
@@ -836,7 +948,11 @@ class SearchService {
 
     // Search Maintenance Requests
     MOCK_MAINTENANCE_REQUESTS.forEach((m) => {
-      if (m.title.toLowerCase().includes(q) || m.workOrderNumber.toLowerCase().includes(q) || m.assetOrFacilityName.toLowerCase().includes(q)) {
+      if (
+        m.title.toLowerCase().includes(q) ||
+        m.workOrderNumber.toLowerCase().includes(q) ||
+        m.assetOrFacilityName.toLowerCase().includes(q)
+      ) {
         results.push({
           id: m.id,
           title: `${m.workOrderNumber}: ${m.title}`,
@@ -853,7 +969,8 @@ class SearchService {
       if (
         doc.name.toLowerCase().includes(q) ||
         doc.ownerName.toLowerCase().includes(q) ||
-        (doc.ownerRollNumber && doc.ownerRollNumber.toLowerCase().includes(q)) ||
+        (doc.ownerRollNumber &&
+          doc.ownerRollNumber.toLowerCase().includes(q)) ||
         (doc.documentNumber && doc.documentNumber.toLowerCase().includes(q)) ||
         doc.category.toLowerCase().includes(q) ||
         doc.documentType.toLowerCase().includes(q)
@@ -871,7 +988,11 @@ class SearchService {
 
     // Search Document Categories
     MOCK_DOCUMENT_CATEGORIES.forEach((cat) => {
-      if (cat.name.toLowerCase().includes(q) || cat.code.toLowerCase().includes(q) || cat.description.toLowerCase().includes(q)) {
+      if (
+        cat.name.toLowerCase().includes(q) ||
+        cat.code.toLowerCase().includes(q) ||
+        cat.description.toLowerCase().includes(q)
+      ) {
         results.push({
           id: cat.id,
           title: `Category: ${cat.name} (${cat.code})`,

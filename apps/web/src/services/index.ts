@@ -38,5 +38,8 @@ export * from "./staff.service";
 export * from "./people.service";
 export * from "./guardians.service";
 export * from "./organization.service";
-
-
+export * from "./residential.service";
+export * from "./hostels.service";
+export * from "./international.service";
+export * from "./research.service";
+export * from "./research-calculator";

@@ -44,7 +44,9 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
             className="hidden sm:flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors cursor-pointer w-48 lg:w-64"
           >
             <Search className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-            <span className="flex-1 text-left truncate">Search CampusOS...</span>
+            <span className="flex-1 text-left truncate">
+              Search CampusOS...
+            </span>
             <kbd className="hidden lg:inline-flex items-center rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400">
               ⌘K
             </kbd>
@@ -144,10 +146,16 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
       </header>
 
       {/* Global Command Palette Modal */}
-      <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
+      <CommandPalette
+        open={commandOpen}
+        onClose={() => setCommandOpen(false)}
+      />
 
       {/* Slide-over Notification Drawer */}
-      <NotificationDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
+      <NotificationDrawer
+        open={notifOpen}
+        onClose={() => setNotifOpen(false)}
+      />
     </>
   );
 }

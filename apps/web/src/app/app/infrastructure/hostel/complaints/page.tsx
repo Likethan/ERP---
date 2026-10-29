@@ -3,7 +3,12 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { hostelComplaintsService } from "@/services/hostel-complaints.service";
-import { HostelComplaint, ComplaintCategory, ComplaintStatus, ComplaintPriority } from "@campusos/types";
+import {
+  HostelComplaint,
+  ComplaintCategory,
+  ComplaintStatus,
+  ComplaintPriority,
+} from "@campusos/types";
 import { useAuth } from "@/lib/auth-context";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
@@ -74,7 +79,9 @@ export default function HostelComplaintsPage() {
 
     await hostelComplaintsService.createHostelComplaint({
       studentId: isStudent ? "stu-24cse0101" : "stu-24cse0101",
-      studentName: isStudent ? `${user?.first_name} ${user?.last_name}` : "Aarav Patel",
+      studentName: isStudent
+        ? `${user?.first_name} ${user?.last_name}`
+        : "Aarav Patel",
       registerNumber: "24CSE0101",
       hostelId: "hst-raman",
       hostelName: "Sir C. V. Raman Hall of Residence",
@@ -103,7 +110,10 @@ export default function HostelComplaintsPage() {
             >
               {c.ticketNumber}
             </Link>
-            <div className="text-xs text-slate-300 font-medium truncate max-w-[240px]" title={c.title}>
+            <div
+              className="text-xs text-slate-300 font-medium truncate max-w-[240px]"
+              title={c.title}
+            >
               {c.title}
             </div>
           </div>
@@ -115,7 +125,9 @@ export default function HostelComplaintsPage() {
         cell: (c) => (
           <div className="text-xs">
             <span className="font-medium text-white">{c.studentName}</span>
-            <div className="text-[11px] text-slate-400 font-mono">Room {c.roomNumber} ({c.hostelName.split(" ")[0]})</div>
+            <div className="text-[11px] text-slate-400 font-mono">
+              Room {c.roomNumber} ({c.hostelName.split(" ")[0]})
+            </div>
           </div>
         ),
       },
@@ -153,7 +165,9 @@ export default function HostelComplaintsPage() {
         accessorKey: "assignedStaffName",
         cell: (c) => (
           <span className="text-xs text-slate-300">
-            {c.assignedStaffName || <span className="text-slate-500 italic">Unassigned</span>}
+            {c.assignedStaffName || (
+              <span className="text-slate-500 italic">Unassigned</span>
+            )}
           </span>
         ),
       },
@@ -165,8 +179,10 @@ export default function HostelComplaintsPage() {
           const sMap: Record<string, string> = {
             OPEN: "bg-blue-500/10 text-blue-400 border-blue-500/20",
             ASSIGNED: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-            IN_PROGRESS: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-            RESOLVED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+            IN_PROGRESS:
+              "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+            RESOLVED:
+              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
             CLOSED: "bg-slate-500/10 text-slate-400 border-slate-500/20",
           };
           return (
@@ -195,7 +211,11 @@ export default function HostelComplaintsPage() {
         header: "Actions",
         cell: (c) => (
           <Link href={`/app/infrastructure/hostel/complaints/${c.id}`}>
-            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-800"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               Inspect
             </Button>
@@ -203,7 +223,7 @@ export default function HostelComplaintsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -216,7 +236,10 @@ export default function HostelComplaintsPage() {
               Infrastructure
             </Link>
             <span>/</span>
-            <Link href="/app/infrastructure/hostel" className="hover:text-white">
+            <Link
+              href="/app/infrastructure/hostel"
+              className="hover:text-white"
+            >
               Hostel
             </Link>
             <span>/</span>
@@ -227,7 +250,8 @@ export default function HostelComplaintsPage() {
             Hostel Maintenance Complaints
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Log, assign, track SLAs, and resolve resident electrical, plumbing, WiFi, and furniture tickets.
+            Log, assign, track SLAs, and resolve resident electrical, plumbing,
+            WiFi, and furniture tickets.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -317,10 +341,17 @@ export default function HostelComplaintsPage() {
         <form onSubmit={handleCreate} className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Issue Category *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Issue Category *
+              </label>
               <select
                 value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value as ComplaintCategory })}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    category: e.target.value as ComplaintCategory,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="ELECTRICAL">Electrical & Power</option>
@@ -333,10 +364,17 @@ export default function HostelComplaintsPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Urgency Priority *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Urgency Priority *
+              </label>
               <select
                 value={form.priority}
-                onChange={(e) => setForm({ ...form, priority: e.target.value as ComplaintPriority })}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    priority: e.target.value as ComplaintPriority,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="LOW">Low (48 Hours)</option>
@@ -348,7 +386,9 @@ export default function HostelComplaintsPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Room Number *</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Room Number *
+            </label>
             <Input
               required
               value={form.roomNumber}
@@ -358,7 +398,9 @@ export default function HostelComplaintsPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Subject / Summary *</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Subject / Summary *
+            </label>
             <Input
               required
               placeholder="e.g. Ceiling fan humming loudly at speed 3"
@@ -369,13 +411,17 @@ export default function HostelComplaintsPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Detailed Description *</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Detailed Description *
+            </label>
             <textarea
               required
               rows={3}
               placeholder="Describe the exact location, symptoms, and when the issue started..."
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
               className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
             />
           </div>
@@ -389,7 +435,10 @@ export default function HostelComplaintsPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Submit Ticket
             </Button>
           </div>

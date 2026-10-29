@@ -24,10 +24,14 @@ class InstitutionalRecordsService {
         items = items.filter((rec) => rec.category === filters.category);
       }
       if (filters.department && filters.department !== "ALL") {
-        items = items.filter((rec) => rec.ownerDepartment === filters.department);
+        items = items.filter(
+          (rec) => rec.ownerDepartment === filters.department,
+        );
       }
       if (filters.confidentiality && filters.confidentiality !== "ALL") {
-        items = items.filter((rec) => rec.confidentiality === filters.confidentiality);
+        items = items.filter(
+          (rec) => rec.confidentiality === filters.confidentiality,
+        );
       }
       if (filters.status && filters.status !== "ALL") {
         items = items.filter((rec) => rec.status === filters.status);
@@ -38,8 +42,10 @@ class InstitutionalRecordsService {
           (rec) =>
             rec.recordName.toLowerCase().includes(q) ||
             rec.code.toLowerCase().includes(q) ||
-            (rec.referenceNumber && rec.referenceNumber.toLowerCase().includes(q)) ||
-            (rec.issuingAuthority && rec.issuingAuthority.toLowerCase().includes(q))
+            (rec.referenceNumber &&
+              rec.referenceNumber.toLowerCase().includes(q)) ||
+            (rec.issuingAuthority &&
+              rec.issuingAuthority.toLowerCase().includes(q)),
         );
       }
     }
@@ -47,14 +53,16 @@ class InstitutionalRecordsService {
     return { success: true, data: items };
   }
 
-  async getRecordById(id: string): Promise<ApiResponse<InstitutionalRecord | null>> {
+  async getRecordById(
+    id: string,
+  ): Promise<ApiResponse<InstitutionalRecord | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const rec = this.records.find((r) => r.id === id || r.code === id) || null;
     return { success: true, data: rec };
   }
 
   async createRecord(
-    data: Partial<InstitutionalRecord>
+    data: Partial<InstitutionalRecord>,
   ): Promise<ApiResponse<InstitutionalRecord>> {
     await new Promise((r) => setTimeout(r, 60));
     const newRecord: InstitutionalRecord = {
@@ -90,7 +98,7 @@ class InstitutionalRecordsService {
 
   async updateRecord(
     id: string,
-    data: Partial<InstitutionalRecord>
+    data: Partial<InstitutionalRecord>,
   ): Promise<ApiResponse<InstitutionalRecord>> {
     await new Promise((r) => setTimeout(r, 50));
     const rec = this.records.find((r) => r.id === id);

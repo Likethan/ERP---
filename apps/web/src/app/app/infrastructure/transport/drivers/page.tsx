@@ -80,7 +80,9 @@ export default function TransportDriversListPage() {
     loadDrivers();
   };
 
-  const activeDrivers = drivers.filter((d) => d.status === DriverStatus.ACTIVE).length;
+  const activeDrivers = drivers.filter(
+    (d) => d.status === DriverStatus.ACTIVE,
+  ).length;
 
   const columns: ColumnDef<TransportDriver>[] = useMemo(
     () => [
@@ -95,7 +97,9 @@ export default function TransportDriversListPage() {
             >
               {d.name}
             </Link>
-            <span className="font-mono text-xs text-slate-500">{d.employeeId}</span>
+            <span className="font-mono text-xs text-slate-500">
+              {d.employeeId}
+            </span>
           </div>
         ),
       },
@@ -104,9 +108,14 @@ export default function TransportDriversListPage() {
         header: "Heavy Transport License",
         cell: (d) => (
           <div className="text-xs space-y-0.5">
-            <span className="font-mono text-slate-300 font-semibold">{d.licenseNumber}</span>
+            <span className="font-mono text-slate-300 font-semibold">
+              {d.licenseNumber}
+            </span>
             <div className="text-slate-500">
-              Valid till: {d.licenseExpiry ? new Date(d.licenseExpiry).toLocaleDateString("en-IN") : "2029"}
+              Valid till:{" "}
+              {d.licenseExpiry
+                ? new Date(d.licenseExpiry).toLocaleDateString("en-IN")
+                : "2029"}
             </div>
           </div>
         ),
@@ -121,7 +130,9 @@ export default function TransportDriversListPage() {
               {d.phone}
             </div>
             {d.emergencyContact && (
-              <div className="text-[11px] text-slate-500">Emg: {d.emergencyContact}</div>
+              <div className="text-[11px] text-slate-500">
+                Emg: {d.emergencyContact}
+              </div>
             )}
           </div>
         ),
@@ -135,7 +146,9 @@ export default function TransportDriversListPage() {
               <Bus className="w-3 h-3 text-emerald-400" />
               {d.assignedVehicleNumber || "Unassigned"}
             </div>
-            <div className="text-slate-400">{d.assignedRouteName || "Standby Pool"}</div>
+            <div className="text-slate-400">
+              {d.assignedRouteName || "Standby Pool"}
+            </div>
           </div>
         ),
       },
@@ -161,14 +174,18 @@ export default function TransportDriversListPage() {
         header: "Actions",
         cell: (d) => (
           <Link href={`/app/infrastructure/transport/drivers/${d.id}`}>
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+            >
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -192,7 +209,8 @@ export default function TransportDriversListPage() {
             Driver & Crew Roster
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Manage commercial heavy transport licensed drivers, duty rosters, and verified credentials.
+            Manage commercial heavy transport licensed drivers, duty rosters,
+            and verified credentials.
           </p>
         </div>
 
@@ -209,20 +227,30 @@ export default function TransportDriversListPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
           <div className="text-slate-400 text-xs font-medium">Total Crew</div>
-          <div className="text-2xl font-bold text-white mt-1">{drivers.length}</div>
+          <div className="text-2xl font-bold text-white mt-1">
+            {drivers.length}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">On Duty / Active</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{activeDrivers}</div>
+          <div className="text-slate-400 text-xs font-medium">
+            On Duty / Active
+          </div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {activeDrivers}
+          </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Assigned to Routes</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Assigned to Routes
+          </div>
           <div className="text-2xl font-bold text-cyan-400 mt-1">
             {drivers.filter((d) => d.assignedRouteName).length}
           </div>
         </div>
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-          <div className="text-slate-400 text-xs font-medium">Standby / Relievers</div>
+          <div className="text-slate-400 text-xs font-medium">
+            Standby / Relievers
+          </div>
           <div className="text-2xl font-bold text-slate-400 mt-1">
             {drivers.filter((d) => !d.assignedRouteName).length}
           </div>
@@ -293,7 +321,9 @@ export default function TransportDriversListPage() {
                     required
                     placeholder="e.g. Anand Kumar"
                     value={createForm.name}
-                    onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, name: e.target.value })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
@@ -305,7 +335,12 @@ export default function TransportDriversListPage() {
                     type="text"
                     placeholder="e.g. EMP-TR-108"
                     value={createForm.employeeId}
-                    onChange={(e) => setCreateForm({ ...createForm, employeeId: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({
+                        ...createForm,
+                        employeeId: e.target.value,
+                      })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono"
                   />
                 </div>
@@ -321,7 +356,9 @@ export default function TransportDriversListPage() {
                     required
                     placeholder="+91 98455 12009"
                     value={createForm.phone}
-                    onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, phone: e.target.value })
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono"
                   />
                 </div>
@@ -355,7 +392,10 @@ export default function TransportDriversListPage() {
                     placeholder="e.g. KA-04-2018-0091823"
                     value={createForm.licenseNumber}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, licenseNumber: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        licenseNumber: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono"
                   />
@@ -368,7 +408,10 @@ export default function TransportDriversListPage() {
                     type="date"
                     value={createForm.licenseExpiry}
                     onChange={(e) =>
-                      setCreateForm({ ...createForm, licenseExpiry: e.target.value })
+                      setCreateForm({
+                        ...createForm,
+                        licenseExpiry: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500"
                   />
@@ -384,7 +427,10 @@ export default function TransportDriversListPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-cyan-600 hover:bg-cyan-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white"
+                >
                   Add Driver
                 </Button>
               </div>

@@ -6,7 +6,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 # -----------------------------------------------------------------------------
 # 1. Tenant Lifecycle & Directory Schemas
 # -----------------------------------------------------------------------------

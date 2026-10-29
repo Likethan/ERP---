@@ -9,19 +9,18 @@ Verifies:
    in packages/types/src/index.ts match authoritative backend models.
 """
 
-from pathlib import Path
 import re
 import uuid
+from pathlib import Path
 
-from httpx import AsyncClient
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
+from httpx import AsyncClient
 
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.main import app
 from app.models.core import Institution
-from app.models.people import Role, User
+from app.models.people import User
 
 
 def make_auth_headers(

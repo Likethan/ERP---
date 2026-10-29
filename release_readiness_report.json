@@ -1,7 +1,7 @@
 {
   "release_certification": {
-    "commit_sha": "ab71cdc74e9d3926e1428b4af677a884b672656b",
-    "timestamp": "2026-10-17T16:29:33.270980+00:00",
+    "commit_sha": "65b1794e27d3e401873c810ca68929035921a42e",
+    "timestamp": "2026-10-19T12:47:25.508211+00:00",
     "environment": {
       "os": "Windows-10-10.0.26200-SP0",
       "python": "3.11.9"
@@ -21,7 +21,7 @@
         "passed": 11,
         "failed": 0,
         "skipped": 0,
-        "summary": "11 passed, 3 warnings in 5.32s"
+        "summary": "11 passed, 1 warning in 5.36s"
       },
       {
         "suite": "tests/test_enterprise_database_migrations.py",
@@ -29,7 +29,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 4.80s"
+        "summary": "5 passed, 1 warning in 5.33s"
       },
       {
         "suite": "tests/test_enterprise_api_contracts.py",
@@ -37,7 +37,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 2 warnings in 10.98s"
+        "summary": "5 passed, 2 warnings in 11.44s"
       },
       {
         "suite": "tests/test_enterprise_failure_injection.py",
@@ -45,7 +45,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 5.58s"
+        "summary": "5 passed, 1 warning in 5.09s"
       },
       {
         "suite": "tests/test_enterprise_ai_safety_eval.py",
@@ -53,18 +53,18 @@
         "passed": 19,
         "failed": 0,
         "skipped": 0,
-        "summary": "19 passed, 12 warnings in 4.54s"
+        "summary": "19 passed, 1 warning in 4.70s"
       }
     ],
     "accessibility": {
       "status": "PASS",
-      "compliance_rate": "80.25%",
-      "files_scanned": 160,
+      "compliance_rate": "80.6%",
+      "files_scanned": 171,
       "violations": 0
     },
     "e2e_browser": {
       "status": "BLOCKED",
-      "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev')."
+      "details": "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web."
     },
     "gates": [
       {
@@ -119,13 +119,13 @@
         "gate": "G-09",
         "name": "Frontend Accessibility (WCAG 2.1 AA)",
         "status": "PASS",
-        "details": "Compliance 80.25%, 0 violations"
+        "details": "Compliance 80.6%, 0 violations"
       },
       {
         "gate": "G-10",
         "name": "E2E Browser Automation",
         "status": "BLOCKED",
-        "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev')."
+        "details": "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web."
       },
       {
         "gate": "G-11",

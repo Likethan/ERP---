@@ -14,19 +14,17 @@ Validates end-to-end business workflows crossing multiple domain boundaries:
 11. SaaS Tenant Lifecycle Transitions (ACTIVE -> SUSPENDED) & Quota Enforcement.
 """
 
-from datetime import UTC, date, datetime, time, timedelta
-from decimal import Decimal
 import uuid
+from datetime import UTC, date, datetime
+from decimal import Decimal
 
-from httpx import AsyncClient
 import pytest
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import ValidationException
 from app.core.permissions import (
     DEFAULT_ROLE_PERMISSIONS,
-    SECURITY_INCIDENTS_READ,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.domains.intelligence.governance.safety import PromptGuard
@@ -36,6 +34,7 @@ from app.models.academics import (
     Subject,
 )
 from app.models.attendance import AttendancePolicy
+from app.models.campus import CampusEvent, EventVenue
 from app.models.core import (
     AcademicYear,
     Batch,
@@ -48,41 +47,27 @@ from app.models.core import (
     Semester,
     TenantMembership,
 )
-from app.models.campus import CampusEvent, EventVenue
 from app.models.documents import (
-    CertificateRequest,
     CertificateTemplate,
     Document,
     DocumentCategory,
 )
 from app.models.examination import (
     Assessment,
-    ExamEligibility,
-    ExamSchedule,
-    ExamTerm,
     GradeScale,
     GradeScaleItem,
     StudentAssessmentMark,
 )
 from app.models.finance import (
     FeeCategory,
-    FeeItem,
-    FeeStructure,
     Invoice,
     PaymentAllocation,
     PaymentTransaction,
-    Receipt,
 )
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import StudentProfile, User
 from app.models.placement import Company, JobDrive, JobPosition, PlacementApplication
 from app.models.platform_ops import TenantLifecycleTransition, TenantResourceQuotaUsage
-from app.services.attendance_service import AttendanceService
 from app.services.campus_service import CampusService
-from app.services.examination_service import ExaminationService
-from app.services.finance_service import FinanceService
-from app.services.placement_service import PlacementService
-from app.services.tenant_quota_service import TenantQuotaService
-
 
 TEST_PASSWORD_HASH = "$argon2id$v=19$m=65536,t=3,p=4$dummyqualityhashforintegrationtests"
 

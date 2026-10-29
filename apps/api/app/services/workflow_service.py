@@ -9,20 +9,18 @@ Orchestrates:
 - Tenant isolation across all operations and audit logging
 """
 
-from datetime import UTC, datetime
 import logging
 import re
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, func, or_, select, update
+from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.events import is_valid_event_type
 from app.core.exceptions import (
-    ConflictException,
-    ForbiddenException,
     NotFoundException,
     ValidationException,
 )
@@ -32,7 +30,6 @@ from app.core.workflow_conditions import ConditionEngine
 from app.models.audit import AuditLog
 from app.models.workflow import (
     ExecutionStepStatus,
-    OutboxEvent,
     WorkflowDeadLetter,
     WorkflowDefinition,
     WorkflowExecution,
@@ -119,7 +116,7 @@ class WorkflowService:
                     raise ValidationException(f"Step '{s_id}' references non-existent on_failure_step_id '{fail}'.")
                 adj[s_id].append(fail)
 
-        color: dict[str, int] = {s_id: 0 for s_id in step_ids}
+        color: dict[str, int] = dict.fromkeys(step_ids, 0)
 
         def dfs(node: str) -> None:
             color[node] = 1  # visiting

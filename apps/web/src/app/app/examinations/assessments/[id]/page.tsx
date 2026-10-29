@@ -49,7 +49,10 @@ export default function AssessmentDetailPage() {
       } catch (err: unknown) {
         showToast({
           title: "Error",
-          message: err instanceof Error ? err.message : "Failed to load assessment details",
+          message:
+            err instanceof Error
+              ? err.message
+              : "Failed to load assessment details",
           type: "error",
         });
       } finally {
@@ -66,11 +69,18 @@ export default function AssessmentDetailPage() {
       setFinalizing(true);
       const res = await examinationsService.finalizeAssessment(assessment.id);
       setAssessment(res.data);
-      showToast({ title: "Finalized", message: "Assessment scheme locked and finalized.", type: "success" });
+      showToast({
+        title: "Finalized",
+        message: "Assessment scheme locked and finalized.",
+        type: "success",
+      });
     } catch (err: unknown) {
       showToast({
         title: "Finalization Blocked",
-        message: err instanceof Error ? err.message : "All marks must be entered prior to finalization.",
+        message:
+          err instanceof Error
+            ? err.message
+            : "All marks must be entered prior to finalization.",
         type: "error",
       });
     } finally {
@@ -100,7 +110,9 @@ export default function AssessmentDetailPage() {
   }
 
   const enteredMarks = marks.filter((m) => m.status !== "NOT_ENTERED");
-  const completionRate = Math.round((enteredMarks.length / (marks.length || 1)) * 100);
+  const completionRate = Math.round(
+    (enteredMarks.length / (marks.length || 1)) * 100,
+  );
 
   const tabs = [
     {
@@ -195,12 +207,22 @@ export default function AssessmentDetailPage() {
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {assessment.components?.map((c, idx) => (
                     <tr key={c.id}>
-                      <td className="p-2.5 font-mono text-slate-400">{idx + 1}</td>
-                      <td className="p-2.5 font-medium text-slate-900 dark:text-white">{c.name}</td>
+                      <td className="p-2.5 font-mono text-slate-400">
+                        {idx + 1}
+                      </td>
+                      <td className="p-2.5 font-medium text-slate-900 dark:text-white">
+                        {c.name}
+                      </td>
                       <td className="p-2.5 text-slate-500">{c.type}</td>
-                      <td className="p-2.5 text-right font-semibold text-slate-800 dark:text-slate-200">{c.maxMarks}</td>
-                      <td className="p-2.5 text-right text-slate-500">{c.passingMarks}</td>
-                      <td className="p-2.5 text-right font-medium text-indigo-600 dark:text-indigo-400">{c.weightage}%</td>
+                      <td className="p-2.5 text-right font-semibold text-slate-800 dark:text-slate-200">
+                        {c.maxMarks}
+                      </td>
+                      <td className="p-2.5 text-right text-slate-500">
+                        {c.passingMarks}
+                      </td>
+                      <td className="p-2.5 text-right font-medium text-indigo-600 dark:text-indigo-400">
+                        {c.weightage}%
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -219,8 +241,14 @@ export default function AssessmentDetailPage() {
             <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
               Candidate Roster Marks
             </h3>
-            <Link href={`/app/examinations/marks?course_offering_id=${assessment.courseOfferingId}&assessment_id=${assessment.id}`}>
-              <Button size="sm" variant="primary" className="h-7 text-xs gap-1.5">
+            <Link
+              href={`/app/examinations/marks?course_offering_id=${assessment.courseOfferingId}&assessment_id=${assessment.id}`}
+            >
+              <Button
+                size="sm"
+                variant="primary"
+                className="h-7 text-xs gap-1.5"
+              >
                 <FileSpreadsheet className="h-3 w-3" />
                 Open Entry Matrix
               </Button>
@@ -241,10 +269,16 @@ export default function AssessmentDetailPage() {
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {marks.map((m) => (
                   <tr key={m.id}>
-                    <td className="p-2.5 font-mono text-slate-600 dark:text-slate-300">{m.rollNumber}</td>
-                    <td className="p-2.5 font-medium text-slate-900 dark:text-white">{m.studentName}</td>
+                    <td className="p-2.5 font-mono text-slate-600 dark:text-slate-300">
+                      {m.rollNumber}
+                    </td>
+                    <td className="p-2.5 font-medium text-slate-900 dark:text-white">
+                      {m.studentName}
+                    </td>
                     <td className="p-2.5 text-right font-bold text-slate-800 dark:text-slate-100">
-                      {m.marksObtained !== null ? `${m.marksObtained} / ${m.maxMarks}` : "—"}
+                      {m.marksObtained !== null
+                        ? `${m.marksObtained} / ${m.maxMarks}`
+                        : "—"}
                     </td>
                     <td className="p-2.5">
                       <span
@@ -252,8 +286,8 @@ export default function AssessmentDetailPage() {
                           m.status === "ENTERED"
                             ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
                             : m.status === "ABSENT"
-                            ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
-                            : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                              ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                              : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                         }`}
                       >
                         {m.status}
@@ -283,7 +317,8 @@ export default function AssessmentDetailPage() {
                 Assessment Scheme Created
               </p>
               <p className="text-[11px] text-slate-400">
-                Created by {assessment.facultyName} • {new Date(assessment.createdAt).toLocaleString()}
+                Created by {assessment.facultyName} •{" "}
+                {new Date(assessment.createdAt).toLocaleString()}
               </p>
             </div>
             <div className="relative">
@@ -292,7 +327,8 @@ export default function AssessmentDetailPage() {
                 Marks Entry Opened
               </p>
               <p className="text-[11px] text-slate-400">
-                Class cohort roster loaded with {assessment.totalEnrolled} students
+                Class cohort roster loaded with {assessment.totalEnrolled}{" "}
+                students
               </p>
             </div>
             {assessment.isFinalized ? (
@@ -302,7 +338,8 @@ export default function AssessmentDetailPage() {
                   Assessment Finalized & Locked
                 </p>
                 <p className="text-[11px] text-slate-400">
-                  Locked at {new Date(assessment.finalizedAt || "").toLocaleString()}
+                  Locked at{" "}
+                  {new Date(assessment.finalizedAt || "").toLocaleString()}
                 </p>
               </div>
             ) : (
@@ -312,7 +349,8 @@ export default function AssessmentDetailPage() {
                   Pending Finalization
                 </p>
                 <p className="text-[11px] text-slate-400">
-                  Will lock marks ledger permanently once all grades are verified.
+                  Will lock marks ledger permanently once all grades are
+                  verified.
                 </p>
               </div>
             )}
@@ -350,12 +388,15 @@ export default function AssessmentDetailPage() {
             </span>
           </div>
           <p className="mt-1 text-xs text-slate-500">
-            {assessment.courseCode} • {assessment.courseName} (Section {assessment.section})
+            {assessment.courseCode} • {assessment.courseName} (Section{" "}
+            {assessment.section})
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Link href={`/app/examinations/marks?course_offering_id=${assessment.courseOfferingId}&assessment_id=${assessment.id}`}>
+          <Link
+            href={`/app/examinations/marks?course_offering_id=${assessment.courseOfferingId}&assessment_id=${assessment.id}`}
+          >
             <Button variant="outline" size="sm" className="gap-1.5 text-xs">
               <FileSpreadsheet className="h-3.5 w-3.5" />
               Enter Marks

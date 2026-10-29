@@ -1,9 +1,9 @@
 """Enterprise Institutional Research, Innovation, Grants & IP Management API Router (Step 44)."""
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
@@ -15,7 +15,6 @@ from app.core.permissions import (
     RESEARCH_ETHICS_REVIEW_DOT,
     RESEARCH_GRANTS_APPLY_DOT,
     RESEARCH_GRANTS_APPROVE_DOT,
-    RESEARCH_IP_CONFIDENTIAL_READ_DOT,
     RESEARCH_IP_MANAGE_DOT,
     RESEARCH_OUTPUTS_MANAGE_DOT,
     RESEARCH_OUTPUTS_VERIFY_DOT,
@@ -26,25 +25,27 @@ from app.core.permissions import (
 from app.core.tenant import TenantContext
 from app.models.people import User
 from app.models.research import (
-    ResearchEthicsApprovalStatus,
     ResearchExternalSubmissionStatus,
     ResearchGrantInternalReviewStatus,
     ResearchOpportunityStatus,
-    ResearchProjectCategory,
     ResearchProjectStatus,
 )
 from app.schemas.common import ApiResponse
 from app.schemas.research import (
+    ResearchAgreementAmendmentCreate,
     ResearchAnalyticsSummaryResponse,
     ResearchBudgetPlanCreate,
     ResearchBudgetPlanResponse,
     ResearchBudgetRevisionRequest,
     ResearchDeadlineSweepResponse,
+    ResearcherWorkloadResponse,
     ResearchEthicsApprovalCreate,
     ResearchEthicsApprovalDecision,
     ResearchEthicsApprovalResponse,
+    ResearchExpressionOfInterestCreate,
     ResearchFacilityReferenceCreate,
     ResearchFacilityReferenceResponse,
+    ResearchFinancialSummaryResponse,
     ResearchFundingOpportunityCreate,
     ResearchFundingOpportunityResponse,
     ResearchFundingOpportunityUpdate,
@@ -53,7 +54,6 @@ from app.schemas.research import (
     ResearchGrantApplicationUpdate,
     ResearchGrantAwardCreate,
     ResearchGrantAwardResponse,
-    ResearchGrantAwardUpdate,
     ResearchGrantExternalSubmissionConfirm,
     ResearchGrantInternalReview,
     ResearchInventionDisclosureCreate,
@@ -63,11 +63,13 @@ from app.schemas.research import (
     ResearchMilestoneResponse,
     ResearchMilestoneUpdate,
     ResearchMilestoneVerify,
+    ResearchOpportunitySaveRequest,
     ResearchOutputCreate,
     ResearchOutputResponse,
-    ResearchOutputUpdate,
     ResearchOutputVerify,
     ResearchProjectCreate,
+    ResearchProjectDetailResponse,
+    ResearchProjectHealthReport,
     ResearchProjectResponse,
     ResearchProjectRiskCreate,
     ResearchProjectRiskResponse,
@@ -75,6 +77,8 @@ from app.schemas.research import (
     ResearchProjectStatusHistoryResponse,
     ResearchProjectTransition,
     ResearchProjectUpdate,
+    ResearchSponsorDecisionRecord,
+    ResearchSponsoredAgreementCreate,
     ResearchTeamMemberCreate,
     ResearchTeamMemberResponse,
     ResearchTeamMemberUpdate,
@@ -103,6 +107,9 @@ async def list_projects(
     domain: str | None = None,
     department_id: UUID | None = None,
     campus_id: UUID | None = None,
+    search: str | None = None,
+    pi_id: UUID | None = None,
+    user_id: UUID | None = None,
     limit: int = 50,
     offset: int = 0,
 ):
@@ -114,6 +121,9 @@ async def list_projects(
         domain=domain,
         department_id=department_id,
         campus_id=campus_id,
+        search=search,
+        pi_id=pi_id,
+        user_id=user_id,
         limit=limit,
         offset=offset,
     )
@@ -158,6 +168,89 @@ async def get_project(
         project_id=project_id,
     )
     return ApiResponse(data=ResearchProjectResponse.model_validate(project))
+
+
+@research_router.get(
+    "/projects/{project_id}/health",
+    response_model=ApiResponse[ResearchProjectHealthReport],
+    summary="Get Explainable Research Project Health Diagnosis",
+)
+async def get_project_health(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    health = await ResearchService.get_project_health(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+    )
+    return ApiResponse(data=health)
+
+
+@research_router.get(
+    "/projects/{project_id}/details",
+    response_model=ApiResponse[ResearchProjectDetailResponse],
+    summary="Get 360-degree Unified Research Project Details",
+)
+async def get_project_details(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    details = await ResearchService.get_project_details(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+    )
+    return ApiResponse(data=details)
+
+
+@research_router.get(
+    "/projects/{project_id}/milestones",
+    response_model=ApiResponse[list[ResearchMilestoneResponse]],
+    include_in_schema=False,
+)
+async def list_project_milestones_alias(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    milestones = await ResearchService.list_milestones(db=db, tenant_id=tenant_ctx.tenant_id, project_id=project_id)
+    return ApiResponse(data=[ResearchMilestoneResponse.model_validate(m) for m in milestones])
+
+
+@research_router.get(
+    "/projects/{project_id}/ethics-approvals",
+    response_model=ApiResponse[list[ResearchEthicsApprovalResponse]],
+    include_in_schema=False,
+)
+async def list_project_ethics_alias(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    approvals = await ResearchService.list_ethics_approvals(db=db, tenant_id=tenant_ctx.tenant_id, project_id=project_id)
+    return ApiResponse(data=[ResearchEthicsApprovalResponse.model_validate(a) for a in approvals])
+
+
+@research_router.get(
+    "/projects/{project_id}/risks",
+    response_model=ApiResponse[list[ResearchProjectRiskResponse]],
+    include_in_schema=False,
+)
+async def list_project_risks_alias(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    risks = await ResearchService.list_project_risks(db=db, tenant_id=tenant_ctx.tenant_id, project_id=project_id)
+    return ApiResponse(data=[ResearchProjectRiskResponse.model_validate(r) for r in risks])
 
 
 @research_router.patch(
@@ -312,6 +405,44 @@ async def remove_team_member(
     return ApiResponse(data=ResearchTeamMemberResponse.model_validate(member))
 
 
+@research_router.get(
+    "/team/users/{user_id}/workload",
+    response_model=ApiResponse[ResearcherWorkloadResponse],
+    summary="Get Researcher Project Portfolio and Workload Allocation",
+)
+async def get_researcher_workload(
+    user_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    workload = await ResearchService.get_researcher_workload(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        user_id=user_id,
+    )
+    return ApiResponse(data=workload)
+
+
+@research_router.get(
+    "/team/my-projects",
+    response_model=ApiResponse[ResearcherWorkloadResponse],
+    summary="Get Current User's Active Research Projects & Workload",
+)
+async def get_my_projects(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    workload = await ResearchService.get_researcher_workload(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        user_id=current_user.id,
+    )
+    return ApiResponse(data=workload)
+
+
+
 # =============================================================================
 # 3. RESEARCH FUNDING OPPORTUNITIES
 # =============================================================================
@@ -402,6 +533,51 @@ async def update_opportunity(
         current_user_id=current_user.id,
     )
     return ApiResponse(data=ResearchFundingOpportunityResponse.model_validate(opp))
+
+
+@research_router.post(
+    "/opportunities/{opportunity_id}/save",
+    response_model=ApiResponse[ResearchFundingOpportunityResponse],
+    summary="Save or Bookmark Funding Opportunity",
+)
+async def save_opportunity(
+    opportunity_id: UUID,
+    payload: ResearchOpportunitySaveRequest,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    opp = await ResearchService.save_funding_opportunity(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        opportunity_id=opportunity_id,
+        user_id=current_user.id,
+        save=payload.saved,
+    )
+    return ApiResponse(data=ResearchFundingOpportunityResponse.model_validate(opp))
+
+
+@research_router.post(
+    "/opportunities/{opportunity_id}/eoi",
+    response_model=ApiResponse[ResearchFundingOpportunityResponse],
+    summary="Record Expression of Interest in Funding Opportunity",
+)
+async def record_expression_of_interest(
+    opportunity_id: UUID,
+    payload: ResearchExpressionOfInterestCreate,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_GRANTS_APPLY_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    opp = await ResearchService.record_expression_of_interest(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        opportunity_id=opportunity_id,
+        data=payload,
+        current_user_id=current_user.id,
+    )
+    return ApiResponse(data=ResearchFundingOpportunityResponse.model_validate(opp))
+
 
 
 # =============================================================================
@@ -542,9 +718,125 @@ async def confirm_external_submission(
     return ApiResponse(data=ResearchGrantApplicationResponse.model_validate(app))
 
 
+@research_router.post(
+    "/grants/applications/{application_id}/sponsor-decision",
+    response_model=ApiResponse[ResearchGrantApplicationResponse],
+    summary="Record External Sponsor Decision and Award Details",
+)
+async def record_sponsor_decision(
+    application_id: UUID,
+    payload: ResearchSponsorDecisionRecord,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_GRANTS_APPROVE_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    app = await ResearchService.record_sponsor_decision(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        application_id=application_id,
+        data=payload,
+        current_user_id=current_user.id,
+    )
+    return ApiResponse(data=ResearchGrantApplicationResponse.model_validate(app))
+
+
+@research_router.get(
+    "/grant-applications",
+    response_model=ApiResponse[list[ResearchGrantApplicationResponse]],
+    include_in_schema=False,
+)
+async def list_grant_applications_alias(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    project_id: UUID | None = None,
+    internal_status: ResearchGrantInternalReviewStatus | None = None,
+    external_status: ResearchExternalSubmissionStatus | None = None,
+    limit: int = 50,
+    offset: int = 0,
+):
+    return await list_grant_applications(
+        tenant_ctx=tenant_ctx,
+        current_user=current_user,
+        db=db,
+        project_id=project_id,
+        internal_status=internal_status,
+        external_status=external_status,
+        limit=limit,
+        offset=offset,
+    )
+
+
 # =============================================================================
-# 5. GRANT AWARDS & FINANCIAL RECONCILIATION
+# 5. GRANT AWARDS & SPONSORED RESEARCH AGREEMENTS
 # =============================================================================
+
+
+@research_router.get(
+    "/agreements",
+    response_model=ApiResponse[list[ResearchGrantAwardResponse]],
+    summary="List Sponsored Research Agreements & Grant Awards",
+)
+async def list_sponsored_agreements(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    project_id: UUID | None = None,
+    limit: int = 50,
+    offset: int = 0,
+):
+    awards, _ = await ResearchService.list_grant_awards(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+        limit=limit,
+        offset=offset,
+    )
+    return ApiResponse(data=[ResearchGrantAwardResponse.model_validate(a) for a in awards])
+
+
+@research_router.post(
+    "/agreements",
+    response_model=ApiResponse[ResearchGrantAwardResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Create Sponsored Research Agreement",
+)
+async def create_sponsored_agreement(
+    payload: ResearchSponsoredAgreementCreate,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_AWARDS_MANAGE_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    award = await ResearchService.create_sponsored_agreement(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        data=payload,
+        current_user_id=current_user.id,
+    )
+    return ApiResponse(data=ResearchGrantAwardResponse.model_validate(award))
+
+
+@research_router.post(
+    "/agreements/{award_id}/amendments",
+    response_model=ApiResponse[ResearchGrantAwardResponse],
+    summary="Record Sponsored Research Agreement Amendment or Renewal",
+)
+async def record_agreement_amendment(
+    award_id: UUID,
+    payload: ResearchAgreementAmendmentCreate,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_AWARDS_MANAGE_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    award = await ResearchService.record_agreement_amendment(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        award_id=award_id,
+        data=payload,
+        current_user_id=current_user.id,
+    )
+    return ApiResponse(data=ResearchGrantAwardResponse.model_validate(award))
+
 
 
 @research_router.get(
@@ -655,6 +947,27 @@ async def list_budget_plans(
     return ApiResponse(data=[ResearchBudgetPlanResponse.model_validate(p) for p in plans])
 
 
+@research_router.get(
+    "/budgets",
+    response_model=ApiResponse[list[ResearchBudgetPlanResponse]],
+    summary="List Budget Plans Across Projects",
+)
+async def list_all_budget_plans(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    project_id: UUID | None = None,
+    award_id: UUID | None = None,
+):
+    plans = await ResearchService.list_budget_plans(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+        award_id=award_id,
+    )
+    return ApiResponse(data=[ResearchBudgetPlanResponse.model_validate(p) for p in plans])
+
+
 @research_router.post(
     "/budgets",
     response_model=ApiResponse[ResearchBudgetPlanResponse],
@@ -698,6 +1011,26 @@ async def revise_budget_plan(
     return ApiResponse(data=ResearchBudgetPlanResponse.model_validate(plan))
 
 
+@research_router.get(
+    "/budgets/projects/{project_id}/financial-summary",
+    response_model=ApiResponse[ResearchFinancialSummaryResponse],
+    summary="Get Reconciled Project Financial Summary and Health",
+)
+async def get_project_financial_summary(
+    project_id: UUID,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    summary = await ResearchService.get_project_financial_summary(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+    )
+    return ApiResponse(data=summary)
+
+
+
 # =============================================================================
 # 7. RESEARCH MILESTONES & DELIVERABLES
 # =============================================================================
@@ -713,6 +1046,25 @@ async def list_milestones(
     tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
     current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
     db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    milestones = await ResearchService.list_milestones(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+    )
+    return ApiResponse(data=[ResearchMilestoneResponse.model_validate(m) for m in milestones])
+
+
+@research_router.get(
+    "/milestones",
+    response_model=ApiResponse[list[ResearchMilestoneResponse]],
+    summary="List Milestones Across Portfolio",
+)
+async def list_all_milestones(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    project_id: UUID | None = None,
 ):
     milestones = await ResearchService.list_milestones(
         db=db,
@@ -811,6 +1163,25 @@ async def list_ethics_approvals(
     return ApiResponse(data=[ResearchEthicsApprovalResponse.model_validate(a) for a in approvals])
 
 
+@research_router.get(
+    "/ethics",
+    response_model=ApiResponse[list[ResearchEthicsApprovalResponse]],
+    summary="List Institutional Ethics Approvals",
+)
+async def list_all_ethics_approvals(
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_PROJECTS_READ_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    project_id: UUID | None = None,
+):
+    approvals = await ResearchService.list_ethics_approvals(
+        db=db,
+        tenant_id=tenant_ctx.tenant_id,
+        project_id=project_id,
+    )
+    return ApiResponse(data=[ResearchEthicsApprovalResponse.model_validate(a) for a in approvals])
+
+
 @research_router.post(
     "/ethics",
     response_model=ApiResponse[ResearchEthicsApprovalResponse],
@@ -852,6 +1223,27 @@ async def decide_ethics_approval(
         current_user_id=current_user.id,
     )
     return ApiResponse(data=ResearchEthicsApprovalResponse.model_validate(approval))
+
+
+@research_router.post(
+    "/ethics/{approval_id}/decision",
+    response_model=ApiResponse[ResearchEthicsApprovalResponse],
+    include_in_schema=False,
+)
+async def decide_ethics_approval_alias(
+    approval_id: UUID,
+    payload: ResearchEthicsApprovalDecision,
+    tenant_ctx: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(require_permission(RESEARCH_ETHICS_REVIEW_DOT))],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+):
+    return await decide_ethics_approval(
+        approval_id=approval_id,
+        payload=payload,
+        tenant_ctx=tenant_ctx,
+        current_user=current_user,
+        db=db,
+    )
 
 
 # =============================================================================

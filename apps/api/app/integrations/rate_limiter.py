@@ -6,10 +6,9 @@ Enforces:
 - Isolated fault domains: one tenant's heavy traffic cannot starve another tenant's connector.
 """
 
+import threading
 from collections import defaultdict
 from datetime import UTC, datetime
-import threading
-from typing import Any
 from uuid import UUID
 
 from app.core.exceptions import TooManyRequestsException

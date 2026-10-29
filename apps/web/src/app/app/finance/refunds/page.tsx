@@ -18,7 +18,13 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast, ToastType } from "@/components/ui/toast";
@@ -31,7 +37,8 @@ import { MOCK_STUDENTS } from "@/mocks/students.mock";
 export default function RefundsPage() {
   const { hasPermission } = useAuth();
   const { showToast } = useToast();
-  const notify = (title: string, type: ToastType = "info") => showToast({ title, type });
+  const notify = (title: string, type: ToastType = "info") =>
+    showToast({ title, type });
 
   const [refunds, setRefunds] = useState<Refund[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -49,7 +56,8 @@ export default function RefundsPage() {
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const canManage = hasPermission("finance.manage_refunds") || hasPermission("refunds:create");
+  const canManage =
+    hasPermission("finance.manage_refunds") || hasPermission("refunds:create");
 
   const loadData = async () => {
     try {
@@ -77,8 +85,10 @@ export default function RefundsPage() {
     return invoices.filter(
       (inv) =>
         (inv.studentId === selectedStudentId ||
-          inv.studentName.toLowerCase().includes(selectedStudentId.toLowerCase())) &&
-        inv.paidAmount > 0
+          inv.studentName
+            .toLowerCase()
+            .includes(selectedStudentId.toLowerCase())) &&
+        inv.paidAmount > 0,
     );
   }, [selectedStudentId, invoices]);
 
@@ -92,7 +102,7 @@ export default function RefundsPage() {
       (inv) =>
         (inv.studentId === studentId ||
           inv.studentName.toLowerCase().includes(studentId.toLowerCase())) &&
-        inv.paidAmount > 0
+        inv.paidAmount > 0,
     );
     if (eligible.length > 0) {
       setSelectedInvoiceId(eligible[0].id);
@@ -114,7 +124,10 @@ export default function RefundsPage() {
   const handleCreateRefund = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedInvoice) {
-      notify("Please pick a settled invoice to petition refund against.", "error");
+      notify(
+        "Please pick a settled invoice to petition refund against.",
+        "error",
+      );
       return;
     }
     if (requestedAmount <= 0) {
@@ -124,7 +137,7 @@ export default function RefundsPage() {
     if (requestedAmount > selectedInvoice.paidAmount) {
       notify(
         `Requested refund (${formatMoney(requestedAmount)}) cannot exceed total settled amount (${formatMoney(selectedInvoice.paidAmount)}).`,
-        "error"
+        "error",
       );
       return;
     }
@@ -151,7 +164,8 @@ export default function RefundsPage() {
       setReason("");
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to petition refund.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to petition refund.";
       notify(msg, "error");
     } finally {
       setSubmitting(false);
@@ -160,7 +174,9 @@ export default function RefundsPage() {
 
   // Metrics
   const pendingCount = useMemo(() => {
-    return refunds.filter((r) => r.status === "REQUESTED" || r.status === "UNDER_REVIEW").length;
+    return refunds.filter(
+      (r) => r.status === "REQUESTED" || r.status === "UNDER_REVIEW",
+    ).length;
   }, [refunds]);
 
   const approvedCount = useMemo(() => {
@@ -211,8 +227,12 @@ export default function RefundsPage() {
       sortable: true,
       cell: ({ row }) => (
         <div>
-          <div className="font-semibold text-slate-900 dark:text-white">{row.studentName}</div>
-          <div className="text-xs text-slate-500 font-mono">{row.rollNumber}</div>
+          <div className="font-semibold text-slate-900 dark:text-white">
+            {row.studentName}
+          </div>
+          <div className="text-xs text-slate-500 font-mono">
+            {row.rollNumber}
+          </div>
         </div>
       ),
     },
@@ -256,11 +276,16 @@ export default function RefundsPage() {
       accessorKey: "status",
       cell: ({ row }) => {
         const badges: Record<string, string> = {
-          REQUESTED: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300",
-          UNDER_REVIEW: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
-          APPROVED: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300",
-          PROCESSED: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
-          REJECTED: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
+          REQUESTED:
+            "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300",
+          UNDER_REVIEW:
+            "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300",
+          APPROVED:
+            "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300",
+          PROCESSED:
+            "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
+          REJECTED:
+            "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
         };
         return (
           <span
@@ -293,17 +318,23 @@ export default function RefundsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Refunds</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Refunds
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Refunds & Disbursement Workflow
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Multi-stage audit verification, authorization committee review, and electronic reimbursement.
+            Multi-stage audit verification, authorization committee review, and
+            electronic reimbursement.
           </p>
         </div>
 
@@ -439,7 +470,8 @@ export default function RefundsPage() {
             {selectedInvoice && (
               <div>
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Refund Requested Amount (₹) <span className="text-rose-500">*</span>
+                  Refund Requested Amount (₹){" "}
+                  <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   type="number"
@@ -451,14 +483,16 @@ export default function RefundsPage() {
                   required
                 />
                 <p className="text-[11px] text-slate-500 mt-1">
-                  Maximum allowable refund for this invoice: {formatMoney(selectedInvoice.paidAmount)}
+                  Maximum allowable refund for this invoice:{" "}
+                  {formatMoney(selectedInvoice.paidAmount)}
                 </p>
               </div>
             )}
 
             <div>
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Audit Justification & Reason <span className="text-rose-500">*</span>
+                Audit Justification & Reason{" "}
+                <span className="text-rose-500">*</span>
               </label>
               <Input
                 value={reason}
@@ -470,13 +504,22 @@ export default function RefundsPage() {
             </div>
 
             <DialogFooter className="pt-3">
-              <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setModalOpen(false)}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="primary"
-                disabled={!selectedInvoice || requestedAmount <= 0 || !reason.trim() || submitting}
+                disabled={
+                  !selectedInvoice ||
+                  requestedAmount <= 0 ||
+                  !reason.trim() ||
+                  submitting
+                }
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 {submitting ? "Submitting..." : "Submit Petition"}

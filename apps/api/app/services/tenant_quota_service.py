@@ -5,7 +5,6 @@ threshold notifications, and administrative quota adjustments.
 """
 
 from datetime import UTC, datetime
-from typing import Any
 from uuid import UUID
 
 from sqlalchemy import select
@@ -17,8 +16,8 @@ from app.core.exceptions import (
     NotFoundException,
     QuotaExceededException,
 )
+from app.core.logging import logger
 from app.models.platform_ops import (
-    TenantEntitlement,
     TenantResourceQuotaUsage,
     TenantResourceType,
 )

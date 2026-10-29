@@ -31,8 +31,13 @@ interface CampusCalendarProps {
   announcements: AnnouncementItem[];
 }
 
-export function CampusCalendarView({ events, announcements }: CampusCalendarProps) {
-  const [viewMode, setViewMode] = useState<"MONTH" | "WEEK" | "DAY" | "AGENDA">("MONTH");
+export function CampusCalendarView({
+  events,
+  announcements,
+}: CampusCalendarProps) {
+  const [viewMode, setViewMode] = useState<"MONTH" | "WEEK" | "DAY" | "AGENDA">(
+    "MONTH",
+  );
   const [filterSource, setFilterSource] = useState<string>("ALL");
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 9, 15)); // October 2026
 
@@ -102,8 +107,18 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth(); // 0-indexed, 9 = October
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -135,7 +150,8 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Aggregated schedule across campus fests, academic seminars, placement drives & notices
+              Aggregated schedule across campus fests, academic seminars,
+              placement drives & notices
             </p>
           </div>
         </div>
@@ -157,7 +173,7 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
                   "px-2.5 py-1 text-xs rounded-lg font-medium transition-colors cursor-pointer",
                   filterSource === f.id
                     ? "bg-indigo-600 text-white"
-                    : "text-slate-400 hover:text-slate-200"
+                    : "text-slate-400 hover:text-slate-200",
                 )}
               >
                 {f.label}
@@ -175,7 +191,7 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
                   "px-2.5 py-1 text-xs rounded-lg font-medium transition-colors cursor-pointer",
                   viewMode === mode
                     ? "bg-slate-800 text-white"
-                    : "text-slate-400 hover:text-slate-200"
+                    : "text-slate-400 hover:text-slate-200",
                 )}
               >
                 {mode.charAt(0) + mode.slice(1).toLowerCase()}
@@ -235,7 +251,9 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const dayNum = i + 1;
               const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
-              const dayEntries = filteredEntries.filter((e) => e.date === dateString);
+              const dayEntries = filteredEntries.filter(
+                (e) => e.date === dateString,
+              );
               const isToday = dayNum === 15 && month === 9 && year === 2026;
 
               return (
@@ -245,21 +263,22 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
                     "min-h-[110px] rounded-xl border p-2 flex flex-col transition-all",
                     isToday
                       ? "border-indigo-500/80 bg-indigo-950/20 shadow-md shadow-indigo-500/10"
-                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700",
                   )}
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <span
                       className={cn(
                         "text-xs font-bold font-mono px-1.5 py-0.5 rounded",
-                        isToday ? "bg-indigo-600 text-white" : "text-slate-400"
+                        isToday ? "bg-indigo-600 text-white" : "text-slate-400",
                       )}
                     >
                       {dayNum}
                     </span>
                     {dayEntries.length > 0 && (
                       <span className="text-[10px] font-mono text-slate-500">
-                        {dayEntries.length} {dayEntries.length === 1 ? "item" : "items"}
+                        {dayEntries.length}{" "}
+                        {dayEntries.length === 1 ? "item" : "items"}
                       </span>
                     )}
                   </div>
@@ -271,12 +290,16 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
                         href={entry.href}
                         className={cn(
                           "block rounded-lg px-2 py-1 text-[11px] font-medium border truncate transition-transform hover:scale-[1.02]",
-                          entry.colorClass
+                          entry.colorClass,
                         )}
                         title={`${entry.title} (${entry.time})`}
                       >
-                        <div className="truncate font-semibold">{entry.title}</div>
-                        <div className="text-[9px] opacity-80 truncate">{entry.time}</div>
+                        <div className="truncate font-semibold">
+                          {entry.title}
+                        </div>
+                        <div className="text-[9px] opacity-80 truncate">
+                          {entry.time}
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -291,7 +314,8 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
       {(viewMode === "AGENDA" || viewMode === "WEEK" || viewMode === "DAY") && (
         <div className="space-y-3">
           <div className="text-xs text-slate-400 font-medium pb-2 border-b border-slate-800">
-            Displaying all {filteredEntries.length} scheduled institutional items in chronological sequence
+            Displaying all {filteredEntries.length} scheduled institutional
+            items in chronological sequence
           </div>
           <div className="space-y-2.5">
             {filteredEntries.map((item) => (
@@ -311,7 +335,7 @@ export function CampusCalendarView({ events, announcements }: CampusCalendarProp
                       <span
                         className={cn(
                           "text-[10px] font-mono px-2 py-0.5 rounded-full border",
-                          item.colorClass
+                          item.colorClass,
                         )}
                       >
                         {item.badge}

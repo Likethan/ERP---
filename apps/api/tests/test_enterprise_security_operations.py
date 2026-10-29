@@ -23,24 +23,17 @@ Validates all 18 core Step 33 requirements:
 18. Security Operations Center (SOC) real-time overview metrics and rule tuning.
 """
 
-from datetime import UTC, datetime, timedelta
 import uuid
+from datetime import UTC, datetime, timedelta
 
-from httpx import AsyncClient
 import pytest
+from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import NotFoundException, ValidationException
 from app.core.permissions import (
     DEFAULT_ROLE_PERMISSIONS,
-    SECURITY_ACTIONS_APPROVE,
-    SECURITY_ACTIONS_EXECUTE,
-    SECURITY_ACTIONS_PROPOSE,
-    SECURITY_INCIDENTS_MANAGE,
-    SECURITY_INCIDENTS_READ,
-    SECURITY_PLATFORM_READ,
-    SECURITY_RULES_MANAGE,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.core.threat_detection import (
@@ -50,14 +43,9 @@ from app.core.threat_detection import (
 )
 from app.models.audit import AuditLog
 from app.models.core import Institution
-from app.models.people import User, UserSession
-from app.models.platform_api import ApplicationCredential
+from app.models.people import User
 from app.models.security_ops import (
-    SecurityDetection,
-    SecurityDetectionRuleConfig,
     SecurityIncident,
-    SecurityIncidentNote,
-    SecurityRemediationTask,
     SecurityResponseAction,
 )
 from app.services.security_ops_service import SecurityOpsService

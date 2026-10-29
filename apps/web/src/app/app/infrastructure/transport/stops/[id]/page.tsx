@@ -4,7 +4,11 @@ import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { transportStopsService } from "@/services/transport-stops.service";
 import { transportAllocationsService } from "@/services/transport-allocations.service";
-import { TransportStop, TransportAllocation, StopStatus } from "@campusos/types";
+import {
+  TransportStop,
+  TransportAllocation,
+  StopStatus,
+} from "@campusos/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -61,7 +65,9 @@ export default function TransportStopDetailPage({
   if (!stop) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Transit Stop Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Transit Stop Not Found
+        </h2>
         <Link href="/app/infrastructure/transport/stops">
           <Button variant="outline" className="border-slate-700">
             Back to Stops
@@ -103,7 +109,8 @@ export default function TransportStopDetailPage({
                 {stop.status}
               </Badge>
               <span className="text-xs text-slate-400">
-                Sequence Order: <strong className="text-white">#{stop.sequence}</strong>
+                Sequence Order:{" "}
+                <strong className="text-white">#{stop.sequence}</strong>
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
@@ -120,7 +127,9 @@ export default function TransportStopDetailPage({
               <Users className="w-6 h-6 text-indigo-400" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white font-mono">{allocations.length}</div>
+              <div className="text-2xl font-bold text-white font-mono">
+                {allocations.length}
+              </div>
               <div className="text-xs text-slate-400">Boarding Passholders</div>
             </div>
           </div>
@@ -133,7 +142,9 @@ export default function TransportStopDetailPage({
           <span className="text-xs text-slate-500 uppercase tracking-wider block">
             Corridor Route
           </span>
-          <div className="text-base font-semibold text-white">{stop.routeName}</div>
+          <div className="text-base font-semibold text-white">
+            {stop.routeName}
+          </div>
           <Link
             href={`/app/infrastructure/transport/routes/${stop.routeId}`}
             className="text-xs text-blue-400 hover:underline flex items-center gap-1 font-mono"
@@ -151,7 +162,9 @@ export default function TransportStopDetailPage({
             <Clock className="w-5 h-5 text-emerald-400" />
             {stop.pickupTime}
           </div>
-          <p className="text-xs text-slate-400">Students advised to assemble 5 mins prior</p>
+          <p className="text-xs text-slate-400">
+            Students advised to assemble 5 mins prior
+          </p>
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-3">
@@ -162,7 +175,9 @@ export default function TransportStopDetailPage({
             <Clock className="w-5 h-5 text-amber-400" />
             {stop.dropTime}
           </div>
-          <p className="text-xs text-slate-400">Estimated drop timestamp from Campus Gate 2</p>
+          <p className="text-xs text-slate-400">
+            Estimated drop timestamp from Campus Gate 2
+          </p>
         </div>
       </div>
 
@@ -173,7 +188,9 @@ export default function TransportStopDetailPage({
             <Users className="w-4 h-4 text-violet-400" />
             Boarding Students at this Stop ({allocations.length})
           </h2>
-          <span className="text-xs text-slate-500">Transit Pass Clearances</span>
+          <span className="text-xs text-slate-500">
+            Transit Pass Clearances
+          </span>
         </div>
 
         {allocations.length === 0 ? (

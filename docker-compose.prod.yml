@@ -30,7 +30,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 2048M
 
   redis:
@@ -57,7 +57,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 512M
 
   api:
@@ -97,7 +97,11 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health/live\")' || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/health/live")'' || exit 1',
+        ]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -106,7 +110,7 @@ services:
       replicas: 2
       resources:
         limits:
-          cpus: '1.5'
+          cpus: "1.5"
           memory: 1536M
 
   worker:
@@ -135,7 +139,7 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 1024M
 
   scheduler:
@@ -159,7 +163,7 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 
   web:
@@ -185,7 +189,7 @@ services:
       replicas: 2
       resources:
         limits:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 1024M
 
   proxy:
@@ -205,7 +209,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
 
 volumes:

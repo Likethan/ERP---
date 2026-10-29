@@ -58,7 +58,9 @@ export default function TransportDriverDetailPage({
   if (!driver) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Driver Dossier Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Driver Dossier Not Found
+        </h2>
         <Link href="/app/infrastructure/transport/drivers">
           <Button variant="outline" className="border-slate-700">
             Back to Drivers
@@ -99,7 +101,10 @@ export default function TransportDriverDetailPage({
               >
                 {driver.status}
               </Badge>
-              <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700">
+              <Badge
+                variant="outline"
+                className="bg-slate-800 text-slate-300 border-slate-700"
+              >
                 {driver.experienceYears || 8} Years Commercial Experience
               </Badge>
             </div>
@@ -120,7 +125,9 @@ export default function TransportDriverDetailPage({
           </div>
 
           <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 min-w-[200px]">
-            <span className="text-xs text-slate-500 block mb-1">Roster Assignment</span>
+            <span className="text-xs text-slate-500 block mb-1">
+              Roster Assignment
+            </span>
             <div className="text-sm font-semibold text-white">
               {driver.assignedVehicleNumber ? (
                 <div className="flex items-center gap-1.5 text-emerald-400">
@@ -148,7 +155,9 @@ export default function TransportDriverDetailPage({
           </h2>
           <div className="space-y-3 text-sm">
             <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-              <span className="text-xs text-slate-500 block mb-1">License Number (HMV / Transport)</span>
+              <span className="text-xs text-slate-500 block mb-1">
+                License Number (HMV / Transport)
+              </span>
               <span className="font-mono text-base font-bold text-white">
                 {driver.licenseNumber}
               </span>
@@ -180,7 +189,9 @@ export default function TransportDriverDetailPage({
           </h2>
           <div className="space-y-3 text-sm">
             <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-              <span className="text-xs text-slate-500 block mb-1">Emergency Contact</span>
+              <span className="text-xs text-slate-500 block mb-1">
+                Emergency Contact
+              </span>
               <span className="font-medium text-white">
                 {driver.emergencyContact || "+91 98455 99001 (Spouse)"}
               </span>
@@ -188,11 +199,17 @@ export default function TransportDriverDetailPage({
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
                 <span className="text-slate-500 block">Blood Group</span>
-                <span className="font-semibold text-white mt-0.5 block">O Positive (O+)</span>
+                <span className="font-semibold text-white mt-0.5 block">
+                  O Positive (O+)
+                </span>
               </div>
               <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
-                <span className="text-slate-500 block">Annual Medical Test</span>
-                <span className="font-semibold text-emerald-400 mt-0.5 block">Cleared (2026)</span>
+                <span className="text-slate-500 block">
+                  Annual Medical Test
+                </span>
+                <span className="font-semibold text-emerald-400 mt-0.5 block">
+                  Cleared (2026)
+                </span>
               </div>
             </div>
           </div>

@@ -1,8 +1,6 @@
 """Comprehensive automated tests for CampusOS Step 7: Examination & Assessment Engine."""
 
 import uuid
-from datetime import date, time
-from decimal import Decimal
 from typing import Any
 
 import pytest
@@ -12,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_password_hash
 from app.models.core import Institution
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import Role, User, UserRoleAssignment
 
 
 async def authenticate_user(
@@ -188,7 +186,7 @@ async def setup_academic_and_exam_environment(client: AsyncClient) -> dict[str, 
                 "email": stu_email,
                 "admission_number": f"ADM_{uid}_{i}",
                 "first_name": f"Student{i}",
-                "last_name": f"Candidate",
+                "last_name": "Candidate",
                 "date_of_birth": "2004-04-12",
                 "gender": "MALE" if i == 1 else "FEMALE",
                 "admission_date": "2024-08-01",

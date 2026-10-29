@@ -223,7 +223,8 @@ jobs:
   docker-build-verification:
     name: Docker Image Build Gates
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, backend-tests, release-certification, frontend-build]
+    needs:
+      [lint-and-typecheck, backend-tests, release-certification, frontend-build]
     steps:
       - uses: actions/checkout@v4
 

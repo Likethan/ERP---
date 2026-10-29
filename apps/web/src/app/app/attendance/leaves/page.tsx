@@ -4,7 +4,11 @@ import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceLeave, AttendanceLeaveStatus, LeaveType } from "@/types/attendance";
+import {
+  AttendanceLeave,
+  AttendanceLeaveStatus,
+  LeaveType,
+} from "@/types/attendance";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { ColumnDef } from "@/components/data-grid/data-grid.types";
 import { Badge } from "@/components/ui/badge";
@@ -50,8 +54,12 @@ export default function LeaveManagementPage() {
 
   // Review Modal
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState<AttendanceLeave | null>(null);
-  const [reviewAction, setReviewAction] = useState<"APPROVED" | "REJECTED">("APPROVED");
+  const [selectedLeave, setSelectedLeave] = useState<AttendanceLeave | null>(
+    null,
+  );
+  const [reviewAction, setReviewAction] = useState<"APPROVED" | "REJECTED">(
+    "APPROVED",
+  );
   const [reviewNotes, setReviewNotes] = useState("");
   const [reviewing, setReviewing] = useState(false);
 
@@ -66,7 +74,11 @@ export default function LeaveManagementPage() {
       }
     } catch (err) {
       console.error("Failed to load leaves", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load leave requests." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load leave requests.",
+      });
     } finally {
       setLoading(false);
     }
@@ -93,7 +105,11 @@ export default function LeaveManagementPage() {
       }
     } catch (err) {
       console.error("Failed to submit leave", err);
-      showToast({ type: "error", title: "Submission Failed", message: "Could not submit leave request." });
+      showToast({
+        type: "error",
+        title: "Submission Failed",
+        message: "Could not submit leave request.",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -108,7 +124,7 @@ export default function LeaveManagementPage() {
         selectedLeave.id,
         reviewAction,
         reviewNotes,
-        "Dr. K. S. Anand (HOD - CSE)"
+        "Dr. K. S. Anand (HOD - CSE)",
       );
       if (res.success) {
         showToast({
@@ -123,7 +139,11 @@ export default function LeaveManagementPage() {
       }
     } catch (err) {
       console.error("Failed to update leave", err);
-      showToast({ type: "error", title: "Update Failed", message: "Could not update leave status." });
+      showToast({
+        type: "error",
+        title: "Update Failed",
+        message: "Could not update leave status.",
+      });
     } finally {
       setReviewing(false);
     }
@@ -154,7 +174,9 @@ export default function LeaveManagementPage() {
             <div className="font-semibold text-slate-900 dark:text-white">
               {row.studentName}
             </div>
-            <div className="text-xs text-slate-500">{row.rollNumber} • Sec {row.section}</div>
+            <div className="text-xs text-slate-500">
+              {row.rollNumber} • Sec {row.section}
+            </div>
           </div>
         ),
         sortable: true,
@@ -201,11 +223,17 @@ export default function LeaveManagementPage() {
           <div className="text-xs text-slate-600 dark:text-slate-400">
             {row.reviewedBy ? (
               <div>
-                <div className="font-medium text-slate-800 dark:text-slate-200">{row.reviewedBy}</div>
-                <div className="text-[10px] text-slate-400">{new Date(row.reviewedAt || "").toLocaleDateString()}</div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">
+                  {row.reviewedBy}
+                </div>
+                <div className="text-[10px] text-slate-400">
+                  {new Date(row.reviewedAt || "").toLocaleDateString()}
+                </div>
               </div>
             ) : (
-              <span className="text-slate-400 italic">Awaiting HOD sign-off</span>
+              <span className="text-slate-400 italic">
+                Awaiting HOD sign-off
+              </span>
             )}
           </div>
         ),
@@ -246,7 +274,7 @@ export default function LeaveManagementPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -258,17 +286,24 @@ export default function LeaveManagementPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
               Absence Exemption
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Excused Absence Workflow</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Excused Absence Workflow
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Student Leave Management
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Submit and review medical, sports, and official on-duty leave requests for percentage exemption.
+            Submit and review medical, sports, and official on-duty leave
+            requests for percentage exemption.
           </p>
         </div>
 
-        <Button variant="primary" className="gap-2" onClick={() => setCreateModalOpen(true)}>
+        <Button
+          variant="primary"
+          className="gap-2"
+          onClick={() => setCreateModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           Apply for Leave
         </Button>
@@ -312,7 +347,8 @@ export default function LeaveManagementPage() {
       >
         <form onSubmit={handleCreateLeave} className="space-y-4 text-xs">
           <p className="text-slate-500">
-            Approved leaves are counted as valid exemptions in course attendance calculations.
+            Approved leaves are counted as valid exemptions in course attendance
+            calculations.
           </p>
 
           <div className="grid grid-cols-2 gap-3">
@@ -324,7 +360,9 @@ export default function LeaveManagementPage() {
                 type="text"
                 required
                 value={formData.studentName}
-                onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, studentName: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -337,7 +375,9 @@ export default function LeaveManagementPage() {
                 type="text"
                 required
                 value={formData.rollNumber}
-                onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, rollNumber: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -350,7 +390,12 @@ export default function LeaveManagementPage() {
               </label>
               <select
                 value={formData.leaveType}
-                onChange={(e) => setFormData({ ...formData, leaveType: e.target.value as LeaveType })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    leaveType: e.target.value as LeaveType,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value="MEDICAL">Medical Emergency</option>
@@ -369,7 +414,9 @@ export default function LeaveManagementPage() {
                 type="date"
                 required
                 value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, startDate: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -382,7 +429,9 @@ export default function LeaveManagementPage() {
                 type="date"
                 required
                 value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, endDate: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               />
             </div>
@@ -396,7 +445,9 @@ export default function LeaveManagementPage() {
               required
               rows={3}
               value={formData.reason}
-              onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, reason: e.target.value })
+              }
               placeholder="e.g. Hospitalized with dengue fever at Apollo Hospitals; medical certificate verified by medical officer."
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             />
@@ -409,7 +460,9 @@ export default function LeaveManagementPage() {
             <input
               type="text"
               value={formData.supportingDocName}
-              onChange={(e) => setFormData({ ...formData, supportingDocName: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, supportingDocName: e.target.value })
+              }
               placeholder="Medical_Certificate_Oct26.pdf"
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             />
@@ -440,14 +493,22 @@ export default function LeaveManagementPage() {
           {selectedLeave && (
             <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 space-y-2">
               <div className="flex justify-between">
-                <span className="font-semibold text-slate-900 dark:text-white">{selectedLeave.studentName}</span>
-                <span className="text-slate-500">{selectedLeave.rollNumber}</span>
+                <span className="font-semibold text-slate-900 dark:text-white">
+                  {selectedLeave.studentName}
+                </span>
+                <span className="text-slate-500">
+                  {selectedLeave.rollNumber}
+                </span>
               </div>
               <div className="text-slate-600 dark:text-slate-400">
-                <strong>Type: </strong>{selectedLeave.leaveType} • <strong>Duration: </strong>{selectedLeave.startDate} to {selectedLeave.endDate} ({selectedLeave.totalDays} Days)
+                <strong>Type: </strong>
+                {selectedLeave.leaveType} • <strong>Duration: </strong>
+                {selectedLeave.startDate} to {selectedLeave.endDate} (
+                {selectedLeave.totalDays} Days)
               </div>
               <div className="text-slate-700 dark:text-slate-300 pt-1 border-t border-slate-200 dark:border-slate-700">
-                <strong>Reason: </strong>{selectedLeave.reason}
+                <strong>Reason: </strong>
+                {selectedLeave.reason}
               </div>
               {selectedLeave.supportingDocName && (
                 <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-medium">
@@ -511,7 +572,9 @@ export default function LeaveManagementPage() {
                 </Button>
                 <Button
                   type="submit"
-                  variant={reviewAction === "APPROVED" ? "primary" : "destructive"}
+                  variant={
+                    reviewAction === "APPROVED" ? "primary" : "destructive"
+                  }
                   disabled={reviewing}
                 >
                   {reviewing ? "Processing..." : `Confirm ${reviewAction}`}
@@ -522,7 +585,11 @@ export default function LeaveManagementPage() {
 
           {selectedLeave?.status !== "PENDING" && (
             <div className="pt-2 flex justify-end">
-              <Button type="button" variant="outline" onClick={() => setReviewModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setReviewModalOpen(false)}
+              >
                 Close
               </Button>
             </div>

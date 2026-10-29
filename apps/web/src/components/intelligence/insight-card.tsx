@@ -65,7 +65,9 @@ export function InsightCard({
             {insight.title}
           </h3>
         </Link>
-        <p className="text-xs text-slate-600 line-clamp-2 mb-3">{insight.summary}</p>
+        <p className="text-xs text-slate-600 line-clamp-2 mb-3">
+          {insight.summary}
+        </p>
 
         {/* Affected & Metrics */}
         <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-3">
@@ -82,14 +84,22 @@ export function InsightCard({
 
         {/* Recommendation Snippet */}
         <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-xs text-slate-700 mb-3">
-          <span className="font-semibold text-slate-900 block mb-0.5">Recommended:</span>
-          <p className="line-clamp-2 text-slate-600">{insight.recommendedAction}</p>
+          <span className="font-semibold text-slate-900 block mb-0.5">
+            Recommended:
+          </span>
+          <p className="line-clamp-2 text-slate-600">
+            {insight.recommendedAction}
+          </p>
         </div>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
         <Link href={`/app/intelligence/insights/${insight.id}`}>
-          <Button variant="ghost" size="sm" className="text-xs gap-1 text-slate-600 hover:text-slate-900 px-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs gap-1 text-slate-600 hover:text-slate-900 px-2"
+          >
             <Eye className="w-3.5 h-3.5" /> View Details
           </Button>
         </Link>
@@ -108,7 +118,11 @@ export function InsightCard({
 
           {insight.recommendedActionHref && (
             <Link href={insight.recommendedActionHref}>
-              <Button size="sm" variant="outline" className="text-xs gap-1 px-2.5">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs gap-1 px-2.5"
+              >
                 Take Action <ArrowRight className="w-3 h-3" />
               </Button>
             </Link>

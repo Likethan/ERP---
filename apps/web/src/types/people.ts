@@ -22,22 +22,12 @@ export interface AddressInfo {
 // ==========================================
 
 export type StudentStatus =
-  | "ACTIVE"
-  | "ADMITTED"
-  | "SUSPENDED"
-  | "GRADUATED"
-  | "ON_LEAVE"
-  | "WITHDRAWN";
+  "ACTIVE" | "ADMITTED" | "SUSPENDED" | "GRADUATED" | "ON_LEAVE" | "WITHDRAWN";
 
 export type AdmissionQuota = "MERIT" | "MANAGEMENT" | "SPORTS" | "GOVERNMENT";
 
 export type GuardianRelationType =
-  | "FATHER"
-  | "MOTHER"
-  | "GUARDIAN"
-  | "SIBLING"
-  | "EMERGENCY_CONTACT"
-  | "OTHER";
+  "FATHER" | "MOTHER" | "GUARDIAN" | "SIBLING" | "EMERGENCY_CONTACT" | "OTHER";
 
 export interface GuardianRecord {
   id: string;
@@ -64,12 +54,7 @@ export type DocumentCategory =
   | "OTHER";
 
 export type DocumentVerificationStatus =
-  | "MISSING"
-  | "UPLOADED"
-  | "UNDER_REVIEW"
-  | "VERIFIED"
-  | "REJECTED"
-  | "EXPIRED";
+  "MISSING" | "UPLOADED" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "EXPIRED";
 
 export interface PersonDocument {
   id: string;
@@ -116,7 +101,8 @@ export interface AcademicMilestone {
 
 export type FacultyStatus = "ACTIVE" | "ON_LEAVE" | "SABBATICAL" | "RESIGNED";
 
-export type WorkloadAllocationStatus = "UNDER_ALLOCATED" | "BALANCED" | "HIGH_ALLOCATION";
+export type WorkloadAllocationStatus =
+  "UNDER_ALLOCATED" | "BALANCED" | "HIGH_ALLOCATION";
 
 export interface FacultyCourseAssignment {
   id: string;
@@ -144,14 +130,10 @@ export interface LabDesignationItem {
 }
 
 export type PublicationType =
-  | "JOURNAL"
-  | "CONFERENCE"
-  | "BOOK_CHAPTER"
-  | "PATENT"
-  | "WORKSHOP"
-  | "OTHER";
+  "JOURNAL" | "CONFERENCE" | "BOOK_CHAPTER" | "PATENT" | "WORKSHOP" | "OTHER";
 
-export type PublicationStatus = "DRAFT" | "SUBMITTED" | "ACCEPTED" | "PUBLISHED";
+export type PublicationStatus =
+  "DRAFT" | "SUBMITTED" | "ACCEPTED" | "PUBLISHED";
 
 export interface FacultyPublication {
   id: string;
@@ -187,7 +169,8 @@ export interface FacultyWorkloadSummary {
 
 export type StaffStatus = "ACTIVE" | "ON_LEAVE" | "RESIGNED";
 
-export type StaffShiftType = "MORNING" | "GENERAL" | "EVENING" | "NIGHT" | "CUSTOM";
+export type StaffShiftType =
+  "MORNING" | "GENERAL" | "EVENING" | "NIGHT" | "CUSTOM";
 
 export interface StaffShiftItem {
   id: string;
@@ -195,7 +178,7 @@ export interface StaffShiftItem {
   shiftName: string;
   shiftType: StaffShiftType;
   startTime: string; // e.g. "08:00 AM"
-  endTime: string;   // e.g. "04:30 PM"
+  endTime: string; // e.g. "04:30 PM"
   assignedStaffCount: number;
   department: string;
   description?: string;
@@ -210,7 +193,8 @@ export type StaffLeaveType =
   | "PATERNITY"
   | "COMPENSATORY";
 
-export type StaffLeaveStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+export type StaffLeaveStatus =
+  "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export interface StaffLeaveRequest {
   id: string;

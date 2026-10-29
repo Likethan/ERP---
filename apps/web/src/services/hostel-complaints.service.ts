@@ -8,11 +8,19 @@
  * POST /api/v1/infrastructure/complaints/:id/assign
  */
 
-import { ApiResponse, HostelComplaint, ComplaintStatus, ComplaintPriority, ComplaintCategory } from "@campusos/types";
+import {
+  ApiResponse,
+  HostelComplaint,
+  ComplaintStatus,
+  ComplaintPriority,
+  ComplaintCategory,
+} from "@campusos/types";
 import { MOCK_HOSTEL_COMPLAINTS } from "@/mocks/infrastructure.mock";
 
 class HostelComplaintsService {
-  private complaints: HostelComplaint[] = JSON.parse(JSON.stringify(MOCK_HOSTEL_COMPLAINTS));
+  private complaints: HostelComplaint[] = JSON.parse(
+    JSON.stringify(MOCK_HOSTEL_COMPLAINTS),
+  );
 
   async listHostelComplaints(filters?: {
     hostelId?: string;
@@ -49,16 +57,19 @@ class HostelComplaintsService {
           c.studentName.toLowerCase().includes(q) ||
           c.roomNumber.toLowerCase().includes(q) ||
           c.hostelName.toLowerCase().includes(q) ||
-          c.category.toLowerCase().includes(q)
+          c.category.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getHostelComplaintById(id: string): Promise<ApiResponse<HostelComplaint | null>> {
+  async getHostelComplaintById(
+    id: string,
+  ): Promise<ApiResponse<HostelComplaint | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const comp = this.complaints.find((c) => c.id === id || c.ticketNumber === id) || null;
+    const comp =
+      this.complaints.find((c) => c.id === id || c.ticketNumber === id) || null;
     return { success: true, data: comp };
   }
 
@@ -76,7 +87,12 @@ class HostelComplaintsService {
   }): Promise<ApiResponse<HostelComplaint>> {
     await new Promise((r) => setTimeout(r, 60));
 
-    const targetSlaHours = payload.priority === ComplaintPriority.CRITICAL ? 4 : payload.priority === ComplaintPriority.HIGH ? 12 : 24;
+    const targetSlaHours =
+      payload.priority === ComplaintPriority.CRITICAL
+        ? 4
+        : payload.priority === ComplaintPriority.HIGH
+          ? 12
+          : 24;
 
     const newComplaint: HostelComplaint = {
       id: `cmp-${Date.now().toString(36)}`,
@@ -108,7 +124,7 @@ class HostelComplaintsService {
     id: string,
     newStatus: ComplaintStatus,
     actorName: string,
-    notes?: string
+    notes?: string,
   ): Promise<ApiResponse<HostelComplaint | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const comp = this.complaints.find((c) => c.id === id);
@@ -140,7 +156,7 @@ class HostelComplaintsService {
     id: string,
     staffId: string,
     staffName: string,
-    assignedBy: string
+    assignedBy: string,
   ): Promise<ApiResponse<HostelComplaint | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const comp = this.complaints.find((c) => c.id === id);

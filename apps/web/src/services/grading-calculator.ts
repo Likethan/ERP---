@@ -17,14 +17,70 @@ export const DEFAULT_GRADE_SCALE: GradeScale = {
   academicYear: "2026-2027",
   isDefault: true,
   rules: [
-    { grade: "A+", minPercentage: 90, maxPercentage: 100, gradePoint: 10.0, isPass: true, description: "Outstanding" },
-    { grade: "A",  minPercentage: 80, maxPercentage: 89.9, gradePoint: 9.0,  isPass: true, description: "Excellent" },
-    { grade: "B+", minPercentage: 70, maxPercentage: 79.9, gradePoint: 8.0,  isPass: true, description: "Very Good" },
-    { grade: "B",  minPercentage: 60, maxPercentage: 69.9, gradePoint: 7.0,  isPass: true, description: "Good" },
-    { grade: "C",  minPercentage: 50, maxPercentage: 59.9, gradePoint: 6.0,  isPass: true, description: "Above Average" },
-    { grade: "D",  minPercentage: 40, maxPercentage: 49.9, gradePoint: 5.0,  isPass: true, description: "Pass" },
-    { grade: "E",  minPercentage: 35, maxPercentage: 39.9, gradePoint: 4.0,  isPass: true, description: "Marginal / Conditional Pass" },
-    { grade: "F",  minPercentage: 0,  maxPercentage: 34.9, gradePoint: 0.0,  isPass: false, description: "Fail" },
+    {
+      grade: "A+",
+      minPercentage: 90,
+      maxPercentage: 100,
+      gradePoint: 10.0,
+      isPass: true,
+      description: "Outstanding",
+    },
+    {
+      grade: "A",
+      minPercentage: 80,
+      maxPercentage: 89.9,
+      gradePoint: 9.0,
+      isPass: true,
+      description: "Excellent",
+    },
+    {
+      grade: "B+",
+      minPercentage: 70,
+      maxPercentage: 79.9,
+      gradePoint: 8.0,
+      isPass: true,
+      description: "Very Good",
+    },
+    {
+      grade: "B",
+      minPercentage: 60,
+      maxPercentage: 69.9,
+      gradePoint: 7.0,
+      isPass: true,
+      description: "Good",
+    },
+    {
+      grade: "C",
+      minPercentage: 50,
+      maxPercentage: 59.9,
+      gradePoint: 6.0,
+      isPass: true,
+      description: "Above Average",
+    },
+    {
+      grade: "D",
+      minPercentage: 40,
+      maxPercentage: 49.9,
+      gradePoint: 5.0,
+      isPass: true,
+      description: "Pass",
+    },
+    {
+      grade: "E",
+      minPercentage: 35,
+      maxPercentage: 39.9,
+      gradePoint: 4.0,
+      isPass: true,
+      description: "Marginal / Conditional Pass",
+    },
+    {
+      grade: "F",
+      minPercentage: 0,
+      maxPercentage: 34.9,
+      gradePoint: 0.0,
+      isPass: false,
+      description: "Fail",
+    },
   ],
 };
 
@@ -40,8 +96,14 @@ export function calculateAssessmentTotal(components: AssessmentComponent[]): {
     return { totalMaxMarks: 0, totalWeightage: 0, isValidWeightage: false };
   }
 
-  const totalMaxMarks = components.reduce((acc, c) => acc + (c.maxMarks || 0), 0);
-  const totalWeightage = components.reduce((acc, c) => acc + (c.weightage || 0), 0);
+  const totalMaxMarks = components.reduce(
+    (acc, c) => acc + (c.maxMarks || 0),
+    0,
+  );
+  const totalWeightage = components.reduce(
+    (acc, c) => acc + (c.weightage || 0),
+    0,
+  );
   const isValidWeightage = Math.abs(totalWeightage - 100) < 0.01;
 
   return { totalMaxMarks, totalWeightage, isValidWeightage };
@@ -54,9 +116,14 @@ export function calculateAssessmentTotal(components: AssessmentComponent[]): {
 export function calculateWeightedMarks(
   obtained: number | null | undefined,
   max: number,
-  weightagePercent: number
+  weightagePercent: number,
 ): number {
-  if (obtained === null || obtained === undefined || isNaN(obtained) || max <= 0) {
+  if (
+    obtained === null ||
+    obtained === undefined ||
+    isNaN(obtained) ||
+    max <= 0
+  ) {
     return 0;
   }
   const clampedObtained = Math.min(Math.max(obtained, 0), max);
@@ -78,11 +145,11 @@ export function calculatePercentage(obtained: number, max: number): number {
  */
 export function calculateGrade(
   percentage: number,
-  scale: GradeScale = DEFAULT_GRADE_SCALE
+  scale: GradeScale = DEFAULT_GRADE_SCALE,
 ): GradeRule {
   const normalized = Math.min(100, Math.max(0, percentage));
   const matched = scale.rules.find(
-    (r) => normalized >= r.minPercentage && normalized <= r.maxPercentage
+    (r) => normalized >= r.minPercentage && normalized <= r.maxPercentage,
   );
 
   return (
@@ -128,7 +195,7 @@ export function calculateResultStatus(options: {
  * Compiles statistical grade distribution across result items.
  */
 export function calculateGradeDistribution(
-  results: { grade: string }[]
+  results: { grade: string }[],
 ): { grade: string; count: number; percentage: number }[] {
   const grades = ["A+", "A", "B+", "B", "C", "D", "E", "F"];
   const counts: Record<string, number> = {};

@@ -21,12 +21,16 @@ import {
 
 export default function ServiceDeskPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"requester" | "workspace" | "sla_policies" | "analytics">("requester");
+  const [activeTab, setActiveTab] = useState<
+    "requester" | "workspace" | "sla_policies" | "analytics"
+  >("requester");
   const [tickets, setTickets] = useState<SupportTicketModel[]>([]);
-  const [selectedTicket, setSelectedTicket] = useState<SupportTicketDetailModel | null>(null);
+  const [selectedTicket, setSelectedTicket] =
+    useState<SupportTicketDetailModel | null>(null);
   const [teams, setTeams] = useState<SupportTeamModel[]>([]);
   const [slaPolicies, setSlaPolicies] = useState<SupportSlaPolicyModel[]>([]);
-  const [analytics, setAnalytics] = useState<SupportAnalyticsMetricsModel | null>(null);
+  const [analytics, setAnalytics] =
+    useState<SupportAnalyticsMetricsModel | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,15 +40,25 @@ export default function ServiceDeskPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newSubject, setNewSubject] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newCategory, setNewCategory] = useState<string>(SupportCategory.GENERAL_ASSISTANCE);
-  const [newPriority, setNewPriority] = useState<string>(SupportPriority.MEDIUM);
-  const [newSeverity, setNewSeverity] = useState<string>(SupportSeverity.SEV_3_MODERATE);
-  const [newRequestType, setNewRequestType] = useState<string>(SupportRequestType.SERVICE_REQUEST);
+  const [newCategory, setNewCategory] = useState<string>(
+    SupportCategory.GENERAL_ASSISTANCE,
+  );
+  const [newPriority, setNewPriority] = useState<string>(
+    SupportPriority.MEDIUM,
+  );
+  const [newSeverity, setNewSeverity] = useState<string>(
+    SupportSeverity.SEV_3_MODERATE,
+  );
+  const [newRequestType, setNewRequestType] = useState<string>(
+    SupportRequestType.SERVICE_REQUEST,
+  );
   const [newErpModule, setNewErpModule] = useState("");
 
   // Communication message form
   const [messageBody, setMessageBody] = useState("");
-  const [messageType, setMessageType] = useState<string>(SupportMessageType.PUBLIC_REPLY);
+  const [messageType, setMessageType] = useState<string>(
+    SupportMessageType.PUBLIC_REPLY,
+  );
 
   // Transition form
   const [transitionStatus, setTransitionStatus] = useState<string>("");
@@ -54,7 +68,10 @@ export default function ServiceDeskPage() {
   const [csatRating, setCsatRating] = useState<number>(5);
   const [csatFeedback, setCsatFeedback] = useState<string>("");
 
-  const isSupportStaff = user?.role === "SUPER_ADMIN" || user?.role === "INSTITUTION_ADMIN" || user?.role === "SUPPORT_AGENT";
+  const isSupportStaff =
+    user?.role === "SUPER_ADMIN" ||
+    user?.role === "INSTITUTION_ADMIN" ||
+    user?.role === "SUPPORT_AGENT";
 
   const loadData = async () => {
     try {
@@ -62,10 +79,18 @@ export default function ServiceDeskPage() {
       setError(null);
 
       const [ticketsRes, teamsRes, slaRes, analyticsRes] = await Promise.all([
-        apiFetch<{ items: SupportTicketModel[]; meta: any }>("/api/v1/support/tickets?limit=100").catch(() => ({ data: { items: [] } })),
-        apiFetch<SupportTeamModel[]>("/api/v1/support/teams").catch(() => ({ data: [] })),
-        apiFetch<SupportSlaPolicyModel[]>("/api/v1/support/sla-policies").catch(() => ({ data: [] })),
-        apiFetch<SupportAnalyticsMetricsModel>("/api/v1/support/analytics").catch(() => ({ data: null })),
+        apiFetch<{ items: SupportTicketModel[]; meta: any }>(
+          "/api/v1/support/tickets?limit=100",
+        ).catch(() => ({ data: { items: [] } })),
+        apiFetch<SupportTeamModel[]>("/api/v1/support/teams").catch(() => ({
+          data: [],
+        })),
+        apiFetch<SupportSlaPolicyModel[]>("/api/v1/support/sla-policies").catch(
+          () => ({ data: [] }),
+        ),
+        apiFetch<SupportAnalyticsMetricsModel>(
+          "/api/v1/support/analytics",
+        ).catch(() => ({ data: null })),
       ]);
 
       setTickets(ticketsRes.data?.items || []);
@@ -85,7 +110,9 @@ export default function ServiceDeskPage() {
 
   const selectTicket = async (ticketId: string) => {
     try {
-      const res = await apiFetch<SupportTicketDetailModel>(`/api/v1/support/tickets/${ticketId}`);
+      const res = await apiFetch<SupportTicketDetailModel>(
+        `/api/v1/support/tickets/${ticketId}`,
+      );
       setSelectedTicket(res.data);
       setTransitionStatus(res.data.status);
     } catch (err: any) {
@@ -114,7 +141,9 @@ export default function ServiceDeskPage() {
       setShowCreateModal(false);
       setNewSubject("");
       setNewDescription("");
-      setActionSuccess("Support ticket created successfully and routed to specialist queue.");
+      setActionSuccess(
+        "Support ticket created successfully and routed to specialist queue.",
+      );
       await loadData();
     } catch (err: any) {
       setError(err?.message || "Failed to create support ticket.");
@@ -144,17 +173,21 @@ export default function ServiceDeskPage() {
   };
 
   const handleStatusTransition = async () => {
-    if (!selectedTicket || !transitionStatus || !transitionReason.trim()) return;
+    if (!selectedTicket || !transitionStatus || !transitionReason.trim())
+      return;
 
     try {
       setError(null);
-      await apiFetch(`/api/v1/support/tickets/${selectedTicket.id}/transitions`, {
-        method: "POST",
-        body: JSON.stringify({
-          target_status: transitionStatus,
-          reason: transitionReason,
-        }),
-      });
+      await apiFetch(
+        `/api/v1/support/tickets/${selectedTicket.id}/transitions`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            target_status: transitionStatus,
+            reason: transitionReason,
+          }),
+        },
+      );
       setTransitionReason("");
       setActionSuccess(`Ticket status updated to ${transitionStatus}.`);
       await selectTicket(selectedTicket.id);
@@ -231,7 +264,8 @@ export default function ServiceDeskPage() {
             </h1>
           </div>
           <p className="mt-1 text-sm text-slate-400">
-            Enterprise service commitment tracking, multi-tenant isolation, SLA clock management, and verified resolution.
+            Enterprise service commitment tracking, multi-tenant isolation, SLA
+            clock management, and verified resolution.
           </p>
         </div>
 
@@ -268,29 +302,57 @@ export default function ServiceDeskPage() {
       {analytics && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-            <div className="text-xs font-medium text-slate-400">Total Requests</div>
-            <div className="mt-1 text-2xl font-bold text-white">{analytics.total_tickets_created}</div>
-            <div className="mt-1 text-xs text-slate-500">{analytics.total_tickets_resolved} resolved</div>
+            <div className="text-xs font-medium text-slate-400">
+              Total Requests
+            </div>
+            <div className="mt-1 text-2xl font-bold text-white">
+              {analytics.total_tickets_created}
+            </div>
+            <div className="mt-1 text-xs text-slate-500">
+              {analytics.total_tickets_resolved} resolved
+            </div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-            <div className="text-xs font-medium text-slate-400">Open Backlog</div>
-            <div className="mt-1 text-2xl font-bold text-amber-400">{analytics.open_backlog_count}</div>
-            <div className="mt-1 text-xs text-rose-400">{analytics.urgent_priority_count} urgent priority</div>
+            <div className="text-xs font-medium text-slate-400">
+              Open Backlog
+            </div>
+            <div className="mt-1 text-2xl font-bold text-amber-400">
+              {analytics.open_backlog_count}
+            </div>
+            <div className="mt-1 text-xs text-rose-400">
+              {analytics.urgent_priority_count} urgent priority
+            </div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-            <div className="text-xs font-medium text-slate-400">SLA Compliance</div>
-            <div className="mt-1 text-2xl font-bold text-emerald-400">{analytics.sla_compliance_rate_pct}%</div>
+            <div className="text-xs font-medium text-slate-400">
+              SLA Compliance
+            </div>
+            <div className="mt-1 text-2xl font-bold text-emerald-400">
+              {analytics.sla_compliance_rate_pct}%
+            </div>
             <div className="mt-1 text-xs text-slate-500">Commitments met</div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-            <div className="text-xs font-medium text-slate-400">Avg First Response</div>
-            <div className="mt-1 text-2xl font-bold text-sky-400">{analytics.average_first_response_minutes}m</div>
-            <div className="mt-1 text-xs text-slate-500">Minutes to agent response</div>
+            <div className="text-xs font-medium text-slate-400">
+              Avg First Response
+            </div>
+            <div className="mt-1 text-2xl font-bold text-sky-400">
+              {analytics.average_first_response_minutes}m
+            </div>
+            <div className="mt-1 text-xs text-slate-500">
+              Minutes to agent response
+            </div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-            <div className="text-xs font-medium text-slate-400">Customer CSAT</div>
-            <div className="mt-1 text-2xl font-bold text-purple-400">{analytics.csat_average_score || "5.0"} / 5</div>
-            <div className="mt-1 text-xs text-slate-500">{analytics.csat_response_count} verified ratings</div>
+            <div className="text-xs font-medium text-slate-400">
+              Customer CSAT
+            </div>
+            <div className="mt-1 text-2xl font-bold text-purple-400">
+              {analytics.csat_average_score || "5.0"} / 5
+            </div>
+            <div className="mt-1 text-xs text-slate-500">
+              {analytics.csat_response_count} verified ratings
+            </div>
           </div>
         </div>
       )}
@@ -345,7 +407,8 @@ export default function ServiceDeskPage() {
             </div>
           ) : tickets.length === 0 ? (
             <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8 text-center text-sm text-slate-400">
-              No tickets submitted yet. Click &quot;+ New Support Ticket&quot; to request assistance.
+              No tickets submitted yet. Click &quot;+ New Support Ticket&quot;
+              to request assistance.
             </div>
           ) : (
             <div className="space-y-2 max-h-[700px] overflow-y-auto pr-1">
@@ -365,17 +428,21 @@ export default function ServiceDeskPage() {
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${getStatusBadge(
-                        t.status
+                        t.status,
                       )}`}
                     >
                       {t.status}
                     </span>
                   </div>
 
-                  <h3 className="mt-1.5 text-sm font-medium text-white line-clamp-1">{t.subject}</h3>
+                  <h3 className="mt-1.5 text-sm font-medium text-white line-clamp-1">
+                    {t.subject}
+                  </h3>
 
                   <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span className={`px-1.5 py-0.5 rounded border ${getPriorityBadge(t.priority)}`}>
+                    <span
+                      className={`px-1.5 py-0.5 rounded border ${getPriorityBadge(t.priority)}`}
+                    >
                       {t.priority}
                     </span>
                     <span>{t.assigned_team_name || "Triage Queue"}</span>
@@ -399,14 +466,14 @@ export default function ServiceDeskPage() {
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-semibold border ${getStatusBadge(
-                        selectedTicket.status
+                        selectedTicket.status,
                       )}`}
                     >
                       {selectedTicket.status}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-semibold border ${getPriorityBadge(
-                        selectedTicket.priority
+                        selectedTicket.priority,
                       )}`}
                     >
                       {selectedTicket.priority}
@@ -414,12 +481,17 @@ export default function ServiceDeskPage() {
                   </div>
 
                   <div className="text-xs text-slate-400">
-                    Opened by <span className="text-slate-200">{selectedTicket.requester_name}</span> (
-                    {selectedTicket.requester_email})
+                    Opened by{" "}
+                    <span className="text-slate-200">
+                      {selectedTicket.requester_name}
+                    </span>{" "}
+                    ({selectedTicket.requester_email})
                   </div>
                 </div>
 
-                <h2 className="mt-3 text-lg font-bold text-white">{selectedTicket.subject}</h2>
+                <h2 className="mt-3 text-lg font-bold text-white">
+                  {selectedTicket.subject}
+                </h2>
                 <div className="mt-2 rounded-lg bg-slate-950/60 p-3.5 text-xs text-slate-300 whitespace-pre-wrap border border-slate-800/80">
                   {selectedTicket.description}
                 </div>
@@ -427,19 +499,25 @@ export default function ServiceDeskPage() {
                 {/* SLA Commitments Indicator */}
                 <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div className="p-2 rounded bg-slate-950/40 border border-slate-800/80">
-                    <div className="text-slate-400 text-[10px]">Response SLA</div>
+                    <div className="text-slate-400 text-[10px]">
+                      Response SLA
+                    </div>
                     <div className="font-semibold text-slate-200 mt-0.5">
                       {selectedTicket.sla_response_status}
                     </div>
                   </div>
                   <div className="p-2 rounded bg-slate-950/40 border border-slate-800/80">
-                    <div className="text-slate-400 text-[10px]">Resolution SLA</div>
+                    <div className="text-slate-400 text-[10px]">
+                      Resolution SLA
+                    </div>
                     <div className="font-semibold text-slate-200 mt-0.5">
                       {selectedTicket.sla_resolution_status}
                     </div>
                   </div>
                   <div className="p-2 rounded bg-slate-950/40 border border-slate-800/80">
-                    <div className="text-slate-400 text-[10px]">Assigned Team</div>
+                    <div className="text-slate-400 text-[10px]">
+                      Assigned Team
+                    </div>
                     <div className="font-semibold text-slate-200 mt-0.5">
                       {selectedTicket.assigned_team_name || "Unassigned"}
                     </div>
@@ -464,13 +542,23 @@ export default function ServiceDeskPage() {
                     onChange={(e) => setTransitionStatus(e.target.value)}
                     className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500"
                   >
-                    <option value={SupportTicketStatus.IN_PROGRESS}>IN_PROGRESS</option>
-                    <option value={SupportTicketStatus.WAITING_FOR_REQUESTER}>WAITING_FOR_REQUESTER</option>
-                    <option value={SupportTicketStatus.WAITING_FOR_ENGINEERING}>WAITING_FOR_ENGINEERING</option>
+                    <option value={SupportTicketStatus.IN_PROGRESS}>
+                      IN_PROGRESS
+                    </option>
+                    <option value={SupportTicketStatus.WAITING_FOR_REQUESTER}>
+                      WAITING_FOR_REQUESTER
+                    </option>
+                    <option value={SupportTicketStatus.WAITING_FOR_ENGINEERING}>
+                      WAITING_FOR_ENGINEERING
+                    </option>
                     <option value={SupportTicketStatus.ON_HOLD}>ON_HOLD</option>
-                    <option value={SupportTicketStatus.RESOLVED}>RESOLVED</option>
+                    <option value={SupportTicketStatus.RESOLVED}>
+                      RESOLVED
+                    </option>
                     <option value={SupportTicketStatus.CLOSED}>CLOSED</option>
-                    <option value={SupportTicketStatus.CANCELLED}>CANCELLED</option>
+                    <option value={SupportTicketStatus.CANCELLED}>
+                      CANCELLED
+                    </option>
                   </select>
 
                   <input
@@ -493,7 +581,8 @@ export default function ServiceDeskPage() {
               {/* Communication Message Thread */}
               <div className="space-y-3">
                 <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Communications & Activity ({selectedTicket.messages?.length || 0})
+                  Communications & Activity (
+                  {selectedTicket.messages?.length || 0})
                 </div>
 
                 <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2">
@@ -522,7 +611,9 @@ export default function ServiceDeskPage() {
                                 : "bg-sky-500/20 text-sky-400"
                             }`}
                           >
-                            {msg.message_type === "INTERNAL_NOTE" ? "Confidential Internal Note" : "Public Reply"}
+                            {msg.message_type === "INTERNAL_NOTE"
+                              ? "Confidential Internal Note"
+                              : "Public Reply"}
                           </span>
                         </div>
                         <div className="whitespace-pre-wrap">{msg.body}</div>
@@ -535,17 +626,26 @@ export default function ServiceDeskPage() {
                 </div>
 
                 {/* Reply Composer */}
-                <form onSubmit={handleSendMessage} className="space-y-2 pt-2 border-t border-slate-800">
+                <form
+                  onSubmit={handleSendMessage}
+                  className="space-y-2 pt-2 border-t border-slate-800"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-300">Add Message</span>
+                    <span className="text-xs font-medium text-slate-300">
+                      Add Message
+                    </span>
                     {isSupportStaff && (
                       <div className="flex items-center gap-2 text-xs">
                         <label className="flex items-center gap-1 cursor-pointer text-slate-300">
                           <input
                             type="radio"
                             name="msgType"
-                            checked={messageType === SupportMessageType.PUBLIC_REPLY}
-                            onChange={() => setMessageType(SupportMessageType.PUBLIC_REPLY)}
+                            checked={
+                              messageType === SupportMessageType.PUBLIC_REPLY
+                            }
+                            onChange={() =>
+                              setMessageType(SupportMessageType.PUBLIC_REPLY)
+                            }
                           />
                           Public Reply
                         </label>
@@ -553,8 +653,12 @@ export default function ServiceDeskPage() {
                           <input
                             type="radio"
                             name="msgType"
-                            checked={messageType === SupportMessageType.INTERNAL_NOTE}
-                            onChange={() => setMessageType(SupportMessageType.INTERNAL_NOTE)}
+                            checked={
+                              messageType === SupportMessageType.INTERNAL_NOTE
+                            }
+                            onChange={() =>
+                              setMessageType(SupportMessageType.INTERNAL_NOTE)
+                            }
                           />
                           Internal Note
                         </label>
@@ -580,7 +684,10 @@ export default function ServiceDeskPage() {
                       disabled={!messageBody.trim()}
                       className="px-4 py-1.5 text-xs font-medium rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white transition-colors"
                     >
-                      Post {messageType === SupportMessageType.INTERNAL_NOTE ? "Internal Note" : "Reply"}
+                      Post{" "}
+                      {messageType === SupportMessageType.INTERNAL_NOTE
+                        ? "Internal Note"
+                        : "Reply"}
                     </button>
                   </div>
                 </form>
@@ -595,15 +702,23 @@ export default function ServiceDeskPage() {
                   </div>
                   {selectedTicket.csat_rating ? (
                     <div className="text-xs text-slate-300">
-                      Rated: <span className="font-bold text-amber-400">{selectedTicket.csat_rating}/5 Stars</span>.
+                      Rated:{" "}
+                      <span className="font-bold text-amber-400">
+                        {selectedTicket.csat_rating}/5 Stars
+                      </span>
+                      .
                       {selectedTicket.csat_feedback && (
-                        <p className="mt-1 italic text-slate-400">&quot;{selectedTicket.csat_feedback}&quot;</p>
+                        <p className="mt-1 italic text-slate-400">
+                          &quot;{selectedTicket.csat_feedback}&quot;
+                        </p>
                       )}
                     </div>
                   ) : (
                     <form onSubmit={handleSubmitCsat} className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-300">Your Rating:</span>
+                        <span className="text-xs text-slate-300">
+                          Your Rating:
+                        </span>
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             type="button"
@@ -639,7 +754,8 @@ export default function ServiceDeskPage() {
             </div>
           ) : (
             <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center text-sm text-slate-400">
-              Select a ticket from the left panel to review timeline, communications, and SLA status.
+              Select a ticket from the left panel to review timeline,
+              communications, and SLA status.
             </div>
           )}
         </div>
@@ -650,7 +766,9 @@ export default function ServiceDeskPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-bold text-white">Create Support Ticket</h3>
+              <h3 className="text-base font-bold text-white">
+                Create Support Ticket
+              </h3>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="text-slate-400 hover:text-white text-sm"
@@ -661,7 +779,9 @@ export default function ServiceDeskPage() {
 
             <form onSubmit={handleCreateTicket} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Subject</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Subject
+                </label>
                 <input
                   type="text"
                   required
@@ -674,7 +794,9 @@ export default function ServiceDeskPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Category</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Category
+                  </label>
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
@@ -688,7 +810,9 @@ export default function ServiceDeskPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Priority</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Priority
+                  </label>
                   <select
                     value={newPriority}
                     onChange={(e) => setNewPriority(e.target.value)}
@@ -704,20 +828,32 @@ export default function ServiceDeskPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Severity</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Severity
+                  </label>
                   <select
                     value={newSeverity}
                     onChange={(e) => setNewSeverity(e.target.value)}
                     className="w-full rounded-lg border border-slate-700 bg-slate-950 p-2 text-slate-200"
                   >
-                    <option value={SupportSeverity.SEV_4_MINOR}>SEV_4_MINOR</option>
-                    <option value={SupportSeverity.SEV_3_MODERATE}>SEV_3_MODERATE</option>
-                    <option value={SupportSeverity.SEV_2_MAJOR}>SEV_2_MAJOR</option>
-                    <option value={SupportSeverity.SEV_1_CRITICAL}>SEV_1_CRITICAL</option>
+                    <option value={SupportSeverity.SEV_4_MINOR}>
+                      SEV_4_MINOR
+                    </option>
+                    <option value={SupportSeverity.SEV_3_MODERATE}>
+                      SEV_3_MODERATE
+                    </option>
+                    <option value={SupportSeverity.SEV_2_MAJOR}>
+                      SEV_2_MAJOR
+                    </option>
+                    <option value={SupportSeverity.SEV_1_CRITICAL}>
+                      SEV_1_CRITICAL
+                    </option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">ERP Module</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    ERP Module
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. FINANCE, ATTENDANCE"
@@ -729,7 +865,9 @@ export default function ServiceDeskPage() {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Detailed Description</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Detailed Description
+                </label>
                 <textarea
                   rows={4}
                   required

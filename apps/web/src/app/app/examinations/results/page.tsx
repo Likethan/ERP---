@@ -50,7 +50,11 @@ export default function ResultsAndFinalizationPage() {
       });
       setResults(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load results", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load results",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -64,13 +68,18 @@ export default function ResultsAndFinalizationPage() {
     try {
       setFinalizing(true);
       await examinationsService.finalizeResults("exam-2026-ese");
-      showToast({ title: "Finalized", message: "All semester candidate results finalized successfully.", type: "success" });
+      showToast({
+        title: "Finalized",
+        message: "All semester candidate results finalized successfully.",
+        type: "success",
+      });
       setFinalizeModalOpen(false);
       loadResults();
     } catch (err: unknown) {
       showToast({
         title: "Error",
-        message: err instanceof Error ? err.message : "Failed to finalize results",
+        message:
+          err instanceof Error ? err.message : "Failed to finalize results",
         type: "error",
       });
     } finally {
@@ -79,7 +88,9 @@ export default function ResultsAndFinalizationPage() {
   };
 
   const passCount = results.filter((r) => r.status === "PASS").length;
-  const failCount = results.filter((r) => r.status === "FAIL" || r.status === "ABSENT").length;
+  const failCount = results.filter(
+    (r) => r.status === "FAIL" || r.status === "ABSENT",
+  ).length;
   const passRate = Math.round((passCount / (results.length || 1)) * 100);
 
   const columns: ColumnDef<Result>[] = useMemo(
@@ -114,7 +125,9 @@ export default function ResultsAndFinalizationPage() {
               {row.courseCode}
             </span>
             <p className="text-slate-500">{row.courseName}</p>
-            <span className="text-[11px] text-slate-400">{row.credits} Credits</span>
+            <span className="text-[11px] text-slate-400">
+              {row.credits} Credits
+            </span>
           </div>
         ),
       },
@@ -142,16 +155,18 @@ export default function ResultsAndFinalizationPage() {
                 row.grade === "A+" || row.grade === "A"
                   ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300"
                   : row.grade === "B+" || row.grade === "B"
-                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
-                  : row.grade === "C" || row.grade === "D"
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                  : "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                    : row.grade === "C" || row.grade === "D"
+                      ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                      : "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
               }`}
             >
               {row.grade}
             </span>
             <div className="text-xs">
-              <p className="font-bold text-slate-800 dark:text-slate-200">{row.gradePoint}.0</p>
+              <p className="font-bold text-slate-800 dark:text-slate-200">
+                {row.gradePoint}.0
+              </p>
               <p className="text-[10px] text-slate-400">Grade Point</p>
             </div>
           </div>
@@ -167,8 +182,8 @@ export default function ResultsAndFinalizationPage() {
                 row.status === "PASS"
                   ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
                   : row.status === "FAIL"
-                  ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
-                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                    ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                    : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
               }`}
             >
               {row.status}
@@ -194,7 +209,7 @@ export default function ResultsAndFinalizationPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -206,18 +221,26 @@ export default function ResultsAndFinalizationPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
               UGC CBCS Evaluation
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Semester 5 Grade Ledger</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Semester 5 Grade Ledger
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Semester Examination Results
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Weighted assessment outcomes, 10-point grade conversions, and formal finalization gates prior to publication.
+            Weighted assessment outcomes, 10-point grade conversions, and formal
+            finalization gates prior to publication.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setScaleModalOpen(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-xs"
+            onClick={() => setScaleModalOpen(true)}
+          >
             <GraduationCap className="h-3.5 w-3.5" />
             View Grade Scale
           </Button>
@@ -287,8 +310,12 @@ export default function ResultsAndFinalizationPage() {
           className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         >
           <option value="ALL">All Departments</option>
-          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-          <option value="Electronics & Communication">Electronics & Communication</option>
+          <option value="Computer Science & Engineering">
+            Computer Science & Engineering
+          </option>
+          <option value="Electronics & Communication">
+            Electronics & Communication
+          </option>
         </select>
       </div>
 
@@ -304,7 +331,10 @@ export default function ResultsAndFinalizationPage() {
       />
 
       {/* Finalization Confirmation Modal */}
-      <Dialog open={finalizeModalOpen} onClose={() => setFinalizeModalOpen(false)}>
+      <Dialog
+        open={finalizeModalOpen}
+        onClose={() => setFinalizeModalOpen(false)}
+      >
         <div className="p-6 space-y-4 max-w-md">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
@@ -314,12 +344,16 @@ export default function ResultsAndFinalizationPage() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 Finalize Semester Results
               </h2>
-              <p className="text-xs text-slate-500">Lock course outcomes for publication</p>
+              <p className="text-xs text-slate-500">
+                Lock course outcomes for publication
+              </p>
             </div>
           </div>
 
           <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            Finalizing results locks all grades across the semester cohort and compiles official GPA scores. Once finalized, results will be ready for release via the <strong>Publications Ledger</strong>.
+            Finalizing results locks all grades across the semester cohort and
+            compiles official GPA scores. Once finalized, results will be ready
+            for release via the <strong>Publications Ledger</strong>.
           </p>
 
           <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 text-xs space-y-1.5">
@@ -338,10 +372,17 @@ export default function ResultsAndFinalizationPage() {
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button variant="outline" onClick={() => setFinalizeModalOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setFinalizeModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleFinalizeBatch} disabled={finalizing}>
+            <Button
+              variant="primary"
+              onClick={handleFinalizeBatch}
+              disabled={finalizing}
+            >
               {finalizing ? "Finalizing..." : "Confirm Finalization"}
             </Button>
           </div>
@@ -356,7 +397,9 @@ export default function ResultsAndFinalizationPage() {
               <GraduationCap className="h-5 w-5 text-indigo-600" />
               {DEFAULT_GRADE_SCALE.name}
             </h2>
-            <p className="text-xs text-slate-500">Academic Year {DEFAULT_GRADE_SCALE.academicYear}</p>
+            <p className="text-xs text-slate-500">
+              Academic Year {DEFAULT_GRADE_SCALE.academicYear}
+            </p>
           </div>
 
           <div className="overflow-x-auto">
@@ -373,9 +416,15 @@ export default function ResultsAndFinalizationPage() {
                 {DEFAULT_GRADE_SCALE.rules.map((rule) => (
                   <tr key={rule.grade}>
                     <td className="p-2 font-bold">{rule.grade}</td>
-                    <td className="p-2 font-mono text-slate-500">{rule.minPercentage}% - {rule.maxPercentage}%</td>
-                    <td className="p-2 font-bold text-indigo-600">{rule.gradePoint}.0</td>
-                    <td className="p-2 text-slate-600 dark:text-slate-400">{rule.description}</td>
+                    <td className="p-2 font-mono text-slate-500">
+                      {rule.minPercentage}% - {rule.maxPercentage}%
+                    </td>
+                    <td className="p-2 font-bold text-indigo-600">
+                      {rule.gradePoint}.0
+                    </td>
+                    <td className="p-2 text-slate-600 dark:text-slate-400">
+                      {rule.description}
+                    </td>
                   </tr>
                 ))}
               </tbody>

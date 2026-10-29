@@ -3,7 +3,7 @@
 from typing import Any, Generic, TypeVar
 from uuid import UUID
 
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import CrossTenantRelationshipException, NotFoundException

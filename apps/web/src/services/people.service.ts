@@ -14,7 +14,9 @@ import { staffService } from "./staff.service";
 
 class PeopleService {
   private metrics: PeopleSummaryMetrics = { ...MOCK_PEOPLE_METRICS };
-  private departments: DepartmentPeopleDistribution[] = [...MOCK_DEPARTMENT_DISTRIBUTION];
+  private departments: DepartmentPeopleDistribution[] = [
+    ...MOCK_DEPARTMENT_DISTRIBUTION,
+  ];
 
   async getMetrics(): Promise<ApiResponse<PeopleSummaryMetrics>> {
     await new Promise((r) => setTimeout(r, 40));
@@ -24,7 +26,9 @@ class PeopleService {
     };
   }
 
-  async getDepartmentDistribution(): Promise<ApiResponse<DepartmentPeopleDistribution[]>> {
+  async getDepartmentDistribution(): Promise<
+    ApiResponse<DepartmentPeopleDistribution[]>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -32,7 +36,9 @@ class PeopleService {
     };
   }
 
-  async searchPeople(query: string): Promise<ApiResponse<UnifiedPersonSearchResult[]>> {
+  async searchPeople(
+    query: string,
+  ): Promise<ApiResponse<UnifiedPersonSearchResult[]>> {
     await new Promise((r) => setTimeout(r, 50));
     const q = query.toLowerCase().trim();
     if (!q) return { success: true, data: [] };

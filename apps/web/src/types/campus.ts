@@ -89,7 +89,8 @@ export interface CampusEventItem {
   category: EventCategory;
   description: string;
   organizer: string;
-  organizerType: "DEPARTMENT" | "CLUB" | "INSTITUTION" | "FACULTY" | "STUDENT_BODY";
+  organizerType:
+    "DEPARTMENT" | "CLUB" | "INSTITUTION" | "FACULTY" | "STUDENT_BODY";
   departmentId?: string;
   clubId?: string;
   startDate: string;
@@ -156,10 +157,7 @@ export interface EventRegistrationItem {
 }
 
 export type EventAttendanceStatus =
-  | "PRESENT"
-  | "ABSENT"
-  | "EXCUSED"
-  | "PENDING";
+  "PRESENT" | "ABSENT" | "EXCUSED" | "PENDING";
 
 export interface EventAttendanceItem {
   id: string;
@@ -193,11 +191,7 @@ export interface EventAttendanceSummary {
 // 3. Clubs & Organizations Domain Types
 // ==========================================
 
-export type ClubStatus =
-  | "DRAFT"
-  | "ACTIVE"
-  | "INACTIVE"
-  | "SUSPENDED";
+export type ClubStatus = "DRAFT" | "ACTIVE" | "INACTIVE" | "SUSPENDED";
 
 export type ClubRole =
   | "FACULTY_COORDINATOR"
@@ -208,11 +202,7 @@ export type ClubRole =
   | "EVENT_COORDINATOR"
   | "MEMBER";
 
-export type ClubMembershipStatus =
-  | "ACTIVE"
-  | "PENDING"
-  | "SUSPENDED"
-  | "LEFT";
+export type ClubMembershipStatus = "ACTIVE" | "PENDING" | "SUSPENDED" | "LEFT";
 
 export interface ClubMemberItem {
   id: string;
@@ -237,7 +227,13 @@ export interface ClubItem {
   id: string;
   name: string;
   code: string;
-  category: "TECHNICAL" | "CULTURAL" | "LITERARY" | "SPORTS" | "ENTREPRENEURSHIP" | "SOCIAL";
+  category:
+    | "TECHNICAL"
+    | "CULTURAL"
+    | "LITERARY"
+    | "SPORTS"
+    | "ENTREPRENEURSHIP"
+    | "SOCIAL";
   description: string;
   facultyCoordinator: string;
   facultyCoordinatorEmail: string;
@@ -261,17 +257,9 @@ export interface ClubItem {
 // ==========================================
 
 export type AnnouncementStatus =
-  | "DRAFT"
-  | "SCHEDULED"
-  | "PUBLISHED"
-  | "EXPIRED"
-  | "ARCHIVED";
+  "DRAFT" | "SCHEDULED" | "PUBLISHED" | "EXPIRED" | "ARCHIVED";
 
-export type AnnouncementPriority =
-  | "LOW"
-  | "NORMAL"
-  | "HIGH"
-  | "URGENT";
+export type AnnouncementPriority = "LOW" | "NORMAL" | "HIGH" | "URGENT";
 
 export interface AnnouncementAudienceTarget {
   type:
@@ -299,7 +287,14 @@ export interface AnnouncementItem {
   title: string;
   summary: string;
   content: string;
-  category: "ACADEMIC" | "EXAMINATION" | "HOSTEL" | "GENERAL" | "URGENT" | "PLACEMENT" | "CLUB";
+  category:
+    | "ACADEMIC"
+    | "EXAMINATION"
+    | "HOSTEL"
+    | "GENERAL"
+    | "URGENT"
+    | "PLACEMENT"
+    | "CLUB";
   priority: AnnouncementPriority;
   status: AnnouncementStatus;
   publisher: string;
@@ -328,22 +323,11 @@ export type NotificationCategory =
   | "SYSTEM"
   | "GENERAL";
 
-export type NotificationStatus =
-  | "UNREAD"
-  | "READ"
-  | "ARCHIVED";
+export type NotificationStatus = "UNREAD" | "READ" | "ARCHIVED";
 
-export type NotificationPriority =
-  | "LOW"
-  | "NORMAL"
-  | "HIGH"
-  | "URGENT";
+export type NotificationPriority = "LOW" | "NORMAL" | "HIGH" | "URGENT";
 
-export type NotificationChannel =
-  | "IN_APP"
-  | "EMAIL"
-  | "SMS"
-  | "PUSH";
+export type NotificationChannel = "IN_APP" | "EMAIL" | "SMS" | "PUSH";
 
 export interface NotificationItem {
   id: string;
@@ -357,7 +341,14 @@ export interface NotificationItem {
   archivedAt?: string;
   recipientId: string;
   actionUrl?: string;
-  relatedEntityType?: "EVENT" | "CLUB" | "ANNOUNCEMENT" | "INVOICE" | "PLACEMENT_DRIVE" | "EXAMINATION" | "ATTENDANCE";
+  relatedEntityType?:
+    | "EVENT"
+    | "CLUB"
+    | "ANNOUNCEMENT"
+    | "INVOICE"
+    | "PLACEMENT_DRIVE"
+    | "EXAMINATION"
+    | "ATTENDANCE";
   relatedEntityId?: string;
   relatedEntityTitle?: string;
 }

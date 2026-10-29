@@ -9,17 +9,11 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.models.subscription import (
     BillingInterval,
-    CustomerHealthStatus,
     CustomerNoteType,
-    InvoiceStatus,
     OverrideType,
-    PaymentStatus,
-    SubscriptionChangeStatus,
-    SubscriptionChangeType,
     SubscriptionPlanStatus,
     SubscriptionStatus,
 )
-
 
 # -----------------------------------------------------------------------------
 # 1. Base Schema

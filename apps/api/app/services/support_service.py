@@ -5,35 +5,28 @@ automated team routing, SLA policy calculations, public vs internal note segrega
 breach escalations, CSAT feedback, and incident correlations.
 """
 
-from datetime import UTC, datetime, timedelta
 import logging
-from typing import Any
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.audit import AuditEventCategory, build_audit_entry
+from app.core.audit import build_audit_entry
 from app.core.exceptions import (
-    ConflictException,
     NotFoundException,
     PermissionDeniedException,
     ValidationException,
 )
-from app.models.core import Institution
 from app.models.people import Role, User, UserRoleAssignment
 from app.models.security_ops import SecurityIncident
 from app.models.support import (
     RequesterType,
-    SupportCategory,
     SupportMessageType,
     SupportPriority,
-    SupportRequestType,
-    SupportSeverity,
     SupportSlaPolicy,
     SupportSlaState,
     SupportTeam,
-    SupportTeamMember,
     SupportTicket,
     SupportTicketArticleLink,
     SupportTicketMessage,
@@ -43,7 +36,6 @@ from app.models.support import (
 )
 from app.schemas.support import (
     SupportAnalyticsMetrics,
-    SupportSlaPolicyCreateRequest,
     SupportTicketArticleLinkRequest,
     SupportTicketAssignRequest,
     SupportTicketCloseRequest,
@@ -55,7 +47,6 @@ from app.schemas.support import (
     SupportTicketReopenRequest,
     SupportTicketResolveRequest,
     SupportTicketTransitionRequest,
-    SupportTicketUpdateRequest,
 )
 
 logger = logging.getLogger("campusos.support")

@@ -21,7 +21,9 @@ export default function DepartmentsPage() {
   const [campusId, setCampusId] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(
+    null,
+  );
 
   const canManage = hasPermission("core:departments:manage");
 
@@ -36,7 +38,9 @@ export default function DepartmentsPage() {
       setDepartments(deptRes.data);
       setCampuses(campRes.data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load departments");
+      setError(
+        err instanceof Error ? err.message : "Failed to load departments",
+      );
     } finally {
       setLoading(false);
     }
@@ -66,13 +70,17 @@ export default function DepartmentsPage() {
       setCampusId("");
       await loadData();
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "Failed to create department");
+      setFormError(
+        err instanceof Error ? err.message : "Failed to create department",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleUpdateDepartment = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateDepartment = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
     if (!editingDepartment) return;
     setSubmitting(true);
@@ -88,7 +96,9 @@ export default function DepartmentsPage() {
       setShowCreate(false);
       await loadData();
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "Failed to update department");
+      setFormError(
+        err instanceof Error ? err.message : "Failed to update department",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -99,18 +109,37 @@ export default function DepartmentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Academic Departments</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Academic Departments
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
             Authoritative faculty and program organizational units.
           </p>
         </div>
         {canManage && (
           <button
-            onClick={() => { setEditingDepartment(null); setFormError(null); setCode(""); setName(""); setCampusId(""); setShowCreate(true); }}
+            onClick={() => {
+              setEditingDepartment(null);
+              setFormError(null);
+              setCode("");
+              setName("");
+              setCampusId("");
+              setShowCreate(true);
+            }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-indigo-500 transition-colors shadow-sm self-start sm:self-auto"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
             </svg>
             Create Department
           </button>
@@ -134,7 +163,11 @@ export default function DepartmentsPage() {
             strokeWidth="2"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
           </svg>
         </div>
       </div>
@@ -153,12 +186,26 @@ export default function DepartmentsPage() {
         </div>
       ) : departments.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-800 bg-slate-900/20 p-12 text-center">
-          <svg className="mx-auto h-10 w-10 text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21" />
+          <svg
+            className="mx-auto h-10 w-10 text-slate-600 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"
+            />
           </svg>
-          <p className="text-sm font-medium text-slate-300">No departments found.</p>
+          <p className="text-sm font-medium text-slate-300">
+            No departments found.
+          </p>
           <p className="mt-1 text-xs text-slate-500">
-            {search ? "Try adjusting your search criteria." : "Create your first department to begin building the academic structure."}
+            {search
+              ? "Try adjusting your search criteria."
+              : "Create your first department to begin building the academic structure."}
           </p>
         </div>
       ) : (
@@ -169,16 +216,29 @@ export default function DepartmentsPage() {
                 <th className="px-5 py-3 font-semibold">Code</th>
                 <th className="px-5 py-3 font-semibold">Department Name</th>
                 <th className="px-5 py-3 font-semibold">Classification</th>
-                <th className="px-5 py-3 font-semibold">Head of Department (HOD)</th>
+                <th className="px-5 py-3 font-semibold">
+                  Head of Department (HOD)
+                </th>
                 <th className="px-5 py-3 font-semibold">Status</th>
-                {canManage && <th className="px-5 py-3 font-semibold text-right">Actions</th>}
+                {canManage && (
+                  <th className="px-5 py-3 font-semibold text-right">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {departments.map((d) => (
-                <tr key={d.id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-5 py-3.5 font-mono text-indigo-400 font-medium">{d.code}</td>
-                  <td className="px-5 py-3.5 font-medium text-white">{d.name}</td>
+                <tr
+                  key={d.id}
+                  className="hover:bg-slate-800/40 transition-colors"
+                >
+                  <td className="px-5 py-3.5 font-mono text-indigo-400 font-medium">
+                    {d.code}
+                  </td>
+                  <td className="px-5 py-3.5 font-medium text-white">
+                    {d.name}
+                  </td>
                   <td className="px-5 py-3.5">
                     <span className="rounded bg-slate-800 px-2 py-0.5 text-[11px] text-slate-300">
                       {d.department_type}
@@ -186,17 +246,40 @@ export default function DepartmentsPage() {
                   </td>
                   <td className="px-5 py-3.5">
                     {d.hod_name ? (
-                      <span className="text-slate-200 font-medium">{d.hod_name}</span>
+                      <span className="text-slate-200 font-medium">
+                        {d.hod_name}
+                      </span>
                     ) : (
-                      <span className="text-slate-500 italic">Not Assigned</span>
+                      <span className="text-slate-500 italic">
+                        Not Assigned
+                      </span>
                     )}
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${d.is_active ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-800 text-slate-400"}`}>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${d.is_active ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-800 text-slate-400"}`}
+                    >
                       {d.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  {canManage && <td className="px-5 py-3.5 text-right"><button onClick={() => { setFormError(null); setEditingDepartment(d); setCode(d.code); setName(d.name); setDeptType(d.department_type); setCampusId(d.campus_id || ""); setShowCreate(true); }} className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800">Edit</button></td>}
+                  {canManage && (
+                    <td className="px-5 py-3.5 text-right">
+                      <button
+                        onClick={() => {
+                          setFormError(null);
+                          setEditingDepartment(d);
+                          setCode(d.code);
+                          setName(d.name);
+                          setDeptType(d.department_type);
+                          setCampusId(d.campus_id || "");
+                          setShowCreate(true);
+                        }}
+                        className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -209,8 +292,18 @@ export default function DepartmentsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-semibold text-white">{editingDepartment ? "Edit Academic Department" : "Create Academic Department"}</h3>
-              <button onClick={() => { setShowCreate(false); setEditingDepartment(null); }} className="text-slate-400 hover:text-white">
+              <h3 className="text-base font-semibold text-white">
+                {editingDepartment
+                  ? "Edit Academic Department"
+                  : "Create Academic Department"}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowCreate(false);
+                  setEditingDepartment(null);
+                }}
+                className="text-slate-400 hover:text-white"
+              >
                 ✕
               </button>
             </div>
@@ -221,9 +314,18 @@ export default function DepartmentsPage() {
               </div>
             )}
 
-            <form onSubmit={editingDepartment ? handleUpdateDepartment : handleCreateDepartment} className="space-y-3.5 text-xs">
+            <form
+              onSubmit={
+                editingDepartment
+                  ? handleUpdateDepartment
+                  : handleCreateDepartment
+              }
+              className="space-y-3.5 text-xs"
+            >
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Department Code</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Department Code
+                </label>
                 <input
                   type="text"
                   required
@@ -236,7 +338,9 @@ export default function DepartmentsPage() {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Department Name</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Department Name
+                </label>
                 <input
                   type="text"
                   required
@@ -248,21 +352,31 @@ export default function DepartmentsPage() {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Department Classification</label>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Department Classification
+                </label>
                 <select
                   value={deptType}
                   onChange={(e) => setDeptType(e.target.value)}
                   className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
                 >
-                  <option value="ACADEMIC">ACADEMIC (Teaching & Research)</option>
-                  <option value="ADMINISTRATIVE">ADMINISTRATIVE (Operations & Office)</option>
-                  <option value="SUPPORT">SUPPORT (Infrastructure & Facilities)</option>
+                  <option value="ACADEMIC">
+                    ACADEMIC (Teaching & Research)
+                  </option>
+                  <option value="ADMINISTRATIVE">
+                    ADMINISTRATIVE (Operations & Office)
+                  </option>
+                  <option value="SUPPORT">
+                    SUPPORT (Infrastructure & Facilities)
+                  </option>
                 </select>
               </div>
 
               {campuses.length > 0 && (
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Campus Branch (Optional)</label>
+                  <label className="block text-slate-300 font-medium mb-1">
+                    Campus Branch (Optional)
+                  </label>
                   <select
                     value={campusId}
                     onChange={(e) => setCampusId(e.target.value)}
@@ -278,12 +392,30 @@ export default function DepartmentsPage() {
                 </div>
               )}
 
-              {editingDepartment && <label className="flex items-center gap-2 text-slate-300"><input type="checkbox" checked={editingDepartment.is_active} onChange={(e) => setEditingDepartment({ ...editingDepartment, is_active: e.target.checked })} className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500" /> Department is active</label>}
+              {editingDepartment && (
+                <label className="flex items-center gap-2 text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={editingDepartment.is_active}
+                    onChange={(e) =>
+                      setEditingDepartment({
+                        ...editingDepartment,
+                        is_active: e.target.checked,
+                      })
+                    }
+                    className="rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500"
+                  />{" "}
+                  Department is active
+                </label>
+              )}
 
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
                 <button
                   type="button"
-                  onClick={() => { setShowCreate(false); setEditingDepartment(null); }}
+                  onClick={() => {
+                    setShowCreate(false);
+                    setEditingDepartment(null);
+                  }}
                   className="rounded-lg px-3 py-2 text-slate-300 hover:bg-slate-800 transition-colors"
                 >
                   Cancel
@@ -293,7 +425,11 @@ export default function DepartmentsPage() {
                   disabled={submitting}
                   className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 transition-colors disabled:opacity-50"
                 >
-                  {submitting ? "Saving..." : editingDepartment ? "Save changes" : "Create Department"}
+                  {submitting
+                    ? "Saving..."
+                    : editingDepartment
+                      ? "Save changes"
+                      : "Create Department"}
                 </button>
               </div>
             </form>

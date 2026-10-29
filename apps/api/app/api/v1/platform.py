@@ -12,20 +12,10 @@ from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import require_platform_admin, require_platform_permission
-from app.core.exceptions import (
-    BadRequestException,
-    ConflictException,
-    NotFoundException,
-)
-from app.schemas.common import ApiResponse
+from app.core.deps import require_platform_admin
 from app.models.core import Institution
 from app.models.people import User
-from app.models.platform_ops import (
-    PlatformSupportSession,
-    TenantLifecycleStatus,
-    TenantLifecycleTransition,
-)
+from app.schemas.common import ApiResponse
 from app.schemas.core import (
     TenantCreateRequest,
     TenantResponse,
@@ -38,7 +28,6 @@ from app.schemas.platform_ops import (
     TenantDeletionExecuteRequest,
     TenantDeletionPlanResponse,
     TenantDeletionPreviewResponse,
-    TenantDirectoryItemResponse,
     TenantEntitlementResponse,
     TenantEntitlementUpdateRequest,
     TenantLifecycleTransitionRequest,

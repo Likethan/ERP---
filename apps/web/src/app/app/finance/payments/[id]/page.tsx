@@ -38,7 +38,9 @@ export default function PaymentDetailPage() {
         const res = await financeService.getPaymentById(paymentId);
         setPayment(res.data);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Payment record not found.");
+        setError(
+          err instanceof Error ? err.message : "Payment record not found.",
+        );
       } finally {
         setLoading(false);
       }
@@ -49,7 +51,9 @@ export default function PaymentDetailPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-sm text-slate-500">Retrieving payment transaction details...</div>
+        <div className="text-sm text-slate-500">
+          Retrieving payment transaction details...
+        </div>
       </div>
     );
   }
@@ -77,11 +81,17 @@ export default function PaymentDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link href="/app/finance" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance"
+              className="hover:text-emerald-600 transition"
+            >
               Finance Hub
             </Link>
             <span>/</span>
-            <Link href="/app/finance/payments" className="hover:text-emerald-600 transition">
+            <Link
+              href="/app/finance/payments"
+              className="hover:text-emerald-600 transition"
+            >
               Payments
             </Link>
             <span>/</span>
@@ -116,7 +126,11 @@ export default function PaymentDetailPage() {
             </Button>
           </Link>
           <Link href={`/app/finance/receipts`}>
-            <Button variant="primary" size="sm" className="gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button
+              variant="primary"
+              size="sm"
+              className="gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
               <ReceiptIcon className="w-3.5 h-3.5" />
               View Official Receipt
             </Button>
@@ -135,13 +149,17 @@ export default function PaymentDetailPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <div className="text-xs text-slate-500">Total Payment Amount</div>
+                <div className="text-xs text-slate-500">
+                  Total Payment Amount
+                </div>
                 <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                   {formatMoney(payment.amount)}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-slate-500">Allocated to Invoices</div>
+                <div className="text-xs text-slate-500">
+                  Allocated to Invoices
+                </div>
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                   {formatMoney(payment.allocatedAmount)}
                 </div>
@@ -201,7 +219,8 @@ export default function PaymentDetailPage() {
                   Invoice Allocation Register
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Direct ledger mapping of this transaction against student billing documents.
+                  Direct ledger mapping of this transaction against student
+                  billing documents.
                 </p>
               </div>
             </div>
@@ -219,7 +238,9 @@ export default function PaymentDetailPage() {
                 {payment.allocations && payment.allocations.length > 0 ? (
                   payment.allocations.map((alloc) => (
                     <tr key={alloc.id}>
-                      <td className="px-4 py-3 font-mono text-slate-500">{alloc.id}</td>
+                      <td className="px-4 py-3 font-mono text-slate-500">
+                        {alloc.id}
+                      </td>
                       <td className="px-4 py-3">
                         <Link
                           href={`/app/finance/invoices/${alloc.invoiceId}`}
@@ -238,7 +259,9 @@ export default function PaymentDetailPage() {
                   ))
                 ) : (
                   <tr>
-                    <td className="px-4 py-3 font-mono text-slate-500">{payment.id}-all</td>
+                    <td className="px-4 py-3 font-mono text-slate-500">
+                      {payment.id}-all
+                    </td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/app/finance/invoices/${payment.invoiceId}`}
@@ -250,7 +273,9 @@ export default function PaymentDetailPage() {
                     <td className="px-4 py-3 text-right font-semibold text-emerald-600 dark:text-emerald-400">
                       {formatMoney(payment.allocatedAmount)}
                     </td>
-                    <td className="px-4 py-3 text-slate-500">{payment.paymentDate}</td>
+                    <td className="px-4 py-3 text-slate-500">
+                      {payment.paymentDate}
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -265,7 +290,10 @@ export default function PaymentDetailPage() {
             <div className="space-y-4">
               {payment.history && payment.history.length > 0 ? (
                 payment.history.map((h, idx) => (
-                  <div key={h.id || idx} className="flex items-start gap-3 text-xs">
+                  <div
+                    key={h.id || idx}
+                    className="flex items-start gap-3 text-xs"
+                  >
                     <div className="mt-0.5 p-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
@@ -297,7 +325,8 @@ export default function PaymentDetailPage() {
                       By {payment.recordedBy} • {payment.paymentDate}
                     </div>
                     <div className="mt-1 text-slate-700 dark:text-slate-300 bg-slate-50 p-2 rounded border border-slate-100 dark:bg-slate-800 dark:border-slate-700">
-                      {payment.notes || "Official institutional fee settlement."}
+                      {payment.notes ||
+                        "Official institutional fee settlement."}
                     </div>
                   </div>
                 </div>
@@ -346,7 +375,11 @@ export default function PaymentDetailPage() {
             </div>
             <p className="text-emerald-800/90 dark:text-emerald-400 leading-relaxed">
               This transaction is an immutable audit record tied to receipt{" "}
-              <span className="font-mono font-bold">{payment.receiptNumber}</span>. Reversals or adjustments require authorized refund approval workflow.
+              <span className="font-mono font-bold">
+                {payment.receiptNumber}
+              </span>
+              . Reversals or adjustments require authorized refund approval
+              workflow.
             </p>
           </div>
         </div>

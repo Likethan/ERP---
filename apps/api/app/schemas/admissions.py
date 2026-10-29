@@ -12,15 +12,11 @@ from app.models.admissions import (
     ApplicantVerificationStatus,
     ApplicationStatus,
     DocumentVerificationStatus,
-    EnrollmentWorkflowStatus,
-    OfferStatus,
     OnboardingStatus,
     OnboardingTaskCategory,
     ReviewDecision,
     ReviewStage,
-    SelectionStatus,
 )
-
 
 # =============================================================================
 # 1. ADMISSION CYCLES

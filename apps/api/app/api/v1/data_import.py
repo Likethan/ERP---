@@ -7,29 +7,16 @@ Enforces:
 - Formula injection escaping for CSV downloads
 """
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
+from fastapi import APIRouter, Depends, Query, Response, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_active_user, require_permission
+from app.core.deps import get_current_active_user
 from app.core.exceptions import (
-    BadRequestException,
-    NotFoundException,
     PermissionDeniedException,
-    ValidationException,
-)
-from app.core.permissions import (
-    DATA_IMPORT_APPROVE,
-    DATA_IMPORT_CANCEL,
-    DATA_IMPORT_CREATE,
-    DATA_IMPORT_DOWNLOAD,
-    DATA_IMPORT_EXECUTE,
-    DATA_IMPORT_MANAGE,
-    DATA_IMPORT_READ,
-    DATA_IMPORT_RECONCILE,
 )
 from app.models.people import User
 from app.schemas.data_import import (

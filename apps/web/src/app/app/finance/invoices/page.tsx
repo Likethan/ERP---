@@ -20,7 +20,13 @@ import {
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
@@ -44,11 +50,13 @@ export default function InvoicesPage() {
 
   // Create Invoice Modal State
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState(MOCK_STUDENTS[0]?.id || "");
+  const [selectedStudentId, setSelectedStudentId] = useState(
+    MOCK_STUDENTS[0]?.id || "",
+  );
   const [selectedStructureId, setSelectedStructureId] = useState("");
   const [customGross, setCustomGross] = useState(76000);
   const [dueDate, setDueDate] = useState(
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
   );
   const [creating, setCreating] = useState(false);
 
@@ -68,7 +76,10 @@ export default function InvoicesPage() {
     } catch (err: unknown) {
       showToast({
         title: "Error Loading Invoices",
-        message: err instanceof Error ? err.message : "Unable to load student invoices",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Unable to load student invoices",
         type: "error",
       });
     } finally {
@@ -86,7 +97,11 @@ export default function InvoicesPage() {
     const fs = structures.find((f) => f.id === selectedStructureId);
 
     if (!student) {
-      showToast({ title: "Validation Error", message: "Select a valid student.", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Select a valid student.",
+        type: "error",
+      });
       return;
     }
 
@@ -112,7 +127,8 @@ export default function InvoicesPage() {
     } catch (err: unknown) {
       showToast({
         title: "Invoice Creation Failed",
-        message: err instanceof Error ? err.message : "Error generating invoice",
+        message:
+          err instanceof Error ? err.message : "Error generating invoice",
         type: "error",
       });
     } finally {
@@ -126,30 +142,59 @@ export default function InvoicesPage() {
         inv.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         inv.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         inv.rollNumber.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === "ALL" || inv.status === statusFilter;
-      const matchesProgram = programFilter === "ALL" || inv.program.includes(programFilter);
+      const matchesStatus =
+        statusFilter === "ALL" || inv.status === statusFilter;
+      const matchesProgram =
+        programFilter === "ALL" || inv.program.includes(programFilter);
       return matchesSearch && matchesStatus && matchesProgram;
     });
   }, [invoices, searchQuery, statusFilter, programFilter]);
 
   const totalBilled = invoices.reduce((acc, i) => acc + i.netPayable, 0);
   const totalCollected = invoices.reduce((acc, i) => acc + i.paidAmount, 0);
-  const totalOutstanding = invoices.reduce((acc, i) => acc + i.outstandingAmount, 0);
+  const totalOutstanding = invoices.reduce(
+    (acc, i) => acc + i.outstandingAmount,
+    0,
+  );
 
   const getStatusBadge = (status: InvoiceStatus) => {
     switch (status) {
       case "PAID":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Paid
+          </span>
+        );
       case "PARTIALLY_PAID":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Partially Paid</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            Partially Paid
+          </span>
+        );
       case "ISSUED":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">Issued</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            Issued
+          </span>
+        );
       case "OVERDUE":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">Overdue</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            Overdue
+          </span>
+        );
       case "DRAFT":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">Draft</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">
+            Draft
+          </span>
+        );
       case "CANCELLED":
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-500 border border-slate-700/60 line-through">Cancelled</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-500 border border-slate-700/60 line-through">
+            Cancelled
+          </span>
+        );
     }
   };
 
@@ -249,7 +294,11 @@ export default function InvoicesPage() {
       cell: (row) => (
         <div className="flex items-center gap-1.5">
           <Link href={`/app/finance/invoices/${row.id}`}>
-            <Button variant="ghost" size="sm" className="h-7 text-xs text-slate-300 hover:text-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs text-slate-300 hover:text-white"
+            >
               <Eye className="h-3.5 w-3.5 mr-1" />
               View
             </Button>
@@ -265,7 +314,10 @@ export default function InvoicesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1">
-            <Link href="/app/finance" className="hover:text-slate-200 transition-colors">
+            <Link
+              href="/app/finance"
+              className="hover:text-slate-200 transition-colors"
+            >
               Finance
             </Link>
             <span>/</span>
@@ -276,12 +328,18 @@ export default function InvoicesPage() {
             Billing Invoices Ledger
           </h1>
           <p className="mt-1 text-xs text-slate-400 max-w-2xl">
-            Centralized billing documents across tuition, laboratory, hostel, and institutional services with real-time settlement tracking.
+            Centralized billing documents across tuition, laboratory, hostel,
+            and institutional services with real-time settlement tracking.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="primary" size="sm" onClick={() => setCreateModalOpen(true)} className="gap-1.5 text-xs">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setCreateModalOpen(true)}
+            className="gap-1.5 text-xs"
+          >
             <Plus className="h-3.5 w-3.5" />
             Create Invoice
           </Button>
@@ -358,8 +416,12 @@ export default function InvoicesPage() {
         emptyState={
           <div className="py-12 text-center">
             <CreditCard className="mx-auto h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm font-semibold text-slate-300">No Invoices Found</p>
-            <p className="text-xs text-slate-500 mt-1">Try clearing filters or generate a new student billing invoice.</p>
+            <p className="text-sm font-semibold text-slate-300">
+              No Invoices Found
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Try clearing filters or generate a new student billing invoice.
+            </p>
           </div>
         }
       />
@@ -423,7 +485,9 @@ export default function InvoicesPage() {
                   min="1"
                   required
                   value={customGross.toString()}
-                  onChange={(e) => setCustomGross(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setCustomGross(parseFloat(e.target.value) || 0)
+                  }
                   className="h-8 text-xs font-mono bg-slate-950 border-slate-800"
                 />
               </div>
@@ -443,10 +507,20 @@ export default function InvoicesPage() {
             </div>
 
             <DialogFooter className="pt-3 border-t border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={() => setCreateModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setCreateModalOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" size="sm" disabled={creating}>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={creating}
+              >
                 {creating ? "Generating..." : "Generate Invoice"}
               </Button>
             </DialogFooter>

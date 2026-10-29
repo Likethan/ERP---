@@ -13,18 +13,11 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.integration import (
-    CircuitBreakerState,
     ConflictResolutionStrategy,
     ConnectorOwnership,
-    ConnectorStatus,
     ConnectorType,
     CredentialAuthType,
-    IntegrationHealthStatus,
-    IntegrationLogStatus,
     SyncDirection,
-    SyncItemAction,
-    SyncRunStatus,
-    WebhookDeliveryStatus,
     WebhookStatus,
 )
 

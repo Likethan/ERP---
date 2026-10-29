@@ -1,4 +1,8 @@
-import type { ApiResponse, ApiErrorResponse, PaginatedResponse } from "@campusos/types";
+import type {
+  ApiResponse,
+  ApiErrorResponse,
+  PaginatedResponse,
+} from "@campusos/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -142,5 +146,3 @@ export async function apiFetchPaginated<T>(
 
   return execute();
 }
-
-

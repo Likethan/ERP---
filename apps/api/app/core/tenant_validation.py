@@ -1,13 +1,11 @@
 """Tenant isolation validation helpers for cross-tenant FK and payload protection."""
 
-from typing import Any
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import CrossTenantRelationshipException, NotFoundException
-from app.models.base import TenantScopedModel
 
 
 async def validate_tenant_entity_ownership(

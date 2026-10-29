@@ -40,7 +40,11 @@ export default function CourseAttendanceDirectoryPage() {
       }
     } catch (err) {
       console.error("Failed to load course summaries", err);
-      showToast({ type: "error", title: "Load Error", message: "Failed to load course attendance summaries." });
+      showToast({
+        type: "error",
+        title: "Load Error",
+        message: "Failed to load course attendance summaries.",
+      });
     } finally {
       setLoading(false);
     }
@@ -106,8 +110,8 @@ export default function CourseAttendanceDirectoryPage() {
                   row.percentage >= 85
                     ? "bg-emerald-500"
                     : row.percentage >= 75
-                    ? "bg-amber-500"
-                    : "bg-rose-500"
+                      ? "bg-amber-500"
+                      : "bg-rose-500"
                 }`}
                 style={{ width: `${row.percentage}%` }}
               />
@@ -121,7 +125,9 @@ export default function CourseAttendanceDirectoryPage() {
         header: "Students At Risk",
         cell: (row) => (
           <div>
-            <span className={`font-semibold text-xs ${row.studentsBelowThresholdCount ? "text-rose-600" : "text-emerald-600"}`}>
+            <span
+              className={`font-semibold text-xs ${row.studentsBelowThresholdCount ? "text-rose-600" : "text-emerald-600"}`}
+            >
               {row.studentsBelowThresholdCount || 0} students (&lt;75%)
             </span>
             <div className="text-[10px] text-slate-400">
@@ -143,7 +149,7 @@ export default function CourseAttendanceDirectoryPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -155,13 +161,16 @@ export default function CourseAttendanceDirectoryPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300">
               Curriculum Cohorts
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Course Offering Attendance</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Course Offering Attendance
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Course Offering Registers
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Monitor class delivery averages, identify low-attendance courses, and inspect student rosters.
+            Monitor class delivery averages, identify low-attendance courses,
+            and inspect student rosters.
           </p>
         </div>
       </div>

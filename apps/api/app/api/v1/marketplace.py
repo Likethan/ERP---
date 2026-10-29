@@ -11,23 +11,18 @@ Enforces:
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Header, Query, Request, status
+from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import (
     get_current_active_user,
-    require_permission,
     require_platform_admin,
 )
 from app.core.exceptions import (
     BadRequestException,
-    NotFoundException,
-    PermissionDeniedException,
 )
 from app.models.marketplace import (
-    ConflictResolutionPolicy,
-    MarketplaceApp,
     TenantAppInstallation,
 )
 from app.models.people import User
@@ -40,7 +35,6 @@ from app.schemas.marketplace import (
     MarketplaceSyncRunResponse,
     SyncTriggerRequest,
     TenantAppInstallationCreateRequest,
-    TenantAppInstallationLifecycleResponse,
     TenantAppInstallationResponse,
     TenantAppInstallationUpdateRequest,
     TestConnectivityResponse,

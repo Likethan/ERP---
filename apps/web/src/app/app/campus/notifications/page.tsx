@@ -3,7 +3,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { campusService } from "@/services/campus.service";
-import { NotificationItem, NotificationCategory, NotificationStatus } from "@/types/campus";
+import {
+  NotificationItem,
+  NotificationCategory,
+  NotificationStatus,
+} from "@/types/campus";
 import { useAuth } from "@/lib/auth-context";
 import {
   Bell,
@@ -37,7 +41,9 @@ export default function CampusNotificationsInboxPage() {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "UNREAD" | "READ" | "ARCHIVED">("ALL");
+  const [statusFilter, setStatusFilter] = useState<
+    "ALL" | "UNREAD" | "READ" | "ARCHIVED"
+  >("ALL");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
@@ -76,7 +82,8 @@ export default function CampusNotificationsInboxPage() {
   const filteredNotifications = useMemo(() => {
     return notifications.filter((n) => {
       const matchStatus = statusFilter === "ALL" || n.status === statusFilter;
-      const matchCat = categoryFilter === "ALL" || n.category === categoryFilter;
+      const matchCat =
+        categoryFilter === "ALL" || n.category === categoryFilter;
       return matchStatus && matchCat;
     });
   }, [notifications, statusFilter, categoryFilter]);
@@ -108,18 +115,24 @@ export default function CampusNotificationsInboxPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Notifications</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Notifications
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <Bell className="h-6 w-6 text-indigo-400" />
             Notification Center & Inbox
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Real-time feed of academic notices, fee invoices, job drive updates, and event reminders.
+            Real-time feed of academic notices, fee invoices, job drive updates,
+            and event reminders.
           </p>
         </div>
 
@@ -151,7 +164,10 @@ export default function CampusNotificationsInboxPage() {
       {actionMessage && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setActionMessage(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -169,7 +185,7 @@ export default function CampusNotificationsInboxPage() {
                 "px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
                 statusFilter === s
                   ? "bg-indigo-600 text-white shadow-sm"
-                  : "bg-slate-950 text-slate-400 hover:text-white border border-slate-800"
+                  : "bg-slate-950 text-slate-400 hover:text-white border border-slate-800",
               )}
             >
               {s === "UNREAD" ? `Unread (${unreadCount})` : s}
@@ -200,8 +216,12 @@ export default function CampusNotificationsInboxPage() {
         {filteredNotifications.length === 0 ? (
           <div className="p-12 text-center rounded-2xl border border-slate-800 bg-slate-900/40 space-y-2">
             <Bell className="h-8 w-8 text-slate-600 mx-auto" />
-            <div className="text-sm font-semibold text-white">No notifications found</div>
-            <p className="text-xs text-slate-400">You are all caught up on your campus alerts!</p>
+            <div className="text-sm font-semibold text-white">
+              No notifications found
+            </div>
+            <p className="text-xs text-slate-400">
+              You are all caught up on your campus alerts!
+            </p>
           </div>
         ) : (
           filteredNotifications.map((notif) => {
@@ -213,7 +233,7 @@ export default function CampusNotificationsInboxPage() {
                   "p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4",
                   isUnread
                     ? "border-indigo-900/60 bg-indigo-950/20 text-slate-200 shadow-sm"
-                    : "border-slate-800/80 bg-slate-900/40 text-slate-400"
+                    : "border-slate-800/80 bg-slate-900/40 text-slate-400",
                 )}
               >
                 <div className="flex items-start gap-3.5 flex-1">
@@ -223,7 +243,12 @@ export default function CampusNotificationsInboxPage() {
 
                   <div className="space-y-1 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={cn("text-xs font-bold", isUnread ? "text-white" : "text-slate-300")}>
+                      <span
+                        className={cn(
+                          "text-xs font-bold",
+                          isUnread ? "text-white" : "text-slate-300",
+                        )}
+                      >
                         {notif.title}
                       </span>
                       <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-slate-800 text-slate-400">
@@ -245,7 +270,9 @@ export default function CampusNotificationsInboxPage() {
                       {notif.relatedEntityTitle && (
                         <>
                           <span>•</span>
-                          <span className="text-slate-400">Entity: {notif.relatedEntityTitle}</span>
+                          <span className="text-slate-400">
+                            Entity: {notif.relatedEntityTitle}
+                          </span>
                         </>
                       )}
                     </div>

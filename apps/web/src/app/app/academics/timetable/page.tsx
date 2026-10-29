@@ -15,7 +15,13 @@ import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/ui/stat-card";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
@@ -50,13 +56,17 @@ export default function MasterTimetableManagementPage() {
   const { activePersona } = useAuth();
 
   const [timeSlots, setTimeSlots] = useState<MasterTimeSlot[]>([]);
-  const [scheduledEntries, setScheduledEntries] = useState<ScheduledTimetableEntry[]>([]);
+  const [scheduledEntries, setScheduledEntries] = useState<
+    ScheduledTimetableEntry[]
+  >([]);
   const [conflicts, setConflicts] = useState<TimetableConflict[]>([]);
   const [offerings, setOfferings] = useState<CourseOfferingDetail[]>([]);
   const [loading, setLoading] = useState(true);
 
   // View Mode: 'week' | 'day' | 'section' | 'faculty' | 'room'
-  const [viewMode, setViewMode] = useState<"week" | "day" | "section" | "faculty" | "room">("week");
+  const [viewMode, setViewMode] = useState<
+    "week" | "day" | "section" | "faculty" | "room"
+  >("week");
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>("MONDAY");
   const [selectedSection, setSelectedSection] = useState("A");
   const [selectedFaculty, setSelectedFaculty] = useState("Dr. V. Ramanathan");
@@ -70,7 +80,9 @@ export default function MasterTimetableManagementPage() {
   const [formOfferingId, setFormOfferingId] = useState("");
   const [formRoomNumber, setFormRoomNumber] = useState("Room A-204");
   const [formBuilding, setFormBuilding] = useState("Turing Block");
-  const [formEntryType, setFormEntryType] = useState<"THEORY" | "LAB" | "TUTORIAL">("THEORY");
+  const [formEntryType, setFormEntryType] = useState<
+    "THEORY" | "LAB" | "TUTORIAL"
+  >("THEORY");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Delete confirmation
@@ -133,7 +145,14 @@ export default function MasterTimetableManagementPage() {
     }
     // Week view shows for current selected section
     return scheduledEntries.filter((e) => e.section === selectedSection);
-  }, [scheduledEntries, viewMode, selectedDay, selectedSection, selectedFaculty, selectedRoom]);
+  }, [
+    scheduledEntries,
+    viewMode,
+    selectedDay,
+    selectedSection,
+    selectedFaculty,
+    selectedRoom,
+  ]);
 
   // Check if an entry has an active conflict
   const isConflicting = (entryId: string) => {
@@ -207,7 +226,11 @@ export default function MasterTimetableManagementPage() {
       setEntryModalOpen(false);
       loadData();
     } catch (err: any) {
-      showToast({ title: "Operation failed", message: err.message, type: "error" });
+      showToast({
+        title: "Operation failed",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -221,7 +244,11 @@ export default function MasterTimetableManagementPage() {
       setDeleteConfirmId(null);
       loadData();
     } catch (err: any) {
-      showToast({ title: "Failed to delete slot", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to delete slot",
+        message: err.message,
+        type: "error",
+      });
     }
   };
 
@@ -231,7 +258,10 @@ export default function MasterTimetableManagementPage() {
         <div className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-24 bg-slate-900/60 rounded-xl animate-pulse"
+            />
           ))}
         </div>
         <TableSkeleton rows={6} />
@@ -245,7 +275,10 @@ export default function MasterTimetableManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
@@ -255,7 +288,8 @@ export default function MasterTimetableManagementPage() {
             Master Timetable & Collision Engine
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Weekly section schedules, faculty contact allocations, classroom double-booking audits, and conflict detection.
+            Weekly section schedules, faculty contact allocations, classroom
+            double-booking audits, and conflict detection.
           </p>
         </div>
 
@@ -283,7 +317,11 @@ export default function MasterTimetableManagementPage() {
         <StatCard
           label="Detected Conflicts"
           value={conflicts.length}
-          description={conflicts.length === 0 ? "0 collisions found" : "Requires schedule adjustment"}
+          description={
+            conflicts.length === 0
+              ? "0 collisions found"
+              : "Requires schedule adjustment"
+          }
           variant={conflicts.length > 0 ? "amber" : "emerald"}
           icon={<AlertTriangle className="h-4 w-4" />}
         />
@@ -312,15 +350,23 @@ export default function MasterTimetableManagementPage() {
           </div>
           <div className="space-y-1">
             {conflicts.map((c) => (
-              <div key={c.id} className="text-xs text-amber-200/90 flex items-start gap-2">
-                <span className="font-mono font-bold text-amber-400">[{c.conflictType.replace("_", " ")}]</span>
+              <div
+                key={c.id}
+                className="text-xs text-amber-200/90 flex items-start gap-2"
+              >
+                <span className="font-mono font-bold text-amber-400">
+                  [{c.conflictType.replace("_", " ")}]
+                </span>
                 <span>{c.description}</span>
-                <span className="font-mono text-slate-400">({c.day} • {c.timeSlot})</span>
+                <span className="font-mono text-slate-400">
+                  ({c.day} • {c.timeSlot})
+                </span>
               </div>
             ))}
           </div>
           <div className="text-[10px] text-amber-400/80 pt-1">
-            * Note: Frontend collision detection acts as an operational convenience; academic council policy remains authoritative.
+            * Note: Frontend collision detection acts as an operational
+            convenience; academic council policy remains authoritative.
           </div>
         </div>
       )}
@@ -424,9 +470,14 @@ export default function MasterTimetableManagementPage() {
             <table className="w-full text-xs text-slate-200 border-collapse">
               <thead>
                 <tr className="bg-slate-950/80 border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase">
-                  <th className="p-3 w-28 text-left border-r border-slate-800">Day / Slot</th>
+                  <th className="p-3 w-28 text-left border-r border-slate-800">
+                    Day / Slot
+                  </th>
                   {timeSlots.map((ts) => (
-                    <th key={ts.id} className="p-2.5 text-center min-w-[130px] border-r border-slate-800 last:border-r-0">
+                    <th
+                      key={ts.id}
+                      className="p-2.5 text-center min-w-[130px] border-r border-slate-800 last:border-r-0"
+                    >
                       <div>{ts.label}</div>
                       <div className="text-[10px] text-slate-500 font-mono font-normal">
                         {ts.startTime} - {ts.endTime}
@@ -443,9 +494,14 @@ export default function MasterTimetableManagementPage() {
                     </td>
                     {timeSlots.map((ts) => {
                       const entry = scheduledEntries.find(
-                        (e) => e.day === day && e.timeSlotId === ts.id && e.section === selectedSection
+                        (e) =>
+                          e.day === day &&
+                          e.timeSlotId === ts.id &&
+                          e.section === selectedSection,
                       );
-                      const hasConflict = entry ? isConflicting(entry.id) : false;
+                      const hasConflict = entry
+                        ? isConflicting(entry.id)
+                        : false;
 
                       return (
                         <td
@@ -458,20 +514,33 @@ export default function MasterTimetableManagementPage() {
                                 hasConflict
                                   ? "border-red-500/80 bg-red-500/10 ring-1 ring-red-500/40"
                                   : entry.entryType === "LAB"
-                                  ? "border-emerald-500/40 bg-emerald-500/10"
-                                  : "border-indigo-500/40 bg-indigo-500/10"
+                                    ? "border-emerald-500/40 bg-emerald-500/10"
+                                    : "border-indigo-500/40 bg-indigo-500/10"
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="font-mono font-bold text-white">{entry.subjectCode}</span>
-                                <Badge variant={entry.entryType === "LAB" ? "success" : "info"} className="text-[9px] px-1 py-0">
+                                <span className="font-mono font-bold text-white">
+                                  {entry.subjectCode}
+                                </span>
+                                <Badge
+                                  variant={
+                                    entry.entryType === "LAB"
+                                      ? "success"
+                                      : "info"
+                                  }
+                                  className="text-[9px] px-1 py-0"
+                                >
                                   {entry.entryType}
                                 </Badge>
                               </div>
-                              <div className="text-[11px] text-slate-300 line-clamp-1">{entry.subjectName}</div>
+                              <div className="text-[11px] text-slate-300 line-clamp-1">
+                                {entry.subjectName}
+                              </div>
                               <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-800/60">
                                 <span>{entry.roomNumber}</span>
-                                <span className="text-indigo-300 font-sans">{entry.facultyName}</span>
+                                <span className="text-indigo-300 font-sans">
+                                  {entry.facultyName}
+                                </span>
                               </div>
 
                               {/* Hover actions */}
@@ -519,8 +588,10 @@ export default function MasterTimetableManagementPage() {
             <div>
               <CardTitle>
                 {viewMode === "day" && `${selectedDay} Schedule`}
-                {viewMode === "section" && `Section ${selectedSection} Schedule`}
-                {viewMode === "faculty" && `${selectedFaculty} Workload & Timetable`}
+                {viewMode === "section" &&
+                  `Section ${selectedSection} Schedule`}
+                {viewMode === "faculty" &&
+                  `${selectedFaculty} Workload & Timetable`}
                 {viewMode === "room" && `${selectedRoom} Utilization Timeline`}
               </CardTitle>
               <CardDescription>
@@ -559,7 +630,10 @@ export default function MasterTimetableManagementPage() {
                     {visibleEntries.map((slot) => {
                       const hasConflict = isConflicting(slot.id);
                       return (
-                        <tr key={slot.id} className="hover:bg-slate-800/40 transition-colors">
+                        <tr
+                          key={slot.id}
+                          className="hover:bg-slate-800/40 transition-colors"
+                        >
                           <td className="px-5 py-3.5 font-medium text-white">
                             <div>{slot.day}</div>
                             <div className="text-[11px] text-indigo-400 font-mono">
@@ -567,19 +641,31 @@ export default function MasterTimetableManagementPage() {
                             </div>
                           </td>
                           <td className="px-4 py-3.5">
-                            <span className="font-mono font-semibold text-white">{slot.subjectCode}</span>
-                            <span className="block text-[11px] text-slate-400">{slot.subjectName}</span>
+                            <span className="font-mono font-semibold text-white">
+                              {slot.subjectCode}
+                            </span>
+                            <span className="block text-[11px] text-slate-400">
+                              {slot.subjectName}
+                            </span>
                           </td>
                           <td className="px-4 py-3.5 font-mono text-slate-300">
                             Sem {slot.semester} • Sec {slot.section}
                           </td>
-                          <td className="px-4 py-3.5 text-slate-200">{slot.facultyName}</td>
+                          <td className="px-4 py-3.5 text-slate-200">
+                            {slot.facultyName}
+                          </td>
                           <td className="px-4 py-3.5 text-slate-200">
                             <div>{slot.roomNumber}</div>
-                            <div className="text-[10px] text-slate-500">{slot.building}</div>
+                            <div className="text-[10px] text-slate-500">
+                              {slot.building}
+                            </div>
                           </td>
                           <td className="px-4 py-3.5">
-                            <Badge variant={slot.entryType === "LAB" ? "success" : "info"}>
+                            <Badge
+                              variant={
+                                slot.entryType === "LAB" ? "success" : "info"
+                              }
+                            >
                               {slot.entryType}
                             </Badge>
                           </td>
@@ -614,12 +700,18 @@ export default function MasterTimetableManagementPage() {
       <Dialog
         open={entryModalOpen}
         onClose={() => setEntryModalOpen(false)}
-        title={editingEntryId ? "Edit Timetable Period" : "Schedule New Period in Master Timetable"}
+        title={
+          editingEntryId
+            ? "Edit Timetable Period"
+            : "Schedule New Period in Master Timetable"
+        }
       >
         <form onSubmit={handleSubmitEntry} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Day of Week</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Day of Week
+              </label>
               <select
                 value={formDay}
                 onChange={(e) => setFormDay(e.target.value as DayOfWeek)}
@@ -634,7 +726,9 @@ export default function MasterTimetableManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Time Slot Period</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Time Slot Period
+              </label>
               <select
                 value={formTimeSlotId}
                 onChange={(e) => setFormTimeSlotId(e.target.value)}
@@ -660,7 +754,8 @@ export default function MasterTimetableManagementPage() {
             >
               {offerings.map((o) => (
                 <option key={o.id} value={o.id}>
-                  {o.subjectCode} - {o.subjectName} (Sem {o.semester} Sec {o.section})
+                  {o.subjectCode} - {o.subjectName} (Sem {o.semester} Sec{" "}
+                  {o.section})
                 </option>
               ))}
             </select>
@@ -668,7 +763,9 @@ export default function MasterTimetableManagementPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Classroom / Lab</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Classroom / Lab
+              </label>
               <Input
                 value={formRoomNumber}
                 onChange={(e) => setFormRoomNumber(e.target.value)}
@@ -677,7 +774,9 @@ export default function MasterTimetableManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Building</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Building
+              </label>
               <Input
                 value={formBuilding}
                 onChange={(e) => setFormBuilding(e.target.value)}
@@ -687,7 +786,9 @@ export default function MasterTimetableManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Period Session Type</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Period Session Type
+            </label>
             <select
               value={formEntryType}
               onChange={(e) => setFormEntryType(e.target.value as any)}
@@ -728,7 +829,8 @@ export default function MasterTimetableManagementPage() {
       >
         <div className="space-y-3 text-xs text-slate-300">
           <p>
-            Are you sure you want to remove this scheduled period from the master timetable?
+            Are you sure you want to remove this scheduled period from the
+            master timetable?
           </p>
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
             <Button
@@ -741,7 +843,9 @@ export default function MasterTimetableManagementPage() {
             <Button
               variant="destructive"
               size="sm"
-              onClick={() => deleteConfirmId && handleDeleteEntry(deleteConfirmId)}
+              onClick={() =>
+                deleteConfirmId && handleDeleteEntry(deleteConfirmId)
+              }
             >
               Delete Period
             </Button>

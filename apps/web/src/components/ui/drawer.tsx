@@ -64,7 +64,7 @@ export function Drawer({
       <div
         className={cn(
           "fixed inset-y-0 flex max-w-full z-10",
-          side === "right" ? "right-0" : "left-0"
+          side === "right" ? "right-0" : "left-0",
         )}
       >
         <div
@@ -73,7 +73,7 @@ export function Drawer({
           className={cn(
             "w-screen bg-slate-900 border-slate-800 shadow-2xl flex flex-col justify-between text-slate-100",
             side === "right" ? "border-l" : "border-r",
-            sizeClasses[size]
+            sizeClasses[size],
           )}
         >
           {/* Header */}

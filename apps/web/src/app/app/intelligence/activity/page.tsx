@@ -40,7 +40,9 @@ export default function AiActivityPage() {
   const [domainFilter, setDomainFilter] = useState("ALL");
 
   // Selected Activity detail dialog
-  const [selectedActivity, setSelectedActivity] = useState<AIActivity | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<AIActivity | null>(
+    null,
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,13 +89,17 @@ export default function AiActivityPage() {
             AI Tool Registry & Audit Activity
           </h1>
           <p className="text-sm text-slate-500">
-            Operational governance ledger, model tool definitions, and query execution audit trails.
+            Operational governance ledger, model tool definitions, and query
+            execution audit trails.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/intelligence/assistant">
-            <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
               <Sparkles className="w-3.5 h-3.5" />
               Open Assistant
             </Button>
@@ -110,7 +116,11 @@ export default function AiActivityPage() {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
-            placeholder={activeTab === "activity" ? "Search activity by query, user, or tool..." : "Search tools by name or description..."}
+            placeholder={
+              activeTab === "activity"
+                ? "Search activity by query, user, or tool..."
+                : "Search tools by name or description..."
+            }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
@@ -161,21 +171,38 @@ export default function AiActivityPage() {
                 <tbody className="divide-y divide-slate-100">
                   {loading ? (
                     <tr>
-                      <td colSpan={8} className="p-8 text-center text-slate-400">Loading audit records...</td>
+                      <td
+                        colSpan={8}
+                        className="p-8 text-center text-slate-400"
+                      >
+                        Loading audit records...
+                      </td>
                     </tr>
                   ) : activities.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="p-8 text-center text-slate-400">No activity matching filter.</td>
+                      <td
+                        colSpan={8}
+                        className="p-8 text-center text-slate-400"
+                      >
+                        No activity matching filter.
+                      </td>
                     </tr>
                   ) : (
                     activities.map((act) => (
                       <tr key={act.id} className="hover:bg-slate-50/60">
                         <td className="px-4 py-3 text-slate-500 whitespace-nowrap">
-                          {new Date(act.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(act.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </td>
                         <td className="px-4 py-3">
-                          <p className="font-semibold text-slate-800">{act.userName}</p>
-                          <span className="text-[10px] text-slate-400">{act.userRole}</span>
+                          <p className="font-semibold text-slate-800">
+                            {act.userName}
+                          </p>
+                          <span className="text-[10px] text-slate-400">
+                            {act.userRole}
+                          </span>
                         </td>
                         <td className="px-4 py-3 font-medium text-slate-900 max-w-xs truncate">
                           "{act.query}"
@@ -229,7 +256,10 @@ export default function AiActivityPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-40 rounded-xl bg-slate-100 animate-pulse" />
+              <div
+                key={i}
+                className="h-40 rounded-xl bg-slate-100 animate-pulse"
+              />
             ))
           ) : tools.length === 0 ? (
             <div className="col-span-full p-12 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500">
@@ -245,29 +275,47 @@ export default function AiActivityPage() {
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <div className="flex items-center gap-1.5">
                       <Wrench className="w-4 h-4 text-blue-600" />
-                      <span className="font-mono font-bold text-xs text-slate-900">{tool.name}</span>
+                      <span className="font-mono font-bold text-xs text-slate-900">
+                        {tool.name}
+                      </span>
                     </div>
-                    <Badge variant="success" className="text-[10px] font-medium">
+                    <Badge
+                      variant="success"
+                      className="text-[10px] font-medium"
+                    >
                       {tool.status}
                     </Badge>
                   </div>
 
-                  <p className="text-xs text-slate-600 mb-3">{tool.description}</p>
+                  <p className="text-xs text-slate-600 mb-3">
+                    {tool.description}
+                  </p>
 
                   <div className="grid grid-cols-2 gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-[11px] mb-3">
                     <div>
                       <span className="text-slate-400 block">Domain:</span>
-                      <span className="font-medium text-slate-800">{tool.domain}</span>
+                      <span className="font-medium text-slate-800">
+                        {tool.domain}
+                      </span>
                     </div>
                     <div>
-                      <span className="text-slate-400 block">Security Scope:</span>
-                      <span className="font-medium text-slate-800">{tool.permissionRequirement}</span>
+                      <span className="text-slate-400 block">
+                        Security Scope:
+                      </span>
+                      <span className="font-medium text-slate-800">
+                        {tool.permissionRequirement}
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-400">
-                  <span>Executions: <strong className="text-slate-700">{tool.executionCount}</strong></span>
+                  <span>
+                    Executions:{" "}
+                    <strong className="text-slate-700">
+                      {tool.executionCount}
+                    </strong>
+                  </span>
                   <span>Last used: {tool.lastUsed}</span>
                 </div>
               </div>
@@ -288,9 +336,12 @@ export default function AiActivityPage() {
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
                 User Query
               </span>
-              <p className="font-semibold text-slate-900 text-sm">"{selectedActivity.query}"</p>
+              <p className="font-semibold text-slate-900 text-sm">
+                "{selectedActivity.query}"
+              </p>
               <p className="text-[11px] text-slate-500">
-                Executed by {selectedActivity.userName} ({selectedActivity.userRole}) at{" "}
+                Executed by {selectedActivity.userName} (
+                {selectedActivity.userRole}) at{" "}
                 {new Date(selectedActivity.timestamp).toLocaleString()}
               </p>
             </div>
@@ -306,7 +357,9 @@ export default function AiActivityPage() {
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
                   Execution Latency
                 </span>
-                <span className="font-mono text-slate-900 font-semibold">{selectedActivity.durationMs}ms</span>
+                <span className="font-mono text-slate-900 font-semibold">
+                  {selectedActivity.durationMs}ms
+                </span>
               </div>
             </div>
 
@@ -352,7 +405,11 @@ export default function AiActivityPage() {
             </div>
 
             <div className="flex justify-end pt-2">
-              <Button size="sm" variant="outline" onClick={() => setSelectedActivity(null)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setSelectedActivity(null)}
+              >
                 Close Detail
               </Button>
             </div>

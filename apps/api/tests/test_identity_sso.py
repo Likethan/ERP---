@@ -14,58 +14,37 @@ Validates:
 11. Background Maintenance Jobs: Automatic session expiry, challenge purging, and provider health checks.
 """
 
-from datetime import datetime, timedelta, timezone
-import json
-import time
-from unittest.mock import AsyncMock, patch
 import uuid
+from datetime import UTC, datetime, timedelta
+from unittest.mock import AsyncMock, patch
 
-from jose import jwt
 import pytest
+from jose import jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
-from app.core.exceptions import (
-    BadRequestException,
-    ConflictException,
-    ForbiddenException,
-    ValidationException,
-)
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import (
     ACCESS_TOKEN_COOKIE_NAME,
     AuthenticationException,
     create_access_token,
-    get_password_hash,
 )
 from app.identity.jobs import (
     cleanup_expired_challenges,
     cleanup_expired_sessions,
-    run_identity_provider_health_checks,
 )
 from app.identity.mfa_service import (
     MfaService,
     generate_totp_code,
-    hash_code,
     verify_totp_code,
 )
 from app.identity.models import (
     AccountLifecycleStatus,
-    ExternalIdentity,
     IdentityProvider,
-    IdentityProviderHealth,
-    IdentityProviderStatus,
-    IdentityProviderType,
     IdentitySession,
     MfaChallenge,
     MfaFactor,
-    MfaFactorType,
-    MfaPolicyLevel,
-    MfaRecoveryCode,
-    ProvisioningMode,
     SessionStatus,
-    TenantIdentityPolicy,
 )
 from app.identity.oidc_service import OidcService
 from app.identity.policy_service import TenantIdentityPolicyService
@@ -73,12 +52,11 @@ from app.identity.saml import SamlConfiguration, SamlFederationProvider
 from app.identity.service import EnterpriseIdentityService
 from app.identity.session_service import (
     IdentitySessionService,
-    hash_ip,
     mask_ip,
     parse_device_summary,
 )
 from app.models.core import Institution
-from app.models.people import Role, User
+from app.models.people import User
 
 
 def make_admin_headers(user: User, tenant_id: uuid.UUID) -> dict[str, str]:
@@ -190,7 +168,7 @@ class TestIdentityUnits:
 
     def test_oidc_token_validation_issuer_audience_mismatch(self):
         """Reject tokens with mismatched issuer or audience."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         payload = {
             "iss": "https://evil-idp.com",
             "aud": "wrong-client-id",
@@ -633,7 +611,7 @@ class TestIdentityBackgroundJobs:
     @pytest.mark.asyncio
     async def test_cleanup_expired_sessions_job(self, db_session: AsyncSession, tenant_a: Institution, faculty_user: User):
         """Verify background job transitions expired sessions to EXPIRED status."""
-        past_time = datetime.now(timezone.utc) - timedelta(hours=2)
+        past_time = datetime.now(UTC) - timedelta(hours=2)
         sess = IdentitySession(
             user_id=faculty_user.id,
             tenant_id=tenant_a.id,
@@ -656,7 +634,7 @@ class TestIdentityBackgroundJobs:
     @pytest.mark.asyncio
     async def test_cleanup_expired_challenges_job(self, db_session: AsyncSession, tenant_a: Institution, faculty_user: User):
         """Verify background job purges expired MFA challenges."""
-        past_time = datetime.now(timezone.utc) - timedelta(minutes=10)
+        past_time = datetime.now(UTC) - timedelta(minutes=10)
         challenge = MfaChallenge(
             user_id=faculty_user.id,
             tenant_id=tenant_a.id,

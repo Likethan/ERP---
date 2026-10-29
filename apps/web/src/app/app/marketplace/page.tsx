@@ -16,14 +16,22 @@ import type {
 
 export default function MarketplaceIntegrationsPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"catalog" | "connected" | "history" | "conflicts" | "platform">("catalog");
+  const [activeTab, setActiveTab] = useState<
+    "catalog" | "connected" | "history" | "conflicts" | "platform"
+  >("catalog");
 
   const [catalogApps, setCatalogApps] = useState<MarketplaceAppModel[]>([]);
-  const [connections, setConnections] = useState<TenantAppInstallationModel[]>([]);
-  const [conflicts, setConflicts] = useState<IntegrationDataConflictModel[]>([]);
-  const [selectedConnection, setSelectedConnection] = useState<TenantAppInstallationModel | null>(null);
+  const [connections, setConnections] = useState<TenantAppInstallationModel[]>(
+    [],
+  );
+  const [conflicts, setConflicts] = useState<IntegrationDataConflictModel[]>(
+    [],
+  );
+  const [selectedConnection, setSelectedConnection] =
+    useState<TenantAppInstallationModel | null>(null);
   const [syncRuns, setSyncRuns] = useState<MarketplaceSyncRunModel[]>([]);
-  const [platformHealth, setPlatformHealth] = useState<PlatformMarketplaceHealthModel | null>(null);
+  const [platformHealth, setPlatformHealth] =
+    useState<PlatformMarketplaceHealthModel | null>(null);
 
   // Filters & State
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,17 +41,24 @@ export default function MarketplaceIntegrationsPage() {
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
   // Connection Modal
-  const [connectModalApp, setConnectModalApp] = useState<MarketplaceAppModel | null>(null);
+  const [connectModalApp, setConnectModalApp] =
+    useState<MarketplaceAppModel | null>(null);
   const [configFields, setConfigFields] = useState<Record<string, string>>({});
-  const [credentialFields, setCredentialFields] = useState<Record<string, string>>({});
-  const [conflictPolicy, setConflictPolicy] = useState<string>("CAMPUSOS_AUTHORITATIVE");
+  const [credentialFields, setCredentialFields] = useState<
+    Record<string, string>
+  >({});
+  const [conflictPolicy, setConflictPolicy] = useState<string>(
+    "CAMPUSOS_AUTHORITATIVE",
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Probe Result
-  const [probeResult, setProbeResult] = useState<TestConnectivityResultModel | null>(null);
+  const [probeResult, setProbeResult] =
+    useState<TestConnectivityResultModel | null>(null);
   const [probingId, setProbingId] = useState<string | null>(null);
 
-  const isSuperAdmin = user?.role === "SUPER_ADMIN" || user?.role === "PLATFORM_OPERATOR";
+  const isSuperAdmin =
+    user?.role === "SUPER_ADMIN" || user?.role === "PLATFORM_OPERATOR";
 
   const loadData = async () => {
     try {
@@ -51,11 +66,19 @@ export default function MarketplaceIntegrationsPage() {
       setError(null);
 
       const [catRes, connRes, confRes, healthRes] = await Promise.all([
-        apiFetch<MarketplaceAppModel[]>("/api/v1/marketplace/apps").catch(() => ({ data: [] })),
-        apiFetch<TenantAppInstallationModel[]>("/api/v1/integrations/connections").catch(() => ({ data: [] })),
-        apiFetch<IntegrationDataConflictModel[]>("/api/v1/integrations/conflicts").catch(() => ({ data: [] })),
+        apiFetch<MarketplaceAppModel[]>("/api/v1/marketplace/apps").catch(
+          () => ({ data: [] }),
+        ),
+        apiFetch<TenantAppInstallationModel[]>(
+          "/api/v1/integrations/connections",
+        ).catch(() => ({ data: [] })),
+        apiFetch<IntegrationDataConflictModel[]>(
+          "/api/v1/integrations/conflicts",
+        ).catch(() => ({ data: [] })),
         isSuperAdmin
-          ? apiFetch<PlatformMarketplaceHealthModel>("/api/v1/platform/marketplace/health").catch(() => ({ data: null }))
+          ? apiFetch<PlatformMarketplaceHealthModel>(
+              "/api/v1/platform/marketplace/health",
+            ).catch(() => ({ data: null }))
           : Promise.resolve({ data: null }),
       ]);
 
@@ -69,7 +92,9 @@ export default function MarketplaceIntegrationsPage() {
         loadSyncRuns(connRes.data[0].id);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load marketplace data");
+      setError(
+        err instanceof Error ? err.message : "Failed to load marketplace data",
+      );
     } finally {
       setLoading(false);
     }
@@ -77,7 +102,9 @@ export default function MarketplaceIntegrationsPage() {
 
   const loadSyncRuns = async (installationId: string) => {
     try {
-      const res = await apiFetch<MarketplaceSyncRunModel[]>(`/api/v1/integrations/connections/${installationId}/sync-runs`);
+      const res = await apiFetch<MarketplaceSyncRunModel[]>(
+        `/api/v1/integrations/connections/${installationId}/sync-runs`,
+      );
       setSyncRuns(res.data || []);
     } catch {
       setSyncRuns([]);
@@ -94,7 +121,8 @@ export default function MarketplaceIntegrationsPage() {
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       app.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
       app.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === "ALL" || app.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "ALL" || app.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -119,7 +147,10 @@ export default function MarketplaceIntegrationsPage() {
           app_id: connectModalApp.id,
           display_name: connectModalApp.name,
           configuration: configFields,
-          credentials: Object.keys(credentialFields).length > 0 ? credentialFields : undefined,
+          credentials:
+            Object.keys(credentialFields).length > 0
+              ? credentialFields
+              : undefined,
           conflict_policy: conflictPolicy,
         }),
       });
@@ -128,7 +159,9 @@ export default function MarketplaceIntegrationsPage() {
       setConnectModalApp(null);
       await loadData();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to connect application");
+      setError(
+        err instanceof Error ? err.message : "Failed to connect application",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -138,11 +171,16 @@ export default function MarketplaceIntegrationsPage() {
     try {
       setProbingId(instId);
       setProbeResult(null);
-      const res = await apiFetch<TestConnectivityResultModel>(`/api/v1/integrations/connections/${instId}/test`, {
-        method: "POST",
-      });
+      const res = await apiFetch<TestConnectivityResultModel>(
+        `/api/v1/integrations/connections/${instId}/test`,
+        {
+          method: "POST",
+        },
+      );
       setProbeResult(res.data);
-      setActionNotice(`Connectivity check: ${res.data.status} (${res.data.latency_ms}ms)`);
+      setActionNotice(
+        `Connectivity check: ${res.data.status} (${res.data.latency_ms}ms)`,
+      );
       await loadData();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Test connectivity failed");
@@ -154,11 +192,19 @@ export default function MarketplaceIntegrationsPage() {
   const handleTriggerSync = async (instId: string) => {
     try {
       setActionNotice("Triggering on-demand synchronization...");
-      const res = await apiFetch<MarketplaceSyncRunModel>(`/api/v1/integrations/connections/${instId}/sync`, {
-        method: "POST",
-        body: JSON.stringify({ trigger_type: "MANUAL", force_full_sync: false }),
-      });
-      setActionNotice(`Sync completed: ${res.data.records_processed} records processed (${res.data.status})`);
+      const res = await apiFetch<MarketplaceSyncRunModel>(
+        `/api/v1/integrations/connections/${instId}/sync`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            trigger_type: "MANUAL",
+            force_full_sync: false,
+          }),
+        },
+      );
+      setActionNotice(
+        `Sync completed: ${res.data.records_processed} records processed (${res.data.status})`,
+      );
       await loadData();
       if (selectedConnection?.id === instId) {
         await loadSyncRuns(instId);
@@ -172,7 +218,9 @@ export default function MarketplaceIntegrationsPage() {
     try {
       const isPaused = inst.status === "SYNC_PAUSED";
       const action = isPaused ? "resume" : "pause";
-      await apiFetch(`/api/v1/integrations/connections/${inst.id}/${action}`, { method: "POST" });
+      await apiFetch(`/api/v1/integrations/connections/${inst.id}/${action}`, {
+        method: "POST",
+      });
       setActionNotice(`Integration sync ${isPaused ? "resumed" : "paused"}.`);
       await loadData();
     } catch (err: unknown) {
@@ -181,9 +229,16 @@ export default function MarketplaceIntegrationsPage() {
   };
 
   const handleDisconnect = async (instId: string) => {
-    if (!confirm("Are you sure you want to disconnect this integration? Vaulted credentials will be revoked.")) return;
+    if (
+      !confirm(
+        "Are you sure you want to disconnect this integration? Vaulted credentials will be revoked.",
+      )
+    )
+      return;
     try {
-      await apiFetch(`/api/v1/integrations/connections/${instId}/disconnect`, { method: "POST" });
+      await apiFetch(`/api/v1/integrations/connections/${instId}/disconnect`, {
+        method: "POST",
+      });
       setActionNotice("Integration safely disconnected.");
       await loadData();
     } catch (err: unknown) {
@@ -191,7 +246,10 @@ export default function MarketplaceIntegrationsPage() {
     }
   };
 
-  const handleResolveConflict = async (conflictId: string, strategy: string) => {
+  const handleResolveConflict = async (
+    conflictId: string,
+    strategy: string,
+  ) => {
     try {
       await apiFetch(`/api/v1/integrations/conflicts/${conflictId}/resolve`, {
         method: "POST",
@@ -200,13 +258,17 @@ export default function MarketplaceIntegrationsPage() {
       setActionNotice("Conflict resolved successfully.");
       await loadData();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Conflict resolution failed");
+      setError(
+        err instanceof Error ? err.message : "Conflict resolution failed",
+      );
     }
   };
 
   const handleSeedDefaults = async () => {
     try {
-      setActionNotice("Seeding certified production connectors into marketplace...");
+      setActionNotice(
+        "Seeding certified production connectors into marketplace...",
+      );
       await apiFetch("/api/v1/platform/marketplace/seed", { method: "POST" });
       setActionNotice("Certified connectors seeded successfully.");
       await loadData();
@@ -229,7 +291,8 @@ export default function MarketplaceIntegrationsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
-            Governed third-party extensions, API connectors, secure credential vaults, and bi-directional synchronization.
+            Governed third-party extensions, API connectors, secure credential
+            vaults, and bi-directional synchronization.
           </p>
         </div>
 
@@ -247,24 +310,48 @@ export default function MarketplaceIntegrationsPage() {
       {error && (
         <div className="bg-red-950/80 border border-red-800 text-red-200 px-4 py-3 rounded-lg text-sm flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300 font-bold ml-4">✕</button>
+          <button
+            onClick={() => setError(null)}
+            className="text-red-400 hover:text-red-300 font-bold ml-4"
+          >
+            ✕
+          </button>
         </div>
       )}
       {actionNotice && (
         <div className="bg-emerald-950/80 border border-emerald-800 text-emerald-200 px-4 py-3 rounded-lg text-sm flex items-center justify-between">
           <span>{actionNotice}</span>
-          <button onClick={() => setActionNotice(null)} className="text-emerald-400 hover:text-emerald-300 font-bold ml-4">✕</button>
+          <button
+            onClick={() => setActionNotice(null)}
+            className="text-emerald-400 hover:text-emerald-300 font-bold ml-4"
+          >
+            ✕
+          </button>
         </div>
       )}
 
       {/* Navigation Tabs */}
       <div className="flex gap-2 border-b border-slate-800">
         {[
-          { key: "catalog", label: "App Marketplace", count: catalogApps.length },
-          { key: "connected", label: "Connected Apps", count: connections.length },
+          {
+            key: "catalog",
+            label: "App Marketplace",
+            count: catalogApps.length,
+          },
+          {
+            key: "connected",
+            label: "Connected Apps",
+            count: connections.length,
+          },
           { key: "history", label: "Sync Execution", count: syncRuns.length },
-          { key: "conflicts", label: "Conflict Governance", count: conflicts.filter((c) => c.status === "OPEN").length },
-          ...(isSuperAdmin ? [{ key: "platform", label: "Platform Health", count: undefined }] : []),
+          {
+            key: "conflicts",
+            label: "Conflict Governance",
+            count: conflicts.filter((c) => c.status === "OPEN").length,
+          },
+          ...(isSuperAdmin
+            ? [{ key: "platform", label: "Platform Health", count: undefined }]
+            : []),
         ].map((tab) => (
           <button
             key={tab.key}
@@ -277,9 +364,13 @@ export default function MarketplaceIntegrationsPage() {
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                tab.key === "conflicts" && tab.count > 0 ? "bg-amber-900 text-amber-200" : "bg-slate-800 text-slate-300"
-              }`}>
+              <span
+                className={`text-xs px-1.5 py-0.5 rounded-full ${
+                  tab.key === "conflicts" && tab.count > 0
+                    ? "bg-amber-900 text-amber-200"
+                    : "bg-slate-800 text-slate-300"
+                }`}
+              >
                 {tab.count}
               </span>
             )}
@@ -299,7 +390,14 @@ export default function MarketplaceIntegrationsPage() {
               className="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-100 placeholder-slate-500 w-full sm:w-80 focus:outline-none focus:border-indigo-500"
             />
             <div className="flex gap-2 flex-wrap">
-              {["ALL", "LMS", "PAYMENT_GATEWAY", "VIDEO_CONFERENCING", "HARDWARE_IOT", "GOVERNMENT_EXCHANGE"].map((cat) => (
+              {[
+                "ALL",
+                "LMS",
+                "PAYMENT_GATEWAY",
+                "VIDEO_CONFERENCING",
+                "HARDWARE_IOT",
+                "GOVERNMENT_EXCHANGE",
+              ].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setCategoryFilter(cat)}
@@ -317,7 +415,9 @@ export default function MarketplaceIntegrationsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredApps.map((app) => {
-              const installed = connections.find((c) => c.app_id === app.id && c.status !== "DISCONNECTED");
+              const installed = connections.find(
+                (c) => c.app_id === app.id && c.status !== "DISCONNECTED",
+              );
               return (
                 <div
                   key={app.id}
@@ -335,31 +435,45 @@ export default function MarketplaceIntegrationsPage() {
                         {app.name.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-100">{app.name}</h3>
-                        <p className="text-xs text-slate-400">{app.provider_name}</p>
+                        <h3 className="font-semibold text-slate-100">
+                          {app.name}
+                        </h3>
+                        <p className="text-xs text-slate-400">
+                          {app.provider_name}
+                        </p>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 line-clamp-3 mb-4">{app.description}</p>
+                    <p className="text-xs text-slate-300 line-clamp-3 mb-4">
+                      {app.description}
+                    </p>
 
                     <div className="space-y-2 mb-4 text-xs">
                       <div className="flex items-center justify-between text-slate-400">
                         <span>Category:</span>
-                        <span className="text-slate-200 font-mono">{app.category}</span>
+                        <span className="text-slate-200 font-mono">
+                          {app.category}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-slate-400">
                         <span>Method:</span>
-                        <span className="text-slate-200 font-mono">{app.connection_method}</span>
+                        <span className="text-slate-200 font-mono">
+                          {app.connection_method}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-slate-400">
                         <span>Required Modules:</span>
-                        <span className="text-indigo-400 font-mono">{app.required_entitlements.join(", ") || "None"}</span>
+                        <span className="text-indigo-400 font-mono">
+                          {app.required_entitlements.join(", ") || "None"}
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   <div className="border-t border-slate-700/60 pt-4 flex items-center justify-between">
-                    <span className="text-xs text-slate-500">v{app.min_platform_version}</span>
+                    <span className="text-xs text-slate-500">
+                      v{app.min_platform_version}
+                    </span>
                     {installed ? (
                       <span className="px-3 py-1 bg-emerald-950 border border-emerald-700 text-emerald-300 text-xs font-medium rounded-lg">
                         Installed ({installed.status})
@@ -385,7 +499,9 @@ export default function MarketplaceIntegrationsPage() {
         <div className="space-y-6">
           {connections.length === 0 ? (
             <div className="text-center py-16 bg-slate-800/20 border border-slate-800 rounded-xl">
-              <p className="text-slate-400 mb-2">No external integrations connected yet.</p>
+              <p className="text-slate-400 mb-2">
+                No external integrations connected yet.
+              </p>
               <button
                 onClick={() => setActiveTab("catalog")}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium"
@@ -402,29 +518,52 @@ export default function MarketplaceIntegrationsPage() {
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                      <span className="font-semibold text-lg text-slate-100">{inst.display_name}</span>
-                      <span className={`text-xs px-2.5 py-0.5 rounded font-mono ${
-                        inst.status === "CONNECTED"
-                          ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
-                          : inst.status === "DEGRADED"
-                          ? "bg-amber-950 text-amber-300 border border-amber-800"
-                          : inst.status === "SYNC_PAUSED"
-                          ? "bg-blue-950 text-blue-300 border border-blue-800"
-                          : "bg-red-950 text-red-300 border border-red-800"
-                      }`}>
+                      <span className="font-semibold text-lg text-slate-100">
+                        {inst.display_name}
+                      </span>
+                      <span
+                        className={`text-xs px-2.5 py-0.5 rounded font-mono ${
+                          inst.status === "CONNECTED"
+                            ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
+                            : inst.status === "DEGRADED"
+                              ? "bg-amber-950 text-amber-300 border border-amber-800"
+                              : inst.status === "SYNC_PAUSED"
+                                ? "bg-blue-950 text-blue-300 border border-blue-800"
+                                : "bg-red-950 text-red-300 border border-red-800"
+                        }`}
+                      >
                         {inst.status}
                       </span>
-                      <span className="text-xs text-slate-500 font-mono">App Code: {inst.app_code}</span>
+                      <span className="text-xs text-slate-500 font-mono">
+                        App Code: {inst.app_code}
+                      </span>
                     </div>
 
                     <p className="text-xs text-slate-400">
-                      Sync: {inst.sync_direction} • Policy: {inst.conflict_policy} • Vault:{" "}
-                      {inst.has_credentials ? "Encrypted Credentials Attached" : "No Credentials"}
+                      Sync: {inst.sync_direction} • Policy:{" "}
+                      {inst.conflict_policy} • Vault:{" "}
+                      {inst.has_credentials
+                        ? "Encrypted Credentials Attached"
+                        : "No Credentials"}
                     </p>
 
                     <div className="text-xs text-slate-500 flex gap-4 pt-1">
-                      <span>Last Health Check: {inst.last_health_check_at ? new Date(inst.last_health_check_at).toLocaleTimeString() : "Never"}</span>
-                      <span>Last Successful Sync: {inst.last_successful_sync_at ? new Date(inst.last_successful_sync_at).toLocaleString() : "None"}</span>
+                      <span>
+                        Last Health Check:{" "}
+                        {inst.last_health_check_at
+                          ? new Date(
+                              inst.last_health_check_at,
+                            ).toLocaleTimeString()
+                          : "Never"}
+                      </span>
+                      <span>
+                        Last Successful Sync:{" "}
+                        {inst.last_successful_sync_at
+                          ? new Date(
+                              inst.last_successful_sync_at,
+                            ).toLocaleString()
+                          : "None"}
+                      </span>
                     </div>
                   </div>
 
@@ -495,24 +634,38 @@ export default function MarketplaceIntegrationsPage() {
                 ) : (
                   syncRuns.map((r) => (
                     <tr key={r.id} className="hover:bg-slate-700/40">
-                      <td className="p-3 font-mono text-xs">{new Date(r.started_at).toLocaleTimeString()}</td>
+                      <td className="p-3 font-mono text-xs">
+                        {new Date(r.started_at).toLocaleTimeString()}
+                      </td>
                       <td className="p-3 text-xs">{r.trigger_type}</td>
                       <td className="p-3">
-                        <span className={`text-xs px-2 py-0.5 rounded font-mono ${
-                          r.status === "SUCCESS"
-                            ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
-                            : r.status === "PARTIAL_SUCCESS"
-                            ? "bg-amber-950 text-amber-300 border border-amber-800"
-                            : "bg-red-950 text-red-300 border border-red-800"
-                        }`}>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded font-mono ${
+                            r.status === "SUCCESS"
+                              ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
+                              : r.status === "PARTIAL_SUCCESS"
+                                ? "bg-amber-950 text-amber-300 border border-amber-800"
+                                : "bg-red-950 text-red-300 border border-red-800"
+                          }`}
+                        >
                           {r.status}
                         </span>
                       </td>
-                      <td className="p-3 font-mono text-xs">{r.records_fetched}</td>
-                      <td className="p-3 font-mono text-xs text-emerald-400">{r.records_created}</td>
-                      <td className="p-3 font-mono text-xs text-blue-400">{r.records_updated}</td>
-                      <td className="p-3 font-mono text-xs text-slate-400">{r.records_skipped}</td>
-                      <td className="p-3 font-mono text-xs text-red-400">{r.records_failed}</td>
+                      <td className="p-3 font-mono text-xs">
+                        {r.records_fetched}
+                      </td>
+                      <td className="p-3 font-mono text-xs text-emerald-400">
+                        {r.records_created}
+                      </td>
+                      <td className="p-3 font-mono text-xs text-blue-400">
+                        {r.records_updated}
+                      </td>
+                      <td className="p-3 font-mono text-xs text-slate-400">
+                        {r.records_skipped}
+                      </td>
+                      <td className="p-3 font-mono text-xs text-red-400">
+                        {r.records_failed}
+                      </td>
                     </tr>
                   ))
                 )}
@@ -527,31 +680,51 @@ export default function MarketplaceIntegrationsPage() {
         <div className="space-y-4">
           {conflicts.length === 0 ? (
             <div className="text-center py-16 bg-slate-800/20 border border-slate-800 rounded-xl">
-              <p className="text-slate-400">No unresolved integration data conflicts found.</p>
+              <p className="text-slate-400">
+                No unresolved integration data conflicts found.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {conflicts.map((conf) => (
-                <div key={conf.id} className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-5 space-y-4">
+                <div
+                  key={conf.id}
+                  className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-5 space-y-4"
+                >
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-semibold text-slate-200">
-                        Discrepancy in {conf.entity_type} (Record: {conf.record_identifier})
+                        Discrepancy in {conf.entity_type} (Record:{" "}
+                        {conf.record_identifier})
                       </span>
                       <p className="text-xs text-slate-400">
-                        Conflicting fields: <span className="text-amber-400">{conf.conflicting_fields.join(", ")}</span> • Status: {conf.status}
+                        Conflicting fields:{" "}
+                        <span className="text-amber-400">
+                          {conf.conflicting_fields.join(", ")}
+                        </span>{" "}
+                        • Status: {conf.status}
                       </p>
                     </div>
                     {conf.status === "OPEN" && (
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleResolveConflict(conf.id, "CAMPUSOS_AUTHORITATIVE")}
+                          onClick={() =>
+                            handleResolveConflict(
+                              conf.id,
+                              "CAMPUSOS_AUTHORITATIVE",
+                            )
+                          }
                           className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-lg transition"
                         >
                           Keep CampusOS
                         </button>
                         <button
-                          onClick={() => handleResolveConflict(conf.id, "PROVIDER_AUTHORITATIVE")}
+                          onClick={() =>
+                            handleResolveConflict(
+                              conf.id,
+                              "PROVIDER_AUTHORITATIVE",
+                            )
+                          }
                           className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs rounded-lg transition"
                         >
                           Accept Provider
@@ -562,12 +735,20 @@ export default function MarketplaceIntegrationsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                     <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                      <span className="text-slate-400 block mb-1 font-sans">CampusOS Current Data:</span>
-                      <pre className="text-slate-200 overflow-x-auto">{JSON.stringify(conf.campusos_payload, null, 2)}</pre>
+                      <span className="text-slate-400 block mb-1 font-sans">
+                        CampusOS Current Data:
+                      </span>
+                      <pre className="text-slate-200 overflow-x-auto">
+                        {JSON.stringify(conf.campusos_payload, null, 2)}
+                      </pre>
                     </div>
                     <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                      <span className="text-slate-400 block mb-1 font-sans">External Provider Data:</span>
-                      <pre className="text-slate-200 overflow-x-auto">{JSON.stringify(conf.provider_payload, null, 2)}</pre>
+                      <span className="text-slate-400 block mb-1 font-sans">
+                        External Provider Data:
+                      </span>
+                      <pre className="text-slate-200 overflow-x-auto">
+                        {JSON.stringify(conf.provider_payload, null, 2)}
+                      </pre>
                     </div>
                   </div>
                 </div>
@@ -581,20 +762,36 @@ export default function MarketplaceIntegrationsPage() {
       {activeTab === "platform" && platformHealth && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-slate-800/60 border border-slate-700/80 p-5 rounded-xl">
-            <span className="text-xs text-slate-400 uppercase tracking-wider">Catalog Applications</span>
-            <p className="text-3xl font-bold text-slate-100 mt-2">{platformHealth.total_catalog_apps}</p>
+            <span className="text-xs text-slate-400 uppercase tracking-wider">
+              Catalog Applications
+            </span>
+            <p className="text-3xl font-bold text-slate-100 mt-2">
+              {platformHealth.total_catalog_apps}
+            </p>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/80 p-5 rounded-xl">
-            <span className="text-xs text-slate-400 uppercase tracking-wider">Connected Instances</span>
-            <p className="text-3xl font-bold text-emerald-400 mt-2">{platformHealth.active_connected_installations}</p>
+            <span className="text-xs text-slate-400 uppercase tracking-wider">
+              Connected Instances
+            </span>
+            <p className="text-3xl font-bold text-emerald-400 mt-2">
+              {platformHealth.active_connected_installations}
+            </p>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/80 p-5 rounded-xl">
-            <span className="text-xs text-slate-400 uppercase tracking-wider">Degraded Connections</span>
-            <p className="text-3xl font-bold text-amber-400 mt-2">{platformHealth.degraded_installations}</p>
+            <span className="text-xs text-slate-400 uppercase tracking-wider">
+              Degraded Connections
+            </span>
+            <p className="text-3xl font-bold text-amber-400 mt-2">
+              {platformHealth.degraded_installations}
+            </p>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/80 p-5 rounded-xl">
-            <span className="text-xs text-slate-400 uppercase tracking-wider">Sync Success Rate</span>
-            <p className="text-3xl font-bold text-indigo-400 mt-2">{platformHealth.sync_success_rate}%</p>
+            <span className="text-xs text-slate-400 uppercase tracking-wider">
+              Sync Success Rate
+            </span>
+            <p className="text-3xl font-bold text-indigo-400 mt-2">
+              {platformHealth.sync_success_rate}%
+            </p>
           </div>
         </div>
       )}
@@ -604,38 +801,61 @@ export default function MarketplaceIntegrationsPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-lg font-bold text-slate-100">Connect {connectModalApp.name}</h3>
-              <button onClick={() => setConnectModalApp(null)} className="text-slate-400 hover:text-slate-200">✕</button>
+              <h3 className="text-lg font-bold text-slate-100">
+                Connect {connectModalApp.name}
+              </h3>
+              <button
+                onClick={() => setConnectModalApp(null)}
+                className="text-slate-400 hover:text-slate-200"
+              >
+                ✕
+              </button>
             </div>
 
             <form onSubmit={handleInstallApp} className="space-y-4 text-sm">
-              <p className="text-xs text-slate-400">{connectModalApp.setup_instructions}</p>
+              <p className="text-xs text-slate-400">
+                {connectModalApp.setup_instructions}
+              </p>
 
               {/* Dynamic Config Fields from Schema */}
               {connectModalApp.config_schema?.properties &&
-                Object.entries(connectModalApp.config_schema.properties).map(([key, prop]: [string, any]) => (
-                  <div key={key}>
-                    <label className="block text-xs text-slate-400 mb-1">{prop.description || key}</label>
-                    <input
-                      type="text"
-                      required={connectModalApp.config_schema.required?.includes(key)}
-                      value={configFields[key] || ""}
-                      onChange={(e) => setConfigFields({ ...configFields, [key]: e.target.value })}
-                      className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm w-full focus:outline-none focus:border-indigo-500"
-                    />
-                  </div>
-                ))}
+                Object.entries(connectModalApp.config_schema.properties).map(
+                  ([key, prop]: [string, any]) => (
+                    <div key={key}>
+                      <label className="block text-xs text-slate-400 mb-1">
+                        {prop.description || key}
+                      </label>
+                      <input
+                        type="text"
+                        required={connectModalApp.config_schema.required?.includes(
+                          key,
+                        )}
+                        value={configFields[key] || ""}
+                        onChange={(e) =>
+                          setConfigFields({
+                            ...configFields,
+                            [key]: e.target.value,
+                          })
+                        }
+                        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm w-full focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+                  ),
+                )}
 
               {/* Secure Credentials Vault Input */}
               <div className="border-t border-slate-800 pt-3">
                 <label className="block text-xs font-semibold text-indigo-300 mb-1">
-                  API Key / Token / Secret (Securely Vaulted with Fernet Encryption)
+                  API Key / Token / Secret (Securely Vaulted with Fernet
+                  Encryption)
                 </label>
                 <input
                   type="password"
                   placeholder="Enter API token or secret..."
                   value={credentialFields["api_key"] || ""}
-                  onChange={(e) => setCredentialFields({ api_key: e.target.value })}
+                  onChange={(e) =>
+                    setCredentialFields({ api_key: e.target.value })
+                  }
                   className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm w-full focus:outline-none focus:border-indigo-500"
                 />
                 <span className="text-[11px] text-slate-500 mt-1 block">
@@ -645,15 +865,23 @@ export default function MarketplaceIntegrationsPage() {
 
               {/* Conflict Policy */}
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Conflict Resolution Policy</label>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Conflict Resolution Policy
+                </label>
                 <select
                   value={conflictPolicy}
                   onChange={(e) => setConflictPolicy(e.target.value)}
                   className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm w-full focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="CAMPUSOS_AUTHORITATIVE">CampusOS Authoritative (Recommended)</option>
-                  <option value="PROVIDER_AUTHORITATIVE">External Provider Authoritative</option>
-                  <option value="MANUAL_REVIEW">Flag for Manual Institutional Review</option>
+                  <option value="CAMPUSOS_AUTHORITATIVE">
+                    CampusOS Authoritative (Recommended)
+                  </option>
+                  <option value="PROVIDER_AUTHORITATIVE">
+                    External Provider Authoritative
+                  </option>
+                  <option value="MANUAL_REVIEW">
+                    Flag for Manual Institutional Review
+                  </option>
                 </select>
               </div>
 

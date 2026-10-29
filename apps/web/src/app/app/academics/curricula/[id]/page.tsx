@@ -14,7 +14,13 @@ import {
 } from "@/types/academics";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -41,16 +47,23 @@ interface CurriculumDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function CurriculumBuilderPage({ params }: CurriculumDetailPageProps) {
+export default function CurriculumBuilderPage({
+  params,
+}: CurriculumDetailPageProps) {
   const resolvedParams = use(params);
   const id = resolvedParams.id;
   const { showToast } = useToast();
   const { hasPermission } = useAuth();
 
   const [curriculum, setCurriculum] = useState<CurriculumScheme | null>(null);
-  const [availableSubjects, setAvailableSubjects] = useState<AcademicSubject[]>([]);
-  const [activeTab, setActiveTab] = useState<"builder" | "electives" | "validation" | "history">("builder");
-  const [selectedSemesterNumber, setSelectedSemesterNumber] = useState<number>(1);
+  const [availableSubjects, setAvailableSubjects] = useState<AcademicSubject[]>(
+    [],
+  );
+  const [activeTab, setActiveTab] = useState<
+    "builder" | "electives" | "validation" | "history"
+  >("builder");
+  const [selectedSemesterNumber, setSelectedSemesterNumber] =
+    useState<number>(1);
   const [loading, setLoading] = useState(true);
 
   // Add Subject to Semester Modal
@@ -62,10 +75,14 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
 
   // Create Elective Group Modal
   const [createElectiveModalOpen, setCreateElectiveModalOpen] = useState(false);
-  const [electiveGroupName, setElectiveGroupName] = useState("Professional Elective I");
+  const [electiveGroupName, setElectiveGroupName] = useState(
+    "Professional Elective I",
+  );
   const [electiveMin, setElectiveMin] = useState<number>(1);
   const [electiveMax, setElectiveMax] = useState<number>(1);
-  const [selectedElectiveSubjectIds, setSelectedElectiveSubjectIds] = useState<string[]>([]);
+  const [selectedElectiveSubjectIds, setSelectedElectiveSubjectIds] = useState<
+    string[]
+  >([]);
 
   // Publish Dialog
   const [publishModalOpen, setPublishModalOpen] = useState(false);
@@ -97,7 +114,13 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
 
   // Frontend Validation Analysis
   const validationResults = useMemo(() => {
-    if (!curriculum) return { errors: [], warnings: [], isValid: true, currentTotalCredits: 0 };
+    if (!curriculum)
+      return {
+        errors: [],
+        warnings: [],
+        isValid: true,
+        currentTotalCredits: 0,
+      };
 
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -111,7 +134,7 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
     // 1. Credit discrepancy check
     if (currentTotalCredits !== curriculum.totalCredits) {
       warnings.push(
-        `Mapped credits (${currentTotalCredits} Cr) do not match the prescribed curriculum total of ${curriculum.totalCredits} Cr.`
+        `Mapped credits (${currentTotalCredits} Cr) do not match the prescribed curriculum total of ${curriculum.totalCredits} Cr.`,
       );
     }
 
@@ -122,7 +145,7 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         const key = sub.subjectCode.toUpperCase();
         if (seenSubjects.has(key)) {
           errors.push(
-            `Duplicate subject "${sub.subjectCode} - ${sub.subjectName}" is assigned in both Semester ${seenSubjects.get(key)} and Semester ${sem.semesterNumber}.`
+            `Duplicate subject "${sub.subjectCode} - ${sub.subjectName}" is assigned in both Semester ${seenSubjects.get(key)} and Semester ${sem.semesterNumber}.`,
           );
         } else {
           seenSubjects.set(key, sem.semesterNumber);
@@ -133,7 +156,9 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
     // 3. Empty semester check
     for (const sem of curriculum.semesters) {
       if (sem.subjects.length === 0) {
-        warnings.push(`Semester ${sem.semesterNumber} has 0 subjects assigned.`);
+        warnings.push(
+          `Semester ${sem.semesterNumber} has 0 subjects assigned.`,
+        );
       }
     }
 
@@ -142,10 +167,14 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       if (sem.electiveGroups) {
         for (const eg of sem.electiveGroups) {
           if (eg.minSelect > eg.maxSelect) {
-            errors.push(`Elective group "${eg.name}" in Sem ${sem.semesterNumber} has min selection (${eg.minSelect}) greater than max (${eg.maxSelect}).`);
+            errors.push(
+              `Elective group "${eg.name}" in Sem ${sem.semesterNumber} has min selection (${eg.minSelect}) greater than max (${eg.maxSelect}).`,
+            );
           }
           if (eg.subjects.length < eg.maxSelect) {
-            warnings.push(`Elective group "${eg.name}" has fewer subjects (${eg.subjects.length}) than maximum allowed selection (${eg.maxSelect}).`);
+            warnings.push(
+              `Elective group "${eg.name}" has fewer subjects (${eg.subjects.length}) than maximum allowed selection (${eg.maxSelect}).`,
+            );
           }
         }
       }
@@ -164,7 +193,9 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
     e.preventDefault();
     if (!curriculum || !selectedCatalogSubjectId) return;
 
-    const catalogSub = availableSubjects.find((s) => s.id === selectedCatalogSubjectId);
+    const catalogSub = availableSubjects.find(
+      (s) => s.id === selectedCatalogSubjectId,
+    );
     if (!catalogSub) return;
 
     try {
@@ -185,7 +216,7 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       const res = await academicsService.addSubjectToCurriculum(
         curriculum.id,
         targetSemester,
-        newCurrSubject
+        newCurrSubject,
       );
 
       if (res.success) {
@@ -199,27 +230,38 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         setSelectedCatalogSubjectId("");
       }
     } catch (err: any) {
-      showToast({ title: "Failed to add subject", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to add subject",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmittingSubject(false);
     }
   };
 
   // Remove Subject from Semester
-  const handleRemoveSubject = async (semesterNumber: number, subjectId: string) => {
+  const handleRemoveSubject = async (
+    semesterNumber: number,
+    subjectId: string,
+  ) => {
     if (!curriculum) return;
     try {
       const res = await academicsService.removeSubjectFromCurriculum(
         curriculum.id,
         semesterNumber,
-        subjectId
+        subjectId,
       );
       if (res.success) {
         setCurriculum({ ...res.data });
         showToast({ title: "Subject Removed from Semester", type: "info" });
       }
     } catch (err: any) {
-      showToast({ title: "Failed to remove subject", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to remove subject",
+        message: err.message,
+        type: "error",
+      });
     }
   };
 
@@ -257,7 +299,7 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       const res = await academicsService.createElectiveGroup(
         curriculum.id,
         selectedSemesterNumber,
-        newGroup
+        newGroup,
       );
       if (res.success) {
         setCurriculum({ ...res.data });
@@ -270,7 +312,11 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         setSelectedElectiveSubjectIds([]);
       }
     } catch (err: any) {
-      showToast({ title: "Failed to create elective group", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to create elective group",
+        message: err.message,
+        type: "error",
+      });
     }
   };
 
@@ -290,7 +336,11 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         setPublishModalOpen(false);
       }
     } catch (err: any) {
-      showToast({ title: "Publish failed", message: err.message, type: "error" });
+      showToast({
+        title: "Publish failed",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsPublishing(false);
     }
@@ -302,7 +352,10 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         <div className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-slate-900/60 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-24 bg-slate-900/60 rounded-xl animate-pulse"
+            />
           ))}
         </div>
         <TableSkeleton rows={5} />
@@ -314,12 +367,18 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
     return (
       <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12 text-center">
         <FileSpreadsheet className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-        <h3 className="text-lg font-semibold text-white">Curriculum Scheme Not Found</h3>
+        <h3 className="text-lg font-semibold text-white">
+          Curriculum Scheme Not Found
+        </h3>
         <p className="text-xs text-slate-400 mt-1 mb-6">
           The requested curriculum identifier does not exist.
         </p>
         <Link href="/app/academics/curricula">
-          <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back to Curricula Schemes
           </Button>
         </Link>
@@ -327,7 +386,9 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
     );
   }
 
-  const currentSemesterObj = curriculum.semesters.find((s) => s.semesterNumber === selectedSemesterNumber);
+  const currentSemesterObj = curriculum.semesters.find(
+    (s) => s.semesterNumber === selectedSemesterNumber,
+  );
 
   return (
     <div className="space-y-6">
@@ -335,15 +396,23 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
-            <Link href="/app/academics/curricula" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics/curricula"
+              className="hover:text-white transition-colors"
+            >
               Curricula
             </Link>
             <span>/</span>
-            <span className="text-white font-mono">{curriculum.regulation} {curriculum.version}</span>
+            <span className="text-white font-mono">
+              {curriculum.regulation} {curriculum.version}
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold tracking-tight text-white">
@@ -352,19 +421,26 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
             <Badge variant="info">{curriculum.regulation}</Badge>
             <Badge variant="secondary">{curriculum.version}</Badge>
             {curriculum.isActiveVersion ? (
-              <Badge variant="success" dot>Active Regulation</Badge>
+              <Badge variant="success" dot>
+                Active Regulation
+              </Badge>
             ) : (
               <Badge variant="warning">Historical / Draft</Badge>
             )}
           </div>
           <p className="mt-1 text-xs text-slate-400">
-            {curriculum.department} • Effective: {curriculum.effectiveDate} • Total Prescribed: {curriculum.totalCredits} Credits
+            {curriculum.department} • Effective: {curriculum.effectiveDate} •
+            Total Prescribed: {curriculum.totalCredits} Credits
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/academics/curricula">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<ArrowLeft className="h-3.5 w-3.5" />}
+            >
               Back to Schemes
             </Button>
           </Link>
@@ -384,12 +460,15 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       {/* KPI Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <div className="text-[11px] font-medium text-slate-400">Prescribed Credits</div>
+          <div className="text-[11px] font-medium text-slate-400">
+            Prescribed Credits
+          </div>
           <div className="mt-1 text-2xl font-bold text-indigo-400 font-mono">
             {validationResults.currentTotalCredits} / {curriculum.totalCredits}
           </div>
           <div className="text-[10px] text-slate-500 mt-0.5">
-            {validationResults.currentTotalCredits === curriculum.totalCredits ? (
+            {validationResults.currentTotalCredits ===
+            curriculum.totalCredits ? (
               <span className="text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="h-3 w-3" /> Fully Balanced
               </span>
@@ -402,33 +481,54 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <div className="text-[11px] font-medium text-slate-400">Total Semesters</div>
+          <div className="text-[11px] font-medium text-slate-400">
+            Total Semesters
+          </div>
           <div className="mt-1 text-2xl font-bold text-white font-mono">
             {curriculum.totalSemesters} Semesters
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">4 Academic Years (UG)</div>
-        </div>
-
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <div className="text-[11px] font-medium text-slate-400">Subjects Mapped</div>
-          <div className="mt-1 text-2xl font-bold text-emerald-400 font-mono">
-            {curriculum.semesters.reduce((acc, s) => acc + s.subjects.length, 0)} Courses
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            4 Academic Years (UG)
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Core + Labs + Electives</div>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <div className="text-[11px] font-medium text-slate-400">Frontend Validation</div>
+          <div className="text-[11px] font-medium text-slate-400">
+            Subjects Mapped
+          </div>
+          <div className="mt-1 text-2xl font-bold text-emerald-400 font-mono">
+            {curriculum.semesters.reduce(
+              (acc, s) => acc + s.subjects.length,
+              0,
+            )}{" "}
+            Courses
+          </div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            Core + Labs + Electives
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+          <div className="text-[11px] font-medium text-slate-400">
+            Frontend Validation
+          </div>
           <div className="mt-1 text-2xl font-bold font-mono">
-            {validationResults.isValid && validationResults.warnings.length === 0 ? (
+            {validationResults.isValid &&
+            validationResults.warnings.length === 0 ? (
               <span className="text-emerald-400">PASS</span>
             ) : validationResults.errors.length > 0 ? (
-              <span className="text-red-400">{validationResults.errors.length} Errors</span>
+              <span className="text-red-400">
+                {validationResults.errors.length} Errors
+              </span>
             ) : (
-              <span className="text-amber-400">{validationResults.warnings.length} Warnings</span>
+              <span className="text-amber-400">
+                {validationResults.warnings.length} Warnings
+              </span>
             )}
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">Preliminary Engine Check</div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            Preliminary Engine Check
+          </div>
         </div>
       </div>
 
@@ -466,9 +566,11 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         >
           <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
           Curriculum Validation
-          {(validationResults.errors.length > 0 || validationResults.warnings.length > 0) && (
+          {(validationResults.errors.length > 0 ||
+            validationResults.warnings.length > 0) && (
             <span className="rounded-full bg-amber-500/20 px-1.5 py-0.2 text-[10px] font-mono text-amber-300">
-              {validationResults.errors.length + validationResults.warnings.length}
+              {validationResults.errors.length +
+                validationResults.warnings.length}
             </span>
           )}
         </button>
@@ -491,7 +593,10 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
           {/* Semester Selector Pills */}
           <div className="flex flex-wrap items-center gap-2">
             {curriculum.semesters.map((sem) => {
-              const semCredits = sem.subjects.reduce((sum, s) => sum + s.credits, 0);
+              const semCredits = sem.subjects.reduce(
+                (sum, s) => sum + s.credits,
+                0,
+              );
               const isSelected = sem.semesterNumber === selectedSemesterNumber;
               return (
                 <button
@@ -504,7 +609,9 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                   }`}
                 >
                   <span>Semester {sem.semesterNumber}</span>
-                  <span className={`ml-2 text-[10px] font-mono ${isSelected ? "text-indigo-200" : "text-slate-500"}`}>
+                  <span
+                    className={`ml-2 text-[10px] font-mono ${isSelected ? "text-indigo-200" : "text-slate-500"}`}
+                  >
                     ({semCredits} Cr • {sem.subjects.length} courses)
                   </span>
                 </button>
@@ -517,9 +624,16 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Semester {currentSemesterObj.semesterNumber} Structure</CardTitle>
+                  <CardTitle>
+                    Semester {currentSemesterObj.semesterNumber} Structure
+                  </CardTitle>
                   <CardDescription>
-                    Prescribed course lineup • {currentSemesterObj.subjects.reduce((sum, s) => sum + s.credits, 0)} Total Credits
+                    Prescribed course lineup •{" "}
+                    {currentSemesterObj.subjects.reduce(
+                      (sum, s) => sum + s.credits,
+                      0,
+                    )}{" "}
+                    Total Credits
                   </CardDescription>
                 </div>
                 <Button
@@ -537,7 +651,10 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
               <CardContent className="p-0">
                 {currentSemesterObj.subjects.length === 0 ? (
                   <div className="p-12 text-center text-xs text-slate-400">
-                    <p>No subjects mapped to Semester {currentSemesterObj.semesterNumber} yet.</p>
+                    <p>
+                      No subjects mapped to Semester{" "}
+                      {currentSemesterObj.semesterNumber} yet.
+                    </p>
                     <Button
                       variant="outline"
                       size="sm"
@@ -567,7 +684,10 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                       </thead>
                       <tbody className="divide-y divide-slate-800/60">
                         {currentSemesterObj.subjects.map((sub) => (
-                          <tr key={sub.id} className="hover:bg-slate-800/40 transition-colors">
+                          <tr
+                            key={sub.id}
+                            className="hover:bg-slate-800/40 transition-colors"
+                          >
                             <td className="px-5 py-3.5 font-mono font-semibold text-white">
                               <Link
                                 href={`/app/academics/subjects/${sub.subjectId || sub.subjectCode}`}
@@ -585,19 +705,29 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                               </span>
                             </td>
                             <td className="px-4 py-3.5">
-                              <Badge variant={sub.type === "THEORY" ? "info" : "success"}>
+                              <Badge
+                                variant={
+                                  sub.type === "THEORY" ? "info" : "success"
+                                }
+                              >
                                 {sub.type}
                               </Badge>
                             </td>
                             <td className="px-4 py-3.5 font-mono text-slate-300">
-                              {sub.lectureHours}-{sub.tutorialHours}-{sub.practicalHours}
+                              {sub.lectureHours}-{sub.tutorialHours}-
+                              {sub.practicalHours}
                             </td>
                             <td className="px-4 py-3.5 font-mono font-bold text-indigo-400">
                               {sub.credits} Cr
                             </td>
                             <td className="px-4 py-3.5 text-right">
                               <button
-                                onClick={() => handleRemoveSubject(currentSemesterObj.semesterNumber, sub.id)}
+                                onClick={() =>
+                                  handleRemoveSubject(
+                                    currentSemesterObj.semesterNumber,
+                                    sub.id,
+                                  )
+                                }
                                 className="p-1 text-slate-400 hover:text-red-400 transition-colors rounded hover:bg-red-500/10"
                                 title="Remove from semester"
                               >
@@ -625,7 +755,8 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                 Semester {selectedSemesterNumber} Elective Baskets
               </h3>
               <p className="text-xs text-slate-400">
-                Groupings of specialized elective courses offering choice-based credit enrollment.
+                Groupings of specialized elective courses offering choice-based
+                credit enrollment.
               </p>
             </div>
             <Button
@@ -638,7 +769,8 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
             </Button>
           </div>
 
-          {currentSemesterObj?.electiveGroups && currentSemesterObj.electiveGroups.length > 0 ? (
+          {currentSemesterObj?.electiveGroups &&
+          currentSemesterObj.electiveGroups.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {currentSemesterObj.electiveGroups.map((eg) => (
                 <Card key={eg.id}>
@@ -646,7 +778,8 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                     <div>
                       <CardTitle className="text-sm">{eg.name}</CardTitle>
                       <CardDescription>
-                        Rule: Choose {eg.minSelect} of {eg.subjects.length} courses
+                        Rule: Choose {eg.minSelect} of {eg.subjects.length}{" "}
+                        courses
                       </CardDescription>
                     </div>
                     <Badge variant="info">Elective Group</Badge>
@@ -654,12 +787,21 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                   <CardContent className="space-y-2">
                     <div className="divide-y divide-slate-800 text-xs">
                       {eg.subjects.map((sub) => (
-                        <div key={sub.id} className="py-2 flex items-center justify-between">
+                        <div
+                          key={sub.id}
+                          className="py-2 flex items-center justify-between"
+                        >
                           <div>
-                            <span className="font-mono font-medium text-white">{sub.subjectCode}</span>
-                            <span className="ml-2 text-slate-300">{sub.subjectName}</span>
+                            <span className="font-mono font-medium text-white">
+                              {sub.subjectCode}
+                            </span>
+                            <span className="ml-2 text-slate-300">
+                              {sub.subjectName}
+                            </span>
                           </div>
-                          <span className="font-mono text-indigo-400 font-semibold">{sub.credits} Cr</span>
+                          <span className="font-mono text-indigo-400 font-semibold">
+                            {sub.credits} Cr
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -684,7 +826,9 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
               Preliminary Frontend Academic Integrity Validation
             </h4>
             <p className="mt-1">
-              Validates semester integrity, credit balance, duplicate assignments, and elective rules prior to Academic Council ratification.
+              Validates semester integrity, credit balance, duplicate
+              assignments, and elective rules prior to Academic Council
+              ratification.
             </p>
           </div>
 
@@ -699,12 +843,16 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
               <CardContent className="space-y-2">
                 {validationResults.errors.length === 0 ? (
                   <p className="text-xs text-emerald-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4" /> No duplicate course collisions or structure faults.
+                    <CheckCircle2 className="h-4 w-4" /> No duplicate course
+                    collisions or structure faults.
                   </p>
                 ) : (
                   <ul className="space-y-2 text-xs text-red-300">
                     {validationResults.errors.map((err, idx) => (
-                      <li key={idx} className="p-2 rounded bg-red-500/10 border border-red-500/20">
+                      <li
+                        key={idx}
+                        className="p-2 rounded bg-red-500/10 border border-red-500/20"
+                      >
                         {err}
                       </li>
                     ))}
@@ -723,12 +871,16 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
               <CardContent className="space-y-2">
                 {validationResults.warnings.length === 0 ? (
                   <p className="text-xs text-emerald-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4" /> All semesters are populated and credits match 100%.
+                    <CheckCircle2 className="h-4 w-4" /> All semesters are
+                    populated and credits match 100%.
                   </p>
                 ) : (
                   <ul className="space-y-2 text-xs text-amber-300">
                     {validationResults.warnings.map((warn, idx) => (
-                      <li key={idx} className="p-2 rounded bg-amber-500/10 border border-amber-500/20">
+                      <li
+                        key={idx}
+                        className="p-2 rounded bg-amber-500/10 border border-amber-500/20"
+                      >
                         {warn}
                       </li>
                     ))}
@@ -767,11 +919,18 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                       <td className="px-5 py-3.5 font-mono font-semibold text-white">
                         {v.version}
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-slate-400">{v.date}</td>
+                      <td className="px-4 py-3.5 font-mono text-slate-400">
+                        {v.date}
+                      </td>
                       <td className="px-4 py-3.5 text-slate-200">{v.author}</td>
                       <td className="px-4 py-3.5 text-slate-300">{v.notes}</td>
                       <td className="px-4 py-3.5">
-                        <Badge variant={v.status === "PUBLISHED" ? "success" : "info"} dot>
+                        <Badge
+                          variant={
+                            v.status === "PUBLISHED" ? "success" : "info"
+                          }
+                          dot
+                        >
                           {v.status}
                         </Badge>
                       </td>
@@ -793,13 +952,16 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
         <form onSubmit={handleAddSubject} className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1">
-              Select Subject from Catalog <span className="text-red-400">*</span>
+              Select Subject from Catalog{" "}
+              <span className="text-red-400">*</span>
             </label>
             <select
               value={selectedCatalogSubjectId}
               onChange={(e) => {
                 setSelectedCatalogSubjectId(e.target.value);
-                const match = availableSubjects.find((s) => s.id === e.target.value);
+                const match = availableSubjects.find(
+                  (s) => s.id === e.target.value,
+                );
                 if (match) setCustomCredits(match.credits);
               }}
               className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
@@ -910,14 +1072,23 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
                       checked={checked}
                       onChange={() => {
                         if (checked) {
-                          setSelectedElectiveSubjectIds(selectedElectiveSubjectIds.filter((x) => x !== sub.id));
+                          setSelectedElectiveSubjectIds(
+                            selectedElectiveSubjectIds.filter(
+                              (x) => x !== sub.id,
+                            ),
+                          );
                         } else {
-                          setSelectedElectiveSubjectIds([...selectedElectiveSubjectIds, sub.id]);
+                          setSelectedElectiveSubjectIds([
+                            ...selectedElectiveSubjectIds,
+                            sub.id,
+                          ]);
                         }
                       }}
                       className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <span className="font-mono text-indigo-400">{sub.code}</span>
+                    <span className="font-mono text-indigo-400">
+                      {sub.code}
+                    </span>
                     <span>{sub.name}</span>
                   </label>
                 );
@@ -954,10 +1125,16 @@ export default function CurriculumBuilderPage({ params }: CurriculumDetailPagePr
       >
         <div className="space-y-3 text-xs text-slate-300">
           <p>
-            Publishing gazettes <strong className="text-white">{curriculum.programName} ({curriculum.regulation} {curriculum.version})</strong> as the official active regulation for cohort degree progression.
+            Publishing gazettes{" "}
+            <strong className="text-white">
+              {curriculum.programName} ({curriculum.regulation}{" "}
+              {curriculum.version})
+            </strong>{" "}
+            as the official active regulation for cohort degree progression.
           </p>
           <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-amber-200">
-            Once published, the structure becomes authoritative for course offerings and student graduation audits.
+            Once published, the structure becomes authoritative for course
+            offerings and student graduation audits.
           </div>
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
             <Button

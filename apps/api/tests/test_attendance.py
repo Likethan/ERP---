@@ -1,7 +1,6 @@
 """Comprehensive automated tests for CampusOS Step 6: Attendance Management Engine."""
 
 import uuid
-from datetime import date
 from typing import Any
 
 import pytest
@@ -11,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_password_hash
 from app.models.core import Institution
-from app.models.people import FacultyProfile, Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import Role, User, UserRoleAssignment
 
 
 async def authenticate_user(
@@ -186,7 +185,7 @@ async def setup_academic_environment(client: AsyncClient) -> dict[str, Any]:
                 "email": f"stud{i}_{uid}@apextech.edu",
                 "admission_number": f"ADM_{uid}_{i}",
                 "first_name": f"Student{i}",
-                "last_name": f"Test",
+                "last_name": "Test",
                 "date_of_birth": "2005-05-15",
                 "gender": "FEMALE" if i == 1 else "MALE",
                 "admission_date": "2025-08-01",

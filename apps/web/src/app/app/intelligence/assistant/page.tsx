@@ -116,7 +116,11 @@ export default function AiAssistantConsolePage() {
     }
   };
 
-  const handleSendQuery = async (queryText: string, domain: IntelligenceDomain, context?: any) => {
+  const handleSendQuery = async (
+    queryText: string,
+    domain: IntelligenceDomain,
+    context?: any,
+  ) => {
     let currentConvId = activeConvId;
 
     // Create conversation if none active
@@ -141,7 +145,10 @@ export default function AiAssistantConsolePage() {
       role: AIMessageRole.USER,
       status: AIMessageStatus.COMPLETED,
       content: queryText,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -167,7 +174,10 @@ export default function AiAssistantConsolePage() {
           role: AIMessageRole.ASSISTANT,
           status: AIMessageStatus.COMPLETED,
           content: response.data.reply,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
           blocks: response.data.blocks,
           sources: response.data.sources,
           explainability: response.data.explainability,
@@ -180,17 +190,24 @@ export default function AiAssistantConsolePage() {
         // Update conversation title if generic
         const currentConv = conversations.find((c) => c.id === currentConvId);
         if (currentConv && currentConv.title.startsWith("New Campus")) {
-          const generatedTitle = queryText.slice(0, 36) + (queryText.length > 36 ? "..." : "");
-          await aiConversationsService.renameConversation(currentConvId, generatedTitle);
+          const generatedTitle =
+            queryText.slice(0, 36) + (queryText.length > 36 ? "..." : "");
+          await aiConversationsService.renameConversation(
+            currentConvId,
+            generatedTitle,
+          );
           setConversations((prev) =>
-            prev.map((c) => (c.id === currentConvId ? { ...c, title: generatedTitle } : c))
+            prev.map((c) =>
+              c.id === currentConvId ? { ...c, title: generatedTitle } : c,
+            ),
           );
         }
       }
     } catch {
       toast({
         title: "Reasoning Engine Error",
-        description: "Unable to synthesize cross-domain intelligence answer. Please retry.",
+        description:
+          "Unable to synthesize cross-domain intelligence answer. Please retry.",
         variant: "error",
       });
     } finally {
@@ -223,7 +240,9 @@ export default function AiAssistantConsolePage() {
     const res = await aiConversationsService.togglePinConversation(id);
     if (res.success && res.data) {
       setConversations((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, isPinned: res.data!.isPinned } : c))
+        prev.map((c) =>
+          c.id === id ? { ...c, isPinned: res.data!.isPinned } : c,
+        ),
       );
     }
   };
@@ -247,10 +266,15 @@ export default function AiAssistantConsolePage() {
 
   const handleRenameConfirm = async () => {
     if (!renameTarget || !newTitle.trim()) return;
-    const res = await aiConversationsService.renameConversation(renameTarget.id, newTitle);
+    const res = await aiConversationsService.renameConversation(
+      renameTarget.id,
+      newTitle,
+    );
     if (res.success && res.data) {
       setConversations((prev) =>
-        prev.map((c) => (c.id === renameTarget.id ? { ...c, title: newTitle.trim() } : c))
+        prev.map((c) =>
+          c.id === renameTarget.id ? { ...c, title: newTitle.trim() } : c,
+        ),
       );
       toast({ title: "Conversation Renamed", variant: "success" });
     }
@@ -308,7 +332,9 @@ export default function AiAssistantConsolePage() {
             title="Toggle Context Panel"
           >
             <SidebarIcon className="w-4 h-4" />
-            <span className="hidden xl:inline">{showRightPanel ? "Hide Sources" : "Show Sources"}</span>
+            <span className="hidden xl:inline">
+              {showRightPanel ? "Hide Sources" : "Show Sources"}
+            </span>
           </Button>
 
           <Button
@@ -362,7 +388,9 @@ export default function AiAssistantConsolePage() {
                         {conv.isPinned && (
                           <Pin className="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" />
                         )}
-                        <span className={`font-semibold truncate ${isActive ? "text-blue-900" : "text-slate-800"}`}>
+                        <span
+                          className={`font-semibold truncate ${isActive ? "text-blue-900" : "text-slate-800"}`}
+                        >
                           {conv.title}
                         </span>
                       </div>
@@ -402,8 +430,15 @@ export default function AiAssistantConsolePage() {
                     </p>
 
                     <div className="flex items-center justify-between text-[10px] text-slate-400">
-                      <span>{new Date(conv.updatedAt).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
-                      <span className="font-medium text-slate-500">{conv.domain}</span>
+                      <span>
+                        {new Date(conv.updatedAt).toLocaleDateString([], {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                      <span className="font-medium text-slate-500">
+                        {conv.domain}
+                      </span>
                     </div>
                   </div>
                 );
@@ -426,7 +461,8 @@ export default function AiAssistantConsolePage() {
                   What do you want to understand about your campus?
                 </h2>
                 <p className="text-sm text-slate-500 max-w-lg mx-auto">
-                  Ask questions across academics, attendance, finance, placement, campus operations and more.
+                  Ask questions across academics, attendance, finance,
+                  placement, campus operations and more.
                 </p>
               </div>
 
@@ -475,7 +511,9 @@ export default function AiAssistantConsolePage() {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2 mb-1.5 text-xs">
-                        <span className={`font-semibold ${isUser ? "text-blue-100" : "text-slate-900"}`}>
+                        <span
+                          className={`font-semibold ${isUser ? "text-blue-100" : "text-slate-900"}`}
+                        >
                           {isUser ? "You" : "CampusOS Intelligence"}
                         </span>
                         <div className="flex items-center gap-1.5 text-[11px] opacity-75">
@@ -493,10 +531,14 @@ export default function AiAssistantConsolePage() {
                         </div>
                       </div>
 
-                      <p className="whitespace-pre-line leading-relaxed">{msg.content}</p>
+                      <p className="whitespace-pre-line leading-relaxed">
+                        {msg.content}
+                      </p>
 
                       {/* Structured Response Blocks */}
-                      {!isUser && <StructuredResponseView blocks={msg.blocks} />}
+                      {!isUser && (
+                        <StructuredResponseView blocks={msg.blocks} />
+                      )}
 
                       {/* Explainability & Sources */}
                       {!isUser && (
@@ -509,7 +551,9 @@ export default function AiAssistantConsolePage() {
                       {/* Suggested Quick Links */}
                       {!isUser && msg.suggestedActions && (
                         <div className="flex flex-wrap items-center gap-2 pt-2 mt-2 border-t border-slate-200/60">
-                          <span className="text-[11px] font-semibold text-slate-400">Quick Links:</span>
+                          <span className="text-[11px] font-semibold text-slate-400">
+                            Quick Links:
+                          </span>
                           {msg.suggestedActions.map((act, aIdx) => (
                             <Link key={aIdx} href={act.href}>
                               <span className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium hover:underline">
@@ -570,12 +614,20 @@ export default function AiAssistantConsolePage() {
 
             <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-2 text-xs">
               <div className="flex items-center justify-between text-slate-600">
-                <span className="text-[11px] text-slate-400">Institutional Scope</span>
-                <span className="font-semibold text-slate-800">VSB Campus (Full)</span>
+                <span className="text-[11px] text-slate-400">
+                  Institutional Scope
+                </span>
+                <span className="font-semibold text-slate-800">
+                  VSB Campus (Full)
+                </span>
               </div>
               <div className="flex items-center justify-between text-slate-600">
-                <span className="text-[11px] text-slate-400">Security Clearance</span>
-                <Badge variant="success" className="text-[10px]">SUPER_ADMIN</Badge>
+                <span className="text-[11px] text-slate-400">
+                  Security Clearance
+                </span>
+                <Badge variant="success" className="text-[10px]">
+                  SUPER_ADMIN
+                </Badge>
               </div>
               <div className="flex items-center justify-between text-slate-600">
                 <span className="text-[11px] text-slate-400">Active Term</span>
@@ -606,7 +658,9 @@ export default function AiAssistantConsolePage() {
                         </span>
                         <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-blue-600 shrink-0" />
                       </div>
-                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{s.description}</p>
+                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                        {s.description}
+                      </p>
                     </Link>
                   ))}
                 </div>
@@ -620,7 +674,9 @@ export default function AiAssistantConsolePage() {
                 Enterprise Compliance
               </span>
               <p className="text-blue-800/80 leading-relaxed">
-                Queries are executed strictly within role-based access boundaries. No sensitive data is shared outside institutional walls.
+                Queries are executed strictly within role-based access
+                boundaries. No sensitive data is shared outside institutional
+                walls.
               </p>
             </div>
           </aside>
@@ -642,10 +698,18 @@ export default function AiAssistantConsolePage() {
             placeholder="Conversation title"
           />
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" size="sm" onClick={() => setRenameTarget(null)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRenameTarget(null)}
+            >
               Cancel
             </Button>
-            <Button size="sm" onClick={handleRenameConfirm} disabled={!newTitle.trim()}>
+            <Button
+              size="sm"
+              onClick={handleRenameConfirm}
+              disabled={!newTitle.trim()}
+            >
               Save Title
             </Button>
           </div>

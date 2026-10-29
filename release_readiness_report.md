@@ -1,7 +1,7 @@
 # CampusOS Release Certification Report
 
-**Commit Revision:** `ab71cdc74e9d3926e1428b4af677a884b672656b`  
-**Build Timestamp:** `2026-10-17T16:29:33.270980+00:00`  
+**Commit Revision:** `65b1794e27d3e401873c810ca68929035921a42e`  
+**Build Timestamp:** `2026-10-19T12:47:25.508211+00:00`  
 **Target Environment:** `Windows-10-10.0.26200-SP0` | Python `3.11.9`  
 **Overall Release Decision:** **WARNING**  
 
@@ -21,8 +21,8 @@
 | **G-06** | Cross-Domain Business Workflows | `PASS` | 11 critical workflows verified |
 | **G-07** | Resilience & Failure Injection | `PASS` | 5 circuit breaker & retry tests passed |
 | **G-08** | AI Safety & Governance | `PASS` | 19 PromptGuard injection tests passed |
-| **G-09** | Frontend Accessibility (WCAG 2.1 AA) | `PASS` | Compliance 80.25%, 0 violations |
-| **G-10** | E2E Browser Automation | `BLOCKED` | Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev'). |
+| **G-09** | Frontend Accessibility (WCAG 2.1 AA) | `PASS` | Compliance 80.6%, 0 violations |
+| **G-10** | E2E Browser Automation | `BLOCKED` | npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web. |
 | **G-11** | Security Operations & Audit Trail | `PASS` | Audit logging & sanitization enforced |
 | **G-12** | Performance & Scalability Baseline | `PASS` | Step 32 query limits and circuit bounds intact |
 
@@ -32,11 +32,11 @@
 
 | Test Suite File | Passed | Failed | Skipped | Status | Summary |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| `tests/test_enterprise_quality_workflows.py` | 11 | 0 | 0 | `PASS` | 11 passed, 3 warnings in 5.32s |
-| `tests/test_enterprise_database_migrations.py` | 5 | 0 | 0 | `PASS` | 5 passed, 1 warning in 4.80s |
-| `tests/test_enterprise_api_contracts.py` | 5 | 0 | 0 | `PASS` | 5 passed, 2 warnings in 10.98s |
-| `tests/test_enterprise_failure_injection.py` | 5 | 0 | 0 | `PASS` | 5 passed, 1 warning in 5.58s |
-| `tests/test_enterprise_ai_safety_eval.py` | 19 | 0 | 0 | `PASS` | 19 passed, 12 warnings in 4.54s |
+| `tests/test_enterprise_quality_workflows.py` | 11 | 0 | 0 | `PASS` | 11 passed, 1 warning in 5.36s |
+| `tests/test_enterprise_database_migrations.py` | 5 | 0 | 0 | `PASS` | 5 passed, 1 warning in 5.33s |
+| `tests/test_enterprise_api_contracts.py` | 5 | 0 | 0 | `PASS` | 5 passed, 2 warnings in 11.44s |
+| `tests/test_enterprise_failure_injection.py` | 5 | 0 | 0 | `PASS` | 5 passed, 1 warning in 5.09s |
+| `tests/test_enterprise_ai_safety_eval.py` | 19 | 0 | 0 | `PASS` | 19 passed, 1 warning in 4.70s |
 
 **Total Tests Executed:** 45 | **Passed:** 45 | **Failed:** 0 | **Skipped:** 0
 
@@ -45,11 +45,11 @@
 ## 3. Frontend Accessibility & WCAG 2.1 AA Audit
 
 - **Overall Status:** `PASS`
-- **Compliance Rate:** `80.25%`
-- **Files Scanned:** `160` routes
-- **Inspected Elements:** `1534`
+- **Compliance Rate:** `80.6%`
+- **Files Scanned:** `171` routes
+- **Inspected Elements:** `1876`
 - **Violations:** `0`
-- **Warnings:** `303`
+- **Warnings:** `364`
 
 ---
 
@@ -57,7 +57,7 @@
 
 - **Status:** `BLOCKED`
 - **Specification:** `apps/web/e2e/critical-journeys.spec.ts` (12 Core User Journeys)
-- **Diagnostic Details:** Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev').
+- **Diagnostic Details:** npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web.
 
 ---
 

@@ -209,7 +209,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "ADMISSION",
       date: "2024-08-01",
       semester: 1,
-      description: "Admitted to B.Tech CSE under Karnataka State Merit Quota with rank 1,420.",
+      description:
+        "Admitted to B.Tech CSE under Karnataka State Merit Quota with rank 1,420.",
       status: "COMPLETED",
       awardedBy: "Dean of Admissions",
     },
@@ -219,7 +220,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "SEMESTER_PROGRESSION",
       date: "2025-06-20",
       semester: 2,
-      description: "Successfully cleared all 10 foundation subjects with first-class distinction (CGPA: 8.85).",
+      description:
+        "Successfully cleared all 10 foundation subjects with first-class distinction (CGPA: 8.85).",
       status: "COMPLETED",
     },
     {
@@ -228,7 +230,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "ACHIEVEMENT",
       date: "2025-11-18",
       semester: 3,
-      description: "1st Prize in AI & Edge Computing category with cash prize of ₹ 1,00,000.",
+      description:
+        "1st Prize in AI & Edge Computing category with cash prize of ₹ 1,00,000.",
       status: "COMPLETED",
       awardedBy: "Ministry of Education Innovation Cell",
     },
@@ -238,7 +241,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "INTERNSHIP",
       date: "2026-07-15",
       semester: 4,
-      description: "Completed 8-week Cloud Platform Engineering internship at Infosys Bangalore DC.",
+      description:
+        "Completed 8-week Cloud Platform Engineering internship at Infosys Bangalore DC.",
       status: "COMPLETED",
       certificateRef: "CERT-INFY-2026-088",
     },
@@ -248,7 +252,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "PLACEMENT",
       date: "2026-09-28",
       semester: 5,
-      description: "Shortlisted for Round 2 Technical Assessments for SWE 2027 Campus Drive.",
+      description:
+        "Shortlisted for Round 2 Technical Assessments for SWE 2027 Campus Drive.",
       status: "IN_PROGRESS",
     },
     {
@@ -257,7 +262,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "GRADUATION",
       date: "2028-07-30",
       semester: 8,
-      description: "Degree award upon successful completion of 160 university credits.",
+      description:
+        "Degree award upon successful completion of 160 university credits.",
       status: "UPCOMING",
     },
   ],
@@ -268,7 +274,8 @@ export const MOCK_ACADEMIC_MILESTONES: Record<string, AcademicMilestone[]> = {
       category: "ADMISSION",
       date: "2024-08-01",
       semester: 1,
-      description: "Enrolled in B.Tech CSE with 96.4% in Senior Secondary Examinations.",
+      description:
+        "Enrolled in B.Tech CSE with 96.4% in Senior Secondary Examinations.",
       status: "COMPLETED",
     },
     {
@@ -420,7 +427,8 @@ export const MOCK_FACULTY_PUBLICATIONS: Record<string, FacultyPublication[]> = {
   "fac-cse-001": [
     {
       id: "pub-001",
-      title: "Optimized Consensus in Permissioned Distributed Ledgers for High-Throughput Academic Credential Verification",
+      title:
+        "Optimized Consensus in Permissioned Distributed Ledgers for High-Throughput Academic Credential Verification",
       publicationType: "JOURNAL",
       venueName: "IEEE Transactions on Cloud & Services Computing",
       publicationYear: 2025,
@@ -429,13 +437,16 @@ export const MOCK_FACULTY_PUBLICATIONS: Record<string, FacultyPublication[]> = {
       status: "PUBLISHED",
       citationCount: 14,
       url: "https://doi.org/10.1109/TCSC.2025.319082",
-      abstractSummary: "Proposes an asynchronous zero-overhead consensus protocol achieving 18,000 tx/sec with millisecond finality.",
+      abstractSummary:
+        "Proposes an asynchronous zero-overhead consensus protocol achieving 18,000 tx/sec with millisecond finality.",
     },
     {
       id: "pub-002",
-      title: "Multi-Tenant Scalability Patterns in Next-Generation Higher Education ERP Architectures",
+      title:
+        "Multi-Tenant Scalability Patterns in Next-Generation Higher Education ERP Architectures",
       publicationType: "CONFERENCE",
-      venueName: "ACM International Conference on Software Engineering (ICSE 2026)",
+      venueName:
+        "ACM International Conference on Software Engineering (ICSE 2026)",
       publicationYear: 2026,
       authors: ["Dr. V. Ramanathan", "K. J. Likethan"],
       status: "ACCEPTED",
@@ -444,19 +455,22 @@ export const MOCK_FACULTY_PUBLICATIONS: Record<string, FacultyPublication[]> = {
     },
     {
       id: "pub-003",
-      title: "Zero-Knowledge Proof Verification for Decentralized Student Identity Records",
+      title:
+        "Zero-Knowledge Proof Verification for Decentralized Student Identity Records",
       publicationType: "PATENT",
       venueName: "Indian Patent Office (Application No. 202541098231)",
       publicationYear: 2025,
       authors: ["Dr. V. Ramanathan"],
       status: "SUBMITTED",
-      abstractSummary: "Cryptographic protocol ensuring privacy-preserving biometric validation in university attendance nodes.",
+      abstractSummary:
+        "Cryptographic protocol ensuring privacy-preserving biometric validation in university attendance nodes.",
     },
   ],
   "fac-cse-002": [
     {
       id: "pub-010",
-      title: "Approximation Algorithms for Multi-Resource Fair Scheduling in Heterogeneous GPU Clusters",
+      title:
+        "Approximation Algorithms for Multi-Resource Fair Scheduling in Heterogeneous GPU Clusters",
       publicationType: "JOURNAL",
       venueName: "Journal of Parallel and Distributed Computing (Elsevier)",
       publicationYear: 2024,
@@ -482,7 +496,8 @@ export const MOCK_STAFF_SHIFTS: StaffShiftItem[] = [
     endTime: "03:30 PM",
     assignedStaffCount: 8,
     department: "Transport, Hostels & Security",
-    description: "Covers early student transport arrival, breakfast kitchen oversight, and morning registration desk.",
+    description:
+      "Covers early student transport arrival, breakfast kitchen oversight, and morning registration desk.",
   },
   {
     id: "shf-general",
@@ -493,7 +508,8 @@ export const MOCK_STAFF_SHIFTS: StaffShiftItem[] = [
     endTime: "05:30 PM",
     assignedStaffCount: 24,
     department: "Administration, Academic Offices & Central Labs",
-    description: "Standard daytime administrative support, laboratory assistance, and student affairs desks.",
+    description:
+      "Standard daytime administrative support, laboratory assistance, and student affairs desks.",
   },
   {
     id: "shf-evening",
@@ -504,7 +520,8 @@ export const MOCK_STAFF_SHIFTS: StaffShiftItem[] = [
     endTime: "09:30 PM",
     assignedStaffCount: 6,
     department: "Digital Library, Research Computing & Sports",
-    description: "Supervises extended reading rooms, sports complexes, and after-hours research compute facilities.",
+    description:
+      "Supervises extended reading rooms, sports complexes, and after-hours research compute facilities.",
   },
   {
     id: "shf-night",
@@ -515,7 +532,8 @@ export const MOCK_STAFF_SHIFTS: StaffShiftItem[] = [
     endTime: "06:00 AM",
     assignedStaffCount: 5,
     department: "Campus Security & Residential Caretakers",
-    description: "Campus perimeter surveillance, hostel night-entry desk, and emergency medical ambulance dispatch.",
+    description:
+      "Campus perimeter surveillance, hostel night-entry desk, and emergency medical ambulance dispatch.",
   },
 ];
 
@@ -689,7 +707,8 @@ export const MOCK_STAFF_LEAVES: StaffLeaveRequest[] = [
     startDate: "2026-10-08",
     endDate: "2026-10-09",
     totalDays: 2,
-    reason: "Deputation to NKN (National Knowledge Network) High-Speed Internet peering workshop.",
+    reason:
+      "Deputation to NKN (National Knowledge Network) High-Speed Internet peering workshop.",
     status: "APPROVED",
     requestedAt: "2026-09-27",
     reviewedBy: "Registrar Office",
@@ -760,6 +779,7 @@ export const MOCK_DEPARTMENT_DISTRIBUTION: DepartmentPeopleDistribution[] = [
 // Key aliases for seamless lookup across ID formats
 MOCK_FACULTY_WORKLOADS["fac-cse-01"] = MOCK_FACULTY_WORKLOADS["fac-cse-001"];
 MOCK_FACULTY_WORKLOADS["fac-cse-02"] = MOCK_FACULTY_WORKLOADS["fac-cse-002"];
-MOCK_FACULTY_PUBLICATIONS["fac-cse-01"] = MOCK_FACULTY_PUBLICATIONS["fac-cse-001"];
-MOCK_FACULTY_PUBLICATIONS["fac-cse-02"] = MOCK_FACULTY_PUBLICATIONS["fac-cse-002"];
-
+MOCK_FACULTY_PUBLICATIONS["fac-cse-01"] =
+  MOCK_FACULTY_PUBLICATIONS["fac-cse-001"];
+MOCK_FACULTY_PUBLICATIONS["fac-cse-02"] =
+  MOCK_FACULTY_PUBLICATIONS["fac-cse-002"];

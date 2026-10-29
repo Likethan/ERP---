@@ -39,7 +39,11 @@ export default function ExaminationHubPage() {
         const res = await examinationsService.getDashboardSummary();
         setSummary(res.data);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Failed to load examination operations summary");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load examination operations summary",
+        );
       } finally {
         setLoading(false);
       }
@@ -57,13 +61,16 @@ export default function ExaminationHubPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
               Controller of Examinations
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Semester 5 • Evaluation Engine</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Semester 5 • Evaluation Engine
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Examination & Assessment Hub
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Course assessment configurations, timetable schedules, attendance eligibility gates, marks rosters, and ratified results publication.
+            Course assessment configurations, timetable schedules, attendance
+            eligibility gates, marks rosters, and ratified results publication.
           </p>
         </div>
 
@@ -91,7 +98,9 @@ export default function ExaminationHubPage() {
 
       {error && (
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">
-          <p className="font-semibold">Unable to load Examination Operations Summary</p>
+          <p className="font-semibold">
+            Unable to load Examination Operations Summary
+          </p>
           <p className="mt-0.5">{error}</p>
         </div>
       )}
@@ -105,15 +114,22 @@ export default function ExaminationHubPage() {
             </div>
             <div>
               <h2 className="text-sm font-semibold text-amber-950 dark:text-amber-200">
-                Attendance Eligibility Bar: {summary.ineligibleStudentsCount} Students Ineligible
+                Attendance Eligibility Bar: {summary.ineligibleStudentsCount}{" "}
+                Students Ineligible
               </h2>
               <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-0.5">
-                Students below the 75% attendance threshold are debarred from the End Semester Examination pending formal HOD condonation review.
+                Students below the 75% attendance threshold are debarred from
+                the End Semester Examination pending formal HOD condonation
+                review.
               </p>
             </div>
           </div>
           <Link href="/app/examinations/eligibility">
-            <Button size="sm" variant="outline" className="text-xs whitespace-nowrap bg-white dark:bg-slate-900">
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-xs whitespace-nowrap bg-white dark:bg-slate-900"
+            >
               Review Eligibility Register
             </Button>
           </Link>
@@ -124,7 +140,9 @@ export default function ExaminationHubPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Active Examination Cycles"
-          value={loading ? "..." : String(summary?.activeExaminationsCount ?? 0)}
+          value={
+            loading ? "..." : String(summary?.activeExaminationsCount ?? 0)
+          }
           description={`${summary?.upcomingExamsCount ?? 0} papers scheduled this cycle`}
           icon={<Calendar className="h-5 w-5 text-indigo-600" />}
         />
@@ -136,7 +154,9 @@ export default function ExaminationHubPage() {
         />
         <StatCard
           title="Marks Corrections Pending"
-          value={loading ? "..." : String(summary?.marksAwaitingReviewCount ?? 0)}
+          value={
+            loading ? "..." : String(summary?.marksAwaitingReviewCount ?? 0)
+          }
           description="Awaiting HOD verification"
           icon={<Clock className="h-5 w-5 text-amber-600" />}
         />
@@ -162,9 +182,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition dark:bg-indigo-950/60 dark:text-indigo-400">
               <FileText className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Assessment Schemes</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Assessment Schemes
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Configure course internal tests, lab practicals, quizzes, and end-semester weightage summing to 100%.
+              Configure course internal tests, lab practicals, quizzes, and
+              end-semester weightage summing to 100%.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400">
               Manage Schemes <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -179,9 +202,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition dark:bg-emerald-950/60 dark:text-emerald-400">
               <Calendar className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Exam Timetable</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Exam Timetable
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Timetable schedules with conflict detection across room bookings, student clash, and invigilator rosters.
+              Timetable schedules with conflict detection across room bookings,
+              student clash, and invigilator rosters.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400">
               View Schedules <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -196,9 +222,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition dark:bg-amber-950/60 dark:text-amber-400">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Student Eligibility</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Student Eligibility
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Attendance-linked eligibility gates, debarment registers, and HOD medical condonation review.
+              Attendance-linked eligibility gates, debarment registers, and HOD
+              medical condonation review.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-amber-600 dark:text-amber-400">
               Check Eligibility <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -213,9 +242,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition dark:bg-purple-950/60 dark:text-purple-400">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Marks Entry Roster</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Marks Entry Roster
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Keyboard-friendly class marks scoring, absent/malpractice flags, draft auto-saves, and finalization.
+              Keyboard-friendly class marks scoring, absent/malpractice flags,
+              draft auto-saves, and finalization.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-purple-600 dark:text-purple-400">
               Open Marks Matrix <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -230,9 +262,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition dark:bg-blue-950/60 dark:text-blue-400">
               <Award className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Results & GPA</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Results & GPA
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Automated 10-point CBCS grade point assignment, component score weighting, and pass/fail classification.
+              Automated 10-point CBCS grade point assignment, component score
+              weighting, and pass/fail classification.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-blue-600 dark:text-blue-400">
               Explore Results <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -247,9 +282,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition dark:bg-teal-950/60 dark:text-teal-400">
               <Globe className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Publications Ledger</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Publications Ledger
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Controlled batch publishing to student portals, audit stamping, and formal revocation controls.
+              Controlled batch publishing to student portals, audit stamping,
+              and formal revocation controls.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-teal-600 dark:text-teal-400">
               Manage Batches <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -264,9 +302,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-rose-50 flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition dark:bg-rose-950/60 dark:text-rose-400">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Grade Scale Rules</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Grade Scale Rules
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              UGC 10-point CBCS scale definition, minimum pass thresholds, and grade point conversion parameters.
+              UGC 10-point CBCS scale definition, minimum pass thresholds, and
+              grade point conversion parameters.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-rose-600 dark:text-rose-400">
               View Grade Scales <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -281,9 +322,12 @@ export default function ExaminationHubPage() {
             <div className="h-10 w-10 rounded-lg bg-cyan-50 flex items-center justify-center text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white transition dark:bg-cyan-950/60 dark:text-cyan-400">
               <BarChart3 className="h-5 w-5" />
             </div>
-            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">Examination Reports</h3>
+            <h3 className="mt-3.5 font-semibold text-slate-900 dark:text-white">
+              Examination Reports
+            </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              Comprehensive marks rosters, timetable matrices, eligibility audits, and instant CSV data export.
+              Comprehensive marks rosters, timetable matrices, eligibility
+              audits, and instant CSV data export.
             </p>
             <div className="mt-3.5 flex items-center text-xs font-medium text-cyan-600 dark:text-cyan-400">
               Compile Reports <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -327,16 +371,16 @@ export default function ExaminationHubPage() {
                       item.grade === "A+"
                         ? "bg-indigo-600"
                         : item.grade === "A"
-                        ? "bg-blue-600"
-                        : item.grade === "B+"
-                        ? "bg-emerald-500"
-                        : item.grade === "B"
-                        ? "bg-teal-500"
-                        : item.grade === "C"
-                        ? "bg-amber-500"
-                        : item.grade === "D"
-                        ? "bg-orange-500"
-                        : "bg-rose-500"
+                          ? "bg-blue-600"
+                          : item.grade === "B+"
+                            ? "bg-emerald-500"
+                            : item.grade === "B"
+                              ? "bg-teal-500"
+                              : item.grade === "C"
+                                ? "bg-amber-500"
+                                : item.grade === "D"
+                                  ? "bg-orange-500"
+                                  : "bg-rose-500"
                     }`}
                     style={{ width: `${Math.max(item.percentage, 2)}%` }}
                   />
@@ -357,14 +401,20 @@ export default function ExaminationHubPage() {
                 Passing percentage by engineering department
               </p>
             </div>
-            <Link href="/app/examinations/results" className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link
+              href="/app/examinations/results"
+              className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+            >
               View all results &rarr;
             </Link>
           </div>
 
           <div className="mt-5 space-y-4">
             {summary?.departmentPerformance.map((dept) => (
-              <div key={dept.department} className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 dark:border-slate-800 dark:bg-slate-800/40">
+              <div
+                key={dept.department}
+                className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 dark:border-slate-800 dark:bg-slate-800/40"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                     {dept.department}
@@ -380,7 +430,8 @@ export default function ExaminationHubPage() {
                   />
                 </div>
                 <p className="mt-1.5 text-[11px] text-slate-400">
-                  {dept.studentCount} enrolled candidates evaluated in current term
+                  {dept.studentCount} enrolled candidates evaluated in current
+                  term
                 </p>
               </div>
             ))}

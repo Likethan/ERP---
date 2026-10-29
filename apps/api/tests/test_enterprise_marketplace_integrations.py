@@ -14,13 +14,12 @@ Validates:
 11. Strict Multi-Tenant Isolation
 """
 
-from datetime import UTC, datetime, timedelta
 import hashlib
 import hmac
 import uuid
+from datetime import UTC, datetime, timedelta
 
 import pytest
-from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,8 +30,6 @@ from app.core.exceptions import (
     QuotaExceededException,
     ValidationException,
 )
-from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
-from app.integrations.connectors import get_connector, list_available_connectors
 from app.integrations.secrets import SecretManager
 from app.models.core import Institution
 from app.models.marketplace import (
@@ -40,14 +37,9 @@ from app.models.marketplace import (
     ConnectionMethod,
     IntegrationDataConflict,
     IntegrationSyncCheckpoint,
-    MarketplaceApp,
     MarketplaceAppCategory,
     MarketplacePublicationStatus,
-    MarketplaceSyncRun,
-    SyncDirection,
     SyncRunStatus,
-    SyncTriggerType,
-    TenantAppInstallation,
     TenantInstallationStatus,
 )
 from app.models.people import User
@@ -60,13 +52,10 @@ from app.models.subscription import (
 from app.schemas.marketplace import (
     ConflictResolutionRequest,
     MarketplaceAppCreateRequest,
-    MarketplaceAppUpdateRequest,
     SyncTriggerRequest,
     TenantAppInstallationCreateRequest,
-    TenantAppInstallationUpdateRequest,
 )
 from app.services.marketplace_service import MarketplaceService
-from app.services.subscription_service import SubscriptionService
 
 
 @pytest.fixture

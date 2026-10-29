@@ -8,11 +8,18 @@
  * POST /api/v1/transport/vehicles/:id/service
  */
 
-import { ApiResponse, TransportVehicle, VehicleStatus, VehicleType } from "@campusos/types";
+import {
+  ApiResponse,
+  TransportVehicle,
+  VehicleStatus,
+  VehicleType,
+} from "@campusos/types";
 import { MOCK_TRANSPORT_VEHICLES } from "@/mocks/infrastructure.mock";
 
 class TransportVehiclesService {
-  private vehicles: TransportVehicle[] = JSON.parse(JSON.stringify(MOCK_TRANSPORT_VEHICLES));
+  private vehicles: TransportVehicle[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSPORT_VEHICLES),
+  );
 
   async listVehicles(filters?: {
     type?: VehicleType | string;
@@ -36,16 +43,22 @@ class TransportVehiclesService {
           v.vehicleNumber.toLowerCase().includes(q) ||
           v.makeModel.toLowerCase().includes(q) ||
           v.assignedDriverName?.toLowerCase().includes(q) ||
-          v.currentRouteName?.toLowerCase().includes(q)
+          v.currentRouteName?.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getVehicleById(id: string): Promise<ApiResponse<TransportVehicle | null>> {
+  async getVehicleById(
+    id: string,
+  ): Promise<ApiResponse<TransportVehicle | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const vehicle = this.vehicles.find((v) => v.id === id || v.registrationNumber === id || v.vehicleNumber === id) || null;
+    const vehicle =
+      this.vehicles.find(
+        (v) =>
+          v.id === id || v.registrationNumber === id || v.vehicleNumber === id,
+      ) || null;
     return { success: true, data: vehicle };
   }
 
@@ -59,7 +72,7 @@ class TransportVehiclesService {
       nextServiceDate: string;
       vendorName: string;
       notes?: string;
-    }
+    },
   ): Promise<ApiResponse<TransportVehicle | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const vehicle = this.vehicles.find((v) => v.id === id);
@@ -77,21 +90,30 @@ class TransportVehiclesService {
     return { success: true, data: vehicle };
   }
 
-  async createVehicle(payload: Partial<TransportVehicle>): Promise<ApiResponse<TransportVehicle>> {
+  async createVehicle(
+    payload: Partial<TransportVehicle>,
+  ): Promise<ApiResponse<TransportVehicle>> {
     await new Promise((r) => setTimeout(r, 50));
     const newVehicle: TransportVehicle = {
       id: `veh-${Date.now().toString(36)}`,
-      registrationNumber: payload.registrationNumber || `KA-04-TR-${Math.floor(1000 + Math.random() * 9000)}`,
+      registrationNumber:
+        payload.registrationNumber ||
+        `KA-04-TR-${Math.floor(1000 + Math.random() * 9000)}`,
       vehicleNumber: payload.vehicleNumber || `BUS-${this.vehicles.length + 1}`,
       type: (payload.type as VehicleType) || VehicleType.BUS,
       makeModel: payload.makeModel || "Tata Starbus 52-Seater",
       capacity: payload.capacity || 52,
       fuelType: payload.fuelType || "DIESEL",
-      insurancePolicyNumber: payload.insurancePolicyNumber || `POL-NIA-${Date.now().toString().slice(-6)}`,
+      insurancePolicyNumber:
+        payload.insurancePolicyNumber ||
+        `POL-NIA-${Date.now().toString().slice(-6)}`,
       insuranceValidUntil: payload.insuranceValidUntil || "2027-04-30",
-      fitnessCertificateValidUntil: payload.fitnessCertificateValidUntil || "2027-05-15",
-      pollutionCertificateValidUntil: payload.pollutionCertificateValidUntil || "2027-01-31",
-      lastServiceDate: payload.lastServiceDate || new Date().toISOString().split("T")[0],
+      fitnessCertificateValidUntil:
+        payload.fitnessCertificateValidUntil || "2027-05-15",
+      pollutionCertificateValidUntil:
+        payload.pollutionCertificateValidUntil || "2027-01-31",
+      lastServiceDate:
+        payload.lastServiceDate || new Date().toISOString().split("T")[0],
       nextServiceDate: payload.nextServiceDate || "2026-12-15",
       status: (payload.status as VehicleStatus) || VehicleStatus.AVAILABLE,
       services: [],

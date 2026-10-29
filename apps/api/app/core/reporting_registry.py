@@ -5,7 +5,7 @@ canonical dimensions, and filter validation rules.
 Strictly prevents arbitrary database querying, raw table access, or formula divergence.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
 

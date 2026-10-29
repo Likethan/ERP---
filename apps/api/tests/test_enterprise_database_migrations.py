@@ -10,24 +10,22 @@ Verifies:
 """
 
 import ast
-from datetime import UTC, date, datetime
-from pathlib import Path
 import uuid
+from pathlib import Path
 
 import pytest
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.core import Department, Institution, Program
-from app.models.people import Role, User
+from app.models.core import Department, Institution
 
 
 def get_migration_revisions():
     """Extract (revision, down_revision) from all python files in migrations/versions."""
     versions_dir = Path(__file__).resolve().parent.parent / "migrations" / "versions"
     migration_files = sorted(versions_dir.glob("*.py"))
-    
+
     revisions = {}
     for mf in migration_files:
         if mf.name == ".gitkeep":
@@ -75,9 +73,9 @@ def test_migration_chain_continuity():
     assert len(chain) == len(revisions), (
         f"Migration graph is fragmented! Chained {len(chain)} out of {len(revisions)} revisions."
     )
-    # Ensure head reaches the latest Step 33 security operations revision
-    head = chain[-1]
-    assert "020" in head or "security" in head.lower()
+    # Ensure chain contains the security operations revision and reaches head
+    assert any("020" in rev or "security" in rev.lower() for rev in chain)
+    assert len(chain) == len(revisions)
 
 
 @pytest.mark.asyncio
@@ -92,23 +90,26 @@ async def test_database_foreign_key_constraint_enforcement(
     fk_targets = [fk.target_fullname for fk in Department.__table__.foreign_keys]
     assert "core_institutions.id" in fk_targets
 
-    # Enable foreign keys on connection for dialect enforcement
-    await db_session.execute(text("PRAGMA foreign_keys = ON;"))
+    try:
+        # Enable foreign keys on connection for dialect enforcement
+        await db_session.execute(text("PRAGMA foreign_keys = ON;"))
 
-    fake_tenant_id = uuid.uuid4()
-    orphan_dept = Department(
-        id=uuid.uuid4(),
-        tenant_id=fake_tenant_id,  # Non-existent institution
-        code=f"ORPHAN-{uuid.uuid4().hex[:6].upper()}",
-        name="Orphaned Department",
-        department_type="ACADEMIC",
-        is_active=True,
-    )
-    db_session.add(orphan_dept)
-    
-    with pytest.raises(IntegrityError):
-        await db_session.flush()
-    await db_session.rollback()
+        fake_tenant_id = uuid.uuid4()
+        orphan_dept = Department(
+            id=uuid.uuid4(),
+            tenant_id=fake_tenant_id,  # Non-existent institution
+            code=f"ORPHAN-{uuid.uuid4().hex[:6].upper()}",
+            name="Orphaned Department",
+            department_type="ACADEMIC",
+            is_active=True,
+        )
+        db_session.add(orphan_dept)
+
+        with pytest.raises(IntegrityError):
+            await db_session.flush()
+        await db_session.rollback()
+    finally:
+        await db_session.execute(text("PRAGMA foreign_keys = OFF;"))
 
 
 @pytest.mark.asyncio

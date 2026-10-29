@@ -45,14 +45,17 @@ export default function OffersManagementPage() {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     applicationId: "",
-    employmentType: "FULL_TIME" as "FULL_TIME" | "INTERN_PLUS_FTE" | "INTERNSHIP",
+    employmentType: "FULL_TIME" as
+      "FULL_TIME" | "INTERN_PLUS_FTE" | "INTERNSHIP",
     location: "Bengaluru, Karnataka",
     ctcLpa: 12.0,
     baseSalaryLpa: 10.0,
     variableLpa: 2.0,
     stipendMonthly: 0,
     joiningDate: "2027-07-01",
-    responseDeadline: new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0],
+    responseDeadline: new Date(Date.now() + 10 * 86400000)
+      .toISOString()
+      .split("T")[0],
     releasedBy: "Placement Directorate",
   });
 
@@ -112,7 +115,8 @@ export default function OffersManagementPage() {
     const rate = total > 0 ? Math.round((accepted / total) * 100) : 0;
     const totalCtc = offers.reduce((acc, curr) => acc + curr.ctcLpa, 0);
     const avgCtc = total > 0 ? (totalCtc / total).toFixed(2) : "0.00";
-    const maxCtc = total > 0 ? Math.max(...offers.map((o) => o.ctcLpa)).toFixed(2) : "0.00";
+    const maxCtc =
+      total > 0 ? Math.max(...offers.map((o) => o.ctcLpa)).toFixed(2) : "0.00";
 
     return { total, accepted, released, declined, rate, avgCtc, maxCtc };
   }, [offers]);
@@ -127,7 +131,7 @@ export default function OffersManagementPage() {
         a.currentStage === "TECHNICAL" ||
         a.currentStage === "HR" ||
         a.currentStage === "FINAL" ||
-        a.currentStage === "OFFER"
+        a.currentStage === "OFFER",
     );
   }, [applications]);
 
@@ -155,7 +159,8 @@ export default function OffersManagementPage() {
         await loadData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to release offer";
+      const msg =
+        err instanceof Error ? err.message : "Failed to release offer";
       showToast({
         title: "Action Failed",
         message: msg,
@@ -301,7 +306,9 @@ export default function OffersManagementPage() {
             </span>
             <span
               className={`text-[11px] flex items-center gap-1 ${
-                isExpiringSoon ? "text-amber-500 font-medium" : "text-muted-foreground"
+                isExpiringSoon
+                  ? "text-amber-500 font-medium"
+                  : "text-muted-foreground"
               }`}
             >
               <Clock className="w-3 h-3" />
@@ -354,7 +361,8 @@ export default function OffersManagementPage() {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Issue, track, and administer corporate job offers, CTC compensation packages, and candidate acceptances.
+            Issue, track, and administer corporate job offers, CTC compensation
+            packages, and candidate acceptances.
           </p>
         </div>
 
@@ -476,7 +484,8 @@ export default function OffersManagementPage() {
                   Release Corporate Job Offer
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Formalize a recruitment offer following successful interview rounds.
+                  Formalize a recruitment offer following successful interview
+                  rounds.
                 </p>
               </div>
               <button
@@ -490,12 +499,15 @@ export default function OffersManagementPage() {
             <form onSubmit={handleReleaseOffer} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
-                  Select Applicant Application <span className="text-destructive">*</span>
+                  Select Applicant Application{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <Select
                   value={formData.applicationId}
                   onChange={(e) => {
-                    const selApp = applications.find((a) => a.id === e.target.value);
+                    const selApp = applications.find(
+                      (a) => a.id === e.target.value,
+                    );
                     setFormData({
                       ...formData,
                       applicationId: e.target.value,
@@ -506,7 +518,10 @@ export default function OffersManagementPage() {
                   }}
                   className="w-full text-xs"
                   options={[
-                    { value: "", label: "-- Choose Shortlisted Candidate Application --" },
+                    {
+                      value: "",
+                      label: "-- Choose Shortlisted Candidate Application --",
+                    },
                     ...eligibleApps.map((a) => ({
                       value: a.id,
                       label: `${a.studentName} (${a.rollNumber}) — ${a.companyName} [${a.positionTitle}]`,
@@ -525,13 +540,20 @@ export default function OffersManagementPage() {
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        employmentType: e.target.value as "FULL_TIME" | "INTERN_PLUS_FTE" | "INTERNSHIP",
+                        employmentType: e.target.value as
+                          "FULL_TIME" | "INTERN_PLUS_FTE" | "INTERNSHIP",
                       })
                     }
                     className="w-full text-xs"
                     options={[
-                      { value: "FULL_TIME", label: "Full Time Employment (FTE)" },
-                      { value: "INTERN_PLUS_FTE", label: "6M Intern + FTE Conversion" },
+                      {
+                        value: "FULL_TIME",
+                        label: "Full Time Employment (FTE)",
+                      },
+                      {
+                        value: "INTERN_PLUS_FTE",
+                        label: "6M Intern + FTE Conversion",
+                      },
                       { value: "INTERNSHIP", label: "Summer Internship" },
                     ]}
                   />
@@ -543,7 +565,9 @@ export default function OffersManagementPage() {
                   </label>
                   <Input
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     className="h-9 text-xs"
                     placeholder="e.g. Bengaluru / Hyderabad / Pune"
                   />
@@ -562,7 +586,10 @@ export default function OffersManagementPage() {
                     max="100"
                     value={formData.ctcLpa}
                     onChange={(e) =>
-                      setFormData({ ...formData, ctcLpa: parseFloat(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        ctcLpa: parseFloat(e.target.value) || 0,
+                      })
                     }
                     className="h-9 text-xs font-semibold"
                   />
@@ -579,7 +606,10 @@ export default function OffersManagementPage() {
                     max="100"
                     value={formData.baseSalaryLpa}
                     onChange={(e) =>
-                      setFormData({ ...formData, baseSalaryLpa: parseFloat(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        baseSalaryLpa: parseFloat(e.target.value) || 0,
+                      })
                     }
                     className="h-9 text-xs"
                   />
@@ -596,7 +626,10 @@ export default function OffersManagementPage() {
                     max="50"
                     value={formData.variableLpa}
                     onChange={(e) =>
-                      setFormData({ ...formData, variableLpa: parseFloat(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        variableLpa: parseFloat(e.target.value) || 0,
+                      })
                     }
                     className="h-9 text-xs"
                   />
@@ -611,20 +644,26 @@ export default function OffersManagementPage() {
                   <Input
                     type="date"
                     value={formData.joiningDate}
-                    onChange={(e) => setFormData({ ...formData, joiningDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, joiningDate: e.target.value })
+                    }
                     className="h-9 text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-foreground">
-                    Candidate Response Deadline <span className="text-destructive">*</span>
+                    Candidate Response Deadline{" "}
+                    <span className="text-destructive">*</span>
                   </label>
                   <Input
                     type="date"
                     value={formData.responseDeadline}
                     onChange={(e) =>
-                      setFormData({ ...formData, responseDeadline: e.target.value })
+                      setFormData({
+                        ...formData,
+                        responseDeadline: e.target.value,
+                      })
                     }
                     className="h-9 text-xs"
                   />
@@ -637,7 +676,9 @@ export default function OffersManagementPage() {
                 </label>
                 <Input
                   value={formData.releasedBy}
-                  onChange={(e) => setFormData({ ...formData, releasedBy: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, releasedBy: e.target.value })
+                  }
                   className="h-9 text-xs"
                 />
               </div>
@@ -648,8 +689,10 @@ export default function OffersManagementPage() {
                   Autonomous Pipeline Progression
                 </div>
                 <p className="text-muted-foreground">
-                  Releasing this offer will automatically advance the student&apos;s application stage to{" "}
-                  <span className="font-semibold text-foreground">OFFER</span> and update their placement portfolio.
+                  Releasing this offer will automatically advance the
+                  student&apos;s application stage to{" "}
+                  <span className="font-semibold text-foreground">OFFER</span>{" "}
+                  and update their placement portfolio.
                 </p>
               </div>
 

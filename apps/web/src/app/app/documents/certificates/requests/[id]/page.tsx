@@ -62,7 +62,11 @@ export default function CertificateRequestDetailPage({
   }, [id]);
 
   if (loading) {
-    return <div className="py-24 text-center text-xs text-slate-500">Loading certificate request...</div>;
+    return (
+      <div className="py-24 text-center text-xs text-slate-500">
+        Loading certificate request...
+      </div>
+    );
   }
 
   if (!request) {
@@ -76,11 +80,13 @@ export default function CertificateRequestDetailPage({
         request.id,
         "user-super-admin-01",
         "Dr. Arvind Swaminathan (Registrar)",
-        "Student eligibility and fee ledger verified."
+        "Student eligibility and fee ledger verified.",
       );
       if (res.success && res.data) {
         setRequest({ ...res.data });
-        alert("Certificate request approved! Now eligible for digital certificate generation.");
+        alert(
+          "Certificate request approved! Now eligible for digital certificate generation.",
+        );
       }
     } catch (err) {
       console.error(err);
@@ -101,7 +107,7 @@ export default function CertificateRequestDetailPage({
         request.id,
         rejectionReason,
         "user-super-admin-01",
-        "Dr. Arvind Swaminathan (Registrar)"
+        "Dr. Arvind Swaminathan (Registrar)",
       );
       if (res.success && res.data) {
         setRequest({ ...res.data });
@@ -120,13 +126,17 @@ export default function CertificateRequestDetailPage({
       setActionProcessing(true);
       const res = await certificateRequestsService.issueCertificateForRequest(
         request.id,
-        "Office of the Registrar"
+        "Office of the Registrar",
       );
       if (res.success && res.data) {
         // Reload fresh state
-        const refreshed = await certificateRequestsService.getRequestById(request.id);
+        const refreshed = await certificateRequestsService.getRequestById(
+          request.id,
+        );
         if (refreshed.data) setRequest(refreshed.data);
-        alert(`Certificate issued! Serial Number: ${res.data.certificateNumber}`);
+        alert(
+          `Certificate issued! Serial Number: ${res.data.certificateNumber}`,
+        );
       }
     } catch (err) {
       console.error(err);
@@ -160,10 +170,13 @@ export default function CertificateRequestDetailPage({
               {request.certificateType}
             </span>
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-100">{request.templateName}</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-slate-100">
+            {request.templateName}
+          </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Requested on {new Date(request.requestedDate).toLocaleDateString()} by{" "}
-            <strong className="text-slate-200">{request.studentName}</strong> ({request.rollNumber})
+            Requested on {new Date(request.requestedDate).toLocaleDateString()}{" "}
+            by <strong className="text-slate-200">{request.studentName}</strong>{" "}
+            ({request.rollNumber})
           </p>
         </div>
 
@@ -225,22 +238,36 @@ export default function CertificateRequestDetailPage({
             </h3>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="p-3 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] uppercase text-slate-500 block">Student Name</span>
-                <span className="font-semibold text-slate-200 mt-0.5 block">{request.studentName}</span>
+                <span className="text-[10px] uppercase text-slate-500 block">
+                  Student Name
+                </span>
+                <span className="font-semibold text-slate-200 mt-0.5 block">
+                  {request.studentName}
+                </span>
               </div>
               <div className="p-3 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] uppercase text-slate-500 block">Register Number</span>
+                <span className="text-[10px] uppercase text-slate-500 block">
+                  Register Number
+                </span>
                 <span className="font-mono font-semibold text-slate-200 mt-0.5 block">
                   {request.rollNumber}
                 </span>
               </div>
               <div className="p-3 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] uppercase text-slate-500 block">Program</span>
-                <span className="text-slate-200 mt-0.5 block">{request.program}</span>
+                <span className="text-[10px] uppercase text-slate-500 block">
+                  Program
+                </span>
+                <span className="text-slate-200 mt-0.5 block">
+                  {request.program}
+                </span>
               </div>
               <div className="p-3 bg-slate-950 rounded border border-slate-800">
-                <span className="text-[10px] uppercase text-slate-500 block">Department</span>
-                <span className="text-slate-200 mt-0.5 block">{request.department}</span>
+                <span className="text-[10px] uppercase text-slate-500 block">
+                  Department
+                </span>
+                <span className="text-slate-200 mt-0.5 block">
+                  {request.department}
+                </span>
               </div>
             </div>
           </div>
@@ -260,7 +287,10 @@ export default function CertificateRequestDetailPage({
               </div>
               {request.requiredByDate && (
                 <div className="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-                  Required By Deadline: <strong className="text-amber-400">{request.requiredByDate}</strong>
+                  Required By Deadline:{" "}
+                  <strong className="text-amber-400">
+                    {request.requiredByDate}
+                  </strong>
                 </div>
               )}
             </div>
@@ -285,8 +315,12 @@ export default function CertificateRequestDetailPage({
                       <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
                     )}
                     <div>
-                      <div className="font-semibold text-slate-200">{chk.title}</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{chk.details}</div>
+                      <div className="font-semibold text-slate-200">
+                        {chk.title}
+                      </div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">
+                        {chk.details}
+                      </div>
                     </div>
                   </div>
                   <span
@@ -328,12 +362,16 @@ export default function CertificateRequestDetailPage({
                 <div className="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-blue-500" />
                 <div className="bg-slate-950 p-3 rounded border border-slate-800">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-200">{entry.title}</span>
+                    <span className="font-semibold text-slate-200">
+                      {entry.title}
+                    </span>
                     <span className="text-[10px] font-mono text-slate-500">
                       {new Date(entry.timestamp).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">By {entry.performedBy}</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    By {entry.performedBy}
+                  </div>
                   {entry.notes && (
                     <div className="mt-1.5 p-1.5 bg-slate-900 rounded text-[11px] text-slate-300 italic border border-slate-800/80">
                       {entry.notes}
@@ -354,7 +392,8 @@ export default function CertificateRequestDetailPage({
       >
         <div className="space-y-4 text-xs">
           <p className="text-slate-300">
-            Please provide the reason this certificate request cannot be fulfilled at this time.
+            Please provide the reason this certificate request cannot be
+            fulfilled at this time.
           </p>
 
           <div>

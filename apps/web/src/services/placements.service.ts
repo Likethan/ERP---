@@ -38,7 +38,9 @@ class PlacementsService {
     return { success: true, data: this.offers };
   }
 
-  async createDrive(data: Partial<JobDriveItem>): Promise<ApiResponse<JobDriveItem>> {
+  async createDrive(
+    data: Partial<JobDriveItem>,
+  ): Promise<ApiResponse<JobDriveItem>> {
     await new Promise((r) => setTimeout(r, 80));
     const newDrive: JobDriveItem = {
       id: `drive-${Date.now()}`,
@@ -46,7 +48,8 @@ class PlacementsService {
       roleTitle: data.roleTitle || "Associate Engineer",
       packageLPA: data.packageLPA || 10.0,
       driveDate: data.driveDate || new Date().toISOString().split("T")[0],
-      applicationDeadline: data.applicationDeadline || new Date().toISOString().split("T")[0],
+      applicationDeadline:
+        data.applicationDeadline || new Date().toISOString().split("T")[0],
       targetPrograms: data.targetPrograms || ["B.Tech CSE"],
       minimumCGPA: data.minimumCGPA || 7.5,
       maxBacklogsAllowed: data.maxBacklogsAllowed || 0,
@@ -61,16 +64,18 @@ class PlacementsService {
     return { success: true, data: newDrive };
   }
 
-  async getAnalytics(): Promise<ApiResponse<{
-    total_eligible_students: number;
-    placed_students_count: number;
-    placement_percentage: number;
-    average_ctc_lpa: number;
-    highest_ctc_lpa: number;
-    total_companies_visited: number;
-    active_drives_count: number;
-    total_offers_extended: number;
-  }>> {
+  async getAnalytics(): Promise<
+    ApiResponse<{
+      total_eligible_students: number;
+      placed_students_count: number;
+      placement_percentage: number;
+      average_ctc_lpa: number;
+      highest_ctc_lpa: number;
+      total_companies_visited: number;
+      active_drives_count: number;
+      total_offers_extended: number;
+    }>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -81,13 +86,17 @@ class PlacementsService {
         average_ctc_lpa: 14.8,
         highest_ctc_lpa: 48.0,
         total_companies_visited: this.companies.length || 48,
-        active_drives_count: this.drives.filter((d) => d.status === "APPLICATIONS_OPEN").length || 6,
+        active_drives_count:
+          this.drives.filter((d) => d.status === "APPLICATIONS_OPEN").length ||
+          6,
         total_offers_extended: 462,
       },
     };
   }
 
-  async createCompany(data: Partial<CompanyProfileItem>): Promise<ApiResponse<CompanyProfileItem>> {
+  async createCompany(
+    data: Partial<CompanyProfileItem>,
+  ): Promise<ApiResponse<CompanyProfileItem>> {
     await new Promise((r) => setTimeout(r, 80));
     const newComp: CompanyProfileItem = {
       id: `comp-${Date.now()}`,
@@ -109,7 +118,9 @@ class PlacementsService {
     return { success: true, data: newComp };
   }
 
-  async applyToDrive(driveId: string): Promise<ApiResponse<{ applicationNumber: string }>> {
+  async applyToDrive(
+    driveId: string,
+  ): Promise<ApiResponse<{ applicationNumber: string }>> {
     await new Promise((r) => setTimeout(r, 90));
     const drive = this.drives.find((d) => d.id === driveId);
     if (drive) {
@@ -123,7 +134,10 @@ class PlacementsService {
     };
   }
 
-  async submitOfferDecision(offerId: string, decision: "ACCEPT" | "DECLINE"): Promise<ApiResponse<PlacementOfferItem>> {
+  async submitOfferDecision(
+    offerId: string,
+    decision: "ACCEPT" | "DECLINE",
+  ): Promise<ApiResponse<PlacementOfferItem>> {
     await new Promise((r) => setTimeout(r, 80));
     const offer = this.offers.find((o) => o.id === offerId);
     if (offer) {

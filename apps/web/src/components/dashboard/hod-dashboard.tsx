@@ -3,7 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { academicsService } from "@/services/academics.service";
@@ -46,13 +52,18 @@ export function HodDashboard() {
             Department of Computer Science & Engineering
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Head of Department: Dr. K. S. Anand • 720 Students • 28 Faculty Members
+            Head of Department: Dr. K. S. Anand • 720 Students • 28 Faculty
+            Members
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/academics/curricula">
-            <Button variant="outline" size="sm" leftIcon={<FileSpreadsheet className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<FileSpreadsheet className="h-3.5 w-3.5" />}
+            >
               Curriculum Scheme
             </Button>
           </Link>
@@ -104,11 +115,16 @@ export function HodDashboard() {
           <div>
             <CardTitle>Department Faculty Teaching Workload</CardTitle>
             <CardDescription>
-              Current semester course allocations, student counts, and class load hours.
+              Current semester course allocations, student counts, and class
+              load hours.
             </CardDescription>
           </div>
           <Link href="/app/faculty">
-            <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-slate-400 hover:text-white"
+            >
               Full Faculty Directory <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Link>
@@ -127,16 +143,31 @@ export function HodDashboard() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {facultyList.map((f) => (
-                  <tr key={f.id} className="hover:bg-slate-800/40 transition-colors">
+                  <tr
+                    key={f.id}
+                    className="hover:bg-slate-800/40 transition-colors"
+                  >
                     <td className="px-5 py-3.5 font-medium text-white">
-                      <div>{f.firstName} {f.lastName}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">{f.employeeCode}</div>
+                      <div>
+                        {f.firstName} {f.lastName}
+                      </div>
+                      <div className="text-[11px] text-slate-400 font-mono">
+                        {f.employeeCode}
+                      </div>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-300">{f.designation}</td>
-                    <td className="px-4 py-3.5 text-slate-400 truncate max-w-xs">{f.specialization}</td>
-                    <td className="px-4 py-3.5 font-mono">{f.teachingLoadHours} Hrs</td>
+                    <td className="px-4 py-3.5 text-slate-300">
+                      {f.designation}
+                    </td>
+                    <td className="px-4 py-3.5 text-slate-400 truncate max-w-xs">
+                      {f.specialization}
+                    </td>
+                    <td className="px-4 py-3.5 font-mono">
+                      {f.teachingLoadHours} Hrs
+                    </td>
                     <td className="px-4 py-3.5">
-                      <Badge variant="success" dot>{f.status}</Badge>
+                      <Badge variant="success" dot>
+                        {f.status}
+                      </Badge>
                     </td>
                   </tr>
                 ))}

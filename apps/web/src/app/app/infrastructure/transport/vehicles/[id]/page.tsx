@@ -84,7 +84,9 @@ export default function TransportVehicleDetailPage({
   if (!vehicle) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Fleet Vehicle Record Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Fleet Vehicle Record Not Found
+        </h2>
         <Link href="/app/infrastructure/transport/vehicles">
           <Button variant="outline" className="border-slate-700">
             Back to Vehicles
@@ -94,12 +96,14 @@ export default function TransportVehicleDetailPage({
     );
   }
 
-  const isAct = vehicle.status === VehicleStatus.ACTIVE || vehicle.status === VehicleStatus.AVAILABLE;
+  const isAct =
+    vehicle.status === VehicleStatus.ACTIVE ||
+    vehicle.status === VehicleStatus.AVAILABLE;
   const isMaint = vehicle.status === VehicleStatus.MAINTENANCE;
 
   const totalServiceSpend = (vehicle.services || []).reduce(
     (acc, s) => acc + (s.costInr || 0),
-    0
+    0,
   );
 
   return (
@@ -123,20 +127,25 @@ export default function TransportVehicleDetailPage({
               <span className="font-mono text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-md border border-emerald-500/20">
                 {vehicle.registrationNumber}
               </span>
-              <span className="font-mono text-xs text-slate-400">({vehicle.vehicleNumber})</span>
+              <span className="font-mono text-xs text-slate-400">
+                ({vehicle.vehicleNumber})
+              </span>
               <Badge
                 variant="outline"
                 className={
                   isAct
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                     : isMaint
-                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                    : "bg-slate-800 text-slate-400 border-slate-700"
+                      ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                      : "bg-slate-800 text-slate-400 border-slate-700"
                 }
               >
                 {vehicle.status}
               </Badge>
-              <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700">
+              <Badge
+                variant="outline"
+                className="bg-slate-800 text-slate-300 border-slate-700"
+              >
                 {vehicle.type}
               </Badge>
             </div>
@@ -168,26 +177,36 @@ export default function TransportVehicleDetailPage({
         {/* Fitness Card */}
         <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-medium">Fitness Certificate</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Fitness Certificate
+            </span>
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-lg font-bold text-white font-mono">
             {vehicle.fitnessCertificateValidUntil
-              ? new Date(vehicle.fitnessCertificateValidUntil).toLocaleDateString("en-IN")
+              ? new Date(
+                  vehicle.fitnessCertificateValidUntil,
+                ).toLocaleDateString("en-IN")
               : "Valid"}
           </div>
-          <div className="text-[11px] text-slate-500">RTO roadworthiness certificate</div>
+          <div className="text-[11px] text-slate-500">
+            RTO roadworthiness certificate
+          </div>
         </div>
 
         {/* Insurance Card */}
         <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-medium">Commercial Insurance</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Commercial Insurance
+            </span>
             <FileText className="w-4 h-4 text-blue-400" />
           </div>
           <div className="text-lg font-bold text-white font-mono">
             {vehicle.insuranceValidUntil
-              ? new Date(vehicle.insuranceValidUntil).toLocaleDateString("en-IN")
+              ? new Date(vehicle.insuranceValidUntil).toLocaleDateString(
+                  "en-IN",
+                )
               : "Active"}
           </div>
           <div className="text-[11px] text-slate-500">
@@ -198,25 +217,33 @@ export default function TransportVehicleDetailPage({
         {/* Assigned Corridor */}
         <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-medium">Transit Assignment</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Transit Assignment
+            </span>
             <Compass className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="text-sm font-semibold text-white truncate">
             {vehicle.currentRouteName || "Unassigned"}
           </div>
-          <div className="text-[11px] text-slate-500">Scheduled college bus route</div>
+          <div className="text-[11px] text-slate-500">
+            Scheduled college bus route
+          </div>
         </div>
 
         {/* Total Service Spend in INR */}
         <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-medium">Service Expenditure</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Service Expenditure
+            </span>
             <Wrench className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-lg font-bold text-amber-400 font-mono">
             ₹{totalServiceSpend.toLocaleString("en-IN")}
           </div>
-          <div className="text-[11px] text-slate-500">Lifetime recorded maintenance</div>
+          <div className="text-[11px] text-slate-500">
+            Lifetime recorded maintenance
+          </div>
         </div>
       </div>
 
@@ -229,7 +256,8 @@ export default function TransportVehicleDetailPage({
               Service & Workshop Logbook
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Chronological log of periodic servicing, replacement parts, and expenditures
+              Chronological log of periodic servicing, replacement parts, and
+              expenditures
             </p>
           </div>
           <span className="text-xs text-slate-500 font-mono">
@@ -250,29 +278,58 @@ export default function TransportVehicleDetailPage({
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-sm">{srv.serviceType}</span>
-                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+                    <span className="font-semibold text-white text-sm">
+                      {srv.serviceType}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]"
+                    >
                       {srv.status || "COMPLETED"}
                     </Badge>
                   </div>
                   <div className="text-xs text-slate-400 flex flex-wrap items-center gap-3">
-                    <span>Workshop: <strong className="text-slate-300">{srv.vendorName}</strong></span>
+                    <span>
+                      Workshop:{" "}
+                      <strong className="text-slate-300">
+                        {srv.vendorName}
+                      </strong>
+                    </span>
                     <span>•</span>
-                    <span>Odometer: <strong className="font-mono text-slate-300">{srv.mileageKm?.toLocaleString("en-IN")} KM</strong></span>
+                    <span>
+                      Odometer:{" "}
+                      <strong className="font-mono text-slate-300">
+                        {srv.mileageKm?.toLocaleString("en-IN")} KM
+                      </strong>
+                    </span>
                     <span>•</span>
-                    <span>Serviced on: <strong className="text-slate-300">{new Date(srv.serviceDate).toLocaleDateString("en-IN")}</strong></span>
+                    <span>
+                      Serviced on:{" "}
+                      <strong className="text-slate-300">
+                        {new Date(srv.serviceDate).toLocaleDateString("en-IN")}
+                      </strong>
+                    </span>
                   </div>
-                  {srv.notes && <p className="text-xs text-slate-400 mt-1 italic">{srv.notes}</p>}
+                  {srv.notes && (
+                    <p className="text-xs text-slate-400 mt-1 italic">
+                      {srv.notes}
+                    </p>
+                  )}
                 </div>
 
                 <div className="text-right shrink-0">
-                  <span className="text-xs text-slate-500 block">Cost (INR)</span>
+                  <span className="text-xs text-slate-500 block">
+                    Cost (INR)
+                  </span>
                   <span className="font-mono text-base font-bold text-white">
                     ₹{srv.costInr?.toLocaleString("en-IN")}
                   </span>
                   {srv.nextServiceDate && (
                     <span className="text-[11px] text-slate-400 block mt-0.5">
-                      Next due: {new Date(srv.nextServiceDate).toLocaleDateString("en-IN")}
+                      Next due:{" "}
+                      {new Date(srv.nextServiceDate).toLocaleDateString(
+                        "en-IN",
+                      )}
                     </span>
                   )}
                 </div>
@@ -310,7 +367,10 @@ export default function TransportVehicleDetailPage({
                   placeholder="e.g. 30,000 KM Engine Oil & Filter Service"
                   value={serviceForm.serviceType}
                   onChange={(e) =>
-                    setServiceForm({ ...serviceForm, serviceType: e.target.value })
+                    setServiceForm({
+                      ...serviceForm,
+                      serviceType: e.target.value,
+                    })
                   }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                 />
@@ -326,7 +386,10 @@ export default function TransportVehicleDetailPage({
                     required
                     value={serviceForm.serviceDate}
                     onChange={(e) =>
-                      setServiceForm({ ...serviceForm, serviceDate: e.target.value })
+                      setServiceForm({
+                        ...serviceForm,
+                        serviceDate: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   />
@@ -339,7 +402,10 @@ export default function TransportVehicleDetailPage({
                     type="date"
                     value={serviceForm.nextServiceDate}
                     onChange={(e) =>
-                      setServiceForm({ ...serviceForm, nextServiceDate: e.target.value })
+                      setServiceForm({
+                        ...serviceForm,
+                        nextServiceDate: e.target.value,
+                      })
                     }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                   />
@@ -396,7 +462,10 @@ export default function TransportVehicleDetailPage({
                   placeholder="e.g. Authorized Tata Commercial Center"
                   value={serviceForm.vendorName}
                   onChange={(e) =>
-                    setServiceForm({ ...serviceForm, vendorName: e.target.value })
+                    setServiceForm({
+                      ...serviceForm,
+                      vendorName: e.target.value,
+                    })
                   }
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
                 />
@@ -411,7 +480,10 @@ export default function TransportVehicleDetailPage({
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   Record Log
                 </Button>
               </div>

@@ -42,19 +42,16 @@ from app.models.campus import (
     EventCategory,
     EventRegistration,
     EventVenue,
-    Notification,
 )
-from app.models.core import Campus, Department, Program, Section, Semester
+from app.models.core import Campus, Program
 from app.models.people import FacultyProfile, StaffProfile, StudentProfile, User
 from app.schemas.campus import (
     AnnouncementAudienceItem,
     AnnouncementCreate,
-    AnnouncementUpdate,
     AudiencePreviewResponse,
     ClubCreate,
     ClubMembershipRequest,
     ClubMembershipReview,
-    ClubUpdate,
     EventCategoryCreate,
     EventCategoryUpdate,
     EventCheckInRequest,

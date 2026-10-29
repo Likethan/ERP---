@@ -4,33 +4,27 @@ Evaluates institutional resource lifecycle, enforces legal holds, inspects cross
 dependencies, and safely executes archival, anonymization, and deletion workflows.
 """
 
-from datetime import UTC, datetime, timedelta
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, func, or_, select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, build_audit_entry
 from app.core.exceptions import (
     ConflictException,
     NotFoundException,
-    ValidationException,
 )
 from app.models.academics import CourseEnrollment
 from app.models.documents import Document
 from app.models.finance import Invoice
 from app.models.governance import (
-    GovernanceHold,
-    HoldStatus,
-    RetentionAction,
     RetentionPolicy,
-    RetentionTriggerEvent,
     RetentionUnit,
 )
 from app.models.infrastructure import HostelAllocation
-from app.models.people import StudentProfile, User
 from app.schemas.governance import (
     RetentionDecisionRead,
     RetentionPolicyCreate,

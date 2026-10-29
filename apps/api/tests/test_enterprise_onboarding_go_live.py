@@ -18,7 +18,7 @@ Validates:
 9. Tenant Isolation: Zero-trust boundary preventing cross-tenant plan manipulation.
 """
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 import pytest
@@ -28,13 +28,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
     InvalidLifecycleTransitionException,
-    NotFoundException,
     ValidationException,
 )
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.core import Institution
-from app.models.people import User
 from app.models.onboarding import (
     ApprovalDecision,
     ApprovalRole,
@@ -42,16 +40,13 @@ from app.models.onboarding import (
     ChecklistStatus,
     DefectSeverity,
     GoLiveStepStatus,
-    MigrationJobStatus,
     OnboardingApproval,
     OnboardingChecklistItem,
-    OnboardingHypercareRecord,
     OnboardingLifecycleState,
-    OnboardingMigrationJob,
     OnboardingUATScenario,
-    TenantOnboardingPlan,
     UATScenarioStatus,
 )
+from app.models.people import User
 from app.schemas.onboarding import (
     ChecklistItemUpdateRequest,
     MigrationValidationRequest,

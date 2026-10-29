@@ -7,7 +7,12 @@
  * PUT  /api/v1/facilities/:id
  */
 
-import { ApiResponse, Facility, FacilityStatus, FacilityType } from "@campusos/types";
+import {
+  ApiResponse,
+  Facility,
+  FacilityStatus,
+  FacilityType,
+} from "@campusos/types";
 import { MOCK_FACILITIES } from "@/mocks/infrastructure.mock";
 
 class FacilitiesService {
@@ -33,7 +38,9 @@ class FacilitiesService {
       items = items.filter((f) => f.status === filters.status);
     }
     if (filters?.building && filters.building !== "ALL") {
-      items = items.filter((f) => f.building.toLowerCase().includes(filters.building!.toLowerCase()));
+      items = items.filter((f) =>
+        f.building.toLowerCase().includes(filters.building!.toLowerCase()),
+      );
     }
     if (filters?.search && filters.search.trim()) {
       const q = filters.search.toLowerCase().trim();
@@ -43,7 +50,7 @@ class FacilitiesService {
           f.code.toLowerCase().includes(q) ||
           f.building.toLowerCase().includes(q) ||
           f.managerName.toLowerCase().includes(q) ||
-          f.type.toLowerCase().includes(q)
+          f.type.toLowerCase().includes(q),
       );
     }
 
@@ -52,11 +59,14 @@ class FacilitiesService {
 
   async getFacilityById(id: string): Promise<ApiResponse<Facility | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const facility = this.facilities.find((f) => f.id === id || f.code === id) || null;
+    const facility =
+      this.facilities.find((f) => f.id === id || f.code === id) || null;
     return { success: true, data: facility };
   }
 
-  async createFacility(payload: Partial<Facility>): Promise<ApiResponse<Facility>> {
+  async createFacility(
+    payload: Partial<Facility>,
+  ): Promise<ApiResponse<Facility>> {
     await new Promise((r) => setTimeout(r, 50));
     const newFacility: Facility = {
       id: `fac-${Date.now().toString(36)}`,
@@ -84,7 +94,10 @@ class FacilitiesService {
     return { success: true, data: newFacility };
   }
 
-  async updateFacility(id: string, updates: Partial<Facility>): Promise<ApiResponse<Facility | null>> {
+  async updateFacility(
+    id: string,
+    updates: Partial<Facility>,
+  ): Promise<ApiResponse<Facility | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const index = this.facilities.findIndex((f) => f.id === id);
     if (index === -1) return { success: false, data: null };

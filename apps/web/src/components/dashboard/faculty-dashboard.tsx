@@ -3,7 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { facultyService } from "@/services/faculty.service";
@@ -28,7 +34,11 @@ export function FacultyDashboard() {
   }, []);
 
   if (!faculty) {
-    return <div className="p-8 text-center text-slate-400">Loading faculty profile...</div>;
+    return (
+      <div className="p-8 text-center text-slate-400">
+        Loading faculty profile...
+      </div>
+    );
   }
 
   return (
@@ -50,12 +60,20 @@ export function FacultyDashboard() {
 
         <div className="flex items-center gap-2">
           <Link href="/app/attendance/sessions">
-            <Button variant="primary" size="sm" leftIcon={<CheckCircle2 className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<CheckCircle2 className="h-3.5 w-3.5" />}
+            >
               Mark Class Attendance
             </Button>
           </Link>
           <Link href="/app/examinations/marks">
-            <Button variant="outline" size="sm" leftIcon={<FileSpreadsheet className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<FileSpreadsheet className="h-3.5 w-3.5" />}
+            >
               Enter CIA Marks
             </Button>
           </Link>
@@ -111,7 +129,11 @@ export function FacultyDashboard() {
                 </CardDescription>
               </div>
               <Link href="/app/academics/timetable">
-                <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-slate-400 hover:text-white"
+                >
                   My Timetable <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </Link>
@@ -127,7 +149,9 @@ export function FacultyDashboard() {
                       0{idx + 1}
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-white">{cls.subject}</div>
+                      <div className="text-xs font-semibold text-white">
+                        {cls.subject}
+                      </div>
                       <div className="text-[11px] text-slate-400 mt-0.5">
                         {cls.section} • {cls.room}
                       </div>
@@ -160,7 +184,9 @@ export function FacultyDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Assigned Subjects & Rosters</CardTitle>
-              <CardDescription>Odd Semester 2026-27 teaching responsibilities.</CardDescription>
+              <CardDescription>
+                Odd Semester 2026-27 teaching responsibilities.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {faculty.assignedSubjects.map((sub) => (
@@ -173,11 +199,16 @@ export function FacultyDashboard() {
                       {sub.code} — {sub.name}
                     </div>
                     <div className="text-[11px] text-slate-400 mt-0.5">
-                      Sem {sub.semester} ({sub.section}) • {sub.studentCount} Students
+                      Sem {sub.semester} ({sub.section}) • {sub.studentCount}{" "}
+                      Students
                     </div>
                   </div>
                   <Link href="/app/attendance/sessions">
-                    <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                    >
                       Roster
                     </Button>
                   </Link>

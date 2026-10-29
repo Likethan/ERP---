@@ -8,10 +8,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_user, require_permission
-from app.core.exceptions import NotFoundException, PermissionDeniedException
+from app.core.deps import require_permission
+from app.core.exceptions import ForbiddenException, PermissionDeniedException
 from app.core.permissions import (
-    ADJUSTMENTS_APPROVE,
     ADJUSTMENTS_CREATE,
     FINANCE_MANAGE_FEE_STRUCTURES,
     FINANCE_READ,
@@ -25,23 +24,15 @@ from app.core.permissions import (
     REFUNDS_APPROVE,
     REFUNDS_CREATE,
     REFUNDS_PROCESS,
-    SCHOLARSHIPS_APPROVE,
     SCHOLARSHIPS_CREATE,
     SCHOLARSHIPS_READ,
 )
 from app.models.core import AcademicYear, Program, Semester
 from app.models.finance import (
-    FeeCategory,
-    FeeItem,
-    FeeStructure,
-    FinancialAdjustment,
-    Invoice,
-    PaymentAllocation,
     PaymentTransaction,
-    Receipt,
-    StudentFeeAssignment,
 )
-from app.models.people import StudentProfile as Student, User
+from app.models.people import StudentProfile as Student
+from app.models.people import User
 from app.schemas.common import ApiResponse
 from app.schemas.finance import (
     FeeCategoryCreate,
@@ -50,13 +41,11 @@ from app.schemas.finance import (
     FeeItemResponse,
     FeeStructureCreate,
     FeeStructureResponse,
-    FeeStructureUpdate,
     FinancialAdjustmentCreate,
     FinancialAdjustmentResponse,
     InvoiceCreate,
     InvoiceLineResponse,
     InvoiceResponse,
-    InvoiceUpdate,
     PaymentAllocationResponse,
     PaymentCreate,
     PaymentResponse,

@@ -20,40 +20,32 @@ Verifies:
 """
 
 from datetime import UTC, datetime, timedelta
-from uuid import UUID, uuid4
+from uuid import uuid4
 
-from httpx import AsyncClient
-from jose import jwt
 import pytest
-from sqlalchemy import select
-from sqlalchemy.exc import OperationalError
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.audit import AuditEventCategory, build_audit_entry, record_audit_log
-from app.core.config import Settings, settings
+from app.core.audit import AuditEventCategory, record_audit_log
+from app.core.config import Settings
 from app.core.export_security import sanitize_csv_field, sanitize_csv_row
 from app.core.jobs import JobStatus, TenantJobContext, TenantJobRunner
-from app.core.metrics import metrics
 from app.core.rate_limiter import rate_limiter
 from app.core.sanitizer import (
     is_sensitive_key,
     mask_sensitive_dict,
     mask_sensitive_string,
-    safe_metadata,
 )
 from app.core.security import (
     AuthenticationException,
     create_access_token,
     decode_token,
-    get_password_hash,
     validate_password_strength,
 )
 from app.core.security_events import security_events
 from app.core.storage import sanitize_filename
-from app.models.audit import AuditLog
-from app.models.core import Institution, TenantMembership
-from app.models.people import Role, User, UserRoleAssignment
-
+from app.models.core import Institution
+from app.models.people import User
 
 # =============================================================================
 # 1. AUTHENTICATION & TOKEN HARDENING

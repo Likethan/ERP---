@@ -25,7 +25,11 @@ import {
   LogOut,
 } from "lucide-react";
 
-export default function AllocationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function AllocationDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const allocId = resolvedParams.id;
 
@@ -43,7 +47,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
 
   // Vacate Modal
   const [vacateModalOpen, setVacateModalOpen] = useState(false);
-  const [vacateReason, setVacateReason] = useState("Semester internship outside campus");
+  const [vacateReason, setVacateReason] = useState(
+    "Semester internship outside campus",
+  );
 
   const loadAllocation = async () => {
     setLoading(true);
@@ -85,7 +91,11 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
 
   const handleVacate = async () => {
     if (!allocation) return;
-    await hostelAllocationsService.vacateHostelAllocation(allocation.id, vacateReason, "Chief Warden Office");
+    await hostelAllocationsService.vacateHostelAllocation(
+      allocation.id,
+      vacateReason,
+      "Chief Warden Office",
+    );
     setVacateModalOpen(false);
     loadAllocation();
   };
@@ -103,8 +113,12 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
   if (!allocation) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Allocation Not Found</h2>
-        <p className="text-xs mb-4">No record matching ID &ldquo;{allocId}&rdquo;.</p>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Allocation Not Found
+        </h2>
+        <p className="text-xs mb-4">
+          No record matching ID &ldquo;{allocId}&rdquo;.
+        </p>
         <Link href="/app/infrastructure/hostel/allocations">
           <Button variant="outline" className="border-slate-700">
             Back to Allocations
@@ -122,28 +136,39 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
           Infrastructure
         </Link>
         <span>/</span>
-        <Link href="/app/infrastructure/hostel/allocations" className="hover:text-white">
+        <Link
+          href="/app/infrastructure/hostel/allocations"
+          className="hover:text-white"
+        >
           Allocations
         </Link>
         <span>/</span>
-        <span className="text-indigo-400 font-mono">{allocation.registerNumber}</span>
+        <span className="text-indigo-400 font-mono">
+          {allocation.registerNumber}
+        </span>
       </div>
 
       {/* Hero Header */}
       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+            >
               {allocation.status}
             </Badge>
-            <span className="text-xs font-mono text-slate-400">Ref: {allocation.financeRefId}</span>
+            <span className="text-xs font-mono text-slate-400">
+              Ref: {allocation.financeRefId}
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <UserCheck className="h-6 w-6 text-indigo-400" />
             {allocation.studentName}
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Roll: {allocation.registerNumber} • {allocation.programName} (Year {allocation.year})
+            Roll: {allocation.registerNumber} • {allocation.programName} (Year{" "}
+            {allocation.year})
           </p>
         </div>
 
@@ -193,7 +218,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
           <div className="space-y-2.5 text-xs text-slate-300">
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Full Name:</span>
-              <span className="font-semibold text-white">{allocation.studentName}</span>
+              <span className="font-semibold text-white">
+                {allocation.studentName}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Registration Number:</span>
@@ -205,7 +232,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Current Semester:</span>
-              <span>Semester {allocation.semester} (Year {allocation.year})</span>
+              <span>
+                Semester {allocation.semester} (Year {allocation.year})
+              </span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-400">Department:</span>
@@ -233,7 +262,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Block & Floor:</span>
-              <span>{allocation.blockName} • Floor {allocation.floor}</span>
+              <span>
+                {allocation.blockName} • Floor {allocation.floor}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Room & Bed Slot:</span>
@@ -250,7 +281,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-400">Expected Tenure End:</span>
-              <span className="font-mono">{allocation.expectedEndDate || "End of Degree"}</span>
+              <span className="font-mono">
+                {allocation.expectedEndDate || "End of Degree"}
+              </span>
             </div>
           </div>
         </div>
@@ -267,10 +300,15 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
           {allocation.history?.map((entry) => (
             <div key={entry.id} className="relative">
               <span className="absolute -left-[23px] top-1 h-3 w-3 rounded-full bg-indigo-500 border-2 border-slate-950" />
-              <div className="text-xs font-semibold text-white">{entry.action}</div>
-              <div className="text-[11px] text-slate-300 mt-0.5">{entry.description}</div>
+              <div className="text-xs font-semibold text-white">
+                {entry.action}
+              </div>
+              <div className="text-[11px] text-slate-300 mt-0.5">
+                {entry.description}
+              </div>
               <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                {entry.timestamp.split("T")[0]} • Performed by {entry.performedBy}
+                {entry.timestamp.split("T")[0]} • Performed by{" "}
+                {entry.performedBy}
               </div>
             </div>
           ))}
@@ -287,30 +325,48 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
         <form onSubmit={handleTransfer} className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Target Room Number</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Target Room Number
+              </label>
               <Input
                 required
                 value={transferForm.roomNumber}
-                onChange={(e) => setTransferForm({ ...transferForm, roomNumber: e.target.value })}
+                onChange={(e) =>
+                  setTransferForm({
+                    ...transferForm,
+                    roomNumber: e.target.value,
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Target Bed</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Target Bed
+              </label>
               <Input
                 required
                 value={transferForm.bedNumber}
-                onChange={(e) => setTransferForm({ ...transferForm, bedNumber: e.target.value })}
+                onChange={(e) =>
+                  setTransferForm({
+                    ...transferForm,
+                    bedNumber: e.target.value,
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Transfer Justification</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Transfer Justification
+            </label>
             <Input
               required
               value={transferForm.reason}
-              onChange={(e) => setTransferForm({ ...transferForm, reason: e.target.value })}
+              onChange={(e) =>
+                setTransferForm({ ...transferForm, reason: e.target.value })
+              }
               className="bg-slate-900 border-slate-700 text-xs"
             />
           </div>
@@ -323,7 +379,10 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Confirm Transfer
             </Button>
           </div>
@@ -339,7 +398,9 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Checkout Reason</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Checkout Reason
+            </label>
             <Input
               value={vacateReason}
               onChange={(e) => setVacateReason(e.target.value)}
@@ -355,7 +416,10 @@ export default function AllocationDetailPage({ params }: { params: Promise<{ id:
             >
               Cancel
             </Button>
-            <Button onClick={handleVacate} className="bg-rose-600 hover:bg-rose-500 text-white text-xs">
+            <Button
+              onClick={handleVacate}
+              className="bg-rose-600 hover:bg-rose-500 text-white text-xs"
+            >
               Confirm & Vacate
             </Button>
           </div>

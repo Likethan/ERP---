@@ -14,35 +14,63 @@ import type {
 
 export default function AdoptionEnablementPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"journeys" | "training" | "announcements" | "guidance" | "admin_analytics">("journeys");
+  const [activeTab, setActiveTab] = useState<
+    "journeys" | "training" | "announcements" | "guidance" | "admin_analytics"
+  >("journeys");
 
   const [journeys, setJourneys] = useState<AdoptionJourneyModel[]>([]);
-  const [selectedJourney, setSelectedJourney] = useState<AdoptionJourneyModel | null>(null);
-  const [journeyProgress, setJourneyProgress] = useState<UserJourneyProgressModel | null>(null);
+  const [selectedJourney, setSelectedJourney] =
+    useState<AdoptionJourneyModel | null>(null);
+  const [journeyProgress, setJourneyProgress] =
+    useState<UserJourneyProgressModel | null>(null);
 
   const [trainings, setTrainings] = useState<TrainingAssignmentModel[]>([]);
-  const [announcements, setAnnouncements] = useState<ProductAnnouncementModel[]>([]);
-  const [guidanceList, setGuidanceList] = useState<ContextualGuidanceModel[]>([]);
-  const [dashboardSummary, setDashboardSummary] = useState<AdoptionSummaryDashboardModel | null>(null);
+  const [announcements, setAnnouncements] = useState<
+    ProductAnnouncementModel[]
+  >([]);
+  const [guidanceList, setGuidanceList] = useState<ContextualGuidanceModel[]>(
+    [],
+  );
+  const [dashboardSummary, setDashboardSummary] =
+    useState<AdoptionSummaryDashboardModel | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  const isAdmin = user?.role === "SUPER_ADMIN" || user?.role === "INSTITUTION_ADMIN" || user?.role === "PLATFORM_OPERATOR";
+  const isAdmin =
+    user?.role === "SUPER_ADMIN" ||
+    user?.role === "INSTITUTION_ADMIN" ||
+    user?.role === "PLATFORM_OPERATOR";
 
   const loadData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const [journeysRes, trainingRes, announcementsRes, guidanceRes, summaryRes] = await Promise.all([
-        apiFetch<AdoptionJourneyModel[]>("/api/v1/adoption/journeys").catch(() => ({ data: [] })),
-        apiFetch<TrainingAssignmentModel[]>("/api/v1/adoption/training/assigned").catch(() => ({ data: [] })),
-        apiFetch<ProductAnnouncementModel[]>("/api/v1/adoption/announcements").catch(() => ({ data: [] })),
-        apiFetch<ContextualGuidanceModel[]>("/api/v1/adoption/guidance?route_path=/dashboard").catch(() => ({ data: [] })),
+      const [
+        journeysRes,
+        trainingRes,
+        announcementsRes,
+        guidanceRes,
+        summaryRes,
+      ] = await Promise.all([
+        apiFetch<AdoptionJourneyModel[]>("/api/v1/adoption/journeys").catch(
+          () => ({ data: [] }),
+        ),
+        apiFetch<TrainingAssignmentModel[]>(
+          "/api/v1/adoption/training/assigned",
+        ).catch(() => ({ data: [] })),
+        apiFetch<ProductAnnouncementModel[]>(
+          "/api/v1/adoption/announcements",
+        ).catch(() => ({ data: [] })),
+        apiFetch<ContextualGuidanceModel[]>(
+          "/api/v1/adoption/guidance?route_path=/dashboard",
+        ).catch(() => ({ data: [] })),
         isAdmin
-          ? apiFetch<AdoptionSummaryDashboardModel>("/api/v1/adoption/admin/dashboard").catch(() => ({ data: null }))
+          ? apiFetch<AdoptionSummaryDashboardModel>(
+              "/api/v1/adoption/admin/dashboard",
+            ).catch(() => ({ data: null }))
           : Promise.resolve({ data: null }),
       ]);
 
@@ -66,7 +94,9 @@ export default function AdoptionEnablementPage() {
 
   const loadJourneyProgress = async (journeyId: string) => {
     try {
-      const res = await apiFetch<UserJourneyProgressModel>(`/api/v1/adoption/journeys/${journeyId}/progress`);
+      const res = await apiFetch<UserJourneyProgressModel>(
+        `/api/v1/adoption/journeys/${journeyId}/progress`,
+      );
       setJourneyProgress(res.data || null);
     } catch (err: any) {
       console.error("Could not fetch journey progress", err);
@@ -80,10 +110,16 @@ export default function AdoptionEnablementPage() {
   const handleCompleteStep = async (journeyId: string, stepKey: string) => {
     try {
       setError(null);
-      const res = await apiFetch<UserJourneyProgressModel>(`/api/v1/adoption/journeys/${journeyId}/steps/complete`, {
-        method: "POST",
-        body: JSON.stringify({ step_key: stepKey, notes: "Completed via web portal checklist" }),
-      });
+      const res = await apiFetch<UserJourneyProgressModel>(
+        `/api/v1/adoption/journeys/${journeyId}/steps/complete`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            step_key: stepKey,
+            notes: "Completed via web portal checklist",
+          }),
+        },
+      );
       setJourneyProgress(res.data);
       setActionSuccess(`Completed step ${stepKey}!`);
       setTimeout(() => setActionSuccess(null), 3500);
@@ -95,9 +131,12 @@ export default function AdoptionEnablementPage() {
   const handleCompleteModule = async (programId: string, moduleKey: string) => {
     try {
       setError(null);
-      await apiFetch(`/api/v1/adoption/training/programs/${programId}/modules/complete?module_key=${moduleKey}`, {
-        method: "POST",
-      });
+      await apiFetch(
+        `/api/v1/adoption/training/programs/${programId}/modules/complete?module_key=${moduleKey}`,
+        {
+          method: "POST",
+        },
+      );
       setActionSuccess(`Verified completion for module ${moduleKey}!`);
       setTimeout(() => setActionSuccess(null), 3500);
       loadData();
@@ -109,10 +148,15 @@ export default function AdoptionEnablementPage() {
   const handleAcknowledgeAnnouncement = async (announcementId: string) => {
     try {
       setError(null);
-      await apiFetch(`/api/v1/adoption/announcements/${announcementId}/acknowledge`, {
-        method: "POST",
-        body: JSON.stringify({ acknowledgement_notes: "Acknowledged by user" }),
-      });
+      await apiFetch(
+        `/api/v1/adoption/announcements/${announcementId}/acknowledge`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            acknowledgement_notes: "Acknowledged by user",
+          }),
+        },
+      );
       setActionSuccess("Announcement acknowledged successfully.");
       setTimeout(() => setActionSuccess(null), 3500);
       loadData();
@@ -124,7 +168,9 @@ export default function AdoptionEnablementPage() {
   const handleSeedDefaults = async () => {
     try {
       setLoading(true);
-      await apiFetch("/api/v1/adoption/admin/journeys/seed-defaults", { method: "POST" });
+      await apiFetch("/api/v1/adoption/admin/journeys/seed-defaults", {
+        method: "POST",
+      });
       setActionSuccess("Standard role-aware onboarding journeys seeded!");
       setTimeout(() => setActionSuccess(null), 3500);
       loadData();
@@ -143,13 +189,16 @@ export default function AdoptionEnablementPage() {
             <span className="px-2.5 py-1 text-xs font-semibold rounded bg-sky-950 text-sky-400 border border-sky-800">
               CampusOS Step 37
             </span>
-            <span className="text-xs text-slate-400">Enterprise Product Adoption & Change Management</span>
+            <span className="text-xs text-slate-400">
+              Enterprise Product Adoption & Change Management
+            </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white mt-1">
             Product Adoption & Enablement Center
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Role-tailored onboarding journeys, certified learning programs, contextual walkthroughs, and change rollouts.
+            Role-tailored onboarding journeys, certified learning programs,
+            contextual walkthroughs, and change rollouts.
           </p>
         </div>
 
@@ -169,7 +218,10 @@ export default function AdoptionEnablementPage() {
       {error && (
         <div className="my-4 p-4 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-300 text-sm flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-rose-400 hover:text-white text-xs font-bold">
+          <button
+            onClick={() => setError(null)}
+            className="text-rose-400 hover:text-white text-xs font-bold"
+          >
             Dismiss
           </button>
         </div>
@@ -177,7 +229,10 @@ export default function AdoptionEnablementPage() {
       {actionSuccess && (
         <div className="my-4 p-4 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-sm flex items-center justify-between">
           <span>{actionSuccess}</span>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-400 hover:text-white text-xs font-bold">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-400 hover:text-white text-xs font-bold"
+          >
             Dismiss
           </button>
         </div>
@@ -253,7 +308,9 @@ export default function AdoptionEnablementPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Journeys List */}
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                  <h2 className="text-base font-semibold text-white mb-4">Available Onboarding Journeys</h2>
+                  <h2 className="text-base font-semibold text-white mb-4">
+                    Available Onboarding Journeys
+                  </h2>
                   {journeys.length === 0 ? (
                     <div className="text-center py-8 text-slate-500 text-sm">
                       No published onboarding journeys found for your role.
@@ -274,13 +331,19 @@ export default function AdoptionEnablementPage() {
                           }`}
                         >
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-mono font-semibold text-sky-400">{j.code}</span>
+                            <span className="text-xs font-mono font-semibold text-sky-400">
+                              {j.code}
+                            </span>
                             <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                               {j.steps.length} steps
                             </span>
                           </div>
-                          <div className="font-medium text-white text-sm">{j.title}</div>
-                          <p className="text-xs text-slate-400 line-clamp-2 mt-1">{j.description}</p>
+                          <div className="font-medium text-white text-sm">
+                            {j.title}
+                          </div>
+                          <p className="text-xs text-slate-400 line-clamp-2 mt-1">
+                            {j.description}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -294,15 +357,21 @@ export default function AdoptionEnablementPage() {
                       <div className="flex items-start justify-between pb-4 border-b border-slate-800">
                         <div>
                           <div className="flex items-center gap-2">
-                            <h2 className="text-lg font-bold text-white">{selectedJourney.title}</h2>
+                            <h2 className="text-lg font-bold text-white">
+                              {selectedJourney.title}
+                            </h2>
                             <span className="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
                               {journeyProgress?.status || "IN_PROGRESS"}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400 mt-1">{selectedJourney.description}</p>
+                          <p className="text-xs text-slate-400 mt-1">
+                            {selectedJourney.description}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <div className="text-xs text-slate-400">Journey Progress</div>
+                          <div className="text-xs text-slate-400">
+                            Journey Progress
+                          </div>
                           <div className="text-2xl font-black text-sky-400">
                             {journeyProgress?.progress_pct ?? 0}%
                           </div>
@@ -313,7 +382,9 @@ export default function AdoptionEnablementPage() {
                       <div className="w-full bg-slate-800 h-2 rounded-full mt-4 overflow-hidden">
                         <div
                           className="bg-sky-500 h-2 transition-all duration-300"
-                          style={{ width: `${journeyProgress?.progress_pct ?? 0}%` }}
+                          style={{
+                            width: `${journeyProgress?.progress_pct ?? 0}%`,
+                          }}
                         ></div>
                       </div>
 
@@ -323,7 +394,10 @@ export default function AdoptionEnablementPage() {
                           Journey Milestones & Steps
                         </h3>
                         {selectedJourney.steps.map((st) => {
-                          const isDone = journeyProgress?.completed_step_keys?.includes(st.step_key);
+                          const isDone =
+                            journeyProgress?.completed_step_keys?.includes(
+                              st.step_key,
+                            );
                           return (
                             <div
                               key={st.id}
@@ -345,14 +419,18 @@ export default function AdoptionEnablementPage() {
                                 </div>
                                 <div>
                                   <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-sm text-white">{st.title}</span>
+                                    <span className="font-semibold text-sm text-white">
+                                      {st.title}
+                                    </span>
                                     {st.is_required && (
                                       <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-900">
                                         Required
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-xs text-slate-400 mt-1">{st.description}</p>
+                                  <p className="text-xs text-slate-400 mt-1">
+                                    {st.description}
+                                  </p>
                                   {st.route_path && (
                                     <div className="mt-2 text-xs text-sky-400 flex items-center gap-1 font-mono">
                                       <span>Route:</span> {st.route_path}
@@ -368,7 +446,12 @@ export default function AdoptionEnablementPage() {
                                   </span>
                                 ) : (
                                   <button
-                                    onClick={() => handleCompleteStep(selectedJourney.id, st.step_key)}
+                                    onClick={() =>
+                                      handleCompleteStep(
+                                        selectedJourney.id,
+                                        st.step_key,
+                                      )
+                                    }
                                     className="px-3 py-1.5 text-xs font-semibold rounded bg-sky-600 hover:bg-sky-500 text-white transition shadow"
                                   >
                                     Mark Done
@@ -382,7 +465,8 @@ export default function AdoptionEnablementPage() {
                     </div>
                   ) : (
                     <div className="text-center py-20 text-slate-500 text-sm">
-                      Select an onboarding journey from the left to view milestones and checklist progress.
+                      Select an onboarding journey from the left to view
+                      milestones and checklist progress.
                     </div>
                   )}
                 </div>
@@ -393,9 +477,12 @@ export default function AdoptionEnablementPage() {
             {activeTab === "training" && (
               <div className="space-y-6">
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                  <h2 className="text-base font-semibold text-white mb-2">My Enrolled & Assigned Training</h2>
+                  <h2 className="text-base font-semibold text-white mb-2">
+                    My Enrolled & Assigned Training
+                  </h2>
                   <p className="text-xs text-slate-400 mb-6">
-                    Mandatory compliance and skill enablement programs assigned to your role or department.
+                    Mandatory compliance and skill enablement programs assigned
+                    to your role or department.
                   </p>
 
                   {trainings.length === 0 ? (
@@ -405,7 +492,10 @@ export default function AdoptionEnablementPage() {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {trainings.map((t) => (
-                        <div key={t.id} className="p-5 rounded-xl bg-slate-950/70 border border-slate-800">
+                        <div
+                          key={t.id}
+                          className="p-5 rounded-xl bg-slate-950/70 border border-slate-800"
+                        >
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-mono font-semibold text-sky-400">
                               {t.program?.code || "TRAIN-PRG"}
@@ -415,19 +505,26 @@ export default function AdoptionEnablementPage() {
                                 t.status === "COMPLETED"
                                   ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
                                   : t.status === "OVERDUE"
-                                  ? "bg-rose-950 text-rose-400 border border-rose-800"
-                                  : "bg-sky-950 text-sky-400 border border-sky-800"
+                                    ? "bg-rose-950 text-rose-400 border border-rose-800"
+                                    : "bg-sky-950 text-sky-400 border border-sky-800"
                               }`}
                             >
                               {t.status}
                             </span>
                           </div>
-                          <h3 className="text-base font-bold text-white">{t.program?.title || "Training Program"}</h3>
-                          <p className="text-xs text-slate-400 mt-1 line-clamp-2">{t.program?.description}</p>
+                          <h3 className="text-base font-bold text-white">
+                            {t.program?.title || "Training Program"}
+                          </h3>
+                          <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                            {t.program?.description}
+                          </p>
 
                           <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
                             <span className="text-xs text-slate-400">
-                              Progress: <strong className="text-white">{t.progress_pct}%</strong>
+                              Progress:{" "}
+                              <strong className="text-white">
+                                {t.progress_pct}%
+                              </strong>
                             </span>
                             {t.certificate_reference && (
                               <span className="text-[11px] font-mono text-emerald-400">
@@ -440,18 +537,30 @@ export default function AdoptionEnablementPage() {
                           {t.program?.modules && (
                             <div className="mt-4 space-y-2">
                               {t.program.modules.map((m) => {
-                                const isModDone = t.completed_module_keys?.includes(m.module_key);
+                                const isModDone =
+                                  t.completed_module_keys?.includes(
+                                    m.module_key,
+                                  );
                                 return (
                                   <div
                                     key={m.id}
                                     className="p-2.5 rounded bg-slate-900 border border-slate-800/80 flex items-center justify-between text-xs"
                                   >
-                                    <span className="text-slate-300 font-medium">{m.title}</span>
+                                    <span className="text-slate-300 font-medium">
+                                      {m.title}
+                                    </span>
                                     {isModDone ? (
-                                      <span className="text-emerald-400 font-bold">✓ Complete</span>
+                                      <span className="text-emerald-400 font-bold">
+                                        ✓ Complete
+                                      </span>
                                     ) : (
                                       <button
-                                        onClick={() => handleCompleteModule(t.program_id, m.module_key)}
+                                        onClick={() =>
+                                          handleCompleteModule(
+                                            t.program_id,
+                                            m.module_key,
+                                          )
+                                        }
                                         className="px-2.5 py-1 text-[11px] font-semibold rounded bg-sky-600 hover:bg-sky-500 text-white transition"
                                       >
                                         Verify & Complete
@@ -474,9 +583,12 @@ export default function AdoptionEnablementPage() {
             {activeTab === "announcements" && (
               <div className="space-y-4">
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                  <h2 className="text-base font-semibold text-white mb-2">Product & Change Announcements</h2>
+                  <h2 className="text-base font-semibold text-white mb-2">
+                    Product & Change Announcements
+                  </h2>
                   <p className="text-xs text-slate-400 mb-6">
-                    Stay informed regarding new capabilities, scheduled maintenance windows, and policy revisions.
+                    Stay informed regarding new capabilities, scheduled
+                    maintenance windows, and policy revisions.
                   </p>
 
                   {announcements.length === 0 ? (
@@ -500,7 +612,8 @@ export default function AdoptionEnablementPage() {
                               </span>
                               <span
                                 className={`text-xs px-2 py-0.5 rounded font-bold ${
-                                  ann.priority === "URGENT" || ann.priority === "HIGH"
+                                  ann.priority === "URGENT" ||
+                                  ann.priority === "HIGH"
                                     ? "bg-rose-950 text-rose-400 border border-rose-800"
                                     : "bg-slate-800 text-slate-400"
                                 }`}
@@ -508,11 +621,20 @@ export default function AdoptionEnablementPage() {
                                 {ann.priority}
                               </span>
                             </div>
-                            <h3 className="text-base font-bold text-white">{ann.title}</h3>
-                            <p className="text-xs text-slate-300 whitespace-pre-line">{ann.content}</p>
+                            <h3 className="text-base font-bold text-white">
+                              {ann.title}
+                            </h3>
+                            <p className="text-xs text-slate-300 whitespace-pre-line">
+                              {ann.content}
+                            </p>
                             {ann.doc_link_url && (
                               <div className="text-xs text-sky-400 pt-1">
-                                <a href={ann.doc_link_url} target="_blank" rel="noreferrer" className="underline">
+                                <a
+                                  href={ann.doc_link_url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="underline"
+                                >
                                   View Release Notes & Documentation →
                                 </a>
                               </div>
@@ -527,14 +649,18 @@ export default function AdoptionEnablementPage() {
                                 </span>
                               ) : (
                                 <button
-                                  onClick={() => handleAcknowledgeAnnouncement(ann.id)}
+                                  onClick={() =>
+                                    handleAcknowledgeAnnouncement(ann.id)
+                                  }
                                   className="px-4 py-2 text-xs font-bold rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition shadow"
                                 >
                                   Acknowledge Notice
                                 </button>
                               )
                             ) : (
-                              <span className="text-xs text-slate-500">Informational Notice</span>
+                              <span className="text-xs text-slate-500">
+                                Informational Notice
+                              </span>
                             )}
                           </div>
                         </div>
@@ -548,9 +674,12 @@ export default function AdoptionEnablementPage() {
             {/* 4. Contextual Guidance Tab */}
             {activeTab === "guidance" && (
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h2 className="text-base font-semibold text-white mb-2">In-App Walkthroughs & Guidance</h2>
+                <h2 className="text-base font-semibold text-white mb-2">
+                  In-App Walkthroughs & Guidance
+                </h2>
                 <p className="text-xs text-slate-400 mb-6">
-                  Context-sensitive hints and step-by-step guidance applicable to active CampusOS routes.
+                  Context-sensitive hints and step-by-step guidance applicable
+                  to active CampusOS routes.
                 </p>
 
                 {guidanceList.length === 0 ? (
@@ -560,13 +689,24 @@ export default function AdoptionEnablementPage() {
                 ) : (
                   <div className="space-y-3">
                     {guidanceList.map((g) => (
-                      <div key={g.id} className="p-4 rounded-lg bg-slate-950 border border-slate-800">
+                      <div
+                        key={g.id}
+                        className="p-4 rounded-lg bg-slate-950 border border-slate-800"
+                      >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-mono text-sky-400">{g.guidance_key}</span>
-                          <span className="text-xs text-slate-500">{g.guidance_type}</span>
+                          <span className="text-xs font-mono text-sky-400">
+                            {g.guidance_key}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            {g.guidance_type}
+                          </span>
                         </div>
-                        <div className="font-semibold text-white text-sm">{g.title}</div>
-                        <p className="text-xs text-slate-300 mt-1">{g.content}</p>
+                        <div className="font-semibold text-white text-sm">
+                          {g.title}
+                        </div>
+                        <p className="text-xs text-slate-300 mt-1">
+                          {g.content}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -580,44 +720,61 @@ export default function AdoptionEnablementPage() {
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <span className="text-xs text-slate-400">Active Journeys</span>
+                    <span className="text-xs text-slate-400">
+                      Active Journeys
+                    </span>
                     <div className="text-2xl font-bold text-white mt-1">
                       {dashboardSummary?.active_journeys_count ?? 0}
                     </div>
                     <span className="text-[11px] text-emerald-400">
-                      {dashboardSummary?.journey_overall_completion_rate ?? 0}% overall completion
+                      {dashboardSummary?.journey_overall_completion_rate ?? 0}%
+                      overall completion
                     </span>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <span className="text-xs text-slate-400">Active Trainings</span>
+                    <span className="text-xs text-slate-400">
+                      Active Trainings
+                    </span>
                     <div className="text-2xl font-bold text-white mt-1">
                       {dashboardSummary?.active_training_programs_count ?? 0}
                     </div>
                     <span className="text-[11px] text-emerald-400">
-                      {dashboardSummary?.training_overall_completion_rate ?? 0}% completed
+                      {dashboardSummary?.training_overall_completion_rate ?? 0}%
+                      completed
                     </span>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <span className="text-xs text-slate-400">Overdue Trainings</span>
+                    <span className="text-xs text-slate-400">
+                      Overdue Trainings
+                    </span>
                     <div className="text-2xl font-bold text-rose-400 mt-1">
                       {dashboardSummary?.overdue_trainings_count ?? 0}
                     </div>
-                    <span className="text-[11px] text-slate-500">Requires follow-up</span>
+                    <span className="text-[11px] text-slate-500">
+                      Requires follow-up
+                    </span>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <span className="text-xs text-slate-400">Pending Acknowledgements</span>
+                    <span className="text-xs text-slate-400">
+                      Pending Acknowledgements
+                    </span>
                     <div className="text-2xl font-bold text-amber-400 mt-1">
                       {dashboardSummary?.pending_acknowledgements_count ?? 0}
                     </div>
-                    <span className="text-[11px] text-slate-500">Policy change notices</span>
+                    <span className="text-[11px] text-slate-500">
+                      Policy change notices
+                    </span>
                   </div>
                 </div>
 
                 {/* Tracked Capabilities */}
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                  <h3 className="text-base font-semibold text-white mb-4">Adoption Milestones & Feature Targets</h3>
+                  <h3 className="text-base font-semibold text-white mb-4">
+                    Adoption Milestones & Feature Targets
+                  </h3>
                   <div className="text-xs text-slate-400 mb-4">
-                    Monitoring institutional adoption rates across key ERP workflows and newly rolled-out modules.
+                    Monitoring institutional adoption rates across key ERP
+                    workflows and newly rolled-out modules.
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {dashboardSummary?.top_adopted_features?.map((f) => (
@@ -627,7 +784,11 @@ export default function AdoptionEnablementPage() {
                       >
                         {f}
                       </span>
-                    )) || <span className="text-slate-500 text-xs">No active targets defined.</span>}
+                    )) || (
+                      <span className="text-slate-500 text-xs">
+                        No active targets defined.
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

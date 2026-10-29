@@ -8,8 +8,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # -----------------------------------------------------------------------------
 # 1. Support Request & Intake Schemas

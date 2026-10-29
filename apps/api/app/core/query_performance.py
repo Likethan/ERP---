@@ -4,18 +4,16 @@ Provides tools for detecting N+1 regressions, profiling database round-trips,
 and executing stable, deterministic cursor-based pagination across high-volume ERP datasets.
 """
 
-from collections.abc import Sequence
 import contextlib
 import time
-from typing import Any, Generic, TypeVar
+from typing import Any, TypeVar
 from uuid import UUID
 
-from sqlalchemy import Select, asc, desc, event, func, select
+from sqlalchemy import Select, asc, desc, event, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.core.exceptions import ValidationException
 from app.core.metrics import metrics
 from app.models.base import TenantScopedModel
 
@@ -155,7 +153,7 @@ class CursorPaginationHelper:
             cursor_rec = (await db.execute(cursor_stmt)).scalar_one_or_none()
             if cursor_rec is not None:
                 if has_created_at:
-                    cursor_created = getattr(cursor_rec, "created_at")
+                    cursor_created = cursor_rec.created_at
                     if order.lower() == "asc":
                         stmt = stmt.where(
                             (model.created_at > cursor_created)

@@ -10,21 +10,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import create_access_token, get_password_hash
 from app.models.campus import (
-    CampusAnnouncement,
-    CampusEvent,
-    Club,
-    ClubMembership,
-    EventAttendance,
     EventCategory,
-    EventRegistration,
     EventVenue,
     Notification,
-    NotificationPreference,
 )
 from app.models.core import Campus, Department, Institution, Program
 from app.models.people import Role, StudentProfile, User, UserRoleAssignment
-from app.services.campus_service import CampusService
-from app.services.notification_service import NotificationService
 
 
 @pytest.fixture

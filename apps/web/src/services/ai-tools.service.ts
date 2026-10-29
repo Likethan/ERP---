@@ -26,7 +26,7 @@ class AiToolsService {
       result = result.filter(
         (t) =>
           t.name.toLowerCase().includes(q) ||
-          t.description.toLowerCase().includes(q)
+          t.description.toLowerCase().includes(q),
       );
     }
 

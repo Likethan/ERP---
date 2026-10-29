@@ -64,13 +64,21 @@ class CampusService {
   private clubs: ClubItem[] = [...MOCK_CLUBS];
   private clubMembers: ClubMemberItem[] = [...MOCK_CLUB_MEMBERS];
   private events: CampusEventItem[] = [...MOCK_EVENTS];
-  private registrations: EventRegistrationItem[] = [...MOCK_EVENT_REGISTRATIONS];
+  private registrations: EventRegistrationItem[] = [
+    ...MOCK_EVENT_REGISTRATIONS,
+  ];
   private attendanceRecords: EventAttendanceItem[] = [...MOCK_EVENT_ATTENDANCE];
   private announcements: AnnouncementItem[] = [...MOCK_ANNOUNCEMENTS];
   private notifications: NotificationItem[] = [...MOCK_NOTIFICATIONS];
-  private preferences: CategoryNotificationPreference[] = [...MOCK_NOTIFICATION_PREFERENCES];
-  private deliverySummaries: NotificationDeliverySummary[] = [...MOCK_DELIVERY_SUMMARIES];
-  private communicationHistory: CommunicationRecord[] = [...MOCK_COMMUNICATION_HISTORY];
+  private preferences: CategoryNotificationPreference[] = [
+    ...MOCK_NOTIFICATION_PREFERENCES,
+  ];
+  private deliverySummaries: NotificationDeliverySummary[] = [
+    ...MOCK_DELIVERY_SUMMARIES,
+  ];
+  private communicationHistory: CommunicationRecord[] = [
+    ...MOCK_COMMUNICATION_HISTORY,
+  ];
   private dashboard: CampusDashboardSummary = { ...MOCK_CAMPUS_DASHBOARD };
 
   private delay(ms = 30): Promise<void> {
@@ -85,16 +93,27 @@ class CampusService {
     await this.delay(20);
     // Dynamically recalculate key figures
     const activeEvents = this.events.filter(
-      (e) => e.status === "REGISTRATION_OPEN" || e.status === "ONGOING" || e.status === "PUBLISHED"
+      (e) =>
+        e.status === "REGISTRATION_OPEN" ||
+        e.status === "ONGOING" ||
+        e.status === "PUBLISHED",
     ).length;
     const upcomingEvents = this.events.filter(
-      (e) => e.status !== "COMPLETED" && e.status !== "CANCELLED"
+      (e) => e.status !== "COMPLETED" && e.status !== "CANCELLED",
     ).length;
-    const openRegistrations = this.events.filter((e) => e.status === "REGISTRATION_OPEN").length;
+    const openRegistrations = this.events.filter(
+      (e) => e.status === "REGISTRATION_OPEN",
+    ).length;
     const activeClubs = this.clubs.filter((c) => c.status === "ACTIVE").length;
-    const totalRegistrations = this.registrations.filter((r) => r.status !== "CANCELLED").length;
-    const unreadAnnouncements = this.announcements.filter((a) => a.status === "PUBLISHED").length;
-    const unreadNotifications = calculateUnreadNotificationCount(this.notifications);
+    const totalRegistrations = this.registrations.filter(
+      (r) => r.status !== "CANCELLED",
+    ).length;
+    const unreadAnnouncements = this.announcements.filter(
+      (a) => a.status === "PUBLISHED",
+    ).length;
+    const unreadNotifications = calculateUnreadNotificationCount(
+      this.notifications,
+    );
 
     const summary: CampusDashboardSummary = {
       ...this.dashboard,
@@ -136,7 +155,9 @@ class CampusService {
     }
     if (filters?.organizer) {
       const orgQuery = filters.organizer.toLowerCase();
-      result = result.filter((e) => e.organizer.toLowerCase().includes(orgQuery));
+      result = result.filter((e) =>
+        e.organizer.toLowerCase().includes(orgQuery),
+      );
     }
     if (filters?.venue) {
       const venQuery = filters.venue.toLowerCase();
@@ -149,7 +170,7 @@ class CampusService {
           e.title.toLowerCase().includes(q) ||
           e.description.toLowerCase().includes(q) ||
           e.organizer.toLowerCase().includes(q) ||
-          e.venue.toLowerCase().includes(q)
+          e.venue.toLowerCase().includes(q),
       );
     }
 
@@ -168,12 +189,23 @@ class CampusService {
   async createEvent(
     payload: Omit<
       CampusEventItem,
-      "id" | "slug" | "status" | "registeredCount" | "attendedCount" | "waitlistCount" | "createdAt" | "updatedAt" | "timeline"
-    >
+      | "id"
+      | "slug"
+      | "status"
+      | "registeredCount"
+      | "attendedCount"
+      | "waitlistCount"
+      | "createdAt"
+      | "updatedAt"
+      | "timeline"
+    >,
   ): Promise<ApiResponse<CampusEventItem>> {
     await this.delay(50);
     const newId = `evt-${Date.now().toString(36)}`;
-    const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const slug = payload.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
 
     const newEvent: CampusEventItem = {
       ...payload,
@@ -204,7 +236,7 @@ class CampusService {
   async updateEvent(
     id: string,
     payload: Partial<CampusEventItem>,
-    actor = "Administrator"
+    actor = "Administrator",
   ): Promise<ApiResponse<CampusEventItem>> {
     await this.delay(40);
     const idx = this.events.findIndex((e) => e.id === id);
@@ -232,7 +264,10 @@ class CampusService {
     return { success: true, data: updated };
   }
 
-  async publishEvent(id: string, actor = "Dean Academics"): Promise<ApiResponse<CampusEventItem>> {
+  async publishEvent(
+    id: string,
+    actor = "Dean Academics",
+  ): Promise<ApiResponse<CampusEventItem>> {
     await this.delay(40);
     const idx = this.events.findIndex((e) => e.id === id);
     if (idx === -1) {
@@ -240,7 +275,9 @@ class CampusService {
     }
 
     const prev = this.events[idx];
-    const newStatus: EventStatus = prev.requiresRegistration ? "REGISTRATION_OPEN" : "PUBLISHED";
+    const newStatus: EventStatus = prev.requiresRegistration
+      ? "REGISTRATION_OPEN"
+      : "PUBLISHED";
 
     const updated: CampusEventItem = {
       ...prev,
@@ -282,7 +319,11 @@ class CampusService {
     return { success: true, data: updated };
   }
 
-  async cancelEvent(id: string, reason: string, actor = "Administrator"): Promise<ApiResponse<CampusEventItem>> {
+  async cancelEvent(
+    id: string,
+    reason: string,
+    actor = "Administrator",
+  ): Promise<ApiResponse<CampusEventItem>> {
     await this.delay(40);
     const idx = this.events.findIndex((e) => e.id === id);
     if (idx === -1) {
@@ -341,14 +382,16 @@ class CampusService {
           r.studentName.toLowerCase().includes(q) ||
           r.rollNumber.toLowerCase().includes(q) ||
           r.eventTitle.toLowerCase().includes(q) ||
-          r.ticketCode.toLowerCase().includes(q)
+          r.ticketCode.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: result };
   }
 
-  async getEventRegistrations(eventId: string): Promise<ApiResponse<EventRegistrationItem[]>> {
+  async getEventRegistrations(
+    eventId: string,
+  ): Promise<ApiResponse<EventRegistrationItem[]>> {
     return this.getRegistrations({ eventId });
   }
 
@@ -362,7 +405,7 @@ class CampusService {
       department: string;
       program: string;
       semester: number;
-    }
+    },
   ): Promise<ApiResponse<EventRegistrationItem>> {
     await this.delay(50);
     const ev = this.events.find((e) => e.id === eventId);
@@ -380,7 +423,10 @@ class CampusService {
 
     // Check duplicate
     const existing = this.registrations.find(
-      (r) => r.eventId === eventId && r.studentId === student.id && r.status !== "CANCELLED"
+      (r) =>
+        r.eventId === eventId &&
+        r.studentId === student.id &&
+        r.status !== "CANCELLED",
     );
     if (existing) {
       return {
@@ -424,7 +470,9 @@ class CampusService {
       timeline: [
         {
           id: `tl-${Date.now()}`,
-          action: isFull ? "Placed on Event Waitlist" : "Event Registration Confirmed",
+          action: isFull
+            ? "Placed on Event Waitlist"
+            : "Event Registration Confirmed",
           actor: student.name,
           timestamp: new Date().toISOString(),
           toStatus: status,
@@ -463,12 +511,16 @@ class CampusService {
   async cancelRegistration(
     registrationId: string,
     reason?: string,
-    actor = "Student"
+    actor = "Student",
   ): Promise<ApiResponse<EventRegistrationItem>> {
     await this.delay(30);
     const reg = this.registrations.find((r) => r.id === registrationId);
     if (!reg) {
-      return { success: false, data: null as any, error: "Registration record not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Registration record not found",
+      };
     }
 
     reg.status = "CANCELLED";
@@ -504,13 +556,13 @@ class CampusService {
     await this.delay(30);
     const ev = this.events.find((e) => e.id === eventId);
     const eventRegistrations = this.registrations.filter(
-      (r) => r.eventId === eventId && r.status !== "CANCELLED"
+      (r) => r.eventId === eventId && r.status !== "CANCELLED",
     );
 
     // Merge existing attendance records or create pending entries
     const items: EventAttendanceItem[] = eventRegistrations.map((reg) => {
       const existing = this.attendanceRecords.find(
-        (a) => a.eventId === eventId && a.studentId === reg.studentId
+        (a) => a.eventId === eventId && a.studentId === reg.studentId,
       );
       if (existing) return existing;
 
@@ -541,7 +593,10 @@ class CampusService {
     }
 
     const attendanceRate = calculateEventAttendanceRate(present, items.length);
-    const capacityUsageRate = calculateEventCapacityUsage(items.length, ev?.capacity || 100);
+    const capacityUsageRate = calculateEventCapacityUsage(
+      items.length,
+      ev?.capacity || 100,
+    );
 
     const summary: EventAttendanceSummary = {
       eventId,
@@ -565,23 +620,28 @@ class CampusService {
       status: EventAttendanceStatus;
       remarks?: string;
     }>,
-    actor = "Coordinator"
-  ): Promise<ApiResponse<{ updatedCount: number; summary: EventAttendanceSummary }>> {
+    actor = "Coordinator",
+  ): Promise<
+    ApiResponse<{ updatedCount: number; summary: EventAttendanceSummary }>
+  > {
     await this.delay(50);
     const ev = this.events.find((e) => e.id === eventId);
     let presentCount = 0;
 
     for (const rec of records) {
       const existingIdx = this.attendanceRecords.findIndex(
-        (a) => a.eventId === eventId && a.studentId === rec.studentId
+        (a) => a.eventId === eventId && a.studentId === rec.studentId,
       );
 
       const reg = this.registrations.find(
-        (r) => r.eventId === eventId && r.studentId === rec.studentId
+        (r) => r.eventId === eventId && r.studentId === rec.studentId,
       );
 
       const attendanceItem: EventAttendanceItem = {
-        id: existingIdx !== -1 ? this.attendanceRecords[existingIdx].id : `att-${Date.now()}-${rec.studentId}`,
+        id:
+          existingIdx !== -1
+            ? this.attendanceRecords[existingIdx].id
+            : `att-${Date.now()}-${rec.studentId}`,
         eventId,
         registrationId: reg?.id || `reg-${rec.studentId}`,
         studentId: rec.studentId,
@@ -631,8 +691,10 @@ class CampusService {
     eventId: string,
     status: EventAttendanceStatus,
     studentIds: string[],
-    actor = "Coordinator"
-  ): Promise<ApiResponse<{ updatedCount: number; summary: EventAttendanceSummary }>> {
+    actor = "Coordinator",
+  ): Promise<
+    ApiResponse<{ updatedCount: number; summary: EventAttendanceSummary }>
+  > {
     const payload = studentIds.map((id) => ({ studentId: id, status }));
     return this.markEventAttendance(eventId, payload, actor);
   }
@@ -663,7 +725,7 @@ class CampusService {
           c.code.toLowerCase().includes(q) ||
           c.description.toLowerCase().includes(q) ||
           c.facultyCoordinator.toLowerCase().includes(q) ||
-          c.studentLead.toLowerCase().includes(q)
+          c.studentLead.toLowerCase().includes(q),
       );
     }
 
@@ -686,7 +748,9 @@ class CampusService {
 
     const members = this.clubMembers.filter((m) => m.clubId === id);
     const events = this.events.filter((e) => e.clubId === id);
-    const announcements = this.announcements.filter((a) => a.audience.clubName === club.name);
+    const announcements = this.announcements.filter(
+      (a) => a.audience.clubName === club.name,
+    );
 
     return {
       success: true,
@@ -700,8 +764,17 @@ class CampusService {
   }
 
   async createClub(
-    payload: Omit<ClubItem, "id" | "membersCount" | "activeEventsCount" | "upcomingEventTitles" | "createdAt" | "updatedAt" | "timeline">,
-    actor = "Dean of Student Affairs"
+    payload: Omit<
+      ClubItem,
+      | "id"
+      | "membersCount"
+      | "activeEventsCount"
+      | "upcomingEventTitles"
+      | "createdAt"
+      | "updatedAt"
+      | "timeline"
+    >,
+    actor = "Dean of Student Affairs",
   ): Promise<ApiResponse<ClubItem>> {
     await this.delay(50);
     const newClub: ClubItem = {
@@ -730,7 +803,7 @@ class CampusService {
   async updateClub(
     id: string,
     payload: Partial<ClubItem>,
-    actor = "Faculty Coordinator"
+    actor = "Faculty Coordinator",
   ): Promise<ApiResponse<ClubItem>> {
     await this.delay(40);
     const idx = this.clubs.findIndex((c) => c.id === id);
@@ -773,7 +846,7 @@ class CampusService {
       department: string;
       program: string;
       semester: number;
-    }
+    },
   ): Promise<ApiResponse<ClubMemberItem>> {
     await this.delay(40);
     const club = this.clubs.find((c) => c.id === clubId);
@@ -782,7 +855,10 @@ class CampusService {
     }
 
     const existing = this.clubMembers.find(
-      (m) => m.clubId === clubId && m.studentId === student.id && m.status !== "LEFT"
+      (m) =>
+        m.clubId === clubId &&
+        m.studentId === student.id &&
+        m.status !== "LEFT",
     );
     if (existing) {
       return {
@@ -840,12 +916,16 @@ class CampusService {
   async approveMembership(
     clubId: string,
     membershipId: string,
-    actor = "Club Coordinator"
+    actor = "Club Coordinator",
   ): Promise<ApiResponse<ClubMemberItem>> {
     await this.delay(35);
     const member = this.clubMembers.find((m) => m.id === membershipId);
     if (!member) {
-      return { success: false, data: null as any, error: "Membership record not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Membership record not found",
+      };
     }
 
     member.status = "ACTIVE";
@@ -888,12 +968,16 @@ class CampusService {
     clubId: string,
     membershipId: string,
     reason: string,
-    actor = "Club Coordinator"
+    actor = "Club Coordinator",
   ): Promise<ApiResponse<ClubMemberItem>> {
     await this.delay(35);
     const member = this.clubMembers.find((m) => m.id === membershipId);
     if (!member) {
-      return { success: false, data: null as any, error: "Membership record not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Membership record not found",
+      };
     }
 
     member.status = "LEFT";
@@ -913,12 +997,16 @@ class CampusService {
   async leaveClub(
     clubId: string,
     membershipId: string,
-    actor = "Student"
+    actor = "Student",
   ): Promise<ApiResponse<ClubMemberItem>> {
     await this.delay(30);
     const member = this.clubMembers.find((m) => m.id === membershipId);
     if (!member) {
-      return { success: false, data: null as any, error: "Membership record not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Membership record not found",
+      };
     }
 
     member.status = "LEFT";
@@ -942,12 +1030,16 @@ class CampusService {
     clubId: string,
     membershipId: string,
     role: ClubRole,
-    actor = "Faculty Coordinator"
+    actor = "Faculty Coordinator",
   ): Promise<ApiResponse<ClubMemberItem>> {
     await this.delay(30);
     const member = this.clubMembers.find((m) => m.id === membershipId);
     if (!member) {
-      return { success: false, data: null as any, error: "Membership record not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Membership record not found",
+      };
     }
 
     const prevRole = member.role;
@@ -991,14 +1083,16 @@ class CampusService {
         (a) =>
           a.title.toLowerCase().includes(q) ||
           a.content.toLowerCase().includes(q) ||
-          a.publisher.toLowerCase().includes(q)
+          a.publisher.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: result };
   }
 
-  async getAnnouncementById(id: string): Promise<ApiResponse<AnnouncementItem | null>> {
+  async getAnnouncementById(
+    id: string,
+  ): Promise<ApiResponse<AnnouncementItem | null>> {
     await this.delay(20);
     const anc = this.announcements.find((a) => a.id === id);
     if (!anc) {
@@ -1008,8 +1102,17 @@ class CampusService {
   }
 
   async createAnnouncement(
-    payload: Omit<AnnouncementItem, "id" | "status" | "deliveredCount" | "viewCount" | "createdDate" | "updatedDate" | "timeline">,
-    actor = "Administrator"
+    payload: Omit<
+      AnnouncementItem,
+      | "id"
+      | "status"
+      | "deliveredCount"
+      | "viewCount"
+      | "createdDate"
+      | "updatedDate"
+      | "timeline"
+    >,
+    actor = "Administrator",
   ): Promise<ApiResponse<AnnouncementItem>> {
     await this.delay(45);
     const newAnc: AnnouncementItem = {
@@ -1037,16 +1140,22 @@ class CampusService {
 
   async publishAnnouncement(
     id: string,
-    actor = "Authorized Publisher"
+    actor = "Authorized Publisher",
   ): Promise<ApiResponse<AnnouncementItem>> {
     await this.delay(50);
     const idx = this.announcements.findIndex((a) => a.id === id);
     if (idx === -1) {
-      return { success: false, data: null as any, error: "Announcement not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Announcement not found",
+      };
     }
 
     const anc = this.announcements[idx];
-    const estimatedCount = anc.audience.estimatedRecipientCount || calculateAudienceSize(anc.audience as any);
+    const estimatedCount =
+      anc.audience.estimatedRecipientCount ||
+      calculateAudienceSize(anc.audience as any);
 
     const updated: AnnouncementItem = {
       ...anc,
@@ -1093,8 +1202,10 @@ class CampusService {
       inAppDelivered: estimatedCount,
       emailDelivered: Math.round(estimatedCount * 0.98),
       emailFailed: Math.round(estimatedCount * 0.02),
-      smsDelivered: updated.priority === "URGENT" ? Math.round(estimatedCount * 0.97) : 0,
-      smsFailed: updated.priority === "URGENT" ? Math.round(estimatedCount * 0.03) : 0,
+      smsDelivered:
+        updated.priority === "URGENT" ? Math.round(estimatedCount * 0.97) : 0,
+      smsFailed:
+        updated.priority === "URGENT" ? Math.round(estimatedCount * 0.03) : 0,
       status: "DELIVERED",
       timestamp: new Date().toLocaleString(),
     });
@@ -1118,11 +1229,18 @@ class CampusService {
     return { success: true, data: updated };
   }
 
-  async archiveAnnouncement(id: string, actor = "Administrator"): Promise<ApiResponse<AnnouncementItem>> {
+  async archiveAnnouncement(
+    id: string,
+    actor = "Administrator",
+  ): Promise<ApiResponse<AnnouncementItem>> {
     await this.delay(35);
     const idx = this.announcements.findIndex((a) => a.id === id);
     if (idx === -1) {
-      return { success: false, data: null as any, error: "Announcement not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Announcement not found",
+      };
     }
 
     const updated: AnnouncementItem = {
@@ -1166,18 +1284,27 @@ class CampusService {
     return { success: true, data: result };
   }
 
-  async getNotificationById(id: string): Promise<ApiResponse<NotificationItem | null>> {
+  async getNotificationById(
+    id: string,
+  ): Promise<ApiResponse<NotificationItem | null>> {
     await this.delay(15);
     const notif = this.notifications.find((n) => n.id === id);
-    if (!notif) return { success: false, data: null, error: "Notification not found" };
+    if (!notif)
+      return { success: false, data: null, error: "Notification not found" };
     return { success: true, data: { ...notif } };
   }
 
-  async markNotificationRead(id: string): Promise<ApiResponse<NotificationItem>> {
+  async markNotificationRead(
+    id: string,
+  ): Promise<ApiResponse<NotificationItem>> {
     await this.delay(15);
     const notif = this.notifications.find((n) => n.id === id);
     if (!notif) {
-      return { success: false, data: null as any, error: "Notification not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Notification not found",
+      };
     }
     notif.status = "READ";
     notif.readAt = new Date().toISOString();
@@ -1197,31 +1324,41 @@ class CampusService {
     return { success: true, data: { count } };
   }
 
-  async archiveNotification(id: string): Promise<ApiResponse<NotificationItem>> {
+  async archiveNotification(
+    id: string,
+  ): Promise<ApiResponse<NotificationItem>> {
     await this.delay(15);
     const notif = this.notifications.find((n) => n.id === id);
     if (!notif) {
-      return { success: false, data: null as any, error: "Notification not found" };
+      return {
+        success: false,
+        data: null as any,
+        error: "Notification not found",
+      };
     }
     notif.status = "ARCHIVED";
     notif.archivedAt = new Date().toISOString();
     return { success: true, data: { ...notif } };
   }
 
-  async getNotificationPreferences(): Promise<ApiResponse<CategoryNotificationPreference[]>> {
+  async getNotificationPreferences(): Promise<
+    ApiResponse<CategoryNotificationPreference[]>
+  > {
     await this.delay(20);
     return { success: true, data: [...this.preferences] };
   }
 
   async updateNotificationPreferences(
-    newPreferences: CategoryNotificationPreference[]
+    newPreferences: CategoryNotificationPreference[],
   ): Promise<ApiResponse<CategoryNotificationPreference[]>> {
     await this.delay(30);
     this.preferences = [...newPreferences];
     return { success: true, data: [...this.preferences] };
   }
 
-  async getDeliverySummaries(): Promise<ApiResponse<NotificationDeliverySummary[]>> {
+  async getDeliverySummaries(): Promise<
+    ApiResponse<NotificationDeliverySummary[]>
+  > {
     await this.delay(25);
     return { success: true, data: [...this.deliverySummaries] };
   }
@@ -1235,7 +1372,11 @@ class CampusService {
   // 8. Audience Calculator Helper
   // ==========================================
 
-  estimateAudience(target: EventAudienceTarget | { type: string; departmentName?: string; semester?: number }): number {
+  estimateAudience(
+    target:
+      | EventAudienceTarget
+      | { type: string; departmentName?: string; semester?: number },
+  ): number {
     return calculateAudienceSize(target);
   }
 }

@@ -8,15 +8,14 @@ Enforces:
 - Explicit detection of unconfigured providers without fabricating successful external delivery.
 """
 
+import logging
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import StrEnum
-import logging
-import time
 from typing import Any
 from uuid import UUID
 
-from app.core.sanitizer import mask_sensitive_string
 from app.integrations.adapters.base import BaseIntegrationAdapter
 from app.models.integration import IntegrationConnector
 

@@ -3,7 +3,10 @@
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceCourseSummary, AttendanceStudentSummary } from "@/types/attendance";
+import {
+  AttendanceCourseSummary,
+  AttendanceStudentSummary,
+} from "@/types/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
@@ -50,7 +53,11 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
         }
       } catch (err) {
         console.error("Failed to load course attendance detail", err);
-        showToast({ type: "error", title: "Load Error", message: "Failed to load course attendance detail." });
+        showToast({
+          type: "error",
+          title: "Load Error",
+          message: "Failed to load course attendance detail.",
+        });
       } finally {
         setLoading(false);
       }
@@ -69,10 +76,17 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
   if (!course) {
     return (
       <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white">Course Not Found</h3>
-        <p className="mt-1 text-xs text-slate-500">The requested course offering attendance register could not be resolved.</p>
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+          Course Not Found
+        </h3>
+        <p className="mt-1 text-xs text-slate-500">
+          The requested course offering attendance register could not be
+          resolved.
+        </p>
         <Link href="/app/attendance/courses" className="mt-4 inline-block">
-          <Button variant="outline" size="sm">Back to Courses</Button>
+          <Button variant="outline" size="sm">
+            Back to Courses
+          </Button>
         </Link>
       </div>
     );
@@ -96,13 +110,19 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
               <Badge variant="info">Section {course.section}</Badge>
             </div>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-              Faculty Instructor: <strong className="text-slate-700 dark:text-slate-300">{course.facultyName}</strong> • Semester 5
+              Faculty Instructor:{" "}
+              <strong className="text-slate-700 dark:text-slate-300">
+                {course.facultyName}
+              </strong>{" "}
+              • Semester 5
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Link href={`/app/academics/course-offerings/${course.courseOfferingId}`}>
+          <Link
+            href={`/app/academics/course-offerings/${course.courseOfferingId}`}
+          >
             <Button variant="outline" size="sm" className="text-xs">
               View Course Offering
             </Button>
@@ -165,7 +185,9 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
               <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-400">
                 <th className="pb-3 font-semibold">Student Name</th>
                 <th className="pb-3 font-semibold">Roll Number</th>
-                <th className="pb-3 font-semibold text-center">Attended Sessions</th>
+                <th className="pb-3 font-semibold text-center">
+                  Attended Sessions
+                </th>
                 <th className="pb-3 font-semibold text-center">Attendance %</th>
                 <th className="pb-3 font-semibold text-right">Status</th>
                 <th className="pb-3 font-semibold text-right">Action</th>
@@ -174,17 +196,26 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {students.map((student) => {
                 const courseRecord = student.courseSummaries.find(
-                  (c) => c.courseCode === course.courseCode
+                  (c) => c.courseCode === course.courseCode,
                 );
-                const percent = courseRecord ? courseRecord.percentage : student.percentage;
-                const attended = courseRecord ? courseRecord.presentCount : student.presentCount;
+                const percent = courseRecord
+                  ? courseRecord.percentage
+                  : student.percentage;
+                const attended = courseRecord
+                  ? courseRecord.presentCount
+                  : student.presentCount;
 
                 return (
-                  <tr key={student.studentId} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={student.studentId}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                  >
                     <td className="py-3 font-semibold text-slate-900 dark:text-white">
                       {student.studentName}
                     </td>
-                    <td className="py-3 text-slate-500">{student.rollNumber}</td>
+                    <td className="py-3 text-slate-500">
+                      {student.rollNumber}
+                    </td>
                     <td className="py-3 text-center text-slate-600 dark:text-slate-400">
                       {attended} / {course.totalSessions}
                     </td>
@@ -194,8 +225,8 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
                           percent >= 80
                             ? "text-emerald-600 dark:text-emerald-400"
                             : percent >= 75
-                            ? "text-amber-600 dark:text-amber-400"
-                            : "text-rose-600 dark:text-rose-400"
+                              ? "text-amber-600 dark:text-amber-400"
+                              : "text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {percent}%
@@ -204,16 +235,30 @@ export default function CourseAttendanceDetailPage({ params }: PageProps) {
                     <td className="py-3 text-right">
                       <Badge
                         variant={
-                          percent >= 80 ? "success" : percent >= 75 ? "warning" : "destructive"
+                          percent >= 80
+                            ? "success"
+                            : percent >= 75
+                              ? "warning"
+                              : "destructive"
                         }
                         className="text-[10px]"
                       >
-                        {percent >= 80 ? "Eligible" : percent >= 75 ? "Warning" : "Shortage"}
+                        {percent >= 80
+                          ? "Eligible"
+                          : percent >= 75
+                            ? "Warning"
+                            : "Shortage"}
                       </Badge>
                     </td>
                     <td className="py-3 text-right">
-                      <Link href={`/app/attendance/students/${student.studentId}`}>
-                        <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-600 hover:text-indigo-700">
+                      <Link
+                        href={`/app/attendance/students/${student.studentId}`}
+                      >
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs text-indigo-600 hover:text-indigo-700"
+                        >
                           Student 360°
                         </Button>
                       </Link>

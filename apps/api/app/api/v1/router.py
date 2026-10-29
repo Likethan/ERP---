@@ -2,13 +2,19 @@ from fastapi import APIRouter
 
 from app.api.v1.academic_structure import router as academic_structure_router
 from app.api.v1.academics import router as academics_router
+from app.api.v1.accreditation import accreditation_router
 from app.api.v1.admin import router as admin_router
+from app.api.v1.admissions import router as admissions_router
+from app.api.v1.adoption import router as adoption_router
 from app.api.v1.analytics import analytics_router
+from app.api.v1.assets import assets_router
 from app.api.v1.attendance import router as attendance_router
 from app.api.v1.auth import router as auth_router
 from app.api.v1.campus import router as campus_router
+from app.api.v1.campus_security import campus_security_router
 from app.api.v1.campuses import router as campuses_router
 from app.api.v1.cases import router as cases_router
+from app.api.v1.data_import import router as data_import_router
 from app.api.v1.departments import router as departments_router
 from app.api.v1.documents import (
     categories_router as document_categories_router,
@@ -26,42 +32,51 @@ from app.api.v1.documents import (
 from app.api.v1.documents import (
     types_router as document_types_router,
 )
+from app.api.v1.engagement import engagement_router
 from app.api.v1.events import router as events_router
 from app.api.v1.examinations import router as examinations_router
 from app.api.v1.faculty import router as faculty_router
 from app.api.v1.finance import router as finance_router
 from app.api.v1.governance import governance_router
 from app.api.v1.health import router as health_router
+from app.api.v1.housing import housing_router
 from app.api.v1.institutions import router as institutions_router
 from app.api.v1.integrations import router as integrations_router
 from app.api.v1.intelligence import router as intelligence_router
+from app.api.v1.international import international_router
+from app.api.v1.knowledge import knowledge_router
+from app.api.v1.legal import legal_router
+from app.api.v1.library import library_router
+from app.api.v1.marketplace import router as marketplace_router
 from app.api.v1.master_data import router as master_data_router
 from app.api.v1.notifications import router as notifications_router
 from app.api.v1.onboarding import router as onboarding_router
+from app.api.v1.payroll import router as payroll_router
 from app.api.v1.placement import router as placement_router
 from app.api.v1.platform import router as platform_router
-from app.api.v1.reliability import router as reliability_router
+from app.api.v1.procurement import router as procurement_router
 from app.api.v1.programs import router as programs_router
-from app.api.v1.reports import reports_router
-from app.api.v1.security_ops import router as security_ops_router
-from app.api.v1.staff import router as staff_router
-from app.api.v1.students import router as students_router
-from app.api.v1.support import router as support_router
-from app.api.v1.adoption import router as adoption_router
-from app.api.v1.marketplace import router as marketplace_router
-from app.api.v1.subscription import router as subscription_router
-from app.api.v1.data_import import router as data_import_router
 from app.api.v1.records_lifecycle import records_lifecycle_router
-from app.api.v1.knowledge import knowledge_router
-from app.api.v1.accreditation import accreditation_router
+from app.api.v1.reliability import router as reliability_router
+from app.api.v1.reports import reports_router
 from app.api.v1.research import research_router
-from app.api.v1.library import library_router
+from app.api.v1.residential import residential_router
+from app.api.v1.security_ops import router as security_ops_router
+from app.api.v1.sports import sports_router
+from app.api.v1.staff import router as staff_router
+from app.api.v1.student_affairs import student_affairs_router
 from app.api.v1.student_success import student_success_router
-from app.api.v1.admissions import router as admissions_router
+from app.api.v1.student_support import student_support_router
+from app.api.v1.students import router as students_router
+from app.api.v1.subscription import router as subscription_router
+from app.api.v1.support import router as support_router
+from app.api.v1.sustainability import sustainability_router
+from app.api.v1.timetable import router as timetable_router
+from app.api.v1.transport import transport_router
 from app.api.v1.workflows import router as workflows_router
+from app.api.v1.workforce import router as workforce_router
 from app.identity.routers import identity_router
 from app.platform_api import platform_api_router
-
 
 api_v1_router = APIRouter()
 
@@ -188,6 +203,53 @@ api_v1_router.include_router(student_success_router)
 
 # Enterprise Student Admissions, Enrollment & Onboarding Orchestration (Step 48)
 api_v1_router.include_router(admissions_router)
+
+# Enterprise Academic Timetable, Resource Scheduling & Conflict Resolution Engine (Step 49)
+api_v1_router.include_router(timetable_router)
+
+# Enterprise Procurement, Vendor Management, Purchase Orders & Inventory Control (Step 50)
+api_v1_router.include_router(procurement_router)
+
+# Enterprise Workforce Management, Staff Lifecycle, Leave & Workload Administration (Step 51)
+api_v1_router.include_router(workforce_router)
+
+# Enterprise Payroll, Compensation, Benefits & Statutory Compliance (Step 52)
+api_v1_router.include_router(payroll_router)
+
+# Enterprise Asset Lifecycle, Maintenance, Facilities & Equipment Management (Step 53)
+api_v1_router.include_router(assets_router)
+
+# Enterprise Hostel, Residential Life, Room Allocation & Student Accommodation Management (Step 54)
+api_v1_router.include_router(residential_router)
+
+# Enterprise Transport, Fleet, Routes & Student Mobility Management (Step 55)
+api_v1_router.include_router(transport_router)
+
+# Enterprise Sports, Athletics, Recreation & Student Fitness Management (Step 57)
+api_v1_router.include_router(sports_router)
+
+# Enterprise Student Affairs, Grievance Redressal & Disciplinary Case Management (Step 58)
+api_v1_router.include_router(student_affairs_router)
+
+# Enterprise Student Counselling, Mentoring & Personal Development Management (Step 59)
+api_v1_router.include_router(student_support_router)
+
+# Enterprise International Relations, Student Exchange & Global Mobility Management (Step 60)
+api_v1_router.include_router(international_router)
+
+# Enterprise Legal Affairs, Contract Lifecycle, Policy Compliance & Institutional Risk Management (Step 62)
+api_v1_router.include_router(legal_router)
+
+# Enterprise Student Engagement, Community Service, Volunteering & Civic Impact Management (Step 65)
+api_v1_router.include_router(engagement_router)
+
+# Enterprise Student Housing, Off-Campus Accommodation, Landlord Partnerships & Residential Compliance Management (Step 66)
+api_v1_router.include_router(housing_router)
+
+# Enterprise Campus Sustainability, Energy Management, Environmental Compliance & Carbon Intelligence (Step 67)
+api_v1_router.include_router(sustainability_router)
+api_v1_router.include_router(campus_security_router)
+
 
 
 

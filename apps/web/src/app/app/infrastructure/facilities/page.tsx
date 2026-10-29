@@ -43,7 +43,9 @@ export default function FacilitiesManagementPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
+    null,
+  );
 
   // Create Facility Modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -138,10 +140,20 @@ export default function FacilitiesManagementPage() {
 
   const stats = useMemo(() => {
     const total = facilities.length;
-    const active = facilities.filter((f) => f.status === FacilityStatus.ACTIVE).length;
-    const maintenance = facilities.filter((f) => f.status === FacilityStatus.UNDER_MAINTENANCE).length;
-    const totalCapacity = facilities.reduce((acc, f) => acc + (f.capacity || 0), 0);
-    const activeOrders = facilities.reduce((acc, f) => acc + (f.activeWorkOrdersCount || 0), 0);
+    const active = facilities.filter(
+      (f) => f.status === FacilityStatus.ACTIVE,
+    ).length;
+    const maintenance = facilities.filter(
+      (f) => f.status === FacilityStatus.UNDER_MAINTENANCE,
+    ).length;
+    const totalCapacity = facilities.reduce(
+      (acc, f) => acc + (f.capacity || 0),
+      0,
+    );
+    const activeOrders = facilities.reduce(
+      (acc, f) => acc + (f.activeWorkOrdersCount || 0),
+      0,
+    );
 
     return { total, active, maintenance, totalCapacity, activeOrders };
   }, [facilities]);
@@ -173,14 +185,17 @@ export default function FacilitiesManagementPage() {
               Infrastructure
             </Link>
             <span className="text-xs text-slate-600">/</span>
-            <span className="text-xs text-indigo-400 font-medium">Facilities & Venues</span>
+            <span className="text-xs text-indigo-400 font-medium">
+              Facilities & Venues
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mt-1">
             <Building2 className="h-6 w-6 text-indigo-400" />
             Campus Facilities & Venue Operations
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Central registry of auditoriums, high-performance computing labs, seminar halls, sports complexes, and institutional facilities.
+            Central registry of auditoriums, high-performance computing labs,
+            seminar halls, sports complexes, and institutional facilities.
           </p>
         </div>
 
@@ -226,7 +241,11 @@ export default function FacilitiesManagementPage() {
         <StatCard
           title="Active Work Orders"
           value={stats.activeOrders.toString()}
-          description={stats.maintenance > 0 ? `${stats.maintenance} facilities undergoing repair` : "Optimal condition"}
+          description={
+            stats.maintenance > 0
+              ? `${stats.maintenance} facilities undergoing repair`
+              : "Optimal condition"
+          }
           icon={<Wrench className="h-5 w-5 text-amber-400" />}
         />
       </div>
@@ -256,11 +275,17 @@ export default function FacilitiesManagementPage() {
               <option value={FacilityType.AUDITORIUM}>Auditorium</option>
               <option value={FacilityType.LABORATORY}>Laboratory</option>
               <option value={FacilityType.SEMINAR_HALL}>Seminar Hall</option>
-              <option value={FacilityType.SPORTS_COMPLEX}>Sports Complex</option>
+              <option value={FacilityType.SPORTS_COMPLEX}>
+                Sports Complex
+              </option>
               <option value={FacilityType.LIBRARY}>Library</option>
               <option value={FacilityType.CAFETERIA}>Cafeteria</option>
-              <option value={FacilityType.CLASSROOM_BLOCK}>Classroom Block</option>
-              <option value={FacilityType.ADMINISTRATIVE}>Administrative</option>
+              <option value={FacilityType.CLASSROOM_BLOCK}>
+                Classroom Block
+              </option>
+              <option value={FacilityType.ADMINISTRATIVE}>
+                Administrative
+              </option>
             </Select>
           </div>
 
@@ -273,7 +298,9 @@ export default function FacilitiesManagementPage() {
             >
               <option value="ALL">All Statuses</option>
               <option value={FacilityStatus.ACTIVE}>Operational</option>
-              <option value={FacilityStatus.UNDER_MAINTENANCE}>Under Maintenance</option>
+              <option value={FacilityStatus.UNDER_MAINTENANCE}>
+                Under Maintenance
+              </option>
               <option value={FacilityStatus.RESERVED}>Reserved</option>
               <option value={FacilityStatus.INACTIVE}>Offline</option>
             </Select>
@@ -285,7 +312,10 @@ export default function FacilitiesManagementPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div
+              key={i}
+              className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4"
+            >
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-20 w-full" />
@@ -299,9 +329,12 @@ export default function FacilitiesManagementPage() {
       ) : facilities.length === 0 ? (
         <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-12 text-center space-y-3">
           <Building2 className="h-12 w-12 text-slate-600 mx-auto" />
-          <h3 className="text-base font-semibold text-white">No Facilities Found</h3>
+          <h3 className="text-base font-semibold text-white">
+            No Facilities Found
+          </h3>
           <p className="text-sm text-slate-400 max-w-md mx-auto">
-            No campus facilities matched your search criteria. Try modifying your filters or register a new facility.
+            No campus facilities matched your search criteria. Try modifying
+            your filters or register a new facility.
           </p>
           <Button
             variant="outline"
@@ -336,7 +369,8 @@ export default function FacilitiesManagementPage() {
                 </div>
 
                 <p className="text-xs text-slate-400 mt-2 line-clamp-2 min-h-[32px]">
-                  {facility.description || "State-of-the-art academic and institutional campus infrastructure facility."}
+                  {facility.description ||
+                    "State-of-the-art academic and institutional campus infrastructure facility."}
                 </p>
 
                 <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-2.5 text-xs">
@@ -351,7 +385,8 @@ export default function FacilitiesManagementPage() {
 
                   <div className="flex items-center justify-between text-slate-300">
                     <span className="text-slate-500 flex items-center gap-1.5">
-                      <Users className="h-3.5 w-3.5 text-slate-400" /> Seating Capacity
+                      <Users className="h-3.5 w-3.5 text-slate-400" /> Seating
+                      Capacity
                     </span>
                     <span className="font-mono font-semibold text-emerald-400">
                       {facility.capacity.toLocaleString()} seats
@@ -360,7 +395,8 @@ export default function FacilitiesManagementPage() {
 
                   <div className="flex items-center justify-between text-slate-300">
                     <span className="text-slate-500 flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5 text-slate-400" /> Connected Events
+                      <Calendar className="h-3.5 w-3.5 text-slate-400" />{" "}
+                      Connected Events
                     </span>
                     <span className="font-mono text-slate-300">
                       {facility.connectedEventsCount || 0} scheduled
@@ -369,11 +405,14 @@ export default function FacilitiesManagementPage() {
 
                   <div className="flex items-center justify-between text-slate-300">
                     <span className="text-slate-500 flex items-center gap-1.5">
-                      <Wrench className="h-3.5 w-3.5 text-slate-400" /> Active Work Orders
+                      <Wrench className="h-3.5 w-3.5 text-slate-400" /> Active
+                      Work Orders
                     </span>
                     <span
                       className={`font-mono font-semibold ${
-                        (facility.activeWorkOrdersCount || 0) > 0 ? "text-amber-400" : "text-slate-500"
+                        (facility.activeWorkOrdersCount || 0) > 0
+                          ? "text-amber-400"
+                          : "text-slate-500"
                       }`}
                     >
                       {facility.activeWorkOrdersCount || 0} open
@@ -384,7 +423,8 @@ export default function FacilitiesManagementPage() {
 
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between gap-2">
                 <div className="text-[11px] text-slate-400 truncate">
-                  <span className="text-slate-500">Manager:</span> {facility.managerName}
+                  <span className="text-slate-500">Manager:</span>{" "}
+                  {facility.managerName}
                 </div>
                 <Button
                   variant="outline"
@@ -414,13 +454,17 @@ export default function FacilitiesManagementPage() {
                 <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
                   {selectedFacility.code}
                 </span>
-                <span className="text-xs text-slate-400">• {selectedFacility.type}</span>
+                <span className="text-xs text-slate-400">
+                  • {selectedFacility.type}
+                </span>
               </div>
               {getStatusBadge(selectedFacility.status)}
             </div>
 
             <div>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Overview</h4>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                Overview
+              </h4>
               <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
                 {selectedFacility.description}
               </p>
@@ -432,29 +476,41 @@ export default function FacilitiesManagementPage() {
                 <p className="font-semibold text-white">
                   {selectedFacility.building}, Floor {selectedFacility.floor}
                 </p>
-                <span className="text-[11px] text-slate-400">{selectedFacility.campusName}</span>
+                <span className="text-[11px] text-slate-400">
+                  {selectedFacility.campusName}
+                </span>
               </div>
 
               <div className="bg-slate-950/50 p-3 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-xs text-slate-500">Seating & Occupancy</span>
+                <span className="text-xs text-slate-500">
+                  Seating & Occupancy
+                </span>
                 <p className="font-semibold text-emerald-400 font-mono text-base">
                   {selectedFacility.capacity.toLocaleString()} Max Capacity
                 </p>
-                <span className="text-[11px] text-slate-400">Institutional Fire Safety Approved</span>
+                <span className="text-[11px] text-slate-400">
+                  Institutional Fire Safety Approved
+                </span>
               </div>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Facility Officer & In-Charge</h4>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                Facility Officer & In-Charge
+              </h4>
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-white">{selectedFacility.managerName}</p>
+                  <p className="font-semibold text-white">
+                    {selectedFacility.managerName}
+                  </p>
                   <div className="flex items-center gap-4 text-xs text-slate-400 mt-1">
                     <span className="flex items-center gap-1">
-                      <Mail className="h-3 w-3 text-slate-500" /> {selectedFacility.managerEmail}
+                      <Mail className="h-3 w-3 text-slate-500" />{" "}
+                      {selectedFacility.managerEmail}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Phone className="h-3 w-3 text-slate-500" /> {selectedFacility.managerPhone}
+                      <Phone className="h-3 w-3 text-slate-500" />{" "}
+                      {selectedFacility.managerPhone}
                     </span>
                   </div>
                 </div>
@@ -462,44 +518,55 @@ export default function FacilitiesManagementPage() {
               </div>
             </div>
 
-            {selectedFacility.equipment && selectedFacility.equipment.length > 0 && (
-              <div>
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  Key Installed Equipment & Assets ({selectedFacility.equipment.length})
-                </h4>
-                <div className="divide-y divide-slate-800 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
-                  {selectedFacility.equipment.map((eq) => (
-                    <div key={eq.id} className="p-3 flex items-center justify-between text-xs">
-                      <div>
-                        <div className="font-semibold text-white">{eq.name}</div>
-                        <div className="text-[11px] text-slate-400 font-mono">
-                          {eq.code} • Qty: {eq.quantity}
+            {selectedFacility.equipment &&
+              selectedFacility.equipment.length > 0 && (
+                <div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    Key Installed Equipment & Assets (
+                    {selectedFacility.equipment.length})
+                  </h4>
+                  <div className="divide-y divide-slate-800 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
+                    {selectedFacility.equipment.map((eq) => (
+                      <div
+                        key={eq.id}
+                        className="p-3 flex items-center justify-between text-xs"
+                      >
+                        <div>
+                          <div className="font-semibold text-white">
+                            {eq.name}
+                          </div>
+                          <div className="text-[11px] text-slate-400 font-mono">
+                            {eq.code} • Qty: {eq.quantity}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <Badge
+                            variant={
+                              eq.condition === "EXCELLENT"
+                                ? "success"
+                                : eq.condition === "GOOD"
+                                  ? "info"
+                                  : "warning"
+                            }
+                          >
+                            {eq.condition}
+                          </Badge>
+                          <div className="text-[10px] text-slate-500 mt-1 font-mono">
+                            Insp: {eq.lastInspectedDate}
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <Badge
-                          variant={
-                            eq.condition === "EXCELLENT"
-                              ? "success"
-                              : eq.condition === "GOOD"
-                              ? "info"
-                              : "warning"
-                          }
-                        >
-                          {eq.condition}
-                        </Badge>
-                        <div className="text-[10px] text-slate-500 mt-1 font-mono">
-                          Insp: {eq.lastInspectedDate}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
-              <Button variant="ghost" size="sm" onClick={() => setSelectedFacility(null)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedFacility(null)}
+              >
                 Close
               </Button>
               <Link href={`/app/campus/events/create`}>
@@ -508,7 +575,10 @@ export default function FacilitiesManagementPage() {
                 </Button>
               </Link>
               <Link href={`/app/infrastructure/maintenance`}>
-                <Button size="sm" className="gap-2 bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  size="sm"
+                  className="gap-2 bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   <Wrench className="h-4 w-4" /> Log Work Order
                 </Button>
               </Link>
@@ -527,20 +597,31 @@ export default function FacilitiesManagementPage() {
         <form onSubmit={handleCreateFacility} className="space-y-4 text-xs">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Facility Name *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Facility Name *
+              </label>
               <Input
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="e.g. Alan Turing Computing Lab"
                 required
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
             </div>
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Facility Code *</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Facility Code *
+              </label>
               <Input
                 value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    code: e.target.value.toUpperCase(),
+                  })
+                }
                 placeholder="e.g. FAC-LAB-CSE-02"
                 required
                 className="bg-slate-950 border-slate-800 text-white text-xs font-mono"
@@ -550,28 +631,48 @@ export default function FacilitiesManagementPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Facility Type</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Facility Type
+              </label>
               <Select
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as FacilityType })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    type: e.target.value as FacilityType,
+                  })
+                }
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               >
                 <option value={FacilityType.LABORATORY}>Laboratory</option>
                 <option value={FacilityType.AUDITORIUM}>Auditorium</option>
                 <option value={FacilityType.SEMINAR_HALL}>Seminar Hall</option>
-                <option value={FacilityType.SPORTS_COMPLEX}>Sports Complex</option>
+                <option value={FacilityType.SPORTS_COMPLEX}>
+                  Sports Complex
+                </option>
                 <option value={FacilityType.LIBRARY}>Library</option>
                 <option value={FacilityType.CAFETERIA}>Cafeteria</option>
-                <option value={FacilityType.CLASSROOM_BLOCK}>Classroom Block</option>
-                <option value={FacilityType.ADMINISTRATIVE}>Administrative</option>
+                <option value={FacilityType.CLASSROOM_BLOCK}>
+                  Classroom Block
+                </option>
+                <option value={FacilityType.ADMINISTRATIVE}>
+                  Administrative
+                </option>
               </Select>
             </div>
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Capacity (Seats)</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Capacity (Seats)
+              </label>
               <Input
                 type="number"
                 value={formData.capacity}
-                onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    capacity: parseInt(e.target.value) || 0,
+                  })
+                }
                 min={1}
                 required
                 className="bg-slate-950 border-slate-800 text-white text-xs font-mono"
@@ -581,19 +682,27 @@ export default function FacilitiesManagementPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Building</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Building
+              </label>
               <Input
                 value={formData.building}
-                onChange={(e) => setFormData({ ...formData, building: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, building: e.target.value })
+                }
                 placeholder="e.g. Academic Block A"
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
             </div>
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Floor Level</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Floor Level
+              </label>
               <Input
                 value={formData.floor}
-                onChange={(e) => setFormData({ ...formData, floor: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, floor: e.target.value })
+                }
                 placeholder="e.g. 2nd Floor East"
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
@@ -602,29 +711,41 @@ export default function FacilitiesManagementPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Manager / In-Charge</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Manager / In-Charge
+              </label>
               <Input
                 value={formData.managerName}
-                onChange={(e) => setFormData({ ...formData, managerName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, managerName: e.target.value })
+                }
                 placeholder="Dr. Rajesh Rao"
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
             </div>
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Email</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Email
+              </label>
               <Input
                 type="email"
                 value={formData.managerEmail}
-                onChange={(e) => setFormData({ ...formData, managerEmail: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, managerEmail: e.target.value })
+                }
                 placeholder="rajesh.rao@campusos.edu"
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
             </div>
             <div>
-              <label className="text-slate-300 font-medium block mb-1">Phone</label>
+              <label className="text-slate-300 font-medium block mb-1">
+                Phone
+              </label>
               <Input
                 value={formData.managerPhone}
-                onChange={(e) => setFormData({ ...formData, managerPhone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, managerPhone: e.target.value })
+                }
                 placeholder="+91 94480 12345"
                 className="bg-slate-950 border-slate-800 text-white text-xs"
               />
@@ -632,10 +753,14 @@ export default function FacilitiesManagementPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 font-medium block mb-1">Description & Specs</label>
+            <label className="text-slate-300 font-medium block mb-1">
+              Description & Specs
+            </label>
             <Textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               rows={3}
               placeholder="Provide technical specifications, intended usage, and equipment available..."
               className="bg-slate-950 border-slate-800 text-white text-xs"

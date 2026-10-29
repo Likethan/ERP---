@@ -59,13 +59,16 @@ export default function AttendanceHubPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
               CampusOS Engine
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Attendance Operations</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Attendance Operations
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Attendance Operations Hub
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Real-time registers, course attendance analytics, leave approvals, and policy compliance monitoring.
+            Real-time registers, course attendance analytics, leave approvals,
+            and policy compliance monitoring.
           </p>
         </div>
 
@@ -102,14 +105,22 @@ export default function AttendanceHubPage() {
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-rose-900 dark:text-rose-200">
-                Attendance Deficit Alert — {summary?.studentsBelowThresholdCount ?? alerts.length} Students Below Minimum 75% Requirement
+                Attendance Deficit Alert —{" "}
+                {summary?.studentsBelowThresholdCount ?? alerts.length} Students
+                Below Minimum 75% Requirement
               </h3>
               <p className="mt-0.5 text-xs text-rose-700 dark:text-rose-400">
-                Action required: Send automated academic advisories or schedule counselor interventions before end-term hall tickets are blocked.
+                Action required: Send automated academic advisories or schedule
+                counselor interventions before end-term hall tickets are
+                blocked.
               </p>
             </div>
             <Link href="/app/attendance/students?riskLevel=CRITICAL">
-              <Button size="sm" variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:text-rose-300">
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-rose-300 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:text-rose-300"
+              >
                 View At-Risk Roster
               </Button>
             </Link>
@@ -121,25 +132,40 @@ export default function AttendanceHubPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Overall Attendance"
-          value={loading ? "..." : `${summary?.overallAttendancePercentage ?? 88.6}%`}
+          value={
+            loading ? "..." : `${summary?.overallAttendancePercentage ?? 88.6}%`
+          }
           description="Cumulative across active terms"
           icon={<CalendarCheck className="h-5 w-5 text-indigo-600" />}
         />
         <StatCard
           title="Today's Sessions"
-          value={loading ? "..." : `${summary?.todaySessionsCompleted ?? 4} / ${summary?.todaySessionsCount ?? 6}`}
+          value={
+            loading
+              ? "..."
+              : `${summary?.todaySessionsCompleted ?? 4} / ${summary?.todaySessionsCount ?? 6}`
+          }
           description={`${summary?.todaySessionsPending ?? 2} sessions pending marking`}
           icon={<Clock className="h-5 w-5 text-emerald-600" />}
         />
         <StatCard
           title="Students Below 75%"
-          value={loading ? "..." : String(summary?.studentsBelowThresholdCount ?? 14)}
+          value={
+            loading ? "..." : String(summary?.studentsBelowThresholdCount ?? 14)
+          }
           description={`${summary?.studentsAtRiskCount ?? 32} in warning bracket (<80%)`}
           icon={<AlertTriangle className="h-5 w-5 text-rose-600" />}
         />
         <StatCard
           title="Pending Approvals"
-          value={loading ? "..." : String((summary?.pendingLeaveRequestsCount ?? 0) + (summary?.pendingCorrectionsCount ?? 0))}
+          value={
+            loading
+              ? "..."
+              : String(
+                  (summary?.pendingLeaveRequestsCount ?? 0) +
+                    (summary?.pendingCorrectionsCount ?? 0),
+                )
+          }
           description={`${summary?.pendingLeaveRequestsCount ?? 0} leaves, ${summary?.pendingCorrectionsCount ?? 0} corrections`}
           icon={<FileCheck2 className="h-5 w-5 text-amber-600" />}
         />
@@ -165,7 +191,8 @@ export default function AttendanceHubPage() {
               Session Registers
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Daily timetable periods, lecture attendance marking, and session status rosters.
+              Daily timetable periods, lecture attendance marking, and session
+              status rosters.
             </p>
           </Link>
 
@@ -183,7 +210,8 @@ export default function AttendanceHubPage() {
               Attendance Records
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Comprehensive student attendance ledger across all sections, subjects, and dates.
+              Comprehensive student attendance ledger across all sections,
+              subjects, and dates.
             </p>
           </Link>
 
@@ -201,7 +229,8 @@ export default function AttendanceHubPage() {
               Student Attendance 360°
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Individual percentage tracking, course breakdowns, and weekly attendance curves.
+              Individual percentage tracking, course breakdowns, and weekly
+              attendance curves.
             </p>
           </Link>
 
@@ -219,7 +248,8 @@ export default function AttendanceHubPage() {
               Course Offering Registers
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Class-level statistics, faculty delivery logs, and low-attendance course alerts.
+              Class-level statistics, faculty delivery logs, and low-attendance
+              course alerts.
             </p>
           </Link>
 
@@ -237,7 +267,8 @@ export default function AttendanceHubPage() {
               Leave Workflows
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Medical, on-duty, and sports leave applications with verification and approval timeline.
+              Medical, on-duty, and sports leave applications with verification
+              and approval timeline.
             </p>
           </Link>
 
@@ -255,7 +286,8 @@ export default function AttendanceHubPage() {
               Attendance Corrections
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Audit-supervised attendance revisions with HOD sign-off and chronological logs.
+              Audit-supervised attendance revisions with HOD sign-off and
+              chronological logs.
             </p>
           </Link>
 
@@ -273,7 +305,8 @@ export default function AttendanceHubPage() {
               Regulations & Policies
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Configurable 75% minimums, late-punch weights, and medical excuse thresholds.
+              Configurable 75% minimums, late-punch weights, and medical excuse
+              thresholds.
             </p>
           </Link>
 
@@ -291,7 +324,8 @@ export default function AttendanceHubPage() {
               Reports & Audit Exports
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Student cohort rosters, department analytics, and exam eligibility export files.
+              Student cohort rosters, department analytics, and exam eligibility
+              export files.
             </p>
           </Link>
         </div>
@@ -310,19 +344,29 @@ export default function AttendanceHubPage() {
                   Department Breakdown
                 </h3>
               </div>
-              <Badge variant="outline" className="text-xs">Active Term</Badge>
+              <Badge variant="outline" className="text-xs">
+                Active Term
+              </Badge>
             </div>
             <div className="mt-4 space-y-3.5">
               {summary?.departmentBreakdown.map((dept) => (
                 <div key={dept.department} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-medium">
-                    <span className="text-slate-700 dark:text-slate-300 truncate max-w-[180px]">{dept.department}</span>
-                    <span className="text-slate-900 dark:text-white font-semibold">{dept.percentage}%</span>
+                    <span className="text-slate-700 dark:text-slate-300 truncate max-w-[180px]">
+                      {dept.department}
+                    </span>
+                    <span className="text-slate-900 dark:text-white font-semibold">
+                      {dept.percentage}%
+                    </span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
-                        dept.percentage >= 85 ? "bg-emerald-500" : dept.percentage >= 75 ? "bg-amber-500" : "bg-rose-500"
+                        dept.percentage >= 85
+                          ? "bg-emerald-500"
+                          : dept.percentage >= 75
+                            ? "bg-amber-500"
+                            : "bg-rose-500"
                       }`}
                       style={{ width: `${dept.percentage}%` }}
                     />
@@ -341,17 +385,28 @@ export default function AttendanceHubPage() {
                   Semester Comparison
                 </h3>
               </div>
-              <Badge variant="outline" className="text-xs">Cumulative</Badge>
+              <Badge variant="outline" className="text-xs">
+                Cumulative
+              </Badge>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {summary?.semesterBreakdown.map((sem) => (
-                <div key={sem.semester} className="rounded-lg border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-800/40">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Semester {sem.semester}</span>
+                <div
+                  key={sem.semester}
+                  className="rounded-lg border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-800/40"
+                >
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    Semester {sem.semester}
+                  </span>
                   <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-lg font-bold text-slate-900 dark:text-white">{sem.percentage}%</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-white">
+                      {sem.percentage}%
+                    </span>
                     <span className="text-[10px] text-slate-400">avg</span>
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400">{sem.studentCount} students</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {sem.studentCount} students
+                  </span>
                 </div>
               ))}
             </div>
@@ -369,7 +424,8 @@ export default function AttendanceHubPage() {
                 </h3>
               </div>
               <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                Calculates consecutive classes required to satisfy the institutional 75% threshold.
+                Calculates consecutive classes required to satisfy the
+                institutional 75% threshold.
               </p>
             </div>
             <Link href="/app/attendance/students">
@@ -394,17 +450,30 @@ export default function AttendanceHubPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {alerts.map((alert) => (
-                  <tr key={`${alert.studentId}-${alert.courseCode}`} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={`${alert.studentId}-${alert.courseCode}`}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                  >
                     <td className="py-3">
-                      <div className="font-medium text-slate-900 dark:text-white">{alert.studentName}</div>
-                      <div className="text-[11px] text-slate-500">{alert.rollNumber} • Sec {alert.section}</div>
+                      <div className="font-medium text-slate-900 dark:text-white">
+                        {alert.studentName}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {alert.rollNumber} • Sec {alert.section}
+                      </div>
                     </td>
                     <td className="py-3">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{alert.courseCode}</span>
-                      <div className="text-[11px] text-slate-500 truncate max-w-[140px]">{alert.courseName}</div>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">
+                        {alert.courseCode}
+                      </span>
+                      <div className="text-[11px] text-slate-500 truncate max-w-[140px]">
+                        {alert.courseName}
+                      </div>
                     </td>
                     <td className="py-3">
-                      <span className={`font-bold ${alert.attendancePercentage < 65 ? "text-rose-600" : "text-amber-600"}`}>
+                      <span
+                        className={`font-bold ${alert.attendancePercentage < 65 ? "text-rose-600" : "text-amber-600"}`}
+                      >
                         {alert.attendancePercentage}%
                       </span>
                     </td>
@@ -413,18 +482,31 @@ export default function AttendanceHubPage() {
                     </td>
                     <td className="py-3">
                       <span className="inline-flex items-center gap-1 font-semibold text-rose-700 dark:text-rose-400">
-                        <TrendingDown className="h-3 w-3" />
-                        +{alert.sessionsNeededToRecover} sessions
+                        <TrendingDown className="h-3 w-3" />+
+                        {alert.sessionsNeededToRecover} sessions
                       </span>
                     </td>
                     <td className="py-3">
-                      <Badge variant={alert.riskLevel === "CRITICAL" ? "destructive" : "warning"} className="text-[10px]">
+                      <Badge
+                        variant={
+                          alert.riskLevel === "CRITICAL"
+                            ? "destructive"
+                            : "warning"
+                        }
+                        className="text-[10px]"
+                      >
                         {alert.riskLevel}
                       </Badge>
                     </td>
                     <td className="py-3 text-right">
-                      <Link href={`/app/attendance/students/${alert.studentId}`}>
-                        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-indigo-600 hover:text-indigo-700">
+                      <Link
+                        href={`/app/attendance/students/${alert.studentId}`}
+                      >
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 px-2 text-xs text-indigo-600 hover:text-indigo-700"
+                        >
                           Profile
                         </Button>
                       </Link>

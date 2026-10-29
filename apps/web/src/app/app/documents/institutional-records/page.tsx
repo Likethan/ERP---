@@ -54,8 +54,12 @@ export default function InstitutionalRecordsPage() {
   }, []);
 
   const filteredRecords = records.filter((rec) => {
-    if (categoryFilter !== "ALL" && rec.category !== categoryFilter) return false;
-    if (confidentialityFilter !== "ALL" && rec.confidentiality !== confidentialityFilter)
+    if (categoryFilter !== "ALL" && rec.category !== categoryFilter)
+      return false;
+    if (
+      confidentialityFilter !== "ALL" &&
+      rec.confidentiality !== confidentialityFilter
+    )
       return false;
     if (statusFilter !== "ALL" && rec.status !== statusFilter) return false;
 
@@ -84,7 +88,8 @@ export default function InstitutionalRecordsPage() {
             Institutional Records & Gazettes
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Official statutory approvals, NBA/NAAC accreditations, institutional policies, and council minutes.
+            Official statutory approvals, NBA/NAAC accreditations, institutional
+            policies, and council minutes.
           </p>
         </div>
 
@@ -122,7 +127,9 @@ export default function InstitutionalRecordsPage() {
             <option value="Accreditation Records">Accreditation Records</option>
             <option value="Regulatory Approvals">Regulatory Approvals</option>
             <option value="Policies & Governance">Policies & Governance</option>
-            <option value="Administrative Records">Administrative Records</option>
+            <option value="Administrative Records">
+              Administrative Records
+            </option>
           </Select>
         </div>
 
@@ -160,7 +167,9 @@ export default function InstitutionalRecordsPage() {
       {/* Directory Table */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-20 text-center text-xs text-slate-500">Loading institutional records...</div>
+          <div className="py-20 text-center text-xs text-slate-500">
+            Loading institutional records...
+          </div>
         ) : filteredRecords.length === 0 ? (
           <div className="py-16 text-center text-xs text-slate-500">
             No institutional records matched your filters.
@@ -191,7 +200,8 @@ export default function InstitutionalRecordsPage() {
                         {rec.recordName}
                       </Link>
                       <div className="text-[11px] text-blue-400 font-mono mt-0.5">
-                        {rec.code} {rec.referenceNumber && `• Ref: ${rec.referenceNumber}`}
+                        {rec.code}{" "}
+                        {rec.referenceNumber && `• Ref: ${rec.referenceNumber}`}
                       </div>
                     </td>
 
@@ -211,7 +221,9 @@ export default function InstitutionalRecordsPage() {
                       {rec.validUntil ? (
                         <span className="text-amber-400">{rec.validUntil}</span>
                       ) : (
-                        <span className="text-slate-500">Standing / Permanent</span>
+                        <span className="text-slate-500">
+                          Standing / Permanent
+                        </span>
                       )}
                     </td>
 
@@ -226,8 +238,14 @@ export default function InstitutionalRecordsPage() {
                     </td>
 
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/app/documents/institutional-records/${rec.id}`}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                      <Link
+                        href={`/app/documents/institutional-records/${rec.id}`}
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 gap-1"
+                        >
                           <Eye className="w-3.5 h-3.5" />
                           View 360
                         </Button>

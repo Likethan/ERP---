@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { DocumentItem } from "@campusos/types";
-import { DocumentStatusBadge, ConfidentialityBadge } from "./document-status-badge";
+import {
+  DocumentStatusBadge,
+  ConfidentialityBadge,
+} from "./document-status-badge";
 import {
   FileText,
   Download,
@@ -25,7 +28,11 @@ interface DocumentPreviewProps {
   showToolbar?: boolean;
 }
 
-export function DocumentPreview({ document, className = "", showToolbar = true }: DocumentPreviewProps) {
+export function DocumentPreview({
+  document,
+  className = "",
+  showToolbar = true,
+}: DocumentPreviewProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
 
@@ -49,9 +56,12 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
               <FileText className="w-4 h-4" />
             </div>
             <div className="truncate">
-              <h4 className="text-xs font-semibold text-slate-200 truncate">{document.name}</h4>
+              <h4 className="text-xs font-semibold text-slate-200 truncate">
+                {document.name}
+              </h4>
               <p className="text-[10px] text-slate-400">
-                {document.fileType} • {document.fileSize} • Uploaded {new Date(document.uploadedAt).toLocaleDateString()}
+                {document.fileType} • {document.fileSize} • Uploaded{" "}
+                {new Date(document.uploadedAt).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -67,7 +77,9 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
             >
               -
             </button>
-            <span className="text-[11px] font-mono text-slate-400 px-1">{zoomLevel}%</span>
+            <span className="text-[11px] font-mono text-slate-400 px-1">
+              {zoomLevel}%
+            </span>
             <button
               onClick={() => setZoomLevel((z) => Math.min(150, z + 15))}
               className="px-2 py-1 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition"
@@ -81,7 +93,11 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
               className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition"
               title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              {isFullscreen ? (
+                <Minimize2 className="w-4 h-4" />
+              ) : (
+                <Maximize2 className="w-4 h-4" />
+              )}
             </button>
             <a
               href="#mock-download"
@@ -102,7 +118,10 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
       <div className="relative flex-1 p-6 md:p-8 bg-slate-950/50 flex items-center justify-center overflow-auto min-h-[460px]">
         {/* Document Sheet Simulation */}
         <div
-          style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}
+          style={{
+            transform: `scale(${zoomLevel / 100})`,
+            transformOrigin: "top center",
+          }}
           className="w-full max-w-[580px] bg-slate-900 border border-slate-700/60 rounded-lg p-8 shadow-2xl relative transition-transform duration-150 select-none text-slate-100"
         >
           {/* Mock Institutional Seal / Watermark Background */}
@@ -117,9 +136,12 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
                 CampusOS Digital Document Repository
               </div>
               <h2 className="text-base font-bold text-slate-100">
-                {document.issuingAuthority || "Academic & Institutional Registry"}
+                {document.issuingAuthority ||
+                  "Academic & Institutional Registry"}
               </h2>
-              <p className="text-xs text-slate-400">Official Authenticated Record</p>
+              <p className="text-xs text-slate-400">
+                Official Authenticated Record
+              </p>
             </div>
             <div className="text-right">
               <DocumentStatusBadge status={document.status} />
@@ -135,49 +157,71 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
               <div className="text-xs font-semibold uppercase text-slate-400 tracking-wider mb-1">
                 Document Title
               </div>
-              <div className="text-sm font-semibold text-slate-100">{document.name}</div>
+              <div className="text-sm font-semibold text-slate-100">
+                {document.name}
+              </div>
               <div className="text-xs text-blue-400 mt-1 font-mono">
-                Category: {document.category} • Classification: {document.documentType}
+                Category: {document.category} • Classification:{" "}
+                {document.documentType}
               </div>
             </div>
 
             {/* Grid of Verified Fields */}
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Legal Owner</span>
-                <span className="font-medium text-slate-200 mt-0.5 block">{document.ownerName}</span>
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Legal Owner
+                </span>
+                <span className="font-medium text-slate-200 mt-0.5 block">
+                  {document.ownerName}
+                </span>
                 {document.ownerRollNumber && (
-                  <span className="text-[11px] text-slate-400 font-mono">ID: {document.ownerRollNumber}</span>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    ID: {document.ownerRollNumber}
+                  </span>
                 )}
               </div>
 
               <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Department / Cadre</span>
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Department / Cadre
+                </span>
                 <span className="font-medium text-slate-200 mt-0.5 block">
                   {document.ownerDepartment || "General"}
                 </span>
-                <span className="text-[11px] text-slate-400">{document.ownerType}</span>
-              </div>
-
-              <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Document Number</span>
-                <span className="font-medium text-slate-200 mt-0.5 block font-mono">
-                  {document.documentNumber || "CAMPUS-REC-00" + document.id.slice(-4)}
+                <span className="text-[11px] text-slate-400">
+                  {document.ownerType}
                 </span>
               </div>
 
               <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Issue Date</span>
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Document Number
+                </span>
+                <span className="font-medium text-slate-200 mt-0.5 block font-mono">
+                  {document.documentNumber ||
+                    "CAMPUS-REC-00" + document.id.slice(-4)}
+                </span>
+              </div>
+
+              <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Issue Date
+                </span>
                 <span className="font-medium text-slate-200 mt-0.5 block">
                   {document.issueDate || "N/A"}
                 </span>
               </div>
 
               <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Expiry Date</span>
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Expiry Date
+                </span>
                 <span className="font-medium text-slate-200 mt-0.5 block">
                   {document.expiryDate ? (
-                    <span className="text-amber-400">{document.expiryDate}</span>
+                    <span className="text-amber-400">
+                      {document.expiryDate}
+                    </span>
                   ) : (
                     <span className="text-slate-400">Permanent Validity</span>
                   )}
@@ -185,7 +229,9 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
               </div>
 
               <div className="p-3 bg-slate-950/50 border border-slate-800/60 rounded">
-                <span className="text-slate-400 block text-[10px] uppercase">Verification Status</span>
+                <span className="text-slate-400 block text-[10px] uppercase">
+                  Verification Status
+                </span>
                 <span className="font-medium mt-0.5 block text-slate-300">
                   {document.verifiedBy ? (
                     <span className="text-emerald-400 flex items-center gap-1">
@@ -193,30 +239,36 @@ export function DocumentPreview({ document, className = "", showToolbar = true }
                       Verified
                     </span>
                   ) : (
-                    <span className="text-amber-400">Awaiting Verification</span>
+                    <span className="text-amber-400">
+                      Awaiting Verification
+                    </span>
                   )}
                 </span>
               </div>
             </div>
 
             {/* Checklist summary if available */}
-            {document.verificationChecklist && document.verificationChecklist.length > 0 && (
-              <div className="mt-3 p-3 bg-slate-950/40 border border-slate-800/60 rounded text-xs space-y-1.5">
-                <div className="text-[10px] uppercase font-semibold text-slate-400 mb-1">
-                  Verification Checklist Snapshot
-                </div>
-                {document.verificationChecklist.slice(0, 3).map((item) => (
-                  <div key={item.id} className="flex items-center gap-2 text-slate-300 text-[11px]">
-                    {item.checked ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border border-slate-600 shrink-0" />
-                    )}
-                    <span className="truncate">{item.label}</span>
+            {document.verificationChecklist &&
+              document.verificationChecklist.length > 0 && (
+                <div className="mt-3 p-3 bg-slate-950/40 border border-slate-800/60 rounded text-xs space-y-1.5">
+                  <div className="text-[10px] uppercase font-semibold text-slate-400 mb-1">
+                    Verification Checklist Snapshot
                   </div>
-                ))}
-              </div>
-            )}
+                  {document.verificationChecklist.slice(0, 3).map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-2 text-slate-300 text-[11px]"
+                    >
+                      {item.checked ? (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      ) : (
+                        <div className="w-3.5 h-3.5 rounded-full border border-slate-600 shrink-0" />
+                      )}
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
 
           {/* Security & Verification Footer */}

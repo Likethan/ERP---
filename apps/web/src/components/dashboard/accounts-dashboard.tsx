@@ -3,7 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { financeService } from "@/services/finance.service";
@@ -38,18 +44,27 @@ export function AccountsDashboard() {
             Institutional Accounts & Treasury
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Tuition fee schedules, student billing, online UPI/bank receipts, and scholarships.
+            Tuition fee schedules, student billing, online UPI/bank receipts,
+            and scholarships.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/finance/invoices">
-            <Button variant="primary" size="sm" leftIcon={<CreditCard className="h-3.5 w-3.5" />}>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<CreditCard className="h-3.5 w-3.5" />}
+            >
               Issue Fee Invoices
             </Button>
           </Link>
           <Link href="/app/finance/receipts">
-            <Button variant="outline" size="sm" leftIcon={<Receipt className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Receipt className="h-3.5 w-3.5" />}
+            >
               Official Receipts
             </Button>
           </Link>
@@ -97,10 +112,16 @@ export function AccountsDashboard() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Recent Verified Receipts</CardTitle>
-              <CardDescription>Real-time fee reconciliations via UPI & Net Banking.</CardDescription>
+              <CardDescription>
+                Real-time fee reconciliations via UPI & Net Banking.
+              </CardDescription>
             </div>
             <Link href="/app/finance/payments">
-              <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-slate-400 hover:text-white"
+              >
                 All Transactions <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
             </Link>
@@ -123,7 +144,9 @@ export function AccountsDashboard() {
                   <div className="font-mono font-bold text-emerald-400 text-sm">
                     +₹{p.amount.toLocaleString()}
                   </div>
-                  <div className="text-[10px] text-slate-500">{p.paymentDate}</div>
+                  <div className="text-[10px] text-slate-500">
+                    {p.paymentDate}
+                  </div>
                 </div>
               </div>
             ))}
@@ -135,10 +158,16 @@ export function AccountsDashboard() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Student Invoices & Dues</CardTitle>
-              <CardDescription>Installment statuses for Odd Semester 2026-27.</CardDescription>
+              <CardDescription>
+                Installment statuses for Odd Semester 2026-27.
+              </CardDescription>
             </div>
             <Link href="/app/finance/invoices">
-              <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-slate-400 hover:text-white"
+              >
                 Invoices Ledger <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
             </Link>
@@ -168,7 +197,10 @@ export function AccountsDashboard() {
                       </div>
                     )}
                   </div>
-                  <Badge variant={inv.status === "PAID" ? "success" : "warning"} dot>
+                  <Badge
+                    variant={inv.status === "PAID" ? "success" : "warning"}
+                    dot
+                  >
                     {inv.status}
                   </Badge>
                 </div>

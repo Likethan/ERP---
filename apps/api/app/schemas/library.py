@@ -3,29 +3,23 @@
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.models.library import (
-    LibraryAcquisitionStatus,
     LibraryAuditScanResult,
     LibraryBranchStatus,
     LibraryCatalogStatus,
     LibraryCirculationStatus,
     LibraryCopyCondition,
     LibraryFineCategory,
-    LibraryFineStatus,
-    LibraryInventoryAuditStatus,
-    LibraryLoanStatus,
     LibraryMemberCategory,
     LibraryMemberStatus,
-    LibraryReservationStatus,
     LibraryResourceType,
     LibrarySubscriptionStatus,
     LibrarySubscriptionType,
 )
-
 
 # =============================================================================
 # 1. LIBRARY BRANCH SCHEMAS

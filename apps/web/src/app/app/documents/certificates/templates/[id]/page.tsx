@@ -4,7 +4,10 @@ import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { certificateTemplatesService } from "@/services/certificate-templates.service";
-import { CertificateTemplate, CertificateTemplateStatus } from "@campusos/types";
+import {
+  CertificateTemplate,
+  CertificateTemplateStatus,
+} from "@campusos/types";
 import { Button } from "@/components/ui/button";
 import {
   Layers,
@@ -30,7 +33,9 @@ export default function CertificateTemplateDetailPage({
 
   const [template, setTemplate] = useState<CertificateTemplate | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "fields" | "versions" | "usage" | "activity">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "fields" | "versions" | "usage" | "activity"
+  >("overview");
 
   useEffect(() => {
     async function loadTemplate() {
@@ -53,7 +58,11 @@ export default function CertificateTemplateDetailPage({
   }, [id]);
 
   if (loading) {
-    return <div className="py-24 text-center text-xs text-slate-500">Loading certificate template...</div>;
+    return (
+      <div className="py-24 text-center text-xs text-slate-500">
+        Loading certificate template...
+      </div>
+    );
   }
 
   if (!template) {
@@ -88,8 +97,12 @@ export default function CertificateTemplateDetailPage({
                 Version {template.version}
               </span>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-slate-100">{template.templateName}</h1>
-            <p className="text-sm text-slate-400 mt-1 max-w-2xl">{template.description}</p>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-100">
+              {template.templateName}
+            </h1>
+            <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+              {template.description}
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -97,7 +110,9 @@ export default function CertificateTemplateDetailPage({
               size="sm"
               variant="outline"
               className="text-xs"
-              onClick={() => alert(`Previewing layout for ${template.templateName}`)}
+              onClick={() =>
+                alert(`Previewing layout for ${template.templateName}`)
+              }
             >
               Test Preview
             </Button>
@@ -108,8 +123,14 @@ export default function CertificateTemplateDetailPage({
         <div className="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-slate-800 text-xs">
           {[
             { id: "overview", label: "Overview" },
-            { id: "fields", label: `Template Fields (${template.fields.length})` },
-            { id: "versions", label: `Version History (${template.versionHistory.length})` },
+            {
+              id: "fields",
+              label: `Template Fields (${template.fields.length})`,
+            },
+            {
+              id: "versions",
+              label: `Version History (${template.versionHistory.length})`,
+            },
             { id: "usage", label: "Usage Statistics" },
             { id: "activity", label: "Activity Audit" },
           ].map((tab) => (
@@ -131,27 +152,41 @@ export default function CertificateTemplateDetailPage({
       {/* TAB 1: OVERVIEW */}
       {activeTab === "overview" && (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
-          <h3 className="text-sm font-semibold text-slate-100">Template Profile & Audience Policy</h3>
+          <h3 className="text-sm font-semibold text-slate-100">
+            Template Profile & Audience Policy
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-lg">
-              <span className="text-[10px] uppercase text-slate-400 font-semibold block">Certificate Type</span>
+              <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                Certificate Type
+              </span>
               <span className="font-semibold text-slate-200 text-sm mt-1 block">
                 {template.certificateType}
               </span>
             </div>
             <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-lg">
-              <span className="text-[10px] uppercase text-slate-400 font-semibold block">Applicable Audience</span>
+              <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                Applicable Audience
+              </span>
               <span className="font-semibold text-blue-400 text-sm mt-1 block">
                 {template.applicableAudience.join(", ")}
               </span>
             </div>
             <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-lg">
-              <span className="text-[10px] uppercase text-slate-400 font-semibold block">Created Date</span>
-              <span className="text-slate-200 text-sm mt-1 block">{template.createdDate}</span>
+              <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                Created Date
+              </span>
+              <span className="text-slate-200 text-sm mt-1 block">
+                {template.createdDate}
+              </span>
             </div>
             <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-lg">
-              <span className="text-[10px] uppercase text-slate-400 font-semibold block">Last Revision Date</span>
-              <span className="text-slate-200 text-sm mt-1 block">{template.lastUpdated}</span>
+              <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                Last Revision Date
+              </span>
+              <span className="text-slate-200 text-sm mt-1 block">
+                {template.lastUpdated}
+              </span>
             </div>
           </div>
         </div>
@@ -162,12 +197,20 @@ export default function CertificateTemplateDetailPage({
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-slate-100">Dynamic Variable Mapping</h3>
+              <h3 className="text-sm font-semibold text-slate-100">
+                Dynamic Variable Mapping
+              </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Fields mapped from CampusOS student registry or user input during generation.
+                Fields mapped from CampusOS student registry or user input
+                during generation.
               </p>
             </div>
-            <Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => alert("Add field dialog")}>
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-xs gap-1"
+              onClick={() => alert("Add field dialog")}
+            >
               <Plus className="w-3.5 h-3.5" />
               Add Field
             </Button>
@@ -181,16 +224,22 @@ export default function CertificateTemplateDetailPage({
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-200">{field.label}</span>
+                    <span className="font-semibold text-slate-200">
+                      {field.label}
+                    </span>
                     <span className="font-mono text-[10px] text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded">
                       {field.name}
                     </span>
                     {field.required && (
-                      <span className="text-[10px] text-amber-400 font-bold">* Required</span>
+                      <span className="text-[10px] text-amber-400 font-bold">
+                        * Required
+                      </span>
                     )}
                   </div>
                   <div className="text-[11px] text-slate-500 mt-1 font-mono">
-                    Type: {field.type} {field.systemVariableMapping && `→ Source: ${field.systemVariableMapping}`}
+                    Type: {field.type}{" "}
+                    {field.systemVariableMapping &&
+                      `→ Source: ${field.systemVariableMapping}`}
                   </div>
                 </div>
 
@@ -220,12 +269,16 @@ export default function CertificateTemplateDetailPage({
                 className="p-4 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1.5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-blue-400 text-sm">v{ver.version}</span>
+                  <span className="font-mono font-bold text-blue-400 text-sm">
+                    v{ver.version}
+                  </span>
                   <span className="text-slate-500 font-mono text-[10px]">
                     {new Date(ver.publishedAt).toLocaleString()}
                   </span>
                 </div>
-                <div className="text-slate-400">Published by {ver.publishedBy}</div>
+                <div className="text-slate-400">
+                  Published by {ver.publishedBy}
+                </div>
                 <div className="p-2.5 bg-slate-900 rounded text-slate-300 font-mono text-[11px]">
                   {ver.changelog}
                 </div>
@@ -245,16 +298,24 @@ export default function CertificateTemplateDetailPage({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
             <div className="p-5 bg-slate-950 border border-slate-800 rounded-lg">
-              <div className="text-3xl font-bold text-slate-100">{template.usageCount}</div>
-              <div className="text-xs text-slate-400 mt-1">Total Certificates Generated</div>
+              <div className="text-3xl font-bold text-slate-100">
+                {template.usageCount}
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Total Certificates Generated
+              </div>
             </div>
             <div className="p-5 bg-slate-950 border border-slate-800 rounded-lg">
               <div className="text-3xl font-bold text-emerald-400">100%</div>
-              <div className="text-xs text-slate-400 mt-1">Template Validation Compliance</div>
+              <div className="text-xs text-slate-400 mt-1">
+                Template Validation Compliance
+              </div>
             </div>
             <div className="p-5 bg-slate-950 border border-slate-800 rounded-lg">
               <div className="text-3xl font-bold text-blue-400">0.4s</div>
-              <div className="text-xs text-slate-400 mt-1">Average Digital Generation Speed</div>
+              <div className="text-xs text-slate-400 mt-1">
+                Average Digital Generation Speed
+              </div>
             </div>
           </div>
         </div>
@@ -275,13 +336,17 @@ export default function CertificateTemplateDetailPage({
                 className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-slate-200">{item.action}</span>
+                  <span className="font-semibold text-slate-200">
+                    {item.action}
+                  </span>
                   <span className="text-slate-500 font-mono text-[10px]">
                     {new Date(item.timestamp).toLocaleString()}
                   </span>
                 </div>
                 <div className="text-slate-400">By {item.performedBy}</div>
-                {item.notes && <div className="text-slate-300 italic pt-1">{item.notes}</div>}
+                {item.notes && (
+                  <div className="text-slate-300 italic pt-1">{item.notes}</div>
+                )}
               </div>
             ))}
           </div>

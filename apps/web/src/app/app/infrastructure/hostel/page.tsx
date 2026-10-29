@@ -113,7 +113,9 @@ export default function HostelListPage() {
               <BedDouble className="h-4 w-4 text-indigo-400 shrink-0" />
               <span>{h.name}</span>
             </Link>
-            <div className="text-[11px] font-mono text-slate-400 mt-0.5">{h.code}</div>
+            <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+              {h.code}
+            </div>
           </div>
         ),
       },
@@ -121,7 +123,9 @@ export default function HostelListPage() {
         id: "campus",
         header: "Campus",
         accessorKey: "campusName",
-        cell: (h) => <span className="text-slate-300 text-xs">{h.campusName}</span>,
+        cell: (h) => (
+          <span className="text-slate-300 text-xs">{h.campusName}</span>
+        ),
       },
       {
         id: "type",
@@ -172,14 +176,22 @@ export default function HostelListPage() {
         accessorKey: "occupancyPercentage",
         cell: (h) => {
           const pct = h.occupancyPercentage;
-          const barColor = pct >= 90 ? "bg-rose-500" : pct >= 75 ? "bg-emerald-500" : "bg-sky-500";
+          const barColor =
+            pct >= 90
+              ? "bg-rose-500"
+              : pct >= 75
+                ? "bg-emerald-500"
+                : "bg-sky-500";
           return (
             <div className="w-28 space-y-1">
               <div className="flex justify-between text-[11px]">
                 <span className="font-medium text-white">{pct}%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                <div className={`${barColor} h-1.5 rounded-full`} style={{ width: `${pct}%` }} />
+                <div
+                  className={`${barColor} h-1.5 rounded-full`}
+                  style={{ width: `${pct}%` }}
+                />
               </div>
             </div>
           );
@@ -190,7 +202,9 @@ export default function HostelListPage() {
         header: "Warden",
         cell: (h) => (
           <div>
-            <div className="text-xs font-medium text-slate-200">{h.wardenName}</div>
+            <div className="text-xs font-medium text-slate-200">
+              {h.wardenName}
+            </div>
             <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
               <span>{h.wardenPhone}</span>
             </div>
@@ -223,7 +237,11 @@ export default function HostelListPage() {
         cell: (h) => (
           <div className="flex items-center gap-1.5">
             <Link href={`/app/infrastructure/hostel/${h.id}`}>
-              <Button size="sm" variant="ghost" className="h-7 px-2 text-indigo-400 hover:text-indigo-300 hover:bg-slate-800">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 px-2 text-indigo-400 hover:text-indigo-300 hover:bg-slate-800"
+              >
                 <Eye className="h-3.5 w-3.5 mr-1" />
                 View 360°
               </Button>
@@ -232,7 +250,7 @@ export default function HostelListPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -252,12 +270,16 @@ export default function HostelListPage() {
             Hostels & Residential Dormitories
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Manage residential halls, wardens, capacity quotas, occupancy levels, and dormitory blocks.
+            Manage residential halls, wardens, capacity quotas, occupancy
+            levels, and dormitory blocks.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
           <Link href="/app/infrastructure/hostel/rooms">
-            <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-slate-300 text-xs">
+            <Button
+              variant="outline"
+              className="border-slate-700 hover:bg-slate-800 text-slate-300 text-xs"
+            >
               <DoorOpen className="h-3.5 w-3.5 mr-1.5 text-sky-400" />
               Room Inventory
             </Button>
@@ -343,22 +365,30 @@ export default function HostelListPage() {
         <form onSubmit={handleCreateHostel} className="space-y-4 pt-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Hostel Name *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Hostel Name *
+              </label>
               <Input
                 required
                 placeholder="e.g. Homi Bhabha Hall of Residence"
                 value={createForm.name}
-                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, name: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Hostel Code *</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Hostel Code *
+              </label>
               <Input
                 required
                 placeholder="e.g. HOSTEL-BHABHA"
                 value={createForm.code}
-                onChange={(e) => setCreateForm({ ...createForm, code: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, code: e.target.value })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
@@ -366,10 +396,17 @@ export default function HostelListPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Hostel Type</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Hostel Type
+              </label>
               <select
                 value={createForm.type}
-                onChange={(e) => setCreateForm({ ...createForm, type: e.target.value as HostelType })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    type: e.target.value as HostelType,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="BOYS">Boys</option>
@@ -380,10 +417,17 @@ export default function HostelListPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Gender Restriction</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Gender Restriction
+              </label>
               <select
                 value={createForm.gender}
-                onChange={(e) => setCreateForm({ ...createForm, gender: e.target.value as any })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    gender: e.target.value as any,
+                  })
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
               >
                 <option value="BOYS">Boys Only</option>
@@ -395,64 +439,105 @@ export default function HostelListPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Total Blocks</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Total Blocks
+              </label>
               <Input
                 type="number"
                 min={1}
                 value={createForm.totalBlocks}
-                onChange={(e) => setCreateForm({ ...createForm, totalBlocks: Number(e.target.value) })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    totalBlocks: Number(e.target.value),
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Total Rooms</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Total Rooms
+              </label>
               <Input
                 type="number"
                 min={1}
                 value={createForm.totalRooms}
-                onChange={(e) => setCreateForm({ ...createForm, totalRooms: Number(e.target.value) })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    totalRooms: Number(e.target.value),
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Total Beds</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Total Beds
+              </label>
               <Input
                 type="number"
                 min={1}
                 value={createForm.totalBeds}
-                onChange={(e) => setCreateForm({ ...createForm, totalBeds: Number(e.target.value) })}
+                onChange={(e) =>
+                  setCreateForm({
+                    ...createForm,
+                    totalBeds: Number(e.target.value),
+                  })
+                }
                 className="bg-slate-900 border-slate-700 text-xs"
               />
             </div>
           </div>
 
           <div className="border-t border-slate-800 pt-3">
-            <h4 className="text-xs font-bold text-slate-300 uppercase mb-2">Warden In-Charge</h4>
+            <h4 className="text-xs font-bold text-slate-300 uppercase mb-2">
+              Warden In-Charge
+            </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Warden Name</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Warden Name
+                </label>
                 <Input
                   placeholder="Prof. Name"
                   value={createForm.wardenName}
-                  onChange={(e) => setCreateForm({ ...createForm, wardenName: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, wardenName: e.target.value })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Phone Number</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Phone Number
+                </label>
                 <Input
                   placeholder="+91 94480 00000"
                   value={createForm.wardenPhone}
-                  onChange={(e) => setCreateForm({ ...createForm, wardenPhone: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({
+                      ...createForm,
+                      wardenPhone: e.target.value,
+                    })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Email</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Email
+                </label>
                 <Input
                   placeholder="warden@campusos.edu"
                   value={createForm.wardenEmail}
-                  onChange={(e) => setCreateForm({ ...createForm, wardenEmail: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({
+                      ...createForm,
+                      wardenEmail: e.target.value,
+                    })
+                  }
                   className="bg-slate-900 border-slate-700 text-xs"
                 />
               </div>
@@ -468,7 +553,10 @@ export default function HostelListPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Confirm & Create Hall
             </Button>
           </div>

@@ -113,7 +113,11 @@ export default function SubjectsMasterCatalogPage() {
   // Client-side filtering & search
   const filteredSubjects = useMemo(() => {
     return subjects.filter((s) => {
-      if (selectedDept !== "ALL" && s.departmentId !== selectedDept && !s.departmentName.toLowerCase().includes(selectedDept.toLowerCase())) {
+      if (
+        selectedDept !== "ALL" &&
+        s.departmentId !== selectedDept &&
+        !s.departmentName.toLowerCase().includes(selectedDept.toLowerCase())
+      ) {
         return false;
       }
       if (selectedType !== "ALL" && s.type !== selectedType) {
@@ -136,7 +140,14 @@ export default function SubjectsMasterCatalogPage() {
       }
       return true;
     });
-  }, [subjects, selectedDept, selectedType, selectedStatus, selectedCredits, search]);
+  }, [
+    subjects,
+    selectedDept,
+    selectedType,
+    selectedStatus,
+    selectedCredits,
+    search,
+  ]);
 
   const paginatedSubjects = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -148,10 +159,14 @@ export default function SubjectsMasterCatalogPage() {
     const errors: Record<string, string> = {};
     if (!code.trim()) errors.code = "Subject code is required (e.g. CS301)";
     if (!name.trim()) errors.name = "Subject name is required";
-    if (credits < 0 || credits > 30) errors.credits = "Credits must be between 0 and 30";
-    if (lectureHours < 0) errors.lectureHours = "Lecture hours cannot be negative";
-    if (tutorialHours < 0) errors.tutorialHours = "Tutorial hours cannot be negative";
-    if (practicalHours < 0) errors.practicalHours = "Practical hours cannot be negative";
+    if (credits < 0 || credits > 30)
+      errors.credits = "Credits must be between 0 and 30";
+    if (lectureHours < 0)
+      errors.lectureHours = "Lecture hours cannot be negative";
+    if (tutorialHours < 0)
+      errors.tutorialHours = "Tutorial hours cannot be negative";
+    if (practicalHours < 0)
+      errors.practicalHours = "Practical hours cannot be negative";
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -163,7 +178,9 @@ export default function SubjectsMasterCatalogPage() {
     try {
       setIsSubmitting(true);
       const selectedDeptObj = departments.find((d) => d.id === deptId);
-      const deptName = selectedDeptObj ? selectedDeptObj.name : "Computer Science & Engineering";
+      const deptName = selectedDeptObj
+        ? selectedDeptObj.name
+        : "Computer Science & Engineering";
 
       const res = await academicsService.createAcademicSubject({
         code: code.trim().toUpperCase(),
@@ -197,7 +214,11 @@ export default function SubjectsMasterCatalogPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Failed to create subject", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to create subject",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -211,9 +232,14 @@ export default function SubjectsMasterCatalogPage() {
       icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
       onClick: async (items) => {
         for (const item of items) {
-          await academicsService.updateAcademicSubject(item.id, { status: "ACTIVE" });
+          await academicsService.updateAcademicSubject(item.id, {
+            status: "ACTIVE",
+          });
         }
-        showToast({ title: `Updated ${items.length} subjects to ACTIVE`, type: "success" });
+        showToast({
+          title: `Updated ${items.length} subjects to ACTIVE`,
+          type: "success",
+        });
         setSelectedKeys(new Set());
         loadData();
       },
@@ -223,9 +249,14 @@ export default function SubjectsMasterCatalogPage() {
       variant: "destructive",
       onClick: async (items) => {
         for (const item of items) {
-          await academicsService.updateAcademicSubject(item.id, { status: "ARCHIVED" });
+          await academicsService.updateAcademicSubject(item.id, {
+            status: "ARCHIVED",
+          });
         }
-        showToast({ title: `Archived ${items.length} subjects`, type: "warning" });
+        showToast({
+          title: `Archived ${items.length} subjects`,
+          type: "warning",
+        });
         setSelectedKeys(new Set());
         loadData();
       },
@@ -247,10 +278,14 @@ export default function SubjectsMasterCatalogPage() {
           >
             <div className="flex items-center gap-1.5">
               <span>{item.code}</span>
-              <span className="opacity-0 group-hover:opacity-100 text-[10px] text-indigo-400 transition-opacity">↗</span>
+              <span className="opacity-0 group-hover:opacity-100 text-[10px] text-indigo-400 transition-opacity">
+                ↗
+              </span>
             </div>
             {item.shortName && item.shortName !== item.code && (
-              <span className="text-[10px] font-normal text-slate-400">{item.shortName}</span>
+              <span className="text-[10px] font-normal text-slate-400">
+                {item.shortName}
+              </span>
             )}
           </Link>
         ),
@@ -307,7 +342,10 @@ export default function SubjectsMasterCatalogPage() {
         sortable: true,
         accessorKey: "type",
         cell: (item) => {
-          const typeBadgeMap: Record<SubjectType, "info" | "warning" | "success" | "secondary"> = {
+          const typeBadgeMap: Record<
+            SubjectType,
+            "info" | "warning" | "success" | "secondary"
+          > = {
             THEORY: "info",
             PRACTICAL: "success",
             LAB: "success",
@@ -339,7 +377,10 @@ export default function SubjectsMasterCatalogPage() {
         sortable: true,
         accessorKey: "status",
         cell: (item) => {
-          const statusMap: Record<string, "success" | "warning" | "destructive" | "secondary"> = {
+          const statusMap: Record<
+            string,
+            "success" | "warning" | "destructive" | "secondary"
+          > = {
             ACTIVE: "success",
             DRAFT: "warning",
             INACTIVE: "secondary",
@@ -359,7 +400,12 @@ export default function SubjectsMasterCatalogPage() {
         cell: (item) => (
           <div className="flex items-center justify-end gap-1.5">
             <Link href={`/app/academics/subjects/${item.id}`}>
-              <Button size="sm" variant="ghost" className="h-7 text-xs" leftIcon={<Eye className="h-3 w-3" />}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-xs"
+                leftIcon={<Eye className="h-3 w-3" />}
+              >
                 Details
               </Button>
             </Link>
@@ -367,7 +413,7 @@ export default function SubjectsMasterCatalogPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   // Custom filters slot for DataGrid toolbar
@@ -444,7 +490,10 @@ export default function SubjectsMasterCatalogPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
@@ -454,7 +503,8 @@ export default function SubjectsMasterCatalogPage() {
             Subjects & Courses Catalog
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Regulated CBCS course repository, credit definitions, and weekly lecture-tutorial-practical (L-T-P) allocations.
+            Regulated CBCS course repository, credit definitions, and weekly
+            lecture-tutorial-practical (L-T-P) allocations.
           </p>
         </div>
 
@@ -488,14 +538,24 @@ export default function SubjectsMasterCatalogPage() {
         />
         <StatCard
           label="Electives & Seminars"
-          value={subjects.filter((s) => s.type === "ELECTIVE" || s.category === "PROFESSIONAL_ELECTIVE" || s.category === "OPEN_ELECTIVE").length}
+          value={
+            subjects.filter(
+              (s) =>
+                s.type === "ELECTIVE" ||
+                s.category === "PROFESSIONAL_ELECTIVE" ||
+                s.category === "OPEN_ELECTIVE",
+            ).length
+          }
           description="CBCS specialized tracks"
           variant="sky"
           icon={<Layers className="h-4 w-4" />}
         />
         <StatCard
           label="Practical & Lab Courses"
-          value={subjects.filter((s) => s.type === "LAB" || s.type === "PRACTICAL").length}
+          value={
+            subjects.filter((s) => s.type === "LAB" || s.type === "PRACTICAL")
+              .length
+          }
           description="Hands-on computing & hardware"
           variant="amber"
           icon={<Clock className="h-4 w-4" />}
@@ -559,7 +619,9 @@ export default function SubjectsMasterCatalogPage() {
                 className={formErrors.code ? "border-red-500" : ""}
               />
               {formErrors.code && (
-                <span className="text-[11px] text-red-400">{formErrors.code}</span>
+                <span className="text-[11px] text-red-400">
+                  {formErrors.code}
+                </span>
               )}
             </div>
 
@@ -586,7 +648,9 @@ export default function SubjectsMasterCatalogPage() {
               className={formErrors.name ? "border-red-500" : ""}
             />
             {formErrors.name && (
-              <span className="text-[11px] text-red-400">{formErrors.name}</span>
+              <span className="text-[11px] text-red-400">
+                {formErrors.name}
+              </span>
             )}
           </div>
 
@@ -650,7 +714,9 @@ export default function SubjectsMasterCatalogPage() {
             </h4>
             <div className="grid grid-cols-4 gap-2">
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Lecture (L)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">
+                  Lecture (L)
+                </label>
                 <Input
                   type="number"
                   min="0"
@@ -660,7 +726,9 @@ export default function SubjectsMasterCatalogPage() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Tutorial (T)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">
+                  Tutorial (T)
+                </label>
                 <Input
                   type="number"
                   min="0"
@@ -670,7 +738,9 @@ export default function SubjectsMasterCatalogPage() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Practical (P)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">
+                  Practical (P)
+                </label>
                 <Input
                   type="number"
                   min="0"
@@ -680,7 +750,9 @@ export default function SubjectsMasterCatalogPage() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Credits (C)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">
+                  Credits (C)
+                </label>
                 <Input
                   type="number"
                   min="0"
@@ -692,7 +764,9 @@ export default function SubjectsMasterCatalogPage() {
               </div>
             </div>
             {formErrors.credits && (
-              <span className="text-[11px] text-red-400 mt-1 block">{formErrors.credits}</span>
+              <span className="text-[11px] text-red-400 mt-1 block">
+                {formErrors.credits}
+              </span>
             )}
           </div>
 

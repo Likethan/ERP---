@@ -22,7 +22,9 @@ import {
 } from "lucide-react";
 
 export default function DocumentReportsPage() {
-  const [summary, setSummary] = useState<DocumentsDashboardSummary | null>(null);
+  const [summary, setSummary] = useState<DocumentsDashboardSummary | null>(
+    null,
+  );
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +55,10 @@ export default function DocumentReportsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">
-            <Link href="/app/documents" className="hover:underline flex items-center gap-1">
+            <Link
+              href="/app/documents"
+              className="hover:underline flex items-center gap-1"
+            >
               <ArrowLeft className="w-3.5 h-3.5" />
               Documents Center
             </Link>
@@ -62,7 +67,8 @@ export default function DocumentReportsPage() {
             Document Analytics & Compliance Reports
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Institutional verification SLAs, category completion rates, expiry radar audits, and certificate issuance trends.
+            Institutional verification SLAs, category completion rates, expiry
+            radar audits, and certificate issuance trends.
           </p>
         </div>
 
@@ -79,7 +85,9 @@ export default function DocumentReportsPage() {
           <Button
             size="sm"
             className="text-xs gap-1.5 bg-blue-600 hover:bg-blue-700"
-            onClick={() => alert("Generating Executive PDF Compliance Summary...")}
+            onClick={() =>
+              alert("Generating Executive PDF Compliance Summary...")
+            }
           >
             <Download className="w-4 h-4" />
             Executive PDF
@@ -103,13 +111,17 @@ export default function DocumentReportsPage() {
         />
         <StatCard
           title="Average Turnaround SLA"
-          value={loading ? "--" : `${summary?.averageVerificationHours || 0} Hours`}
+          value={
+            loading ? "--" : `${summary?.averageVerificationHours || 0} Hours`
+          }
           icon={<Clock className="w-5 h-5 text-blue-400" />}
           subtitle="Target threshold: 24h"
         />
         <StatCard
           title="Certificates Issued"
-          value={loading ? "--" : String(summary?.certificatesIssuedThisMonth || 0)}
+          value={
+            loading ? "--" : String(summary?.certificatesIssuedThisMonth || 0)
+          }
           icon={<Award className="w-5 h-5 text-amber-400" />}
           subtitle="Current academic session"
         />
@@ -133,37 +145,48 @@ export default function DocumentReportsPage() {
 
           <div className="space-y-3 pt-2 text-xs">
             <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
-              <span className="text-rose-400 font-medium">Expired Documents (Immediate Action)</span>
+              <span className="text-rose-400 font-medium">
+                Expired Documents (Immediate Action)
+              </span>
               <span className="font-mono font-bold text-rose-400 text-sm">
                 {summary?.expiryBreakdown.expired || 0}
               </span>
             </div>
 
             <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
-              <span className="text-red-400 font-medium">Expiring within 7 Days</span>
+              <span className="text-red-400 font-medium">
+                Expiring within 7 Days
+              </span>
               <span className="font-mono font-bold text-red-400 text-sm">
                 {summary?.expiryBreakdown.expiring7Days || 0}
               </span>
             </div>
 
             <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
-              <span className="text-amber-400 font-medium">Expiring within 30 Days</span>
+              <span className="text-amber-400 font-medium">
+                Expiring within 30 Days
+              </span>
               <span className="font-mono font-bold text-amber-400 text-sm">
                 {summary?.expiryBreakdown.expiring30Days || 0}
               </span>
             </div>
 
             <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
-              <span className="text-blue-400 font-medium">Expiring within 90 Days</span>
+              <span className="text-blue-400 font-medium">
+                Expiring within 90 Days
+              </span>
               <span className="font-mono font-bold text-blue-400 text-sm">
                 {summary?.expiryBreakdown.expiring90Days || 0}
               </span>
             </div>
 
             <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
-              <span className="text-slate-300 font-medium">Permanent / Non-Expiring Records</span>
+              <span className="text-slate-300 font-medium">
+                Permanent / Non-Expiring Records
+              </span>
               <span className="font-mono font-bold text-slate-200 text-sm">
-                {(summary?.expiryBreakdown.valid || 0) + (summary?.expiryBreakdown.noExpiry || 0)}
+                {(summary?.expiryBreakdown.valid || 0) +
+                  (summary?.expiryBreakdown.noExpiry || 0)}
               </span>
             </div>
           </div>
@@ -223,18 +246,56 @@ export default function DocumentReportsPage() {
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {[
-                { dept: "Computer Science & Engineering", enrolled: 420, verified: 405, pending: 12, rejected: 3, score: "96.4%" },
-                { dept: "Electronics & Communication Engineering", enrolled: 360, verified: 342, pending: 15, rejected: 3, score: "95.0%" },
-                { dept: "Mechanical Engineering", enrolled: 240, verified: 224, pending: 11, rejected: 5, score: "93.3%" },
-                { dept: "Management Studies (MBA)", enrolled: 120, verified: 118, pending: 2, rejected: 0, score: "98.3%" },
+                {
+                  dept: "Computer Science & Engineering",
+                  enrolled: 420,
+                  verified: 405,
+                  pending: 12,
+                  rejected: 3,
+                  score: "96.4%",
+                },
+                {
+                  dept: "Electronics & Communication Engineering",
+                  enrolled: 360,
+                  verified: 342,
+                  pending: 15,
+                  rejected: 3,
+                  score: "95.0%",
+                },
+                {
+                  dept: "Mechanical Engineering",
+                  enrolled: 240,
+                  verified: 224,
+                  pending: 11,
+                  rejected: 5,
+                  score: "93.3%",
+                },
+                {
+                  dept: "Management Studies (MBA)",
+                  enrolled: 120,
+                  verified: 118,
+                  pending: 2,
+                  rejected: 0,
+                  score: "98.3%",
+                },
               ].map((row) => (
                 <tr key={row.dept} className="hover:bg-slate-800/40">
-                  <td className="py-3 px-4 font-semibold text-slate-100">{row.dept}</td>
+                  <td className="py-3 px-4 font-semibold text-slate-100">
+                    {row.dept}
+                  </td>
                   <td className="py-3 px-4">{row.enrolled}</td>
-                  <td className="py-3 px-4 text-emerald-400 font-medium">{row.verified}</td>
-                  <td className="py-3 px-4 text-amber-400 font-medium">{row.pending}</td>
-                  <td className="py-3 px-4 text-rose-400 font-medium">{row.rejected}</td>
-                  <td className="py-3 px-4 text-right font-mono font-bold text-blue-400">{row.score}</td>
+                  <td className="py-3 px-4 text-emerald-400 font-medium">
+                    {row.verified}
+                  </td>
+                  <td className="py-3 px-4 text-amber-400 font-medium">
+                    {row.pending}
+                  </td>
+                  <td className="py-3 px-4 text-rose-400 font-medium">
+                    {row.rejected}
+                  </td>
+                  <td className="py-3 px-4 text-right font-mono font-bold text-blue-400">
+                    {row.score}
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -7,20 +7,19 @@ Manages:
 - Controlled user deprovisioning preserving Step 19 governed historical records
 """
 
-from datetime import datetime, timedelta, timezone
 import hashlib
 import logging
 import secrets
 import time
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.exceptions import (
-    BadRequestException,
     ConflictException,
     ForbiddenException,
     NotFoundException,
@@ -223,7 +222,7 @@ class EnterpriseIdentityService:
         """Test outbound network reachability and health of provider endpoints with SSRF safety."""
         provider = await cls.get_provider(db, tenant_id, provider_id)
         start_time = time.time()
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         endpoints = {}
         if provider.issuer_url:
@@ -365,7 +364,7 @@ class EnterpriseIdentityService:
         # 3. Create short-lived cryptographic challenge token (15 mins)
         raw_token = f"link_{secrets.token_urlsafe(32)}"
         token_hash = hash_token_str(raw_token)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         expires_at = now + timedelta(minutes=15)
 
         link_req = AccountLinkRequest(
@@ -398,7 +397,7 @@ class EnterpriseIdentityService:
     ) -> ExternalIdentity:
         """Confirm account link with challenge token and password verification."""
         token_hash = hash_token_str(link_token)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         stmt = select(AccountLinkRequest).where(
             AccountLinkRequest.token_hash == token_hash,

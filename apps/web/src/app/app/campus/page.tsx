@@ -43,11 +43,16 @@ export default function CampusOperationsDashboard() {
   const [clubs, setClubs] = useState<ClubItem[]>([]);
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "today">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "today">(
+    "overview",
+  );
 
-  const canCreateEvent = hasPermission("campus.manage_events") || hasPermission("*");
-  const canCreateClub = hasPermission("campus.manage_clubs") || hasPermission("*");
-  const canCreateAnnouncement = hasPermission("campus.create_announcements") || hasPermission("*");
+  const canCreateEvent =
+    hasPermission("campus.manage_events") || hasPermission("*");
+  const canCreateClub =
+    hasPermission("campus.manage_clubs") || hasPermission("*");
+  const canCreateAnnouncement =
+    hasPermission("campus.create_announcements") || hasPermission("*");
 
   const loadDashboardData = async () => {
     try {
@@ -74,15 +79,21 @@ export default function CampusOperationsDashboard() {
     loadDashboardData();
   }, []);
 
-  const upcomingEvents = events.filter((e) => e.status !== "COMPLETED" && e.status !== "CANCELLED");
+  const upcomingEvents = events.filter(
+    (e) => e.status !== "COMPLETED" && e.status !== "CANCELLED",
+  );
 
   // Today's Activity Filters (simulated date matching 16 Oct 2026 or active items)
-  const todayEvents = events.filter(
-    (e) => e.startDate === "2026-10-16" || e.status === "REGISTRATION_OPEN"
-  ).slice(0, 3);
+  const todayEvents = events
+    .filter(
+      (e) => e.startDate === "2026-10-16" || e.status === "REGISTRATION_OPEN",
+    )
+    .slice(0, 3);
 
   const todayAnnouncements = announcements.slice(0, 3);
-  const unreadNotifications = notifications.filter((n) => n.status === "UNREAD").slice(0, 4);
+  const unreadNotifications = notifications
+    .filter((n) => n.status === "UNREAD")
+    .slice(0, 4);
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
@@ -94,14 +105,17 @@ export default function CampusOperationsDashboard() {
               CampusOS Engagement Layer
             </span>
             <span className="text-slate-500">•</span>
-            <span className="text-xs text-slate-400 font-medium">Academic Year 2026-27</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Academic Year 2026-27
+            </span>
           </div>
           <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tight text-white">
             Campus Operations & Engagement Hub
           </h1>
           <p className="mt-1 text-sm text-slate-400 max-w-3xl">
-            Single institutional operating plane for campus events, student organizations,
-            event attendance registers, broadcasts, and notification dispatch.
+            Single institutional operating plane for campus events, student
+            organizations, event attendance registers, broadcasts, and
+            notification dispatch.
           </p>
         </div>
 
@@ -231,7 +245,8 @@ export default function CampusOperationsDashboard() {
                   Upcoming Campus Events & Activities
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Scheduled hackathons, symposiums, guest lectures, and cultural tournaments
+                  Scheduled hackathons, symposiums, guest lectures, and cultural
+                  tournaments
                 </p>
               </div>
               <Link
@@ -258,8 +273,8 @@ export default function CampusOperationsDashboard() {
                           event.status === "REGISTRATION_OPEN"
                             ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                             : event.status === "REGISTRATION_CLOSED"
-                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                            : "bg-slate-800 text-slate-400"
+                              ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                              : "bg-slate-800 text-slate-400"
                         }`}
                       >
                         {event.status.replace("_", " ")}
@@ -277,7 +292,9 @@ export default function CampusOperationsDashboard() {
                     <div className="space-y-1.5 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
                       <div className="flex items-center gap-2 truncate">
                         <Clock className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                        <span>{event.startDate} • {event.startTime}</span>
+                        <span>
+                          {event.startDate} • {event.startTime}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 truncate">
                         <MapPin className="h-3.5 w-3.5 text-slate-500 shrink-0" />
@@ -333,7 +350,9 @@ export default function CampusOperationsDashboard() {
                     className="flex items-center justify-between p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-slate-700 transition-colors"
                   >
                     <div>
-                      <div className="text-xs font-semibold text-white">{c.name}</div>
+                      <div className="text-xs font-semibold text-white">
+                        {c.name}
+                      </div>
                       <div className="text-[11px] text-slate-400 mt-0.5">
                         Lead: {c.studentLead} • Advisor: {c.facultyCoordinator}
                       </div>
@@ -342,7 +361,9 @@ export default function CampusOperationsDashboard() {
                       <span className="text-xs font-mono font-bold text-cyan-300">
                         {c.membersCount}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">members</span>
+                      <span className="text-[10px] text-slate-500 block">
+                        members
+                      </span>
                     </div>
                   </Link>
                 ))}
@@ -468,14 +489,24 @@ export default function CampusOperationsDashboard() {
               </div>
               <div className="space-y-3">
                 {todayEvents.map((e) => (
-                  <div key={e.id} className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <div className="text-xs font-bold text-white">{e.title}</div>
+                  <div
+                    key={e.id}
+                    className="p-3 rounded-xl bg-slate-950 border border-slate-800"
+                  >
+                    <div className="text-xs font-bold text-white">
+                      {e.title}
+                    </div>
                     <div className="text-[11px] text-slate-400 mt-1">
                       {e.venue} • {e.startTime} - {e.endTime}
                     </div>
                     <div className="mt-2 flex items-center justify-between text-xs">
-                      <span className="text-indigo-400 font-mono">{e.registeredCount} attendees</span>
-                      <Link href={`/app/campus/events/${e.id}`} className="text-slate-300 hover:text-white">
+                      <span className="text-indigo-400 font-mono">
+                        {e.registeredCount} attendees
+                      </span>
+                      <Link
+                        href={`/app/campus/events/${e.id}`}
+                        className="text-slate-300 hover:text-white"
+                      >
                         Open →
                       </Link>
                     </div>
@@ -494,10 +525,17 @@ export default function CampusOperationsDashboard() {
               </div>
               <div className="space-y-3">
                 {clubs.slice(0, 3).map((c) => (
-                  <div key={c.id} className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                  <div
+                    key={c.id}
+                    className="p-3 rounded-xl bg-slate-950 border border-slate-800"
+                  >
                     <div className="text-xs font-bold text-white">{c.name}</div>
-                    <div className="text-[11px] text-slate-400 mt-1">{c.meetingSchedule}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Venue: {c.meetingVenue}</div>
+                    <div className="text-[11px] text-slate-400 mt-1">
+                      {c.meetingSchedule}
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">
+                      Venue: {c.meetingVenue}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -515,7 +553,9 @@ export default function CampusOperationsDashboard() {
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
                   <div className="flex items-center justify-between font-semibold text-white">
                     <span>Cisco Pre-Placement Session</span>
-                    <span className="text-emerald-400 font-mono">138 / 142 (97%)</span>
+                    <span className="text-emerald-400 font-mono">
+                      138 / 142 (97%)
+                    </span>
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">
                     Hall attendance marked by Vikram Sen at Seminar Hall.
@@ -525,7 +565,9 @@ export default function CampusOperationsDashboard() {
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
                   <div className="flex items-center justify-between font-semibold text-white">
                     <span>Production Rust Workshop</span>
-                    <span className="text-emerald-400 font-mono">74 / 80 (92%)</span>
+                    <span className="text-emerald-400 font-mono">
+                      74 / 80 (92%)
+                    </span>
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">
                     Lab registers verified by Dr. Rajesh Sharma.

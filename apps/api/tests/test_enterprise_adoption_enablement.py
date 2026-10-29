@@ -23,31 +23,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.adoption import (
-    AdoptionJourneyDefinition,
-    AdoptionJourneyStep,
-    AdoptionMilestoneType,
-    AdoptionTargetStatus,
-    AnnouncementCategory,
-    AnnouncementPriority,
-    AnnouncementStatus,
-    ContextualGuidance,
-    FeatureAdoptionMilestone,
-    FeatureAdoptionTarget,
-    GuidanceStatus,
-    GuidanceType,
     JourneyStatus,
-    ProductAnnouncement,
-    StepCompletionCriteria,
     TrainingAssignment,
     TrainingAssignmentStatus,
-    TrainingModule,
-    TrainingModuleContentType,
     TrainingProgram,
     TrainingProgramStatus,
-    UserAnnouncementReceipt,
-    UserGuidanceAction,
-    UserGuidanceState,
-    UserJourneyProgress,
     UserJourneyState,
 )
 from app.models.campus import Notification
@@ -55,8 +35,6 @@ from app.models.core import Institution
 from app.models.people import User
 from app.schemas.adoption import (
     AdoptionJourneyCreateRequest,
-    AdoptionJourneyUpdateRequest,
-    AnnouncementAcknowledgeRequest,
     ContextualGuidanceCreateRequest,
     FeatureAdoptionMilestoneRecordRequest,
     FeatureAdoptionTargetCreateRequest,
@@ -65,8 +43,6 @@ from app.schemas.adoption import (
     TrainingAssignRequest,
     TrainingModuleCreateRequest,
     TrainingProgramCreateRequest,
-    UserGuidanceActionRequest,
-    UserJourneyStepCompleteRequest,
 )
 from app.services.adoption_service import AdoptionService
 

@@ -8,14 +8,13 @@ Enforces:
 - Controlled Just-In-Time (JIT) provisioning respecting tenant policies and domain limits
 """
 
-from datetime import datetime, timezone
-import json
 import logging
 import time
+from datetime import UTC, datetime
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from jose import jwt, jwk, JWTError
+from jose import JWTError, jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,8 +30,6 @@ from app.identity.models import (
     AccountLifecycleStatus,
     ExternalIdentity,
     IdentityProvider,
-    IdentityProviderHealth,
-    IdentityProviderStatus,
     ProvisioningMode,
     TenantIdentityPolicy,
 )
@@ -144,7 +141,7 @@ class OidcService:
 
         # 4. Validate Expiration
         exp = unverified_claims.get("exp")
-        if not exp or datetime.fromtimestamp(exp, tz=timezone.utc) < datetime.now(timezone.utc):
+        if not exp or datetime.fromtimestamp(exp, tz=UTC) < datetime.now(UTC):
             raise AuthenticationException("ID token has expired.")
 
         # 5. Validate Nonce if expected
@@ -247,7 +244,7 @@ class OidcService:
         attrs = cls.map_user_attributes(claims, provider.attribute_mapping)
         subject = attrs["subject"]
         email = attrs["email"]
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # 2. Lookup existing external identity
         stmt = select(ExternalIdentity).where(

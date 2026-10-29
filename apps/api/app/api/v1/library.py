@@ -1,6 +1,6 @@
 """Enterprise Institutional Library, Learning Resources & Knowledge Access Management API Router (Step 45)."""
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
@@ -14,19 +14,15 @@ from app.core.permissions import (
     LIBRARY_ANALYTICS_READ_DOT,
     LIBRARY_AUDIT_MANAGE_DOT,
     LIBRARY_BRANCHES_MANAGE_DOT,
-    LIBRARY_BRANCHES_READ_DOT,
     LIBRARY_CATALOG_MANAGE_DOT,
     LIBRARY_CATALOG_READ_DOT,
     LIBRARY_CIRCULATION_ISSUE_DOT,
-    LIBRARY_CIRCULATION_RENEW_DOT,
-    LIBRARY_CIRCULATION_RETURN_DOT,
     LIBRARY_COPIES_MANAGE_DOT,
     LIBRARY_DIGITAL_ACCESS_DOT,
     LIBRARY_FINES_MANAGE_DOT,
     LIBRARY_FINES_WAIVE_DOT,
     LIBRARY_MEMBERS_MANAGE_DOT,
     LIBRARY_MEMBERS_READ_DOT,
-    LIBRARY_RESERVATIONS_MANAGE_DOT,
     LIBRARY_SUBSCRIPTIONS_MANAGE_DOT,
 )
 from app.core.tenant import TenantContext

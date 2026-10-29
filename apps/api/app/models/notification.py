@@ -10,6 +10,7 @@ Implements:
 
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
 from sqlalchemy import (
@@ -21,12 +22,15 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
-    func,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, SoftDeleteMixin, TenantScopedModel
+from app.models.base import BaseModel, TenantScopedModel
+
+if TYPE_CHECKING:
+    from app.models.campus import NotificationDelivery
 
 # Cross-dialect JSON type for PostgreSQL JSONB and SQLite JSON
 JSONType = JSONB

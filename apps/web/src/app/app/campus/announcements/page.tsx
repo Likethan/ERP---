@@ -28,8 +28,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 
-const ALL_PRIORITIES: AnnouncementPriority[] = ["LOW", "NORMAL", "HIGH", "URGENT"];
-const ALL_STATUSES: AnnouncementStatus[] = ["DRAFT", "SCHEDULED", "PUBLISHED", "EXPIRED", "ARCHIVED"];
+const ALL_PRIORITIES: AnnouncementPriority[] = [
+  "LOW",
+  "NORMAL",
+  "HIGH",
+  "URGENT",
+];
+const ALL_STATUSES: AnnouncementStatus[] = [
+  "DRAFT",
+  "SCHEDULED",
+  "PUBLISHED",
+  "EXPIRED",
+  "ARCHIVED",
+];
 
 export default function CampusAnnouncementsCenterPage() {
   const { user, hasPermission } = useAuth();
@@ -48,8 +59,11 @@ export default function CampusAnnouncementsCenterPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newSummary, setNewSummary] = useState("");
   const [newContent, setNewContent] = useState("");
-  const [newCategory, setNewCategory] = useState<"ACADEMIC" | "EXAMINATION" | "HOSTEL" | "GENERAL" | "URGENT">("ACADEMIC");
-  const [newPriority, setNewPriority] = useState<AnnouncementPriority>("NORMAL");
+  const [newCategory, setNewCategory] = useState<
+    "ACADEMIC" | "EXAMINATION" | "HOSTEL" | "GENERAL" | "URGENT"
+  >("ACADEMIC");
+  const [newPriority, setNewPriority] =
+    useState<AnnouncementPriority>("NORMAL");
   const [newExpiry, setNewExpiry] = useState("2026-11-01");
   const [newAudience, setNewAudience] = useState<EventAudienceTarget>({
     type: "ALL_STUDENTS",
@@ -59,7 +73,8 @@ export default function CampusAnnouncementsCenterPage() {
   // Feedback & Action
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const canCreate = hasPermission("campus.create_announcements") || hasPermission("*");
+  const canCreate =
+    hasPermission("campus.create_announcements") || hasPermission("*");
 
   const loadAnnouncements = async () => {
     try {
@@ -90,33 +105,43 @@ export default function CampusAnnouncementsCenterPage() {
 
     try {
       setCreating(true);
-      const res = await campusService.createAnnouncement({
-        title: newTitle,
-        summary: newSummary || newContent.slice(0, 100),
-        content: newContent,
-        category: newCategory,
-        priority: newPriority,
-        publisher: user?.first_name ? `${user.first_name} ${user.last_name}` : "Administration",
-        publisherRole: "Institutional Communications Officer",
-        audience: {
-          type: newAudience.type as any,
-          departmentName: newAudience.departmentName,
-          programName: newAudience.programName,
-          semester: newAudience.semester,
-          section: newAudience.section,
-          clubName: newAudience.clubName,
-          estimatedRecipientCount: newAudience.estimatedCount,
-          description: `Targeting ${newAudience.type} (~${newAudience.estimatedCount} users)`,
+      const res = await campusService.createAnnouncement(
+        {
+          title: newTitle,
+          summary: newSummary || newContent.slice(0, 100),
+          content: newContent,
+          category: newCategory,
+          priority: newPriority,
+          publisher: user?.first_name
+            ? `${user.first_name} ${user.last_name}`
+            : "Administration",
+          publisherRole: "Institutional Communications Officer",
+          audience: {
+            type: newAudience.type as any,
+            departmentName: newAudience.departmentName,
+            programName: newAudience.programName,
+            semester: newAudience.semester,
+            section: newAudience.section,
+            clubName: newAudience.clubName,
+            estimatedRecipientCount: newAudience.estimatedCount,
+            description: `Targeting ${newAudience.type} (~${newAudience.estimatedCount} users)`,
+          },
+          isPinned: newPriority === "URGENT" || newPriority === "HIGH",
+          publishDate: new Date().toLocaleString(),
+          expiryDate: newExpiry,
         },
-        isPinned: newPriority === "URGENT" || newPriority === "HIGH",
-        publishDate: new Date().toLocaleString(),
-        expiryDate: newExpiry,
-      }, user?.first_name || "Administrator");
+        user?.first_name || "Administrator",
+      );
 
       if (res.success && res.data) {
         if (asPublished) {
-          await campusService.publishAnnouncement(res.data.id, user?.first_name || "Administrator");
-          setFeedback(`Announcement published and dispatched to ${res.data.audience.estimatedRecipientCount} users!`);
+          await campusService.publishAnnouncement(
+            res.data.id,
+            user?.first_name || "Administrator",
+          );
+          setFeedback(
+            `Announcement published and dispatched to ${res.data.audience.estimatedRecipientCount} users!`,
+          );
         } else {
           setFeedback(`Announcement draft saved successfully.`);
         }
@@ -132,20 +157,27 @@ export default function CampusAnnouncementsCenterPage() {
   };
 
   const handlePublish = async (id: string) => {
-    await campusService.publishAnnouncement(id, user?.first_name || "Administrator");
+    await campusService.publishAnnouncement(
+      id,
+      user?.first_name || "Administrator",
+    );
     setFeedback("Announcement published.");
     loadAnnouncements();
   };
 
   const handleArchive = async (id: string) => {
-    await campusService.archiveAnnouncement(id, user?.first_name || "Administrator");
+    await campusService.archiveAnnouncement(
+      id,
+      user?.first_name || "Administrator",
+    );
     setFeedback("Announcement archived.");
     loadAnnouncements();
   };
 
   const filteredAnnouncements = useMemo(() => {
     return announcements.filter((a) => {
-      const matchPri = priorityFilter === "ALL" || a.priority === priorityFilter;
+      const matchPri =
+        priorityFilter === "ALL" || a.priority === priorityFilter;
       const matchStatus = statusFilter === "ALL" || a.status === statusFilter;
       const matchSearch =
         searchQuery === "" ||
@@ -165,7 +197,9 @@ export default function CampusAnnouncementsCenterPage() {
       cell: (row) => (
         <div className="space-y-1 max-w-md">
           <div className="flex items-center gap-1.5">
-            {row.isPinned && <Pin className="h-3 w-3 text-amber-400 shrink-0 fill-amber-400" />}
+            {row.isPinned && (
+              <Pin className="h-3 w-3 text-amber-400 shrink-0 fill-amber-400" />
+            )}
             <Link
               href={`/app/campus/announcements/${row.id}`}
               className="font-bold text-white text-xs hover:text-indigo-400 transition-colors truncate block"
@@ -173,7 +207,9 @@ export default function CampusAnnouncementsCenterPage() {
               {row.title}
             </Link>
           </div>
-          <p className="text-[11px] text-slate-400 line-clamp-1">{row.summary || row.content}</p>
+          <p className="text-[11px] text-slate-400 line-clamp-1">
+            {row.summary || row.content}
+          </p>
         </div>
       ),
     },
@@ -198,7 +234,8 @@ export default function CampusAnnouncementsCenterPage() {
             {row.audience.type.replace("_", " ")}
           </span>
           <span className="text-[10px] text-slate-500 font-mono">
-            ~{row.audience.estimatedRecipientCount?.toLocaleString() || 150} users
+            ~{row.audience.estimatedRecipientCount?.toLocaleString() || 150}{" "}
+            users
           </span>
         </div>
       ),
@@ -220,7 +257,11 @@ export default function CampusAnnouncementsCenterPage() {
       header: "Published Date",
       accessorFn: (row: AnnouncementItem) => row.publishDate,
       sortable: true,
-      cell: (row) => <span className="text-xs text-slate-400 font-mono">{row.publishDate}</span>,
+      cell: (row) => (
+        <span className="text-xs text-slate-400 font-mono">
+          {row.publishDate}
+        </span>
+      ),
     },
     {
       id: "priority",
@@ -235,7 +276,9 @@ export default function CampusAnnouncementsCenterPage() {
           LOW: "bg-slate-800 text-slate-400 border-slate-700",
         };
         return (
-          <span className={`px-2 py-0.5 rounded text-[10px] border ${colors[row.priority]}`}>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] border ${colors[row.priority]}`}
+          >
             {row.priority}
           </span>
         );
@@ -252,8 +295,8 @@ export default function CampusAnnouncementsCenterPage() {
             row.status === "PUBLISHED"
               ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
               : row.status === "SCHEDULED"
-              ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
-              : "bg-slate-800 text-slate-400 border-slate-700"
+                ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                : "bg-slate-800 text-slate-400 border-slate-700"
           }`}
         >
           {row.status}
@@ -301,18 +344,24 @@ export default function CampusAnnouncementsCenterPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Announcements</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Announcements
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <FileText className="h-6 w-6 text-blue-400" />
             Institutional Announcements Center
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Publish official circulars, examination timetables, emergency advisories, and targeted cohort notices.
+            Publish official circulars, examination timetables, emergency
+            advisories, and targeted cohort notices.
           </p>
         </div>
 
@@ -332,7 +381,10 @@ export default function CampusAnnouncementsCenterPage() {
       {feedback && (
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -373,7 +425,9 @@ export default function CampusAnnouncementsCenterPage() {
             </select>
           </div>
 
-          {(priorityFilter !== "ALL" || statusFilter !== "ALL" || searchQuery !== "") && (
+          {(priorityFilter !== "ALL" ||
+            statusFilter !== "ALL" ||
+            searchQuery !== "") && (
             <button
               onClick={() => {
                 setPriorityFilter("ALL");
@@ -388,7 +442,8 @@ export default function CampusAnnouncementsCenterPage() {
         </div>
 
         <div className="text-xs text-slate-400 font-mono">
-          Showing <strong>{filteredAnnouncements.length}</strong> of {announcements.length} notices
+          Showing <strong>{filteredAnnouncements.length}</strong> of{" "}
+          {announcements.length} notices
         </div>
       </div>
 
@@ -431,7 +486,9 @@ export default function CampusAnnouncementsCenterPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Category</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Category
+              </label>
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as any)}
@@ -446,7 +503,9 @@ export default function CampusAnnouncementsCenterPage() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Priority</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Priority
+              </label>
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as any)}
@@ -461,7 +520,9 @@ export default function CampusAnnouncementsCenterPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Summary (1-2 sentences)</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Summary (1-2 sentences)
+            </label>
             <input
               type="text"
               value={newSummary}
@@ -486,19 +547,33 @@ export default function CampusAnnouncementsCenterPage() {
 
           {/* Reusable AudienceBuilder component */}
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-2">Audience Targeting Scope</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-2">
+              Audience Targeting Scope
+            </label>
             <AudienceBuilder value={newAudience} onChange={setNewAudience} />
           </div>
 
           {/* Explicit Confirmation Notice */}
           <div className="p-3 rounded-xl bg-indigo-950/20 border border-indigo-500/30 text-xs text-slate-300 space-y-1">
-            <span className="font-bold text-white block">Pre-Publication Confirmation:</span>
-            <span>Target Audience: <strong>{newAudience.type}</strong> (~{newAudience.estimatedCount} users)</span>
-            <div>Priority: <strong className="text-indigo-400">{newPriority}</strong></div>
+            <span className="font-bold text-white block">
+              Pre-Publication Confirmation:
+            </span>
+            <span>
+              Target Audience: <strong>{newAudience.type}</strong> (~
+              {newAudience.estimatedCount} users)
+            </span>
+            <div>
+              Priority:{" "}
+              <strong className="text-indigo-400">{newPriority}</strong>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
-            <Button variant="ghost" size="sm" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button

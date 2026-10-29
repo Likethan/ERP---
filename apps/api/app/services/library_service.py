@@ -21,7 +21,7 @@ from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import String, cast, delete, desc, func, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, create_audit_entry
@@ -37,12 +37,10 @@ from app.core.exceptions import (
     LibraryDigitalAccessRestrictedException,
     LibraryDuplicateAccessionException,
     LibraryFineNotFoundException,
-    LibraryFineWaiverUnauthorizedException,
     LibraryInvalidRenewalException,
     LibraryLoanNotFoundException,
     LibraryMemberNotFoundException,
     LibraryMemberSuspendedException,
-    LibraryReservationConflictException,
     LibraryReservationNotFoundException,
     LibrarySubscriptionNotFoundException,
 )
@@ -51,7 +49,6 @@ from app.models.library import (
     LibraryAcquisitionStatus,
     LibraryAuditScanResult,
     LibraryBranch,
-    LibraryBranchStatus,
     LibraryCatalogItem,
     LibraryCatalogStatus,
     LibraryCirculationLoan,
@@ -66,7 +63,6 @@ from app.models.library import (
     LibraryInventoryAuditStatus,
     LibraryLendingPolicy,
     LibraryLoanStatus,
-    LibraryMemberCategory,
     LibraryMemberProfile,
     LibraryMemberStatus,
     LibraryPhysicalCopy,
@@ -75,7 +71,6 @@ from app.models.library import (
     LibraryResourceType,
     LibrarySubscription,
     LibrarySubscriptionStatus,
-    LibrarySubscriptionType,
 )
 from app.models.people import User
 from app.schemas.library import (
@@ -93,7 +88,6 @@ from app.schemas.library import (
     LibraryInventoryAuditItemScanRequest,
     LibraryInventoryAuditReconcileRequest,
     LibraryLendingPolicyCreate,
-    LibraryLendingPolicyUpdate,
     LibraryLoanIssueRequest,
     LibraryLoanRenewRequest,
     LibraryLoanReturnRequest,

@@ -10,9 +10,7 @@ Aggregates:
 - Graceful degradation status reporting
 """
 
-from datetime import UTC, datetime
 import logging
-from typing import Any
 
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,7 +23,6 @@ from app.models.reliability import (
     PlatformBackupRecord,
     PlatformRestoreVerification,
     ReliabilityCircuitBreakerState,
-    RestoreVerificationStatus,
 )
 from app.schemas.reliability import (
     CircuitBreakerResponse,

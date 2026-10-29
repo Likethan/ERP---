@@ -230,9 +230,11 @@ export const MOCK_REGULATIONS_LIST: Regulation[] = [
     id: "reg-r26",
     tenant_id: "inst-vsb-01",
     code: "R26",
-    title: "Academic Curriculum & Examination Regulations 2026 (Outcome-Based Education)",
+    title:
+      "Academic Curriculum & Examination Regulations 2026 (Outcome-Based Education)",
     effective_year: 2026,
-    description: "NEP-2020 aligned curriculum featuring interdisciplinary majors, micro-credentials, and experiential learning.",
+    description:
+      "NEP-2020 aligned curriculum featuring interdisciplinary majors, micro-credentials, and experiential learning.",
     is_active: true,
     created_at: "2026-01-01T00:00:00Z",
     updated_at: "2026-01-15T10:00:00Z",
@@ -243,7 +245,8 @@ export const MOCK_REGULATIONS_LIST: Regulation[] = [
     code: "R24",
     title: "Undergraduate & Postgraduate Academic Regulations 2024",
     effective_year: 2024,
-    description: "CBCS curriculum regulations governing continuous internal assessment, hybrid credits, and capstone thesis.",
+    description:
+      "CBCS curriculum regulations governing continuous internal assessment, hybrid credits, and capstone thesis.",
     is_active: true,
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2025-06-15T10:00:00Z",
@@ -254,7 +257,8 @@ export const MOCK_REGULATIONS_LIST: Regulation[] = [
     code: "R22",
     title: "Autonomous Curriculum Framework 2022",
     effective_year: 2022,
-    description: "Standard credit framework with mandatory industrial internships and honours degree options.",
+    description:
+      "Standard credit framework with mandatory industrial internships and honours degree options.",
     is_active: false,
     created_at: "2022-06-01T00:00:00Z",
     updated_at: "2024-01-15T10:00:00Z",

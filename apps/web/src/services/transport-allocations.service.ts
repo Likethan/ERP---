@@ -8,11 +8,17 @@
  * DELETE /api/v1/transport/allocations/:id
  */
 
-import { ApiResponse, TransportAllocation, TransportAllocationStatus } from "@campusos/types";
+import {
+  ApiResponse,
+  TransportAllocation,
+  TransportAllocationStatus,
+} from "@campusos/types";
 import { MOCK_TRANSPORT_ALLOCATIONS } from "@/mocks/infrastructure.mock";
 
 class TransportAllocationsService {
-  private allocations: TransportAllocation[] = JSON.parse(JSON.stringify(MOCK_TRANSPORT_ALLOCATIONS));
+  private allocations: TransportAllocation[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSPORT_ALLOCATIONS),
+  );
 
   async listTransportAllocations(filters?: {
     routeId?: string;
@@ -26,7 +32,9 @@ class TransportAllocationsService {
     let items = [...this.allocations];
 
     if (filters?.routeId && filters.routeId !== "ALL") {
-      items = items.filter((a) => a.routeId === filters.routeId || a.routeCode === filters.routeId);
+      items = items.filter(
+        (a) => a.routeId === filters.routeId || a.routeCode === filters.routeId,
+      );
     }
     if (filters?.stopId && filters.stopId !== "ALL") {
       items = items.filter((a) => a.stopId === filters.stopId);
@@ -48,14 +56,16 @@ class TransportAllocationsService {
           a.registerNumber.toLowerCase().includes(q) ||
           a.routeName.toLowerCase().includes(q) ||
           a.stopName.toLowerCase().includes(q) ||
-          a.vehicleNumber.toLowerCase().includes(q)
+          a.vehicleNumber.toLowerCase().includes(q),
       );
     }
 
     return { success: true, data: items };
   }
 
-  async getAllocationById(id: string): Promise<ApiResponse<TransportAllocation | null>> {
+  async getAllocationById(
+    id: string,
+  ): Promise<ApiResponse<TransportAllocation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const alloc = this.allocations.find((a) => a.id === id) || null;
     return { success: true, data: alloc };
@@ -110,7 +120,10 @@ class TransportAllocationsService {
     return { success: true, data: newAlloc };
   }
 
-  async cancelTransportAllocation(id: string, reason?: string): Promise<ApiResponse<TransportAllocation | null>> {
+  async cancelTransportAllocation(
+    id: string,
+    reason?: string,
+  ): Promise<ApiResponse<TransportAllocation | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };

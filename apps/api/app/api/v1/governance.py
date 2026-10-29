@@ -17,11 +17,10 @@ from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_user, get_tenant_context, require_permission
+from app.core.deps import get_tenant_context, require_permission
 from app.core.governance_registry import (
-    DataClassificationLevel,
     SENSITIVE_FIELD_REGISTRY,
-    SensitiveFieldDefinition,
+    DataClassificationLevel,
 )
 from app.core.permissions import (
     GOVERNANCE_ACCESS_REVIEWS_MANAGE_DOT,
@@ -29,7 +28,6 @@ from app.core.permissions import (
     GOVERNANCE_CLASSIFICATION_READ_DOT,
     GOVERNANCE_HOLDS_MANAGE_DOT,
     GOVERNANCE_HOLDS_READ_DOT,
-    GOVERNANCE_MANAGE_DOT,
     GOVERNANCE_POLICIES_MANAGE_DOT,
     GOVERNANCE_POLICIES_READ_DOT,
     GOVERNANCE_PRIVACY_CREATE_DOT,

@@ -10,7 +10,7 @@ from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import and_, case, func, or_, select
+from sqlalchemy import and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -24,7 +24,6 @@ from app.models.academics import (
     CourseEnrollment,
     CourseFacultyAssignment,
     CourseOffering,
-    Subject,
     TimetableEntry,
 )
 from app.models.attendance import (
@@ -36,9 +35,9 @@ from app.models.attendance import (
     StudentLeaveRequest,
 )
 from app.models.audit import AuditLog
-from app.models.core import AcademicYear, Section, Semester
 from app.models.people import FacultyProfile, StudentProfile, User
 from app.schemas.attendance import (
+    AttendanceAlertResponse,
     AttendanceCorrectionCreateRequest,
     AttendanceCorrectionResponse,
     AttendanceCorrectionReviewRequest,
@@ -591,7 +590,7 @@ class AttendanceService:
                 actor_id=user_id,
                 producer="ATTENDANCE_MODULE",
             )
-        except Exception as ev_err:
+        except Exception:
             pass
 
         await db.commit()

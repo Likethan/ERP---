@@ -7,25 +7,22 @@ Enforces:
 - Item-level telemetry and transactional reconciliation tracking.
 """
 
-from datetime import UTC, datetime
 import logging
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.exceptions import NotFoundException, ValidationException
+from app.core.exceptions import NotFoundException
 from app.integrations.mappings import apply_data_mapping
 from app.models.integration import (
     ConflictResolutionStrategy,
     ExternalResourceMapping,
-    IntegrationConnector,
-    IntegrationDataMapping,
     IntegrationSyncConfig,
     IntegrationSyncItem,
     IntegrationSyncRun,
-    SyncDirection,
     SyncItemAction,
     SyncRunStatus,
 )

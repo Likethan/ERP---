@@ -41,7 +41,7 @@ class AiConversationsService {
       result = result.filter(
         (c) =>
           c.title.toLowerCase().includes(q) ||
-          c.lastMessageSnippet.toLowerCase().includes(q)
+          c.lastMessageSnippet.toLowerCase().includes(q),
       );
     }
 
@@ -55,7 +55,9 @@ class AiConversationsService {
     return { success: true, data: result };
   }
 
-  async getConversation(id: string): Promise<ApiResponse<AIConversation | null>> {
+  async getConversation(
+    id: string,
+  ): Promise<ApiResponse<AIConversation | null>> {
     await new Promise((r) => setTimeout(r, 30));
     const conv = this.conversations.find((c) => c.id === id) || null;
     return { success: Boolean(conv), data: conv };
@@ -91,14 +93,20 @@ class AiConversationsService {
         role: AIMessageRole.USER,
         status: AIMessageStatus.COMPLETED,
         content: payload.firstMessage,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       });
     }
 
     return { success: true, data: newConv };
   }
 
-  async renameConversation(id: string, newTitle: string): Promise<ApiResponse<AIConversation | null>> {
+  async renameConversation(
+    id: string,
+    newTitle: string,
+  ): Promise<ApiResponse<AIConversation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
@@ -108,7 +116,9 @@ class AiConversationsService {
     return { success: true, data: conv };
   }
 
-  async togglePinConversation(id: string): Promise<ApiResponse<AIConversation | null>> {
+  async togglePinConversation(
+    id: string,
+  ): Promise<ApiResponse<AIConversation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
@@ -118,7 +128,9 @@ class AiConversationsService {
     return { success: true, data: conv };
   }
 
-  async toggleSaveConversation(id: string): Promise<ApiResponse<AIConversation | null>> {
+  async toggleSaveConversation(
+    id: string,
+  ): Promise<ApiResponse<AIConversation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
@@ -128,7 +140,9 @@ class AiConversationsService {
     return { success: true, data: conv };
   }
 
-  async archiveConversation(id: string): Promise<ApiResponse<AIConversation | null>> {
+  async archiveConversation(
+    id: string,
+  ): Promise<ApiResponse<AIConversation | null>> {
     await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
@@ -154,7 +168,10 @@ class AiConversationsService {
     return { success: true, data: [...list] };
   }
 
-  async appendMessage(conversationId: string, message: AIMessage): Promise<ApiResponse<AIMessage>> {
+  async appendMessage(
+    conversationId: string,
+    message: AIMessage,
+  ): Promise<ApiResponse<AIMessage>> {
     if (!this.messages[conversationId]) {
       this.messages[conversationId] = [];
     }

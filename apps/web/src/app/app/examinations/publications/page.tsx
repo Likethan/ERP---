@@ -34,16 +34,24 @@ export default function ResultPublicationsPage() {
 
   // Create Batch Modal State
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [program, setProgram] = useState("B.Tech Computer Science & Engineering");
-  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [program, setProgram] = useState(
+    "B.Tech Computer Science & Engineering",
+  );
+  const [department, setDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [semester, setSemester] = useState(5);
-  const [publicationDate, setPublicationDate] = useState(new Date().toISOString().split("T")[0]);
+  const [publicationDate, setPublicationDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [notes, setNotes] = useState("");
   const [creating, setCreating] = useState(false);
 
   // Publish / Revoke Action State
   const [actionModalOpen, setActionModalOpen] = useState(false);
-  const [selectedBatch, setSelectedBatch] = useState<ResultPublication | null>(null);
+  const [selectedBatch, setSelectedBatch] = useState<ResultPublication | null>(
+    null,
+  );
   const [actionType, setActionType] = useState<"PUBLISH" | "REVOKE">("PUBLISH");
   const [actionNotes, setActionNotes] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -56,7 +64,11 @@ export default function ResultPublicationsPage() {
       });
       setPublications(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load publication batches", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load publication batches",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -77,13 +89,20 @@ export default function ResultPublicationsPage() {
         publicationDate,
         notes,
       });
-      showToast({ title: "Success", message: "Publication batch generated.", type: "success" });
+      showToast({
+        title: "Success",
+        message: "Publication batch generated.",
+        type: "success",
+      });
       setCreateModalOpen(false);
       loadPublications();
     } catch (err: unknown) {
       showToast({
         title: "Error",
-        message: err instanceof Error ? err.message : "Failed to create publication batch",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Failed to create publication batch",
         type: "error",
       });
     } finally {
@@ -99,10 +118,21 @@ export default function ResultPublicationsPage() {
       setProcessing(true);
       if (actionType === "PUBLISH") {
         await examinationsService.publishResults(selectedBatch.id);
-        showToast({ title: "Published", message: "Results published to student portal.", type: "success" });
+        showToast({
+          title: "Published",
+          message: "Results published to student portal.",
+          type: "success",
+        });
       } else {
-        await examinationsService.revokePublication(selectedBatch.id, actionNotes);
-        showToast({ title: "Revoked", message: "Publication batch unpublished.", type: "info" });
+        await examinationsService.revokePublication(
+          selectedBatch.id,
+          actionNotes,
+        );
+        showToast({
+          title: "Revoked",
+          message: "Publication batch unpublished.",
+          type: "info",
+        });
       }
       setActionModalOpen(false);
       loadPublications();
@@ -117,7 +147,9 @@ export default function ResultPublicationsPage() {
     }
   };
 
-  const publishedCount = publications.filter((p) => p.status === "PUBLISHED").length;
+  const publishedCount = publications.filter(
+    (p) => p.status === "PUBLISHED",
+  ).length;
   const readyCount = publications.filter((p) => p.status === "READY").length;
 
   const columns: ColumnDef<ResultPublication>[] = useMemo(
@@ -144,7 +176,9 @@ export default function ResultPublicationsPage() {
             <span className="font-semibold text-slate-800 dark:text-slate-200">
               {row.program}
             </span>
-            <p className="text-slate-500">Semester {row.semester} • AY {row.academicYear}</p>
+            <p className="text-slate-500">
+              Semester {row.semester} • AY {row.academicYear}
+            </p>
           </div>
         ),
       },
@@ -156,7 +190,9 @@ export default function ResultPublicationsPage() {
             <span className="font-bold text-slate-900 dark:text-white">
               {row.resultCount} records
             </span>
-            <div className="text-[11px] text-slate-400">Target: {row.publicationDate}</div>
+            <div className="text-[11px] text-slate-400">
+              Target: {row.publicationDate}
+            </div>
           </div>
         ),
       },
@@ -169,10 +205,10 @@ export default function ResultPublicationsPage() {
               row.status === "PUBLISHED"
                 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
                 : row.status === "READY"
-                ? "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
-                : row.status === "REVOKED"
-                ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
-                : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                  ? "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                  : row.status === "REVOKED"
+                    ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                    : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
             }`}
           >
             {row.status === "PUBLISHED" && <Globe className="h-3 w-3" />}
@@ -184,7 +220,10 @@ export default function ResultPublicationsPage() {
         id: "notes",
         header: "Audit Notes",
         cell: (row) => (
-          <div className="text-xs text-slate-500 truncate max-w-xs" title={row.notes || "Ratified by examination board"}>
+          <div
+            className="text-xs text-slate-500 truncate max-w-xs"
+            title={row.notes || "Ratified by examination board"}
+          >
             {row.notes || "Ratified by examination board"}
           </div>
         ),
@@ -228,7 +267,7 @@ export default function ResultPublicationsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -240,17 +279,24 @@ export default function ResultPublicationsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300">
               Controlled Release
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Student Portal Publications</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Student Portal Publications
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Result Publications Ledger
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Publish ratified exam results in deliberate, audited administrative batches to the public student portal.
+            Publish ratified exam results in deliberate, audited administrative
+            batches to the public student portal.
           </p>
         </div>
 
-        <Button variant="primary" className="gap-2" onClick={() => setCreateModalOpen(true)}>
+        <Button
+          variant="primary"
+          className="gap-2"
+          onClick={() => setCreateModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           Prepare Publication Batch
         </Button>
@@ -322,7 +368,9 @@ export default function ResultPublicationsPage() {
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">
               Prepare Publication Batch
             </h2>
-            <p className="text-xs text-slate-500">Group finalized results for release</p>
+            <p className="text-xs text-slate-500">
+              Group finalized results for release
+            </p>
           </div>
 
           <div className="space-y-3 text-xs">
@@ -335,9 +383,15 @@ export default function ResultPublicationsPage() {
                 onChange={(e) => setProgram(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
-                <option value="B.Tech Computer Science & Engineering">B.Tech Computer Science & Engineering</option>
-                <option value="B.Tech Electronics & Communication">B.Tech Electronics & Communication</option>
-                <option value="B.Tech AI & Machine Learning">B.Tech AI & Machine Learning</option>
+                <option value="B.Tech Computer Science & Engineering">
+                  B.Tech Computer Science & Engineering
+                </option>
+                <option value="B.Tech Electronics & Communication">
+                  B.Tech Electronics & Communication
+                </option>
+                <option value="B.Tech AI & Machine Learning">
+                  B.Tech AI & Machine Learning
+                </option>
               </select>
             </div>
 
@@ -383,7 +437,11 @@ export default function ResultPublicationsPage() {
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={creating}>
@@ -397,14 +455,24 @@ export default function ResultPublicationsPage() {
       <Dialog open={actionModalOpen} onClose={() => setActionModalOpen(false)}>
         <form onSubmit={handleExecuteAction} className="p-6 space-y-4 max-w-md">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-full ${actionType === "PUBLISH" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
-              {actionType === "PUBLISH" ? <Globe className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+            <div
+              className={`p-2.5 rounded-full ${actionType === "PUBLISH" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
+            >
+              {actionType === "PUBLISH" ? (
+                <Globe className="h-5 w-5" />
+              ) : (
+                <AlertTriangle className="h-5 w-5" />
+              )}
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                {actionType === "PUBLISH" ? "Publish Results to Students" : "Revoke Publication"}
+                {actionType === "PUBLISH"
+                  ? "Publish Results to Students"
+                  : "Revoke Publication"}
               </h2>
-              <p className="text-xs text-slate-500">Batch {selectedBatch?.batchNumber}</p>
+              <p className="text-xs text-slate-500">
+                Batch {selectedBatch?.batchNumber}
+              </p>
             </div>
           </div>
 
@@ -431,7 +499,11 @@ export default function ResultPublicationsPage() {
           )}
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" onClick={() => setActionModalOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setActionModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button

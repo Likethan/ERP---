@@ -10,8 +10,8 @@ Provides:
 - Multi-tenant isolation and aggregate enablement analytics
 """
 
-from datetime import UTC, datetime, timedelta
 import statistics
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -21,27 +21,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.audit import AuditEventCategory, build_audit_entry
-from app.core.logging import logger
 from app.models.adoption import (
     AdoptionJourneyDefinition,
     AdoptionJourneyStep,
     AdoptionMilestoneType,
     AdoptionTargetStatus,
-    AnnouncementCategory,
-    AnnouncementPriority,
     AnnouncementStatus,
     ContextualGuidance,
     FeatureAdoptionMilestone,
     FeatureAdoptionTarget,
     GuidanceStatus,
-    GuidanceType,
     JourneyStatus,
     ProductAnnouncement,
     StepCompletionCriteria,
     TrainingAssignment,
     TrainingAssignmentStatus,
     TrainingModule,
-    TrainingModuleContentType,
     TrainingProgram,
     TrainingProgramStatus,
     UserAnnouncementReceipt,
@@ -51,39 +46,23 @@ from app.models.adoption import (
     UserJourneyState,
 )
 from app.models.campus import Notification
-from app.models.core import Institution
 from app.models.people import User
 from app.schemas.adoption import (
     AdoptionJourneyCreateRequest,
-    AdoptionJourneyResponse,
     AdoptionJourneyUpdateRequest,
     AdoptionSummaryDashboardResponse,
-    AnnouncementAcknowledgeRequest,
     AnnouncementReadershipMetricsResponse,
     ContextualGuidanceCreateRequest,
-    ContextualGuidanceResponse,
-    ContextualGuidanceUpdateRequest,
     FeatureAdoptionMilestoneRecordRequest,
-    FeatureAdoptionMilestoneResponse,
     FeatureAdoptionTargetCreateRequest,
-    FeatureAdoptionTargetResponse,
     FeatureRolloutAdoptionMetricsResponse,
     JourneyAdoptionMetricsResponse,
     ProductAnnouncementCreateRequest,
     ProductAnnouncementResponse,
-    ProductAnnouncementUpdateRequest,
     StepDropoffMetric,
     TrainingAssignRequest,
-    TrainingAssignmentResponse,
-    TrainingModuleCreateRequest,
-    TrainingModuleResponse,
     TrainingProgramCreateRequest,
     TrainingProgramMetricsResponse,
-    TrainingProgramResponse,
-    TrainingProgramUpdateRequest,
-    UserAnnouncementReceiptResponse,
-    UserGuidanceStateResponse,
-    UserJourneyProgressResponse,
 )
 
 

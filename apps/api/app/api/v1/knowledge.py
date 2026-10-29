@@ -7,10 +7,9 @@ from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_current_user, get_tenant_context, require_permission
+from app.core.deps import get_tenant_context, require_permission
 from app.core.permissions import (
     KNOWLEDGE_ACKNOWLEDGE_DOT,
-    KNOWLEDGE_APPROVE_DOT,
     KNOWLEDGE_ATTESTATION_READ_DOT,
     KNOWLEDGE_CREATE_DOT,
     KNOWLEDGE_MANAGE_DOT,

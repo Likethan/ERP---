@@ -9,10 +9,9 @@ Enforces:
 - Granular session revocation (individual session, all sessions, revocation on password reset)
 """
 
-from datetime import datetime, timedelta, timezone
 import hashlib
 import ipaddress
-import re
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -20,7 +19,6 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
-    ForbiddenException,
     NotFoundException,
 )
 from app.core.security import AuthenticationException
@@ -105,7 +103,7 @@ class IdentitySessionService:
         max_active_sessions: int = 5,
     ) -> IdentitySession:
         """Create a new first-class IdentitySession while enforcing tenant session limits."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         expires_at = now + timedelta(minutes=session_duration_minutes)
 
         # 1. Enforce max active sessions by revoking oldest if limit exceeded
@@ -170,7 +168,7 @@ class IdentitySessionService:
         If an already-rotated or revoked token is reused, all sessions in the
         associated token family are immediately invalidated and a security event logged.
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # 1. Lookup session by session_identifier
         stmt = select(IdentitySession).where(IdentitySession.session_identifier == session_identifier)
@@ -212,7 +210,7 @@ class IdentitySessionService:
         # 3. Check hard expiry
         exp = session.expires_at
         if exp.tzinfo is None:
-            exp = exp.replace(tzinfo=timezone.utc)
+            exp = exp.replace(tzinfo=UTC)
         if exp < now:
             session.status = SessionStatus.EXPIRED.value
             await db.flush()
@@ -221,7 +219,7 @@ class IdentitySessionService:
         # 4. Check idle timeout
         act = session.last_activity_at
         if act.tzinfo is None:
-            act = act.replace(tzinfo=timezone.utc)
+            act = act.replace(tzinfo=UTC)
         if act + timedelta(minutes=idle_timeout_minutes) < now:
             session.status = SessionStatus.EXPIRED.value
             session.revocation_reason = "IDLE_TIMEOUT"
@@ -267,7 +265,7 @@ class IdentitySessionService:
         client_ip: str | None = None,
     ) -> int:
         """Immediately revoke all sessions belonging to a compromised refresh token family."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         stmt = (
             update(IdentitySession)
             .where(
@@ -318,7 +316,7 @@ class IdentitySessionService:
         if not session:
             raise NotFoundException("Session not found.")
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         session.status = SessionStatus.REVOKED.value
         session.revoked_at = now
         session.revocation_reason = reason
@@ -335,7 +333,7 @@ class IdentitySessionService:
         reason: str = "REVOKE_ALL_SESSIONS",
     ) -> int:
         """Revoke all active sessions for a user (e.g. password change, admin action)."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         stmt = (
             update(IdentitySession)
             .where(
@@ -366,7 +364,7 @@ class IdentitySessionService:
         current_session_identifier: str | None = None,
     ) -> list[dict[str, Any]]:
         """List active sessions for a user, indicating the current session."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         stmt = (
             select(IdentitySession)
             .where(

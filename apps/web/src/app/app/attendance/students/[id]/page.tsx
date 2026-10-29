@@ -3,7 +3,10 @@
 import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { attendanceService } from "@/services/attendance.service";
-import { AttendanceStudentSummary, AttendanceRiskLevel } from "@/types/attendance";
+import {
+  AttendanceStudentSummary,
+  AttendanceRiskLevel,
+} from "@/types/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
@@ -38,13 +41,18 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
     async function loadData() {
       try {
         setLoading(true);
-        const res = await attendanceService.getStudentAttendanceSummary(studentId);
+        const res =
+          await attendanceService.getStudentAttendanceSummary(studentId);
         if (res.success && res.data) {
           setSummary(res.data);
         }
       } catch (err) {
         console.error("Failed to load student attendance summary", err);
-        showToast({ type: "error", title: "Load Error", message: "Failed to load student attendance summary." });
+        showToast({
+          type: "error",
+          title: "Load Error",
+          message: "Failed to load student attendance summary.",
+        });
       } finally {
         setLoading(false);
       }
@@ -63,10 +71,16 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
   if (!summary) {
     return (
       <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white">Student Not Found</h3>
-        <p className="mt-1 text-xs text-slate-500">Could not resolve attendance records for this student.</p>
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+          Student Not Found
+        </h3>
+        <p className="mt-1 text-xs text-slate-500">
+          Could not resolve attendance records for this student.
+        </p>
         <Link href="/app/attendance/students" className="mt-4 inline-block">
-          <Button variant="outline" size="sm">Back to Student Directory</Button>
+          <Button variant="outline" size="sm">
+            Back to Student Directory
+          </Button>
         </Link>
       </div>
     );
@@ -103,8 +117,12 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
               {getRiskBadge(summary.riskLevel)}
             </div>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-              Roll No: <strong className="text-slate-700 dark:text-slate-300">{summary.rollNumber}</strong> •{" "}
-              {summary.program} • Semester {summary.semester}, Section {summary.section}
+              Roll No:{" "}
+              <strong className="text-slate-700 dark:text-slate-300">
+                {summary.rollNumber}
+              </strong>{" "}
+              • {summary.program} • Semester {summary.semester}, Section{" "}
+              {summary.section}
             </p>
           </div>
         </div>
@@ -162,7 +180,9 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
                 Semester Attendance Trend
               </h3>
-              <p className="text-[11px] text-slate-500">Weekly progression curve</p>
+              <p className="text-[11px] text-slate-500">
+                Weekly progression curve
+              </p>
             </div>
             {summary.percentage >= 80 ? (
               <span className="flex items-center gap-1 text-xs text-emerald-600 font-semibold">
@@ -179,9 +199,14 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
             {summary.trend.map((w) => (
               <div key={w.period} className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="font-medium text-slate-700 dark:text-slate-300">{w.period}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">
+                    {w.period}
+                  </span>
                   <span className="font-bold text-slate-900 dark:text-white">
-                    {w.percentage}% <span className="text-[10px] text-slate-400 font-normal">({w.present}/{w.total})</span>
+                    {w.percentage}%{" "}
+                    <span className="text-[10px] text-slate-400 font-normal">
+                      ({w.present}/{w.total})
+                    </span>
                   </span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
@@ -190,8 +215,8 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
                       w.percentage >= 85
                         ? "bg-emerald-500"
                         : w.percentage >= 75
-                        ? "bg-amber-500"
-                        : "bg-rose-500"
+                          ? "bg-amber-500"
+                          : "bg-rose-500"
                     }`}
                     style={{ width: `${w.percentage}%` }}
                   />
@@ -201,8 +226,11 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
           </div>
 
           <div className="mt-6 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500">
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Policy Note: </span>
-            A minimum of 75% aggregate attendance is mandatory under University Autonomous Regulation 2026.
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Policy Note:{" "}
+            </span>
+            A minimum of 75% aggregate attendance is mandatory under University
+            Autonomous Regulation 2026.
           </div>
         </div>
 
@@ -213,7 +241,9 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
                 Course Offering Attendance Breakdown
               </h3>
-              <p className="text-[11px] text-slate-500">Subject-wise delivery and eligibility threshold</p>
+              <p className="text-[11px] text-slate-500">
+                Subject-wise delivery and eligibility threshold
+              </p>
             </div>
             <Badge variant="outline" className="text-xs">
               {summary.courseSummaries.length} Enrolled Courses
@@ -227,23 +257,34 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
                   <th className="pb-3 font-semibold">Subject</th>
                   <th className="pb-3 font-semibold">Faculty Instructor</th>
                   <th className="pb-3 font-semibold text-center">Sessions</th>
-                  <th className="pb-3 font-semibold text-center">Attendance Rate</th>
+                  <th className="pb-3 font-semibold text-center">
+                    Attendance Rate
+                  </th>
                   <th className="pb-3 font-semibold text-right">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {summary.courseSummaries.map((c) => (
-                  <tr key={c.courseOfferingId} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={c.courseOfferingId}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                  >
                     <td className="py-3">
-                      <div className="font-semibold text-slate-900 dark:text-white">{c.courseCode}</div>
-                      <div className="text-[11px] text-slate-500 truncate max-w-[200px]">{c.courseName}</div>
+                      <div className="font-semibold text-slate-900 dark:text-white">
+                        {c.courseCode}
+                      </div>
+                      <div className="text-[11px] text-slate-500 truncate max-w-[200px]">
+                        {c.courseName}
+                      </div>
                     </td>
                     <td className="py-3 text-slate-600 dark:text-slate-400">
                       {c.facultyName}
                     </td>
                     <td className="py-3 text-center text-slate-600 dark:text-slate-400">
                       {c.presentCount} / {c.totalSessions}
-                      <div className="text-[10px] text-slate-400">{c.absentCount} absent • {c.lateCount} late</div>
+                      <div className="text-[10px] text-slate-400">
+                        {c.absentCount} absent • {c.lateCount} late
+                      </div>
                     </td>
                     <td className="py-3 text-center">
                       <span
@@ -251,8 +292,8 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
                           c.percentage >= 80
                             ? "text-emerald-600 dark:text-emerald-400"
                             : c.percentage >= 75
-                            ? "text-amber-600 dark:text-amber-400"
-                            : "text-rose-600 dark:text-rose-400"
+                              ? "text-amber-600 dark:text-amber-400"
+                              : "text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {c.percentage}%
@@ -263,8 +304,8 @@ export default function StudentAttendanceProfilePage({ params }: PageProps) {
                             c.percentage >= 80
                               ? "bg-emerald-500"
                               : c.percentage >= 75
-                              ? "bg-amber-500"
-                              : "bg-rose-500"
+                                ? "bg-amber-500"
+                                : "bg-rose-500"
                           }`}
                           style={{ width: `${c.percentage}%` }}
                         />

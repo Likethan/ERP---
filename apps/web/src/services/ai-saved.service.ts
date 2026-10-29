@@ -24,7 +24,7 @@ class AiSavedService {
       result = result.filter(
         (s) =>
           s.title.toLowerCase().includes(q) ||
-          s.contentSnippet.toLowerCase().includes(q)
+          s.contentSnippet.toLowerCase().includes(q),
       );
     }
 

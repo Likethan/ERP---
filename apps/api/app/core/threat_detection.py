@@ -8,10 +8,10 @@ Provides:
 - Automatic security incident grouping
 """
 
-from collections import defaultdict, deque
-from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
 import hashlib
+from collections import defaultdict, deque
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -19,7 +19,6 @@ from pydantic import BaseModel, Field
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.logging import logger
 from app.core.sanitizer import mask_sensitive_dict
 from app.models.security_ops import (
     SecurityDetection,

@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Search,
-  X,
-  Download,
-  Eye,
-  Rows,
-  Check,
-} from "lucide-react";
+import { Search, X, Download, Eye, Rows, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ColumnDef, RowDensity } from "./data-grid.types";
 
@@ -118,9 +111,13 @@ export function DataGridToolbar<T>({
                           className="flex items-center justify-between w-full px-2 py-1.5 text-xs text-left rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                         >
                           <span className="truncate">
-                            {typeof col.header === "string" ? col.header : col.id}
+                            {typeof col.header === "string"
+                              ? col.header
+                              : col.id}
                           </span>
-                          {isVisible && <Check className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />}
+                          {isVisible && (
+                            <Check className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+                          )}
                         </button>
                       );
                     })}
@@ -149,23 +146,25 @@ export function DataGridToolbar<T>({
                   onClick={() => setDensityMenuOpen(false)}
                 />
                 <div className="absolute right-0 mt-1.5 w-36 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 shadow-lg z-30 space-y-0.5">
-                  {(["compact", "normal", "spacious"] as RowDensity[]).map((d) => (
-                    <button
-                      key={d}
-                      onClick={() => {
-                        onDensityChange(d);
-                        setDensityMenuOpen(false);
-                      }}
-                      className={`flex items-center justify-between w-full px-2 py-1.5 text-xs capitalize rounded transition ${
-                        density === d
-                          ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold"
-                          : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
-                      }`}
-                    >
-                      <span>{d}</span>
-                      {density === d && <Check className="h-3.5 w-3.5" />}
-                    </button>
-                  ))}
+                  {(["compact", "normal", "spacious"] as RowDensity[]).map(
+                    (d) => (
+                      <button
+                        key={d}
+                        onClick={() => {
+                          onDensityChange(d);
+                          setDensityMenuOpen(false);
+                        }}
+                        className={`flex items-center justify-between w-full px-2 py-1.5 text-xs capitalize rounded transition ${
+                          density === d
+                            ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold"
+                            : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                        }`}
+                      >
+                        <span>{d}</span>
+                        {density === d && <Check className="h-3.5 w-3.5" />}
+                      </button>
+                    ),
+                  )}
                 </div>
               </>
             )}

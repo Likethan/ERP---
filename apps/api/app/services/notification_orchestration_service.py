@@ -6,9 +6,10 @@ Domain Event -> Notification Rule -> Recipient Resolution -> Preference & Policy
     -> Delivery Result -> Retry / Suppression / Analytics
 """
 
-from datetime import UTC, datetime, time as dtime, timedelta
 import logging
 import random
+from datetime import UTC, datetime, timedelta
+from datetime import time as dtime
 from typing import Any
 from uuid import UUID, uuid4
 from zoneinfo import ZoneInfo
@@ -16,9 +17,8 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.audit import AuditEventCategory, build_audit_entry
+from app.core.audit import build_audit_entry
 from app.core.exceptions import NotFoundException, ValidationException
-from app.core.sanitizer import mask_sensitive_dict
 from app.integrations.adapters.notification import (
     GenericEmailAdapter,
     GenericPushAdapter,
@@ -34,13 +34,8 @@ from app.models.notification import (
     NotificationChannel,
     NotificationDeliveryAttempt,
     NotificationEvent,
-    NotificationRule,
-    NotificationSuppression,
-    NotificationTemplate,
     NotificationTemplateVersion,
-    ProviderHealthStatus,
     SuppressionReason,
-    TemplateStatus,
     UserNotificationProfile,
 )
 from app.repositories.notification_repository import NotificationRepository

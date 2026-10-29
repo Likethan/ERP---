@@ -21,7 +21,11 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-export default function RoomDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function RoomDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const roomId = resolvedParams.id;
 
@@ -30,7 +34,9 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
 
   // Status Change Dialog
   const [selectedBedId, setSelectedBedId] = useState<string | null>(null);
-  const [newBedStatus, setNewBedStatus] = useState<BedStatus>(BedStatus.MAINTENANCE);
+  const [newBedStatus, setNewBedStatus] = useState<BedStatus>(
+    BedStatus.MAINTENANCE,
+  );
   const [statusModalOpen, setStatusModalOpen] = useState(false);
 
   const loadRoom = async () => {
@@ -51,7 +57,11 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
 
   const handleUpdateBedStatus = async () => {
     if (!selectedBedId || !room) return;
-    await hostelRoomsService.updateBedStatus(room.id, selectedBedId, newBedStatus);
+    await hostelRoomsService.updateBedStatus(
+      room.id,
+      selectedBedId,
+      newBedStatus,
+    );
     setStatusModalOpen(false);
     loadRoom();
   };
@@ -69,8 +79,12 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
   if (!room) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Room Record Not Found</h2>
-        <p className="text-xs mb-4">No room was found matching &ldquo;{roomId}&rdquo;.</p>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Room Record Not Found
+        </h2>
+        <p className="text-xs mb-4">
+          No room was found matching &ldquo;{roomId}&rdquo;.
+        </p>
         <Link href="/app/infrastructure/hostel/rooms">
           <Button variant="outline" className="border-slate-700">
             Back to Room Inventory
@@ -88,21 +102,32 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
           Infrastructure
         </Link>
         <span>/</span>
-        <Link href="/app/infrastructure/hostel/rooms" className="hover:text-white">
+        <Link
+          href="/app/infrastructure/hostel/rooms"
+          className="hover:text-white"
+        >
           Rooms
         </Link>
         <span>/</span>
-        <span className="text-indigo-400 font-mono">Room {room.roomNumber}</span>
+        <span className="text-indigo-400 font-mono">
+          Room {room.roomNumber}
+        </span>
       </div>
 
       {/* Header Card */}
       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <Badge variant="outline" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
+            <Badge
+              variant="outline"
+              className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
+            >
               {room.roomType.replace("_", " ")}
             </Badge>
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+            >
               {room.status}
             </Badge>
           </div>
@@ -111,18 +136,27 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
             Room {room.roomNumber}
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            {room.hostelName} • {room.blockName} • Floor {room.floor} • Capacity: {room.capacity} Beds
+            {room.hostelName} • {room.blockName} • Floor {room.floor} •
+            Capacity: {room.capacity} Beds
           </p>
         </div>
 
         <div className="flex items-center gap-3 text-center">
           <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 min-w-[90px]">
-            <div className="text-[10px] text-slate-400 uppercase font-semibold">Occupied</div>
-            <div className="text-lg font-bold text-white mt-0.5">{room.occupied}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-semibold">
+              Occupied
+            </div>
+            <div className="text-lg font-bold text-white mt-0.5">
+              {room.occupied}
+            </div>
           </div>
           <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 min-w-[90px]">
-            <div className="text-[10px] text-slate-400 uppercase font-semibold">Available</div>
-            <div className="text-lg font-bold text-emerald-400 mt-0.5">{room.available}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-semibold">
+              Available
+            </div>
+            <div className="text-lg font-bold text-emerald-400 mt-0.5">
+              {room.available}
+            </div>
           </div>
         </div>
       </div>
@@ -147,18 +181,24 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
                   isAllocated
                     ? "border-indigo-500/30 bg-slate-900/80"
                     : isAvailable
-                    ? "border-emerald-500/30 bg-emerald-950/10"
-                    : "border-yellow-500/30 bg-yellow-950/10"
+                      ? "border-emerald-500/30 bg-emerald-950/10"
+                      : "border-yellow-500/30 bg-yellow-950/10"
                 }`}
               >
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                   <div className="flex items-center gap-2">
                     <BedDouble
                       className={`h-5 w-5 ${
-                        isAllocated ? "text-indigo-400" : isAvailable ? "text-emerald-400" : "text-yellow-400"
+                        isAllocated
+                          ? "text-indigo-400"
+                          : isAvailable
+                            ? "text-emerald-400"
+                            : "text-yellow-400"
                       }`}
                     />
-                    <span className="font-bold text-white text-sm">{bed.bedNumber}</span>
+                    <span className="font-bold text-white text-sm">
+                      {bed.bedNumber}
+                    </span>
                   </div>
                   <Badge
                     variant="outline"
@@ -166,8 +206,8 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
                       isAllocated
                         ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
                         : isAvailable
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                        : "bg-yellow-500/20 text-yellow-300 border-yellow-500/40"
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                          : "bg-yellow-500/20 text-yellow-300 border-yellow-500/40"
                     }
                   >
                     {bed.status}
@@ -190,7 +230,8 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
                             href={`/app/students/${bed.studentId}`}
                             className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-[11px]"
                           >
-                            Open Student 360° Profile <ExternalLink className="h-2.5 w-2.5" />
+                            Open Student 360° Profile{" "}
+                            <ExternalLink className="h-2.5 w-2.5" />
                           </Link>
                         </div>
                       )}
@@ -215,7 +256,9 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
                     onClick={() => {
                       setSelectedBedId(bed.id);
                       setNewBedStatus(
-                        isMaintenance ? BedStatus.AVAILABLE : BedStatus.MAINTENANCE
+                        isMaintenance
+                          ? BedStatus.AVAILABLE
+                          : BedStatus.MAINTENANCE,
                       );
                       setStatusModalOpen(true);
                     }}
@@ -239,7 +282,9 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">New Bed Status</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              New Bed Status
+            </label>
             <select
               value={newBedStatus}
               onChange={(e) => setNewBedStatus(e.target.value as BedStatus)}
@@ -260,7 +305,10 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
             >
               Cancel
             </Button>
-            <Button onClick={handleUpdateBedStatus} className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              onClick={handleUpdateBedStatus}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               Confirm Status Update
             </Button>
           </div>

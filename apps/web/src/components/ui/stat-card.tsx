@@ -14,7 +14,8 @@ export interface StatCardProps {
   };
   icon?: React.ReactNode;
   variant?: "default" | "indigo" | "emerald" | "amber" | "sky" | "purple";
-  color?: "default" | "indigo" | "emerald" | "amber" | "sky" | "purple" | string;
+  color?:
+    "default" | "indigo" | "emerald" | "amber" | "sky" | "purple" | string;
   className?: string;
 }
 
@@ -31,7 +32,9 @@ export function StatCard({
   className,
 }: StatCardProps) {
   const displayLabel = label || title || "";
-  const displayVariant = (variant !== "default" ? variant : (color as StatCardProps["variant"])) || "default";
+  const displayVariant =
+    (variant !== "default" ? variant : (color as StatCardProps["variant"])) ||
+    "default";
   const displayDesc = description || subtitle;
 
   const iconBgs: Record<string, string> = {
@@ -47,7 +50,7 @@ export function StatCard({
     <div
       className={cn(
         "rounded-xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur-sm transition-all hover:border-slate-700",
-        className
+        className,
       )}
     >
       <div className="flex items-center justify-between">
@@ -58,7 +61,7 @@ export function StatCard({
           <div
             className={cn(
               "flex h-9 w-9 items-center justify-center rounded-lg border",
-              iconBgs[displayVariant] || iconBgs.default
+              iconBgs[displayVariant] || iconBgs.default,
             )}
           >
             {icon}
@@ -76,7 +79,7 @@ export function StatCard({
               "inline-flex items-center gap-0.5 text-xs font-medium",
               change.trend === "up" && "text-emerald-400",
               change.trend === "down" && "text-red-400",
-              change.trend === "neutral" && "text-slate-400"
+              change.trend === "neutral" && "text-slate-400",
             )}
           >
             {change.trend === "up" && <TrendingUp className="h-3 w-3" />}

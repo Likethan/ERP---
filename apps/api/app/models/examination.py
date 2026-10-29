@@ -25,7 +25,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, BaseModel, TenantScopedModel
+from app.models.base import BaseModel, TenantScopedModel
 
 
 class GradeScale(TenantScopedModel):

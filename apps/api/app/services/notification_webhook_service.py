@@ -8,19 +8,16 @@ Enforces:
 - Audit recording of status transitions.
 """
 
-from datetime import UTC, datetime
-import json
 import logging
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.audit import AuditEventCategory, build_audit_entry
+from app.core.audit import build_audit_entry
 from app.core.exceptions import (
     AuthenticationException,
-    NotFoundException,
-    ValidationException,
 )
 from app.integrations.security import verify_webhook_signature
 from app.models.campus import NotificationDelivery

@@ -10,13 +10,11 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import and_, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
-from app.core.exceptions import NotFoundException, ValidationException
+from app.core.exceptions import NotFoundException
 from app.models.audit import AuditLog
 from app.models.campus import Notification, NotificationDelivery, NotificationPreference
 from app.models.notification import UserNotificationProfile
-from app.models.people import User
 from app.schemas.campus import (
     NotificationPreferenceItem,
     NotificationPreferenceUpdate,

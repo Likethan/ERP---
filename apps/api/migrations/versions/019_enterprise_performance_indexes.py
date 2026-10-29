@@ -12,7 +12,6 @@ Adds evidence-based composite indexes across high-traffic multi-tenant tables:
 - Campus Notifications: user inbox badge and unread feed optimization
 """
 
-import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.

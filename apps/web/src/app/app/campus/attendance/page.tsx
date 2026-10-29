@@ -94,10 +94,16 @@ export default function CampusEventAttendancePage() {
   const excusedCount = roster.filter((r) => r.status === "EXCUSED").length;
   const pendingCount = roster.filter((r) => r.status === "PENDING").length;
 
-  const attendanceRate = calculateEventAttendanceRate(presentCount, roster.length);
+  const attendanceRate = calculateEventAttendanceRate(
+    presentCount,
+    roster.length,
+  );
 
   // Interactive marking handler
-  const setAttendeeStatus = (studentId: string, status: EventAttendanceStatus) => {
+  const setAttendeeStatus = (
+    studentId: string,
+    status: EventAttendanceStatus,
+  ) => {
     setRoster((prev) =>
       prev.map((item) =>
         item.studentId === studentId
@@ -107,8 +113,8 @@ export default function CampusEventAttendancePage() {
               markedAt: new Date().toLocaleTimeString(),
               markedBy: user?.first_name || "Coordinator",
             }
-          : item
-      )
+          : item,
+      ),
     );
     setSaveSuccess(false);
   };
@@ -121,7 +127,7 @@ export default function CampusEventAttendancePage() {
         status,
         markedAt: new Date().toLocaleTimeString(),
         markedBy: user?.first_name || "Coordinator",
-      }))
+      })),
     );
     setSaveSuccess(false);
   };
@@ -141,7 +147,7 @@ export default function CampusEventAttendancePage() {
       const res = await campusService.markEventAttendance(
         selectedEventId,
         updates,
-        user?.first_name || "Coordinator"
+        user?.first_name || "Coordinator",
       );
 
       if (res.success) {
@@ -175,18 +181,24 @@ export default function CampusEventAttendancePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Link href="/app/campus" className="text-xs text-slate-400 hover:text-indigo-400">
+            <Link
+              href="/app/campus"
+              className="text-xs text-slate-400 hover:text-indigo-400"
+            >
               Campus Hub
             </Link>
             <span className="text-slate-600">/</span>
-            <span className="text-xs text-slate-200 font-semibold">Event Attendance</span>
+            <span className="text-xs text-slate-200 font-semibold">
+              Event Attendance
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             <CheckSquare className="h-6 w-6 text-indigo-400" />
             Event Attendance Management
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Interactive verification console for event coordinators. Mark physical hall attendance and audit participant yields.
+            Interactive verification console for event coordinators. Mark
+            physical hall attendance and audit participant yields.
           </p>
         </div>
 
@@ -208,9 +220,13 @@ export default function CampusEventAttendancePage() {
         <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-300 text-xs flex items-center justify-between">
           <span className="flex items-center gap-2 font-medium">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            Attendance ledger has been recorded and synchronized with participant profiles.
+            Attendance ledger has been recorded and synchronized with
+            participant profiles.
           </span>
-          <button onClick={() => setSaveSuccess(false)} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setSaveSuccess(false)}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -226,7 +242,9 @@ export default function CampusEventAttendancePage() {
       {/* Event Selection Bar */}
       <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex-1 max-w-lg">
-          <label className="text-xs font-semibold text-slate-300 block mb-1">Select Event:</label>
+          <label className="text-xs font-semibold text-slate-300 block mb-1">
+            Select Event:
+          </label>
           <select
             value={selectedEventId}
             onChange={(e) => setSelectedEventId(e.target.value)}
@@ -257,27 +275,51 @@ export default function CampusEventAttendancePage() {
       {/* Centralized Attendance Rate Summary Banner (Section 12) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
-          <span className="text-[10px] text-slate-500 uppercase font-mono">Registered</span>
-          <div className="text-2xl font-bold font-mono text-white mt-1">{roster.length}</div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Total enrolled roster</span>
+          <span className="text-[10px] text-slate-500 uppercase font-mono">
+            Registered
+          </span>
+          <div className="text-2xl font-bold font-mono text-white mt-1">
+            {roster.length}
+          </div>
+          <span className="text-[10px] text-slate-400 mt-1 block">
+            Total enrolled roster
+          </span>
         </div>
 
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
-          <span className="text-[10px] text-slate-500 uppercase font-mono">Present</span>
-          <div className="text-2xl font-bold font-mono text-emerald-400 mt-1">{presentCount}</div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Verified in hall</span>
+          <span className="text-[10px] text-slate-500 uppercase font-mono">
+            Present
+          </span>
+          <div className="text-2xl font-bold font-mono text-emerald-400 mt-1">
+            {presentCount}
+          </div>
+          <span className="text-[10px] text-slate-400 mt-1 block">
+            Verified in hall
+          </span>
         </div>
 
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
-          <span className="text-[10px] text-slate-500 uppercase font-mono">Absent</span>
-          <div className="text-2xl font-bold font-mono text-rose-400 mt-1">{absentCount}</div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Unexcused / Missing</span>
+          <span className="text-[10px] text-slate-500 uppercase font-mono">
+            Absent
+          </span>
+          <div className="text-2xl font-bold font-mono text-rose-400 mt-1">
+            {absentCount}
+          </div>
+          <span className="text-[10px] text-slate-400 mt-1 block">
+            Unexcused / Missing
+          </span>
         </div>
 
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
-          <span className="text-[10px] text-slate-500 uppercase font-mono">Attendance Rate</span>
-          <div className="text-2xl font-bold font-mono text-indigo-400 mt-1">{attendanceRate}%</div>
-          <span className="text-[10px] text-slate-400 mt-1 block">calculateEventAttendanceRate()</span>
+          <span className="text-[10px] text-slate-500 uppercase font-mono">
+            Attendance Rate
+          </span>
+          <div className="text-2xl font-bold font-mono text-indigo-400 mt-1">
+            {attendanceRate}%
+          </div>
+          <span className="text-[10px] text-slate-400 mt-1 block">
+            calculateEventAttendanceRate()
+          </span>
         </div>
       </div>
 
@@ -354,9 +396,16 @@ export default function CampusEventAttendancePage() {
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {filteredRoster.map((item) => (
-                <tr key={item.studentId} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="p-3.5 font-bold text-white">{item.studentName}</td>
-                  <td className="p-3.5 font-mono text-slate-300">{item.rollNumber}</td>
+                <tr
+                  key={item.studentId}
+                  className="hover:bg-slate-800/30 transition-colors"
+                >
+                  <td className="p-3.5 font-bold text-white">
+                    {item.studentName}
+                  </td>
+                  <td className="p-3.5 font-mono text-slate-300">
+                    {item.rollNumber}
+                  </td>
                   <td className="p-3.5 text-slate-400">{item.department}</td>
                   <td className="p-3.5">
                     <span
@@ -364,24 +413,28 @@ export default function CampusEventAttendancePage() {
                         item.status === "PRESENT"
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
                           : item.status === "ABSENT"
-                          ? "bg-rose-500/20 text-rose-300 border-rose-500/30"
-                          : item.status === "EXCUSED"
-                          ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
-                          : "bg-slate-800 text-slate-400 border-slate-700"
+                            ? "bg-rose-500/20 text-rose-300 border-rose-500/30"
+                            : item.status === "EXCUSED"
+                              ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                              : "bg-slate-800 text-slate-400 border-slate-700"
                       }`}
                     >
                       {item.status}
                     </span>
                   </td>
                   <td className="p-3.5 text-slate-500 font-mono text-[11px]">
-                    {item.markedAt ? `${item.markedAt} (${item.markedBy || "Admin"})` : "—"}
+                    {item.markedAt
+                      ? `${item.markedAt} (${item.markedBy || "Admin"})`
+                      : "—"}
                   </td>
                   <td className="p-3.5 text-right">
                     {canManageAttendance ? (
                       <div className="inline-flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
                         <button
                           type="button"
-                          onClick={() => setAttendeeStatus(item.studentId, "PRESENT")}
+                          onClick={() =>
+                            setAttendeeStatus(item.studentId, "PRESENT")
+                          }
                           className={`px-2 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
                             item.status === "PRESENT"
                               ? "bg-emerald-600 text-white"
@@ -392,7 +445,9 @@ export default function CampusEventAttendancePage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => setAttendeeStatus(item.studentId, "ABSENT")}
+                          onClick={() =>
+                            setAttendeeStatus(item.studentId, "ABSENT")
+                          }
                           className={`px-2 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
                             item.status === "ABSENT"
                               ? "bg-rose-600 text-white"
@@ -403,7 +458,9 @@ export default function CampusEventAttendancePage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => setAttendeeStatus(item.studentId, "EXCUSED")}
+                          onClick={() =>
+                            setAttendeeStatus(item.studentId, "EXCUSED")
+                          }
                           className={`px-2 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
                             item.status === "EXCUSED"
                               ? "bg-purple-600 text-white"
@@ -414,7 +471,9 @@ export default function CampusEventAttendancePage() {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-slate-600 text-[11px]">Read only</span>
+                      <span className="text-slate-600 text-[11px]">
+                        Read only
+                      </span>
                     )}
                   </td>
                 </tr>

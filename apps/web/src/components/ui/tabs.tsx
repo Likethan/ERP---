@@ -25,7 +25,8 @@ export interface CompoundTabsProps {
   children: React.ReactNode;
 }
 
-export type TabsProps = LegacyTabsProps | (CompoundTabsProps & { tabs?: never });
+export type TabsProps =
+  LegacyTabsProps | (CompoundTabsProps & { tabs?: never });
 
 interface TabsContextValue {
   activeTab: string;
@@ -45,7 +46,7 @@ export function Tabs(props: TabsProps) {
       <div
         className={cn(
           "flex items-center gap-1 border-b border-slate-800 overflow-x-auto no-scrollbar",
-          className
+          className,
         )}
         role="tablist"
       >
@@ -61,14 +62,16 @@ export function Tabs(props: TabsProps) {
                 "group inline-flex items-center gap-2 px-4 py-2.5 text-xs font-medium border-b-2 whitespace-nowrap transition-colors cursor-pointer",
                 isActive
                   ? "border-indigo-500 text-white font-semibold"
-                  : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                  : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700",
               )}
             >
               {tab.icon && (
                 <span
                   className={cn(
                     "transition-colors",
-                    isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-400"
+                    isActive
+                      ? "text-indigo-400"
+                      : "text-slate-500 group-hover:text-slate-400",
                   )}
                 >
                   {tab.icon}
@@ -81,7 +84,7 @@ export function Tabs(props: TabsProps) {
                     "ml-1 rounded-full px-2 py-0.5 text-[10px] font-mono",
                     isActive
                       ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                      : "bg-slate-800 text-slate-400 border border-slate-700/60"
+                      : "bg-slate-800 text-slate-400 border border-slate-700/60",
                   )}
                 >
                   {tab.count}
@@ -95,7 +98,8 @@ export function Tabs(props: TabsProps) {
   }
 
   // Compound component mode
-  const { value, onValueChange, className, children } = props as CompoundTabsProps;
+  const { value, onValueChange, className, children } =
+    props as CompoundTabsProps;
 
   const activeTab = value !== undefined ? value : internalValue;
   const setActiveTab = (newVal: string) => {
@@ -122,7 +126,7 @@ export function TabsList({
       role="tablist"
       className={cn(
         "inline-flex items-center justify-start rounded-xl p-1 text-slate-400",
-        className
+        className,
       )}
     >
       {children}
@@ -156,7 +160,7 @@ export function TabsTrigger({
         isActive
           ? "bg-slate-800 text-white shadow-xs font-semibold"
           : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50",
-        className
+        className,
       )}
     >
       {children}
@@ -182,7 +186,10 @@ export function TabsContent({
     <div
       role="tabpanel"
       data-state="active"
-      className={cn("mt-2 ring-offset-background focus-visible:outline-none", className)}
+      className={cn(
+        "mt-2 ring-offset-background focus-visible:outline-none",
+        className,
+      )}
     >
       {children}
     </div>

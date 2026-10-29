@@ -11,15 +11,51 @@ interface AudienceBuilderProps {
   disabled?: boolean;
 }
 
-const AUDIENCE_TYPES: { id: EventAudienceType; label: string; description: string }[] = [
-  { id: "ALL_STUDENTS", label: "All Enrolled Students", description: "All undergraduate & postgraduate student cohorts" },
-  { id: "SPECIFIC_DEPARTMENT", label: "Specific Department", description: "Target a specific department (e.g. Computer Science)" },
-  { id: "SPECIFIC_PROGRAM", label: "Specific Degree Program", description: "Target a degree program (e.g. B.Tech Computer Science)" },
-  { id: "SPECIFIC_SEMESTER", label: "Specific Semester", description: "Target students by academic semester cohort" },
-  { id: "FACULTY", label: "All Faculty Members", description: "Full-time, visiting, and research faculty" },
-  { id: "STAFF", label: "University Staff", description: "Technical, laboratory, and administrative staff" },
-  { id: "CLUB_MEMBERS", label: "Club Members", description: "Members belonging to an active student organization" },
-  { id: "CUSTOM", label: "Custom Filtered Audience", description: "Custom query combining department, semester, and eligibility" },
+const AUDIENCE_TYPES: {
+  id: EventAudienceType;
+  label: string;
+  description: string;
+}[] = [
+  {
+    id: "ALL_STUDENTS",
+    label: "All Enrolled Students",
+    description: "All undergraduate & postgraduate student cohorts",
+  },
+  {
+    id: "SPECIFIC_DEPARTMENT",
+    label: "Specific Department",
+    description: "Target a specific department (e.g. Computer Science)",
+  },
+  {
+    id: "SPECIFIC_PROGRAM",
+    label: "Specific Degree Program",
+    description: "Target a degree program (e.g. B.Tech Computer Science)",
+  },
+  {
+    id: "SPECIFIC_SEMESTER",
+    label: "Specific Semester",
+    description: "Target students by academic semester cohort",
+  },
+  {
+    id: "FACULTY",
+    label: "All Faculty Members",
+    description: "Full-time, visiting, and research faculty",
+  },
+  {
+    id: "STAFF",
+    label: "University Staff",
+    description: "Technical, laboratory, and administrative staff",
+  },
+  {
+    id: "CLUB_MEMBERS",
+    label: "Club Members",
+    description: "Members belonging to an active student organization",
+  },
+  {
+    id: "CUSTOM",
+    label: "Custom Filtered Audience",
+    description: "Custom query combining department, semester, and eligibility",
+  },
 ];
 
 const DEPARTMENTS = [
@@ -48,13 +84,25 @@ const CLUBS = [
   "Odyssey Literary & Debating Society",
 ];
 
-export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderProps) {
-  const [targetType, setTargetType] = useState<EventAudienceType>(value.type || "ALL_STUDENTS");
-  const [selectedDept, setSelectedDept] = useState(value.departmentName || DEPARTMENTS[0]);
-  const [selectedProgram, setSelectedProgram] = useState(value.programName || PROGRAMS[0]);
+export function AudienceBuilder({
+  value,
+  onChange,
+  disabled,
+}: AudienceBuilderProps) {
+  const [targetType, setTargetType] = useState<EventAudienceType>(
+    value.type || "ALL_STUDENTS",
+  );
+  const [selectedDept, setSelectedDept] = useState(
+    value.departmentName || DEPARTMENTS[0],
+  );
+  const [selectedProgram, setSelectedProgram] = useState(
+    value.programName || PROGRAMS[0],
+  );
   const [selectedSemester, setSelectedSemester] = useState(value.semester || 5);
   const [selectedClub, setSelectedClub] = useState(value.clubName || CLUBS[0]);
-  const [customDescription, setCustomDescription] = useState(value.customDescription || "");
+  const [customDescription, setCustomDescription] = useState(
+    value.customDescription || "",
+  );
 
   const emitChange = (updates: Partial<EventAudienceTarget>) => {
     const updatedTarget: EventAudienceTarget = {
@@ -106,7 +154,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
           <Users className="h-4 w-4 text-indigo-400" />
           <div className="text-xs">
             <span className="text-slate-400">Estimated Reach: </span>
-            <span className="font-bold text-white font-mono">{estimated.toLocaleString()} users</span>
+            <span className="font-bold text-white font-mono">
+              {estimated.toLocaleString()} users
+            </span>
           </div>
         </div>
       </div>
@@ -129,7 +179,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold">{t.label}</span>
-                {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400 shrink-0" />}
+                {isSelected && (
+                  <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+                )}
               </div>
               <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-tight">
                 {t.description}
@@ -142,7 +194,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
       {/* Conditional Parameters */}
       {targetType === "SPECIFIC_DEPARTMENT" && (
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-          <label className="text-xs font-medium text-slate-300">Target Department</label>
+          <label className="text-xs font-medium text-slate-300">
+            Target Department
+          </label>
           <select
             value={selectedDept}
             disabled={disabled}
@@ -163,7 +217,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
 
       {targetType === "SPECIFIC_PROGRAM" && (
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-          <label className="text-xs font-medium text-slate-300">Target Degree Program</label>
+          <label className="text-xs font-medium text-slate-300">
+            Target Degree Program
+          </label>
           <select
             value={selectedProgram}
             disabled={disabled}
@@ -186,7 +242,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-slate-300">Department</label>
+              <label className="text-xs font-medium text-slate-300">
+                Department
+              </label>
               <select
                 value={selectedDept}
                 disabled={disabled}
@@ -204,7 +262,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
               </select>
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-300">Semester</label>
+              <label className="text-xs font-medium text-slate-300">
+                Semester
+              </label>
               <select
                 value={selectedSemester}
                 disabled={disabled}
@@ -228,7 +288,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
 
       {targetType === "CLUB_MEMBERS" && (
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-          <label className="text-xs font-medium text-slate-300">Selecting Club or Organization</label>
+          <label className="text-xs font-medium text-slate-300">
+            Selecting Club or Organization
+          </label>
           <select
             value={selectedClub}
             disabled={disabled}
@@ -249,7 +311,9 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
 
       {targetType === "CUSTOM" && (
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-          <label className="text-xs font-medium text-slate-300">Audience Targeting Specifications</label>
+          <label className="text-xs font-medium text-slate-300">
+            Audience Targeting Specifications
+          </label>
           <input
             type="text"
             disabled={disabled}
@@ -266,7 +330,10 @@ export function AudienceBuilder({ value, onChange, disabled }: AudienceBuilderPr
 
       <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/40">
         <Info className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-        <span>Audience calculations are synchronized against live campus student enrollments.</span>
+        <span>
+          Audience calculations are synchronized against live campus student
+          enrollments.
+        </span>
       </div>
     </div>
   );

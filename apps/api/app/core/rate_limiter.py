@@ -4,9 +4,9 @@ Protects authentication endpoints, AI inference, file uploads, and public APIs
 against brute-force, denial-of-service, and resource exhaustion.
 """
 
+import threading
 from collections import defaultdict
 from datetime import UTC, datetime
-import threading
 from typing import Any
 
 from app.core.config import settings

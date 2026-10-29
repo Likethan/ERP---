@@ -64,7 +64,12 @@ export default function InfrastructureReportsPage() {
     );
   }
 
-  const { hostelSummary, transportSummary, facilitiesSummary, maintenanceSummary } = data;
+  const {
+    hostelSummary,
+    transportSummary,
+    facilitiesSummary,
+    maintenanceSummary,
+  } = data;
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -79,14 +84,17 @@ export default function InfrastructureReportsPage() {
               Infrastructure
             </Link>
             <span className="text-xs text-slate-600">/</span>
-            <span className="text-xs text-indigo-400 font-medium">Reports & Analytics</span>
+            <span className="text-xs text-indigo-400 font-medium">
+              Reports & Analytics
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mt-1">
             <BarChart3 className="h-6 w-6 text-indigo-400" />
             Infrastructure Operations & Asset Analytics
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Institutional capacity utilization, fleet telemetry, facility condition indices, and maintenance SLA compliance.
+            Institutional capacity utilization, fleet telemetry, facility
+            condition indices, and maintenance SLA compliance.
           </p>
         </div>
 
@@ -114,9 +122,14 @@ export default function InfrastructureReportsPage() {
         <StatCard
           title="Transport Fleet Health"
           value={`${Math.round(
-            (transportSummary.vehicleFleetStatus.find((s) => s.status.includes("Active"))?.count || 4) /
-              (transportSummary.vehicleFleetStatus.reduce((acc, s) => acc + s.count, 0) || 6) *
-              100
+            ((transportSummary.vehicleFleetStatus.find((s) =>
+              s.status.includes("Active"),
+            )?.count || 4) /
+              (transportSummary.vehicleFleetStatus.reduce(
+                (acc, s) => acc + s.count,
+                0,
+              ) || 6)) *
+              100,
           )}%`}
           description="Active fleet routes in service"
           icon={<Bus className="h-5 w-5 text-emerald-400" />}
@@ -180,19 +193,29 @@ export default function InfrastructureReportsPage() {
                   <BedDouble className="h-4 w-4 text-indigo-400" />
                   Hall of Residence Capacity Breakdown
                 </h3>
-                <span className="text-xs font-mono text-slate-500">{hostelSummary.totalHostels} Halls</span>
+                <span className="text-xs font-mono text-slate-500">
+                  {hostelSummary.totalHostels} Halls
+                </span>
               </div>
 
               <div className="divide-y divide-slate-800 text-xs">
                 {hostelSummary.hostelWiseStats.map((h) => (
                   <div key={h.code} className="py-3 first:pt-0 space-y-1.5">
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-white">{h.hostelName}</span>
-                      <span className="font-mono text-indigo-400 font-bold">{h.occupancyPercentage}%</span>
+                      <span className="font-semibold text-white">
+                        {h.hostelName}
+                      </span>
+                      <span className="font-mono text-indigo-400 font-bold">
+                        {h.occupancyPercentage}%
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-slate-400 text-[11px]">
                       <span>
-                        Occupied: <span className="text-white font-mono">{h.occupiedBeds}</span> / {h.totalBeds} beds
+                        Occupied:{" "}
+                        <span className="text-white font-mono">
+                          {h.occupiedBeds}
+                        </span>{" "}
+                        / {h.totalBeds} beds
                       </span>
                       <span className="text-emerald-400 font-mono">
                         {h.totalBeds - h.occupiedBeds} vacant
@@ -204,10 +227,12 @@ export default function InfrastructureReportsPage() {
                           h.occupancyPercentage >= 95
                             ? "bg-rose-500"
                             : h.occupancyPercentage >= 85
-                            ? "bg-indigo-500"
-                            : "bg-emerald-500"
+                              ? "bg-indigo-500"
+                              : "bg-emerald-500"
                         }`}
-                        style={{ width: `${Math.min(100, h.occupancyPercentage)}%` }}
+                        style={{
+                          width: `${Math.min(100, h.occupancyPercentage)}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -222,20 +247,27 @@ export default function InfrastructureReportsPage() {
                   <Layers className="h-4 w-4 text-purple-400" />
                   Resident Demographic by Academic Program
                 </h3>
-                <span className="text-xs font-mono text-slate-500">{hostelSummary.occupiedBeds} Residents</span>
+                <span className="text-xs font-mono text-slate-500">
+                  {hostelSummary.occupiedBeds} Residents
+                </span>
               </div>
 
               <div className="space-y-3 text-xs">
                 {hostelSummary.programWiseAllocations.map((p) => (
                   <div key={p.programCode} className="space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className="font-medium text-slate-300 font-mono">{p.programCode}</span>
+                      <span className="font-medium text-slate-300 font-mono">
+                        {p.programCode}
+                      </span>
                       <span className="font-mono text-white font-semibold">
                         {p.studentCount} students ({p.percentage}%)
                       </span>
                     </div>
                     <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-500" style={{ width: `${p.percentage}%` }} />
+                      <div
+                        className="h-full bg-purple-500"
+                        style={{ width: `${p.percentage}%` }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -252,10 +284,19 @@ export default function InfrastructureReportsPage() {
               </h3>
               <div className="grid grid-cols-5 gap-2 pt-2">
                 {hostelSummary.monthlyLeaveTrends.map((m) => (
-                  <div key={m.month} className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-center space-y-1">
-                    <span className="text-[10px] text-slate-400 block">{m.month}</span>
-                    <span className="text-sm font-bold text-white font-mono block">{m.leaveRequests}</span>
-                    <span className="text-[9px] text-emerald-400 font-mono block">{m.approved} approved</span>
+                  <div
+                    key={m.month}
+                    className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-center space-y-1"
+                  >
+                    <span className="text-[10px] text-slate-400 block">
+                      {m.month}
+                    </span>
+                    <span className="text-sm font-bold text-white font-mono block">
+                      {m.leaveRequests}
+                    </span>
+                    <span className="text-[9px] text-emerald-400 font-mono block">
+                      {m.approved} approved
+                    </span>
                   </div>
                 ))}
               </div>
@@ -269,10 +310,17 @@ export default function InfrastructureReportsPage() {
               </h3>
               <div className="divide-y divide-slate-800 text-xs">
                 {hostelSummary.complaintDistribution.map((c) => (
-                  <div key={c.category} className="py-2.5 first:pt-0 flex justify-between items-center">
+                  <div
+                    key={c.category}
+                    className="py-2.5 first:pt-0 flex justify-between items-center"
+                  >
                     <div>
-                      <span className="font-medium text-white">{c.category}</span>
-                      <span className="text-[11px] text-slate-500 font-mono ml-2">({c.count} complaints)</span>
+                      <span className="font-medium text-white">
+                        {c.category}
+                      </span>
+                      <span className="text-[11px] text-slate-500 font-mono ml-2">
+                        ({c.count} complaints)
+                      </span>
                     </div>
                     <Badge variant={c.resolvedRate >= 95 ? "success" : "info"}>
                       {c.resolvedRate}% Resolved
@@ -296,22 +344,37 @@ export default function InfrastructureReportsPage() {
                   <Bus className="h-4 w-4 text-emerald-400" />
                   Bus Route Utilization & Passenger Seat Load
                 </h3>
-                <span className="text-xs font-mono text-slate-500">4 Active Circuits</span>
+                <span className="text-xs font-mono text-slate-500">
+                  4 Active Circuits
+                </span>
               </div>
 
               <div className="divide-y divide-slate-800 text-xs">
                 {transportSummary.routeUtilization.map((r) => (
-                  <div key={r.routeCode} className="py-3 first:pt-0 space-y-1.5">
+                  <div
+                    key={r.routeCode}
+                    className="py-3 first:pt-0 space-y-1.5"
+                  >
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="font-mono font-bold text-indigo-400 mr-2">{r.routeCode}</span>
-                        <span className="font-medium text-white">{r.routeName}</span>
+                        <span className="font-mono font-bold text-indigo-400 mr-2">
+                          {r.routeCode}
+                        </span>
+                        <span className="font-medium text-white">
+                          {r.routeName}
+                        </span>
                       </div>
-                      <span className="font-mono text-emerald-400 font-bold">{r.utilizationPercentage}%</span>
+                      <span className="font-mono text-emerald-400 font-bold">
+                        {r.utilizationPercentage}%
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-slate-400 text-[11px]">
                       <span>
-                        Boarding: <span className="text-white font-mono">{r.allocated}</span> / {r.capacity} seats
+                        Boarding:{" "}
+                        <span className="text-white font-mono">
+                          {r.allocated}
+                        </span>{" "}
+                        / {r.capacity} seats
                       </span>
                       <span className="text-slate-500 font-mono">
                         {r.capacity - r.allocated} seats vacant
@@ -320,7 +383,9 @@ export default function InfrastructureReportsPage() {
                     <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div
                         className={`h-full ${
-                          r.utilizationPercentage >= 95 ? "bg-rose-500" : "bg-emerald-500"
+                          r.utilizationPercentage >= 95
+                            ? "bg-rose-500"
+                            : "bg-emerald-500"
                         }`}
                         style={{ width: `${r.utilizationPercentage}%` }}
                       />
@@ -339,9 +404,16 @@ export default function InfrastructureReportsPage() {
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
                   {transportSummary.vehicleFleetStatus.map((v) => (
-                    <div key={v.status} className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
-                      <span className="text-xl font-bold font-mono text-white block">{v.count}</span>
-                      <span className="text-[11px] text-slate-400 block mt-1">{v.status}</span>
+                    <div
+                      key={v.status}
+                      className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center"
+                    >
+                      <span className="text-xl font-bold font-mono text-white block">
+                        {v.count}
+                      </span>
+                      <span className="text-[11px] text-slate-400 block mt-1">
+                        {v.status}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -353,15 +425,26 @@ export default function InfrastructureReportsPage() {
                   Top Boarding Hubs by Student Volume
                 </h3>
                 <div className="divide-y divide-slate-800 text-xs">
-                  {transportSummary.stopWiseStudentDistribution.slice(0, 5).map((s) => (
-                    <div key={s.stopName} className="py-2 first:pt-0 flex justify-between items-center">
-                      <div>
-                        <span className="text-white font-medium">{s.stopName}</span>
-                        <span className="text-slate-500 font-mono text-[10px] ml-2">({s.routeCode})</span>
+                  {transportSummary.stopWiseStudentDistribution
+                    .slice(0, 5)
+                    .map((s) => (
+                      <div
+                        key={s.stopName}
+                        className="py-2 first:pt-0 flex justify-between items-center"
+                      >
+                        <div>
+                          <span className="text-white font-medium">
+                            {s.stopName}
+                          </span>
+                          <span className="text-slate-500 font-mono text-[10px] ml-2">
+                            ({s.routeCode})
+                          </span>
+                        </div>
+                        <span className="font-mono text-indigo-400 font-bold">
+                          {s.studentCount} students
+                        </span>
                       </div>
-                      <span className="font-mono text-indigo-400 font-bold">{s.studentCount} students</span>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
@@ -374,25 +457,39 @@ export default function InfrastructureReportsPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 space-y-3 text-center">
-              <span className="text-xs text-slate-400">Total Registered Facilities</span>
-              <p className="text-3xl font-bold text-white font-mono">{facilitiesSummary.totalFacilities}</p>
-              <span className="text-[11px] text-emerald-400 block">All main campus blocks cataloged</span>
+              <span className="text-xs text-slate-400">
+                Total Registered Facilities
+              </span>
+              <p className="text-3xl font-bold text-white font-mono">
+                {facilitiesSummary.totalFacilities}
+              </p>
+              <span className="text-[11px] text-emerald-400 block">
+                All main campus blocks cataloged
+              </span>
             </div>
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 space-y-3 text-center">
-              <span className="text-xs text-slate-400">Under Repair / Maintenance</span>
+              <span className="text-xs text-slate-400">
+                Under Repair / Maintenance
+              </span>
               <p className="text-3xl font-bold text-amber-400 font-mono">
                 {maintenanceSummary?.inProgressRequests || 1}
               </p>
-              <span className="text-[11px] text-slate-500 block">Active civil & HVAC work</span>
+              <span className="text-[11px] text-slate-500 block">
+                Active civil & HVAC work
+              </span>
             </div>
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 space-y-3 text-center">
-              <span className="text-xs text-slate-400">SLA Adherence Ratio</span>
+              <span className="text-xs text-slate-400">
+                SLA Adherence Ratio
+              </span>
               <p className="text-3xl font-bold text-purple-400 font-mono">
                 94%
               </p>
-              <span className="text-[11px] text-slate-500 block">SLA resolution benchmark met</span>
+              <span className="text-[11px] text-slate-500 block">
+                SLA resolution benchmark met
+              </span>
             </div>
           </div>
 
@@ -403,16 +500,25 @@ export default function InfrastructureReportsPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
               <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
-                <span className="font-semibold text-emerald-400 block">Auditorium & Sports Complex Scheduling</span>
+                <span className="font-semibold text-emerald-400 block">
+                  Auditorium & Sports Complex Scheduling
+                </span>
                 <p className="leading-relaxed text-slate-400">
-                  Peak utilization occurs between October and November during national technical symposiums and university fests. Preventive HVAC servicing should be scheduled during end-semester examination breaks.
+                  Peak utilization occurs between October and November during
+                  national technical symposiums and university fests. Preventive
+                  HVAC servicing should be scheduled during end-semester
+                  examination breaks.
                 </p>
               </div>
 
               <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
-                <span className="font-semibold text-purple-400 block">High Performance Computing Lab Maintenance</span>
+                <span className="font-semibold text-purple-400 block">
+                  High Performance Computing Lab Maintenance
+                </span>
                 <p className="leading-relaxed text-slate-400">
-                  Precision AC units and UPS battery banks in Turing AI Lab require quarterly thermal load audits. Contractor SLA contracts should be renewed prior to academic term start.
+                  Precision AC units and UPS battery banks in Turing AI Lab
+                  require quarterly thermal load audits. Contractor SLA
+                  contracts should be renewed prior to academic term start.
                 </p>
               </div>
             </div>

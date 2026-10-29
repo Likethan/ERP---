@@ -1,28 +1,39 @@
-import { ApiResponse, CertificateTemplate, CertificateTemplateStatus, CertificateType } from "@campusos/types";
+import {
+  ApiResponse,
+  CertificateTemplate,
+  CertificateTemplateStatus,
+  CertificateType,
+} from "@campusos/types";
 import { MOCK_CERTIFICATE_TEMPLATES } from "@/mocks/documents.mock";
 
 class CertificateTemplatesService {
   private templates: CertificateTemplate[] = [...MOCK_CERTIFICATE_TEMPLATES];
 
-  async listTemplates(audience?: string): Promise<ApiResponse<CertificateTemplate[]>> {
+  async listTemplates(
+    audience?: string,
+  ): Promise<ApiResponse<CertificateTemplate[]>> {
     await new Promise((r) => setTimeout(r, 30));
     let items = [...this.templates];
     if (audience && audience !== "ALL") {
       items = items.filter(
-        (t) => t.applicableAudience.includes("ALL") || t.applicableAudience.includes(audience as any)
+        (t) =>
+          t.applicableAudience.includes("ALL") ||
+          t.applicableAudience.includes(audience as any),
       );
     }
     return { success: true, data: items };
   }
 
-  async getTemplateById(id: string): Promise<ApiResponse<CertificateTemplate | null>> {
+  async getTemplateById(
+    id: string,
+  ): Promise<ApiResponse<CertificateTemplate | null>> {
     await new Promise((r) => setTimeout(r, 20));
     const tmpl = this.templates.find((t) => t.id === id) || null;
     return { success: true, data: tmpl };
   }
 
   async createTemplate(
-    data: Partial<CertificateTemplate>
+    data: Partial<CertificateTemplate>,
   ): Promise<ApiResponse<CertificateTemplate>> {
     await new Promise((r) => setTimeout(r, 60));
     const newTmpl: CertificateTemplate = {
@@ -34,8 +45,20 @@ class CertificateTemplatesService {
       status: data.status || CertificateTemplateStatus.ACTIVE,
       version: "1.0",
       fields: data.fields || [
-        { id: "f-std", name: "student_name", label: "Student Full Name", type: "SYSTEM_VARIABLE", required: true },
-        { id: "f-roll", name: "roll_number", label: "Roll Number", type: "SYSTEM_VARIABLE", required: true },
+        {
+          id: "f-std",
+          name: "student_name",
+          label: "Student Full Name",
+          type: "SYSTEM_VARIABLE",
+          required: true,
+        },
+        {
+          id: "f-roll",
+          name: "roll_number",
+          label: "Roll Number",
+          type: "SYSTEM_VARIABLE",
+          required: true,
+        },
       ],
       createdDate: new Date().toISOString().split("T")[0],
       lastUpdated: new Date().toISOString().split("T")[0],
@@ -65,7 +88,7 @@ class CertificateTemplatesService {
 
   async updateTemplate(
     id: string,
-    data: Partial<CertificateTemplate>
+    data: Partial<CertificateTemplate>,
   ): Promise<ApiResponse<CertificateTemplate>> {
     await new Promise((r) => setTimeout(r, 50));
     const tmpl = this.templates.find((t) => t.id === id);

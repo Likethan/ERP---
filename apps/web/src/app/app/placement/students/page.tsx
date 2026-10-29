@@ -27,7 +27,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
 import { formatLPA } from "@/services/placement-calculator";
-import { StudentPlacementProfile, PlacementStatus, ResumeStatus } from "@/types/placement";
+import {
+  StudentPlacementProfile,
+  PlacementStatus,
+  ResumeStatus,
+} from "@/types/placement";
 
 export default function StudentPlacementDirectoryPage() {
   const { showToast } = useToast();
@@ -47,7 +51,11 @@ export default function StudentPlacementDirectoryPage() {
       const res = await placementService.getPlacementStudents();
       setProfiles(res.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load student placement profiles", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load student placement profiles",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -67,7 +75,9 @@ export default function StudentPlacementDirectoryPage() {
           p.rollNumber.toLowerCase().includes(q) ||
           p.department.toLowerCase().includes(q) ||
           (p.placedCompany && p.placedCompany.toLowerCase().includes(q)) ||
-          p.skills.programmingLanguages.some((lang) => lang.toLowerCase().includes(q)) ||
+          p.skills.programmingLanguages.some((lang) =>
+            lang.toLowerCase().includes(q),
+          ) ||
           p.skills.technical.some((tech) => tech.toLowerCase().includes(q));
         if (!matches) return false;
       }
@@ -91,14 +101,28 @@ export default function StudentPlacementDirectoryPage() {
 
       return true;
     });
-  }, [profiles, searchQuery, departmentFilter, statusFilter, resumeFilter, cgpaFilter]);
+  }, [
+    profiles,
+    searchQuery,
+    departmentFilter,
+    statusFilter,
+    resumeFilter,
+    cgpaFilter,
+  ]);
 
   // Summary Metrics
   const totalEligible = profiles.length;
-  const placedCount = profiles.filter((p) => p.placementStatus === "PLACED").length;
-  const inProcessCount = profiles.filter((p) => p.placementStatus === "IN_PROCESS").length;
-  const unplacedCount = profiles.filter((p) => p.placementStatus === "NOT_PLACED").length;
-  const placementRate = totalEligible > 0 ? Math.round((placedCount / totalEligible) * 100) : 0;
+  const placedCount = profiles.filter(
+    (p) => p.placementStatus === "PLACED",
+  ).length;
+  const inProcessCount = profiles.filter(
+    (p) => p.placementStatus === "IN_PROCESS",
+  ).length;
+  const unplacedCount = profiles.filter(
+    (p) => p.placementStatus === "NOT_PLACED",
+  ).length;
+  const placementRate =
+    totalEligible > 0 ? Math.round((placedCount / totalEligible) * 100) : 0;
 
   // Unique departments for filter
   const departments = useMemo(() => {
@@ -139,9 +163,13 @@ export default function StudentPlacementDirectoryPage() {
           </div>
           <div className="text-slate-500 dark:text-slate-400 mt-0.5">
             {item.activeBacklogs === 0 ? (
-              <span className="text-emerald-600 dark:text-emerald-400 font-medium">Clear (0 Backlogs)</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                Clear (0 Backlogs)
+              </span>
             ) : (
-              <span className="text-rose-600 dark:text-rose-400 font-medium">{item.activeBacklogs} Active Backlog(s)</span>
+              <span className="text-rose-600 dark:text-rose-400 font-medium">
+                {item.activeBacklogs} Active Backlog(s)
+              </span>
             )}
           </div>
         </div>
@@ -180,16 +208,41 @@ export default function StudentPlacementDirectoryPage() {
       id: "resume",
       header: "Resume",
       cell: (item) => {
-        const resumeStyles: Record<ResumeStatus, { color: string; label: string }> = {
-          NOT_UPLOADED: { color: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400", label: "Missing" },
-          UPLOADED: { color: "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300", label: "Uploaded" },
-          UNDER_REVIEW: { color: "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300", label: "Under Review" },
-          VERIFIED: { color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300", label: "Verified" },
-          REJECTED: { color: "bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300", label: "Rejected" },
+        const resumeStyles: Record<
+          ResumeStatus,
+          { color: string; label: string }
+        > = {
+          NOT_UPLOADED: {
+            color:
+              "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
+            label: "Missing",
+          },
+          UPLOADED: {
+            color:
+              "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300",
+            label: "Uploaded",
+          },
+          UNDER_REVIEW: {
+            color:
+              "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300",
+            label: "Under Review",
+          },
+          VERIFIED: {
+            color:
+              "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300",
+            label: "Verified",
+          },
+          REJECTED: {
+            color:
+              "bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300",
+            label: "Rejected",
+          },
         };
         const st = resumeStyles[item.resumeStatus] || resumeStyles.NOT_UPLOADED;
         return (
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${st.color}`}>
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${st.color}`}
+          >
             {st.label}
           </span>
         );
@@ -201,15 +254,24 @@ export default function StudentPlacementDirectoryPage() {
       cell: (item) => (
         <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
           <span title="Applications Submitted">
-            <strong className="text-slate-900 dark:text-slate-100">{item.applicationsCount}</strong> Apps
+            <strong className="text-slate-900 dark:text-slate-100">
+              {item.applicationsCount}
+            </strong>{" "}
+            Apps
           </span>
           <span>•</span>
           <span title="Interviews Attended">
-            <strong className="text-slate-900 dark:text-slate-100">{item.interviewsCount}</strong> Intv
+            <strong className="text-slate-900 dark:text-slate-100">
+              {item.interviewsCount}
+            </strong>{" "}
+            Intv
           </span>
           <span>•</span>
           <span title="Offers Received">
-            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{item.offersCount}</strong> Offers
+            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">
+              {item.offersCount}
+            </strong>{" "}
+            Offers
           </span>
         </div>
       ),
@@ -274,7 +336,10 @@ export default function StudentPlacementDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
-            <Link href="/app/placement" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/app/placement"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Placement Hub
             </Link>
             <span>/</span>
@@ -284,7 +349,8 @@ export default function StudentPlacementDirectoryPage() {
             Student Placement Profiles & Talent Roster
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Enterprise registry of graduating candidates, technical skill tags, verified resumes, and live placement outcomes.
+            Enterprise registry of graduating candidates, technical skill tags,
+            verified resumes, and live placement outcomes.
           </p>
         </div>
 

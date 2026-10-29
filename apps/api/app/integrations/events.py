@@ -18,7 +18,6 @@ from pydantic import BaseModel, Field
 
 from app.core.exceptions import ValidationException
 from app.core.governance_registry import (
-    DataClassificationLevel,
     MaskingStrategy,
     apply_masking_strategy,
 )

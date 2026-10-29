@@ -1,4 +1,8 @@
-import { ApiResponse, DocumentsDashboardSummary, DocumentStatus } from "@campusos/types";
+import {
+  ApiResponse,
+  DocumentsDashboardSummary,
+  DocumentStatus,
+} from "@campusos/types";
 import { documentsService } from "./documents.service";
 import { certificateRequestsService } from "./certificate-requests.service";
 import { certificatesService } from "./certificates.service";
@@ -23,14 +27,20 @@ class DocumentReportsService {
     const certs = certsRes.data || [];
 
     const totalDocs = docs.length;
-    const verifiedDocs = docs.filter((d) => d.status === DocumentStatus.VERIFIED).length;
+    const verifiedDocs = docs.filter(
+      (d) => d.status === DocumentStatus.VERIFIED,
+    ).length;
     const pendingDocs = calculatePendingVerificationCount(docs);
-    const rejectedDocs = docs.filter((d) => d.status === DocumentStatus.REJECTED).length;
-    const missingDocs = docs.filter((d) => d.status === DocumentStatus.MISSING).length;
+    const rejectedDocs = docs.filter(
+      (d) => d.status === DocumentStatus.REJECTED,
+    ).length;
+    const missingDocs = docs.filter(
+      (d) => d.status === DocumentStatus.MISSING,
+    ).length;
     const expiringDocs = calculateExpiringDocumentCount(docs, 30);
 
     const pendingReqs = reqs.filter(
-      (r) => r.status === "SUBMITTED" || r.status === "UNDER_REVIEW"
+      (r) => r.status === "SUBMITTED" || r.status === "UNDER_REVIEW",
     ).length;
 
     const verificationRate = calculateVerificationRate(docs);

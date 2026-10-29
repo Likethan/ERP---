@@ -14,7 +14,6 @@ Covers:
 - Full RBAC / PBAC authorization and cross-tenant security containment
 """
 
-from datetime import UTC, datetime, timedelta
 import uuid
 
 import pytest
@@ -26,16 +25,7 @@ from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token, get_password_hash
 from app.core.storage import LocalDocumentStorage
 from app.models.core import Institution
-from app.models.documents import (
-    CertificateRequest,
-    CertificateTemplate,
-    Document,
-    DocumentCategory,
-    DocumentType,
-    InstitutionalRecord,
-    IssuedCertificate,
-)
-from app.models.people import Role, StudentProfile, User, UserRoleAssignment
+from app.models.people import Role, User, UserRoleAssignment
 
 
 def make_auth_headers(user: User, tenant_id: uuid.UUID, role_name: str) -> dict:

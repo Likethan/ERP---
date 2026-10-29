@@ -16,14 +16,14 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import delete, desc, func, or_, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, create_audit_entry
 from app.core.exceptions import (
+    AccreditationAssessmentNotFoundException,
     AccreditationAuditFinalizedException,
     AccreditationAuditNotFoundException,
-    AccreditationAssessmentNotFoundException,
     AccreditationCAPAClosureDeniedException,
     AccreditationCAPANotFoundException,
     AccreditationCriterionNotFoundException,
@@ -31,7 +31,6 @@ from app.core.exceptions import (
     AccreditationEvidenceNotFoundException,
     AccreditationFindingNotFoundException,
     AccreditationFrameworkNotFoundException,
-    AccreditationImprovementNotFoundException,
     AccreditationIndicatorNotFoundException,
     AccreditationInvalidScoreException,
     AccreditationOptimisticLockException,
@@ -45,22 +44,18 @@ from app.models.accreditation import (
     AccreditationCriterionEvidenceMap,
     AccreditationCriterionType,
     AccreditationEvidence,
-    AccreditationEvidenceCategory,
     AccreditationEvidenceVerificationStatus,
     AccreditationFramework,
     AccreditationFrameworkStatus,
     AccreditationFrameworkType,
     AccreditationFrameworkVersion,
-    AccreditationMaturityLevel,
     AccreditationReadinessCategory,
     AccreditationReadinessSnapshot,
     AccreditationScoringModel,
     QualityAuditChecklistItem,
     QualityAuditProgram,
     QualityAuditStatus,
-    QualityAuditType,
     QualityCAPAStatus,
-    QualityCAPAType,
     QualityCorrectiveAction,
     QualityDataQualityStatus,
     QualityFinding,
@@ -69,15 +64,12 @@ from app.models.accreditation import (
     QualityImprovementPlan,
     QualityImprovementStatus,
     QualityIndicator,
-    QualityIndicatorCategory,
     QualityIndicatorObservation,
 )
-from app.models.people import User
 from app.schemas.accreditation import (
     AccreditationCriterionCreate,
     AccreditationCriterionUpdate,
     AccreditationCycleCreate,
-    AccreditationCycleUpdate,
     AccreditationDashboardSummary,
     AccreditationEvidenceCreate,
     AccreditationEvidenceVerify,
@@ -94,10 +86,8 @@ from app.schemas.accreditation import (
     QualityCAPACreate,
     QualityFindingCreate,
     QualityImprovementPlanCreate,
-    QualityImprovementPlanUpdate,
     QualityIndicatorCreate,
     QualityIndicatorObservationCreate,
-    QualityIndicatorUpdate,
 )
 
 

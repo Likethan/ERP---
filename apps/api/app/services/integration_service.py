@@ -9,12 +9,12 @@ Orchestrates:
 - Diagnostic health monitoring and sanitized audit telemetry.
 """
 
-from datetime import UTC, datetime
 import logging
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, select, update
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -23,21 +23,12 @@ from app.core.exceptions import (
     ConflictException,
     ForbiddenException,
     NotFoundException,
-    ValidationException,
 )
-from app.core.tenant_validation import validate_tenant_entity_ownership
-from app.integrations.events import (
-    IntegrationEventEnvelope,
-    IntegrationEventSerializer,
-    IntegrationEventType,
-)
-from app.integrations.health import IntegrationAuditLogger, IntegrationHealthService
+from app.integrations.health import IntegrationHealthService
 from app.integrations.lifecycle import ConnectorLifecycleManager
 from app.integrations.registry import IntegrationProviderRegistry
 from app.integrations.secrets import SecretManager
 from app.integrations.security import (
-    SSRFBlockedException,
-    SafeHttpClient,
     validate_outbound_url,
 )
 from app.integrations.sync import SyncEngine
@@ -46,14 +37,12 @@ from app.models.integration import (
     CircuitBreakerState,
     ConnectorOwnership,
     ConnectorStatus,
-    CredentialAuthType,
     IntegrationConnector,
     IntegrationCredential,
     IntegrationDataMapping,
     IntegrationHealth,
     IntegrationHealthStatus,
     IntegrationLog,
-    IntegrationLogStatus,
     IntegrationSyncConfig,
     IntegrationSyncRun,
     IntegrationWebhookDelivery,
@@ -67,9 +56,7 @@ from app.schemas.integration import (
     ConnectorUpdate,
     CredentialCreate,
     DataMappingCreate,
-    DataMappingUpdate,
     SyncConfigCreate,
-    SyncConfigUpdate,
     WebhookSubscriptionCreate,
     WebhookSubscriptionUpdate,
 )

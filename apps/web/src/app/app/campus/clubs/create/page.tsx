@@ -24,13 +24,17 @@ export default function CreateClubPage() {
   // Form State
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
-  const [category, setCategory] = useState<"TECHNICAL" | "CULTURAL" | "LITERARY" | "SPORTS" | "ENTREPRENEURSHIP">("TECHNICAL");
+  const [category, setCategory] = useState<
+    "TECHNICAL" | "CULTURAL" | "LITERARY" | "SPORTS" | "ENTREPRENEURSHIP"
+  >("TECHNICAL");
   const [description, setDescription] = useState("");
   const [facultyCoordinator, setFacultyCoordinator] = useState("");
   const [facultyCoordinatorEmail, setFacultyCoordinatorEmail] = useState("");
   const [studentLead, setStudentLead] = useState("");
   const [studentLeadRollNo, setStudentLeadRollNo] = useState("");
-  const [meetingSchedule, setMeetingSchedule] = useState("Every Wednesday at 04:30 PM");
+  const [meetingSchedule, setMeetingSchedule] = useState(
+    "Every Wednesday at 04:30 PM",
+  );
   const [meetingVenue, setMeetingVenue] = useState("CS-LAB-3");
   const [establishedYear, setEstablishedYear] = useState(2026);
 
@@ -44,20 +48,24 @@ export default function CreateClubPage() {
     try {
       setSaving(true);
       setError(null);
-      const res = await campusService.createClub({
-        name,
-        code: code.toUpperCase(),
-        category,
-        description,
-        facultyCoordinator: facultyCoordinator || "Prof. Coordinator",
-        facultyCoordinatorEmail: facultyCoordinatorEmail || "coordinator@campusos.edu",
-        studentLead: studentLead || "Student Lead",
-        studentLeadRollNo: studentLeadRollNo || "CS23B001",
-        meetingSchedule,
-        meetingVenue,
-        establishedYear,
-        status: "ACTIVE",
-      }, user?.first_name || "Administrator");
+      const res = await campusService.createClub(
+        {
+          name,
+          code: code.toUpperCase(),
+          category,
+          description,
+          facultyCoordinator: facultyCoordinator || "Prof. Coordinator",
+          facultyCoordinatorEmail:
+            facultyCoordinatorEmail || "coordinator@campusos.edu",
+          studentLead: studentLead || "Student Lead",
+          studentLeadRollNo: studentLeadRollNo || "CS23B001",
+          meetingSchedule,
+          meetingVenue,
+          establishedYear,
+          status: "ACTIVE",
+        },
+        user?.first_name || "Administrator",
+      );
 
       if (res.success && res.data) {
         router.push(`/app/campus/clubs/${res.data.id}`);
@@ -86,7 +94,8 @@ export default function CreateClubPage() {
           Charter a New Student Club or Society
         </h1>
         <p className="mt-1 text-xs text-slate-400">
-          Submit official guild charter, governance structure, advisor assignment, and meeting schedules.
+          Submit official guild charter, governance structure, advisor
+          assignment, and meeting schedules.
         </p>
       </div>
 
@@ -97,7 +106,10 @@ export default function CreateClubPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-6"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-2">
             <label className="text-xs font-semibold text-slate-300 block mb-1">
@@ -130,7 +142,9 @@ export default function CreateClubPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Guild Category</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Guild Category
+            </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
@@ -145,7 +159,9 @@ export default function CreateClubPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Established Year</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Established Year
+            </label>
             <input
               type="number"
               value={establishedYear}
@@ -157,7 +173,8 @@ export default function CreateClubPage() {
 
         <div>
           <label className="text-xs font-semibold text-slate-300 block mb-1">
-            Charter Description & Mission Statement <span className="text-rose-400">*</span>
+            Charter Description & Mission Statement{" "}
+            <span className="text-rose-400">*</span>
           </label>
           <textarea
             required
@@ -171,7 +188,9 @@ export default function CreateClubPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Faculty Coordinator Name</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Faculty Coordinator Name
+            </label>
             <input
               type="text"
               value={facultyCoordinator}
@@ -182,7 +201,9 @@ export default function CreateClubPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Faculty Coordinator Email</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Faculty Coordinator Email
+            </label>
             <input
               type="email"
               value={facultyCoordinatorEmail}
@@ -195,7 +216,9 @@ export default function CreateClubPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Founding Student Lead Name</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Founding Student Lead Name
+            </label>
             <input
               type="text"
               value={studentLead}
@@ -206,7 +229,9 @@ export default function CreateClubPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Student Lead Roll Number</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Student Lead Roll Number
+            </label>
             <input
               type="text"
               value={studentLeadRollNo}
@@ -219,7 +244,9 @@ export default function CreateClubPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Regular Meeting Schedule</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Regular Meeting Schedule
+            </label>
             <input
               type="text"
               value={meetingSchedule}
@@ -230,7 +257,9 @@ export default function CreateClubPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Regular Meeting Venue</label>
+            <label className="text-xs font-semibold text-slate-300 block mb-1">
+              Regular Meeting Venue
+            </label>
             <input
               type="text"
               value={meetingVenue}

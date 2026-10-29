@@ -36,11 +36,26 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     historyBacklogs: 0,
     attendancePercent: 92,
     skills: {
-      technical: ["Distributed Systems", "Cloud Architecture", "REST APIs", "Microservices"],
+      technical: [
+        "Distributed Systems",
+        "Cloud Architecture",
+        "REST APIs",
+        "Microservices",
+      ],
       programmingLanguages: ["TypeScript", "Java", "Python", "Go", "SQL"],
-      toolsAndFrameworks: ["Next.js", "Spring Boot", "Docker", "Kubernetes", "AWS", "Git"],
+      toolsAndFrameworks: [
+        "Next.js",
+        "Spring Boot",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "Git",
+      ],
       domains: ["Fullstack Engineering", "Cloud Computing"],
-      certifications: ["AWS Certified Developer Associate", "Oracle Certified Java Professional"],
+      certifications: [
+        "AWS Certified Developer Associate",
+        "Oracle Certified Java Professional",
+      ],
     },
     resumeUrl: "/documents/resumes/aarav_patel_cv_2026.pdf",
     resumeStatus: "VERIFIED",
@@ -58,9 +73,25 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     createdAt: "2026-07-01T09:00:00Z",
     updatedAt: "2026-09-25T14:30:00Z",
     timeline: [
-      { id: "tl-1", action: "Profile Initialized", actor: "System", timestamp: "2026-07-01T09:00:00Z" },
-      { id: "tl-2", action: "Resume Verified", actor: "Prof. Ananth", timestamp: "2026-09-01T10:00:00Z" },
-      { id: "tl-3", action: "Offer Accepted", actor: "Aarav Patel", timestamp: "2026-09-25T14:30:00Z", details: "Cisco Systems — ₹18.5 LPA" },
+      {
+        id: "tl-1",
+        action: "Profile Initialized",
+        actor: "System",
+        timestamp: "2026-07-01T09:00:00Z",
+      },
+      {
+        id: "tl-2",
+        action: "Resume Verified",
+        actor: "Prof. Ananth",
+        timestamp: "2026-09-01T10:00:00Z",
+      },
+      {
+        id: "tl-3",
+        action: "Offer Accepted",
+        actor: "Aarav Patel",
+        timestamp: "2026-09-25T14:30:00Z",
+        details: "Cisco Systems — ₹18.5 LPA",
+      },
     ],
   },
   {
@@ -79,11 +110,25 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     historyBacklogs: 0,
     attendancePercent: 88,
     skills: {
-      technical: ["Embedded Systems", "IoT Sensor Networks", "VLSI Design", "Digital Signal Processing"],
+      technical: [
+        "Embedded Systems",
+        "IoT Sensor Networks",
+        "VLSI Design",
+        "Digital Signal Processing",
+      ],
       programmingLanguages: ["C", "C++", "Python", "Verilog", "MATLAB"],
-      toolsAndFrameworks: ["Keil uVision", "STM32CubeIDE", "Cadence Virtuoso", "ROS", "Git"],
+      toolsAndFrameworks: [
+        "Keil uVision",
+        "STM32CubeIDE",
+        "Cadence Virtuoso",
+        "ROS",
+        "Git",
+      ],
       domains: ["Automotive Electronics", "Firmware Engineering"],
-      certifications: ["Embedded Linux Development (Linux Foundation)", "ARM Cortex Architecture"],
+      certifications: [
+        "Embedded Linux Development (Linux Foundation)",
+        "ARM Cortex Architecture",
+      ],
     },
     resumeUrl: "/documents/resumes/priya_sundaram_cv.pdf",
     resumeStatus: "VERIFIED",
@@ -100,9 +145,25 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     createdAt: "2026-07-01T09:00:00Z",
     updatedAt: "2026-09-28T16:00:00Z",
     timeline: [
-      { id: "tl-4", action: "Profile Initialized", actor: "System", timestamp: "2026-07-01T09:00:00Z" },
-      { id: "tl-5", action: "Resume Verified", actor: "Prof. Saravanan", timestamp: "2026-08-20T11:00:00Z" },
-      { id: "tl-6", action: "Offer Accepted", actor: "Priya Sundaram", timestamp: "2026-09-28T16:00:00Z", details: "Bosch — ₹9.8 LPA" },
+      {
+        id: "tl-4",
+        action: "Profile Initialized",
+        actor: "System",
+        timestamp: "2026-07-01T09:00:00Z",
+      },
+      {
+        id: "tl-5",
+        action: "Resume Verified",
+        actor: "Prof. Saravanan",
+        timestamp: "2026-08-20T11:00:00Z",
+      },
+      {
+        id: "tl-6",
+        action: "Offer Accepted",
+        actor: "Priya Sundaram",
+        timestamp: "2026-09-28T16:00:00Z",
+        details: "Bosch — ₹9.8 LPA",
+      },
     ],
   },
   {
@@ -140,8 +201,18 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     createdAt: "2026-07-01T09:00:00Z",
     updatedAt: "2026-09-10T15:00:00Z",
     timeline: [
-      { id: "tl-7", action: "Profile Initialized", actor: "System", timestamp: "2026-07-01T09:00:00Z" },
-      { id: "tl-8", action: "Resume Submitted", actor: "Rohan Verghese", timestamp: "2026-09-10T15:00:00Z" },
+      {
+        id: "tl-7",
+        action: "Profile Initialized",
+        actor: "System",
+        timestamp: "2026-07-01T09:00:00Z",
+      },
+      {
+        id: "tl-8",
+        action: "Resume Submitted",
+        actor: "Rohan Verghese",
+        timestamp: "2026-09-10T15:00:00Z",
+      },
     ],
   },
   {
@@ -160,11 +231,26 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     historyBacklogs: 0,
     attendancePercent: 85,
     skills: {
-      technical: ["Machine Learning", "Natural Language Processing", "Data Pipelines", "Big Data Analytics"],
+      technical: [
+        "Machine Learning",
+        "Natural Language Processing",
+        "Data Pipelines",
+        "Big Data Analytics",
+      ],
       programmingLanguages: ["Python", "SQL", "R", "Java"],
-      toolsAndFrameworks: ["PyTorch", "TensorFlow", "Pandas", "Scikit-Learn", "Apache Spark", "Airflow"],
+      toolsAndFrameworks: [
+        "PyTorch",
+        "TensorFlow",
+        "Pandas",
+        "Scikit-Learn",
+        "Apache Spark",
+        "Airflow",
+      ],
       domains: ["Data Science & AI", "MLOps"],
-      certifications: ["TensorFlow Developer Certificate", "DeepLearning.AI Specialization"],
+      certifications: [
+        "TensorFlow Developer Certificate",
+        "DeepLearning.AI Specialization",
+      ],
     },
     resumeUrl: "/documents/resumes/ananya_deshmukh_cv.pdf",
     resumeStatus: "VERIFIED",
@@ -179,8 +265,19 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     createdAt: "2026-07-01T09:00:00Z",
     updatedAt: "2026-09-29T10:00:00Z",
     timeline: [
-      { id: "tl-9", action: "Profile Initialized", actor: "System", timestamp: "2026-07-01T09:00:00Z" },
-      { id: "tl-10", action: "Interview Scheduled", actor: "Placement Officer", timestamp: "2026-09-29T10:00:00Z", details: "Cisco Systems Technical Round" },
+      {
+        id: "tl-9",
+        action: "Profile Initialized",
+        actor: "System",
+        timestamp: "2026-07-01T09:00:00Z",
+      },
+      {
+        id: "tl-10",
+        action: "Interview Scheduled",
+        actor: "Placement Officer",
+        timestamp: "2026-09-29T10:00:00Z",
+        details: "Cisco Systems Technical Round",
+      },
     ],
   },
   {
@@ -199,9 +296,19 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     historyBacklogs: 1,
     attendancePercent: 80,
     skills: {
-      technical: ["Structural Analysis", "Geotechnical Engineering", "Site Execution", "Cost Estimation"],
+      technical: [
+        "Structural Analysis",
+        "Geotechnical Engineering",
+        "Site Execution",
+        "Cost Estimation",
+      ],
       programmingLanguages: ["Python", "C++"],
-      toolsAndFrameworks: ["ETABS", "STAAD.Pro", "Revit Architecture", "AutoCAD Civil 3D"],
+      toolsAndFrameworks: [
+        "ETABS",
+        "STAAD.Pro",
+        "Revit Architecture",
+        "AutoCAD Civil 3D",
+      ],
       domains: ["Structural Engineering", "Infrastructure Planning"],
       certifications: ["BIM Professional Certification"],
     },
@@ -218,8 +325,19 @@ export const MOCK_PLACEMENT_PROFILES: StudentPlacementProfile[] = [
     createdAt: "2026-07-01T09:00:00Z",
     updatedAt: "2026-09-30T11:00:00Z",
     timeline: [
-      { id: "tl-11", action: "Profile Initialized", actor: "System", timestamp: "2026-07-01T09:00:00Z" },
-      { id: "tl-12", action: "Offer Released", actor: "TCS Campus Team", timestamp: "2026-09-30T11:00:00Z", details: "TCS Digital — ₹7.2 LPA" },
+      {
+        id: "tl-11",
+        action: "Profile Initialized",
+        actor: "System",
+        timestamp: "2026-07-01T09:00:00Z",
+      },
+      {
+        id: "tl-12",
+        action: "Offer Released",
+        actor: "TCS Campus Team",
+        timestamp: "2026-09-30T11:00:00Z",
+        details: "TCS Digital — ₹7.2 LPA",
+      },
     ],
   },
 ];
@@ -264,12 +382,23 @@ export const MOCK_COMPANIES: Company[] = [
     averageCtcLpa: 18.5,
     highestCtcLpa: 22.0,
     relationshipStatus: "LONG_STANDING",
-    notes: "Tier-1 enterprise partner since 2018 with consistently high retention and performance.",
+    notes:
+      "Tier-1 enterprise partner since 2018 with consistently high retention and performance.",
     createdAt: "2020-03-15T09:00:00Z",
     updatedAt: "2026-08-10T12:00:00Z",
     timeline: [
-      { id: "ct-1", action: "Partner Empanelled", actor: "Dean Placement", timestamp: "2020-03-15T09:00:00Z" },
-      { id: "ct-2", action: "Drive Announced", actor: "Siddharth Verma", timestamp: "2026-08-10T12:00:00Z" },
+      {
+        id: "ct-1",
+        action: "Partner Empanelled",
+        actor: "Dean Placement",
+        timestamp: "2020-03-15T09:00:00Z",
+      },
+      {
+        id: "ct-2",
+        action: "Drive Announced",
+        actor: "Siddharth Verma",
+        timestamp: "2026-08-10T12:00:00Z",
+      },
     ],
   },
   {
@@ -299,11 +428,17 @@ export const MOCK_COMPANIES: Company[] = [
     averageCtcLpa: 24.0,
     highestCtcLpa: 32.5,
     relationshipStatus: "LONG_STANDING",
-    notes: "Super dream recruiter. Strict technical bar focusing on algorithmic problem solving.",
+    notes:
+      "Super dream recruiter. Strict technical bar focusing on algorithmic problem solving.",
     createdAt: "2021-06-01T10:00:00Z",
     updatedAt: "2026-09-01T11:00:00Z",
     timeline: [
-      { id: "ct-3", action: "Partner Empanelled", actor: "Dean Placement", timestamp: "2021-06-01T10:00:00Z" },
+      {
+        id: "ct-3",
+        action: "Partner Empanelled",
+        actor: "Dean Placement",
+        timestamp: "2021-06-01T10:00:00Z",
+      },
     ],
   },
   {
@@ -337,7 +472,12 @@ export const MOCK_COMPANIES: Company[] = [
     createdAt: "2019-01-20T09:00:00Z",
     updatedAt: "2026-08-15T10:00:00Z",
     timeline: [
-      { id: "ct-4", action: "Partner Empanelled", actor: "Dean Placement", timestamp: "2019-01-20T09:00:00Z" },
+      {
+        id: "ct-4",
+        action: "Partner Empanelled",
+        actor: "Dean Placement",
+        timestamp: "2019-01-20T09:00:00Z",
+      },
     ],
   },
   {
@@ -367,11 +507,17 @@ export const MOCK_COMPANIES: Company[] = [
     averageCtcLpa: 7.2,
     highestCtcLpa: 9.0,
     relationshipStatus: "LONG_STANDING",
-    notes: "Primary anchor recruiter providing high volume placement offers across all branches.",
+    notes:
+      "Primary anchor recruiter providing high volume placement offers across all branches.",
     createdAt: "2018-01-10T09:00:00Z",
     updatedAt: "2026-09-15T15:00:00Z",
     timeline: [
-      { id: "ct-5", action: "Drive Completed", actor: "Rajeev Namboodiri", timestamp: "2026-09-15T15:00:00Z" },
+      {
+        id: "ct-5",
+        action: "Drive Completed",
+        actor: "Rajeev Namboodiri",
+        timestamp: "2026-09-15T15:00:00Z",
+      },
     ],
   },
   {
@@ -401,11 +547,17 @@ export const MOCK_COMPANIES: Company[] = [
     averageCtcLpa: 11.5,
     highestCtcLpa: 14.0,
     relationshipStatus: "LONG_STANDING",
-    notes: "Hires across engineering and business analytics for Advisory & Solutions practice.",
+    notes:
+      "Hires across engineering and business analytics for Advisory & Solutions practice.",
     createdAt: "2020-08-12T09:00:00Z",
     updatedAt: "2026-09-20T10:00:00Z",
     timeline: [
-      { id: "ct-6", action: "Draft Drive Created", actor: "Placement Officer", timestamp: "2026-09-20T10:00:00Z" },
+      {
+        id: "ct-6",
+        action: "Draft Drive Created",
+        actor: "Placement Officer",
+        timestamp: "2026-09-20T10:00:00Z",
+      },
     ],
   },
 ];
@@ -435,14 +587,31 @@ export const MOCK_JOB_DRIVES: JobDrive[] = [
     interviewsCount: 12,
     offersCount: 4,
     status: "OPEN",
-    description: "Annual university hiring drive for Cloud Infrastructure and Network Core software engineering roles.",
-    guidelines: "All applicants must carry a verified hardcopy resume and valid university ID card.",
+    description:
+      "Annual university hiring drive for Cloud Infrastructure and Network Core software engineering roles.",
+    guidelines:
+      "All applicants must carry a verified hardcopy resume and valid university ID card.",
     createdAt: "2026-08-15T09:00:00Z",
     updatedAt: "2026-09-25T14:30:00Z",
     timeline: [
-      { id: "dt-1", action: "Drive Created as Draft", actor: "Placement Officer", timestamp: "2026-08-15T09:00:00Z" },
-      { id: "dt-2", action: "Applications Opened", actor: "Placement Officer", timestamp: "2026-08-20T09:00:00Z" },
-      { id: "dt-3", action: "Shortlist Published", actor: "Cisco Campus Team", timestamp: "2026-09-22T12:00:00Z" },
+      {
+        id: "dt-1",
+        action: "Drive Created as Draft",
+        actor: "Placement Officer",
+        timestamp: "2026-08-15T09:00:00Z",
+      },
+      {
+        id: "dt-2",
+        action: "Applications Opened",
+        actor: "Placement Officer",
+        timestamp: "2026-08-20T09:00:00Z",
+      },
+      {
+        id: "dt-3",
+        action: "Shortlist Published",
+        actor: "Cisco Campus Team",
+        timestamp: "2026-09-22T12:00:00Z",
+      },
     ],
   },
   {
@@ -465,12 +634,19 @@ export const MOCK_JOB_DRIVES: JobDrive[] = [
     interviewsCount: 6,
     offersCount: 0,
     status: "UPCOMING",
-    description: "Recruitment for Software Development Engineer I in Google Cloud infrastructure teams.",
-    guidelines: "Applicants will undergo online coding screening followed by three technical rounds.",
+    description:
+      "Recruitment for Software Development Engineer I in Google Cloud infrastructure teams.",
+    guidelines:
+      "Applicants will undergo online coding screening followed by three technical rounds.",
     createdAt: "2026-09-01T10:00:00Z",
     updatedAt: "2026-09-28T11:00:00Z",
     timeline: [
-      { id: "dt-4", action: "Drive Announced", actor: "Arjun Nambiar", timestamp: "2026-09-01T10:00:00Z" },
+      {
+        id: "dt-4",
+        action: "Drive Announced",
+        actor: "Arjun Nambiar",
+        timestamp: "2026-09-01T10:00:00Z",
+      },
     ],
   },
   {
@@ -493,13 +669,25 @@ export const MOCK_JOB_DRIVES: JobDrive[] = [
     interviewsCount: 8,
     offersCount: 2,
     status: "OPEN",
-    description: "Opportunities in autonomous mobility firmware and IoT sensor edge computing.",
-    guidelines: "Written aptitude test followed by technical domain round in C and microcontrollers.",
+    description:
+      "Opportunities in autonomous mobility firmware and IoT sensor edge computing.",
+    guidelines:
+      "Written aptitude test followed by technical domain round in C and microcontrollers.",
     createdAt: "2026-08-25T09:00:00Z",
     updatedAt: "2026-09-28T16:00:00Z",
     timeline: [
-      { id: "dt-5", action: "Drive Created", actor: "Placement Officer", timestamp: "2026-08-25T09:00:00Z" },
-      { id: "dt-6", action: "Applications Opened", actor: "Placement Officer", timestamp: "2026-09-05T09:00:00Z" },
+      {
+        id: "dt-5",
+        action: "Drive Created",
+        actor: "Placement Officer",
+        timestamp: "2026-08-25T09:00:00Z",
+      },
+      {
+        id: "dt-6",
+        action: "Applications Opened",
+        actor: "Placement Officer",
+        timestamp: "2026-09-05T09:00:00Z",
+      },
     ],
   },
   {
@@ -522,12 +710,18 @@ export const MOCK_JOB_DRIVES: JobDrive[] = [
     interviewsCount: 60,
     offersCount: 25,
     status: "COMPLETED",
-    description: "Mass recruitment for TCS Digital and Ninja engineering bands across all disciplines.",
+    description:
+      "Mass recruitment for TCS Digital and Ninja engineering bands across all disciplines.",
     guidelines: "National Qualifier Test conducted on TCS iON platform.",
     createdAt: "2026-08-01T09:00:00Z",
     updatedAt: "2026-09-30T17:00:00Z",
     timeline: [
-      { id: "dt-7", action: "Drive Completed", actor: "Placement Officer", timestamp: "2026-09-30T17:00:00Z" },
+      {
+        id: "dt-7",
+        action: "Drive Completed",
+        actor: "Placement Officer",
+        timestamp: "2026-09-30T17:00:00Z",
+      },
     ],
   },
   {
@@ -550,12 +744,19 @@ export const MOCK_JOB_DRIVES: JobDrive[] = [
     interviewsCount: 0,
     offersCount: 0,
     status: "DRAFT",
-    description: "Consulting and enterprise technology analysis positions across business domains.",
-    guidelines: "Draft stage. Schedule subject to academic calendar coordination.",
+    description:
+      "Consulting and enterprise technology analysis positions across business domains.",
+    guidelines:
+      "Draft stage. Schedule subject to academic calendar coordination.",
     createdAt: "2026-09-20T10:00:00Z",
     updatedAt: "2026-09-20T10:00:00Z",
     timeline: [
-      { id: "dt-8", action: "Draft Created", actor: "Placement Officer", timestamp: "2026-09-20T10:00:00Z" },
+      {
+        id: "dt-8",
+        action: "Draft Created",
+        actor: "Placement Officer",
+        timestamp: "2026-09-20T10:00:00Z",
+      },
     ],
   },
 ];
@@ -585,11 +786,18 @@ export const MOCK_POSITIONS: Position[] = [
     minCgpa: 8.0,
     maxBacklogs: 0,
     minAttendancePercent: 75,
-    targetPrograms: ["B.Tech Computer Science & Engineering", "B.Tech Electronics & Communication"],
-    targetDepartments: ["Computer Science & Engineering", "Electronics & Communication Engineering"],
+    targetPrograms: [
+      "B.Tech Computer Science & Engineering",
+      "B.Tech Electronics & Communication",
+    ],
+    targetDepartments: [
+      "Computer Science & Engineering",
+      "Electronics & Communication Engineering",
+    ],
     graduationYear: 2026,
     status: "OPEN",
-    description: "Design and implement scalable microservices for next-generation software-defined networking platforms.",
+    description:
+      "Design and implement scalable microservices for next-generation software-defined networking platforms.",
     responsibilities: [
       "Develop distributed network control services using Go and Java",
       "Deploy containerized microservices to Kubernetes clusters",
@@ -616,8 +824,14 @@ export const MOCK_POSITIONS: Position[] = [
     minCgpa: 7.5,
     maxBacklogs: 0,
     minAttendancePercent: 75,
-    targetPrograms: ["B.Tech Computer Science & Engineering", "B.Tech Electronics & Communication"],
-    targetDepartments: ["Computer Science & Engineering", "Electronics & Communication Engineering"],
+    targetPrograms: [
+      "B.Tech Computer Science & Engineering",
+      "B.Tech Electronics & Communication",
+    ],
+    targetDepartments: [
+      "Computer Science & Engineering",
+      "Electronics & Communication Engineering",
+    ],
     graduationYear: 2026,
     status: "OPEN",
     createdAt: "2026-08-15T09:00:00Z",
@@ -662,12 +876,24 @@ export const MOCK_POSITIONS: Position[] = [
     baseSalaryLpa: 8.2,
     variableLpa: 1.0,
     stipendMonthly: 45000,
-    requiredSkills: ["C", "C++", "Embedded Systems", "Microcontrollers", "RTOS"],
+    requiredSkills: [
+      "C",
+      "C++",
+      "Embedded Systems",
+      "Microcontrollers",
+      "RTOS",
+    ],
     minCgpa: 7.5,
     maxBacklogs: 1,
     minAttendancePercent: 75,
-    targetPrograms: ["B.Tech Electronics & Communication", "B.Tech Mechanical Engineering"],
-    targetDepartments: ["Electronics & Communication Engineering", "Mechanical Engineering"],
+    targetPrograms: [
+      "B.Tech Electronics & Communication",
+      "B.Tech Mechanical Engineering",
+    ],
+    targetDepartments: [
+      "Electronics & Communication Engineering",
+      "Mechanical Engineering",
+    ],
     graduationYear: 2026,
     status: "OPEN",
     createdAt: "2026-08-25T09:00:00Z",
@@ -696,7 +922,12 @@ export const MOCK_POSITIONS: Position[] = [
       "B.Tech Mechanical Engineering",
       "B.Tech Civil Engineering",
     ],
-    targetDepartments: ["Computer Science & Engineering", "Electronics & Communication Engineering", "Mechanical Engineering", "Civil Engineering"],
+    targetDepartments: [
+      "Computer Science & Engineering",
+      "Electronics & Communication Engineering",
+      "Mechanical Engineering",
+      "Civil Engineering",
+    ],
     graduationYear: 2026,
     status: "CLOSED",
     createdAt: "2026-08-01T09:00:00Z",
@@ -730,10 +961,30 @@ export const MOCK_APPLICATIONS: Application[] = [
     resumeVersion: "v1.2",
     internalNotes: "Exceptional candidate. Recommended for early offer.",
     timeline: [
-      { id: "at-1", action: "Application Submitted", actor: "Aarav Patel", timestamp: "2026-08-22T10:15:00Z" },
-      { id: "at-2", action: "Shortlisted for Technical Round", actor: "Cisco Campus Team", timestamp: "2026-09-02T11:00:00Z" },
-      { id: "at-3", action: "Offer Extended", actor: "Cisco Systems India", timestamp: "2026-09-24T10:00:00Z" },
-      { id: "at-4", action: "Candidate Accepted Offer", actor: "Aarav Patel", timestamp: "2026-09-25T14:30:00Z" },
+      {
+        id: "at-1",
+        action: "Application Submitted",
+        actor: "Aarav Patel",
+        timestamp: "2026-08-22T10:15:00Z",
+      },
+      {
+        id: "at-2",
+        action: "Shortlisted for Technical Round",
+        actor: "Cisco Campus Team",
+        timestamp: "2026-09-02T11:00:00Z",
+      },
+      {
+        id: "at-3",
+        action: "Offer Extended",
+        actor: "Cisco Systems India",
+        timestamp: "2026-09-24T10:00:00Z",
+      },
+      {
+        id: "at-4",
+        action: "Candidate Accepted Offer",
+        actor: "Aarav Patel",
+        timestamp: "2026-09-25T14:30:00Z",
+      },
     ],
   },
   {
@@ -757,9 +1008,24 @@ export const MOCK_APPLICATIONS: Application[] = [
     eligibilityStatus: "ELIGIBLE",
     resumeVersion: "v2.0",
     timeline: [
-      { id: "at-5", action: "Application Submitted", actor: "Priya Sundaram", timestamp: "2026-09-06T14:00:00Z" },
-      { id: "at-6", action: "Technical Shortlist", actor: "Bosch Talent Lead", timestamp: "2026-09-15T10:00:00Z" },
-      { id: "at-7", action: "Offer Accepted", actor: "Priya Sundaram", timestamp: "2026-09-28T16:00:00Z" },
+      {
+        id: "at-5",
+        action: "Application Submitted",
+        actor: "Priya Sundaram",
+        timestamp: "2026-09-06T14:00:00Z",
+      },
+      {
+        id: "at-6",
+        action: "Technical Shortlist",
+        actor: "Bosch Talent Lead",
+        timestamp: "2026-09-15T10:00:00Z",
+      },
+      {
+        id: "at-7",
+        action: "Offer Accepted",
+        actor: "Priya Sundaram",
+        timestamp: "2026-09-28T16:00:00Z",
+      },
     ],
   },
   {
@@ -783,8 +1049,18 @@ export const MOCK_APPLICATIONS: Application[] = [
     eligibilityStatus: "ELIGIBLE",
     resumeVersion: "v1.1",
     timeline: [
-      { id: "at-8", action: "Application Submitted", actor: "Ananya Deshmukh", timestamp: "2026-08-23T11:00:00Z" },
-      { id: "at-9", action: "Shortlisted", actor: "Cisco Campus Team", timestamp: "2026-09-22T12:00:00Z" },
+      {
+        id: "at-8",
+        action: "Application Submitted",
+        actor: "Ananya Deshmukh",
+        timestamp: "2026-08-23T11:00:00Z",
+      },
+      {
+        id: "at-9",
+        action: "Shortlisted",
+        actor: "Cisco Campus Team",
+        timestamp: "2026-09-22T12:00:00Z",
+      },
     ],
   },
   {
@@ -808,8 +1084,18 @@ export const MOCK_APPLICATIONS: Application[] = [
     eligibilityStatus: "ELIGIBLE",
     resumeVersion: "v1.0",
     timeline: [
-      { id: "at-10", action: "Application Submitted", actor: "Vikramaditya Rao", timestamp: "2026-08-10T16:30:00Z" },
-      { id: "at-11", action: "Interview Cleared", actor: "TCS Evaluator", timestamp: "2026-09-25T11:00:00Z" },
+      {
+        id: "at-10",
+        action: "Application Submitted",
+        actor: "Vikramaditya Rao",
+        timestamp: "2026-08-10T16:30:00Z",
+      },
+      {
+        id: "at-11",
+        action: "Interview Cleared",
+        actor: "TCS Evaluator",
+        timestamp: "2026-09-25T11:00:00Z",
+      },
     ],
   },
 ];
@@ -846,13 +1132,24 @@ export const MOCK_INTERVIEWS: Interview[] = [
       problemSolvingRating: 5,
       roleFitRating: 5,
       overallRecommendation: "STRONG_HIRE",
-      notes: "Flawless performance in systems design and distributed algorithms. Highly recommended.",
+      notes:
+        "Flawless performance in systems design and distributed algorithms. Highly recommended.",
       evaluatedBy: "Dr. Kunal Bhasin",
       evaluatedAt: "2026-09-18T11:15:00Z",
     },
     timeline: [
-      { id: "it-1", action: "Scheduled", actor: "Placement Coordinator", timestamp: "2026-09-10T09:00:00Z" },
-      { id: "it-2", action: "Completed & Evaluated", actor: "Dr. Kunal Bhasin", timestamp: "2026-09-18T11:15:00Z" },
+      {
+        id: "it-1",
+        action: "Scheduled",
+        actor: "Placement Coordinator",
+        timestamp: "2026-09-10T09:00:00Z",
+      },
+      {
+        id: "it-2",
+        action: "Completed & Evaluated",
+        actor: "Dr. Kunal Bhasin",
+        timestamp: "2026-09-18T11:15:00Z",
+      },
     ],
   },
   {
@@ -882,12 +1179,18 @@ export const MOCK_INTERVIEWS: Interview[] = [
       problemSolvingRating: 4,
       roleFitRating: 5,
       overallRecommendation: "STRONG_HIRE",
-      notes: "Excellent team player, articulate values and aligns with Cisco collaborative culture.",
+      notes:
+        "Excellent team player, articulate values and aligns with Cisco collaborative culture.",
       evaluatedBy: "Meenakshi Raman",
       evaluatedAt: "2026-09-20T15:30:00Z",
     },
     timeline: [
-      { id: "it-3", action: "HR Round Cleared", actor: "Meenakshi Raman", timestamp: "2026-09-20T15:30:00Z" },
+      {
+        id: "it-3",
+        action: "HR Round Cleared",
+        actor: "Meenakshi Raman",
+        timestamp: "2026-09-20T15:30:00Z",
+      },
     ],
   },
   {
@@ -921,7 +1224,12 @@ export const MOCK_INTERVIEWS: Interview[] = [
       evaluatedAt: "2026-09-22T13:00:00Z",
     },
     timeline: [
-      { id: "it-4", action: "Interview Completed", actor: "Sanjay Hegde", timestamp: "2026-09-22T13:00:00Z" },
+      {
+        id: "it-4",
+        action: "Interview Completed",
+        actor: "Sanjay Hegde",
+        timestamp: "2026-09-22T13:00:00Z",
+      },
     ],
   },
   {
@@ -944,9 +1252,15 @@ export const MOCK_INTERVIEWS: Interview[] = [
     locationOrMeetingUrl: "https://cisco.webex.com/meet/tech-panel-3",
     interviewerName: "Rohit Joshi (Staff Engineer)",
     status: "SCHEDULED",
-    notes: "Focus on machine learning pipelines and distributed data processing.",
+    notes:
+      "Focus on machine learning pipelines and distributed data processing.",
     timeline: [
-      { id: "it-5", action: "Scheduled", actor: "Placement Officer", timestamp: "2026-09-29T10:00:00Z" },
+      {
+        id: "it-5",
+        action: "Scheduled",
+        actor: "Placement Officer",
+        timestamp: "2026-09-29T10:00:00Z",
+      },
     ],
   },
 ];
@@ -977,11 +1291,22 @@ export const MOCK_OFFERS: Offer[] = [
     responseDeadline: "2026-10-05",
     joiningDate: "2027-07-15",
     status: "ACCEPTED",
-    responseNotes: "Accepted formal offer letter via university placement portal.",
+    responseNotes:
+      "Accepted formal offer letter via university placement portal.",
     releasedBy: "Siddharth Verma (Cisco Campus Talent Lead)",
     timeline: [
-      { id: "ot-1", action: "Offer Released", actor: "Siddharth Verma", timestamp: "2026-09-24T10:00:00Z" },
-      { id: "ot-2", action: "Offer Accepted", actor: "Aarav Patel", timestamp: "2026-09-25T14:30:00Z" },
+      {
+        id: "ot-1",
+        action: "Offer Released",
+        actor: "Siddharth Verma",
+        timestamp: "2026-09-24T10:00:00Z",
+      },
+      {
+        id: "ot-2",
+        action: "Offer Accepted",
+        actor: "Aarav Patel",
+        timestamp: "2026-09-25T14:30:00Z",
+      },
     ],
   },
   {
@@ -1008,8 +1333,18 @@ export const MOCK_OFFERS: Offer[] = [
     responseNotes: "Formally signed and accepted.",
     releasedBy: "Kavitha Murthy (Bosch Campus HR)",
     timeline: [
-      { id: "ot-3", action: "Offer Released", actor: "Kavitha Murthy", timestamp: "2026-09-26T12:00:00Z" },
-      { id: "ot-4", action: "Offer Accepted", actor: "Priya Sundaram", timestamp: "2026-09-28T16:00:00Z" },
+      {
+        id: "ot-3",
+        action: "Offer Released",
+        actor: "Kavitha Murthy",
+        timestamp: "2026-09-26T12:00:00Z",
+      },
+      {
+        id: "ot-4",
+        action: "Offer Accepted",
+        actor: "Priya Sundaram",
+        timestamp: "2026-09-28T16:00:00Z",
+      },
     ],
   },
   {
@@ -1034,7 +1369,12 @@ export const MOCK_OFFERS: Offer[] = [
     status: "RELEASED",
     releasedBy: "Rajeev Namboodiri (TCS Regional Lead)",
     timeline: [
-      { id: "ot-5", action: "Offer Released", actor: "Rajeev Namboodiri", timestamp: "2026-09-30T11:00:00Z" },
+      {
+        id: "ot-5",
+        action: "Offer Released",
+        actor: "Rajeev Namboodiri",
+        timestamp: "2026-09-30T11:00:00Z",
+      },
     ],
   },
 ];
@@ -1065,7 +1405,12 @@ export const MOCK_PLACEMENT_OUTCOMES: PlacementOutcome[] = [
     confirmedBy: "Prof. Ananth (Placement Director)",
     notes: "Super dream placement confirmed.",
     timeline: [
-      { id: "out-t1", action: "Placement Confirmed", actor: "Prof. Ananth", timestamp: "2026-09-25T15:00:00Z" },
+      {
+        id: "out-t1",
+        action: "Placement Confirmed",
+        actor: "Prof. Ananth",
+        timestamp: "2026-09-25T15:00:00Z",
+      },
     ],
   },
   {
@@ -1089,7 +1434,12 @@ export const MOCK_PLACEMENT_OUTCOMES: PlacementOutcome[] = [
     confirmedBy: "Prof. Saravanan (ECE Placement Officer)",
     notes: "Core engineering dream offer confirmed.",
     timeline: [
-      { id: "out-t2", action: "Placement Confirmed", actor: "Prof. Saravanan", timestamp: "2026-09-28T17:00:00Z" },
+      {
+        id: "out-t2",
+        action: "Placement Confirmed",
+        actor: "Prof. Saravanan",
+        timestamp: "2026-09-28T17:00:00Z",
+      },
     ],
   },
   {
@@ -1111,7 +1461,8 @@ export const MOCK_PLACEMENT_OUTCOMES: PlacementOutcome[] = [
     status: "NOT_PLACED",
     confirmedAt: "2026-09-01T09:00:00Z",
     confirmedBy: "System",
-    notes: "Ineligible due to active backlogs (2). Enrolled in special technical bridge course.",
+    notes:
+      "Ineligible due to active backlogs (2). Enrolled in special technical bridge course.",
     timeline: [],
   },
   {
@@ -1217,7 +1568,13 @@ export const MOCK_PLACEMENT_DASHBOARD: PlacementDashboardSummary = {
   packageDistribution: [
     { range: "< ₹6 LPA", minLpa: 0, maxLpa: 6, count: 5, percentage: 16 },
     { range: "₹6 - ₹10 LPA", minLpa: 6, maxLpa: 10, count: 14, percentage: 44 },
-    { range: "₹10 - ₹15 LPA", minLpa: 10, maxLpa: 15, count: 8, percentage: 25 },
+    {
+      range: "₹10 - ₹15 LPA",
+      minLpa: 10,
+      maxLpa: 15,
+      count: 8,
+      percentage: 25,
+    },
     { range: "₹15 - ₹20 LPA", minLpa: 15, maxLpa: 20, count: 3, percentage: 9 },
     { range: "> ₹20 LPA", minLpa: 20, maxLpa: 99, count: 2, percentage: 6 },
   ],

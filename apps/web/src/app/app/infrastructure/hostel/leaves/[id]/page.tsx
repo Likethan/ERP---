@@ -21,7 +21,11 @@ import {
   Building2,
 } from "lucide-react";
 
-export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function HostelLeaveDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const leaveId = resolvedParams.id;
   const { user } = useAuth();
@@ -54,8 +58,10 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
     if (!leave) return;
     await hostelLeavesService.approveHostelLeave(
       leave.id,
-      user?.first_name ? `${user.first_name} ${user.last_name} (Warden)` : "Prof. S. K. Patil (Warden)",
-      "Approved after telephonic parent confirmation"
+      user?.first_name
+        ? `${user.first_name} ${user.last_name} (Warden)`
+        : "Prof. S. K. Patil (Warden)",
+      "Approved after telephonic parent confirmation",
     );
     loadLeave();
   };
@@ -64,8 +70,10 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
     if (!leave) return;
     await hostelLeavesService.rejectHostelLeave(
       leave.id,
-      user?.first_name ? `${user.first_name} ${user.last_name}` : "Warden Office",
-      "Conflicting internal assessment exams on scheduled return date"
+      user?.first_name
+        ? `${user.first_name} ${user.last_name}`
+        : "Warden Office",
+      "Conflicting internal assessment exams on scheduled return date",
     );
     loadLeave();
   };
@@ -88,7 +96,9 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
   if (!leave) {
     return (
       <div className="p-12 text-center text-slate-400">
-        <h2 className="text-lg font-bold text-white mb-2">Leave Record Not Found</h2>
+        <h2 className="text-lg font-bold text-white mb-2">
+          Leave Record Not Found
+        </h2>
         <Link href="/app/infrastructure/hostel/leaves">
           <Button variant="outline" className="border-slate-700">
             Back to Leaves
@@ -106,7 +116,10 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
           Infrastructure
         </Link>
         <span>/</span>
-        <Link href="/app/infrastructure/hostel/leaves" className="hover:text-white">
+        <Link
+          href="/app/infrastructure/hostel/leaves"
+          className="hover:text-white"
+        >
           Leaves
         </Link>
         <span>/</span>
@@ -120,7 +133,9 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
             <Badge variant="outline" className="text-xs">
               {leave.approvalStatus}
             </Badge>
-            <span className="text-xs font-mono text-slate-400">{leave.registerNumber}</span>
+            <span className="text-xs font-mono text-slate-400">
+              {leave.registerNumber}
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <FileCheck2 className="h-6 w-6 text-indigo-400" />
@@ -135,18 +150,28 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
         <div className="flex items-center gap-2.5">
           {leave.approvalStatus === LeaveStatus.PENDING && isWardenOrAdmin && (
             <>
-              <Button onClick={handleReject} variant="outline" className="border-rose-800 text-rose-400 hover:bg-rose-950 text-xs">
+              <Button
+                onClick={handleReject}
+                variant="outline"
+                className="border-rose-800 text-rose-400 hover:bg-rose-950 text-xs"
+              >
                 <XCircle className="h-3.5 w-3.5 mr-1.5" />
                 Reject
               </Button>
-              <Button onClick={handleApprove} className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs">
+              <Button
+                onClick={handleApprove}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs"
+              >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                 Approve Gate Pass
               </Button>
             </>
           )}
           {leave.approvalStatus === LeaveStatus.APPROVED && (
-            <Button onClick={handleReturn} className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs">
+            <Button
+              onClick={handleReturn}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs"
+            >
               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
               Mark Returned to Campus
             </Button>
@@ -171,7 +196,9 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Destination:</span>
-              <span className="text-white font-medium">{leave.destination}</span>
+              <span className="text-white font-medium">
+                {leave.destination}
+              </span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-400">Reason:</span>
@@ -187,11 +214,16 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
           <div className="space-y-2 text-xs text-slate-300">
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Parent / Guardian:</span>
-              <span className="text-white font-medium">{leave.emergencyContact.name} ({leave.emergencyContact.relationship})</span>
+              <span className="text-white font-medium">
+                {leave.emergencyContact.name} (
+                {leave.emergencyContact.relationship})
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Emergency Phone:</span>
-              <span className="font-mono text-indigo-400">{leave.emergencyContact.phone}</span>
+              <span className="font-mono text-indigo-400">
+                {leave.emergencyContact.phone}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
               <span className="text-slate-400">Approved By:</span>
@@ -199,7 +231,9 @@ export default function HostelLeaveDetailPage({ params }: { params: Promise<{ id
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-400">Warden Remarks:</span>
-              <span className="text-slate-200 italic">{leave.remarks || "No remarks noted"}</span>
+              <span className="text-slate-200 italic">
+                {leave.remarks || "No remarks noted"}
+              </span>
             </div>
           </div>
         </div>

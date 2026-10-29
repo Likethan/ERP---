@@ -4,11 +4,11 @@ Provides standard institutional data classification taxonomy, masking strategies
 field-level privacy governance, and sanitization for logs, AI, and exports.
 """
 
+import hashlib
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
-import hashlib
-import re
 from typing import Any
 
 

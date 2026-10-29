@@ -7,49 +7,32 @@ check-in attendance, club lifecycle & membership, targeted announcements, and no
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request, status
-from sqlalchemy import and_, func, or_, select
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, get_tenant_context, require_permission
-from app.core.exceptions import PermissionDeniedException, ValidationException
+from app.core.exceptions import NotFoundException, ValidationException
 from app.core.permissions import (
-    ANNOUNCEMENTS_ARCHIVE,
     ANNOUNCEMENTS_CREATE,
     ANNOUNCEMENTS_PUBLISH,
-    ANNOUNCEMENTS_READ,
-    ANNOUNCEMENTS_UPDATE,
     CLUBS_APPROVE,
-    CLUBS_CREATE,
     CLUBS_MANAGE_MEMBERSHIPS,
-    CLUBS_READ,
-    CLUBS_SELF_MANAGE_MEMBERSHIP,
-    CLUBS_SELF_READ,
-    CLUBS_SELF_REQUEST_MEMBERSHIP,
-    CLUBS_UPDATE,
     EVENTS_CANCEL,
     EVENTS_CREATE,
     EVENTS_MANAGE_ATTENDANCE,
-    EVENTS_MANAGE_REGISTRATIONS,
     EVENTS_PUBLISH,
     EVENTS_READ,
-    EVENTS_SELF_MANAGE_REGISTRATION,
-    EVENTS_SELF_REGISTER,
     EVENTS_UPDATE,
-    NOTIFICATIONS_MANAGE,
-    NOTIFICATIONS_MANAGE_PREFERENCES,
-    NOTIFICATIONS_READ,
-    NOTIFICATIONS_SELF_MANAGE_PREFERENCES,
-    NOTIFICATIONS_SELF_READ,
 )
 from app.core.tenant import TenantContext
+from app.models.campus import Club, ClubMembership, EventRegistration
 from app.models.people import StudentProfile, User
 from app.schemas.campus import (
     AnnouncementAudienceItem,
     AnnouncementCreate,
     AnnouncementResponse,
-    AnnouncementUpdate,
     AudiencePreviewRequest,
     AudiencePreviewResponse,
     CampusDashboardStats,
@@ -59,8 +42,6 @@ from app.schemas.campus import (
     ClubMembershipResponse,
     ClubMembershipReview,
     ClubResponse,
-    ClubStatusTransition,
-    ClubUpdate,
     EventCategoryCreate,
     EventCategoryResponse,
     EventCategoryUpdate,
@@ -78,15 +59,9 @@ from app.schemas.campus import (
     EventVenueCreate,
     EventVenueResponse,
     EventVenueUpdate,
-    NotificationListResponse,
-    NotificationPreferenceItem,
-    NotificationPreferenceUpdate,
-    NotificationResponse,
-    UnreadCountResponse,
 )
 from app.schemas.common import ApiResponse
 from app.services.campus_service import CampusService
-from app.services.notification_service import NotificationService
 
 router = APIRouter(tags=["Campus Events, Clubs & Communication"])
 

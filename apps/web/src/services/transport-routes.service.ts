@@ -12,7 +12,9 @@ import { MOCK_TRANSPORT_ROUTES } from "@/mocks/infrastructure.mock";
 import { calculateRouteUtilization } from "./infrastructure-calculator";
 
 class TransportRoutesService {
-  private routes: TransportRoute[] = JSON.parse(JSON.stringify(MOCK_TRANSPORT_ROUTES));
+  private routes: TransportRoute[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSPORT_ROUTES),
+  );
 
   async listRoutes(filters?: {
     campusId?: string;
@@ -37,7 +39,7 @@ class TransportRoutesService {
           r.startPoint.toLowerCase().includes(q) ||
           r.endPoint.toLowerCase().includes(q) ||
           r.vehicleNumber?.toLowerCase().includes(q) ||
-          r.driverName?.toLowerCase().includes(q)
+          r.driverName?.toLowerCase().includes(q),
       );
     }
 
@@ -46,11 +48,14 @@ class TransportRoutesService {
 
   async getRouteById(id: string): Promise<ApiResponse<TransportRoute | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const route = this.routes.find((r) => r.id === id || r.routeCode === id) || null;
+    const route =
+      this.routes.find((r) => r.id === id || r.routeCode === id) || null;
     return { success: true, data: route };
   }
 
-  async createRoute(payload: Partial<TransportRoute>): Promise<ApiResponse<TransportRoute>> {
+  async createRoute(
+    payload: Partial<TransportRoute>,
+  ): Promise<ApiResponse<TransportRoute>> {
     await new Promise((r) => setTimeout(r, 50));
     const capacity = payload.capacity || 52;
     const allocated = payload.allocatedStudents || 0;

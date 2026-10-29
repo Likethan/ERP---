@@ -45,7 +45,8 @@ export default function ApplicationDetailPage() {
 
   // Override modal
   const [showOverrideModal, setShowOverrideModal] = useState(false);
-  const [overrideStatus, setOverrideStatus] = useState<EligibilityStatus>("ELIGIBLE");
+  const [overrideStatus, setOverrideStatus] =
+    useState<EligibilityStatus>("ELIGIBLE");
   const [overrideReason, setOverrideReason] = useState("");
 
   const loadData = async () => {
@@ -53,7 +54,11 @@ export default function ApplicationDetailPage() {
       setLoading(true);
       const appRes = await placementService.getApplicationById(applicationId);
       if (!appRes.data) {
-        showToast({ title: "Not Found", message: "Application record not found", type: "error" });
+        showToast({
+          title: "Not Found",
+          message: "Application record not found",
+          type: "error",
+        });
         router.push("/app/placement/applications");
         return;
       }
@@ -63,11 +68,15 @@ export default function ApplicationDetailPage() {
       // Evaluate eligibility snapshot
       const snapRes = await placementService.evaluateEligibility(
         appRes.data.studentId,
-        appRes.data.positionId
+        appRes.data.positionId,
       );
       setSnapshot(snapRes.data);
     } catch {
-      showToast({ title: "Error", message: "Failed to load application details", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load application details",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -82,17 +91,32 @@ export default function ApplicationDetailPage() {
   const handleShortlist = async () => {
     if (!application) return;
     try {
-      await placementService.shortlistApplications([application.id], "Placement Officer");
-      showToast({ title: "Shortlisted", message: "Candidate advanced to interview pipeline", type: "success" });
+      await placementService.shortlistApplications(
+        [application.id],
+        "Placement Officer",
+      );
+      showToast({
+        title: "Shortlisted",
+        message: "Candidate advanced to interview pipeline",
+        type: "success",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to shortlist application", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to shortlist application",
+        type: "error",
+      });
     }
   };
 
   const handleConfirmOverride = async () => {
     if (!snapshot || !overrideReason.trim()) {
-      showToast({ title: "Validation Error", message: "Override reason is mandatory", type: "error" });
+      showToast({
+        title: "Validation Error",
+        message: "Override reason is mandatory",
+        type: "error",
+      });
       return;
     }
 
@@ -101,7 +125,7 @@ export default function ApplicationDetailPage() {
         snapshot,
         overrideStatus,
         overrideReason,
-        "Dr. Ramesh (Dean Placement)"
+        "Dr. Ramesh (Dean Placement)",
       );
       setSnapshot(res.data);
       showToast({
@@ -112,7 +136,11 @@ export default function ApplicationDetailPage() {
       setShowOverrideModal(false);
       setOverrideReason("");
     } catch {
-      showToast({ title: "Error", message: "Failed to override eligibility", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to override eligibility",
+        type: "error",
+      });
     }
   };
 
@@ -121,7 +149,9 @@ export default function ApplicationDetailPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500">Loading candidate application dossier...</p>
+          <p className="text-xs text-slate-500">
+            Loading candidate application dossier...
+          </p>
         </div>
       </div>
     );
@@ -157,16 +187,18 @@ export default function ApplicationDetailPage() {
                     application.status === "SELECTED"
                       ? "success"
                       : application.status === "SHORTLISTED"
-                      ? "info"
-                      : application.status === "REJECTED"
-                      ? "destructive"
-                      : "secondary"
+                        ? "info"
+                        : application.status === "REJECTED"
+                          ? "destructive"
+                          : "secondary"
                   }
                   dot
                 >
                   {application.status}
                 </Badge>
-                <Badge variant="outline">Stage: {application.currentStage}</Badge>
+                <Badge variant="outline">
+                  Stage: {application.currentStage}
+                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5">
@@ -190,7 +222,12 @@ export default function ApplicationDetailPage() {
 
           <div className="flex items-center gap-2">
             {application.status === "SUBMITTED" && (
-              <Button variant="primary" size="sm" onClick={handleShortlist} className="gap-1.5 text-xs">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleShortlist}
+                className="gap-1.5 text-xs"
+              >
                 <Check className="w-3.5 h-3.5" />
                 Shortlist Candidate
               </Button>
@@ -224,8 +261,8 @@ export default function ApplicationDetailPage() {
                     snapshot?.status === "ELIGIBLE"
                       ? "success"
                       : snapshot?.status === "CONDITIONALLY_ELIGIBLE"
-                      ? "warning"
-                      : "destructive"
+                        ? "warning"
+                        : "destructive"
                   }
                   dot
                 >
@@ -246,8 +283,9 @@ export default function ApplicationDetailPage() {
             {/* Overridden Callout */}
             {snapshot?.isOverridden && (
               <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 text-xs">
-                <strong>Manual Administrative Override:</strong> Overridden to <strong>{snapshot.status}</strong> by{" "}
-                {snapshot.overriddenBy} on {new Date(snapshot.overriddenAt || "").toLocaleString()}.
+                <strong>Manual Administrative Override:</strong> Overridden to{" "}
+                <strong>{snapshot.status}</strong> by {snapshot.overriddenBy} on{" "}
+                {new Date(snapshot.overriddenAt || "").toLocaleString()}.
                 <p className="mt-0.5 italic">"{snapshot.overrideReason}"</p>
               </div>
             )}
@@ -275,7 +313,9 @@ export default function ApplicationDetailPage() {
                       <span className="font-bold text-slate-900 dark:text-white">
                         {rule.ruleName}
                       </span>
-                      <p className="text-slate-600 dark:text-slate-400 mt-0.5">{rule.message}</p>
+                      <p className="text-slate-600 dark:text-slate-400 mt-0.5">
+                        {rule.message}
+                      </p>
                     </div>
                   </div>
 
@@ -283,13 +323,17 @@ export default function ApplicationDetailPage() {
                     <div className="text-[11px] text-slate-500">
                       Required:{" "}
                       <strong>
-                        {Array.isArray(rule.required) ? rule.required.join(", ") : String(rule.required)}
+                        {Array.isArray(rule.required)
+                          ? rule.required.join(", ")
+                          : String(rule.required)}
                       </strong>
                     </div>
                     <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
                       Actual:{" "}
                       <strong>
-                        {Array.isArray(rule.actual) ? rule.actual.join(", ") : String(rule.actual)}
+                        {Array.isArray(rule.actual)
+                          ? rule.actual.join(", ")
+                          : String(rule.actual)}
                       </strong>
                     </div>
                   </div>
@@ -325,7 +369,8 @@ export default function ApplicationDetailPage() {
                     {entry.action}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    By {entry.actor} • {new Date(entry.timestamp).toLocaleDateString()}
+                    By {entry.actor} •{" "}
+                    {new Date(entry.timestamp).toLocaleDateString()}
                   </div>
                   {entry.details && (
                     <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 bg-slate-50 dark:bg-slate-800 p-2 rounded">
@@ -343,27 +388,38 @@ export default function ApplicationDetailPage() {
       {showOverrideModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs">
           <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Manual Eligibility Override</h3>
+            <h3 className="text-base font-bold text-white">
+              Manual Eligibility Override
+            </h3>
             <p className="text-xs text-slate-400">
-              Placement officers may override automated eligibility flags with documented academic or administrative justification.
+              Placement officers may override automated eligibility flags with
+              documented academic or administrative justification.
             </p>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-slate-300 font-medium">New Eligibility Status *</label>
+                <label className="text-slate-300 font-medium">
+                  New Eligibility Status *
+                </label>
                 <select
                   value={overrideStatus}
-                  onChange={(e) => setOverrideStatus(e.target.value as EligibilityStatus)}
+                  onChange={(e) =>
+                    setOverrideStatus(e.target.value as EligibilityStatus)
+                  }
                   className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 p-2 text-white"
                 >
                   <option value="ELIGIBLE">ELIGIBLE (Full Clearance)</option>
-                  <option value="CONDITIONALLY_ELIGIBLE">CONDITIONALLY ELIGIBLE (Pending Re-test)</option>
+                  <option value="CONDITIONALLY_ELIGIBLE">
+                    CONDITIONALLY ELIGIBLE (Pending Re-test)
+                  </option>
                   <option value="INELIGIBLE">INELIGIBLE (Disqualified)</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-slate-300 font-medium">Justification & Regulatory Authority *</label>
+                <label className="text-slate-300 font-medium">
+                  Justification & Regulatory Authority *
+                </label>
                 <textarea
                   value={overrideReason}
                   onChange={(e) => setOverrideReason(e.target.value)}
@@ -375,10 +431,18 @@ export default function ApplicationDetailPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setShowOverrideModal(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowOverrideModal(false)}
+              >
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={handleConfirmOverride}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleConfirmOverride}
+              >
                 Sign & Authorize Override
               </Button>
             </div>

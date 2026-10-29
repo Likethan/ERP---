@@ -20,8 +20,11 @@ export default function ExaminationReportsPage() {
   const { showToast } = useToast();
 
   const [loading, setLoading] = useState(false);
-  const [reportType, setReportType] = useState<ExamReportFilter["reportType"]>("COMPLETION");
-  const [department, setDepartment] = useState("Computer Science & Engineering");
+  const [reportType, setReportType] =
+    useState<ExamReportFilter["reportType"]>("COMPLETION");
+  const [department, setDepartment] = useState(
+    "Computer Science & Engineering",
+  );
   const [semester, setSemester] = useState(5);
   const [startDate, setStartDate] = useState("2026-08-01");
   const [endDate, setEndDate] = useState("2026-10-31");
@@ -44,9 +47,17 @@ export default function ExaminationReportsPage() {
         endDate,
       });
       setReportResult(res.data);
-      showToast({ title: "Report Compiled", message: `Generated ${res.data.totalRecords} records.`, type: "success" });
+      showToast({
+        title: "Report Compiled",
+        message: `Generated ${res.data.totalRecords} records.`,
+        type: "success",
+      });
     } catch {
-      showToast({ title: "Compilation Error", message: "Failed to compile report", type: "error" });
+      showToast({
+        title: "Compilation Error",
+        message: "Failed to compile report",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -59,7 +70,9 @@ export default function ExaminationReportsPage() {
     const csvContent = [
       headers.join(","),
       ...reportResult.rows.map((row) =>
-        headers.map((h) => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(",")
+        headers
+          .map((h) => `"${String(row[h] ?? "").replace(/"/g, '""')}"`)
+          .join(","),
       ),
     ].join("\n");
 
@@ -67,15 +80,24 @@ export default function ExaminationReportsPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `campusos-exam-report-${reportType.toLowerCase()}-${Date.now()}.csv`);
+    link.setAttribute(
+      "download",
+      `campusos-exam-report-${reportType.toLowerCase()}-${Date.now()}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    showToast({ title: "Exported", message: "CSV file downloaded successfully.", type: "success" });
+    showToast({
+      title: "Exported",
+      message: "CSV file downloaded successfully.",
+      type: "success",
+    });
   };
 
-  const columns = reportResult?.rows.length ? Object.keys(reportResult.rows[0]) : [];
+  const columns = reportResult?.rows.length
+    ? Object.keys(reportResult.rows[0])
+    : [];
 
   return (
     <div className="space-y-6">
@@ -86,13 +108,16 @@ export default function ExaminationReportsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-cyan-100 text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300">
               Audit & Compliance
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Institutional Reporting Engine</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Institutional Reporting Engine
+            </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Examination & Assessment Reports
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Compile marks registers, timetable schedules, attendance eligibility gates, and semester grade distributions with export.
+            Compile marks registers, timetable schedules, attendance eligibility
+            gates, and semester grade distributions with export.
           </p>
         </div>
 
@@ -118,13 +143,19 @@ export default function ExaminationReportsPage() {
             </label>
             <select
               value={reportType}
-              onChange={(e) => setReportType(e.target.value as ExamReportFilter["reportType"])}
+              onChange={(e) =>
+                setReportType(e.target.value as ExamReportFilter["reportType"])
+              }
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
-              <option value="COMPLETION">Assessment Completion & Lock Audit</option>
+              <option value="COMPLETION">
+                Assessment Completion & Lock Audit
+              </option>
               <option value="MARKS_ROSTER">Class Marks Roster Ledger</option>
               <option value="SCHEDULE">Master Exam Timetable Schedule</option>
-              <option value="ELIGIBILITY">Student Attendance Eligibility Audit</option>
+              <option value="ELIGIBILITY">
+                Student Attendance Eligibility Audit
+              </option>
               <option value="RESULTS">Semester Cohort Results & GPA</option>
             </select>
           </div>
@@ -138,8 +169,12 @@ export default function ExaminationReportsPage() {
               onChange={(e) => setDepartment(e.target.value)}
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
-              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-              <option value="Electronics & Communication">Electronics & Communication</option>
+              <option value="Computer Science & Engineering">
+                Computer Science & Engineering
+              </option>
+              <option value="Electronics & Communication">
+                Electronics & Communication
+              </option>
             </select>
           </div>
 
@@ -180,10 +215,16 @@ export default function ExaminationReportsPage() {
                 {reportResult.title}
               </h3>
               <p className="text-xs text-slate-500">
-                Compiled at {reportResult.generatedAt} • {reportResult.totalRecords} records
+                Compiled at {reportResult.generatedAt} •{" "}
+                {reportResult.totalRecords} records
               </p>
             </div>
-            <Button size="sm" variant="outline" onClick={handleExportCSV} className="text-xs gap-1.5 self-start">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleExportCSV}
+              className="text-xs gap-1.5 self-start"
+            >
               <Download className="h-3.5 w-3.5" />
               Download CSV
             </Button>
@@ -194,7 +235,10 @@ export default function ExaminationReportsPage() {
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
                 <tr>
                   {columns.map((col) => (
-                    <th key={col} className="p-2.5 font-semibold capitalize whitespace-nowrap">
+                    <th
+                      key={col}
+                      className="p-2.5 font-semibold capitalize whitespace-nowrap"
+                    >
                       {col.replace(/([A-Z])/g, " $1")}
                     </th>
                   ))}
@@ -202,9 +246,15 @@ export default function ExaminationReportsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {reportResult.rows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={idx}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                  >
                     {columns.map((col) => (
-                      <td key={col} className="p-2.5 whitespace-nowrap font-mono text-slate-700 dark:text-slate-300">
+                      <td
+                        key={col}
+                        className="p-2.5 whitespace-nowrap font-mono text-slate-700 dark:text-slate-300"
+                      >
                         {String(row[col] ?? "—")}
                       </td>
                     ))}

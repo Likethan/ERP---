@@ -9,7 +9,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-
 # -----------------------------------------------------------------------------
 # 1. Onboarding Plan & Lifecycle Schemas
 # -----------------------------------------------------------------------------

@@ -43,7 +43,9 @@ class PlacementService {
   private interviews: Interview[] = [...MOCK_INTERVIEWS];
   private offers: Offer[] = [...MOCK_OFFERS];
   private outcomes: PlacementOutcome[] = [...MOCK_PLACEMENT_OUTCOMES];
-  private dashboard: PlacementDashboardSummary = { ...MOCK_PLACEMENT_DASHBOARD };
+  private dashboard: PlacementDashboardSummary = {
+    ...MOCK_PLACEMENT_DASHBOARD,
+  };
 
   // ==========================================
   // 1. Dashboard
@@ -58,23 +60,30 @@ class PlacementService {
   // 2. Student Placement Profiles
   // ==========================================
 
-  async getPlacementStudents(): Promise<ApiResponse<StudentPlacementProfile[]>> {
+  async getPlacementStudents(): Promise<
+    ApiResponse<StudentPlacementProfile[]>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...this.profiles] };
   }
 
-  async getPlacementStudentById(id: string): Promise<ApiResponse<StudentPlacementProfile | null>> {
+  async getPlacementStudentById(
+    id: string,
+  ): Promise<ApiResponse<StudentPlacementProfile | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const prof = this.profiles.find((p) => p.id === id || p.studentId === id) || null;
+    const prof =
+      this.profiles.find((p) => p.id === id || p.studentId === id) || null;
     return { success: true, data: prof };
   }
 
   async updateStudentSkills(
     studentId: string,
-    skills: StudentSkillsProfile
+    skills: StudentSkillsProfile,
   ): Promise<ApiResponse<StudentPlacementProfile>> {
     await new Promise((r) => setTimeout(r, 60));
-    const idx = this.profiles.findIndex((p) => p.studentId === studentId || p.id === studentId);
+    const idx = this.profiles.findIndex(
+      (p) => p.studentId === studentId || p.id === studentId,
+    );
     if (idx === -1) throw new Error("Student placement profile not found");
 
     this.profiles[idx] = {
@@ -88,10 +97,12 @@ class PlacementService {
   async updateResumeStatus(
     studentId: string,
     status: ResumeStatus,
-    notes?: string
+    notes?: string,
   ): Promise<ApiResponse<StudentPlacementProfile>> {
     await new Promise((r) => setTimeout(r, 60));
-    const idx = this.profiles.findIndex((p) => p.studentId === studentId || p.id === studentId);
+    const idx = this.profiles.findIndex(
+      (p) => p.studentId === studentId || p.id === studentId,
+    );
     if (idx === -1) throw new Error("Student placement profile not found");
 
     this.profiles[idx] = {
@@ -122,7 +133,8 @@ class PlacementService {
 
   async getCompanyById(id: string): Promise<ApiResponse<Company | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const comp = this.companies.find((c) => c.id === id || c.code === id) || null;
+    const comp =
+      this.companies.find((c) => c.id === id || c.code === id) || null;
     return { success: true, data: comp };
   }
 
@@ -130,7 +142,11 @@ class PlacementService {
     await new Promise((r) => setTimeout(r, 80));
     const newComp: Company = {
       id: `comp-${Date.now()}`,
-      code: (data.code || data.name?.replace(/\s+/g, "").toUpperCase() || "COMP").slice(0, 10),
+      code: (
+        data.code ||
+        data.name?.replace(/\s+/g, "").toUpperCase() ||
+        "COMP"
+      ).slice(0, 10),
       name: data.name || "Corporate Partner",
       legalName: data.legalName || data.name,
       industry: data.industry || "Information Technology",
@@ -162,7 +178,10 @@ class PlacementService {
     return { success: true, data: newComp };
   }
 
-  async updateCompany(id: string, data: Partial<Company>): Promise<ApiResponse<Company>> {
+  async updateCompany(
+    id: string,
+    data: Partial<Company>,
+  ): Promise<ApiResponse<Company>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.companies.findIndex((c) => c.id === id);
     if (idx === -1) throw new Error("Company not found");
@@ -194,7 +213,9 @@ class PlacementService {
     return { success: true, data: drive };
   }
 
-  async createJobDrive(data: Partial<JobDrive>): Promise<ApiResponse<JobDrive>> {
+  async createJobDrive(
+    data: Partial<JobDrive>,
+  ): Promise<ApiResponse<JobDrive>> {
     await new Promise((r) => setTimeout(r, 80));
     const company = this.companies.find((c) => c.id === data.companyId);
     const newDrive: JobDrive = {
@@ -205,8 +226,12 @@ class PlacementService {
       companyName: company?.name || data.companyName || "Corporate Partner",
       companyTier: company?.tier || "TIER_2_DREAM",
       driveType: data.driveType || "ON_CAMPUS",
-      driveDate: data.driveDate || new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
-      applicationDeadline: data.applicationDeadline || new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
+      driveDate:
+        data.driveDate ||
+        new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
+      applicationDeadline:
+        data.applicationDeadline ||
+        new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
       location: data.location || "Campus Auditorium",
       academicYear: data.academicYear || "2026-2027",
       batchGraduationYear: data.batchGraduationYear || 2026,
@@ -291,7 +316,9 @@ class PlacementService {
     return { success: true, data: pos };
   }
 
-  async createPosition(data: Partial<Position>): Promise<ApiResponse<Position>> {
+  async createPosition(
+    data: Partial<Position>,
+  ): Promise<ApiResponse<Position>> {
     await new Promise((r) => setTimeout(r, 60));
     const drive = this.drives.find((d) => d.id === data.driveId);
     const newPos: Position = {
@@ -299,7 +326,8 @@ class PlacementService {
       driveId: data.driveId || "drv-cisco-2026",
       driveCode: drive?.code || "DRV-2026",
       companyId: drive?.companyId || data.companyId || "comp-cisco",
-      companyName: drive?.companyName || data.companyName || "Corporate Partner",
+      companyName:
+        drive?.companyName || data.companyName || "Corporate Partner",
       title: data.title || "Associate Software Engineer",
       departmentFunction: data.departmentFunction || "Engineering",
       employmentType: data.employmentType || "FULL_TIME",
@@ -314,8 +342,12 @@ class PlacementService {
       minCgpa: data.minCgpa || 7.0,
       maxBacklogs: data.maxBacklogs || 0,
       minAttendancePercent: data.minAttendancePercent || 75,
-      targetPrograms: data.targetPrograms || ["B.Tech Computer Science & Engineering"],
-      targetDepartments: data.targetDepartments || ["Computer Science & Engineering"],
+      targetPrograms: data.targetPrograms || [
+        "B.Tech Computer Science & Engineering",
+      ],
+      targetDepartments: data.targetDepartments || [
+        "Computer Science & Engineering",
+      ],
       graduationYear: data.graduationYear || 2026,
       status: "OPEN",
       description: data.description,
@@ -332,10 +364,12 @@ class PlacementService {
 
   async evaluateEligibility(
     studentId: string,
-    positionId: string
+    positionId: string,
   ): Promise<ApiResponse<EligibilitySnapshot>> {
     await new Promise((r) => setTimeout(r, 30));
-    const student = this.profiles.find((p) => p.studentId === studentId || p.id === studentId);
+    const student = this.profiles.find(
+      (p) => p.studentId === studentId || p.id === studentId,
+    );
     const position = this.positions.find((p) => p.id === positionId);
 
     if (!student || !position) {
@@ -350,7 +384,7 @@ class PlacementService {
     snapshot: EligibilitySnapshot,
     newStatus: EligibilityStatus,
     reason: string,
-    authority: string
+    authority: string,
   ): Promise<ApiResponse<EligibilitySnapshot>> {
     await new Promise((r) => setTimeout(r, 60));
     const updated: EligibilitySnapshot = {
@@ -387,9 +421,13 @@ class PlacementService {
     return { success: true, data: list };
   }
 
-  async getApplicationById(id: string): Promise<ApiResponse<Application | null>> {
+  async getApplicationById(
+    id: string,
+  ): Promise<ApiResponse<Application | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const app = this.applications.find((a) => a.id === id || a.applicationCode === id) || null;
+    const app =
+      this.applications.find((a) => a.id === id || a.applicationCode === id) ||
+      null;
     return { success: true, data: app };
   }
 
@@ -406,13 +444,15 @@ class PlacementService {
       (a) =>
         a.studentId === data.studentId &&
         a.positionId === data.positionId &&
-        a.status !== "WITHDRAWN"
+        a.status !== "WITHDRAWN",
     );
     if (existing) {
       throw new Error("Student has already applied to this position.");
     }
 
-    const student = this.profiles.find((p) => p.studentId === data.studentId || p.id === data.studentId);
+    const student = this.profiles.find(
+      (p) => p.studentId === data.studentId || p.id === data.studentId,
+    );
     const drive = this.drives.find((d) => d.id === data.driveId);
     const position = this.positions.find((p) => p.id === data.positionId);
 
@@ -422,13 +462,17 @@ class PlacementService {
 
     // Verify drive is open
     if (drive.status !== "OPEN") {
-      throw new Error(`Drive is not open for applications (Current status: ${drive.status}).`);
+      throw new Error(
+        `Drive is not open for applications (Current status: ${drive.status}).`,
+      );
     }
 
     // Evaluate eligibility
     const snapshot = calculateEligibility(student, position);
     if (snapshot.status === "INELIGIBLE") {
-      throw new Error("Application rejected: Candidate does not meet mandatory eligibility requirements.");
+      throw new Error(
+        "Application rejected: Candidate does not meet mandatory eligibility requirements.",
+      );
     }
 
     const newApp: Application = {
@@ -471,7 +515,7 @@ class PlacementService {
 
   async shortlistApplications(
     applicationIds: string[],
-    reviewer: string
+    reviewer: string,
   ): Promise<ApiResponse<Application[]>> {
     await new Promise((r) => setTimeout(r, 70));
     const modified: Application[] = [];
@@ -506,7 +550,7 @@ class PlacementService {
   async rejectApplication(
     applicationId: string,
     reason: string,
-    reviewer: string
+    reviewer: string,
   ): Promise<ApiResponse<Application>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.applications.findIndex((a) => a.id === applicationId);
@@ -529,7 +573,7 @@ class PlacementService {
 
   async withdrawApplication(
     applicationId: string,
-    reason?: string
+    reason?: string,
   ): Promise<ApiResponse<Application>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.applications.findIndex((a) => a.id === applicationId);
@@ -574,11 +618,15 @@ class PlacementService {
 
   async getInterviewById(id: string): Promise<ApiResponse<Interview | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const intv = this.interviews.find((i) => i.id === id || i.interviewCode === id) || null;
+    const intv =
+      this.interviews.find((i) => i.id === id || i.interviewCode === id) ||
+      null;
     return { success: true, data: intv };
   }
 
-  async scheduleInterview(data: Partial<Interview>): Promise<ApiResponse<Interview>> {
+  async scheduleInterview(
+    data: Partial<Interview>,
+  ): Promise<ApiResponse<Interview>> {
     await new Promise((r) => setTimeout(r, 70));
     const app = this.applications.find((a) => a.id === data.applicationId);
     if (!app) throw new Error("Application record not found");
@@ -600,7 +648,8 @@ class PlacementService {
       time: data.time || "10:00 AM",
       durationMinutes: data.durationMinutes || 60,
       mode: data.mode || "ONLINE",
-      locationOrMeetingUrl: data.locationOrMeetingUrl || "https://meet.google.com/xyz",
+      locationOrMeetingUrl:
+        data.locationOrMeetingUrl || "https://meet.google.com/xyz",
       interviewerName: data.interviewerName || "Technical Panel Member",
       interviewerEmail: data.interviewerEmail,
       status: "SCHEDULED",
@@ -628,7 +677,7 @@ class PlacementService {
     date: string,
     time: string,
     reason: string,
-    actor: string
+    actor: string,
   ): Promise<ApiResponse<Interview>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.interviews.findIndex((i) => i.id === id);
@@ -652,7 +701,7 @@ class PlacementService {
 
   async completeInterview(
     id: string,
-    evaluation: InterviewEvaluation
+    evaluation: InterviewEvaluation,
   ): Promise<ApiResponse<Interview>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.interviews.findIndex((i) => i.id === id);
@@ -694,7 +743,8 @@ class PlacementService {
 
   async getOfferById(id: string): Promise<ApiResponse<Offer | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const offer = this.offers.find((o) => o.id === id || o.offerCode === id) || null;
+    const offer =
+      this.offers.find((o) => o.id === id || o.offerCode === id) || null;
     return { success: true, data: offer };
   }
 
@@ -721,7 +771,9 @@ class PlacementService {
       variableLpa: data.variableLpa,
       stipendMonthly: data.stipendMonthly,
       offerDate: new Date().toISOString().split("T")[0],
-      responseDeadline: data.responseDeadline || new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0],
+      responseDeadline:
+        data.responseDeadline ||
+        new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0],
       joiningDate: data.joiningDate || "2027-07-01",
       status: "RELEASED",
       releasedBy: data.releasedBy || "Placement Officer",
@@ -746,7 +798,10 @@ class PlacementService {
     return { success: true, data: newOffer };
   }
 
-  async acceptOffer(id: string, studentNotes?: string): Promise<ApiResponse<Offer>> {
+  async acceptOffer(
+    id: string,
+    studentNotes?: string,
+  ): Promise<ApiResponse<Offer>> {
     await new Promise((r) => setTimeout(r, 70));
     const idx = this.offers.findIndex((o) => o.id === id);
     if (idx === -1) throw new Error("Offer not found");
@@ -784,7 +839,9 @@ class PlacementService {
       });
     }
 
-    const outIdx = this.outcomes.findIndex((o) => o.studentId === offer.studentId);
+    const outIdx = this.outcomes.findIndex(
+      (o) => o.studentId === offer.studentId,
+    );
     if (outIdx !== -1) {
       this.outcomes[outIdx] = {
         ...this.outcomes[outIdx],
@@ -867,7 +924,7 @@ class PlacementService {
   }
 
   async getPlacementOutcomeByStudent(
-    studentId: string
+    studentId: string,
   ): Promise<ApiResponse<PlacementOutcome | null>> {
     await new Promise((r) => setTimeout(r, 30));
     const out = this.outcomes.find((o) => o.studentId === studentId) || null;
@@ -875,7 +932,7 @@ class PlacementService {
   }
 
   async confirmPlacementOutcome(
-    data: Partial<PlacementOutcome>
+    data: Partial<PlacementOutcome>,
   ): Promise<ApiResponse<PlacementOutcome>> {
     await new Promise((r) => setTimeout(r, 60));
     const idx = this.outcomes.findIndex((o) => o.studentId === data.studentId);
@@ -948,7 +1005,9 @@ class PlacementService {
           Offers: p.offersCount,
           "Placement Status": p.placementStatus,
           Company: p.placedCompany || "N/A",
-          "CTC (LPA)": p.placedPackageLpa ? `₹${p.placedPackageLpa} LPA` : "N/A",
+          "CTC (LPA)": p.placedPackageLpa
+            ? `₹${p.placedPackageLpa} LPA`
+            : "N/A",
         }));
         break;
 

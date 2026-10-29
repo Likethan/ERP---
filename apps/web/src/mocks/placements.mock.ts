@@ -30,7 +30,12 @@ export interface JobDriveItem {
   totalApplicants: number;
   shortlistedCount: number;
   offersMadeCount: number;
-  status: "APPLICATIONS_OPEN" | "SHORTLISTING" | "INTERVIEWS_ACTIVE" | "COMPLETED" | "DRAFT";
+  status:
+    | "APPLICATIONS_OPEN"
+    | "SHORTLISTING"
+    | "INTERVIEWS_ACTIVE"
+    | "COMPLETED"
+    | "DRAFT";
 }
 
 export interface PlacementOfferItem {

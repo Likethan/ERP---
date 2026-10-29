@@ -26,29 +26,24 @@ Validates all 20 required reliability and disaster recovery capabilities:
 """
 
 import asyncio
-from datetime import UTC, datetime, timedelta
 import json
-from pathlib import Path
 import shutil
 import tempfile
 import uuid
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
-from httpx import AsyncClient
 import pytest
+from httpx import AsyncClient
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory
 from app.core.events import DomainEventType, OutboxService
-from app.core.exceptions import BadRequestException, PermissionDeniedException
+from app.core.exceptions import BadRequestException
 from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
-from app.core.reliability_config import (
-    evaluate_backup_freshness,
-    get_reliability_objectives,
-)
 from app.core.resilience import (
     CircuitBreaker,
-    CircuitBreakerRegistry,
     circuit_registry,
     retry_async,
 )
@@ -56,8 +51,8 @@ from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
 from app.models.audit import AuditLog
 from app.models.core import Institution
 from app.models.documents import Document, DocumentCategory
-from app.models.event import EventConsumerCheckpoint, EventDeadLetter
-from app.models.people import Role, User
+from app.models.event import EventConsumerCheckpoint
+from app.models.people import User
 from app.models.reliability import (
     BackupStatus,
     BackupType,

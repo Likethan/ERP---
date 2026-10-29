@@ -103,12 +103,16 @@ class FinanceService {
   private categories: FeeCategory[] = [...MOCK_FEE_CATEGORIES];
   private feeItems: FeeItem[] = [...MOCK_FEE_ITEMS];
   private feeStructures: FeeStructure[] = [...MOCK_CANONICAL_FEE_STRUCTURES];
-  private assignments: StudentFeeAssignment[] = [...MOCK_STUDENT_FEE_ASSIGNMENTS];
+  private assignments: StudentFeeAssignment[] = [
+    ...MOCK_STUDENT_FEE_ASSIGNMENTS,
+  ];
   private invoices: Invoice[] = [...MOCK_CANONICAL_INVOICES];
   private payments: Payment[] = [...MOCK_CANONICAL_PAYMENTS];
   private receipts: Receipt[] = [...MOCK_CANONICAL_RECEIPTS];
   private scholarships: Scholarship[] = [...MOCK_CANONICAL_SCHOLARSHIPS];
-  private studentScholarships: StudentScholarship[] = [...MOCK_STUDENT_SCHOLARSHIPS];
+  private studentScholarships: StudentScholarship[] = [
+    ...MOCK_STUDENT_SCHOLARSHIPS,
+  ];
   private adjustments: FinancialAdjustment[] = [...MOCK_FINANCIAL_ADJUSTMENTS];
   private refunds: Refund[] = [...MOCK_CANONICAL_REFUNDS];
 
@@ -120,15 +124,30 @@ class FinanceService {
     await new Promise((r) => setTimeout(r, 40));
 
     // Dynamic aggregation over live state
-    const totalBilled = this.invoices.reduce((acc, i) => addMoney(acc, i.grossAmount), 0);
+    const totalBilled = this.invoices.reduce(
+      (acc, i) => addMoney(acc, i.grossAmount),
+      0,
+    );
     const totalCollected = this.payments
       .filter((p) => p.status === "SUCCESS")
       .reduce((acc, p) => addMoney(acc, p.amount), 0);
-    const totalOutstanding = this.invoices.reduce((acc, i) => addMoney(acc, i.outstandingAmount), 0);
+    const totalOutstanding = this.invoices.reduce(
+      (acc, i) => addMoney(acc, i.outstandingAmount),
+      0,
+    );
 
-    const overdueInvoices = this.invoices.filter((i) => i.status === "OVERDUE" || (i.outstandingAmount > 0 && calculateOverdueDays(i.dueDate) > 0));
-    const totalOverdue = overdueInvoices.reduce((acc, i) => addMoney(acc, i.outstandingAmount), 0);
-    const pendingRefunds = this.refunds.filter((r) => r.status === "REQUESTED" || r.status === "UNDER_REVIEW");
+    const overdueInvoices = this.invoices.filter(
+      (i) =>
+        i.status === "OVERDUE" ||
+        (i.outstandingAmount > 0 && calculateOverdueDays(i.dueDate) > 0),
+    );
+    const totalOverdue = overdueInvoices.reduce(
+      (acc, i) => addMoney(acc, i.outstandingAmount),
+      0,
+    );
+    const pendingRefunds = this.refunds.filter(
+      (r) => r.status === "REQUESTED" || r.status === "UNDER_REVIEW",
+    );
 
     const aging = compileAgingBuckets(this.invoices);
 
@@ -138,16 +157,28 @@ class FinanceService {
       totalCollected,
       totalOutstanding,
       totalOverdue,
-      collectionRatePercent: totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 1000) / 10 : 0,
+      collectionRatePercent:
+        totalBilled > 0
+          ? Math.round((totalCollected / totalBilled) * 1000) / 10
+          : 0,
       pendingRefundsCount: pendingRefunds.length,
-      pendingRefundsAmount: pendingRefunds.reduce((acc, r) => addMoney(acc, r.requestedAmount), 0),
+      pendingRefundsAmount: pendingRefunds.reduce(
+        (acc, r) => addMoney(acc, r.requestedAmount),
+        0,
+      ),
       agingBuckets: aging,
       operationalQueues: {
-        pendingPaymentsCount: this.payments.filter((p) => p.status === "PENDING").length,
+        pendingPaymentsCount: this.payments.filter(
+          (p) => p.status === "PENDING",
+        ).length,
         overdueInvoicesCount: overdueInvoices.length,
         refundRequestsCount: pendingRefunds.length,
-        scholarshipApprovalsCount: this.scholarships.filter((s) => s.status === "PENDING_APPROVAL").length,
-        unallocatedPaymentsCount: this.payments.filter((p) => p.unallocatedAmount > 0).length,
+        scholarshipApprovalsCount: this.scholarships.filter(
+          (s) => s.status === "PENDING_APPROVAL",
+        ).length,
+        unallocatedPaymentsCount: this.payments.filter(
+          (p) => p.unallocatedAmount > 0,
+        ).length,
         recentlyIssuedReceiptsCount: this.receipts.length,
       },
     };
@@ -156,17 +187,19 @@ class FinanceService {
   }
 
   // Legacy dashboard support
-  async getDashboard(): Promise<ApiResponse<{
-    total_billed: number;
-    total_collected: number;
-    total_outstanding: number;
-    collection_rate_percent: number;
-    total_invoices_count: number;
-    paid_invoices_count: number;
-    pending_invoices_count: number;
-    overdue_invoices_count: number;
-    today_collections: number;
-  }>> {
+  async getDashboard(): Promise<
+    ApiResponse<{
+      total_billed: number;
+      total_collected: number;
+      total_outstanding: number;
+      collection_rate_percent: number;
+      total_invoices_count: number;
+      paid_invoices_count: number;
+      pending_invoices_count: number;
+      overdue_invoices_count: number;
+      today_collections: number;
+    }>
+  > {
     await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
@@ -176,9 +209,14 @@ class FinanceService {
         total_outstanding: 107000,
         collection_rate_percent: 71.1,
         total_invoices_count: this.invoices.length,
-        paid_invoices_count: this.invoices.filter((i) => i.status === "PAID").length,
-        pending_invoices_count: this.invoices.filter((i) => i.status === "ISSUED" || i.status === "PARTIALLY_PAID").length,
-        overdue_invoices_count: this.invoices.filter((i) => i.status === "OVERDUE").length,
+        paid_invoices_count: this.invoices.filter((i) => i.status === "PAID")
+          .length,
+        pending_invoices_count: this.invoices.filter(
+          (i) => i.status === "ISSUED" || i.status === "PARTIALLY_PAID",
+        ).length,
+        overdue_invoices_count: this.invoices.filter(
+          (i) => i.status === "OVERDUE",
+        ).length,
         today_collections: 50000,
       },
     };
@@ -200,13 +238,16 @@ class FinanceService {
     return { success: true, data: cat };
   }
 
-  async createFeeCategory(data: Partial<FeeCategory>): Promise<ApiResponse<FeeCategory>> {
+  async createFeeCategory(
+    data: Partial<FeeCategory>,
+  ): Promise<ApiResponse<FeeCategory>> {
     await new Promise((r) => setTimeout(r, 60));
     const newCat: FeeCategory = {
       id: `cat-${Date.now()}`,
       code: data.code || `CAT-${Date.now().toString().slice(-4)}`,
       name: data.name || "Institutional Fee",
-      description: data.description || "General academic or facilities fee category.",
+      description:
+        data.description || "General academic or facilities fee category.",
       type: data.type || "OTHER",
       isTaxable: Boolean(data.isTaxable),
       isRefundable: Boolean(data.isRefundable),
@@ -218,7 +259,10 @@ class FinanceService {
     return { success: true, data: newCat };
   }
 
-  async updateFeeCategory(id: string, updates: Partial<FeeCategory>): Promise<ApiResponse<FeeCategory>> {
+  async updateFeeCategory(
+    id: string,
+    updates: Partial<FeeCategory>,
+  ): Promise<ApiResponse<FeeCategory>> {
     await new Promise((r) => setTimeout(r, 50));
     const idx = this.categories.findIndex((c) => c.id === id);
     if (idx === -1) throw new Error(`Fee Category '${id}' not found.`);
@@ -277,7 +321,9 @@ class FinanceService {
   // 4. Fee Structures & Lifecycle
   // ==========================================
 
-  async getFeeStructures(filters?: FeeStructureFilters): Promise<ApiResponse<FeeStructure[]>> {
+  async getFeeStructures(
+    filters?: FeeStructureFilters,
+  ): Promise<ApiResponse<FeeStructure[]>> {
     await new Promise((r) => setTimeout(r, 40));
     let items = [...this.feeStructures];
 
@@ -285,7 +331,9 @@ class FinanceService {
       items = items.filter((fs) => fs.status === filters.status);
     }
     if (filters?.program) {
-      items = items.filter((fs) => fs.program.toLowerCase().includes(filters.program!.toLowerCase()));
+      items = items.filter((fs) =>
+        fs.program.toLowerCase().includes(filters.program!.toLowerCase()),
+      );
     }
     if (filters?.semester) {
       items = items.filter((fs) => fs.semester === filters.semester);
@@ -296,7 +344,7 @@ class FinanceService {
         (fs) =>
           fs.name.toLowerCase().includes(q) ||
           fs.code.toLowerCase().includes(q) ||
-          fs.program.toLowerCase().includes(q)
+          fs.program.toLowerCase().includes(q),
       );
     }
 
@@ -310,14 +358,31 @@ class FinanceService {
     return { success: true, data: found };
   }
 
-  async createFeeStructure(data: Partial<FeeStructure>): Promise<ApiResponse<FeeStructure>> {
+  async createFeeStructure(
+    data: Partial<FeeStructure>,
+  ): Promise<ApiResponse<FeeStructure>> {
     await new Promise((r) => setTimeout(r, 80));
 
     const components = data.components || [
-      { id: "c-1", title: "Academic Tuition", categoryName: "Tuition Fee", amount: 50000, isMandatory: true },
-      { id: "c-2", title: "Computing Lab", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
+      {
+        id: "c-1",
+        title: "Academic Tuition",
+        categoryName: "Tuition Fee",
+        amount: 50000,
+        isMandatory: true,
+      },
+      {
+        id: "c-2",
+        title: "Computing Lab",
+        categoryName: "Laboratory Fee",
+        amount: 15000,
+        isMandatory: true,
+      },
     ];
-    const grossTotal = components.reduce((acc, c) => addMoney(acc, c.amount), 0);
+    const grossTotal = components.reduce(
+      (acc, c) => addMoney(acc, c.amount),
+      0,
+    );
 
     const newFs: FeeStructure = {
       id: `fs-${Date.now()}`,
@@ -330,8 +395,10 @@ class FinanceService {
       components,
       grossTotal,
       status: "DRAFT",
-      effectiveDate: data.effectiveDate || new Date().toISOString().split("T")[0],
-      notes: data.notes || "Draft fee structure created for departmental review.",
+      effectiveDate:
+        data.effectiveDate || new Date().toISOString().split("T")[0],
+      notes:
+        data.notes || "Draft fee structure created for departmental review.",
       totalStudentsAssigned: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -350,7 +417,9 @@ class FinanceService {
     return { success: true, data: newFs };
   }
 
-  async submitFeeStructureForApproval(id: string): Promise<ApiResponse<FeeStructure>> {
+  async submitFeeStructureForApproval(
+    id: string,
+  ): Promise<ApiResponse<FeeStructure>> {
     const fs = this.feeStructures.find((f) => f.id === id);
     if (!fs) throw new Error(`Fee Structure '${id}' not found.`);
     fs.status = "PENDING_APPROVAL";
@@ -365,7 +434,10 @@ class FinanceService {
     return { success: true, data: fs };
   }
 
-  async approveFeeStructure(id: string, approvedBy = "Academic Senate"): Promise<ApiResponse<FeeStructure>> {
+  async approveFeeStructure(
+    id: string,
+    approvedBy = "Academic Senate",
+  ): Promise<ApiResponse<FeeStructure>> {
     const fs = this.feeStructures.find((f) => f.id === id);
     if (!fs) throw new Error(`Fee Structure '${id}' not found.`);
     fs.status = "APPROVED";
@@ -434,12 +506,18 @@ class FinanceService {
     const fs = this.feeStructures.find((f) => f.id === data.feeStructureId);
 
     if (!student) throw new Error(`Student '${data.studentId}' not found.`);
-    if (!fs) throw new Error(`Fee Structure '${data.feeStructureId}' not found.`);
+    if (!fs)
+      throw new Error(`Fee Structure '${data.feeStructureId}' not found.`);
 
     const grossAmount = fs.grossTotal;
     const scholarshipAmount = data.scholarshipAmount || 0;
     const discountAmount = data.discountAmount || 0;
-    const netPayable = calculateNetPayable(grossAmount, scholarshipAmount, discountAmount, 0);
+    const netPayable = calculateNetPayable(
+      grossAmount,
+      scholarshipAmount,
+      discountAmount,
+      0,
+    );
 
     const newAssign: StudentFeeAssignment = {
       id: `assign-${Date.now()}`,
@@ -492,7 +570,9 @@ class FinanceService {
       discountAmount,
       adjustmentAmount: 0,
       netPayable,
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
     });
 
     newAssign.invoiceId = invRes.data.id;
@@ -529,7 +609,9 @@ class FinanceService {
       items = items.filter((inv) => inv.studentId === filters.studentId);
     }
     if (filters?.program) {
-      items = items.filter((inv) => inv.program.toLowerCase().includes(filters.program!.toLowerCase()));
+      items = items.filter((inv) =>
+        inv.program.toLowerCase().includes(filters.program!.toLowerCase()),
+      );
     }
     if (filters?.semester) {
       items = items.filter((inv) => inv.semester === filters.semester);
@@ -540,7 +622,7 @@ class FinanceService {
         (inv) =>
           inv.invoiceNumber.toLowerCase().includes(q) ||
           inv.studentName.toLowerCase().includes(q) ||
-          inv.rollNumber.toLowerCase().includes(q)
+          inv.rollNumber.toLowerCase().includes(q),
       );
     }
 
@@ -549,7 +631,9 @@ class FinanceService {
 
   async getInvoiceById(id: string): Promise<ApiResponse<Invoice>> {
     await new Promise((r) => setTimeout(r, 30));
-    const inv = this.invoices.find((i) => i.id === id || i.invoiceNumber === id);
+    const inv = this.invoices.find(
+      (i) => i.id === id || i.invoiceNumber === id,
+    );
     if (!inv) throw new Error(`Invoice '${id}' not found.`);
     return { success: true, data: inv };
   }
@@ -557,7 +641,9 @@ class FinanceService {
   async createInvoice(data: Partial<Invoice>): Promise<ApiResponse<Invoice>> {
     await new Promise((r) => setTimeout(r, 70));
 
-    const gross = data.grossAmount || (data.lines ? calculateInvoiceGross(data.lines) : 75000);
+    const gross =
+      data.grossAmount ||
+      (data.lines ? calculateInvoiceGross(data.lines) : 75000);
     const scholarship = data.scholarshipAmount || 0;
     const discount = data.discountAmount || 0;
     const adjustment = data.adjustmentAmount || 0;
@@ -574,9 +660,20 @@ class FinanceService {
       semester: data.semester || 5,
       academicYear: data.academicYear || "2026-2027",
       issueDate: data.issueDate || new Date().toISOString().split("T")[0],
-      dueDate: data.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      dueDate:
+        data.dueDate ||
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
       lines: data.lines || [
-        { id: "l-1", title: "Semester Tuition", categoryName: "Tuition Fee", quantity: 1, unitAmount: gross, totalAmount: gross },
+        {
+          id: "l-1",
+          title: "Semester Tuition",
+          categoryName: "Tuition Fee",
+          quantity: 1,
+          unitAmount: gross,
+          totalAmount: gross,
+        },
       ],
       grossAmount: gross,
       scholarshipAmount: scholarship,
@@ -606,13 +703,18 @@ class FinanceService {
     return { success: true, data: newInv };
   }
 
-  async cancelInvoice(id: string, reason: string): Promise<ApiResponse<Invoice>> {
+  async cancelInvoice(
+    id: string,
+    reason: string,
+  ): Promise<ApiResponse<Invoice>> {
     await new Promise((r) => setTimeout(r, 60));
     const inv = this.invoices.find((i) => i.id === id);
     if (!inv) throw new Error(`Invoice '${id}' not found.`);
 
     if (inv.paidAmount > 0) {
-      throw new Error(`Cannot cancel invoice '${inv.invoiceNumber}': payments of ₹${inv.paidAmount} are already allocated. Process a refund first.`);
+      throw new Error(
+        `Cannot cancel invoice '${inv.invoiceNumber}': payments of ₹${inv.paidAmount} are already allocated. Process a refund first.`,
+      );
     }
 
     inv.status = "CANCELLED";
@@ -651,7 +753,7 @@ class FinanceService {
         (p) =>
           p.transactionRef.toLowerCase().includes(q) ||
           p.studentName.toLowerCase().includes(q) ||
-          p.invoiceNumber.toLowerCase().includes(q)
+          p.invoiceNumber.toLowerCase().includes(q),
       );
     }
 
@@ -660,7 +762,9 @@ class FinanceService {
 
   async getPaymentById(id: string): Promise<ApiResponse<Payment>> {
     await new Promise((r) => setTimeout(r, 30));
-    const p = this.payments.find((pay) => pay.id === id || pay.transactionRef === id);
+    const p = this.payments.find(
+      (pay) => pay.id === id || pay.transactionRef === id,
+    );
     if (!p) throw new Error(`Payment '${id}' not found.`);
     return { success: true, data: p };
   }
@@ -690,14 +794,16 @@ class FinanceService {
 
     if (data.amount > inv.outstandingAmount) {
       throw new Error(
-        `Payment amount of ₹${data.amount} exceeds invoice outstanding balance of ₹${inv.outstandingAmount}.`
+        `Payment amount of ₹${data.amount} exceeds invoice outstanding balance of ₹${inv.outstandingAmount}.`,
       );
     }
 
     const paymentId = `pay-${Date.now()}`;
     const receiptId = `rec-${Date.now()}`;
     const receiptNumber = `REC-2026-${(this.receipts.length + 10).toString().padStart(4, "0")}`;
-    const transactionRef = data.referenceNumber || `TXN-${data.paymentMethod}-${Date.now().toString().slice(-6)}`;
+    const transactionRef =
+      data.referenceNumber ||
+      `TXN-${data.paymentMethod}-${Date.now().toString().slice(-6)}`;
 
     // Create Payment Allocation
     const allocation = {
@@ -744,7 +850,10 @@ class FinanceService {
 
     // Update Invoice state
     inv.paidAmount = addMoney(inv.paidAmount, data.amount);
-    inv.outstandingAmount = calculateOutstanding(inv.netPayable, inv.paidAmount);
+    inv.outstandingAmount = calculateOutstanding(
+      inv.netPayable,
+      inv.paidAmount,
+    );
     inv.status = inv.outstandingAmount === 0 ? "PAID" : "PARTIALLY_PAID";
     inv.paymentIds.push(newPayment.id);
     inv.receiptIds.push(receiptId);
@@ -794,7 +903,9 @@ class FinanceService {
 
   async getReceiptById(id: string): Promise<ApiResponse<Receipt>> {
     await new Promise((r) => setTimeout(r, 30));
-    const r = this.receipts.find((rc) => rc.id === id || rc.receiptNumber === id);
+    const r = this.receipts.find(
+      (rc) => rc.id === id || rc.receiptNumber === id,
+    );
     if (!r) throw new Error(`Receipt '${id}' not found.`);
     return { success: true, data: r };
   }
@@ -815,7 +926,9 @@ class FinanceService {
     return { success: true, data: s };
   }
 
-  async createScholarship(data: Partial<Scholarship>): Promise<ApiResponse<Scholarship>> {
+  async createScholarship(
+    data: Partial<Scholarship>,
+  ): Promise<ApiResponse<Scholarship>> {
     await new Promise((r) => setTimeout(r, 60));
     const newSch: Scholarship = {
       id: `sch-${Date.now()}`,
@@ -826,7 +939,8 @@ class FinanceService {
       discountType: data.discountType || "PERCENTAGE",
       value: data.value || 10,
       maxDiscountAmount: data.maxDiscountAmount,
-      eligibilityCriteria: data.eligibilityCriteria || "Satisfies academic eligibility.",
+      eligibilityCriteria:
+        data.eligibilityCriteria || "Satisfies academic eligibility.",
       academicYear: data.academicYear || "2026-2027",
       status: "APPROVED",
       totalRecipients: 0,
@@ -846,7 +960,9 @@ class FinanceService {
     return { success: true, data: s };
   }
 
-  async getStudentScholarships(studentId?: string): Promise<ApiResponse<StudentScholarship[]>> {
+  async getStudentScholarships(
+    studentId?: string,
+  ): Promise<ApiResponse<StudentScholarship[]>> {
     await new Promise((r) => setTimeout(r, 30));
     let items = [...this.studentScholarships];
     if (studentId) {
@@ -857,7 +973,7 @@ class FinanceService {
 
   async applyScholarshipToInvoice(
     invoiceId: string,
-    scholarshipId: string
+    scholarshipId: string,
   ): Promise<ApiResponse<Invoice>> {
     await new Promise((r) => setTimeout(r, 70));
     const inv = this.invoices.find((i) => i.id === invoiceId);
@@ -868,9 +984,22 @@ class FinanceService {
 
     const { discountAmount } = calculateScholarshipImpact(inv.grossAmount, sch);
     inv.scholarshipAmount = discountAmount;
-    inv.netPayable = calculateNetPayable(inv.grossAmount, inv.scholarshipAmount, inv.discountAmount, inv.adjustmentAmount);
-    inv.outstandingAmount = calculateOutstanding(inv.netPayable, inv.paidAmount);
-    inv.status = inv.outstandingAmount === 0 ? "PAID" : inv.paidAmount > 0 ? "PARTIALLY_PAID" : "ISSUED";
+    inv.netPayable = calculateNetPayable(
+      inv.grossAmount,
+      inv.scholarshipAmount,
+      inv.discountAmount,
+      inv.adjustmentAmount,
+    );
+    inv.outstandingAmount = calculateOutstanding(
+      inv.netPayable,
+      inv.paidAmount,
+    );
+    inv.status =
+      inv.outstandingAmount === 0
+        ? "PAID"
+        : inv.paidAmount > 0
+          ? "PARTIALLY_PAID"
+          : "ISSUED";
     inv.updatedAt = new Date().toISOString();
     inv.history.push({
       id: `ih-${Date.now()}`,
@@ -887,7 +1016,9 @@ class FinanceService {
   // 9. Refunds
   // ==========================================
 
-  async getRefunds(filters?: { status?: RefundStatus | "ALL" }): Promise<ApiResponse<Refund[]>> {
+  async getRefunds(filters?: {
+    status?: RefundStatus | "ALL";
+  }): Promise<ApiResponse<Refund[]>> {
     await new Promise((r) => setTimeout(r, 30));
     let items = [...this.refunds];
     if (filters?.status && filters.status !== "ALL") {
@@ -955,7 +1086,7 @@ class FinanceService {
     refundId: string,
     action: "APPROVE" | "REJECT",
     notes: string,
-    approvedAmount?: number
+    approvedAmount?: number,
   ): Promise<ApiResponse<Refund>> {
     await new Promise((r) => setTimeout(r, 70));
 
@@ -1122,16 +1253,31 @@ class FinanceService {
   // 11. Student Financial Statement
   // ==========================================
 
-  async getStudentStatement(studentId?: string): Promise<ApiResponse<StudentFeeStatement>> {
+  async getStudentStatement(
+    studentId?: string,
+  ): Promise<ApiResponse<StudentFeeStatement>> {
     await new Promise((r) => setTimeout(r, 40));
 
     const sId = studentId || "std-001";
-    const studentInvoices = this.invoices.filter((i) => i.studentId === sId || i.rollNumber === "24CSE0101");
-    const studentReceipts = this.receipts.filter((r) => r.studentId === sId || r.rollNumber === "24CSE0101");
+    const studentInvoices = this.invoices.filter(
+      (i) => i.studentId === sId || i.rollNumber === "24CSE0101",
+    );
+    const studentReceipts = this.receipts.filter(
+      (r) => r.studentId === sId || r.rollNumber === "24CSE0101",
+    );
 
-    const totalBilled = studentInvoices.reduce((acc, i) => addMoney(acc, i.grossAmount), 0);
-    const totalPaid = studentInvoices.reduce((acc, i) => addMoney(acc, i.paidAmount), 0);
-    const totalDue = studentInvoices.reduce((acc, i) => addMoney(acc, i.outstandingAmount), 0);
+    const totalBilled = studentInvoices.reduce(
+      (acc, i) => addMoney(acc, i.grossAmount),
+      0,
+    );
+    const totalPaid = studentInvoices.reduce(
+      (acc, i) => addMoney(acc, i.paidAmount),
+      0,
+    );
+    const totalDue = studentInvoices.reduce(
+      (acc, i) => addMoney(acc, i.outstandingAmount),
+      0,
+    );
 
     return {
       success: true,
@@ -1139,7 +1285,9 @@ class FinanceService {
         student_id: sId,
         student_name: studentInvoices[0]?.studentName || "Aarav Patel",
         roll_number: studentInvoices[0]?.rollNumber || "24CSE0101",
-        program: studentInvoices[0]?.program || "B.Tech Computer Science & Engineering",
+        program:
+          studentInvoices[0]?.program ||
+          "B.Tech Computer Science & Engineering",
         academic_year: "2026-2027",
         total_billed: totalBilled,
         total_paid: totalPaid,

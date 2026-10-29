@@ -10,7 +10,7 @@ Exposes RESTful endpoints for:
 - Multi-tenant enablement analytics, completion rates, and drop-off reporting
 """
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -23,13 +23,11 @@ from app.models.people import User
 from app.schemas.adoption import (
     AdoptionJourneyCreateRequest,
     AdoptionJourneyResponse,
-    AdoptionJourneyUpdateRequest,
     AdoptionSummaryDashboardResponse,
     AnnouncementAcknowledgeRequest,
     AnnouncementReadershipMetricsResponse,
     ContextualGuidanceCreateRequest,
     ContextualGuidanceResponse,
-    ContextualGuidanceUpdateRequest,
     FeatureAdoptionMilestoneRecordRequest,
     FeatureAdoptionMilestoneResponse,
     FeatureAdoptionTargetCreateRequest,
@@ -38,13 +36,11 @@ from app.schemas.adoption import (
     JourneyAdoptionMetricsResponse,
     ProductAnnouncementCreateRequest,
     ProductAnnouncementResponse,
-    ProductAnnouncementUpdateRequest,
-    TrainingAssignRequest,
     TrainingAssignmentResponse,
+    TrainingAssignRequest,
     TrainingProgramCreateRequest,
     TrainingProgramMetricsResponse,
     TrainingProgramResponse,
-    TrainingProgramUpdateRequest,
     UserAnnouncementReceiptResponse,
     UserGuidanceActionRequest,
     UserGuidanceStateResponse,

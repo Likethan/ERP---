@@ -16,7 +16,13 @@ import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/ui/stat-card";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth-context";
 import { DataGrid, ColumnDef, BulkAction } from "@/components/data-grid";
@@ -39,13 +45,17 @@ export default function StudentCourseEnrollmentsPage() {
   const { showToast } = useToast();
   const { hasPermission } = useAuth();
 
-  const [enrollments, setEnrollments] = useState<StudentCourseEnrollmentRecord[]>([]);
+  const [enrollments, setEnrollments] = useState<
+    StudentCourseEnrollmentRecord[]
+  >([]);
   const [offerings, setOfferings] = useState<CourseOfferingDetail[]>([]);
   const [students, setStudents] = useState<StudentComprehensiveDetail[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Tabs: Master Registrations vs Elective Selection
-  const [activeTab, setActiveTab] = useState<"registrations" | "electives">("registrations");
+  const [activeTab, setActiveTab] = useState<"registrations" | "electives">(
+    "registrations",
+  );
 
   // Filter states
   const [search, setSearch] = useState("");
@@ -62,11 +72,14 @@ export default function StudentCourseEnrollmentsPage() {
   const [bulkSemester, setBulkSemester] = useState<number>(5);
   const [bulkSection, setBulkSection] = useState("A");
   const [bulkOfferingId, setBulkOfferingId] = useState("");
-  const [selectedBulkStudentIds, setSelectedBulkStudentIds] = useState<string[]>([]);
+  const [selectedBulkStudentIds, setSelectedBulkStudentIds] = useState<
+    string[]
+  >([]);
   const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
 
   // Elective Selection Wizard
-  const [selectedStudentForElective, setSelectedStudentForElective] = useState("");
+  const [selectedStudentForElective, setSelectedStudentForElective] =
+    useState("");
   const [chosenElectiveCode, setChosenElectiveCode] = useState("PE-CS-01");
   const [isSubmittingElective, setIsSubmittingElective] = useState(false);
 
@@ -102,14 +115,18 @@ export default function StudentCourseEnrollmentsPage() {
   // Cohort students filtered for bulk selection
   const cohortStudents = useMemo(() => {
     return students.filter(
-      (s) => s.currentSemester === Number(bulkSemester) && s.section === bulkSection
+      (s) =>
+        s.currentSemester === Number(bulkSemester) && s.section === bulkSection,
     );
   }, [students, bulkSemester, bulkSection]);
 
   // Filtering enrollments
   const filteredEnrollments = useMemo(() => {
     return enrollments.filter((e) => {
-      if (selectedSemester !== "ALL" && e.semester !== Number(selectedSemester)) {
+      if (
+        selectedSemester !== "ALL" &&
+        e.semester !== Number(selectedSemester)
+      ) {
         return false;
       }
       if (selectedSection !== "ALL" && e.section !== selectedSection) {
@@ -118,7 +135,10 @@ export default function StudentCourseEnrollmentsPage() {
       if (selectedStatus !== "ALL" && e.status !== selectedStatus) {
         return false;
       }
-      if (selectedOfferingId !== "ALL" && e.courseOfferingId !== selectedOfferingId) {
+      if (
+        selectedOfferingId !== "ALL" &&
+        e.courseOfferingId !== selectedOfferingId
+      ) {
         return false;
       }
       if (search) {
@@ -132,7 +152,14 @@ export default function StudentCourseEnrollmentsPage() {
       }
       return true;
     });
-  }, [enrollments, selectedSemester, selectedSection, selectedStatus, selectedOfferingId, search]);
+  }, [
+    enrollments,
+    selectedSemester,
+    selectedSection,
+    selectedStatus,
+    selectedOfferingId,
+    search,
+  ]);
 
   const paginatedEnrollments = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -165,7 +192,11 @@ export default function StudentCourseEnrollmentsPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Bulk enrollment failed", message: err.message, type: "error" });
+      showToast({
+        title: "Bulk enrollment failed",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsBulkSubmitting(false);
     }
@@ -180,7 +211,11 @@ export default function StudentCourseEnrollmentsPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Failed to drop enrollment", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to drop enrollment",
+        message: err.message,
+        type: "error",
+      });
     }
   };
 
@@ -223,7 +258,11 @@ export default function StudentCourseEnrollmentsPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Elective registration failed", message: err.message, type: "error" });
+      showToast({
+        title: "Elective registration failed",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmittingElective(false);
     }
@@ -238,7 +277,10 @@ export default function StudentCourseEnrollmentsPage() {
         for (const item of items) {
           await academicsService.updateEnrollmentStatus(item.id, "DROPPED");
         }
-        showToast({ title: `Marked ${items.length} enrollments as DROPPED`, type: "warning" });
+        showToast({
+          title: `Marked ${items.length} enrollments as DROPPED`,
+          type: "warning",
+        });
         setSelectedKeys(new Set());
         loadData();
       },
@@ -261,7 +303,9 @@ export default function StudentCourseEnrollmentsPage() {
             >
               {item.studentName}
             </Link>
-            <div className="font-mono text-xs text-indigo-300 font-semibold">{item.rollNumber}</div>
+            <div className="font-mono text-xs text-indigo-300 font-semibold">
+              {item.rollNumber}
+            </div>
           </div>
         ),
       },
@@ -278,7 +322,9 @@ export default function StudentCourseEnrollmentsPage() {
             >
               {item.subjectCode}
             </Link>
-            <div className="text-xs text-slate-400 line-clamp-1">{item.subjectName}</div>
+            <div className="text-xs text-slate-400 line-clamp-1">
+              {item.subjectName}
+            </div>
             {item.isElective && (
               <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/20 mt-0.5">
                 {item.electiveGroup || "Elective Basket"}
@@ -295,7 +341,9 @@ export default function StudentCourseEnrollmentsPage() {
             <span className="rounded bg-slate-800 px-2 py-0.5 border border-slate-700">
               Sem {item.semester} • Sec {item.section}
             </span>
-            <div className="text-[10px] text-slate-500 mt-1">AY {item.academicYear}</div>
+            <div className="text-[10px] text-slate-500 mt-1">
+              AY {item.academicYear}
+            </div>
           </div>
         ),
       },
@@ -316,7 +364,10 @@ export default function StudentCourseEnrollmentsPage() {
         sortable: true,
         accessorKey: "status",
         cell: (item) => {
-          const statusMap: Record<CourseEnrollmentStatus, "success" | "warning" | "destructive" | "info" | "secondary"> = {
+          const statusMap: Record<
+            CourseEnrollmentStatus,
+            "success" | "warning" | "destructive" | "info" | "secondary"
+          > = {
             ENROLLED: "success",
             PENDING: "warning",
             DROPPED: "destructive",
@@ -361,7 +412,7 @@ export default function StudentCourseEnrollmentsPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   // Custom filter slot
@@ -437,7 +488,10 @@ export default function StudentCourseEnrollmentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
@@ -447,7 +501,8 @@ export default function StudentCourseEnrollmentsPage() {
             Student Course Registrations & Electives
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Course offering enrollment records, section cohort batch onboarding, and choice-based elective selection.
+            Course offering enrollment records, section cohort batch onboarding,
+            and choice-based elective selection.
           </p>
         </div>
 
@@ -490,7 +545,11 @@ export default function StudentCourseEnrollmentsPage() {
         />
         <StatCard
           label="Dropped / Withdrawn"
-          value={enrollments.filter((e) => e.status === "DROPPED" || e.status === "WITHDRAWN").length}
+          value={
+            enrollments.filter(
+              (e) => e.status === "DROPPED" || e.status === "WITHDRAWN",
+            ).length
+          }
           description="Roster adjustments"
           variant="amber"
           icon={<AlertTriangle className="h-4 w-4" />}
@@ -569,9 +628,12 @@ export default function StudentCourseEnrollmentsPage() {
           <div className="md:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Professional Elective I Selection (Semester 5)</CardTitle>
+                <CardTitle>
+                  Professional Elective I Selection (Semester 5)
+                </CardTitle>
                 <CardDescription>
-                  Autonomous CBCS Regulation R-2024 • Choose exactly 1 course from the professional basket.
+                  Autonomous CBCS Regulation R-2024 • Choose exactly 1 course
+                  from the professional basket.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -619,7 +681,9 @@ export default function StudentCourseEnrollmentsPage() {
                           />
                           <div>
                             <div className="font-semibold text-white flex items-center gap-2">
-                              <span className="font-mono text-indigo-400">{track.code}</span>
+                              <span className="font-mono text-indigo-400">
+                                {track.code}
+                              </span>
                               <span>{track.name}</span>
                             </div>
                             <p className="text-xs text-slate-400 mt-1 leading-relaxed">
@@ -653,15 +717,20 @@ export default function StudentCourseEnrollmentsPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-400 mb-1">Select Student</label>
+                  <label className="block text-slate-400 mb-1">
+                    Select Student
+                  </label>
                   <select
                     value={selectedStudentForElective}
-                    onChange={(e) => setSelectedStudentForElective(e.target.value)}
+                    onChange={(e) =>
+                      setSelectedStudentForElective(e.target.value)
+                    }
                     className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
                   >
                     {students.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.rollNumber} - {s.firstName} {s.lastName} (Sec {s.section})
+                        {s.rollNumber} - {s.firstName} {s.lastName} (Sec{" "}
+                        {s.section})
                       </option>
                     ))}
                   </select>
@@ -670,11 +739,15 @@ export default function StudentCourseEnrollmentsPage() {
                 <div className="rounded-lg border border-slate-800 bg-slate-900/40 p-3 space-y-2 text-slate-300">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Basket:</span>
-                    <span className="font-medium text-white">Professional Elective I</span>
+                    <span className="font-medium text-white">
+                      Professional Elective I
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Selected:</span>
-                    <span className="font-mono font-bold text-indigo-400">{chosenElectiveCode}</span>
+                    <span className="font-mono font-bold text-indigo-400">
+                      {chosenElectiveCode}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Rule check:</span>
@@ -709,7 +782,9 @@ export default function StudentCourseEnrollmentsPage() {
         <form onSubmit={handleExecuteBulkEnrollment} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Semester</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Semester
+              </label>
               <select
                 value={bulkSemester}
                 onChange={(e) => setBulkSemester(Number(e.target.value))}
@@ -724,7 +799,9 @@ export default function StudentCourseEnrollmentsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Section</label>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Section
+              </label>
               <select
                 value={bulkSection}
                 onChange={(e) => setBulkSection(e.target.value)}
@@ -748,7 +825,8 @@ export default function StudentCourseEnrollmentsPage() {
             >
               {offerings.map((o) => (
                 <option key={o.id} value={o.id}>
-                  {o.subjectCode} - {o.subjectName} (Sem {o.semester} Sec {o.section})
+                  {o.subjectCode} - {o.subjectName} (Sem {o.semester} Sec{" "}
+                  {o.section})
                 </option>
               ))}
             </select>
@@ -779,7 +857,8 @@ export default function StudentCourseEnrollmentsPage() {
             <div className="max-h-48 overflow-y-auto rounded-lg border border-slate-700 bg-slate-900 p-2 space-y-1">
               {cohortStudents.length === 0 ? (
                 <div className="p-4 text-center text-xs text-slate-500">
-                  No students found in Semester {bulkSemester} Section {bulkSection}.
+                  No students found in Semester {bulkSemester} Section{" "}
+                  {bulkSection}.
                 </div>
               ) : (
                 cohortStudents.map((s) => {
@@ -794,15 +873,24 @@ export default function StudentCourseEnrollmentsPage() {
                         checked={checked}
                         onChange={() => {
                           if (checked) {
-                            setSelectedBulkStudentIds(selectedBulkStudentIds.filter((x) => x !== s.id));
+                            setSelectedBulkStudentIds(
+                              selectedBulkStudentIds.filter((x) => x !== s.id),
+                            );
                           } else {
-                            setSelectedBulkStudentIds([...selectedBulkStudentIds, s.id]);
+                            setSelectedBulkStudentIds([
+                              ...selectedBulkStudentIds,
+                              s.id,
+                            ]);
                           }
                         }}
                         className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500"
                       />
-                      <span className="font-mono text-indigo-300 font-semibold">{s.rollNumber}</span>
-                      <span>{s.firstName} {s.lastName}</span>
+                      <span className="font-mono text-indigo-300 font-semibold">
+                        {s.rollNumber}
+                      </span>
+                      <span>
+                        {s.firstName} {s.lastName}
+                      </span>
                     </label>
                   );
                 })

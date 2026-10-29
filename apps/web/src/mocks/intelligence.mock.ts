@@ -66,7 +66,8 @@ export const MOCK_OPERATIONAL_ALERTS: OperationalAlertItem[] = [
     id: "alt-01",
     level: "CRITICAL",
     title: "Low Attendance Warning (18 Students <75%)",
-    message: "18 students in 5th Sem CSE Sec B are currently falling below exam eligibility thresholds.",
+    message:
+      "18 students in 5th Sem CSE Sec B are currently falling below exam eligibility thresholds.",
     department: "Computer Science & Engineering",
     timestamp: "2 hours ago",
     actionHref: "/app/attendance",
@@ -76,7 +77,8 @@ export const MOCK_OPERATIONAL_ALERTS: OperationalAlertItem[] = [
     id: "alt-02",
     level: "WARNING",
     title: "CIA-1 Marks Pending Submission (2 Faculty)",
-    message: "Internal Assessment 1 marks for CS304 and ME401 await upload deadline in 48 hours.",
+    message:
+      "Internal Assessment 1 marks for CS304 and ME401 await upload deadline in 48 hours.",
     department: "Examination Cell",
     timestamp: "Today, 09:15 AM",
     actionHref: "/app/examinations/marks",
@@ -86,7 +88,8 @@ export const MOCK_OPERATIONAL_ALERTS: OperationalAlertItem[] = [
     id: "alt-03",
     level: "INFO",
     title: "Hostel Occupancy at 94.2% Capacity",
-    message: "Boys Hostel Block A has only 14 vacant beds remaining for the current academic session.",
+    message:
+      "Boys Hostel Block A has only 14 vacant beds remaining for the current academic session.",
     department: "Residential Facilities",
     timestamp: "Yesterday",
     actionHref: "/app/hostel",
@@ -118,7 +121,7 @@ export const MOCK_DEPARTMENT_KPIS: DepartmentKpiItem[] = [
     facultyCount: 18,
     studentsCount: 360,
     avgAttendancePercent: 85.2,
-    avgCgpa: 7.90,
+    avgCgpa: 7.9,
     placementRatePercent: 78.4,
     feeCollectionPercent: 91.0,
   },
@@ -150,10 +153,34 @@ export interface RiskRadarSummary {
 }
 
 export const MOCK_COHORT_DATA: CohortDistributionItem[] = [
-  { year: "1st Year (Batch 2026)", enrolled: 680, retentionRate: 98.4, avgAttendance: 91.2, passPercentage: 94.0 },
-  { year: "2nd Year (Batch 2025)", enrolled: 610, retentionRate: 96.8, avgAttendance: 88.7, passPercentage: 89.5 },
-  { year: "3rd Year (Batch 2024)", enrolled: 550, retentionRate: 95.2, avgAttendance: 86.4, passPercentage: 91.2 },
-  { year: "4th Year (Batch 2023)", enrolled: 440, retentionRate: 94.9, avgAttendance: 84.1, passPercentage: 96.5 },
+  {
+    year: "1st Year (Batch 2026)",
+    enrolled: 680,
+    retentionRate: 98.4,
+    avgAttendance: 91.2,
+    passPercentage: 94.0,
+  },
+  {
+    year: "2nd Year (Batch 2025)",
+    enrolled: 610,
+    retentionRate: 96.8,
+    avgAttendance: 88.7,
+    passPercentage: 89.5,
+  },
+  {
+    year: "3rd Year (Batch 2024)",
+    enrolled: 550,
+    retentionRate: 95.2,
+    avgAttendance: 86.4,
+    passPercentage: 91.2,
+  },
+  {
+    year: "4th Year (Batch 2023)",
+    enrolled: 440,
+    retentionRate: 94.9,
+    avgAttendance: 84.1,
+    passPercentage: 96.5,
+  },
 ];
 
 export const MOCK_RISK_RADAR: RiskRadarSummary = {
@@ -163,4 +190,3 @@ export const MOCK_RISK_RADAR: RiskRadarSummary = {
   criticalDisciplinary: 3,
   lastUpdated: "Today at 05:30 PM",
 };
-

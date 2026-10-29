@@ -78,7 +78,8 @@ export default function CourseOfferingsDirectoryPage() {
 
   // Step 3: Faculty Assignment
   const [selectedFacultyId, setSelectedFacultyId] = useState("");
-  const [facultyRole, setFacultyRole] = useState<FacultyAssignmentRole>("PRIMARY_INSTRUCTOR");
+  const [facultyRole, setFacultyRole] =
+    useState<FacultyAssignmentRole>("PRIMARY_INSTRUCTOR");
   const [assignedHours, setAssignedHours] = useState<number>(4);
 
   const loadData = useCallback(async () => {
@@ -96,7 +97,11 @@ export default function CourseOfferingsDirectoryPage() {
       setDepartments(deptRes.data);
       setPrograms(progRes.data);
       // Filter staff that are faculty
-      const facs = staffRes.data.filter((s: StaffDetailView) => s.role.toLowerCase().includes("prof") || s.role.toLowerCase().includes("faculty"));
+      const facs = staffRes.data.filter(
+        (s: StaffDetailView) =>
+          s.role.toLowerCase().includes("prof") ||
+          s.role.toLowerCase().includes("faculty"),
+      );
       setFacultyStaff(facs.length > 0 ? facs : staffRes.data);
       if (subRes.data.length > 0 && !selectedSubjectId) {
         setSelectedSubjectId(subRes.data[0].id);
@@ -119,10 +124,16 @@ export default function CourseOfferingsDirectoryPage() {
       if (selectedYear !== "ALL" && o.academicYear !== selectedYear) {
         return false;
       }
-      if (selectedSemester !== "ALL" && o.semester !== Number(selectedSemester)) {
+      if (
+        selectedSemester !== "ALL" &&
+        o.semester !== Number(selectedSemester)
+      ) {
         return false;
       }
-      if (selectedDept !== "ALL" && !o.department.toLowerCase().includes(selectedDept.toLowerCase())) {
+      if (
+        selectedDept !== "ALL" &&
+        !o.department.toLowerCase().includes(selectedDept.toLowerCase())
+      ) {
         return false;
       }
       if (selectedSection !== "ALL" && o.section !== selectedSection) {
@@ -137,12 +148,22 @@ export default function CourseOfferingsDirectoryPage() {
           o.subjectCode.toLowerCase().includes(q) ||
           o.subjectName.toLowerCase().includes(q) ||
           o.programName.toLowerCase().includes(q) ||
-          o.facultyAssignments.some((f) => f.facultyName.toLowerCase().includes(q))
+          o.facultyAssignments.some((f) =>
+            f.facultyName.toLowerCase().includes(q),
+          )
         );
       }
       return true;
     });
-  }, [offerings, selectedYear, selectedSemester, selectedDept, selectedSection, selectedStatus, search]);
+  }, [
+    offerings,
+    selectedYear,
+    selectedSemester,
+    selectedDept,
+    selectedSection,
+    selectedStatus,
+    search,
+  ]);
 
   const paginatedOfferings = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -153,17 +174,23 @@ export default function CourseOfferingsDirectoryPage() {
   const validateStep = (step: number) => {
     const errors: Record<string, string> = {};
     if (step === 1) {
-      if (!academicYear.trim()) errors.academicYear = "Academic year is required";
-      if (!semester || semester < 1 || semester > 10) errors.semester = "Valid semester is required";
+      if (!academicYear.trim())
+        errors.academicYear = "Academic year is required";
+      if (!semester || semester < 1 || semester > 10)
+        errors.semester = "Valid semester is required";
     }
     if (step === 2) {
-      if (!selectedSubjectId) errors.selectedSubjectId = "Please select a subject from catalog";
-      if (!selectedSectionVal) errors.selectedSectionVal = "Section is required";
+      if (!selectedSubjectId)
+        errors.selectedSubjectId = "Please select a subject from catalog";
+      if (!selectedSectionVal)
+        errors.selectedSectionVal = "Section is required";
       if (maxCapacity < 1) errors.maxCapacity = "Capacity must be at least 1";
     }
     if (step === 3) {
-      if (!selectedFacultyId) errors.selectedFacultyId = "Please select a faculty instructor";
-      if (assignedHours < 1) errors.assignedHours = "Assigned hours must be positive";
+      if (!selectedFacultyId)
+        errors.selectedFacultyId = "Please select a faculty instructor";
+      if (assignedHours < 1)
+        errors.assignedHours = "Assigned hours must be positive";
     }
     setWizardErrors(errors);
     return Object.keys(errors).length === 0;
@@ -234,7 +261,11 @@ export default function CourseOfferingsDirectoryPage() {
         loadData();
       }
     } catch (err: any) {
-      showToast({ title: "Failed to create offering", message: err.message, type: "error" });
+      showToast({
+        title: "Failed to create offering",
+        message: err.message,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -248,9 +279,14 @@ export default function CourseOfferingsDirectoryPage() {
       icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
       onClick: async (items) => {
         for (const item of items) {
-          await academicsService.updateCourseOffering(item.id, { status: "ACTIVE" });
+          await academicsService.updateCourseOffering(item.id, {
+            status: "ACTIVE",
+          });
         }
-        showToast({ title: `Activated ${items.length} course offerings`, type: "success" });
+        showToast({
+          title: `Activated ${items.length} course offerings`,
+          type: "success",
+        });
         setSelectedKeys(new Set());
         loadData();
       },
@@ -272,10 +308,16 @@ export default function CourseOfferingsDirectoryPage() {
           >
             <div className="flex items-center gap-1.5 font-mono">
               <span>{item.subjectCode}</span>
-              <span className="opacity-0 group-hover:opacity-100 text-[10px] text-indigo-400 transition-opacity">↗</span>
+              <span className="opacity-0 group-hover:opacity-100 text-[10px] text-indigo-400 transition-opacity">
+                ↗
+              </span>
             </div>
-            <div className="text-xs font-normal text-slate-300 line-clamp-1">{item.subjectName}</div>
-            <div className="text-[10px] text-slate-500 font-mono">{item.credits} Cr • {item.type}</div>
+            <div className="text-xs font-normal text-slate-300 line-clamp-1">
+              {item.subjectName}
+            </div>
+            <div className="text-[10px] text-slate-500 font-mono">
+              {item.credits} Cr • {item.type}
+            </div>
           </Link>
         ),
       },
@@ -291,7 +333,9 @@ export default function CourseOfferingsDirectoryPage() {
               <span className="rounded bg-slate-800 px-1.5 py-0.2 font-mono text-[11px] text-slate-300 border border-slate-700">
                 Sem {item.semester} • Sec {item.section}
               </span>
-              <span className="text-[11px] text-slate-500 font-mono">AY {item.academicYear}</span>
+              <span className="text-[11px] text-slate-500 font-mono">
+                AY {item.academicYear}
+              </span>
             </div>
           </div>
         ),
@@ -300,14 +344,20 @@ export default function CourseOfferingsDirectoryPage() {
         id: "faculty",
         header: "Faculty Assignment",
         cell: (item) => {
-          const primary = item.facultyAssignments.find((f) => f.role === "PRIMARY_INSTRUCTOR") || item.facultyAssignments[0];
+          const primary =
+            item.facultyAssignments.find(
+              (f) => f.role === "PRIMARY_INSTRUCTOR",
+            ) || item.facultyAssignments[0];
           return (
             <div className="text-xs">
               {primary ? (
                 <div>
-                  <div className="font-medium text-slate-200">{primary.facultyName}</div>
+                  <div className="font-medium text-slate-200">
+                    {primary.facultyName}
+                  </div>
                   <div className="text-[10px] text-indigo-400 font-mono">
-                    {primary.role.replace("_", " ")} ({primary.assignedWeeklyHours} hrs)
+                    {primary.role.replace("_", " ")} (
+                    {primary.assignedWeeklyHours} hrs)
                   </div>
                   {item.facultyAssignments.length > 1 && (
                     <div className="text-[10px] text-slate-500">
@@ -334,13 +384,19 @@ export default function CourseOfferingsDirectoryPage() {
           return (
             <div className="text-xs font-mono">
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className="text-slate-200 font-semibold">{item.enrolledCount} Students</span>
+                <span className="text-slate-200 font-semibold">
+                  {item.enrolledCount} Students
+                </span>
                 <span className="text-slate-500">Cap: {item.maxCapacity}</span>
               </div>
               <div className="w-28 bg-slate-800 rounded-full h-1.5 overflow-hidden">
                 <div
                   className={`h-1.5 rounded-full ${
-                    pct >= 100 ? "bg-red-500" : pct >= 80 ? "bg-amber-500" : "bg-indigo-500"
+                    pct >= 100
+                      ? "bg-red-500"
+                      : pct >= 80
+                        ? "bg-amber-500"
+                        : "bg-indigo-500"
                   }`}
                   style={{ width: `${Math.min(100, pct)}%` }}
                 />
@@ -355,7 +411,10 @@ export default function CourseOfferingsDirectoryPage() {
         sortable: true,
         accessorKey: "status",
         cell: (item) => {
-          const statusMap: Record<CourseOfferingStatus, "success" | "warning" | "destructive" | "info" | "secondary"> = {
+          const statusMap: Record<
+            CourseOfferingStatus,
+            "success" | "warning" | "destructive" | "info" | "secondary"
+          > = {
             ACTIVE: "success",
             OPEN: "info",
             PLANNED: "warning",
@@ -376,7 +435,12 @@ export default function CourseOfferingsDirectoryPage() {
         cell: (item) => (
           <div className="flex items-center justify-end gap-1.5">
             <Link href={`/app/academics/course-offerings/${item.id}`}>
-              <Button size="sm" variant="ghost" className="h-7 text-xs" leftIcon={<Eye className="h-3 w-3" />}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-xs"
+                leftIcon={<Eye className="h-3 w-3" />}
+              >
                 Details
               </Button>
             </Link>
@@ -384,7 +448,7 @@ export default function CourseOfferingsDirectoryPage() {
         ),
       },
     ],
-    []
+    [],
   );
 
   // Custom filter slot
@@ -473,7 +537,10 @@ export default function CourseOfferingsDirectoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/app/academics" className="hover:text-white transition-colors">
+            <Link
+              href="/app/academics"
+              className="hover:text-white transition-colors"
+            >
               Academics
             </Link>
             <span>/</span>
@@ -483,7 +550,8 @@ export default function CourseOfferingsDirectoryPage() {
             Classroom Course Offerings
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Subject + Term + Section staffing, faculty assignments, and cohort student registrations.
+            Subject + Term + Section staffing, faculty assignments, and cohort
+            student registrations.
           </p>
         </div>
 
@@ -513,7 +581,10 @@ export default function CourseOfferingsDirectoryPage() {
         />
         <StatCard
           label="Assigned Faculty Leads"
-          value={offerings.reduce((sum, o) => sum + o.facultyAssignments.length, 0)}
+          value={offerings.reduce(
+            (sum, o) => sum + o.facultyAssignments.length,
+            0,
+          )}
           description="Instructors & Lab in-charges"
           variant="emerald"
           icon={<GraduationCap className="h-4 w-4" />}
@@ -527,7 +598,9 @@ export default function CourseOfferingsDirectoryPage() {
         />
         <StatCard
           label="Unassigned Offerings"
-          value={offerings.filter((o) => o.facultyAssignments.length === 0).length}
+          value={
+            offerings.filter((o) => o.facultyAssignments.length === 0).length
+          }
           description="Require immediate staffing"
           variant="amber"
           icon={<AlertCircle className="h-4 w-4" />}
@@ -594,8 +667,8 @@ export default function CourseOfferingsDirectoryPage() {
                   currentStep === st.num
                     ? "font-semibold text-indigo-400"
                     : currentStep > st.num
-                    ? "text-emerald-400"
-                    : "text-slate-500"
+                      ? "text-emerald-400"
+                      : "text-slate-500"
                 }`}
               >
                 <div
@@ -603,8 +676,8 @@ export default function CourseOfferingsDirectoryPage() {
                     currentStep === st.num
                       ? "bg-indigo-600 border-indigo-500 text-white"
                       : currentStep > st.num
-                      ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
-                      : "bg-slate-800 border-slate-700 text-slate-400"
+                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
+                        : "bg-slate-800 border-slate-700 text-slate-400"
                   }`}
                 >
                   {currentStep > st.num ? "✓" : st.num}
@@ -617,7 +690,9 @@ export default function CourseOfferingsDirectoryPage() {
           {/* Step 1: Academic Year & Semester */}
           {currentStep === 1 && (
             <div className="space-y-4">
-              <h4 className="text-xs font-semibold text-white">Step 1: Select Academic Term</h4>
+              <h4 className="text-xs font-semibold text-white">
+                Step 1: Select Academic Term
+              </h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-300 mb-1">
@@ -646,7 +721,9 @@ export default function CourseOfferingsDirectoryPage() {
                     className={wizardErrors.semester ? "border-red-500" : ""}
                   />
                   {wizardErrors.semester && (
-                    <span className="text-[11px] text-red-400">{wizardErrors.semester}</span>
+                    <span className="text-[11px] text-red-400">
+                      {wizardErrors.semester}
+                    </span>
                   )}
                 </div>
               </div>
@@ -656,9 +733,13 @@ export default function CourseOfferingsDirectoryPage() {
           {/* Step 2: Program, Section & Subject */}
           {currentStep === 2 && (
             <div className="space-y-4">
-              <h4 className="text-xs font-semibold text-white">Step 2: Choose Program, Section & Catalog Subject</h4>
+              <h4 className="text-xs font-semibold text-white">
+                Step 2: Choose Program, Section & Catalog Subject
+              </h4>
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Degree Program</label>
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Degree Program
+                </label>
                 <select
                   value={selectedProgramId}
                   onChange={(e) => setSelectedProgramId(e.target.value)}
@@ -689,13 +770,17 @@ export default function CourseOfferingsDirectoryPage() {
                   ))}
                 </select>
                 {wizardErrors.selectedSubjectId && (
-                  <span className="text-[11px] text-red-400">{wizardErrors.selectedSubjectId}</span>
+                  <span className="text-[11px] text-red-400">
+                    {wizardErrors.selectedSubjectId}
+                  </span>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Section</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Section
+                  </label>
                   <select
                     value={selectedSectionVal}
                     onChange={(e) => setSelectedSectionVal(e.target.value)}
@@ -709,7 +794,9 @@ export default function CourseOfferingsDirectoryPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Max Student Capacity</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Max Student Capacity
+                  </label>
                   <Input
                     type="number"
                     min="10"
@@ -725,7 +812,9 @@ export default function CourseOfferingsDirectoryPage() {
           {/* Step 3: Faculty Assignment */}
           {currentStep === 3 && (
             <div className="space-y-4">
-              <h4 className="text-xs font-semibold text-white">Step 3: Assign Canonical Faculty Instructor</h4>
+              <h4 className="text-xs font-semibold text-white">
+                Step 3: Assign Canonical Faculty Instructor
+              </h4>
               <div>
                 <label className="block text-xs font-medium text-slate-300 mb-1">
                   Faculty Instructor <span className="text-red-400">*</span>
@@ -738,31 +827,42 @@ export default function CourseOfferingsDirectoryPage() {
                   <option value="">-- Select Faculty Member --</option>
                   {facultyStaff.map((f) => (
                     <option key={f.id} value={f.id}>
-                      {f.firstName} {f.lastName} ({f.employeeCode}) • {f.department}
+                      {f.firstName} {f.lastName} ({f.employeeCode}) •{" "}
+                      {f.department}
                     </option>
                   ))}
                 </select>
                 {wizardErrors.selectedFacultyId && (
-                  <span className="text-[11px] text-red-400">{wizardErrors.selectedFacultyId}</span>
+                  <span className="text-[11px] text-red-400">
+                    {wizardErrors.selectedFacultyId}
+                  </span>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Instructional Role</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Instructional Role
+                  </label>
                   <select
                     value={facultyRole}
-                    onChange={(e) => setFacultyRole(e.target.value as FacultyAssignmentRole)}
+                    onChange={(e) =>
+                      setFacultyRole(e.target.value as FacultyAssignmentRole)
+                    }
                     className="w-full h-9 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
                   >
-                    <option value="PRIMARY_INSTRUCTOR">Primary Instructor</option>
+                    <option value="PRIMARY_INSTRUCTOR">
+                      Primary Instructor
+                    </option>
                     <option value="CO_INSTRUCTOR">Co-Instructor</option>
                     <option value="LAB_INSTRUCTOR">Lab Instructor</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Assigned Weekly Hours</label>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Assigned Weekly Hours
+                  </label>
                   <Input
                     type="number"
                     min="1"
@@ -778,18 +878,22 @@ export default function CourseOfferingsDirectoryPage() {
           {/* Step 4: Review & Confirm */}
           {currentStep === 4 && (
             <div className="space-y-4">
-              <h4 className="text-xs font-semibold text-white">Step 4: Review Course Offering Configuration</h4>
+              <h4 className="text-xs font-semibold text-white">
+                Step 4: Review Course Offering Configuration
+              </h4>
               <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Subject:</span>
                   <span className="font-semibold text-white font-mono">
-                    {subjects.find((s) => s.id === selectedSubjectId)?.code} - {subjects.find((s) => s.id === selectedSubjectId)?.name}
+                    {subjects.find((s) => s.id === selectedSubjectId)?.code} -{" "}
+                    {subjects.find((s) => s.id === selectedSubjectId)?.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Term & Section:</span>
                   <span className="text-slate-200">
-                    AY {academicYear} • Sem {semester} (Section {selectedSectionVal})
+                    AY {academicYear} • Sem {semester} (Section{" "}
+                    {selectedSectionVal})
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -799,7 +903,15 @@ export default function CourseOfferingsDirectoryPage() {
                 <div className="flex justify-between">
                   <span className="text-slate-400">Assigned Instructor:</span>
                   <span className="text-indigo-400 font-medium">
-                    {facultyStaff.find((f) => f.id === selectedFacultyId)?.firstName} {facultyStaff.find((f) => f.id === selectedFacultyId)?.lastName} ({facultyRole.replace("_", " ")})
+                    {
+                      facultyStaff.find((f) => f.id === selectedFacultyId)
+                        ?.firstName
+                    }{" "}
+                    {
+                      facultyStaff.find((f) => f.id === selectedFacultyId)
+                        ?.lastName
+                    }{" "}
+                    ({facultyRole.replace("_", " ")})
                   </span>
                 </div>
               </div>
@@ -809,7 +921,12 @@ export default function CourseOfferingsDirectoryPage() {
           {/* Stepper Navigation Buttons */}
           <div className="flex items-center justify-between pt-3 border-t border-slate-800">
             {currentStep > 1 ? (
-              <Button variant="outline" size="sm" onClick={handlePrevStep} leftIcon={<ArrowLeft className="h-3.5 w-3.5" />}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrevStep}
+                leftIcon={<ArrowLeft className="h-3.5 w-3.5" />}
+              >
                 Previous
               </Button>
             ) : (
@@ -817,7 +934,12 @@ export default function CourseOfferingsDirectoryPage() {
             )}
 
             {currentStep < 4 ? (
-              <Button variant="primary" size="sm" onClick={handleNextStep} rightIcon={<ArrowRight className="h-3.5 w-3.5" />}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleNextStep}
+                rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+              >
                 Continue
               </Button>
             ) : (

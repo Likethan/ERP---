@@ -55,7 +55,10 @@ export default function AlertDetailPage() {
 
   const handleAcknowledge = async () => {
     if (!alert) return;
-    const res = await aiAlertsService.acknowledgeAlert(alert.id, "Administrator");
+    const res = await aiAlertsService.acknowledgeAlert(
+      alert.id,
+      "Administrator",
+    );
     if (res.success && res.data) {
       setAlert(res.data);
       toast({ title: "Alert Acknowledged", variant: "warning" });
@@ -64,7 +67,11 @@ export default function AlertDetailPage() {
 
   const handleResolve = async () => {
     if (!alert) return;
-    const res = await aiAlertsService.resolveAlert(alert.id, "Administrator", "Verified operational fix");
+    const res = await aiAlertsService.resolveAlert(
+      alert.id,
+      "Administrator",
+      "Verified operational fix",
+    );
     if (res.success && res.data) {
       setAlert(res.data);
       toast({ title: "Alert Resolved Successfully", variant: "success" });
@@ -108,7 +115,11 @@ export default function AlertDetailPage() {
           />
           <div className="flex items-center gap-2 mt-1">
             <Link href="/app/intelligence/alerts">
-              <Button variant="ghost" size="sm" className="p-1 h-7 w-7 text-slate-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1 h-7 w-7 text-slate-500"
+              >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             </Link>
@@ -143,7 +154,10 @@ export default function AlertDetailPage() {
 
           {alert.recommendedActionHref && (
             <Link href={alert.recommendedActionHref}>
-              <Button size="sm" className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white">
+              <Button
+                size="sm"
+                className="gap-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 Open in Module <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
@@ -160,7 +174,11 @@ export default function AlertDetailPage() {
         <span className="text-slate-600">Source: {alert.sourceDomain}</span>
         <span className="text-slate-400">•</span>
         <span className="text-slate-600">
-          Detected: {new Date(alert.detectedAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
+          Detected:{" "}
+          {new Date(alert.detectedAt).toLocaleString([], {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
         </span>
       </div>
 
@@ -191,14 +209,26 @@ export default function AlertDetailPage() {
               <CardContent className="p-0">
                 <div className="divide-y divide-slate-100">
                   {alert.affectedRecords.map((rec) => (
-                    <div key={rec.id} className="p-3 px-4 flex items-center justify-between hover:bg-slate-50 text-xs">
+                    <div
+                      key={rec.id}
+                      className="p-3 px-4 flex items-center justify-between hover:bg-slate-50 text-xs"
+                    >
                       <div>
-                        <p className="font-semibold text-slate-800">{rec.name}</p>
-                        <p className="text-[11px] text-slate-500">{rec.type} • ID: {rec.id}</p>
+                        <p className="font-semibold text-slate-800">
+                          {rec.name}
+                        </p>
+                        <p className="text-[11px] text-slate-500">
+                          {rec.type} • ID: {rec.id}
+                        </p>
                       </div>
                       <Link href={rec.href}>
-                        <Button variant="ghost" size="sm" className="text-xs text-blue-600 gap-1">
-                          Inspect Record <ExternalLink className="w-3.5 h-3.5" />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-blue-600 gap-1"
+                        >
+                          Inspect Record{" "}
+                          <ExternalLink className="w-3.5 h-3.5" />
                         </Button>
                       </Link>
                     </div>
@@ -219,11 +249,16 @@ export default function AlertDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3 text-xs text-slate-800">
-              <p className="leading-relaxed font-medium">{alert.recommendedAction}</p>
+              <p className="leading-relaxed font-medium">
+                {alert.recommendedAction}
+              </p>
 
               {alert.recommendedActionHref && (
                 <Link href={alert.recommendedActionHref} className="block pt-2">
-                  <Button size="sm" className="w-full text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white gap-1">
+                  <Button
+                    size="sm"
+                    className="w-full text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white gap-1"
+                  >
                     Resolve in Module <ArrowRight className="w-3 h-3" />
                   </Button>
                 </Link>
@@ -243,10 +278,17 @@ export default function AlertDetailPage() {
               <div className="relative pl-4 border-l-2 border-slate-200 space-y-3">
                 <div className="relative">
                   <span className="w-2 h-2 rounded-full bg-rose-500 absolute -left-[21px] top-1" />
-                  <p className="font-semibold text-slate-800">Alert Triggered</p>
-                  <p className="text-[11px] text-slate-500">Autonomous SLA threshold breach</p>
+                  <p className="font-semibold text-slate-800">
+                    Alert Triggered
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    Autonomous SLA threshold breach
+                  </p>
                   <span className="text-[10px] text-slate-400">
-                    {new Date(alert.detectedAt).toLocaleDateString([], { month: "short", day: "numeric" })}
+                    {new Date(alert.detectedAt).toLocaleDateString([], {
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </span>
                 </div>
 
@@ -254,9 +296,14 @@ export default function AlertDetailPage() {
                   <div className="relative">
                     <span className="w-2 h-2 rounded-full bg-amber-500 absolute -left-[21px] top-1" />
                     <p className="font-semibold text-slate-800">Acknowledged</p>
-                    <p className="text-[11px] text-slate-500">By {alert.acknowledgedBy || "Officer"}</p>
+                    <p className="text-[11px] text-slate-500">
+                      By {alert.acknowledgedBy || "Officer"}
+                    </p>
                     <span className="text-[10px] text-slate-400">
-                      {new Date(alert.acknowledgedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(alert.acknowledgedAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                 )}
@@ -265,9 +312,14 @@ export default function AlertDetailPage() {
                   <div className="relative">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 absolute -left-[21px] top-1" />
                     <p className="font-semibold text-slate-800">Resolved</p>
-                    <p className="text-[11px] text-slate-500">By {alert.resolvedBy || "Officer"}</p>
+                    <p className="text-[11px] text-slate-500">
+                      By {alert.resolvedBy || "Officer"}
+                    </p>
                     <span className="text-[10px] text-slate-400">
-                      {new Date(alert.resolvedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(alert.resolvedAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                 )}

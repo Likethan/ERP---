@@ -50,7 +50,8 @@ export interface InvoiceItem {
   totalAmount: number;
   paidAmount: number;
   balanceAmount: number;
-  status: "PAID" | "PARTIALLY_PAID" | "ISSUED" | "OVERDUE" | "CANCELLED" | "DRAFT";
+  status:
+    "PAID" | "PARTIALLY_PAID" | "ISSUED" | "OVERDUE" | "CANCELLED" | "DRAFT";
 }
 
 export interface PaymentTransactionItem {
@@ -61,7 +62,14 @@ export interface PaymentTransactionItem {
   rollNumber: string;
   invoiceNumber: string;
   amount: number;
-  paymentMode: "UPI" | "NET_BANKING" | "NEFT_RTGS" | "DEMAND_DRAFT" | "CASH_COUNTER" | "CARD" | "CHEQUE";
+  paymentMode:
+    | "UPI"
+    | "NET_BANKING"
+    | "NEFT_RTGS"
+    | "DEMAND_DRAFT"
+    | "CASH_COUNTER"
+    | "CARD"
+    | "CHEQUE";
   paymentDate: string;
   status: "SUCCESS" | "PENDING" | "REVERSED" | "FAILED";
 }
@@ -86,7 +94,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-tuition",
     code: "TUI",
     name: "Tuition Fee",
-    description: "Core academic instruction, curriculum delivery, and faculty hours.",
+    description:
+      "Core academic instruction, curriculum delivery, and faculty hours.",
     type: "TUITION",
     isTaxable: false,
     isRefundable: false,
@@ -98,7 +107,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-exam",
     code: "EXM",
     name: "Examination & Evaluation Fee",
-    description: "Midterm tests, end semester university question banks, and grading.",
+    description:
+      "Midterm tests, end semester university question banks, and grading.",
     type: "EXAMINATION",
     isTaxable: false,
     isRefundable: false,
@@ -110,7 +120,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-lab",
     code: "LAB",
     name: "Laboratory & Computing Fee",
-    description: "High performance GPU lab access, engineering workstations, and consumable kits.",
+    description:
+      "High performance GPU lab access, engineering workstations, and consumable kits.",
     type: "LABORATORY",
     isTaxable: false,
     isRefundable: false,
@@ -122,7 +133,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-lib",
     code: "LIB",
     name: "Library & E-Resources Fee",
-    description: "IEEE Xplore, ACM Digital Library subscriptions, and book lending facility.",
+    description:
+      "IEEE Xplore, ACM Digital Library subscriptions, and book lending facility.",
     type: "LIBRARY",
     isTaxable: false,
     isRefundable: false,
@@ -134,7 +146,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-hostel",
     code: "HST",
     name: "Residential Hostel & Mess Fee",
-    description: "Campus accommodation, electricity, hygiene maintenance, and catering.",
+    description:
+      "Campus accommodation, electricity, hygiene maintenance, and catering.",
     type: "HOSTEL",
     isTaxable: false,
     isRefundable: true,
@@ -146,7 +159,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-trans",
     code: "TRN",
     name: "Campus Transport Fee",
-    description: "Dedicated daily institutional commuter bus transit across designated routes.",
+    description:
+      "Dedicated daily institutional commuter bus transit across designated routes.",
     type: "TRANSPORT",
     isTaxable: false,
     isRefundable: true,
@@ -158,7 +172,8 @@ export const MOCK_FEE_CATEGORIES: FeeCategory[] = [
     id: "cat-dev",
     code: "DEV",
     name: "Campus Development & Student Welfare",
-    description: "Sports complexes, student clubs, incubation labs, and campus Wi-Fi infrastructure.",
+    description:
+      "Sports complexes, student clubs, incubation labs, and campus Wi-Fi infrastructure.",
     type: "DEVELOPMENT",
     isTaxable: false,
     isRefundable: false,
@@ -179,7 +194,8 @@ export const MOCK_FEE_ITEMS: FeeItem[] = [
     categoryName: "Tuition Fee",
     code: "TUI-BTECH-S5",
     name: "B.Tech Semester 5 Tuition Fee",
-    description: "Core lecture and tutorial credit hours for engineering semester 5.",
+    description:
+      "Core lecture and tutorial credit hours for engineering semester 5.",
     program: "B.Tech Computer Science & Engineering",
     academicYear: "2026-2027",
     semester: 5,
@@ -195,7 +211,8 @@ export const MOCK_FEE_ITEMS: FeeItem[] = [
     categoryName: "Laboratory & Computing Fee",
     code: "LAB-CSE-S5",
     name: "Advanced Database & OS Lab Practicals",
-    description: "Laboratory equipment maintenance, software licenses, and cloud compute credits.",
+    description:
+      "Laboratory equipment maintenance, software licenses, and cloud compute credits.",
     program: "B.Tech Computer Science & Engineering",
     academicYear: "2026-2027",
     semester: 5,
@@ -211,7 +228,8 @@ export const MOCK_FEE_ITEMS: FeeItem[] = [
     categoryName: "Examination & Evaluation Fee",
     code: "EXAM-S5",
     name: "University End Semester Examination Fee",
-    description: "Formative evaluation, question paper encryption, external valuation, and grade sheets.",
+    description:
+      "Formative evaluation, question paper encryption, external valuation, and grade sheets.",
     program: "B.Tech Computer Science & Engineering",
     academicYear: "2026-2027",
     semester: 5,
@@ -227,7 +245,8 @@ export const MOCK_FEE_ITEMS: FeeItem[] = [
     categoryName: "Library & E-Resources Fee",
     code: "LIB-ANNUAL",
     name: "Digital Library Access & Physical Journal Subscriptions",
-    description: "Annual subscription to international technical repositories and lending access.",
+    description:
+      "Annual subscription to international technical repositories and lending access.",
     program: "B.Tech Computer Science & Engineering",
     academicYear: "2026-2027",
     semester: 5,
@@ -243,7 +262,8 @@ export const MOCK_FEE_ITEMS: FeeItem[] = [
     categoryName: "Residential Hostel & Mess Fee",
     code: "HST-DBL-ROOM",
     name: "Hostel Accommodation (Double Occupancy)",
-    description: "Furnished room with power backup, Wi-Fi, and mess catering charges.",
+    description:
+      "Furnished room with power backup, Wi-Fi, and mess catering charges.",
     program: "All Programs",
     academicYear: "2026-2027",
     semester: 5,
@@ -269,25 +289,78 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     academicYear: "2026-2027",
     semester: 5,
     components: [
-      { id: "fsc-1", feeItemId: "item-btech-tui-s5", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
-      { id: "fsc-2", feeItemId: "item-btech-lab-s5", title: "Advanced Computing Lab Levy", categoryName: "Laboratory Fee", amount: 15000, isMandatory: true },
-      { id: "fsc-3", feeItemId: "item-btech-exam-s5", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
-      { id: "fsc-4", feeItemId: "item-btech-lib-s5", title: "Library & E-Resource Subscriptions", categoryName: "Library Fee", amount: 2500, isMandatory: true },
+      {
+        id: "fsc-1",
+        feeItemId: "item-btech-tui-s5",
+        title: "Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        amount: 55000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-2",
+        feeItemId: "item-btech-lab-s5",
+        title: "Advanced Computing Lab Levy",
+        categoryName: "Laboratory Fee",
+        amount: 15000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-3",
+        feeItemId: "item-btech-exam-s5",
+        title: "Semester Examination Fee",
+        categoryName: "Examination Fee",
+        amount: 3500,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-4",
+        feeItemId: "item-btech-lib-s5",
+        title: "Library & E-Resource Subscriptions",
+        categoryName: "Library Fee",
+        amount: 2500,
+        isMandatory: true,
+      },
     ],
     grossTotal: 76000,
     status: "ACTIVE",
     effectiveDate: "2026-07-01",
     approvedBy: "Finance Committee & Academic Senate",
     approvedAt: "2026-06-25T14:30:00Z",
-    notes: "Mandatory semester scheme for all regular enrolled candidates in Section A and B.",
+    notes:
+      "Mandatory semester scheme for all regular enrolled candidates in Section A and B.",
     totalStudentsAssigned: 68,
     createdAt: "2026-06-15T11:00:00Z",
     updatedAt: "2026-06-25T14:30:00Z",
     history: [
-      { id: "h-1", action: "CREATED", actor: "Accounts Officer (B. K. Sharma)", timestamp: "2026-06-15T11:00:00Z", notes: "Draft fee schedule compiled." },
-      { id: "h-2", action: "SUBMITTED_FOR_APPROVAL", actor: "Finance Dean", timestamp: "2026-06-20T10:00:00Z", notes: "Submitted to Senate committee." },
-      { id: "h-3", action: "APPROVED", actor: "Registrar / Academic Senate", timestamp: "2026-06-25T14:30:00Z", notes: "Approved without fee revision." },
-      { id: "h-4", action: "ACTIVATED", actor: "Chief Finance Officer", timestamp: "2026-07-01T09:00:00Z", notes: "Scheme activated for student billing." },
+      {
+        id: "h-1",
+        action: "CREATED",
+        actor: "Accounts Officer (B. K. Sharma)",
+        timestamp: "2026-06-15T11:00:00Z",
+        notes: "Draft fee schedule compiled.",
+      },
+      {
+        id: "h-2",
+        action: "SUBMITTED_FOR_APPROVAL",
+        actor: "Finance Dean",
+        timestamp: "2026-06-20T10:00:00Z",
+        notes: "Submitted to Senate committee.",
+      },
+      {
+        id: "h-3",
+        action: "APPROVED",
+        actor: "Registrar / Academic Senate",
+        timestamp: "2026-06-25T14:30:00Z",
+        notes: "Approved without fee revision.",
+      },
+      {
+        id: "h-4",
+        action: "ACTIVATED",
+        actor: "Chief Finance Officer",
+        timestamp: "2026-07-01T09:00:00Z",
+        notes: "Scheme activated for student billing.",
+      },
     ],
   },
   {
@@ -299,10 +372,34 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     academicYear: "2026-2027",
     semester: 5,
     components: [
-      { id: "fsc-ece-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", amount: 55000, isMandatory: true },
-      { id: "fsc-ece-2", title: "VLSI & Embedded Systems Laboratory", categoryName: "Laboratory Fee", amount: 16000, isMandatory: true },
-      { id: "fsc-ece-3", title: "Semester Examination Fee", categoryName: "Examination Fee", amount: 3500, isMandatory: true },
-      { id: "fsc-ece-4", title: "Library & Technical Resources", categoryName: "Library Fee", amount: 2500, isMandatory: true },
+      {
+        id: "fsc-ece-1",
+        title: "Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        amount: 55000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-ece-2",
+        title: "VLSI & Embedded Systems Laboratory",
+        categoryName: "Laboratory Fee",
+        amount: 16000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-ece-3",
+        title: "Semester Examination Fee",
+        categoryName: "Examination Fee",
+        amount: 3500,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-ece-4",
+        title: "Library & Technical Resources",
+        categoryName: "Library Fee",
+        amount: 2500,
+        isMandatory: true,
+      },
     ],
     grossTotal: 77000,
     status: "ACTIVE",
@@ -313,8 +410,18 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     createdAt: "2026-06-15T11:30:00Z",
     updatedAt: "2026-06-25T15:00:00Z",
     history: [
-      { id: "h-ece-1", action: "CREATED", actor: "Accounts Officer", timestamp: "2026-06-15T11:30:00Z" },
-      { id: "h-ece-2", action: "APPROVED", actor: "Finance Dean", timestamp: "2026-06-25T15:00:00Z" },
+      {
+        id: "h-ece-1",
+        action: "CREATED",
+        actor: "Accounts Officer",
+        timestamp: "2026-06-15T11:30:00Z",
+      },
+      {
+        id: "h-ece-2",
+        action: "APPROVED",
+        actor: "Finance Dean",
+        timestamp: "2026-06-25T15:00:00Z",
+      },
     ],
   },
   {
@@ -326,9 +433,27 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     academicYear: "2026-2027",
     semester: 5,
     components: [
-      { id: "fsc-h-1", title: "Hostel Room Rent (Double Occupancy)", categoryName: "Hostel Fee", amount: 25000, isMandatory: true },
-      { id: "fsc-h-2", title: "Central Dining & Mess Catering", categoryName: "Hostel Fee", amount: 20000, isMandatory: true },
-      { id: "fsc-h-3", title: "Hostel Amenities, Maintenance & Wi-Fi", categoryName: "Development Fee", amount: 5000, isMandatory: true },
+      {
+        id: "fsc-h-1",
+        title: "Hostel Room Rent (Double Occupancy)",
+        categoryName: "Hostel Fee",
+        amount: 25000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-h-2",
+        title: "Central Dining & Mess Catering",
+        categoryName: "Hostel Fee",
+        amount: 20000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-h-3",
+        title: "Hostel Amenities, Maintenance & Wi-Fi",
+        categoryName: "Development Fee",
+        amount: 5000,
+        isMandatory: true,
+      },
     ],
     grossTotal: 50000,
     status: "ACTIVE",
@@ -339,8 +464,18 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     createdAt: "2026-06-18T10:00:00Z",
     updatedAt: "2026-06-28T10:00:00Z",
     history: [
-      { id: "h-h-1", action: "CREATED", actor: "Hostel Manager", timestamp: "2026-06-18T10:00:00Z" },
-      { id: "h-h-2", action: "APPROVED", actor: "CFO", timestamp: "2026-06-28T10:00:00Z" },
+      {
+        id: "h-h-1",
+        action: "CREATED",
+        actor: "Hostel Manager",
+        timestamp: "2026-06-18T10:00:00Z",
+      },
+      {
+        id: "h-h-2",
+        action: "APPROVED",
+        actor: "CFO",
+        timestamp: "2026-06-28T10:00:00Z",
+      },
     ],
   },
   {
@@ -352,9 +487,27 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     academicYear: "2026-2027",
     semester: 7,
     components: [
-      { id: "fsc-ai-1", title: "Tuition Fee", categoryName: "Tuition Fee", amount: 50000, isMandatory: true },
-      { id: "fsc-ai-2", title: "Industry Capstone & GPU Lab", categoryName: "Laboratory Fee", amount: 18000, isMandatory: true },
-      { id: "fsc-ai-3", title: "Placement & Evaluation Levy", categoryName: "Examination Fee", amount: 5000, isMandatory: true },
+      {
+        id: "fsc-ai-1",
+        title: "Tuition Fee",
+        categoryName: "Tuition Fee",
+        amount: 50000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-ai-2",
+        title: "Industry Capstone & GPU Lab",
+        categoryName: "Laboratory Fee",
+        amount: 18000,
+        isMandatory: true,
+      },
+      {
+        id: "fsc-ai-3",
+        title: "Placement & Evaluation Levy",
+        categoryName: "Examination Fee",
+        amount: 5000,
+        isMandatory: true,
+      },
     ],
     grossTotal: 73000,
     status: "PENDING_APPROVAL",
@@ -364,8 +517,18 @@ export const MOCK_CANONICAL_FEE_STRUCTURES: FeeStructure[] = [
     createdAt: "2026-09-10T14:00:00Z",
     updatedAt: "2026-09-15T09:30:00Z",
     history: [
-      { id: "h-ai-1", action: "CREATED", actor: "Dept Finance Coordinator", timestamp: "2026-09-10T14:00:00Z" },
-      { id: "h-ai-2", action: "SUBMITTED_FOR_APPROVAL", actor: "HOD AI-DS", timestamp: "2026-09-15T09:30:00Z" },
+      {
+        id: "h-ai-1",
+        action: "CREATED",
+        actor: "Dept Finance Coordinator",
+        timestamp: "2026-09-10T14:00:00Z",
+      },
+      {
+        id: "h-ai-2",
+        action: "SUBMITTED_FOR_APPROVAL",
+        actor: "HOD AI-DS",
+        timestamp: "2026-09-15T09:30:00Z",
+      },
     ],
   },
 ];
@@ -510,10 +673,38 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-07-15",
     dueDate: "2026-08-15",
     lines: [
-      { id: "line-1", title: "B.Tech Semester 5 Academic Tuition Fee", categoryName: "Tuition Fee", quantity: 1, unitAmount: 55000, totalAmount: 55000 },
-      { id: "line-2", title: "Advanced Computing Laboratory Levy", categoryName: "Laboratory Fee", quantity: 1, unitAmount: 15000, totalAmount: 15000 },
-      { id: "line-3", title: "Semester 5 Examination & Evaluation", categoryName: "Examination Fee", quantity: 1, unitAmount: 3500, totalAmount: 3500 },
-      { id: "line-4", title: "Library & Technical Periodicals Subscription", categoryName: "Library Fee", quantity: 1, unitAmount: 2500, totalAmount: 2500 },
+      {
+        id: "line-1",
+        title: "B.Tech Semester 5 Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        quantity: 1,
+        unitAmount: 55000,
+        totalAmount: 55000,
+      },
+      {
+        id: "line-2",
+        title: "Advanced Computing Laboratory Levy",
+        categoryName: "Laboratory Fee",
+        quantity: 1,
+        unitAmount: 15000,
+        totalAmount: 15000,
+      },
+      {
+        id: "line-3",
+        title: "Semester 5 Examination & Evaluation",
+        categoryName: "Examination Fee",
+        quantity: 1,
+        unitAmount: 3500,
+        totalAmount: 3500,
+      },
+      {
+        id: "line-4",
+        title: "Library & Technical Periodicals Subscription",
+        categoryName: "Library Fee",
+        quantity: 1,
+        unitAmount: 2500,
+        totalAmount: 2500,
+      },
     ],
     grossAmount: 76000,
     scholarshipAmount: 0,
@@ -529,9 +720,27 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-07-15T09:00:00Z",
     updatedAt: "2026-08-02T11:30:00Z",
     history: [
-      { id: "ih-1", action: "ISSUED", actor: "Billing Engine", timestamp: "2026-07-15T09:00:00Z", notes: "Invoice generated from assigned fee structure." },
-      { id: "ih-2", action: "PAYMENT_RECORDED", actor: "Aarav Patel (UPI Gateway)", timestamp: "2026-08-02T11:30:00Z", notes: "Full payment of ₹76,000 received." },
-      { id: "ih-3", action: "PAID", actor: "Finance System", timestamp: "2026-08-02T11:30:00Z", notes: "Invoice settled in full. Receipt REC-2026-0001 issued." },
+      {
+        id: "ih-1",
+        action: "ISSUED",
+        actor: "Billing Engine",
+        timestamp: "2026-07-15T09:00:00Z",
+        notes: "Invoice generated from assigned fee structure.",
+      },
+      {
+        id: "ih-2",
+        action: "PAYMENT_RECORDED",
+        actor: "Aarav Patel (UPI Gateway)",
+        timestamp: "2026-08-02T11:30:00Z",
+        notes: "Full payment of ₹76,000 received.",
+      },
+      {
+        id: "ih-3",
+        action: "PAID",
+        actor: "Finance System",
+        timestamp: "2026-08-02T11:30:00Z",
+        notes: "Invoice settled in full. Receipt REC-2026-0001 issued.",
+      },
     ],
   },
   {
@@ -547,10 +756,38 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-07-15",
     dueDate: "2026-08-15",
     lines: [
-      { id: "line-2-1", title: "B.Tech Semester 5 Academic Tuition Fee", categoryName: "Tuition Fee", quantity: 1, unitAmount: 55000, totalAmount: 55000 },
-      { id: "line-2-2", title: "Advanced Computing Laboratory Levy", categoryName: "Laboratory Fee", quantity: 1, unitAmount: 15000, totalAmount: 15000 },
-      { id: "line-2-3", title: "Semester 5 Examination & Evaluation", categoryName: "Examination Fee", quantity: 1, unitAmount: 3500, totalAmount: 3500 },
-      { id: "line-2-4", title: "Library & Technical Periodicals Subscription", categoryName: "Library Fee", quantity: 1, unitAmount: 2500, totalAmount: 2500 },
+      {
+        id: "line-2-1",
+        title: "B.Tech Semester 5 Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        quantity: 1,
+        unitAmount: 55000,
+        totalAmount: 55000,
+      },
+      {
+        id: "line-2-2",
+        title: "Advanced Computing Laboratory Levy",
+        categoryName: "Laboratory Fee",
+        quantity: 1,
+        unitAmount: 15000,
+        totalAmount: 15000,
+      },
+      {
+        id: "line-2-3",
+        title: "Semester 5 Examination & Evaluation",
+        categoryName: "Examination Fee",
+        quantity: 1,
+        unitAmount: 3500,
+        totalAmount: 3500,
+      },
+      {
+        id: "line-2-4",
+        title: "Library & Technical Periodicals Subscription",
+        categoryName: "Library Fee",
+        quantity: 1,
+        unitAmount: 2500,
+        totalAmount: 2500,
+      },
     ],
     grossAmount: 76000,
     scholarshipAmount: 15200,
@@ -566,8 +803,20 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-07-15T09:00:00Z",
     updatedAt: "2026-08-05T14:20:00Z",
     history: [
-      { id: "ih-2-1", action: "ISSUED", actor: "Billing Engine", timestamp: "2026-07-15T09:00:00Z", notes: "Gross ₹76,000, Merit waiver ₹15,200 deducted." },
-      { id: "ih-2-2", action: "PAYMENT_RECORDED", actor: "Priya Sundaram (Net Banking)", timestamp: "2026-08-05T14:20:00Z", notes: "Payment of ₹60,800 confirmed." },
+      {
+        id: "ih-2-1",
+        action: "ISSUED",
+        actor: "Billing Engine",
+        timestamp: "2026-07-15T09:00:00Z",
+        notes: "Gross ₹76,000, Merit waiver ₹15,200 deducted.",
+      },
+      {
+        id: "ih-2-2",
+        action: "PAYMENT_RECORDED",
+        actor: "Priya Sundaram (Net Banking)",
+        timestamp: "2026-08-05T14:20:00Z",
+        notes: "Payment of ₹60,800 confirmed.",
+      },
     ],
   },
   {
@@ -583,10 +832,38 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-07-15",
     dueDate: "2026-08-15",
     lines: [
-      { id: "line-3-1", title: "B.Tech Semester 5 Academic Tuition Fee", categoryName: "Tuition Fee", quantity: 1, unitAmount: 55000, totalAmount: 55000 },
-      { id: "line-3-2", title: "Advanced Computing Laboratory Levy", categoryName: "Laboratory Fee", quantity: 1, unitAmount: 15000, totalAmount: 15000 },
-      { id: "line-3-3", title: "Semester 5 Examination & Evaluation", categoryName: "Examination Fee", quantity: 1, unitAmount: 3500, totalAmount: 3500 },
-      { id: "line-3-4", title: "Library & Technical Periodicals Subscription", categoryName: "Library Fee", quantity: 1, unitAmount: 2500, totalAmount: 2500 },
+      {
+        id: "line-3-1",
+        title: "B.Tech Semester 5 Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        quantity: 1,
+        unitAmount: 55000,
+        totalAmount: 55000,
+      },
+      {
+        id: "line-3-2",
+        title: "Advanced Computing Laboratory Levy",
+        categoryName: "Laboratory Fee",
+        quantity: 1,
+        unitAmount: 15000,
+        totalAmount: 15000,
+      },
+      {
+        id: "line-3-3",
+        title: "Semester 5 Examination & Evaluation",
+        categoryName: "Examination Fee",
+        quantity: 1,
+        unitAmount: 3500,
+        totalAmount: 3500,
+      },
+      {
+        id: "line-3-4",
+        title: "Library & Technical Periodicals Subscription",
+        categoryName: "Library Fee",
+        quantity: 1,
+        unitAmount: 2500,
+        totalAmount: 2500,
+      },
     ],
     grossAmount: 76000,
     scholarshipAmount: 0,
@@ -602,8 +879,19 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-07-15T09:00:00Z",
     updatedAt: "2026-08-10T16:15:00Z",
     history: [
-      { id: "ih-3-1", action: "ISSUED", actor: "Billing Engine", timestamp: "2026-07-15T09:00:00Z" },
-      { id: "ih-3-2", action: "PARTIAL_PAYMENT", actor: "Accounts Counter (Cash)", timestamp: "2026-08-10T16:15:00Z", notes: "₹40,000 received. Balance: ₹36,000." },
+      {
+        id: "ih-3-1",
+        action: "ISSUED",
+        actor: "Billing Engine",
+        timestamp: "2026-07-15T09:00:00Z",
+      },
+      {
+        id: "ih-3-2",
+        action: "PARTIAL_PAYMENT",
+        actor: "Accounts Counter (Cash)",
+        timestamp: "2026-08-10T16:15:00Z",
+        notes: "₹40,000 received. Balance: ₹36,000.",
+      },
     ],
   },
   {
@@ -619,10 +907,38 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-07-15",
     dueDate: "2026-08-15",
     lines: [
-      { id: "line-4-1", title: "Academic Tuition Fee", categoryName: "Tuition Fee", quantity: 1, unitAmount: 55000, totalAmount: 55000 },
-      { id: "line-4-2", title: "VLSI & Embedded Systems Laboratory", categoryName: "Laboratory Fee", quantity: 1, unitAmount: 16000, totalAmount: 16000 },
-      { id: "line-4-3", title: "Semester Examination Fee", categoryName: "Examination Fee", quantity: 1, unitAmount: 3500, totalAmount: 3500 },
-      { id: "line-4-4", title: "Library & Technical Resources", categoryName: "Library Fee", quantity: 1, unitAmount: 2500, totalAmount: 2500 },
+      {
+        id: "line-4-1",
+        title: "Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        quantity: 1,
+        unitAmount: 55000,
+        totalAmount: 55000,
+      },
+      {
+        id: "line-4-2",
+        title: "VLSI & Embedded Systems Laboratory",
+        categoryName: "Laboratory Fee",
+        quantity: 1,
+        unitAmount: 16000,
+        totalAmount: 16000,
+      },
+      {
+        id: "line-4-3",
+        title: "Semester Examination Fee",
+        categoryName: "Examination Fee",
+        quantity: 1,
+        unitAmount: 3500,
+        totalAmount: 3500,
+      },
+      {
+        id: "line-4-4",
+        title: "Library & Technical Resources",
+        categoryName: "Library Fee",
+        quantity: 1,
+        unitAmount: 2500,
+        totalAmount: 2500,
+      },
     ],
     grossAmount: 77000,
     scholarshipAmount: 40000,
@@ -638,8 +954,18 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-07-15T09:00:00Z",
     updatedAt: "2026-08-12T10:00:00Z",
     history: [
-      { id: "ih-4-1", action: "ISSUED", actor: "Billing Engine", timestamp: "2026-07-15T09:00:00Z" },
-      { id: "ih-4-2", action: "PAID", actor: "Bank Transfer", timestamp: "2026-08-12T10:00:00Z" },
+      {
+        id: "ih-4-1",
+        action: "ISSUED",
+        actor: "Billing Engine",
+        timestamp: "2026-07-15T09:00:00Z",
+      },
+      {
+        id: "ih-4-2",
+        action: "PAID",
+        actor: "Bank Transfer",
+        timestamp: "2026-08-12T10:00:00Z",
+      },
     ],
   },
   {
@@ -655,10 +981,38 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-07-15",
     dueDate: "2026-08-15",
     lines: [
-      { id: "line-5-1", title: "B.Tech Semester 5 Academic Tuition Fee", categoryName: "Tuition Fee", quantity: 1, unitAmount: 55000, totalAmount: 55000 },
-      { id: "line-5-2", title: "Advanced Computing Laboratory Levy", categoryName: "Laboratory Fee", quantity: 1, unitAmount: 15000, totalAmount: 15000 },
-      { id: "line-5-3", title: "Semester 5 Examination & Evaluation", categoryName: "Examination Fee", quantity: 1, unitAmount: 3500, totalAmount: 3500 },
-      { id: "line-5-4", title: "Library & Technical Periodicals Subscription", categoryName: "Library Fee", quantity: 1, unitAmount: 2500, totalAmount: 2500 },
+      {
+        id: "line-5-1",
+        title: "B.Tech Semester 5 Academic Tuition Fee",
+        categoryName: "Tuition Fee",
+        quantity: 1,
+        unitAmount: 55000,
+        totalAmount: 55000,
+      },
+      {
+        id: "line-5-2",
+        title: "Advanced Computing Laboratory Levy",
+        categoryName: "Laboratory Fee",
+        quantity: 1,
+        unitAmount: 15000,
+        totalAmount: 15000,
+      },
+      {
+        id: "line-5-3",
+        title: "Semester 5 Examination & Evaluation",
+        categoryName: "Examination Fee",
+        quantity: 1,
+        unitAmount: 3500,
+        totalAmount: 3500,
+      },
+      {
+        id: "line-5-4",
+        title: "Library & Technical Periodicals Subscription",
+        categoryName: "Library Fee",
+        quantity: 1,
+        unitAmount: 2500,
+        totalAmount: 2500,
+      },
     ],
     grossAmount: 76000,
     scholarshipAmount: 0,
@@ -674,8 +1028,21 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-07-15T09:00:00Z",
     updatedAt: "2026-08-16T00:00:00Z",
     history: [
-      { id: "ih-5-1", action: "ISSUED", actor: "Billing Engine", timestamp: "2026-07-15T09:00:00Z" },
-      { id: "ih-5-2", action: "STATUS_CHANGED", actor: "Overdue Cron Service", timestamp: "2026-08-16T00:00:00Z", previousState: "ISSUED", newState: "OVERDUE", notes: "Due date passed with zero payments received." },
+      {
+        id: "ih-5-1",
+        action: "ISSUED",
+        actor: "Billing Engine",
+        timestamp: "2026-07-15T09:00:00Z",
+      },
+      {
+        id: "ih-5-2",
+        action: "STATUS_CHANGED",
+        actor: "Overdue Cron Service",
+        timestamp: "2026-08-16T00:00:00Z",
+        previousState: "ISSUED",
+        newState: "OVERDUE",
+        notes: "Due date passed with zero payments received.",
+      },
     ],
   },
   {
@@ -691,9 +1058,30 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     issueDate: "2026-08-01",
     dueDate: "2026-08-25",
     lines: [
-      { id: "line-6-1", title: "Hostel Room Rent (Double Occupancy)", categoryName: "Hostel Fee", quantity: 1, unitAmount: 25000, totalAmount: 25000 },
-      { id: "line-6-2", title: "Central Dining & Mess Catering", categoryName: "Hostel Fee", quantity: 1, unitAmount: 20000, totalAmount: 20000 },
-      { id: "line-6-3", title: "Hostel Maintenance & Amenities", categoryName: "Development Fee", quantity: 1, unitAmount: 5000, totalAmount: 5000 },
+      {
+        id: "line-6-1",
+        title: "Hostel Room Rent (Double Occupancy)",
+        categoryName: "Hostel Fee",
+        quantity: 1,
+        unitAmount: 25000,
+        totalAmount: 25000,
+      },
+      {
+        id: "line-6-2",
+        title: "Central Dining & Mess Catering",
+        categoryName: "Hostel Fee",
+        quantity: 1,
+        unitAmount: 20000,
+        totalAmount: 20000,
+      },
+      {
+        id: "line-6-3",
+        title: "Hostel Maintenance & Amenities",
+        categoryName: "Development Fee",
+        quantity: 1,
+        unitAmount: 5000,
+        totalAmount: 5000,
+      },
     ],
     grossAmount: 50000,
     scholarshipAmount: 0,
@@ -708,8 +1096,18 @@ export const MOCK_CANONICAL_INVOICES: Invoice[] = [
     createdAt: "2026-08-01T10:00:00Z",
     updatedAt: "2026-08-10T12:00:00Z",
     history: [
-      { id: "ih-6-1", action: "ISSUED", actor: "Hostel Billing Unit", timestamp: "2026-08-01T10:00:00Z" },
-      { id: "ih-6-2", action: "PAID", actor: "Aarav Patel", timestamp: "2026-08-10T12:00:00Z" },
+      {
+        id: "ih-6-1",
+        action: "ISSUED",
+        actor: "Hostel Billing Unit",
+        timestamp: "2026-08-01T10:00:00Z",
+      },
+      {
+        id: "ih-6-2",
+        action: "PAID",
+        actor: "Aarav Patel",
+        timestamp: "2026-08-10T12:00:00Z",
+      },
     ],
   },
 ];
@@ -738,10 +1136,22 @@ export const MOCK_CANONICAL_PAYMENTS: Payment[] = [
     recordedBy: "Automated Payment Gateway",
     notes: "Full settlement for Semester 5 academic tuition.",
     allocations: [
-      { id: "alloc-1", paymentId: "pay-2026-0001", invoiceId: "inv-2026-0001", invoiceNumber: "INV-2026-0001", allocatedAmount: 76000, allocatedAt: "2026-08-02T11:30:00Z" },
+      {
+        id: "alloc-1",
+        paymentId: "pay-2026-0001",
+        invoiceId: "inv-2026-0001",
+        invoiceNumber: "INV-2026-0001",
+        allocatedAmount: 76000,
+        allocatedAt: "2026-08-02T11:30:00Z",
+      },
     ],
     history: [
-      { id: "ph-1", action: "RECORDED", actor: "UPI Gateway", timestamp: "2026-08-02T11:30:00Z" },
+      {
+        id: "ph-1",
+        action: "RECORDED",
+        actor: "UPI Gateway",
+        timestamp: "2026-08-02T11:30:00Z",
+      },
     ],
   },
   {
@@ -763,10 +1173,22 @@ export const MOCK_CANONICAL_PAYMENTS: Payment[] = [
     status: "SUCCESS",
     recordedBy: "Automated NetBanking Gateway",
     allocations: [
-      { id: "alloc-2", paymentId: "pay-2026-0002", invoiceId: "inv-2026-0002", invoiceNumber: "INV-2026-0002", allocatedAmount: 60800, allocatedAt: "2026-08-05T14:20:00Z" },
+      {
+        id: "alloc-2",
+        paymentId: "pay-2026-0002",
+        invoiceId: "inv-2026-0002",
+        invoiceNumber: "INV-2026-0002",
+        allocatedAmount: 60800,
+        allocatedAt: "2026-08-05T14:20:00Z",
+      },
     ],
     history: [
-      { id: "ph-2", action: "RECORDED", actor: "NetBanking Gateway", timestamp: "2026-08-05T14:20:00Z" },
+      {
+        id: "ph-2",
+        action: "RECORDED",
+        actor: "NetBanking Gateway",
+        timestamp: "2026-08-05T14:20:00Z",
+      },
     ],
   },
   {
@@ -788,10 +1210,22 @@ export const MOCK_CANONICAL_PAYMENTS: Payment[] = [
     recordedBy: "B. K. Sharma (Accounts Cashier)",
     notes: "Installment 1 paid at Main Block Cash Counter.",
     allocations: [
-      { id: "alloc-3", paymentId: "pay-2026-0003", invoiceId: "inv-2026-0003", invoiceNumber: "INV-2026-0003", allocatedAmount: 40000, allocatedAt: "2026-08-10T16:15:00Z" },
+      {
+        id: "alloc-3",
+        paymentId: "pay-2026-0003",
+        invoiceId: "inv-2026-0003",
+        invoiceNumber: "INV-2026-0003",
+        allocatedAmount: 40000,
+        allocatedAt: "2026-08-10T16:15:00Z",
+      },
     ],
     history: [
-      { id: "ph-3", action: "RECORDED", actor: "Accounts Cashier", timestamp: "2026-08-10T16:15:00Z" },
+      {
+        id: "ph-3",
+        action: "RECORDED",
+        actor: "Accounts Cashier",
+        timestamp: "2026-08-10T16:15:00Z",
+      },
     ],
   },
   {
@@ -813,10 +1247,22 @@ export const MOCK_CANONICAL_PAYMENTS: Payment[] = [
     status: "SUCCESS",
     recordedBy: "Accounts Officer",
     allocations: [
-      { id: "alloc-4", paymentId: "pay-2026-0004", invoiceId: "inv-2026-0004", invoiceNumber: "INV-2026-0004", allocatedAmount: 37000, allocatedAt: "2026-08-12T10:00:00Z" },
+      {
+        id: "alloc-4",
+        paymentId: "pay-2026-0004",
+        invoiceId: "inv-2026-0004",
+        invoiceNumber: "INV-2026-0004",
+        allocatedAmount: 37000,
+        allocatedAt: "2026-08-12T10:00:00Z",
+      },
     ],
     history: [
-      { id: "ph-4", action: "RECORDED", actor: "Accounts Officer", timestamp: "2026-08-12T10:00:00Z" },
+      {
+        id: "ph-4",
+        action: "RECORDED",
+        actor: "Accounts Officer",
+        timestamp: "2026-08-12T10:00:00Z",
+      },
     ],
   },
   {
@@ -837,10 +1283,22 @@ export const MOCK_CANONICAL_PAYMENTS: Payment[] = [
     status: "SUCCESS",
     recordedBy: "Hostel Finance Gateway",
     allocations: [
-      { id: "alloc-5", paymentId: "pay-2026-0005", invoiceId: "inv-2026-0006", invoiceNumber: "INV-2026-0006", allocatedAmount: 50000, allocatedAt: "2026-08-10T12:00:00Z" },
+      {
+        id: "alloc-5",
+        paymentId: "pay-2026-0005",
+        invoiceId: "inv-2026-0006",
+        invoiceNumber: "INV-2026-0006",
+        allocatedAmount: 50000,
+        allocatedAt: "2026-08-10T12:00:00Z",
+      },
     ],
     history: [
-      { id: "ph-5", action: "RECORDED", actor: "Hostel Gateway", timestamp: "2026-08-10T12:00:00Z" },
+      {
+        id: "ph-5",
+        action: "RECORDED",
+        actor: "Hostel Gateway",
+        timestamp: "2026-08-10T12:00:00Z",
+      },
     ],
   },
 ];
@@ -867,7 +1325,8 @@ export const MOCK_CANONICAL_RECEIPTS: Receipt[] = [
     date: "2026-08-02 11:30 AM",
     status: "ISSUED",
     recordedBy: "Automated Payment Gateway",
-    notes: "Official university receipt for Semester 5 tuition & laboratory fees.",
+    notes:
+      "Official university receipt for Semester 5 tuition & laboratory fees.",
   },
   {
     id: "rec-2026-0002",
@@ -955,7 +1414,8 @@ export const MOCK_CANONICAL_SCHOLARSHIPS: Scholarship[] = [
     code: "SCH-MERIT-20",
     name: "University Academic Merit Scholarship",
     type: "MERIT",
-    description: "20% tuition concession for students securing top 5% SGPA/CGPA rank in previous semester.",
+    description:
+      "20% tuition concession for students securing top 5% SGPA/CGPA rank in previous semester.",
     discountType: "PERCENTAGE",
     value: 20,
     maxDiscountAmount: 25000,
@@ -973,10 +1433,12 @@ export const MOCK_CANONICAL_SCHOLARSHIPS: Scholarship[] = [
     code: "SCH-WTECH-40K",
     name: "State Women in Engineering Fellowship",
     type: "GOVERNMENT",
-    description: "Annual flat scholarship grant of ₹40,000 for women pursuing technical programs.",
+    description:
+      "Annual flat scholarship grant of ₹40,000 for women pursuing technical programs.",
     discountType: "FIXED",
     value: 40000,
-    eligibilityCriteria: "Female candidate enrolled in B.Tech engineering disciplines.",
+    eligibilityCriteria:
+      "Female candidate enrolled in B.Tech engineering disciplines.",
     academicYear: "2026-2027",
     status: "APPROVED",
     totalRecipients: 22,
@@ -990,10 +1452,12 @@ export const MOCK_CANONICAL_SCHOLARSHIPS: Scholarship[] = [
     code: "SCH-SPORTS-15K",
     name: "Inter-University Sports Excellence Award",
     type: "SPORTS",
-    description: "Flat grant of ₹15,000 for university team representatives in AIU tournaments.",
+    description:
+      "Flat grant of ₹15,000 for university team representatives in AIU tournaments.",
     discountType: "FIXED",
     value: 15000,
-    eligibilityCriteria: "University gold/silver medalists in zonal/national tournaments.",
+    eligibilityCriteria:
+      "University gold/silver medalists in zonal/national tournaments.",
     academicYear: "2026-2027",
     status: "APPROVED",
     totalRecipients: 8,
@@ -1007,11 +1471,13 @@ export const MOCK_CANONICAL_SCHOLARSHIPS: Scholarship[] = [
     code: "SCH-NEED-50",
     name: "EWS & Need-Based Tuition Assistance Scheme",
     type: "NEED_BASED",
-    description: "50% tuition waiver for students from families with annual income < ₹2.5 Lakhs.",
+    description:
+      "50% tuition waiver for students from families with annual income < ₹2.5 Lakhs.",
     discountType: "PERCENTAGE",
     value: 50,
     maxDiscountAmount: 35000,
-    eligibilityCriteria: "Verified government income certificate with authentic revenue records.",
+    eligibilityCriteria:
+      "Verified government income certificate with authentic revenue records.",
     academicYear: "2026-2027",
     status: "PENDING_APPROVAL",
     totalRecipients: 0,
@@ -1104,9 +1570,27 @@ export const MOCK_CANONICAL_REFUNDS: Refund[] = [
     reviewerNotes: "Verified no hostel property damages. Sanctioned.",
     processedAt: "2026-08-20T11:30:00Z",
     timeline: [
-      { id: "rh-1", action: "REQUESTED", actor: "Aarav Patel", timestamp: "2026-08-15T10:00:00Z", notes: "Refund application submitted." },
-      { id: "rh-2", action: "APPROVED", actor: "Hostel Warden", timestamp: "2026-08-18T14:00:00Z", notes: "Inspection completed, approved ₹5,000." },
-      { id: "rh-3", action: "PROCESSED", actor: "Accounts Bank Transfer", timestamp: "2026-08-20T11:30:00Z", notes: "Electronic credit processed to student bank account." },
+      {
+        id: "rh-1",
+        action: "REQUESTED",
+        actor: "Aarav Patel",
+        timestamp: "2026-08-15T10:00:00Z",
+        notes: "Refund application submitted.",
+      },
+      {
+        id: "rh-2",
+        action: "APPROVED",
+        actor: "Hostel Warden",
+        timestamp: "2026-08-18T14:00:00Z",
+        notes: "Inspection completed, approved ₹5,000.",
+      },
+      {
+        id: "rh-3",
+        action: "PROCESSED",
+        actor: "Accounts Bank Transfer",
+        timestamp: "2026-08-20T11:30:00Z",
+        notes: "Electronic credit processed to student bank account.",
+      },
     ],
   },
   {
@@ -1127,8 +1611,19 @@ export const MOCK_CANONICAL_REFUNDS: Refund[] = [
     requestedAt: "2026-09-02T11:15:00Z",
     reviewerNotes: "Accounts clerk verifying ledger entries with exam cell.",
     timeline: [
-      { id: "rh-2-1", action: "REQUESTED", actor: "Rohan Verghese", timestamp: "2026-09-02T11:15:00Z" },
-      { id: "rh-2-2", action: "FLAGGED_FOR_AUDIT", actor: "Accounts Supervisor", timestamp: "2026-09-05T09:30:00Z", notes: "Cross-verifying with Examination Cell hall ticket rolls." },
+      {
+        id: "rh-2-1",
+        action: "REQUESTED",
+        actor: "Rohan Verghese",
+        timestamp: "2026-09-02T11:15:00Z",
+      },
+      {
+        id: "rh-2-2",
+        action: "FLAGGED_FOR_AUDIT",
+        actor: "Accounts Supervisor",
+        timestamp: "2026-09-05T09:30:00Z",
+        notes: "Cross-verifying with Examination Cell hall ticket rolls.",
+      },
     ],
   },
   {
@@ -1149,10 +1644,22 @@ export const MOCK_CANONICAL_REFUNDS: Refund[] = [
     requestedAt: "2026-09-10T15:00:00Z",
     reviewedBy: "Chief Accounts Officer",
     reviewedAt: "2026-09-12T16:00:00Z",
-    reviewerNotes: "Caution deposit was never collected on this invoice. Ineligible.",
+    reviewerNotes:
+      "Caution deposit was never collected on this invoice. Ineligible.",
     timeline: [
-      { id: "rh-3-1", action: "REQUESTED", actor: "Vikramaditya Rao", timestamp: "2026-09-10T15:00:00Z" },
-      { id: "rh-3-2", action: "REJECTED", actor: "Chief Accounts Officer", timestamp: "2026-09-12T16:00:00Z", notes: "No underlying payment recorded." },
+      {
+        id: "rh-3-1",
+        action: "REQUESTED",
+        actor: "Vikramaditya Rao",
+        timestamp: "2026-09-10T15:00:00Z",
+      },
+      {
+        id: "rh-3-2",
+        action: "REJECTED",
+        actor: "Chief Accounts Officer",
+        timestamp: "2026-09-12T16:00:00Z",
+        notes: "No underlying payment recorded.",
+      },
     ],
   },
 ];
@@ -1174,11 +1681,41 @@ export const MOCK_FINANCE_OPERATIONS_SUMMARY: FinanceDashboardSummary = {
   unallocatedPaymentsAmount: 0,
   pendingScholarshipsCount: 1,
   agingBuckets: [
-    { bucket: "CURRENT", label: "Current (Not Overdue)", amount: 36000, invoiceCount: 1, percentage: 34 },
-    { bucket: "DAYS_1_30", label: "1–30 Days Overdue", amount: 0, invoiceCount: 0, percentage: 0 },
-    { bucket: "DAYS_31_60", label: "31–60 Days Overdue", amount: 71000, invoiceCount: 1, percentage: 66 },
-    { bucket: "DAYS_61_90", label: "61–90 Days Overdue", amount: 0, invoiceCount: 0, percentage: 0 },
-    { bucket: "DAYS_90_PLUS", label: "90+ Days Overdue", amount: 0, invoiceCount: 0, percentage: 0 },
+    {
+      bucket: "CURRENT",
+      label: "Current (Not Overdue)",
+      amount: 36000,
+      invoiceCount: 1,
+      percentage: 34,
+    },
+    {
+      bucket: "DAYS_1_30",
+      label: "1–30 Days Overdue",
+      amount: 0,
+      invoiceCount: 0,
+      percentage: 0,
+    },
+    {
+      bucket: "DAYS_31_60",
+      label: "31–60 Days Overdue",
+      amount: 71000,
+      invoiceCount: 1,
+      percentage: 66,
+    },
+    {
+      bucket: "DAYS_61_90",
+      label: "61–90 Days Overdue",
+      amount: 0,
+      invoiceCount: 0,
+      percentage: 0,
+    },
+    {
+      bucket: "DAYS_90_PLUS",
+      label: "90+ Days Overdue",
+      amount: 0,
+      invoiceCount: 0,
+      percentage: 0,
+    },
   ],
   collectionTrends: [
     { month: "Jun 2026", billed: 0, collected: 0, rate: 0 },
@@ -1188,16 +1725,83 @@ export const MOCK_FINANCE_OPERATIONS_SUMMARY: FinanceDashboardSummary = {
     { month: "Oct 2026", billed: 0, collected: 0, rate: 65.1 },
   ],
   programOutstandings: [
-    { program: "B.Tech Computer Science & Engineering", department: "Computer Science & Engineering", billed: 228000, collected: 176800, outstanding: 36000, studentCount: 3 },
-    { program: "B.Tech Electronics & Communication", department: "Electronics & Communication Engineering", billed: 77000, collected: 37000, outstanding: 0, studentCount: 1 },
-    { program: "B.Tech AI & Data Science", department: "Artificial Intelligence & Data Science", billed: 76000, collected: 0, outstanding: 71000, studentCount: 1 },
+    {
+      program: "B.Tech Computer Science & Engineering",
+      department: "Computer Science & Engineering",
+      billed: 228000,
+      collected: 176800,
+      outstanding: 36000,
+      studentCount: 3,
+    },
+    {
+      program: "B.Tech Electronics & Communication",
+      department: "Electronics & Communication Engineering",
+      billed: 77000,
+      collected: 37000,
+      outstanding: 0,
+      studentCount: 1,
+    },
+    {
+      program: "B.Tech AI & Data Science",
+      department: "Artificial Intelligence & Data Science",
+      billed: 76000,
+      collected: 0,
+      outstanding: 71000,
+      studentCount: 1,
+    },
   ],
   recentActivities: [
-    { id: "act-1", type: "PAYMENT_RECORDED", title: "Hostel Fee Payment Recorded", description: "₹50,000 received via UPI from Aarav Patel (24CSE0101)", amount: 50000, timestamp: "2026-08-10 12:00 PM", entityId: "pay-2026-0005", href: "/app/finance/payments/pay-2026-0005" },
-    { id: "act-2", type: "PAYMENT_RECORDED", title: "Partial Cash Fee Received", description: "₹40,000 counter installment recorded for Rohan Verghese (24CSE0103)", amount: 40000, timestamp: "2026-08-10 04:15 PM", entityId: "pay-2026-0003", href: "/app/finance/payments/pay-2026-0003" },
-    { id: "act-3", type: "RECEIPT_ISSUED", title: "Electronic Receipt REC-2026-0002 Generated", description: "Receipt issued for Priya Sundaram (Net Banking ₹60,800)", amount: 60800, timestamp: "2026-08-05 02:45 PM", entityId: "rec-2026-0002", href: "/app/finance/receipts/rec-2026-0002" },
-    { id: "act-4", type: "SCHOLARSHIP_APPROVED", title: "Academic Merit Concession Approved", description: "20% waiver (₹15,200) granted to Priya Sundaram (24CSE0102)", amount: 15200, timestamp: "2026-07-10 10:00 AM", entityId: "sch-merit-2026", href: "/app/finance/scholarships/sch-merit-2026" },
-    { id: "act-5", type: "REFUND_APPROVED", title: "Hostel Caution Refund Approved", description: "₹5,000 refund processed for Aarav Patel (24CSE0101)", amount: 5000, timestamp: "2026-08-20 11:30 AM", entityId: "ref-2026-0001", href: "/app/finance/refunds/ref-2026-0001" },
+    {
+      id: "act-1",
+      type: "PAYMENT_RECORDED",
+      title: "Hostel Fee Payment Recorded",
+      description: "₹50,000 received via UPI from Aarav Patel (24CSE0101)",
+      amount: 50000,
+      timestamp: "2026-08-10 12:00 PM",
+      entityId: "pay-2026-0005",
+      href: "/app/finance/payments/pay-2026-0005",
+    },
+    {
+      id: "act-2",
+      type: "PAYMENT_RECORDED",
+      title: "Partial Cash Fee Received",
+      description:
+        "₹40,000 counter installment recorded for Rohan Verghese (24CSE0103)",
+      amount: 40000,
+      timestamp: "2026-08-10 04:15 PM",
+      entityId: "pay-2026-0003",
+      href: "/app/finance/payments/pay-2026-0003",
+    },
+    {
+      id: "act-3",
+      type: "RECEIPT_ISSUED",
+      title: "Electronic Receipt REC-2026-0002 Generated",
+      description: "Receipt issued for Priya Sundaram (Net Banking ₹60,800)",
+      amount: 60800,
+      timestamp: "2026-08-05 02:45 PM",
+      entityId: "rec-2026-0002",
+      href: "/app/finance/receipts/rec-2026-0002",
+    },
+    {
+      id: "act-4",
+      type: "SCHOLARSHIP_APPROVED",
+      title: "Academic Merit Concession Approved",
+      description: "20% waiver (₹15,200) granted to Priya Sundaram (24CSE0102)",
+      amount: 15200,
+      timestamp: "2026-07-10 10:00 AM",
+      entityId: "sch-merit-2026",
+      href: "/app/finance/scholarships/sch-merit-2026",
+    },
+    {
+      id: "act-5",
+      type: "REFUND_APPROVED",
+      title: "Hostel Caution Refund Approved",
+      description: "₹5,000 refund processed for Aarav Patel (24CSE0101)",
+      amount: 5000,
+      timestamp: "2026-08-20 11:30 AM",
+      entityId: "ref-2026-0001",
+      href: "/app/finance/refunds/ref-2026-0001",
+    },
   ],
   operationalQueues: {
     pendingPaymentsCount: 0,
@@ -1213,55 +1817,70 @@ export const MOCK_FINANCE_OPERATIONS_SUMMARY: FinanceDashboardSummary = {
 // Legacy Array Aliases (Maintains Zero Breaks)
 // ==========================================
 
-export const MOCK_FEE_STRUCTURES: FeeStructureItem[] = MOCK_CANONICAL_FEE_STRUCTURES.map((fs) => ({
-  id: fs.id,
-  name: fs.name,
-  program: fs.program,
-  academicYear: fs.academicYear,
-  totalAnnualFee: fs.grossTotal,
-  components: fs.components.map((c) => ({
-    title: c.title,
-    amount: c.amount,
-    mandatory: c.isMandatory,
-  })),
-  status: fs.status === "ACTIVE" ? "ACTIVE" : fs.status === "DRAFT" ? "DRAFT" : "ARCHIVED",
-}));
+export const MOCK_FEE_STRUCTURES: FeeStructureItem[] =
+  MOCK_CANONICAL_FEE_STRUCTURES.map((fs) => ({
+    id: fs.id,
+    name: fs.name,
+    program: fs.program,
+    academicYear: fs.academicYear,
+    totalAnnualFee: fs.grossTotal,
+    components: fs.components.map((c) => ({
+      title: c.title,
+      amount: c.amount,
+      mandatory: c.isMandatory,
+    })),
+    status:
+      fs.status === "ACTIVE"
+        ? "ACTIVE"
+        : fs.status === "DRAFT"
+          ? "DRAFT"
+          : "ARCHIVED",
+  }));
 
-export const MOCK_INVOICES: InvoiceItem[] = MOCK_CANONICAL_INVOICES.map((inv) => ({
-  id: inv.id,
-  invoiceNumber: inv.invoiceNumber,
-  studentId: inv.studentId,
-  studentName: inv.studentName,
-  rollNumber: inv.rollNumber,
-  program: inv.program,
-  dueDate: inv.dueDate,
-  issueDate: inv.issueDate,
-  totalAmount: inv.netPayable,
-  paidAmount: inv.paidAmount,
-  balanceAmount: inv.outstandingAmount,
-  status: inv.status,
-}));
+export const MOCK_INVOICES: InvoiceItem[] = MOCK_CANONICAL_INVOICES.map(
+  (inv) => ({
+    id: inv.id,
+    invoiceNumber: inv.invoiceNumber,
+    studentId: inv.studentId,
+    studentName: inv.studentName,
+    rollNumber: inv.rollNumber,
+    program: inv.program,
+    dueDate: inv.dueDate,
+    issueDate: inv.issueDate,
+    totalAmount: inv.netPayable,
+    paidAmount: inv.paidAmount,
+    balanceAmount: inv.outstandingAmount,
+    status: inv.status,
+  }),
+);
 
-export const MOCK_PAYMENTS: PaymentTransactionItem[] = MOCK_CANONICAL_PAYMENTS.map((p) => ({
-  id: p.id,
-  transactionRef: p.transactionRef,
-  receiptNumber: p.receiptNumber,
-  studentName: p.studentName,
-  rollNumber: p.rollNumber,
-  invoiceNumber: p.invoiceNumber,
-  amount: p.amount,
-  paymentMode: p.paymentMethod === "UPI" ? "UPI" : p.paymentMethod === "CASH" ? "CASH_COUNTER" : "NET_BANKING",
-  paymentDate: p.paymentDate,
-  status: p.status,
-}));
+export const MOCK_PAYMENTS: PaymentTransactionItem[] =
+  MOCK_CANONICAL_PAYMENTS.map((p) => ({
+    id: p.id,
+    transactionRef: p.transactionRef,
+    receiptNumber: p.receiptNumber,
+    studentName: p.studentName,
+    rollNumber: p.rollNumber,
+    invoiceNumber: p.invoiceNumber,
+    amount: p.amount,
+    paymentMode:
+      p.paymentMethod === "UPI"
+        ? "UPI"
+        : p.paymentMethod === "CASH"
+          ? "CASH_COUNTER"
+          : "NET_BANKING",
+    paymentDate: p.paymentDate,
+    status: p.status,
+  }));
 
-export const MOCK_SCHOLARSHIPS: ScholarshipItem[] = MOCK_STUDENT_SCHOLARSHIPS.map((s) => ({
-  id: s.id,
-  studentName: s.studentName,
-  rollNumber: s.rollNumber,
-  scholarshipScheme: s.scholarshipName,
-  sanctionAmount: s.discountAmount,
-  disbursedAmount: s.discountAmount,
-  academicYear: s.academicYear,
-  status: s.status === "DISBURSED" ? "DISBURSED" : "APPROVED",
-}));
+export const MOCK_SCHOLARSHIPS: ScholarshipItem[] =
+  MOCK_STUDENT_SCHOLARSHIPS.map((s) => ({
+    id: s.id,
+    studentName: s.studentName,
+    rollNumber: s.rollNumber,
+    scholarshipScheme: s.scholarshipName,
+    sanctionAmount: s.discountAmount,
+    disbursedAmount: s.discountAmount,
+    academicYear: s.academicYear,
+    status: s.status === "DISBURSED" ? "DISBURSED" : "APPROVED",
+  }));

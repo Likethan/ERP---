@@ -27,7 +27,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/toast";
 import { placementService } from "@/services/placement.service";
 import { formatLPA } from "@/services/placement-calculator";
-import { JobDrive, Position, Application, Interview, Offer, DriveStatus } from "@/types/placement";
+import {
+  JobDrive,
+  Position,
+  Application,
+  Interview,
+  Offer,
+  DriveStatus,
+} from "@/types/placement";
 
 export default function JobDriveDetailPage() {
   const params = useParams();
@@ -54,7 +61,11 @@ export default function JobDriveDetailPage() {
       ]);
 
       if (!driveRes.data) {
-        showToast({ title: "Not Found", message: "Job drive not found", type: "error" });
+        showToast({
+          title: "Not Found",
+          message: "Job drive not found",
+          type: "error",
+        });
         router.push("/app/placement/drives");
         return;
       }
@@ -62,10 +73,22 @@ export default function JobDriveDetailPage() {
       setDrive(driveRes.data);
       setPositions(posRes.data || []);
       setApplications(appsRes.data || []);
-      setInterviews((intvRes.data || []).filter((i) => i.companyId === driveRes.data?.companyId));
-      setOffers((ofrRes.data || []).filter((o) => o.companyId === driveRes.data?.companyId));
+      setInterviews(
+        (intvRes.data || []).filter(
+          (i) => i.companyId === driveRes.data?.companyId,
+        ),
+      );
+      setOffers(
+        (ofrRes.data || []).filter(
+          (o) => o.companyId === driveRes.data?.companyId,
+        ),
+      );
     } catch {
-      showToast({ title: "Error", message: "Failed to load drive details", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to load drive details",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -81,10 +104,18 @@ export default function JobDriveDetailPage() {
     if (!drive) return;
     try {
       await placementService.publishJobDrive(drive.id);
-      showToast({ title: "Drive Published", message: "Applications are now OPEN to all eligible students.", type: "success" });
+      showToast({
+        title: "Drive Published",
+        message: "Applications are now OPEN to all eligible students.",
+        type: "success",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to publish drive", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to publish drive",
+        type: "error",
+      });
     }
   };
 
@@ -92,20 +123,39 @@ export default function JobDriveDetailPage() {
     if (!drive) return;
     try {
       await placementService.closeJobDrive(drive.id);
-      showToast({ title: "Drive Closed", message: "Applications closed for this recruitment cycle.", type: "info" });
+      showToast({
+        title: "Drive Closed",
+        message: "Applications closed for this recruitment cycle.",
+        type: "info",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to close drive", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to close drive",
+        type: "error",
+      });
     }
   };
 
   const handleShortlistApplicant = async (appId: string) => {
     try {
-      await placementService.shortlistApplications([appId], "Placement Officer");
-      showToast({ title: "Candidate Shortlisted", message: "Moved to technical interview pipeline", type: "success" });
+      await placementService.shortlistApplications(
+        [appId],
+        "Placement Officer",
+      );
+      showToast({
+        title: "Candidate Shortlisted",
+        message: "Moved to technical interview pipeline",
+        type: "success",
+      });
       loadData();
     } catch {
-      showToast({ title: "Error", message: "Failed to shortlist candidate", type: "error" });
+      showToast({
+        title: "Error",
+        message: "Failed to shortlist candidate",
+        type: "error",
+      });
     }
   };
 
@@ -114,7 +164,9 @@ export default function JobDriveDetailPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500">Loading campus drive operations center...</p>
+          <p className="text-xs text-slate-500">
+            Loading campus drive operations center...
+          </p>
         </div>
       </div>
     );
@@ -150,14 +202,16 @@ export default function JobDriveDetailPage() {
                     drive.status === "OPEN"
                       ? "success"
                       : drive.status === "UPCOMING"
-                      ? "warning"
-                      : "secondary"
+                        ? "warning"
+                        : "secondary"
                   }
                   dot
                 >
                   {drive.status}
                 </Badge>
-                <Badge variant="outline">{drive.companyTier.replace(/_/g, " ")}</Badge>
+                <Badge variant="outline">
+                  {drive.companyTier.replace(/_/g, " ")}
+                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1.5">
@@ -186,12 +240,22 @@ export default function JobDriveDetailPage() {
 
           <div className="flex items-center gap-2">
             {drive.status === "DRAFT" || drive.status === "UPCOMING" ? (
-              <Button variant="primary" size="sm" onClick={handlePublishDrive} className="gap-1.5 text-xs">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handlePublishDrive}
+                className="gap-1.5 text-xs"
+              >
                 <Check className="w-3.5 h-3.5" />
                 Publish & Open Applications
               </Button>
             ) : drive.status === "OPEN" ? (
-              <Button variant="outline" size="sm" onClick={handleCloseDrive} className="gap-1.5 text-xs text-rose-600 border-rose-300">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCloseDrive}
+                className="gap-1.5 text-xs text-rose-600 border-rose-300"
+              >
                 <Clock className="w-3.5 h-3.5" />
                 Close Applications
               </Button>
@@ -204,9 +268,15 @@ export default function JobDriveDetailPage() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-slate-100 p-1 dark:bg-slate-800">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="positions">Positions ({positions.length})</TabsTrigger>
-          <TabsTrigger value="applicants">Applicants ({applications.length})</TabsTrigger>
-          <TabsTrigger value="interviews">Interviews ({interviews.length})</TabsTrigger>
+          <TabsTrigger value="positions">
+            Positions ({positions.length})
+          </TabsTrigger>
+          <TabsTrigger value="applicants">
+            Applicants ({applications.length})
+          </TabsTrigger>
+          <TabsTrigger value="interviews">
+            Interviews ({interviews.length})
+          </TabsTrigger>
           <TabsTrigger value="offers">Offers ({offers.length})</TabsTrigger>
           <TabsTrigger value="timeline">Governance Timeline</TabsTrigger>
         </TabsList>
@@ -228,7 +298,11 @@ export default function JobDriveDetailPage() {
             />
             <StatCard
               title="Candidates Shortlisted"
-              value={applications.filter((a) => a.status === "SHORTLISTED" || a.status === "SELECTED").length}
+              value={
+                applications.filter(
+                  (a) => a.status === "SHORTLISTED" || a.status === "SELECTED",
+                ).length
+              }
               icon={<Award className="w-5 h-5 text-amber-500" />}
               description="Advanced to interview rounds"
             />
@@ -273,33 +347,45 @@ export default function JobDriveDetailPage() {
                       <h4 className="font-bold text-sm text-slate-900 dark:text-white">
                         {pos.title}
                       </h4>
-                      <p className="text-xs text-slate-500">{pos.departmentFunction}</p>
+                      <p className="text-xs text-slate-500">
+                        {pos.departmentFunction}
+                      </p>
                     </div>
                     <div className="text-right">
                       <span className="font-bold font-mono text-emerald-600 dark:text-emerald-400 text-sm">
                         {formatLPA(pos.ctcLpa)}
                       </span>
-                      <p className="text-[11px] text-slate-500">Base: {formatLPA(pos.baseSalaryLpa)}</p>
+                      <p className="text-[11px] text-slate-500">
+                        Base: {formatLPA(pos.baseSalaryLpa)}
+                      </p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-200 dark:border-slate-700">
                     <div>
                       <span className="text-slate-500">Min CGPA:</span>{" "}
-                      <strong className="text-slate-900 dark:text-white">{pos.minCgpa}</strong>
+                      <strong className="text-slate-900 dark:text-white">
+                        {pos.minCgpa}
+                      </strong>
                     </div>
                     <div>
                       <span className="text-slate-500">Max Backlogs:</span>{" "}
-                      <strong className="text-slate-900 dark:text-white">{pos.maxBacklogs}</strong>
+                      <strong className="text-slate-900 dark:text-white">
+                        {pos.maxBacklogs}
+                      </strong>
                     </div>
                     <div>
                       <span className="text-slate-500">Vacancies:</span>{" "}
-                      <strong className="text-slate-900 dark:text-white">{pos.vacancies} open</strong>
+                      <strong className="text-slate-900 dark:text-white">
+                        {pos.vacancies} open
+                      </strong>
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-xs text-slate-500">Mandatory Skills:</span>
+                    <span className="text-xs text-slate-500">
+                      Mandatory Skills:
+                    </span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {pos.requiredSkills.map((s) => (
                         <span
@@ -326,7 +412,10 @@ export default function JobDriveDetailPage() {
             {applications.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {applications.map((app) => (
-                  <div key={app.id} className="py-3 flex items-center justify-between">
+                  <div
+                    key={app.id}
+                    className="py-3 flex items-center justify-between"
+                  >
                     <div>
                       <Link
                         href={`/app/placement/applications/${app.id}`}
@@ -335,12 +424,21 @@ export default function JobDriveDetailPage() {
                         {app.studentName} ({app.rollNumber})
                       </Link>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        {app.program} • CGPA: {app.cgpa.toFixed(2)} • Applied: {app.appliedDate.split("T")[0]}
+                        {app.program} • CGPA: {app.cgpa.toFixed(2)} • Applied:{" "}
+                        {app.appliedDate.split("T")[0]}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <Badge variant={app.status === "SELECTED" ? "success" : app.status === "SHORTLISTED" ? "info" : "secondary"}>
+                      <Badge
+                        variant={
+                          app.status === "SELECTED"
+                            ? "success"
+                            : app.status === "SHORTLISTED"
+                              ? "info"
+                              : "secondary"
+                        }
+                      >
                         {app.status}
                       </Badge>
                       {app.status === "SUBMITTED" && (
@@ -354,7 +452,11 @@ export default function JobDriveDetailPage() {
                         </Button>
                       )}
                       <Link href={`/app/placement/applications/${app.id}`}>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs"
+                        >
                           Review
                         </Button>
                       </Link>
@@ -363,7 +465,9 @@ export default function JobDriveDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No student applications submitted yet.</p>
+              <p className="text-xs text-slate-500">
+                No student applications submitted yet.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -383,20 +487,27 @@ export default function JobDriveDetailPage() {
                   >
                     <div>
                       <span className="font-semibold text-slate-900 dark:text-white">
-                        {intv.studentName} — {intv.stage} Round {intv.roundNumber}
+                        {intv.studentName} — {intv.stage} Round{" "}
+                        {intv.roundNumber}
                       </span>
                       <p className="text-slate-500 mt-0.5">
                         {intv.date} at {intv.time} • Mode: {intv.mode}
                       </p>
                     </div>
-                    <Badge variant={intv.status === "COMPLETED" ? "success" : "warning"}>
+                    <Badge
+                      variant={
+                        intv.status === "COMPLETED" ? "success" : "warning"
+                      }
+                    >
                       {intv.status}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No interviews scheduled yet for this drive.</p>
+              <p className="text-xs text-slate-500">
+                No interviews scheduled yet for this drive.
+              </p>
             )}
           </div>
         </TabsContent>
@@ -425,7 +536,11 @@ export default function JobDriveDetailPage() {
                         {formatLPA(ofr.ctcLpa)}
                       </p>
                     </div>
-                    <Badge variant={ofr.status === "ACCEPTED" ? "success" : "warning"}>
+                    <Badge
+                      variant={
+                        ofr.status === "ACCEPTED" ? "success" : "warning"
+                      }
+                    >
                       {ofr.status}
                     </Badge>
                   </div>
@@ -451,7 +566,8 @@ export default function JobDriveDetailPage() {
                     {entry.action}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    By {entry.actor} • {new Date(entry.timestamp).toLocaleString()}
+                    By {entry.actor} •{" "}
+                    {new Date(entry.timestamp).toLocaleString()}
                   </div>
                 </div>
               ))}

@@ -2,7 +2,23 @@
 
 import React, { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Command, X, ArrowRight, User, BookOpen, Briefcase, FileText, Calendar, DollarSign, Sparkles, Loader2, FileSpreadsheet, CheckSquare, Award } from "lucide-react";
+import {
+  Search,
+  Command,
+  X,
+  ArrowRight,
+  User,
+  BookOpen,
+  Briefcase,
+  FileText,
+  Calendar,
+  DollarSign,
+  Sparkles,
+  Loader2,
+  FileSpreadsheet,
+  CheckSquare,
+  Award,
+} from "lucide-react";
 import { searchService } from "@/services/search.service";
 import { GlobalSearchResultItem } from "@/types/domain";
 
@@ -18,15 +34,51 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const [isSearching, startTransition] = useTransition();
 
   const QUICK_LINKS = [
-    { label: "Dashboard", href: "/app/dashboard", icon: <Command className="h-4 w-4 text-indigo-400" /> },
-    { label: "Students Registry", href: "/app/students", icon: <User className="h-4 w-4 text-emerald-400" /> },
-    { label: "Faculty Directory", href: "/app/faculty", icon: <User className="h-4 w-4 text-sky-400" /> },
-    { label: "Academics & Curricula", href: "/app/academics", icon: <BookOpen className="h-4 w-4 text-amber-400" /> },
-    { label: "Attendance Sessions", href: "/app/attendance", icon: <Calendar className="h-4 w-4 text-purple-400" /> },
-    { label: "Examinations & Marks", href: "/app/examinations", icon: <FileText className="h-4 w-4 text-rose-400" /> },
-    { label: "Finance & Invoices", href: "/app/finance", icon: <DollarSign className="h-4 w-4 text-emerald-400" /> },
-    { label: "Placements & Career", href: "/app/placement", icon: <Briefcase className="h-4 w-4 text-blue-400" /> },
-    { label: "Campus Intelligence", href: "/app/intelligence", icon: <Sparkles className="h-4 w-4 text-yellow-400" /> },
+    {
+      label: "Dashboard",
+      href: "/app/dashboard",
+      icon: <Command className="h-4 w-4 text-indigo-400" />,
+    },
+    {
+      label: "Students Registry",
+      href: "/app/students",
+      icon: <User className="h-4 w-4 text-emerald-400" />,
+    },
+    {
+      label: "Faculty Directory",
+      href: "/app/faculty",
+      icon: <User className="h-4 w-4 text-sky-400" />,
+    },
+    {
+      label: "Academics & Curricula",
+      href: "/app/academics",
+      icon: <BookOpen className="h-4 w-4 text-amber-400" />,
+    },
+    {
+      label: "Attendance Sessions",
+      href: "/app/attendance",
+      icon: <Calendar className="h-4 w-4 text-purple-400" />,
+    },
+    {
+      label: "Examinations & Marks",
+      href: "/app/examinations",
+      icon: <FileText className="h-4 w-4 text-rose-400" />,
+    },
+    {
+      label: "Finance & Invoices",
+      href: "/app/finance",
+      icon: <DollarSign className="h-4 w-4 text-emerald-400" />,
+    },
+    {
+      label: "Placements & Career",
+      href: "/app/placement",
+      icon: <Briefcase className="h-4 w-4 text-blue-400" />,
+    },
+    {
+      label: "Campus Intelligence",
+      href: "/app/intelligence",
+      icon: <Sparkles className="h-4 w-4 text-yellow-400" />,
+    },
   ];
 
   useEffect(() => {

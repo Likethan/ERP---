@@ -43,7 +43,8 @@ export const MOCK_AI_CONVERSATIONS: AIConversation[] = [
     createdAt: "2026-10-01T09:30:00Z",
     updatedAt: "2026-10-02T14:15:00Z",
     messageCount: 4,
-    lastMessageSnippet: "18 students identified with attendance <75% in 5th Semester.",
+    lastMessageSnippet:
+      "18 students identified with attendance <75% in 5th Semester.",
   },
   {
     id: "conv-002",
@@ -55,7 +56,8 @@ export const MOCK_AI_CONVERSATIONS: AIConversation[] = [
     createdAt: "2026-09-28T11:00:00Z",
     updatedAt: "2026-09-29T16:20:00Z",
     messageCount: 3,
-    lastMessageSnippet: "3 candidates eligible for Cisco Systems drive have pending hostel dues.",
+    lastMessageSnippet:
+      "3 candidates eligible for Cisco Systems drive have pending hostel dues.",
   },
   {
     id: "conv-003",
@@ -79,7 +81,8 @@ export const MOCK_AI_CONVERSATIONS: AIConversation[] = [
     createdAt: "2026-09-20T10:00:00Z",
     updatedAt: "2026-09-20T10:30:00Z",
     messageCount: 2,
-    lastMessageSnippet: "4 passport & caste validity documents expire within 30 days.",
+    lastMessageSnippet:
+      "4 passport & caste validity documents expire within 30 days.",
   },
 ];
 
@@ -105,19 +108,44 @@ export const MOCK_SEED_MESSAGES: Record<string, AIMessage[]> = {
         {
           type: AIResponseBlockType.METRIC,
           metrics: [
-            { label: "Students Below 75%", value: 18, change: "-4 vs last term", trend: "up" },
-            { label: "Critical (<60%)", value: 3, change: "Requires Condonation", trend: "down" },
-            { label: "Average Dept Attendance", value: "84.6%", change: "+1.2%", trend: "up" },
+            {
+              label: "Students Below 75%",
+              value: 18,
+              change: "-4 vs last term",
+              trend: "up",
+            },
+            {
+              label: "Critical (<60%)",
+              value: 3,
+              change: "Requires Condonation",
+              trend: "down",
+            },
+            {
+              label: "Average Dept Attendance",
+              value: "84.6%",
+              change: "+1.2%",
+              trend: "up",
+            },
           ],
         },
         {
           type: AIResponseBlockType.TABLE,
           title: "Department Breakdown of Attendance Risk",
           table: {
-            headers: ["Department", "Semester", "Affected Students", "Risk Level"],
+            headers: [
+              "Department",
+              "Semester",
+              "Affected Students",
+              "Risk Level",
+            ],
             rows: [
               ["Computer Science & Engineering", "Sem 5 Sec B", 7, "HIGH"],
-              ["Artificial Intelligence & Data Science", "Sem 3 Sec A", 5, "HIGH"],
+              [
+                "Artificial Intelligence & Data Science",
+                "Sem 3 Sec A",
+                5,
+                "HIGH",
+              ],
               ["Electronics & Communication", "Sem 5 Sec A", 3, "MEDIUM"],
               ["Mechanical Engineering", "Sem 7 Sec A", 3, "CRITICAL"],
             ],
@@ -148,8 +176,16 @@ export const MOCK_SEED_MESSAGES: Record<string, AIMessage[]> = {
         },
       ],
       explainability: {
-        dataSources: ["attendance_sessions", "attendance_records", "students_master"],
-        filtersApplied: ["Academic Term: 2026-2027", "Enrollment: Active", "Attendance < 75%"],
+        dataSources: [
+          "attendance_sessions",
+          "attendance_records",
+          "students_master",
+        ],
+        filtersApplied: [
+          "Academic Term: 2026-2027",
+          "Enrollment: Active",
+          "Attendance < 75%",
+        ],
         timePeriod: "Current Term (1 Aug 2026 – 2 Oct 2026)",
         calculationUsed: "SUM(Present) / SUM(Total Enrolled Hours) * 100",
         threshold: "75.0% Mandatory Examination Standard",
@@ -171,30 +207,50 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_student_profile",
     domain: IntelligenceDomain.PEOPLE,
-    description: "Fetches canonical student 360 profile including enrollment, guardian, and mentor metadata.",
+    description:
+      "Fetches canonical student 360 profile including enrollment, guardian, and mentor metadata.",
     permissionRequirement: AIToolPermission.STUDENT,
     status: "ACTIVE",
     lastUsed: "10 mins ago",
     executionCount: 1420,
-    parameters: [{ name: "studentId", type: "string", required: true, description: "Canonical student identifier" }],
+    parameters: [
+      {
+        name: "studentId",
+        type: "string",
+        required: true,
+        description: "Canonical student identifier",
+      },
+    ],
   },
   {
     name: "get_attendance_summary",
     domain: IntelligenceDomain.ATTENDANCE,
-    description: "Computes cumulative and course-wise attendance percentages against policy minimums.",
+    description:
+      "Computes cumulative and course-wise attendance percentages against policy minimums.",
     permissionRequirement: AIToolPermission.ALL,
     status: "ACTIVE",
     lastUsed: "2 mins ago",
     executionCount: 2840,
     parameters: [
-      { name: "studentId", type: "string", required: false, description: "Filter by student" },
-      { name: "courseId", type: "string", required: false, description: "Filter by subject" },
+      {
+        name: "studentId",
+        type: "string",
+        required: false,
+        description: "Filter by student",
+      },
+      {
+        name: "courseId",
+        type: "string",
+        required: false,
+        description: "Filter by subject",
+      },
     ],
   },
   {
     name: "get_course_attendance",
     domain: IntelligenceDomain.ATTENDANCE,
-    description: "Retrieves attendance logs for a specific course offering and faculty instructor.",
+    description:
+      "Retrieves attendance logs for a specific course offering and faculty instructor.",
     permissionRequirement: AIToolPermission.FACULTY,
     status: "ACTIVE",
     lastUsed: "1 hour ago",
@@ -203,7 +259,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_exam_schedule",
     domain: IntelligenceDomain.EXAMINATIONS,
-    description: "Retrieves upcoming CIA and End-Semester examination timetables and seating plans.",
+    description:
+      "Retrieves upcoming CIA and End-Semester examination timetables and seating plans.",
     permissionRequirement: AIToolPermission.ALL,
     status: "ACTIVE",
     lastUsed: "15 mins ago",
@@ -212,7 +269,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_student_result",
     domain: IntelligenceDomain.EXAMINATIONS,
-    description: "Fetches published semester grades, SGPA, CGPA transcripts, and moderation records.",
+    description:
+      "Fetches published semester grades, SGPA, CGPA transcripts, and moderation records.",
     permissionRequirement: AIToolPermission.STUDENT,
     status: "ACTIVE",
     lastUsed: "40 mins ago",
@@ -221,7 +279,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_fee_summary",
     domain: IntelligenceDomain.FINANCE,
-    description: "Aggregates fee structures, invoiced amounts, cleared payments, and outstanding balances.",
+    description:
+      "Aggregates fee structures, invoiced amounts, cleared payments, and outstanding balances.",
     permissionRequirement: AIToolPermission.ACCOUNTS,
     status: "ACTIVE",
     lastUsed: "5 mins ago",
@@ -230,7 +289,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_payment_history",
     domain: IntelligenceDomain.FINANCE,
-    description: "Extracts transaction ledger entries and receipts for student financial audit.",
+    description:
+      "Extracts transaction ledger entries and receipts for student financial audit.",
     permissionRequirement: AIToolPermission.STUDENT,
     status: "ACTIVE",
     lastUsed: "25 mins ago",
@@ -239,7 +299,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_placement_summary",
     domain: IntelligenceDomain.PLACEMENT,
-    description: "Tracks active recruitment drives, company eligibility criteria, and candidate offers.",
+    description:
+      "Tracks active recruitment drives, company eligibility criteria, and candidate offers.",
     permissionRequirement: AIToolPermission.PLACEMENT_OFFICER,
     status: "ACTIVE",
     lastUsed: "12 mins ago",
@@ -248,7 +309,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_event_summary",
     domain: IntelligenceDomain.CAMPUS,
-    description: "Lists symposiums, technical hackathons, cultural fests, and club participation stats.",
+    description:
+      "Lists symposiums, technical hackathons, cultural fests, and club participation stats.",
     permissionRequirement: AIToolPermission.ALL,
     status: "ACTIVE",
     lastUsed: "2 hours ago",
@@ -257,7 +319,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_hostel_status",
     domain: IntelligenceDomain.INFRASTRUCTURE,
-    description: "Reports residential hall capacity, bed allocations, open maintenance complaints.",
+    description:
+      "Reports residential hall capacity, bed allocations, open maintenance complaints.",
     permissionRequirement: AIToolPermission.HOD,
     status: "ACTIVE",
     lastUsed: "30 mins ago",
@@ -266,7 +329,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_transport_allocation",
     domain: IntelligenceDomain.INFRASTRUCTURE,
-    description: "Audits bus route capacities, vehicle fleet maintenance, and active student transit passes.",
+    description:
+      "Audits bus route capacities, vehicle fleet maintenance, and active student transit passes.",
     permissionRequirement: AIToolPermission.HOD,
     status: "ACTIVE",
     lastUsed: "3 hours ago",
@@ -275,7 +339,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_document_status",
     domain: IntelligenceDomain.DOCUMENTS,
-    description: "Checks student credentials, verification queue backlog, and expiring documents.",
+    description:
+      "Checks student credentials, verification queue backlog, and expiring documents.",
     permissionRequirement: AIToolPermission.ALL,
     status: "ACTIVE",
     lastUsed: "8 mins ago",
@@ -284,7 +349,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_department_metrics",
     domain: IntelligenceDomain.ACADEMICS,
-    description: "Calculates consolidated department health across attendance, placement, and finance.",
+    description:
+      "Calculates consolidated department health across attendance, placement, and finance.",
     permissionRequirement: AIToolPermission.HOD,
     status: "ACTIVE",
     lastUsed: "1 hour ago",
@@ -293,7 +359,8 @@ export const MOCK_AI_TOOLS: AITool[] = [
   {
     name: "get_campus_metrics",
     domain: IntelligenceDomain.ALL,
-    description: "Executive synthesis of campus-wide operational telemetry, risk radars, and alerts.",
+    description:
+      "Executive synthesis of campus-wide operational telemetry, risk radars, and alerts.",
     permissionRequirement: AIToolPermission.ADMIN,
     status: "ACTIVE",
     lastUsed: "1 min ago",
@@ -313,20 +380,41 @@ export const MOCK_INSIGHTS: Insight[] = [
     domain: IntelligenceDomain.ATTENDANCE,
     priority: InsightPriority.HIGH,
     status: InsightStatus.NEW,
-    summary: "12 students in Semester 5 Section B are trending below the 75% attendance threshold with 18 instructional days remaining.",
+    summary:
+      "12 students in Semester 5 Section B are trending below the 75% attendance threshold with 18 instructional days remaining.",
     affectedRecordCount: 12,
     affectedRecords: [
-      { id: "stu-001", name: "Aarav Patel (22CS001)", type: "Student", href: "/app/students/stu-001" },
-      { id: "stu-004", name: "Rhea Sen (22CS014)", type: "Student", href: "/app/students/stu-004" },
+      {
+        id: "stu-001",
+        name: "Aarav Patel (22CS001)",
+        type: "Student",
+        href: "/app/students/stu-001",
+      },
+      {
+        id: "stu-004",
+        name: "Rhea Sen (22CS014)",
+        type: "Student",
+        href: "/app/students/stu-004",
+      },
     ],
     detectedAt: "2026-10-02T08:30:00Z",
-    recommendedAction: "Dispatch automated warning notices and schedule academic advisor check-in.",
+    recommendedAction:
+      "Dispatch automated warning notices and schedule academic advisor check-in.",
     recommendedActionHref: "/app/attendance",
     evidence: [
-      { metric: "Current Section Average", value: "71.4%", baseline: "85.0% Institutional Target" },
-      { metric: "Classes Remaining", value: "18 Sessions", baseline: "Minimum 12 required to attain 75%" },
+      {
+        metric: "Current Section Average",
+        value: "71.4%",
+        baseline: "85.0% Institutional Target",
+      },
+      {
+        metric: "Classes Remaining",
+        value: "18 Sessions",
+        baseline: "Minimum 12 required to attain 75%",
+      },
     ],
-    methodology: "Evaluated (Current Sessions Attended + Remaining Sessions) against total semester hours.",
+    methodology:
+      "Evaluated (Current Sessions Attended + Remaining Sessions) against total semester hours.",
     relatedDomainHref: "/app/attendance",
     isSaved: true,
   },
@@ -337,19 +425,35 @@ export const MOCK_INSIGHTS: Insight[] = [
     domain: IntelligenceDomain.PLACEMENT,
     priority: InsightPriority.MEDIUM,
     status: InsightStatus.REVIEWED,
-    summary: "8 students meeting Cisco Systems CGPA criteria (>= 8.0) are blocked due to unverified 10th/12th marksheets in digital records.",
+    summary:
+      "8 students meeting Cisco Systems CGPA criteria (>= 8.0) are blocked due to unverified 10th/12th marksheets in digital records.",
     affectedRecordCount: 8,
     affectedRecords: [
-      { id: "stu-001", name: "Aarav Patel", type: "Student", href: "/app/students/stu-001" },
+      {
+        id: "stu-001",
+        name: "Aarav Patel",
+        type: "Student",
+        href: "/app/students/stu-001",
+      },
     ],
     detectedAt: "2026-10-01T14:00:00Z",
-    recommendedAction: "Expedite document verification queue for shortlisted placement candidates.",
+    recommendedAction:
+      "Expedite document verification queue for shortlisted placement candidates.",
     recommendedActionHref: "/app/documents/verification",
     evidence: [
-      { metric: "Shortlisted Candidates", value: "24 Students", baseline: "8 with unverified docs" },
-      { metric: "Drive Registration Deadline", value: "05 Oct 2026", baseline: "72 hours remaining" },
+      {
+        metric: "Shortlisted Candidates",
+        value: "24 Students",
+        baseline: "8 with unverified docs",
+      },
+      {
+        metric: "Drive Registration Deadline",
+        value: "05 Oct 2026",
+        baseline: "72 hours remaining",
+      },
     ],
-    methodology: "Correlated Placement Drive Applicants with Documents Verification Status table.",
+    methodology:
+      "Correlated Placement Drive Applicants with Documents Verification Status table.",
     relatedDomainHref: "/app/placement",
     isSaved: true,
   },
@@ -360,16 +464,27 @@ export const MOCK_INSIGHTS: Insight[] = [
     domain: IntelligenceDomain.FINANCE,
     priority: InsightPriority.HIGH,
     status: InsightStatus.NEW,
-    summary: "₹42.8 Lakhs across 36 student installment invoices are overdue by more than 30 days.",
+    summary:
+      "₹42.8 Lakhs across 36 student installment invoices are overdue by more than 30 days.",
     affectedRecordCount: 36,
     detectedAt: "2026-10-02T07:15:00Z",
-    recommendedAction: "Generate installment reminders and offer fee concession plans.",
+    recommendedAction:
+      "Generate installment reminders and offer fee concession plans.",
     recommendedActionHref: "/app/finance/invoices",
     evidence: [
-      { metric: "Overdue Amount", value: "₹42,80,000", baseline: "Target: < ₹15,00,000" },
-      { metric: "Overdue Count", value: "36 Invoices", baseline: "Aging bucket > 30 days" },
+      {
+        metric: "Overdue Amount",
+        value: "₹42,80,000",
+        baseline: "Target: < ₹15,00,000",
+      },
+      {
+        metric: "Overdue Count",
+        value: "36 Invoices",
+        baseline: "Aging bucket > 30 days",
+      },
     ],
-    methodology: "Aggregated outstanding invoices filtered by dueDate < NOW() - 30 days.",
+    methodology:
+      "Aggregated outstanding invoices filtered by dueDate < NOW() - 30 days.",
     relatedDomainHref: "/app/finance",
     isSaved: false,
   },
@@ -380,16 +495,27 @@ export const MOCK_INSIGHTS: Insight[] = [
     domain: IntelligenceDomain.INFRASTRUCTURE,
     priority: InsightPriority.LOW,
     status: InsightStatus.ACTIONED,
-    summary: "Sir C. V. Raman Hall is at 96% capacity with only 8 beds vacant for incoming lateral transfers.",
+    summary:
+      "Sir C. V. Raman Hall is at 96% capacity with only 8 beds vacant for incoming lateral transfers.",
     affectedRecordCount: 1,
     detectedAt: "2026-09-30T10:00:00Z",
-    recommendedAction: "Review Block B buffer rooms before accepting new residential admissions.",
+    recommendedAction:
+      "Review Block B buffer rooms before accepting new residential admissions.",
     recommendedActionHref: "/app/hostel",
     evidence: [
-      { metric: "Allocated Beds", value: "192 / 200", baseline: "96% Occupancy" },
-      { metric: "Pending Requests", value: "14 Applications", baseline: "8 Available Beds" },
+      {
+        metric: "Allocated Beds",
+        value: "192 / 200",
+        baseline: "96% Occupancy",
+      },
+      {
+        metric: "Pending Requests",
+        value: "14 Applications",
+        baseline: "8 Available Beds",
+      },
     ],
-    methodology: "Calculated bed allocation count against registered room inventory.",
+    methodology:
+      "Calculated bed allocation count against registered room inventory.",
     relatedDomainHref: "/app/hostel",
     isSaved: false,
   },
@@ -410,11 +536,18 @@ export const MOCK_ALERTS: Alert[] = [
     detectedAt: "2026-10-02T06:00:00Z",
     affectedCount: 18,
     affectedRecords: [
-      { id: "stu-001", name: "Aarav Patel (22CS001)", type: "Student", href: "/app/students/stu-001" },
+      {
+        id: "stu-001",
+        name: "Aarav Patel (22CS001)",
+        type: "Student",
+        href: "/app/students/stu-001",
+      },
     ],
     sourceDomain: "Attendance Module",
-    reason: "Attendance percentage fell below mandatory threshold for CIA-1 exam eligibility.",
-    recommendedAction: "Review low-attendance list and issue institutional condonation or parent alert.",
+    reason:
+      "Attendance percentage fell below mandatory threshold for CIA-1 exam eligibility.",
+    recommendedAction:
+      "Review low-attendance list and issue institutional condonation or parent alert.",
     recommendedActionHref: "/app/attendance",
   },
   {
@@ -427,8 +560,10 @@ export const MOCK_ALERTS: Alert[] = [
     detectedAt: "2026-10-01T09:00:00Z",
     affectedCount: 4,
     sourceDomain: "Examinations Cell",
-    reason: "4 subject offerings still have unmarked Continuous Internal Assessment 1 scripts.",
-    recommendedAction: "Send automated faculty reminder via institutional notification bell.",
+    reason:
+      "4 subject offerings still have unmarked Continuous Internal Assessment 1 scripts.",
+    recommendedAction:
+      "Send automated faculty reminder via institutional notification bell.",
     recommendedActionHref: "/app/examinations/marks",
     acknowledgedAt: "2026-10-01T11:00:00Z",
     acknowledgedBy: "Dr. Arvind Swaminathan (HOD)",
@@ -443,8 +578,10 @@ export const MOCK_ALERTS: Alert[] = [
     detectedAt: "2026-10-02T07:45:00Z",
     affectedCount: 1,
     sourceDomain: "Hostel & Facilities Maintenance",
-    reason: "Hostel complaint CMP-HST-2026-102 breached 4-hour SLA without technician assignment.",
-    recommendedAction: "Escalate to Warden Desk and assign standby campus maintenance technician.",
+    reason:
+      "Hostel complaint CMP-HST-2026-102 breached 4-hour SLA without technician assignment.",
+    recommendedAction:
+      "Escalate to Warden Desk and assign standby campus maintenance technician.",
     recommendedActionHref: "/app/hostel",
   },
   {
@@ -457,8 +594,10 @@ export const MOCK_ALERTS: Alert[] = [
     detectedAt: "2026-10-01T15:30:00Z",
     affectedCount: 6,
     sourceDomain: "Digital Records Office",
-    reason: "6 government scholarship category certificates expire within 30 days.",
-    recommendedAction: "Prompt students to upload renewed certificates before scholarship disbursement.",
+    reason:
+      "6 government scholarship category certificates expire within 30 days.",
+    recommendedAction:
+      "Prompt students to upload renewed certificates before scholarship disbursement.",
     recommendedActionHref: "/app/documents/verification",
   },
 ];
@@ -477,7 +616,8 @@ export const MOCK_SAVED_INSIGHTS: SavedInsight[] = [
     ownerName: "Administrator",
     ownerRole: "SUPER_ADMIN",
     lastAccessedAt: "2026-10-02T10:15:00Z",
-    contentSnippet: "18 students identified with attendance <75% in 5th Semester across CSE and AI&DS.",
+    contentSnippet:
+      "18 students identified with attendance <75% in 5th Semester across CSE and AI&DS.",
     href: "/app/intelligence/assistant?conv=conv-001",
   },
   {
@@ -489,7 +629,8 @@ export const MOCK_SAVED_INSIGHTS: SavedInsight[] = [
     ownerName: "Placement Officer",
     ownerRole: "PLACEMENT_OFFICER",
     lastAccessedAt: "2026-10-02T09:00:00Z",
-    contentSnippet: "8 shortlisted candidates blocked due to unverified 10th/12th marksheets in digital records.",
+    contentSnippet:
+      "8 shortlisted candidates blocked due to unverified 10th/12th marksheets in digital records.",
     href: "/app/intelligence/insights/ins-002",
   },
   {
@@ -501,7 +642,8 @@ export const MOCK_SAVED_INSIGHTS: SavedInsight[] = [
     ownerName: "Dr. Arvind Swaminathan",
     ownerRole: "HOD",
     lastAccessedAt: "2026-10-01T11:45:00Z",
-    contentSnippet: "Cross-departmental attendance variance across CSE (84.6%), ECE (88.1%), ME (79.2%).",
+    contentSnippet:
+      "Cross-departmental attendance variance across CSE (84.6%), ECE (88.1%), ME (79.2%).",
     href: "/app/intelligence/analytics?domain=ATTENDANCE",
   },
 ];
@@ -587,7 +729,10 @@ export const MOCK_AI_ACTIVITIES: AIActivity[] = [
 // 7. MOCK STUDENT INTELLIGENCE PROFILES (Section 33)
 // ============================================================================
 
-export const MOCK_STUDENT_INTELLIGENCE: Record<string, StudentIntelligenceProfile> = {
+export const MOCK_STUDENT_INTELLIGENCE: Record<
+  string,
+  StudentIntelligenceProfile
+> = {
   "stu-001": {
     studentId: "stu-001",
     studentName: "Aarav Patel",
@@ -752,7 +897,8 @@ export const MOCK_CAMPUS_HEALTH_METRICS: CampusHealthMetric[] = [
     currentValue: "86.8%",
     targetValue: "85.0%",
     trend: "up",
-    trendDescription: "86.8% institutional presence, 18 students in warning zone",
+    trendDescription:
+      "86.8% institutional presence, 18 students in warning zone",
     alertCount: 2,
     healthScore: 84,
     status: "GOOD",
@@ -807,7 +953,8 @@ export const MOCK_CAMPUS_HEALTH_METRICS: CampusHealthMetric[] = [
     currentValue: "95.4%",
     targetValue: "95.0%",
     trend: "neutral",
-    trendDescription: "Hostel occupancy at 94.2%; average maintenance turnaround 3.4 hrs",
+    trendDescription:
+      "Hostel occupancy at 94.2%; average maintenance turnaround 3.4 hrs",
     alertCount: 1,
     healthScore: 87,
     status: "GOOD",

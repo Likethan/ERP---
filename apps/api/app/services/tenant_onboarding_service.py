@@ -17,12 +17,11 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, desc, func, select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.audit import AuditEventCategory, build_audit_entry
+from app.core.audit import build_audit_entry
 from app.core.exceptions import (
-    ConflictException,
     InvalidLifecycleTransitionException,
     NotFoundException,
     ValidationException,
@@ -48,20 +47,14 @@ from app.models.onboarding import (
     VerificationMethod,
 )
 from app.schemas.onboarding import (
-    ChecklistItemResponse,
     ChecklistItemUpdateRequest,
-    MigrationJobResponse,
     MigrationValidationRequest,
     OnboardingApprovalRequest,
-    OnboardingApprovalResponse,
     OnboardingLifecycleTransitionRequest,
-    OnboardingPlanCreateRequest,
-    OnboardingPlanResponse,
     ReadinessEvaluationResponse,
     RollbackExecutionRequest,
     RollbackExecutionResponse,
     UATScenarioExecuteRequest,
-    UATScenarioResponse,
 )
 
 logger = logging.getLogger("campusos.onboarding")

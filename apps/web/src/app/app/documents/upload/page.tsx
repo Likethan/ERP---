@@ -42,29 +42,45 @@ export default function DocumentUploadPage() {
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   // Form State
-  const [ownerType, setOwnerType] = useState<DocumentOwnerType>(DocumentOwnerType.STUDENT);
+  const [ownerType, setOwnerType] = useState<DocumentOwnerType>(
+    DocumentOwnerType.STUDENT,
+  );
   const [ownerId, setOwnerId] = useState("stu-001");
   const [ownerName, setOwnerName] = useState("Aarav Patel");
   const [ownerRollNumber, setOwnerRollNumber] = useState("24CSE0101");
-  const [ownerDepartment, setOwnerDepartment] = useState("Computer Science & Engineering");
+  const [ownerDepartment, setOwnerDepartment] = useState(
+    "Computer Science & Engineering",
+  );
 
-  const [categoryCode, setCategoryCode] = useState<DocumentCategoryCode>(DocumentCategoryCode.IDENTITY);
+  const [categoryCode, setCategoryCode] = useState<DocumentCategoryCode>(
+    DocumentCategoryCode.IDENTITY,
+  );
   const [documentType, setDocumentType] = useState("Aadhaar Card");
   const [documentName, setDocumentName] = useState("");
   const [documentNumber, setDocumentNumber] = useState("");
   const [issuingAuthority, setIssuingAuthority] = useState("");
   const [issueDate, setIssueDate] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
-  const [confidentiality, setConfidentiality] = useState<ConfidentialityLevel>(ConfidentialityLevel.INTERNAL);
-  const [priority, setPriority] = useState<VerificationPriority>(VerificationPriority.NORMAL);
+  const [confidentiality, setConfidentiality] = useState<ConfidentialityLevel>(
+    ConfidentialityLevel.INTERNAL,
+  );
+  const [priority, setPriority] = useState<VerificationPriority>(
+    VerificationPriority.NORMAL,
+  );
 
   // File Upload Simulator State
-  const [mockFile, setMockFile] = useState<{ name: string; size: number; type: string } | null>({
+  const [mockFile, setMockFile] = useState<{
+    name: string;
+    size: number;
+    type: string;
+  } | null>({
     name: "official_document_scan.pdf",
     size: 2.1 * 1024 * 1024,
     type: "application/pdf",
   });
-  const [uploadState, setUploadState] = useState<"IDLE" | "SELECTED" | "UPLOADING" | "UPLOADED" | "FAILED">("SELECTED");
+  const [uploadState, setUploadState] = useState<
+    "IDLE" | "SELECTED" | "UPLOADING" | "UPLOADED" | "FAILED"
+  >("SELECTED");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -78,7 +94,9 @@ export default function DocumentUploadPage() {
           setCategories(res.data);
           if (res.data.length > 0) {
             setCategoryCode(res.data[0].code);
-            setDocumentType(res.data[0].applicableDocumentTypes[0] || "Standard Document");
+            setDocumentType(
+              res.data[0].applicableDocumentTypes[0] || "Standard Document",
+            );
           }
         }
       } catch (err) {
@@ -103,7 +121,9 @@ export default function DocumentUploadPage() {
         return;
       }
       if (activeCategory?.expiryRequired && !expiryDate) {
-        setValidationErrors(["Expiry date is mandatory for this document category."]);
+        setValidationErrors([
+          "Expiry date is mandatory for this document category.",
+        ]);
         return;
       }
     }
@@ -131,8 +151,12 @@ export default function DocumentUploadPage() {
 
       // Simulate step-by-step upload progress
       await documentUploadService.simulateUpload(
-        mockFile || { name: "document.pdf", size: 1024 * 1024, type: "application/pdf" },
-        (progress) => setUploadProgress(progress)
+        mockFile || {
+          name: "document.pdf",
+          size: 1024 * 1024,
+          type: "application/pdf",
+        },
+        (progress) => setUploadProgress(progress),
       );
 
       setUploadState("UPLOADED");
@@ -153,7 +177,9 @@ export default function DocumentUploadPage() {
         issueDate,
         expiryDate: expiryDate || undefined,
         priority,
-        fileSize: mockFile ? `${(mockFile.size / (1024 * 1024)).toFixed(1)} MB` : "1.8 MB",
+        fileSize: mockFile
+          ? `${(mockFile.size / (1024 * 1024)).toFixed(1)} MB`
+          : "1.8 MB",
         fileType: mockFile?.type || "application/pdf",
       });
 
@@ -164,7 +190,9 @@ export default function DocumentUploadPage() {
     } catch (err) {
       console.error("Submission failed:", err);
       setUploadState("FAILED");
-      setValidationErrors(["Failed to complete document submission. Please try again."]);
+      setValidationErrors([
+        "Failed to complete document submission. Please try again.",
+      ]);
     } finally {
       setSubmitting(false);
     }
@@ -190,13 +218,18 @@ export default function DocumentUploadPage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           Cancel & Return to Vault
         </Link>
-        <span className="text-xs text-slate-500 font-mono">Step {currentStep} of 6</span>
+        <span className="text-xs text-slate-500 font-mono">
+          Step {currentStep} of 6
+        </span>
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Upload Official Document</h1>
+        <h1 className="text-2xl font-bold text-slate-100">
+          Upload Official Document
+        </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Submit official academic records, proof of identity, certificates, and credentials for institutional verification.
+          Submit official academic records, proof of identity, certificates, and
+          credentials for institutional verification.
         </p>
       </div>
 
@@ -212,8 +245,8 @@ export default function DocumentUploadPage() {
                 isCurrent
                   ? "bg-blue-600 text-white shadow-sm"
                   : isDone
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                  : "text-slate-500"
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                    : "text-slate-500"
               }`}
             >
               <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] border border-current">
@@ -249,15 +282,28 @@ export default function DocumentUploadPage() {
                 Step 1: Specify Document Owner
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Select whether this document belongs to a student, faculty member, or institutional department.
+                Select whether this document belongs to a student, faculty
+                member, or institutional department.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { type: DocumentOwnerType.STUDENT, title: "Student Record", desc: "Aarav Patel (24CSE0101)" },
-                { type: DocumentOwnerType.FACULTY, title: "Faculty Record", desc: "Dr. Rajesh Sharma" },
-                { type: DocumentOwnerType.INSTITUTION, title: "Institutional Record", desc: "Campus Directorate" },
+                {
+                  type: DocumentOwnerType.STUDENT,
+                  title: "Student Record",
+                  desc: "Aarav Patel (24CSE0101)",
+                },
+                {
+                  type: DocumentOwnerType.FACULTY,
+                  title: "Faculty Record",
+                  desc: "Dr. Rajesh Sharma",
+                },
+                {
+                  type: DocumentOwnerType.INSTITUTION,
+                  title: "Institutional Record",
+                  desc: "Campus Directorate",
+                },
               ].map((opt) => (
                 <div
                   key={opt.type}
@@ -276,7 +322,9 @@ export default function DocumentUploadPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800 text-xs">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Owner Full Legal Name</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Owner Full Legal Name
+                </label>
                 <Input
                   value={ownerName}
                   onChange={(e) => setOwnerName(e.target.value)}
@@ -285,7 +333,9 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Roll / Employee Number</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Roll / Employee Number
+                </label>
                 <Input
                   value={ownerRollNumber}
                   onChange={(e) => setOwnerRollNumber(e.target.value)}
@@ -326,10 +376,16 @@ export default function DocumentUploadPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm text-slate-200">{cat.name}</span>
-                    <span className="text-[10px] font-mono text-blue-400 font-bold">{cat.code}</span>
+                    <span className="font-semibold text-sm text-slate-200">
+                      {cat.name}
+                    </span>
+                    <span className="text-[10px] font-mono text-blue-400 font-bold">
+                      {cat.code}
+                    </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{cat.description}</p>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                    {cat.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -345,7 +401,10 @@ export default function DocumentUploadPage() {
                 Step 3: Document Type Classification
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Selected Category: <strong className="text-blue-400">{activeCategory?.name}</strong>
+                Selected Category:{" "}
+                <strong className="text-blue-400">
+                  {activeCategory?.name}
+                </strong>
               </p>
             </div>
 
@@ -354,12 +413,17 @@ export default function DocumentUploadPage() {
                 Choose Specific Document Type
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {(activeCategory?.applicableDocumentTypes || ["Standard Document"]).map((type) => (
+                {(
+                  activeCategory?.applicableDocumentTypes || [
+                    "Standard Document",
+                  ]
+                ).map((type) => (
                   <div
                     key={type}
                     onClick={() => {
                       setDocumentType(type);
-                      if (!documentName) setDocumentName(`${type} - ${ownerName}`);
+                      if (!documentName)
+                        setDocumentName(`${type} - ${ownerName}`);
                     }}
                     className={`p-3 rounded-lg border text-xs cursor-pointer transition ${
                       documentType === type
@@ -402,7 +466,9 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Document / Serial Number</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Document / Serial Number
+                </label>
                 <Input
                   value={documentNumber}
                   onChange={(e) => setDocumentNumber(e.target.value)}
@@ -412,7 +478,9 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Issuing Authority</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Issuing Authority
+                </label>
                 <Input
                   value={issuingAuthority}
                   onChange={(e) => setIssuingAuthority(e.target.value)}
@@ -422,7 +490,9 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Issue Date</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Issue Date
+                </label>
                 <Input
                   type="date"
                   value={issueDate}
@@ -433,7 +503,10 @@ export default function DocumentUploadPage() {
 
               <div>
                 <label className="block text-slate-400 font-medium mb-1">
-                  Expiry Date {activeCategory?.expiryRequired && <span className="text-rose-400">*</span>}
+                  Expiry Date{" "}
+                  {activeCategory?.expiryRequired && (
+                    <span className="text-rose-400">*</span>
+                  )}
                 </label>
                 <Input
                   type="date"
@@ -447,10 +520,14 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Confidentiality Tier</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Confidentiality Tier
+                </label>
                 <Select
                   value={confidentiality}
-                  onChange={(e) => setConfidentiality(e.target.value as ConfidentialityLevel)}
+                  onChange={(e) =>
+                    setConfidentiality(e.target.value as ConfidentialityLevel)
+                  }
                   className="bg-slate-950 border-slate-800 text-xs"
                 >
                   {Object.values(ConfidentialityLevel).map((lvl) => (
@@ -462,10 +539,14 @@ export default function DocumentUploadPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Verification Priority</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Verification Priority
+                </label>
                 <Select
                   value={priority}
-                  onChange={(e) => setPriority(e.target.value as VerificationPriority)}
+                  onChange={(e) =>
+                    setPriority(e.target.value as VerificationPriority)
+                  }
                   className="bg-slate-950 border-slate-800 text-xs"
                 >
                   {Object.values(VerificationPriority).map((p) => (
@@ -502,7 +583,8 @@ export default function DocumentUploadPage() {
                   {mockFile ? mockFile.name : "Select a PDF or image scan"}
                 </div>
                 <div className="text-xs text-slate-400 mt-1">
-                  Supported formats: PDF, PNG, JPG, DOCX • Maximum file size: 15 MB
+                  Supported formats: PDF, PNG, JPG, DOCX • Maximum file size: 15
+                  MB
                 </div>
               </div>
 
@@ -529,13 +611,17 @@ export default function DocumentUploadPage() {
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   <div>
-                    <span className="font-semibold text-slate-200">{mockFile.name}</span>
+                    <span className="font-semibold text-slate-200">
+                      {mockFile.name}
+                    </span>
                     <span className="text-slate-500 ml-2 font-mono">
                       {(mockFile.size / (1024 * 1024)).toFixed(1)} MB
                     </span>
                   </div>
                 </div>
-                <span className="text-emerald-400 font-medium">Ready for review</span>
+                <span className="text-emerald-400 font-medium">
+                  Ready for review
+                </span>
               </div>
             )}
           </div>
@@ -550,48 +636,67 @@ export default function DocumentUploadPage() {
                 Step 6: Review & Confirm Submission
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Please verify all entered particulars before submitting to the institutional review queue.
+                Please verify all entered particulars before submitting to the
+                institutional review queue.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">Document Title</span>
-                <span className="font-semibold text-slate-200 mt-1 block">{documentName}</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  Document Title
+                </span>
+                <span className="font-semibold text-slate-200 mt-1 block">
+                  {documentName}
+                </span>
               </div>
 
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">Category & Type</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  Category & Type
+                </span>
                 <span className="font-semibold text-blue-400 mt-1 block">
                   {categoryCode} • {documentType}
                 </span>
               </div>
 
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">Owner</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  Owner
+                </span>
                 <span className="font-semibold text-slate-200 mt-1 block">
                   {ownerName} ({ownerRollNumber})
                 </span>
               </div>
 
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">Doc Number & Authority</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  Doc Number & Authority
+                </span>
                 <span className="font-semibold text-slate-200 mt-1 block font-mono">
                   {documentNumber || "N/A"} ({issuingAuthority || "N/A"})
                 </span>
               </div>
 
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">Validity Range</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  Validity Range
+                </span>
                 <span className="font-semibold text-slate-200 mt-1 block">
                   {issueDate || "N/A"} to {expiryDate || "Permanent"}
                 </span>
               </div>
 
               <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg">
-                <span className="text-[10px] uppercase text-slate-400 font-semibold block">File Asset</span>
+                <span className="text-[10px] uppercase text-slate-400 font-semibold block">
+                  File Asset
+                </span>
                 <span className="font-semibold text-slate-200 mt-1 block">
-                  {mockFile?.name} ({(mockFile?.size ? mockFile.size / (1024 * 1024) : 1).toFixed(1)} MB)
+                  {mockFile?.name} (
+                  {(mockFile?.size ? mockFile.size / (1024 * 1024) : 1).toFixed(
+                    1,
+                  )}{" "}
+                  MB)
                 </span>
               </div>
             </div>
@@ -650,7 +755,9 @@ export default function DocumentUploadPage() {
               className="text-xs gap-1.5 bg-emerald-600 hover:bg-emerald-700 font-semibold"
             >
               <Upload className="w-4 h-4" />
-              {submitting ? "Submitting Document..." : "Submit to Verification Desk"}
+              {submitting
+                ? "Submitting Document..."
+                : "Submit to Verification Desk"}
             </Button>
           )}
         </div>

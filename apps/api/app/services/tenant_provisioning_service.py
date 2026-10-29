@@ -10,9 +10,8 @@ Coordinates domain services to provision new institutional tenants with:
 """
 
 from datetime import UTC, date, datetime
-import os
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +23,7 @@ from app.core.exceptions import (
     NotFoundException,
     ProvisioningFailedException,
 )
-from app.core.permissions import DEFAULT_ROLE_PERMISSIONS
+from app.core.logging import logger
 from app.core.security import get_password_hash
 from app.models.core import (
     AcademicYear,

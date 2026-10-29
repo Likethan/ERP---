@@ -68,11 +68,13 @@ export function Badge({
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium tracking-wide transition-colors",
         currentVariant.badge,
-        className
+        className,
       )}
       {...props}
     >
-      {dot && <span className={cn("h-1.5 w-1.5 rounded-full", currentVariant.dot)} />}
+      {dot && (
+        <span className={cn("h-1.5 w-1.5 rounded-full", currentVariant.dot)} />
+      )}
       {children}
     </div>
   );

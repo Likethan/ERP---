@@ -22,14 +22,10 @@ Comprehensive test suite verifying:
 """
 
 from datetime import UTC, datetime, timedelta
-import secrets
-from typing import Any
-import uuid
 from uuid import UUID, uuid4
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
@@ -39,10 +35,8 @@ from app.core.exceptions import (
     NotFoundException,
 )
 from app.core.security import ACCESS_TOKEN_COOKIE_NAME, create_access_token
-from app.models.academics import CourseEnrollment
 from app.models.core import Institution
-from app.models.finance import Invoice
-from app.models.people import Role, User, UserRoleAssignment
+from app.models.people import User
 from app.models.records_lifecycle import (
     ArchivalStatus,
     DispositionMethod,
@@ -50,16 +44,7 @@ from app.models.records_lifecycle import (
     LegalHoldScope,
     LegalHoldStatus,
     PolicyScope,
-    RecordArchivalRecord,
-    RecordCategory,
-    RecordDispositionCertificate,
-    RecordDispositionRequest,
-    RecordLegalHold,
-    RecordLifecycleHistory,
-    RecordLifecycleScheduledRun,
     RecordLifecycleState,
-    RecordRegistryEntry,
-    RetentionPolicyDefinition,
     RetentionPolicyStatus,
     RetentionTriggerEvent,
     RetentionUnit,

@@ -8,7 +8,14 @@
  * POST /api/v1/infrastructure/rooms/:id/beds/:bedId/status
  */
 
-import { ApiResponse, HostelRoom, HostelBed, RoomStatus, BedStatus, RoomType } from "@campusos/types";
+import {
+  ApiResponse,
+  HostelRoom,
+  HostelBed,
+  RoomStatus,
+  BedStatus,
+  RoomType,
+} from "@campusos/types";
 import { MOCK_HOSTEL_ROOMS } from "@/mocks/infrastructure.mock";
 
 class HostelRoomsService {
@@ -30,7 +37,11 @@ class HostelRoomsService {
       items = items.filter((r) => r.hostelId === filters.hostelId);
     }
     if (filters?.blockId && filters.blockId !== "ALL") {
-      items = items.filter((r) => r.blockId === filters.blockId || (filters.blockId && r.blockName.includes(filters.blockId)));
+      items = items.filter(
+        (r) =>
+          r.blockId === filters.blockId ||
+          (filters.blockId && r.blockName.includes(filters.blockId)),
+      );
     }
     if (filters?.floor && filters.floor !== "ALL") {
       const flr = Number(filters.floor);
@@ -52,7 +63,11 @@ class HostelRoomsService {
           r.roomNumber.toLowerCase().includes(q) ||
           r.hostelName.toLowerCase().includes(q) ||
           r.blockName.toLowerCase().includes(q) ||
-          r.beds?.some((b: HostelBed) => b.studentName?.toLowerCase().includes(q) || b.studentRollNumber?.toLowerCase().includes(q))
+          r.beds?.some(
+            (b: HostelBed) =>
+              b.studentName?.toLowerCase().includes(q) ||
+              b.studentRollNumber?.toLowerCase().includes(q),
+          ),
       );
     }
 
@@ -61,7 +76,8 @@ class HostelRoomsService {
 
   async getRoomById(id: string): Promise<ApiResponse<HostelRoom | null>> {
     await new Promise((r) => setTimeout(r, 40));
-    const room = this.rooms.find((r) => r.id === id || r.roomNumber === id) || null;
+    const room =
+      this.rooms.find((r) => r.id === id || r.roomNumber === id) || null;
     return { success: true, data: room };
   }
 
@@ -69,7 +85,11 @@ class HostelRoomsService {
     roomId: string,
     bedId: string,
     status: BedStatus,
-    studentInfo?: { studentId: string; studentName: string; studentRollNumber: string }
+    studentInfo?: {
+      studentId: string;
+      studentName: string;
+      studentRollNumber: string;
+    },
   ): Promise<ApiResponse<HostelRoom | null>> {
     await new Promise((r) => setTimeout(r, 50));
     const room = this.rooms.find((r) => r.id === roomId);
@@ -84,7 +104,11 @@ class HostelRoomsService {
       bed.studentName = studentInfo.studentName;
       bed.studentRollNumber = studentInfo.studentRollNumber;
       bed.allocatedAt = new Date().toISOString();
-    } else if (status === BedStatus.AVAILABLE || status === BedStatus.MAINTENANCE || status === BedStatus.BLOCKED) {
+    } else if (
+      status === BedStatus.AVAILABLE ||
+      status === BedStatus.MAINTENANCE ||
+      status === BedStatus.BLOCKED
+    ) {
       bed.studentId = null;
       bed.studentName = null;
       bed.studentRollNumber = null;
@@ -92,8 +116,12 @@ class HostelRoomsService {
     }
 
     // Recalculate room occupancy
-    const occupied = room.beds.filter((b: HostelBed) => b.status === BedStatus.ALLOCATED).length;
-    const available = room.beds.filter((b: HostelBed) => b.status === BedStatus.AVAILABLE).length;
+    const occupied = room.beds.filter(
+      (b: HostelBed) => b.status === BedStatus.ALLOCATED,
+    ).length;
+    const available = room.beds.filter(
+      (b: HostelBed) => b.status === BedStatus.AVAILABLE,
+    ).length;
     room.occupied = occupied;
     room.available = available;
 
@@ -108,7 +136,9 @@ class HostelRoomsService {
     return { success: true, data: room };
   }
 
-  async createRoom(payload: Partial<HostelRoom>): Promise<ApiResponse<HostelRoom>> {
+  async createRoom(
+    payload: Partial<HostelRoom>,
+  ): Promise<ApiResponse<HostelRoom>> {
     await new Promise((r) => setTimeout(r, 50));
     const capacity = payload.capacity || 2;
     const beds: HostelBed[] = [];

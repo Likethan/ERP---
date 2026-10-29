@@ -6,16 +6,15 @@ Enforces:
 - Automatic synchronization with Circuit Breaker state.
 """
 
-from datetime import UTC, datetime
 import logging
 import time
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.exceptions import NotFoundException
 from app.integrations.circuit_breaker import (
     circuit_breaker_engine,
 )

@@ -10,25 +10,22 @@ Enforces:
 """
 
 import base64
-from datetime import datetime, timedelta, timezone
 import hashlib
 import hmac
-import os
 import secrets
 import string
 import struct
 import time
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from urllib.parse import quote
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.exceptions import (
     BadRequestException,
-    ConflictException,
     NotFoundException,
     ValidationException,
 )
@@ -233,7 +230,7 @@ class MfaService:
             raise ValidationException("Invalid TOTP verification code.")
 
         factor.is_active = True
-        factor.last_used_at = datetime.now(timezone.utc)
+        factor.last_used_at = datetime.now(UTC)
         await db.commit()
         return True
 
@@ -249,7 +246,7 @@ class MfaService:
         """Create a temporary challenge token for multi-factor login or step-up authentication."""
         raw_token = f"mfa_ch_{secrets.token_urlsafe(32)}"
         token_hash = hash_code(raw_token)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         expires_at = now + timedelta(minutes=expiry_minutes)
 
         challenge = MfaChallenge(
@@ -276,7 +273,7 @@ class MfaService:
         Returns user_id on success.
         """
         token_hash = hash_code(challenge_token)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         stmt = select(MfaChallenge).where(
             MfaChallenge.challenge_token_hash == token_hash,
@@ -369,7 +366,7 @@ class MfaService:
             rec = rec_res.scalars().first()
             if rec:
                 rec.is_used = True
-                rec.used_at = datetime.now(timezone.utc)
+                rec.used_at = datetime.now(UTC)
                 is_verified = True
 
         if not is_verified:
