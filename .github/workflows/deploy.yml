@@ -25,14 +25,19 @@ jobs:
   build-and-push:
     name: Build & Push Images
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     outputs:
       image_tag: ${{ steps.tag.outputs.val }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Compute Image Tag
+      - name: Compute Image Metadata
         id: tag
-        run: echo "val=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+        run: |
+          echo "val=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+          echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -51,8 +56,8 @@ jobs:
           file: ./apps/api/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/api:${{ steps.tag.outputs.val }}
-            ghcr.io/${{ github.repository }}/api:latest
+            ghcr.io/${{ steps.tag.outputs.repo }}/api:${{ steps.tag.outputs.val }}
+            ghcr.io/${{ steps.tag.outputs.repo }}/api:latest
 
       - name: Build & Push Web Image
         uses: docker/build-push-action@v5
@@ -61,8 +66,8 @@ jobs:
           file: ./apps/web/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/web:${{ steps.tag.outputs.val }}
-            ghcr.io/${{ github.repository }}/web:latest
+            ghcr.io/${{ steps.tag.outputs.repo }}/web:${{ steps.tag.outputs.val }}
+            ghcr.io/${{ steps.tag.outputs.repo }}/web:latest
 
   # ----------------------------------------------------------------------------
   # 2. Staging Deployment & Validation
@@ -71,6 +76,7 @@ jobs:
     name: Deploy to Staging
     needs: [build-and-push]
     runs-on: ubuntu-latest
+    if: ${{ secrets.STAGING_DATABASE_URL != '' }}
     environment:
       name: staging
       url: https://staging.campusos.internal
@@ -100,7 +106,7 @@ jobs:
     name: Deploy to Production
     needs: [build-and-push, deploy-staging]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production'
+    if: ${{ secrets.PROD_DATABASE_URL != '' && (github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production') }}
     environment:
       name: production
       url: https://app.campusos.internal

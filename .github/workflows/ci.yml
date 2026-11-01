@@ -53,7 +53,7 @@ jobs:
       - name: Lint Backend Python (Ruff)
         run: |
           pip install ruff
-          ruff check apps/api
+          ruff check apps/api/app
 
   # ----------------------------------------------------------------------------
   # 2. Dependency Security Vulnerability Audit

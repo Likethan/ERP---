@@ -47,4 +47,4 @@ jobs:
         run: pip install ruff
 
       - name: Run Ruff check
-        run: ruff check apps/api
+        run: ruff check apps/api/app

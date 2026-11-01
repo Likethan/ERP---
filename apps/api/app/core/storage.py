@@ -52,8 +52,9 @@ def sanitize_filename(filename: str) -> str:
     """Normalize and sanitize an uploaded document filename against path traversal and control characters."""
     if not filename:
         return "unnamed_document"
-    # Extract basename only to strip any path components
-    base = Path(filename).name
+    # Normalize path separators so traversal stripping functions consistently across both POSIX and Windows
+    clean = filename.replace("\\", "/")
+    base = Path(clean).name
     # Strip null bytes and control characters
     base = "".join(ch for ch in base if ord(ch) >= 32 and ch != "\x00")
     # Replace unsafe characters with underscores
