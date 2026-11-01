@@ -30,6 +30,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY packages ./packages
 COPY apps/web ./apps/web
+RUN mkdir -p apps/web/public
 
 # Set production environment flags for build
 ENV NEXT_TELEMETRY_DISABLED=1
