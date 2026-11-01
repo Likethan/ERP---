@@ -76,7 +76,7 @@ jobs:
     name: Deploy to Staging
     needs: [build-and-push]
     runs-on: ubuntu-latest
-    if: ${{ secrets.STAGING_DATABASE_URL != '' }}
+    if: secrets.STAGING_DATABASE_URL != ''
     environment:
       name: staging
       url: https://staging.campusos.internal
@@ -106,7 +106,7 @@ jobs:
     name: Deploy to Production
     needs: [build-and-push, deploy-staging]
     runs-on: ubuntu-latest
-    if: ${{ secrets.PROD_DATABASE_URL != '' && (github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production') }}
+    if: secrets.PROD_DATABASE_URL != '' && (github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production')
     environment:
       name: production
       url: https://app.campusos.internal
