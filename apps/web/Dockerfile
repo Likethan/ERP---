@@ -27,7 +27,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json tsconfig.base.json ./
+COPY package.json package-lock.json ./
 COPY packages ./packages
 COPY apps/web ./apps/web
 

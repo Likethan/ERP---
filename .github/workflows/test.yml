@@ -10,10 +10,35 @@ jobs:
   test-backend:
     name: Backend Pytest Suite
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: campusos_user
+          POSTGRES_PASSWORD: campusos_password
+          POSTGRES_DB: campusos_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -24,10 +49,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r apps/api/requirements-dev.txt
 
+      - name: Verify Migration History
+        run: |
+          cd apps/api
+          python -m alembic history
+
       - name: Run Pytest
         env:
           ENVIRONMENT: test
+          DATABASE_URL: postgresql+asyncpg://campusos_user:campusos_password@localhost:5432/campusos_db
+          REDIS_URL: redis://localhost:6379/0
           SECRET_KEY: test_secret_key_minimum_32_characters_for_pytest
         run: |
           cd apps/api
-          pytest tests/
+          pytest tests/ -v

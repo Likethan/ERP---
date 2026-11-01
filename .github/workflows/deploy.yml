@@ -76,7 +76,6 @@ jobs:
     name: Deploy to Staging
     needs: [build-and-push]
     runs-on: ubuntu-latest
-    if: secrets.STAGING_DATABASE_URL != ''
     environment:
       name: staging
       url: https://staging.campusos.internal
@@ -84,6 +83,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Execute Controlled Database Migration (Staging)
+        if: ${{ secrets.STAGING_DATABASE_URL != '' }}
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
         run: |
@@ -94,6 +94,7 @@ jobs:
           echo "Deploying API and Web images (${{ needs.build-and-push.outputs.image_tag }}) to Staging..."
 
       - name: Staging Automated Smoke Tests
+        if: ${{ secrets.STAGING_DATABASE_URL != '' }}
         run: |
           python scripts/smoke_test.py \
             --api-url "https://staging-api.campusos.internal" \
@@ -106,7 +107,7 @@ jobs:
     name: Deploy to Production
     needs: [build-and-push, deploy-staging]
     runs-on: ubuntu-latest
-    if: secrets.PROD_DATABASE_URL != '' && (github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production')
+    if: github.ref == 'refs/heads/main' || github.event.inputs.target_env == 'production'
     environment:
       name: production
       url: https://app.campusos.internal
@@ -114,12 +115,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Pre-Deployment Database Backup
+        if: ${{ secrets.PROD_DATABASE_URL != '' }}
         env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
         run: |
           python scripts/backup.py --retention 30
 
       - name: Execute Backward-Compatible Database Migration
+        if: ${{ secrets.PROD_DATABASE_URL != '' }}
         env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
         run: |
@@ -130,6 +133,7 @@ jobs:
           echo "Rolling out API and Web images (${{ needs.build-and-push.outputs.image_tag }}) to Production..."
 
       - name: Post-Deployment Smoke Tests
+        if: ${{ secrets.PROD_DATABASE_URL != '' }}
         run: |
           python scripts/smoke_test.py \
             --api-url "https://api.campusos.internal" \
