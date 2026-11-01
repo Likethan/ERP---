@@ -37,7 +37,7 @@ jobs:
         id: tag
         run: |
           echo "val=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
-          echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+          echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]' | sed 's/-*$//')" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
