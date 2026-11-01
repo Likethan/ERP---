@@ -630,7 +630,9 @@ class FinanceService {
     const net = calculateNetPayable(gross, scholarship, discount, adjustment);
 
     const newInv: Invoice = {
-      id: `inv-${Date.now()}`,
+      id:
+        data.id ||
+        `inv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       invoiceNumber: `INV-2026-${(this.invoices.length + 10).toString().padStart(4, "0")}`,
       studentId: data.studentId || "std-001",
       studentName: data.studentName || "Aarav Patel",
