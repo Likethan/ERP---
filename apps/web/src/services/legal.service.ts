@@ -32,15 +32,14 @@ import {
   RiskUpdateInput,
 } from "@/types/legal";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/legal-operations`
-    : "http://localhost:8000/api/v1/legal-operations";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/legal-operations`
+  : "http://localhost:8000/api/v1/legal-operations";
 
 async function fetchWithFallback<T>(
   url: string,
   options?: RequestInit,
-  fallback?: T
+  fallback?: T,
 ): Promise<T> {
   try {
     const res = await fetch(`${API_BASE}${url}`, {
@@ -78,7 +77,10 @@ const MOCK_CONTRACTS: InstitutionalContract[] = [
     purpose: "Full Wi-Fi 7 campus rollout and core infrastructure SLA",
     internal_owner_id: "u-it-director",
     counterparty_name: "Cisco Systems Global LLC",
-    counterparty_contact_json: { contact: "Robert Miller", email: "rmiller@cisco.com" },
+    counterparty_contact_json: {
+      contact: "Robert Miller",
+      email: "rmiller@cisco.com",
+    },
     status: "ACTIVE",
     effective_date: "2025-06-01",
     expiration_date: "2027-05-31",
@@ -92,10 +94,26 @@ const MOCK_CONTRACTS: InstitutionalContract[] = [
     executed_at: "2025-05-28T14:30:00Z",
     governing_law: "State of California",
     approval_chain_json: [
-      { step: "DEPARTMENT_APPROVAL", reviewer_name: "Dr. K. Patel (IT Director)", decided_at: "2025-05-20" },
-      { step: "LEGAL_REVIEW", reviewer_name: "Adv. Sarah Jenkins", decided_at: "2025-05-24" },
-      { step: "AUTHORIZED_APPROVAL", reviewer_name: "Prof. Arthur Vance (VP)", decided_at: "2025-05-26" },
-      { step: "EXECUTION_CONFIRMED", reviewer_name: "Legal Affairs Office", decided_at: "2025-05-28" },
+      {
+        step: "DEPARTMENT_APPROVAL",
+        reviewer_name: "Dr. K. Patel (IT Director)",
+        decided_at: "2025-05-20",
+      },
+      {
+        step: "LEGAL_REVIEW",
+        reviewer_name: "Adv. Sarah Jenkins",
+        decided_at: "2025-05-24",
+      },
+      {
+        step: "AUTHORIZED_APPROVAL",
+        reviewer_name: "Prof. Arthur Vance (VP)",
+        decided_at: "2025-05-26",
+      },
+      {
+        step: "EXECUTION_CONFIRMED",
+        reviewer_name: "Legal Affairs Office",
+        decided_at: "2025-05-28",
+      },
     ],
     created_at: "2025-05-15T09:00:00Z",
     updated_at: "2025-05-28T14:30:00Z",
@@ -151,10 +169,26 @@ const MOCK_CONTRACTS: InstitutionalContract[] = [
     confidentiality_level: "CONFIDENTIAL",
     governing_law: "Delaware Corporate Law",
     approval_chain_json: [
-      { step: "INTERNAL_REVIEW", reviewer_name: "Academic Technology Committee", decided_at: "2026-10-02" },
-      { step: "DEPARTMENT_APPROVAL", reviewer_name: "Dean of Academic Affairs", decided_at: "2026-10-10" },
-      { step: "LEGAL_REVIEW", reviewer_name: "General Counsel Office", decided_at: "2026-10-18" },
-      { step: "AUTHORIZED_APPROVAL", reviewer_name: "President & Vice Chancellor", decided_at: "2026-10-22" },
+      {
+        step: "INTERNAL_REVIEW",
+        reviewer_name: "Academic Technology Committee",
+        decided_at: "2026-10-02",
+      },
+      {
+        step: "DEPARTMENT_APPROVAL",
+        reviewer_name: "Dean of Academic Affairs",
+        decided_at: "2026-10-10",
+      },
+      {
+        step: "LEGAL_REVIEW",
+        reviewer_name: "General Counsel Office",
+        decided_at: "2026-10-18",
+      },
+      {
+        step: "AUTHORIZED_APPROVAL",
+        reviewer_name: "President & Vice Chancellor",
+        decided_at: "2026-10-22",
+      },
     ],
     created_at: "2026-09-18T10:00:00Z",
     updated_at: "2026-10-22T16:00:00Z",
@@ -199,8 +233,16 @@ const MOCK_MATTERS: InstitutionalLegalMatter[] = [
     confidential_notes:
       "Privileged Legal Counsel Analysis: Arbitration mandatory under Section 19.3. Independent quantity surveyor report confirms defects. Recommended settlement bracket: $45k - $60k.",
     key_deadlines_json: [
-      { title: "Mediation Brief Filing", due_date: "2026-11-15", status: "PENDING" },
-      { title: "Joint Evidence Exchange", due_date: "2026-11-28", status: "PENDING" },
+      {
+        title: "Mediation Brief Filing",
+        due_date: "2026-11-15",
+        status: "PENDING",
+      },
+      {
+        title: "Joint Evidence Exchange",
+        due_date: "2026-11-28",
+        status: "PENDING",
+      },
     ],
     created_at: "2026-08-14T10:00:00Z",
     updated_at: "2026-10-15T12:00:00Z",
@@ -218,9 +260,11 @@ const MOCK_COMPLIANCE: InstitutionalComplianceObligation[] = [
     due_date: "2026-11-30",
     next_review_date: "2027-11-30",
     review_frequency_months: 12,
-    required_controls: "Annual independent audit of federal student aid disbursements and refund calculations.",
+    required_controls:
+      "Annual independent audit of federal student aid disbursements and refund calculations.",
     status: "COMPLIANT",
-    assessment_findings: "Audit executed by Ernst & Young. Unqualified opinion issued with zero material weaknesses.",
+    assessment_findings:
+      "Audit executed by Ernst & Young. Unqualified opinion issued with zero material weaknesses.",
     created_at: "2026-01-10T00:00:00Z",
     updated_at: "2026-10-01T00:00:00Z",
   },
@@ -236,12 +280,14 @@ const MOCK_RISKS: InstitutionalRisk[] = [
     inherent_likelihood: 4,
     inherent_impact: 5,
     inherent_score: 20,
-    existing_controls: "EDR endpoint protection, 24/7 SOC monitoring, mandatory MFA for all staff.",
+    existing_controls:
+      "EDR endpoint protection, 24/7 SOC monitoring, mandatory MFA for all staff.",
     residual_likelihood: 2,
     residual_impact: 4,
     residual_score: 8,
     risk_level: "MEDIUM",
-    mitigation_plan: "Conduct annual penetration testing and tabletop incident response simulations with leadership.",
+    mitigation_plan:
+      "Conduct annual penetration testing and tabletop incident response simulations with leadership.",
     target_completion_date: "2026-12-31",
     status: "MITIGATION_IN_PROGRESS",
     created_at: "2026-01-20T00:00:00Z",
@@ -271,14 +317,23 @@ const MOCK_DASHBOARD: LegalOperationsDashboard = {
 export const LegalService = {
   // 1. Dashboard & Automation
   async getDashboard(): Promise<LegalOperationsDashboard> {
-    return fetchWithFallback<LegalOperationsDashboard>("/dashboard", undefined, MOCK_DASHBOARD);
+    return fetchWithFallback<LegalOperationsDashboard>(
+      "/dashboard",
+      undefined,
+      MOCK_DASHBOARD,
+    );
   },
 
   async triggerRenewalSweep(): Promise<RenewalSweepResult> {
     return fetchWithFallback<RenewalSweepResult>(
       "/renewals/sweep",
       { method: "POST" },
-      { contracts_flagged_expiring: 1, obligations_flagged_overdue: 1, compliance_reviews_flagged: 0, notifications_dispatched: 2 }
+      {
+        contracts_flagged_expiring: 1,
+        obligations_flagged_overdue: 1,
+        compliance_reviews_flagged: 0,
+        notifications_dispatched: 2,
+      },
     );
   },
 
@@ -296,15 +351,26 @@ export const LegalService = {
     if (params?.search) qs.append("search", params.search);
 
     const query = qs.toString() ? `?${qs.toString()}` : "";
-    return fetchWithFallback<InstitutionalContract[]>(`/contracts${query}`, undefined, MOCK_CONTRACTS);
+    return fetchWithFallback<InstitutionalContract[]>(
+      `/contracts${query}`,
+      undefined,
+      MOCK_CONTRACTS,
+    );
   },
 
   async getContract(id: string): Promise<InstitutionalContract> {
-    const fallback = MOCK_CONTRACTS.find((c) => c.id === id) || MOCK_CONTRACTS[0];
-    return fetchWithFallback<InstitutionalContract>(`/contracts/${id}`, undefined, fallback);
+    const fallback =
+      MOCK_CONTRACTS.find((c) => c.id === id) || MOCK_CONTRACTS[0];
+    return fetchWithFallback<InstitutionalContract>(
+      `/contracts/${id}`,
+      undefined,
+      fallback,
+    );
   },
 
-  async createContract(data: ContractCreateInput): Promise<InstitutionalContract> {
+  async createContract(
+    data: ContractCreateInput,
+  ): Promise<InstitutionalContract> {
     return fetchWithFallback<InstitutionalContract>(
       "/contracts",
       { method: "POST", body: JSON.stringify(data) },
@@ -316,36 +382,57 @@ export const LegalService = {
         category: data.category,
         counterparty_name: data.counterparty_name,
         status: "DRAFT",
-      }
+      },
     );
   },
 
-  async updateContract(id: string, data: ContractUpdateInput): Promise<InstitutionalContract> {
+  async updateContract(
+    id: string,
+    data: ContractUpdateInput,
+  ): Promise<InstitutionalContract> {
     return fetchWithFallback<InstitutionalContract>(`/contracts/${id}`, {
       method: "PATCH",
       body: JSON.stringify(data),
     });
   },
 
-  async transitionContract(id: string, data: ContractTransitionInput): Promise<InstitutionalContract> {
-    return fetchWithFallback<InstitutionalContract>(`/contracts/${id}/transition`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async transitionContract(
+    id: string,
+    data: ContractTransitionInput,
+  ): Promise<InstitutionalContract> {
+    return fetchWithFallback<InstitutionalContract>(
+      `/contracts/${id}/transition`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   },
 
-  async confirmExecution(id: string, data: ContractExecutionConfirmInput): Promise<InstitutionalContract> {
-    return fetchWithFallback<InstitutionalContract>(`/contracts/${id}/execute`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async confirmExecution(
+    id: string,
+    data: ContractExecutionConfirmInput,
+  ): Promise<InstitutionalContract> {
+    return fetchWithFallback<InstitutionalContract>(
+      `/contracts/${id}/execute`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   },
 
-  async addAmendment(contractId: string, data: ContractAmendmentCreateInput): Promise<ContractAmendment> {
-    return fetchWithFallback<ContractAmendment>(`/contracts/${contractId}/amendments`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async addAmendment(
+    contractId: string,
+    data: ContractAmendmentCreateInput,
+  ): Promise<ContractAmendment> {
+    return fetchWithFallback<ContractAmendment>(
+      `/contracts/${contractId}/amendments`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   },
 
   // 3. Obligations
@@ -360,24 +447,39 @@ export const LegalService = {
     if (params?.overdue_only) qs.append("overdue_only", "true");
 
     const query = qs.toString() ? `?${qs.toString()}` : "";
-    return fetchWithFallback<ContractObligation[]>(`/obligations${query}`, undefined, MOCK_CONTRACTS[0].obligations);
+    return fetchWithFallback<ContractObligation[]>(
+      `/obligations${query}`,
+      undefined,
+      MOCK_CONTRACTS[0].obligations,
+    );
   },
 
-  async createObligation(data: ContractObligationCreateInput): Promise<ContractObligation> {
+  async createObligation(
+    data: ContractObligationCreateInput,
+  ): Promise<ContractObligation> {
     return fetchWithFallback<ContractObligation>(`/obligations`, {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
-  async completeObligation(id: string, data: ObligationCompleteInput): Promise<ContractObligation> {
-    return fetchWithFallback<ContractObligation>(`/obligations/${id}/complete`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async completeObligation(
+    id: string,
+    data: ObligationCompleteInput,
+  ): Promise<ContractObligation> {
+    return fetchWithFallback<ContractObligation>(
+      `/obligations/${id}/complete`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   },
 
-  async waiveObligation(id: string, data: ObligationWaiveInput): Promise<ContractObligation> {
+  async waiveObligation(
+    id: string,
+    data: ObligationWaiveInput,
+  ): Promise<ContractObligation> {
     return fetchWithFallback<ContractObligation>(`/obligations/${id}/waive`, {
       method: "POST",
       body: JSON.stringify(data),
@@ -385,29 +487,46 @@ export const LegalService = {
   },
 
   // 4. Legal Matters
-  async getMatters(params?: { category?: string; status?: string; priority?: string }): Promise<InstitutionalLegalMatter[]> {
+  async getMatters(params?: {
+    category?: string;
+    status?: string;
+    priority?: string;
+  }): Promise<InstitutionalLegalMatter[]> {
     const qs = new URLSearchParams();
     if (params?.category) qs.append("category", params.category);
     if (params?.status) qs.append("status", params.status);
     if (params?.priority) qs.append("priority", params.priority);
 
     const query = qs.toString() ? `?${qs.toString()}` : "";
-    return fetchWithFallback<InstitutionalLegalMatter[]>(`/matters${query}`, undefined, MOCK_MATTERS);
+    return fetchWithFallback<InstitutionalLegalMatter[]>(
+      `/matters${query}`,
+      undefined,
+      MOCK_MATTERS,
+    );
   },
 
   async getMatter(id: string): Promise<InstitutionalLegalMatter> {
     const fallback = MOCK_MATTERS.find((m) => m.id === id) || MOCK_MATTERS[0];
-    return fetchWithFallback<InstitutionalLegalMatter>(`/matters/${id}`, undefined, fallback);
+    return fetchWithFallback<InstitutionalLegalMatter>(
+      `/matters/${id}`,
+      undefined,
+      fallback,
+    );
   },
 
-  async createMatter(data: MatterCreateInput): Promise<InstitutionalLegalMatter> {
+  async createMatter(
+    data: MatterCreateInput,
+  ): Promise<InstitutionalLegalMatter> {
     return fetchWithFallback<InstitutionalLegalMatter>(`/matters`, {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
-  async updateMatter(id: string, data: MatterUpdateInput): Promise<InstitutionalLegalMatter> {
+  async updateMatter(
+    id: string,
+    data: MatterUpdateInput,
+  ): Promise<InstitutionalLegalMatter> {
     return fetchWithFallback<InstitutionalLegalMatter>(`/matters/${id}`, {
       method: "PATCH",
       body: JSON.stringify(data),
@@ -415,38 +534,61 @@ export const LegalService = {
   },
 
   // 5. Compliance
-  async getComplianceObligations(params?: { category?: string; status?: string }): Promise<InstitutionalComplianceObligation[]> {
+  async getComplianceObligations(params?: {
+    category?: string;
+    status?: string;
+  }): Promise<InstitutionalComplianceObligation[]> {
     const qs = new URLSearchParams();
     if (params?.category) qs.append("category", params.category);
     if (params?.status) qs.append("status", params.status);
 
     const query = qs.toString() ? `?${qs.toString()}` : "";
-    return fetchWithFallback<InstitutionalComplianceObligation[]>(`/compliance${query}`, undefined, MOCK_COMPLIANCE);
+    return fetchWithFallback<InstitutionalComplianceObligation[]>(
+      `/compliance${query}`,
+      undefined,
+      MOCK_COMPLIANCE,
+    );
   },
 
-  async createComplianceObligation(data: ComplianceCreateInput): Promise<InstitutionalComplianceObligation> {
+  async createComplianceObligation(
+    data: ComplianceCreateInput,
+  ): Promise<InstitutionalComplianceObligation> {
     return fetchWithFallback<InstitutionalComplianceObligation>(`/compliance`, {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
-  async assessCompliance(id: string, data: ComplianceAssessInput): Promise<InstitutionalComplianceObligation> {
-    return fetchWithFallback<InstitutionalComplianceObligation>(`/compliance/${id}/assess`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async assessCompliance(
+    id: string,
+    data: ComplianceAssessInput,
+  ): Promise<InstitutionalComplianceObligation> {
+    return fetchWithFallback<InstitutionalComplianceObligation>(
+      `/compliance/${id}/assess`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    );
   },
 
   // 6. Risks
-  async getRisks(params?: { category?: string; risk_level?: string; status?: string }): Promise<InstitutionalRisk[]> {
+  async getRisks(params?: {
+    category?: string;
+    risk_level?: string;
+    status?: string;
+  }): Promise<InstitutionalRisk[]> {
     const qs = new URLSearchParams();
     if (params?.category) qs.append("category", params.category);
     if (params?.risk_level) qs.append("risk_level", params.risk_level);
     if (params?.status) qs.append("status", params.status);
 
     const query = qs.toString() ? `?${qs.toString()}` : "";
-    return fetchWithFallback<InstitutionalRisk[]>(`/risks${query}`, undefined, MOCK_RISKS);
+    return fetchWithFallback<InstitutionalRisk[]>(
+      `/risks${query}`,
+      undefined,
+      MOCK_RISKS,
+    );
   },
 
   async createRisk(data: RiskCreateInput): Promise<InstitutionalRisk> {
@@ -456,14 +598,20 @@ export const LegalService = {
     });
   },
 
-  async updateRisk(id: string, data: RiskUpdateInput): Promise<InstitutionalRisk> {
+  async updateRisk(
+    id: string,
+    data: RiskUpdateInput,
+  ): Promise<InstitutionalRisk> {
     return fetchWithFallback<InstitutionalRisk>(`/risks/${id}`, {
       method: "PATCH",
       body: JSON.stringify(data),
     });
   },
 
-  async acceptRisk(id: string, data: RiskAcceptInput): Promise<InstitutionalRisk> {
+  async acceptRisk(
+    id: string,
+    data: RiskAcceptInput,
+  ): Promise<InstitutionalRisk> {
     return fetchWithFallback<InstitutionalRisk>(`/risks/${id}/accept`, {
       method: "POST",
       body: JSON.stringify(data),

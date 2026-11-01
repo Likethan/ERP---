@@ -184,10 +184,19 @@ export const MOCK_MENTORING_SESSIONS: MentoringSessionItem[] = [
     endTime: "15:15:00",
     locationOrLink: "Faculty Cabin 304, Academic Block A",
     status: "COMPLETED",
-    summary: "Reviewed mid-term assessment marks and data structures mini-project. Student demonstrated solid progress in algorithms but requested guidance on technical presentation skills.",
+    summary:
+      "Reviewed mid-term assessment marks and data structures mini-project. Student demonstrated solid progress in algorithms but requested guidance on technical presentation skills.",
     actionItems: [
-      { title: "Submit revised algorithms lab code documentation", assignee: "Aarav Sharma", dueDate: "2026-10-25" },
-      { title: "Enroll in campus public-speaking workshop series", assignee: "Aarav Sharma", dueDate: "2026-11-01" },
+      {
+        title: "Submit revised algorithms lab code documentation",
+        assignee: "Aarav Sharma",
+        dueDate: "2026-10-25",
+      },
+      {
+        title: "Enroll in campus public-speaking workshop series",
+        assignee: "Aarav Sharma",
+        dueDate: "2026-11-01",
+      },
     ],
     followUpDate: "2026-11-12",
     createdByUserId: "fac-001",
@@ -198,8 +207,10 @@ export const MOCK_MENTORING_SESSIONS: MentoringSessionItem[] = [
         studentId: "stu-001",
         studentName: "Aarav Sharma",
         attendanceStatus: "PRESENT",
-        studentFeedback: "Very encouraging discussion regarding project architecture.",
-        studentReflection: "I will prioritize practicing code walkthroughs to build speaking confidence.",
+        studentFeedback:
+          "Very encouraging discussion regarding project architecture.",
+        studentReflection:
+          "I will prioritize practicing code walkthroughs to build speaking confidence.",
       },
     ],
     createdAt: "2026-10-05T10:00:00Z",
@@ -216,9 +227,11 @@ export const MOCK_MENTORING_SESSIONS: MentoringSessionItem[] = [
     sessionDate: "2026-11-05",
     startTime: "11:00:00",
     endTime: "11:45:00",
-    locationOrLink: "Virtual Meet (Google Meet link: meet.google.com/xyz-mentor)",
+    locationOrLink:
+      "Virtual Meet (Google Meet link: meet.google.com/xyz-mentor)",
     status: "SCHEDULED",
-    summary: "Planned discussion on upcoming elective course selections and internship readiness.",
+    summary:
+      "Planned discussion on upcoming elective course selections and internship readiness.",
     actionItems: [],
     createdByUserId: "fac-001",
     attendees: [
@@ -302,9 +315,11 @@ export const MOCK_CONFIDENTIAL_RECORDS: ConfidentialCounsellingRecordItem[] = [
     student_name: "Aarav Sharma",
     counsellorUserId: "coun-001",
     counsellorName: "Pooja Nambiar, M.Phil Clinical Psych",
-    sessionNotesRestricted: "Intake assessment conducted. Student exhibited high cognitive burden regarding competitive placement timelines. Introduced sleep hygiene guidelines and progressive muscle relaxation techniques.",
+    sessionNotesRestricted:
+      "Intake assessment conducted. Student exhibited high cognitive burden regarding competitive placement timelines. Introduced sleep hygiene guidelines and progressive muscle relaxation techniques.",
     interventionType: "SOLUTION_FOCUSED",
-    clinicalObservations: "Alert, oriented, responsive. No acute safety concerns.",
+    clinicalObservations:
+      "Alert, oriented, responsive. No acute safety concerns.",
     followUpRecommended: true,
     followUpTargetDate: "2026-11-15",
     consentConfirmed: true,
@@ -331,9 +346,12 @@ export const MOCK_DEVELOPMENT_PLANS: StudentDevelopmentPlanItem[] = [
     reviewFrequency: "MONTHLY",
     lastReviewedAt: "2026-10-10T15:00:00Z",
     nextReviewDate: "2026-11-12",
-    strengthsSummary: "Exceptional analytical skills, consistent programming discipline, high curiosity.",
-    areasForGrowth: "Public presentation speaking, technical white-paper composition.",
-    careerAspirations: "Distributed systems backend architect / Cloud platform engineer.",
+    strengthsSummary:
+      "Exceptional analytical skills, consistent programming discipline, high curiosity.",
+    areasForGrowth:
+      "Public presentation speaking, technical white-paper composition.",
+    careerAspirations:
+      "Distributed systems backend architect / Cloud platform engineer.",
     goals: [
       {
         id: "goal-001",
@@ -341,7 +359,8 @@ export const MOCK_DEVELOPMENT_PLANS: StudentDevelopmentPlanItem[] = [
         planId: "plan-001",
         category: "ACADEMIC_EXCELLENCE",
         title: "Maintain 8.5+ CGPA and master Advanced Operating Systems",
-        description: "Focus on kernel synchronization, memory management, and virtualization labs",
+        description:
+          "Focus on kernel synchronization, memory management, and virtualization labs",
         targetDate: "2026-12-15",
         status: "IN_PROGRESS",
         progressPct: 80,
@@ -350,7 +369,8 @@ export const MOCK_DEVELOPMENT_PLANS: StudentDevelopmentPlanItem[] = [
           "Score > 85% in mid-term OS examination",
         ],
         mentorNotes: "Good trajectory so far. Keep regular lab hours.",
-        studentReflection: "Consistent weekend study blocks have helped significantly.",
+        studentReflection:
+          "Consistent weekend study blocks have helped significantly.",
         actionItems: [
           {
             id: "act-001",
@@ -373,7 +393,8 @@ export const MOCK_DEVELOPMENT_PLANS: StudentDevelopmentPlanItem[] = [
         planId: "plan-001",
         category: "PROFESSIONAL_SKILLS",
         title: "Build and deploy distributed key-value store portfolio project",
-        description: "Implement Raft consensus algorithm with gRPC in Golang or Rust",
+        description:
+          "Implement Raft consensus algorithm with gRPC in Golang or Rust",
         targetDate: "2027-01-30",
         status: "IN_PROGRESS",
         progressPct: 70,
@@ -381,7 +402,8 @@ export const MOCK_DEVELOPMENT_PLANS: StudentDevelopmentPlanItem[] = [
           "Raft leader election and log replication passing cluster tests",
           "Publish well-documented GitHub repository with benchmarks",
         ],
-        mentorNotes: "Project scope looks robust for top-tier placement interviews.",
+        mentorNotes:
+          "Project scope looks robust for top-tier placement interviews.",
         studentReflection: "Completed initial cluster heartbeat prototype.",
         actionItems: [
           {
@@ -419,12 +441,14 @@ export const MOCK_SUPPORT_REFERRALS: SupportReferralItem[] = [
     targetService: "CAREER_SERVICES",
     reasonCategory: "Summer Internship Placement Preparation",
     priority: "STANDARD",
-    summaryNotes: "Student has high technical caliber and requests mock technical interview scheduling and resume alignment for cloud platform roles.",
+    summaryNotes:
+      "Student has high technical caliber and requests mock technical interview scheduling and resume alignment for cloud platform roles.",
     status: "IN_PROGRESS",
     assignedStaffUserId: "staff-car-01",
     assignedStaffName: "Sunita Deshmukh, Career Officer",
     consentObtained: true,
-    outcomeNotes: "Resume reviewed and initial mock technical screen scheduled for Nov 2.",
+    outcomeNotes:
+      "Resume reviewed and initial mock technical screen scheduled for Nov 2.",
     followUps: [
       {
         id: "fup-001",
@@ -454,7 +478,8 @@ export const MOCK_SUPPORT_REFERRALS: SupportReferralItem[] = [
     targetService: "ACADEMIC_ADVISING",
     reasonCategory: "Course Credit Transfer Consultation",
     priority: "STANDARD",
-    summaryNotes: "Student transferred from affiliate campus and requires course equivalency verification for semester 4 prerequisites.",
+    summaryNotes:
+      "Student transferred from affiliate campus and requires course equivalency verification for semester 4 prerequisites.",
     status: "PENDING",
     consentObtained: true,
     followUps: [],

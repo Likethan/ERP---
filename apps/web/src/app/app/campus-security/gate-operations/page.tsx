@@ -31,7 +31,9 @@ export default function GateOperationsPage() {
   const [loading, setLoading] = useState(true);
 
   // Revoke Dialog State
-  const [revokeModalPass, setRevokeModalPass] = useState<VisitorPass | null>(null);
+  const [revokeModalPass, setRevokeModalPass] = useState<VisitorPass | null>(
+    null,
+  );
   const [revokeReason, setRevokeReason] = useState("");
 
   async function loadData() {
@@ -63,7 +65,9 @@ export default function GateOperationsPage() {
     if (!qrTokenInput.trim()) return;
 
     try {
-      const pass = await CampusSecurityService.verifyPassToken(qrTokenInput.trim());
+      const pass = await CampusSecurityService.verifyPassToken(
+        qrTokenInput.trim(),
+      );
       setVerifiedPass(pass);
     } catch (err) {
       setTokenError((err as Error).message);
@@ -119,14 +123,19 @@ export default function GateOperationsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-black tracking-tight">Gate Operations & Access Verification</h1>
+            <h1 className="text-2xl font-black tracking-tight">
+              Gate Operations & Access Verification
+            </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Live checkpoint terminal for fast biometric turnstile, vehicle gate, and visitor pass verification.
+              Live checkpoint terminal for fast biometric turnstile, vehicle
+              gate, and visitor pass verification.
             </p>
           </div>
 
           <div className="flex items-center space-x-3 bg-card border border-border p-2 rounded-xl">
-            <span className="text-xs font-semibold text-muted-foreground pl-2">Current Post:</span>
+            <span className="text-xs font-semibold text-muted-foreground pl-2">
+              Current Post:
+            </span>
             <select
               value={selectedCheckpoint}
               onChange={(e) => setSelectedCheckpoint(e.target.value)}
@@ -150,12 +159,16 @@ export default function GateOperationsPage() {
             <div>
               <h2 className="text-base font-bold">Fast Pass Token Scanner</h2>
               <p className="text-xs text-muted-foreground">
-                Scan barcode or paste cryptographically signed visitor QR token (HMAC-SHA256 authenticated)
+                Scan barcode or paste cryptographically signed visitor QR token
+                (HMAC-SHA256 authenticated)
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleVerifyToken} className="flex flex-col sm:flex-row gap-3">
+          <form
+            onSubmit={handleVerifyToken}
+            className="flex flex-col sm:flex-row gap-3"
+          >
             <div className="relative flex-1">
               <input
                 type="text"
@@ -194,11 +207,18 @@ export default function GateOperationsPage() {
                   </span>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Host: <span className="text-foreground">{verifiedPass.host_name}</span> • Dest:{" "}
-                  <span className="text-foreground">{verifiedPass.destination}</span>
+                  Host:{" "}
+                  <span className="text-foreground">
+                    {verifiedPass.host_name}
+                  </span>{" "}
+                  • Dest:{" "}
+                  <span className="text-foreground">
+                    {verifiedPass.destination}
+                  </span>
                 </div>
                 <div className="text-[11px] text-muted-foreground">
-                  Valid Until: {new Date(verifiedPass.valid_until).toLocaleString()}
+                  Valid Until:{" "}
+                  {new Date(verifiedPass.valid_until).toLocaleString()}
                 </div>
               </div>
 
@@ -228,7 +248,8 @@ export default function GateOperationsPage() {
             <div>
               <h2 className="font-bold text-base">All Visitor Passes</h2>
               <p className="text-xs text-muted-foreground">
-                Track arrivals, active sessions, overdue departures, and revocations
+                Track arrivals, active sessions, overdue departures, and
+                revocations
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -262,37 +283,65 @@ export default function GateOperationsPage() {
               <tbody className="divide-y divide-border/60">
                 {filteredPasses.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-5 py-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={6}
+                      className="px-5 py-8 text-center text-muted-foreground"
+                    >
                       No visitor passes matching filter.
                     </td>
                   </tr>
                 ) : (
                   filteredPasses.map((p) => (
-                    <tr key={p.id} className="hover:bg-muted/20 transition-colors">
+                    <tr
+                      key={p.id}
+                      className="hover:bg-muted/20 transition-colors"
+                    >
                       <td className="px-5 py-4">
-                        <div className="font-bold text-sm">{p.visitor_name}</div>
+                        <div className="font-bold text-sm">
+                          {p.visitor_name}
+                        </div>
                         <div className="text-xs text-muted-foreground font-mono">
                           {p.pass_number} • {p.visitor_category}
                         </div>
                       </td>
                       <td className="px-5 py-4">
                         <div className="font-medium text-xs">{p.host_name}</div>
-                        <div className="text-[11px] text-muted-foreground">{p.destination}</div>
+                        <div className="text-[11px] text-muted-foreground">
+                          {p.destination}
+                        </div>
                       </td>
                       <td className="px-5 py-4 text-xs">
-                        <div>Till {new Date(p.valid_until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+                        <div>
+                          Till{" "}
+                          {new Date(p.valid_until).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
                         <div className="text-[11px] text-muted-foreground">
                           {new Date(p.valid_until).toLocaleDateString()}
                         </div>
                       </td>
                       <td className="px-5 py-4 text-xs text-muted-foreground">
                         {p.check_in_at ? (
-                          <div>In: {new Date(p.check_in_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+                          <div>
+                            In:{" "}
+                            {new Date(p.check_in_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
                         ) : (
                           <div>Not entered</div>
                         )}
                         {p.check_out_at && (
-                          <div>Out: {new Date(p.check_out_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+                          <div>
+                            Out:{" "}
+                            {new Date(p.check_out_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
                         )}
                       </td>
                       <td className="px-5 py-4">
@@ -301,10 +350,10 @@ export default function GateOperationsPage() {
                             p.status === "CHECKED_IN"
                               ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                               : p.status === "OVERDUE"
-                              ? "bg-rose-500/10 text-rose-500 border border-rose-500/20"
-                              : p.status === "REVOKED"
-                              ? "bg-zinc-800 text-rose-400 border border-rose-900"
-                              : "bg-muted text-muted-foreground"
+                                ? "bg-rose-500/10 text-rose-500 border border-rose-500/20"
+                                : p.status === "REVOKED"
+                                  ? "bg-zinc-800 text-rose-400 border border-rose-900"
+                                  : "bg-muted text-muted-foreground"
                           }`}
                         >
                           {p.status}
@@ -329,14 +378,15 @@ export default function GateOperationsPage() {
                               <span>Check-Out</span>
                             </button>
                           )}
-                          {p.status !== "REVOKED" && p.status !== "CHECKED_OUT" && (
-                            <button
-                              onClick={() => setRevokeModalPass(p)}
-                              className="px-2.5 py-1 text-xs text-rose-500 hover:bg-rose-500/10 rounded-lg font-medium"
-                            >
-                              Revoke
-                            </button>
-                          )}
+                          {p.status !== "REVOKED" &&
+                            p.status !== "CHECKED_OUT" && (
+                              <button
+                                onClick={() => setRevokeModalPass(p)}
+                                className="px-2.5 py-1 text-xs text-rose-500 hover:bg-rose-500/10 rounded-lg font-medium"
+                              >
+                                Revoke
+                              </button>
+                            )}
                         </div>
                       </td>
                     </tr>
@@ -358,8 +408,11 @@ export default function GateOperationsPage() {
             </div>
             <p className="text-xs text-muted-foreground">
               Are you sure you want to cancel access for{" "}
-              <strong className="text-foreground">{revokeModalPass.visitor_name}</strong> (Pass{" "}
-              {revokeModalPass.pass_number})? This action is immediately audited.
+              <strong className="text-foreground">
+                {revokeModalPass.visitor_name}
+              </strong>{" "}
+              (Pass {revokeModalPass.pass_number})? This action is immediately
+              audited.
             </p>
 
             <form onSubmit={handleRevokeSubmit} className="space-y-4">
@@ -399,4 +452,3 @@ export default function GateOperationsPage() {
     </div>
   );
 }
-

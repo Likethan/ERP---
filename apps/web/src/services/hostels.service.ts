@@ -24,12 +24,14 @@ class HostelsService {
   }): Promise<ApiResponse<Hostel[]>> {
     try {
       const params = new URLSearchParams();
-      if (filters?.campusId && filters.campusId !== "ALL") params.append("campus_id", filters.campusId);
-      if (filters?.status && filters.status !== "ALL") params.append("status", filters.status);
+      if (filters?.campusId && filters.campusId !== "ALL")
+        params.append("campus_id", filters.campusId);
+      if (filters?.status && filters.status !== "ALL")
+        params.append("status", filters.status);
       const qs = params.toString() ? `?${params.toString()}` : "";
 
       const res = await apiFetch<any[]>(`/api/v1/residential/hostels${qs}`);
-      if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res && res.data && Array.isArray(res.data)) {
         let items: Hostel[] = res.data.map((h: any) => ({
           id: h.id,
           name: h.name,
@@ -177,7 +179,12 @@ class HostelsService {
           code: newHostel.code,
           campus_id: newHostel.campusId,
           hostel_type: newHostel.type,
-          gender: newHostel.gender === "BOYS" ? "MALE" : newHostel.gender === "GIRLS" ? "FEMALE" : "CO_ED",
+          gender:
+            newHostel.gender === "BOYS"
+              ? "MALE"
+              : newHostel.gender === "GIRLS"
+                ? "FEMALE"
+                : "CO_ED",
           status: newHostel.status,
           contact_phone: newHostel.wardenPhone,
           contact_email: newHostel.wardenEmail,
@@ -204,7 +211,12 @@ class HostelsService {
         body: JSON.stringify({
           name: updates.name,
           hostel_type: updates.type,
-          gender: updates.gender === "BOYS" ? "MALE" : updates.gender === "GIRLS" ? "FEMALE" : "CO_ED",
+          gender:
+            updates.gender === "BOYS"
+              ? "MALE"
+              : updates.gender === "GIRLS"
+                ? "FEMALE"
+                : "CO_ED",
           status: updates.status,
           contact_phone: updates.wardenPhone,
           contact_email: updates.wardenEmail,

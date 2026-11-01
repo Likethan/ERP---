@@ -14,7 +14,10 @@ import {
 } from "lucide-react";
 import { SustainabilityNav } from "../../../../components/sustainability/sustainability-nav";
 import { sustainabilityService } from "../../../../services/sustainability.service";
-import { ResourceMeasurement, ResourceType } from "../../../../types/sustainability";
+import {
+  ResourceMeasurement,
+  ResourceType,
+} from "../../../../types/sustainability";
 
 export default function SustainabilityEnergyPage() {
   const [measurements, setMeasurements] = useState<ResourceMeasurement[]>([]);
@@ -25,7 +28,8 @@ export default function SustainabilityEnergyPage() {
   // Form State
   const [building, setBuilding] = useState("Main Academic Complex");
   const [meterCode, setMeterCode] = useState("MTR-ELEC-MAC-01");
-  const [resourceType, setResourceType] = useState<ResourceType>("ELECTRICITY_GRID");
+  const [resourceType, setResourceType] =
+    useState<ResourceType>("ELECTRICITY_GRID");
   const [readingVal, setReadingVal] = useState(4500);
   const [expectedBaseline, setExpectedBaseline] = useState(4200);
 
@@ -82,41 +86,58 @@ export default function SustainabilityEnergyPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">TANGEDCO Grid Import</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              TANGEDCO Grid Import
+            </span>
             <span className="p-2 rounded-lg bg-amber-950 text-amber-400 border border-amber-800">
               <Zap className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-slate-100">
-            682,500 <span className="text-xs font-normal text-slate-400">kWh YTD</span>
+            682,500{" "}
+            <span className="text-xs font-normal text-slate-400">kWh YTD</span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">High Tension (HT) 11 kV Substation Feeder</p>
+          <p className="text-xs text-slate-400 mt-1">
+            High Tension (HT) 11 kV Substation Feeder
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Rooftop Solar Generated</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Rooftop Solar Generated
+            </span>
             <span className="p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800">
               <Sun className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-emerald-400">
-            254,800 <span className="text-xs font-normal text-slate-400">kWh YTD</span>
+            254,800{" "}
+            <span className="text-xs font-normal text-slate-400">kWh YTD</span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">500 kWp Phase-1 Bifacial Plant Capacity</p>
+          <p className="text-xs text-slate-400 mt-1">
+            500 kWp Phase-1 Bifacial Plant Capacity
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Genset Fuel Consumption</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Genset Fuel Consumption
+            </span>
             <span className="p-2 rounded-lg bg-red-950 text-red-400 border border-red-800">
               <Flame className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-red-400">
-            12,500 <span className="text-xs font-normal text-slate-400">Litres Diesel</span>
+            12,500{" "}
+            <span className="text-xs font-normal text-slate-400">
+              Litres Diesel
+            </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Emergency backup during grid maintenance outages</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Emergency backup during grid maintenance outages
+          </p>
         </div>
       </div>
 
@@ -125,25 +146,27 @@ export default function SustainabilityEnergyPage() {
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-slate-400" />
           <div className="flex gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
-            {["ALL", "ELECTRICITY_GRID", "SOLAR_GENERATION", "ANOMALIES"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setFilterType(tab)}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition ${
-                  filterType === tab
-                    ? "bg-emerald-600 text-white font-semibold"
-                    : "text-slate-300 hover:text-white"
-                }`}
-              >
-                {tab === "ELECTRICITY_GRID"
-                  ? "Grid Power"
-                  : tab === "SOLAR_GENERATION"
-                  ? "Solar Generation"
-                  : tab === "ANOMALIES"
-                  ? "Anomalies Only"
-                  : "All Records"}
-              </button>
-            ))}
+            {["ALL", "ELECTRICITY_GRID", "SOLAR_GENERATION", "ANOMALIES"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setFilterType(tab)}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition ${
+                    filterType === tab
+                      ? "bg-emerald-600 text-white font-semibold"
+                      : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  {tab === "ELECTRICITY_GRID"
+                    ? "Grid Power"
+                    : tab === "SOLAR_GENERATION"
+                      ? "Solar Generation"
+                      : tab === "ANOMALIES"
+                        ? "Anomalies Only"
+                        : "All Records"}
+                </button>
+              ),
+            )}
           </div>
         </div>
 
@@ -179,8 +202,12 @@ export default function SustainabilityEnergyPage() {
               {filtered.map((m) => (
                 <tr key={m.id} className="hover:bg-slate-800/30 transition">
                   <td className="py-3.5 px-4">
-                    <div className="font-bold text-slate-200">{m.building_name}</div>
-                    <div className="text-[11px] text-slate-400 font-mono">{m.meter_code}</div>
+                    <div className="font-bold text-slate-200">
+                      {m.building_name}
+                    </div>
+                    <div className="text-[11px] text-slate-400 font-mono">
+                      {m.meter_code}
+                    </div>
                   </td>
                   <td className="py-3.5 px-4">
                     <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300">
@@ -191,16 +218,22 @@ export default function SustainabilityEnergyPage() {
                     {m.reading_value.toLocaleString()} {m.unit}
                   </td>
                   <td className="py-3.5 px-4 text-slate-400">
-                    {m.baseline_expected_value ? `${m.baseline_expected_value.toLocaleString()} ${m.unit}` : "—"}
+                    {m.baseline_expected_value
+                      ? `${m.baseline_expected_value.toLocaleString()} ${m.unit}`
+                      : "—"}
                   </td>
                   <td className="py-3.5 px-4">
                     {m.variance_pct ? (
                       <span
                         className={`font-semibold ${
-                          m.variance_pct > 30 ? "text-amber-400" : "text-slate-300"
+                          m.variance_pct > 30
+                            ? "text-amber-400"
+                            : "text-slate-300"
                         }`}
                       >
-                        {m.variance_pct > 0 ? `+${m.variance_pct}%` : `${m.variance_pct}%`}
+                        {m.variance_pct > 0
+                          ? `+${m.variance_pct}%`
+                          : `${m.variance_pct}%`}
                       </span>
                     ) : (
                       "—"
@@ -237,12 +270,15 @@ export default function SustainabilityEnergyPage() {
               Log Energy Telemetry Point
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Records are evaluated against baseline standard deviation for immediate anomaly triggering.
+              Records are evaluated against baseline standard deviation for
+              immediate anomaly triggering.
             </p>
 
             <form onSubmit={handleLog} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Building / Zone</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Building / Zone
+                </label>
                 <input
                   type="text"
                   required
@@ -253,7 +289,9 @@ export default function SustainabilityEnergyPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Meter Code</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Meter Code
+                </label>
                 <input
                   type="text"
                   required
@@ -264,10 +302,14 @@ export default function SustainabilityEnergyPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Resource Classification</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Resource Classification
+                </label>
                 <select
                   value={resourceType}
-                  onChange={(e) => setResourceType(e.target.value as ResourceType)}
+                  onChange={(e) =>
+                    setResourceType(e.target.value as ResourceType)
+                  }
                   className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                 >
                   <option value="ELECTRICITY_GRID">Electricity (Grid)</option>
@@ -278,7 +320,9 @@ export default function SustainabilityEnergyPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Reading (kWh)</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Reading (kWh)
+                  </label>
                   <input
                     type="number"
                     required
@@ -288,11 +332,15 @@ export default function SustainabilityEnergyPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Expected Baseline</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Expected Baseline
+                  </label>
                   <input
                     type="number"
                     value={expectedBaseline}
-                    onChange={(e) => setExpectedBaseline(Number(e.target.value))}
+                    onChange={(e) =>
+                      setExpectedBaseline(Number(e.target.value))
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   />
                 </div>
@@ -320,4 +368,3 @@ export default function SustainabilityEnergyPage() {
     </div>
   );
 }
-

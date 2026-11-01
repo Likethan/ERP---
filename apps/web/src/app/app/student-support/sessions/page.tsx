@@ -2,10 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StudentSupportService } from "@/services/student-support.service";
-import {
-  MentoringSessionItem,
-  MenteeItem,
-} from "@/types/student-support";
+import { MentoringSessionItem, MenteeItem } from "@/types/student-support";
 import { StudentSupportNav } from "@/components/student-support/student-support-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +41,9 @@ export default function MentoringSessionsPage() {
   // Schedule Modal State
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [sessionType, setSessionType] = useState<"ONE_ON_ONE" | "GROUP">("ONE_ON_ONE");
+  const [sessionType, setSessionType] = useState<"ONE_ON_ONE" | "GROUP">(
+    "ONE_ON_ONE",
+  );
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [durationMinutes, setDurationMinutes] = useState(45);
@@ -55,7 +54,8 @@ export default function MentoringSessionsPage() {
 
   // Complete Session Modal State
   const [completeModalOpen, setCompleteModalOpen] = useState(false);
-  const [selectedSession, setSelectedSession] = useState<MentoringSessionItem | null>(null);
+  const [selectedSession, setSelectedSession] =
+    useState<MentoringSessionItem | null>(null);
   const [summaryNotes, setSummaryNotes] = useState("");
   const [actionItemText, setActionItemText] = useState("");
   const [submittingComplete, setSubmittingComplete] = useState(false);
@@ -76,7 +76,9 @@ export default function MentoringSessionsPage() {
       setSessions(allSessions);
       setMentees(allMentees);
       if (allMentees.length > 0) {
-        setSelectedStudentId(allMentees[0].student_id || allMentees[0].studentId || "");
+        setSelectedStudentId(
+          allMentees[0].student_id || allMentees[0].studentId || "",
+        );
       }
     } catch (err) {
       console.error("Failed to load mentoring sessions:", err);
@@ -91,7 +93,9 @@ export default function MentoringSessionsPage() {
     setSubmittingSchedule(true);
     try {
       const startIso = new Date(`${startDate}T${startTime}:00Z`).toISOString();
-      const endIso = new Date(new Date(startIso).getTime() + durationMinutes * 60000).toISOString();
+      const endIso = new Date(
+        new Date(startIso).getTime() + durationMinutes * 60000,
+      ).toISOString();
 
       await StudentSupportService.createMentoringSession({
         title,
@@ -126,14 +130,19 @@ export default function MentoringSessionsPage() {
       await StudentSupportService.completeMentoringSession(selectedSession.id, {
         summary_notes: summaryNotes,
         action_items: actionItemText
-          ? actionItemText.split("\n").filter((l) => l.trim()).map((t) => ({
-              title: t.trim(),
-              assigned_to_role: "STUDENT",
-            }))
+          ? actionItemText
+              .split("\n")
+              .filter((l) => l.trim())
+              .map((t) => ({
+                title: t.trim(),
+                assigned_to_role: "STUDENT",
+              }))
           : undefined,
       });
 
-      setNotification("Mentoring session marked completed with recorded outcomes.");
+      setNotification(
+        "Mentoring session marked completed with recorded outcomes.",
+      );
       setCompleteModalOpen(false);
       setSelectedSession(null);
       setSummaryNotes("");
@@ -164,7 +173,10 @@ export default function MentoringSessionsPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Mentoring Sessions", href: "/app/student-support/sessions" },
+            {
+              label: "Mentoring Sessions",
+              href: "/app/student-support/sessions",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -174,7 +186,8 @@ export default function MentoringSessionsPage() {
               Faculty Mentoring Sessions
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Organize 1-on-1 and cohort mentoring discussions, record meeting summaries, and track actionable tasks.
+              Organize 1-on-1 and cohort mentoring discussions, record meeting
+              summaries, and track actionable tasks.
             </p>
           </div>
           <Button
@@ -195,7 +208,10 @@ export default function MentoringSessionsPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -228,7 +244,9 @@ export default function MentoringSessionsPage() {
 
       {/* Sessions List */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading mentoring sessions...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading mentoring sessions...
+        </div>
       ) : filteredSessions.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
           No mentoring sessions found matching the filter.
@@ -243,50 +261,71 @@ export default function MentoringSessionsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-base">{session.title}</span>
+                    <span className="font-semibold text-white text-base">
+                      {session.title}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
                         session.status === "COMPLETED"
                           ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-xs"
                           : session.status === "SCHEDULED"
-                          ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-xs"
-                          : "border-slate-700 text-slate-400 text-xs"
+                            ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-xs"
+                            : "border-slate-700 text-slate-400 text-xs"
                       }
                     >
                       {session.status}
                     </Badge>
                     <span className="text-xs text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
-                      {session.session_type === "ONE_ON_ONE" ? "1-on-1 Individual" : "Group Cohort"}
+                      {session.session_type === "ONE_ON_ONE"
+                        ? "1-on-1 Individual"
+                        : "Group Cohort"}
                     </span>
                   </div>
                   <div className="text-xs text-slate-400">
-                    Faculty Mentor: <span className="text-slate-200">{session.mentor_name ?? "Faculty Staff"}</span> • Location:{" "}
+                    Faculty Mentor:{" "}
+                    <span className="text-slate-200">
+                      {session.mentor_name ?? "Faculty Staff"}
+                    </span>{" "}
+                    • Location:{" "}
                     <span className="text-slate-200">{session.location}</span>
                   </div>
                 </div>
 
                 <div className="text-right text-xs">
                   <div className="font-semibold text-indigo-300">
-                    {new Date(session.scheduled_start || session.sessionDate || "").toLocaleDateString()} at{" "}
-                    {new Date(session.scheduled_start || session.sessionDate || "").toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(
+                      session.scheduled_start || session.sessionDate || "",
+                    ).toLocaleDateString()}{" "}
+                    at{" "}
+                    {new Date(
+                      session.scheduled_start || session.sessionDate || "",
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </div>
                   <div className="text-slate-400 mt-0.5">
-                    {session.attendees_count ?? 1} Participant(s) • {session.action_items_count ?? 0} Action Item(s)
+                    {session.attendees_count ?? 1} Participant(s) •{" "}
+                    {session.action_items_count ?? 0} Action Item(s)
                   </div>
                 </div>
               </div>
 
               {session.discussion_points && (
                 <div className="text-xs space-y-1">
-                  <span className="text-slate-400 font-medium">Planned Agenda:</span>
+                  <span className="text-slate-400 font-medium">
+                    Planned Agenda:
+                  </span>
                   <p className="text-slate-300">{session.discussion_points}</p>
                 </div>
               )}
 
               {session.summary_notes && (
                 <div className="text-xs space-y-1">
-                  <span className="text-slate-400 font-medium">Session Summary & Outcomes:</span>
+                  <span className="text-slate-400 font-medium">
+                    Session Summary & Outcomes:
+                  </span>
                   <p className="text-slate-200 bg-slate-950/60 p-3 rounded-lg border border-slate-800">
                     {session.summary_notes}
                   </p>
@@ -295,7 +334,9 @@ export default function MentoringSessionsPage() {
 
               {session.student_reflection && (
                 <div className="text-xs space-y-1">
-                  <span className="text-indigo-400 font-medium">Student Reflection:</span>
+                  <span className="text-indigo-400 font-medium">
+                    Student Reflection:
+                  </span>
                   <p className="text-slate-300 italic bg-indigo-950/20 p-2.5 rounded border border-indigo-900/30">
                     "{session.student_reflection}"
                   </p>
@@ -332,9 +373,14 @@ export default function MentoringSessionsPage() {
               Schedule Mentoring Session
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleScheduleSession} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleScheduleSession}
+            className="space-y-4 pt-2 text-xs"
+          >
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Session Title / Topic *</label>
+              <label className="text-slate-400 font-medium">
+                Session Title / Topic *
+              </label>
               <Input
                 required
                 placeholder="e.g. Mid-semester academic & project review"
@@ -346,7 +392,9 @@ export default function MentoringSessionsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Session Type *</label>
+                <label className="text-slate-400 font-medium">
+                  Session Type *
+                </label>
                 <select
                   value={sessionType}
                   onChange={(e) => setSessionType(e.target.value as any)}
@@ -358,15 +406,21 @@ export default function MentoringSessionsPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Student Mentee</label>
+                <label className="text-slate-400 font-medium">
+                  Student Mentee
+                </label>
                 <select
                   value={selectedStudentId}
                   onChange={(e) => setSelectedStudentId(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white"
                 >
                   {mentees.map((m) => (
-                    <option key={m.student_id || m.studentId} value={m.student_id || m.studentId}>
-                      {m.student_name || m.studentName} ({m.student_reg_no || m.rollNumber})
+                    <option
+                      key={m.student_id || m.studentId}
+                      value={m.student_id || m.studentId}
+                    >
+                      {m.student_name || m.studentName} (
+                      {m.student_reg_no || m.rollNumber})
                     </option>
                   ))}
                 </select>
@@ -406,7 +460,9 @@ export default function MentoringSessionsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Discussion Points / Agenda</label>
+              <label className="text-slate-400 font-medium">
+                Discussion Points / Agenda
+              </label>
               <Textarea
                 placeholder="Key items to discuss..."
                 value={discussionPoints}
@@ -446,9 +502,14 @@ export default function MentoringSessionsPage() {
               Record Mentoring Session Completion
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleCompleteSession} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleCompleteSession}
+            className="space-y-4 pt-2 text-xs"
+          >
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Session Summary & Discussion Outcomes *</label>
+              <label className="text-slate-400 font-medium">
+                Session Summary & Discussion Outcomes *
+              </label>
               <Textarea
                 required
                 placeholder="Describe key guidance shared, academic recommendations, and student commitments..."
@@ -460,7 +521,9 @@ export default function MentoringSessionsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">New Action Items (One per line)</label>
+              <label className="text-slate-400 font-medium">
+                New Action Items (One per line)
+              </label>
               <Textarea
                 placeholder="e.g. Complete online machine learning lab 3&#10;Consult placement cell for resume critique"
                 value={actionItemText}

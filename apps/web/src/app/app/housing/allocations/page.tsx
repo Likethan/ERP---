@@ -36,12 +36,16 @@ export default function AllocationsAndOffersPage() {
   const [requests, setRequests] = useState<StudentHousingRequest[]>([]);
   const [units, setUnits] = useState<AccommodationUnit[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"ASSIGNMENTS" | "OFFERS">("ASSIGNMENTS");
+  const [activeTab, setActiveTab] = useState<"ASSIGNMENTS" | "OFFERS">(
+    "ASSIGNMENTS",
+  );
 
   // Modals
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-  const [isDirectAllocateModalOpen, setIsDirectAllocateModalOpen] = useState(false);
-  const [selectedAssignmentForTransfer, setSelectedAssignmentForTransfer] = useState<HousingAssignment | null>(null);
+  const [isDirectAllocateModalOpen, setIsDirectAllocateModalOpen] =
+    useState(false);
+  const [selectedAssignmentForTransfer, setSelectedAssignmentForTransfer] =
+    useState<HousingAssignment | null>(null);
 
   // Form states
   const [newOffer, setNewOffer] = useState<HousingOfferCreateInput>({
@@ -56,16 +60,17 @@ export default function AllocationsAndOffersPage() {
     offer_valid_days: 3,
   });
 
-  const [directAllocate, setDirectAllocate] = useState<HousingAssignmentCreateInput>({
-    student_id: "",
-    property_id: "",
-    unit_id: "",
-    bed_id: "",
-    start_date: new Date().toISOString().split("T")[0],
-    end_date: "2027-05-31",
-    monthly_rent: 8500,
-    security_deposit: 15000,
-  });
+  const [directAllocate, setDirectAllocate] =
+    useState<HousingAssignmentCreateInput>({
+      student_id: "",
+      property_id: "",
+      unit_id: "",
+      bed_id: "",
+      start_date: new Date().toISOString().split("T")[0],
+      end_date: "2027-05-31",
+      monthly_rent: 8500,
+      security_deposit: 15000,
+    });
 
   const [transferData, setTransferData] = useState<HousingTransferInput>({
     target_unit_id: "",
@@ -88,7 +93,10 @@ export default function AllocationsAndOffersPage() {
       setAssignments(allAssignments);
       setProperties(allProps);
       setRequests(
-        allReqs.filter((r: StudentHousingRequest) => r.status === "WAITLISTED" || r.status === "SUBMITTED")
+        allReqs.filter(
+          (r: StudentHousingRequest) =>
+            r.status === "WAITLISTED" || r.status === "SUBMITTED",
+        ),
       );
       if (allProps.length > 0) {
         setSelectedOfferPropertyId(allProps[0].id);
@@ -156,7 +164,10 @@ export default function AllocationsAndOffersPage() {
     if (!selectedAssignmentForTransfer) return;
     setActionLoading(true);
     try {
-      await HousingService.transferRoom(selectedAssignmentForTransfer.id, transferData);
+      await HousingService.transferRoom(
+        selectedAssignmentForTransfer.id,
+        transferData,
+      );
       setSelectedAssignmentForTransfer(null);
       loadAll();
     } catch (err) {
@@ -247,7 +258,7 @@ export default function AllocationsAndOffersPage() {
   const availableBeds = units.flatMap((u) =>
     (u.beds || [])
       .filter((b) => b.status === "AVAILABLE")
-      .map((b) => ({ ...b, unit_number: u.unit_number, unit_id: u.id }))
+      .map((b) => ({ ...b, unit_number: u.unit_number, unit_id: u.id })),
   );
 
   return (
@@ -263,7 +274,8 @@ export default function AllocationsAndOffersPage() {
               Allocations, Formal Offers & Room Transfers
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Concurrency-safe bed assignments, binding electronic offers, and inter-room transfer audit trails.
+              Concurrency-safe bed assignments, binding electronic offers, and
+              inter-room transfer audit trails.
             </p>
           </div>
 
@@ -313,7 +325,9 @@ export default function AllocationsAndOffersPage() {
 
         {/* Loading state */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading allocation records...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading allocation records...
+          </div>
         ) : activeTab === "ASSIGNMENTS" ? (
           /* Assignments Table */
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
@@ -332,19 +346,26 @@ export default function AllocationsAndOffersPage() {
                 <tbody className="divide-y divide-slate-800/60">
                   {assignments.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="px-5 py-12 text-center text-slate-500"
+                      >
                         No active bed assignments found.
                       </td>
                     </tr>
                   ) : (
                     assignments.map((asg) => (
-                      <tr key={asg.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={asg.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="px-5 py-4">
                           <div className="font-semibold text-white">
                             {asg.student_name || "Enrolled Scholar"}
                           </div>
                           <div className="text-xs font-mono text-indigo-400">
-                            {asg.student_roll_number || asg.student_id.slice(0, 8)}
+                            {asg.student_roll_number ||
+                              asg.student_id.slice(0, 8)}
                           </div>
                         </td>
                         <td className="px-5 py-4">
@@ -361,22 +382,29 @@ export default function AllocationsAndOffersPage() {
                           </span>
                         </td>
                         <td className="px-5 py-4">
-                          <div className="text-xs text-slate-300">{asg.start_date} to {asg.end_date}</div>
-                          <div className="text-xs text-emerald-400 font-mono">₹{asg.monthly_rent}/mo</div>
+                          <div className="text-xs text-slate-300">
+                            {asg.start_date} to {asg.end_date}
+                          </div>
+                          <div className="text-xs text-emerald-400 font-mono">
+                            ₹{asg.monthly_rent}/mo
+                          </div>
                         </td>
-                        <td className="px-5 py-4">{getAssignmentStatusBadge(asg.status)}</td>
+                        <td className="px-5 py-4">
+                          {getAssignmentStatusBadge(asg.status)}
+                        </td>
                         <td className="px-5 py-4 text-right">
-                          {asg.status !== "CHECKED_OUT" && asg.status !== "TERMINATED" && (
-                            <button
-                              onClick={() => {
-                                setSelectedAssignmentForTransfer(asg);
-                              }}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-slate-800 hover:bg-slate-700 text-indigo-300 transition-colors"
-                            >
-                              <ArrowLeftRight className="w-3.5 h-3.5" />
-                              Transfer Room
-                            </button>
-                          )}
+                          {asg.status !== "CHECKED_OUT" &&
+                            asg.status !== "TERMINATED" && (
+                              <button
+                                onClick={() => {
+                                  setSelectedAssignmentForTransfer(asg);
+                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-slate-800 hover:bg-slate-700 text-indigo-300 transition-colors"
+                              >
+                                <ArrowLeftRight className="w-3.5 h-3.5" />
+                                Transfer Room
+                              </button>
+                            )}
                         </td>
                       </tr>
                     ))
@@ -403,13 +431,19 @@ export default function AllocationsAndOffersPage() {
                 <tbody className="divide-y divide-slate-800/60">
                   {offers.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="px-5 py-12 text-center text-slate-500"
+                      >
                         No pending or past accommodation offers found.
                       </td>
                     </tr>
                   ) : (
                     offers.map((off) => (
-                      <tr key={off.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={off.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="px-5 py-4">
                           <div className="font-semibold text-white">
                             {off.student_name || "Applicant Scholar"}
@@ -428,10 +462,12 @@ export default function AllocationsAndOffersPage() {
                         </td>
                         <td className="px-5 py-4">
                           <div className="text-xs font-medium text-emerald-400">
-                            ₹{off.offered_rent_monthly.toLocaleString("en-IN")}/month
+                            ₹{off.offered_rent_monthly.toLocaleString("en-IN")}
+                            /month
                           </div>
                           <div className="text-[11px] text-slate-400">
-                            Deposit: ₹{off.offered_deposit.toLocaleString("en-IN")}
+                            Deposit: ₹
+                            {off.offered_deposit.toLocaleString("en-IN")}
                           </div>
                         </td>
                         <td className="px-5 py-4">
@@ -439,7 +475,9 @@ export default function AllocationsAndOffersPage() {
                             {new Date(off.offer_valid_until).toLocaleString()}
                           </span>
                         </td>
-                        <td className="px-5 py-4">{getOfferStatusBadge(off.status)}</td>
+                        <td className="px-5 py-4">
+                          {getOfferStatusBadge(off.status)}
+                        </td>
                         <td className="px-5 py-4 text-right">
                           {off.status === "OFFERED" && (
                             <div className="flex items-center justify-end gap-2">
@@ -452,7 +490,9 @@ export default function AllocationsAndOffersPage() {
                               </button>
                               <button
                                 disabled={actionLoading}
-                                onClick={() => handleRespondOffer(off.id, false)}
+                                onClick={() =>
+                                  handleRespondOffer(off.id, false)
+                                }
                                 className="px-2 py-1 text-xs font-medium rounded bg-rose-600/20 text-rose-300 hover:bg-rose-600/40 border border-rose-500/30"
                               >
                                 Decline
@@ -478,7 +518,10 @@ export default function AllocationsAndOffersPage() {
                   <Sparkles className="w-5 h-5 text-indigo-400" />
                   Issue Formal Electronic Accommodation Offer
                 </h3>
-                <button onClick={() => setIsOfferModalOpen(false)} className="text-slate-400 hover:text-white">
+                <button
+                  onClick={() => setIsOfferModalOpen(false)}
+                  className="text-slate-400 hover:text-white"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -491,13 +534,18 @@ export default function AllocationsAndOffersPage() {
                   <select
                     required
                     value={newOffer.request_id}
-                    onChange={(e) => setNewOffer({ ...newOffer, request_id: e.target.value })}
+                    onChange={(e) =>
+                      setNewOffer({ ...newOffer, request_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                   >
-                    <option value="">-- Select Approved Student Request --</option>
+                    <option value="">
+                      -- Select Approved Student Request --
+                    </option>
                     {requests.map((r) => (
                       <option key={r.id} value={r.id}>
-                        {r.student_name} ({r.academic_term}) — Budget ₹{r.budget_max}
+                        {r.student_name} ({r.academic_term}) — Budget ₹
+                        {r.budget_max}
                       </option>
                     ))}
                   </select>
@@ -512,7 +560,10 @@ export default function AllocationsAndOffersPage() {
                       value={selectedOfferPropertyId}
                       onChange={(e) => {
                         setSelectedOfferPropertyId(e.target.value);
-                        setNewOffer((prev) => ({ ...prev, property_id: e.target.value }));
+                        setNewOffer((prev) => ({
+                          ...prev,
+                          property_id: e.target.value,
+                        }));
                       }}
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     >
@@ -532,7 +583,9 @@ export default function AllocationsAndOffersPage() {
                       required
                       value={newOffer.bed_id}
                       onChange={(e) => {
-                        const bed = availableBeds.find((b) => b.id === e.target.value);
+                        const bed = availableBeds.find(
+                          (b) => b.id === e.target.value,
+                        );
                         setNewOffer({
                           ...newOffer,
                           bed_id: e.target.value,
@@ -561,7 +614,10 @@ export default function AllocationsAndOffersPage() {
                       type="number"
                       value={newOffer.offered_rent_monthly}
                       onChange={(e) =>
-                        setNewOffer({ ...newOffer, offered_rent_monthly: parseFloat(e.target.value) || 0 })
+                        setNewOffer({
+                          ...newOffer,
+                          offered_rent_monthly: parseFloat(e.target.value) || 0,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -575,7 +631,10 @@ export default function AllocationsAndOffersPage() {
                       type="number"
                       value={newOffer.offered_deposit}
                       onChange={(e) =>
-                        setNewOffer({ ...newOffer, offered_deposit: parseFloat(e.target.value) || 0 })
+                        setNewOffer({
+                          ...newOffer,
+                          offered_deposit: parseFloat(e.target.value) || 0,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -591,7 +650,10 @@ export default function AllocationsAndOffersPage() {
                       type="date"
                       value={newOffer.occupancy_start_date}
                       onChange={(e) =>
-                        setNewOffer({ ...newOffer, occupancy_start_date: e.target.value })
+                        setNewOffer({
+                          ...newOffer,
+                          occupancy_start_date: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -604,7 +666,10 @@ export default function AllocationsAndOffersPage() {
                       type="number"
                       value={newOffer.offer_valid_days || 3}
                       onChange={(e) =>
-                        setNewOffer({ ...newOffer, offer_valid_days: parseInt(e.target.value) || 3 })
+                        setNewOffer({
+                          ...newOffer,
+                          offer_valid_days: parseInt(e.target.value) || 3,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -637,13 +702,21 @@ export default function AllocationsAndOffersPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-lg font-bold text-white">Direct Student Bed Allocation</h3>
-                <button onClick={() => setIsDirectAllocateModalOpen(false)} className="text-slate-400 hover:text-white">
+                <h3 className="text-lg font-bold text-white">
+                  Direct Student Bed Allocation
+                </h3>
+                <button
+                  onClick={() => setIsDirectAllocateModalOpen(false)}
+                  className="text-slate-400 hover:text-white"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleDirectAllocate} className="space-y-4 text-sm">
+              <form
+                onSubmit={handleDirectAllocate}
+                className="space-y-4 text-sm"
+              >
                 <div>
                   <label className="block text-xs font-medium text-slate-300 mb-1">
                     Student ID / UUID *
@@ -653,7 +726,10 @@ export default function AllocationsAndOffersPage() {
                     type="text"
                     value={directAllocate.student_id}
                     onChange={(e) =>
-                      setDirectAllocate({ ...directAllocate, student_id: e.target.value })
+                      setDirectAllocate({
+                        ...directAllocate,
+                        student_id: e.target.value,
+                      })
                     }
                     placeholder="e.g. stu-uuid-001 or registration number"
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -669,7 +745,10 @@ export default function AllocationsAndOffersPage() {
                       value={selectedOfferPropertyId}
                       onChange={(e) => {
                         setSelectedOfferPropertyId(e.target.value);
-                        setDirectAllocate((prev) => ({ ...prev, property_id: e.target.value }));
+                        setDirectAllocate((prev) => ({
+                          ...prev,
+                          property_id: e.target.value,
+                        }));
                       }}
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     >
@@ -689,7 +768,9 @@ export default function AllocationsAndOffersPage() {
                       required
                       value={directAllocate.bed_id}
                       onChange={(e) => {
-                        const bed = availableBeds.find((b) => b.id === e.target.value);
+                        const bed = availableBeds.find(
+                          (b) => b.id === e.target.value,
+                        );
                         setDirectAllocate({
                           ...directAllocate,
                           bed_id: e.target.value,
@@ -717,7 +798,10 @@ export default function AllocationsAndOffersPage() {
                       type="date"
                       value={directAllocate.start_date}
                       onChange={(e) =>
-                        setDirectAllocate({ ...directAllocate, start_date: e.target.value })
+                        setDirectAllocate({
+                          ...directAllocate,
+                          start_date: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -730,7 +814,10 @@ export default function AllocationsAndOffersPage() {
                       type="date"
                       value={directAllocate.end_date}
                       onChange={(e) =>
-                        setDirectAllocate({ ...directAllocate, end_date: e.target.value })
+                        setDirectAllocate({
+                          ...directAllocate,
+                          end_date: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -777,10 +864,17 @@ export default function AllocationsAndOffersPage() {
 
               <div className="p-3 rounded-lg bg-slate-950 text-xs space-y-1">
                 <div>
-                  Occupant: <strong className="text-white">{selectedAssignmentForTransfer.student_name}</strong>
+                  Occupant:{" "}
+                  <strong className="text-white">
+                    {selectedAssignmentForTransfer.student_name}
+                  </strong>
                 </div>
                 <div>
-                  Current Bed: <span className="font-mono text-indigo-400">Bed {selectedAssignmentForTransfer.bed_code}</span> (Room {selectedAssignmentForTransfer.unit_number})
+                  Current Bed:{" "}
+                  <span className="font-mono text-indigo-400">
+                    Bed {selectedAssignmentForTransfer.bed_code}
+                  </span>{" "}
+                  (Room {selectedAssignmentForTransfer.unit_number})
                 </div>
               </div>
 
@@ -793,7 +887,9 @@ export default function AllocationsAndOffersPage() {
                     required
                     value={transferData.target_bed_id}
                     onChange={(e) => {
-                      const bed = availableBeds.find((b) => b.id === e.target.value);
+                      const bed = availableBeds.find(
+                        (b) => b.id === e.target.value,
+                      );
                       setTransferData({
                         ...transferData,
                         target_bed_id: e.target.value,
@@ -820,7 +916,10 @@ export default function AllocationsAndOffersPage() {
                     rows={2}
                     value={transferData.transfer_reason}
                     onChange={(e) =>
-                      setTransferData({ ...transferData, transfer_reason: e.target.value })
+                      setTransferData({
+                        ...transferData,
+                        transfer_reason: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 text-xs"
                   />

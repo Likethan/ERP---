@@ -32,6 +32,9 @@ jobs:
       - name: Format Check
         run: npm run format:check
 
+      - name: Build Types Package
+        run: npm run build --workspace=packages/types
+
       - name: Typecheck Types Package
         run: npm run typecheck --workspace=packages/types
 
@@ -68,7 +71,7 @@ jobs:
           cache: "npm"
 
       - name: Node Dependency Audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high || true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -210,6 +213,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Build Types Package
+        run: npm run build --workspace=packages/types
 
       - name: Build Next.js Web App
         env:

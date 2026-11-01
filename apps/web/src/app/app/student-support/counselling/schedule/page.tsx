@@ -24,7 +24,9 @@ import {
 } from "lucide-react";
 
 export default function CounsellingSchedulePage() {
-  const [appointments, setAppointments] = useState<CounsellingAppointmentItem[]>([]);
+  const [appointments, setAppointments] = useState<
+    CounsellingAppointmentItem[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchDate, setSearchDate] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -48,13 +50,16 @@ export default function CounsellingSchedulePage() {
 
   async function handleStatusTransition(
     apptId: string,
-    newStatus: "CHECKED_IN" | "COMPLETED" | "NO_SHOW" | "CANCELLED"
+    newStatus: "CHECKED_IN" | "COMPLETED" | "NO_SHOW" | "CANCELLED",
   ) {
     setUpdatingId(apptId);
     try {
       await StudentSupportService.transitionCounsellingAppointment(apptId, {
         status: newStatus,
-        cancellation_reason: newStatus === "NO_SHOW" ? "Student did not attend scheduled session" : undefined,
+        cancellation_reason:
+          newStatus === "NO_SHOW"
+            ? "Student did not attend scheduled session"
+            : undefined,
       });
       loadSchedule();
     } catch (err) {
@@ -67,7 +72,9 @@ export default function CounsellingSchedulePage() {
 
   const filteredAppointments = appointments.filter((a) => {
     const matchesStatus = statusFilter === "ALL" || a.status === statusFilter;
-    const matchesDate = !searchDate || (a.scheduled_start || a.appointmentDate || "").startsWith(searchDate);
+    const matchesDate =
+      !searchDate ||
+      (a.scheduled_start || a.appointmentDate || "").startsWith(searchDate);
     return matchesStatus && matchesDate;
   });
 
@@ -78,7 +85,10 @@ export default function CounsellingSchedulePage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Counselling Schedule", href: "/app/student-support/counselling/schedule" },
+            {
+              label: "Counselling Schedule",
+              href: "/app/student-support/counselling/schedule",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -88,7 +98,8 @@ export default function CounsellingSchedulePage() {
               Counsellor Agenda & Daily Schedule
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Manage clinical appointments, check-ins, session completions, and transitions.
+              Manage clinical appointments, check-ins, session completions, and
+              transitions.
             </p>
           </div>
           <Link href="/app/student-support/counselling/workspace">
@@ -141,7 +152,9 @@ export default function CounsellingSchedulePage() {
 
       {/* Appointment Cards / Schedule Agenda */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading daily appointments...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading daily appointments...
+        </div>
       ) : filteredAppointments.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
           No counselling appointments found for the selected filter.
@@ -156,19 +169,21 @@ export default function CounsellingSchedulePage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-base">{appt.appointment_number}</span>
+                    <span className="font-semibold text-white text-base">
+                      {appt.appointment_number}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
                         appt.status === "COMPLETED"
                           ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-xs"
                           : appt.status === "CONFIRMED"
-                          ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-xs"
-                          : appt.status === "CHECKED_IN"
-                          ? "border-purple-500/30 text-purple-400 bg-purple-500/10 text-xs"
-                          : appt.status === "NO_SHOW"
-                          ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-xs"
-                          : "border-slate-700 text-slate-400 text-xs"
+                            ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-xs"
+                            : appt.status === "CHECKED_IN"
+                              ? "border-purple-500/30 text-purple-400 bg-purple-500/10 text-xs"
+                              : appt.status === "NO_SHOW"
+                                ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-xs"
+                                : "border-slate-700 text-slate-400 text-xs"
                       }
                     >
                       {appt.status}
@@ -178,15 +193,27 @@ export default function CounsellingSchedulePage() {
                     </span>
                   </div>
                   <div className="text-xs text-slate-400">
-                    Student ID: <span className="text-slate-200">{appt.student_id}</span> • Assigned Counsellor:{" "}
-                    <span className="text-slate-200">{appt.counsellor_name ?? "Clinical Counsellor"}</span>
+                    Student ID:{" "}
+                    <span className="text-slate-200">{appt.student_id}</span> •
+                    Assigned Counsellor:{" "}
+                    <span className="text-slate-200">
+                      {appt.counsellor_name ?? "Clinical Counsellor"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="text-right text-xs">
                   <div className="font-semibold text-indigo-300">
-                    {new Date(appt.scheduled_start || appt.appointmentDate || "").toLocaleDateString()} at{" "}
-                    {new Date(appt.scheduled_start || appt.appointmentDate || "").toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(
+                      appt.scheduled_start || appt.appointmentDate || "",
+                    ).toLocaleDateString()}{" "}
+                    at{" "}
+                    {new Date(
+                      appt.scheduled_start || appt.appointmentDate || "",
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </div>
                   <div className="text-slate-400 flex items-center justify-end gap-1 mt-0.5">
                     {appt.appointment_mode === "ONLINE" ? (
@@ -209,54 +236,70 @@ export default function CounsellingSchedulePage() {
                 <div className="text-xs text-slate-400">
                   {appt.check_in_time && (
                     <span className="text-purple-400">
-                      Checked in: {new Date(appt.check_in_time).toLocaleTimeString()}
+                      Checked in:{" "}
+                      {new Date(appt.check_in_time).toLocaleTimeString()}
                     </span>
                   )}
                   {appt.completed_at && (
                     <span className="text-emerald-400">
-                      Completed: {new Date(appt.completed_at).toLocaleTimeString()}
+                      Completed:{" "}
+                      {new Date(appt.completed_at).toLocaleTimeString()}
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {appt.status !== "COMPLETED" && appt.status !== "CANCELLED" && appt.status !== "NO_SHOW" && (
-                    <>
-                      {appt.status !== "CHECKED_IN" && (
+                  {appt.status !== "COMPLETED" &&
+                    appt.status !== "CANCELLED" &&
+                    appt.status !== "NO_SHOW" && (
+                      <>
+                        {appt.status !== "CHECKED_IN" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={updatingId === appt.id}
+                            onClick={() =>
+                              handleStatusTransition(appt.id, "CHECKED_IN")
+                            }
+                            className="text-xs border-purple-800/40 text-purple-300 hover:bg-purple-950/40"
+                          >
+                            Check In
+                          </Button>
+                        )}
                         <Button
                           size="sm"
-                          variant="outline"
                           disabled={updatingId === appt.id}
-                          onClick={() => handleStatusTransition(appt.id, "CHECKED_IN")}
-                          className="text-xs border-purple-800/40 text-purple-300 hover:bg-purple-950/40"
+                          onClick={() =>
+                            handleStatusTransition(appt.id, "COMPLETED")
+                          }
+                          className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
-                          Check In
+                          <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                          Complete Session
                         </Button>
-                      )}
-                      <Button
-                        size="sm"
-                        disabled={updatingId === appt.id}
-                        onClick={() => handleStatusTransition(appt.id, "COMPLETED")}
-                        className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
-                      >
-                        <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
-                        Complete Session
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={updatingId === appt.id}
-                        onClick={() => handleStatusTransition(appt.id, "NO_SHOW")}
-                        className="text-xs text-amber-400 hover:bg-amber-950/40"
-                      >
-                        <AlertCircle className="mr-1 h-3.5 w-3.5" />
-                        Mark No-Show
-                      </Button>
-                    </>
-                  )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          disabled={updatingId === appt.id}
+                          onClick={() =>
+                            handleStatusTransition(appt.id, "NO_SHOW")
+                          }
+                          className="text-xs text-amber-400 hover:bg-amber-950/40"
+                        >
+                          <AlertCircle className="mr-1 h-3.5 w-3.5" />
+                          Mark No-Show
+                        </Button>
+                      </>
+                    )}
 
-                  <Link href={`/app/student-support/counselling/workspace?appointment_id=${appt.id}`}>
-                    <Button size="sm" variant="outline" className="text-xs border-amber-900/40 text-amber-300 hover:bg-amber-950/40">
+                  <Link
+                    href={`/app/student-support/counselling/workspace?appointment_id=${appt.id}`}
+                  >
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-xs border-amber-900/40 text-amber-300 hover:bg-amber-950/40"
+                    >
                       <Lock className="mr-1 h-3.5 w-3.5" />
                       Session Notes
                     </Button>

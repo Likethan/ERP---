@@ -21,14 +21,20 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { MobilityFundingRequest, MobilityScholarship } from "@/types/international";
+import {
+  MobilityFundingRequest,
+  MobilityScholarship,
+} from "@/types/international";
 
 export default function ScholarshipsPage() {
   const [scholarships, setScholarships] = useState<MobilityScholarship[]>([]);
-  const [fundingRequests, setFundingRequests] = useState<MobilityFundingRequest[]>([]);
+  const [fundingRequests, setFundingRequests] = useState<
+    MobilityFundingRequest[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedFundingForApproval, setSelectedFundingForApproval] = useState<MobilityFundingRequest | null>(null);
+  const [selectedFundingForApproval, setSelectedFundingForApproval] =
+    useState<MobilityFundingRequest | null>(null);
 
   // New Scholarship Form
   const [form, setForm] = useState({
@@ -36,8 +42,11 @@ export default function ScholarshipsPage() {
     funding_source: "Institutional Mobility Trust",
     award_amount_per_student: 2500,
     total_available_slots: 5,
-    application_deadline: new Date(Date.now() + 90 * 86400000).toISOString().split("T")[0],
-    eligibility_criteria_notes: "CGPA >= 8.5 with approved semester exchange admission.",
+    application_deadline: new Date(Date.now() + 90 * 86400000)
+      .toISOString()
+      .split("T")[0],
+    eligibility_criteria_notes:
+      "CGPA >= 8.5 with approved semester exchange admission.",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -92,9 +101,11 @@ export default function ScholarshipsPage() {
         selectedFundingForApproval.id,
         decision,
         approvedAmount,
-        financeRef
+        financeRef,
       );
-      alert(`Funding request ${decision.toLowerCase()} and linked to finance ledger reference: ${financeRef}`);
+      alert(
+        `Funding request ${decision.toLowerCase()} and linked to finance ledger reference: ${financeRef}`,
+      );
       setSelectedFundingForApproval(null);
       loadData();
     } catch (err) {
@@ -117,7 +128,8 @@ export default function ScholarshipsPage() {
               Mobility Scholarships & Travel Funding Coordination
             </h2>
             <p className="text-xs text-slate-400">
-              Institutional endowment fellowships, partner travel grants, and unified finance ledger disbursements
+              Institutional endowment fellowships, partner travel grants, and
+              unified finance ledger disbursements
             </p>
           </div>
           <button
@@ -146,7 +158,8 @@ export default function ScholarshipsPage() {
                       {sch.scholarship_code || sch.scholarshipCode}
                     </span>
                     <span className="text-xs text-slate-400">
-                      {sch.total_available_slots || sch.totalAvailableSlots} Award Slots
+                      {sch.total_available_slots || sch.totalAvailableSlots}{" "}
+                      Award Slots
                     </span>
                   </div>
 
@@ -158,7 +171,9 @@ export default function ScholarshipsPage() {
                   </p>
 
                   <div className="mt-3.5 p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 space-y-1">
-                    <span className="text-slate-500 font-semibold block text-[11px]">Criteria:</span>
+                    <span className="text-slate-500 font-semibold block text-[11px]">
+                      Criteria:
+                    </span>
                     <p>{sch.eligibility_criteria_notes || "General Merit"}</p>
                   </div>
                 </div>
@@ -167,12 +182,19 @@ export default function ScholarshipsPage() {
                   <div className="text-xs">
                     <span className="text-slate-500 block">Award Amount:</span>
                     <span className="font-bold text-emerald-400 text-sm">
-                      ${(sch.award_amount_per_student || sch.award_amount || 2500).toLocaleString()} / Scholar
+                      $
+                      {(
+                        sch.award_amount_per_student ||
+                        sch.award_amount ||
+                        2500
+                      ).toLocaleString()}{" "}
+                      / Scholar
                     </span>
                   </div>
                   <span className="text-[11px] text-amber-400/90 flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    Deadline: {sch.application_deadline || sch.applicationDeadline}
+                    Deadline:{" "}
+                    {sch.application_deadline || sch.applicationDeadline}
                   </span>
                 </div>
               </div>
@@ -202,28 +224,42 @@ export default function ScholarshipsPage() {
                 <tbody className="divide-y divide-slate-800/80">
                   {fundingRequests.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-slate-500"
+                      >
                         No funding requests recorded.
                       </td>
                     </tr>
                   ) : (
                     fundingRequests.map((req) => (
-                      <tr key={req.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr
+                        key={req.id}
+                        className="hover:bg-slate-800/40 transition-colors"
+                      >
                         <td className="py-3.5 px-4">
-                          <div className="font-semibold text-white">{req.student_name || "Student Applicant"}</div>
-                          <div className="text-[11px] text-slate-400 mt-0.5">{req.scholarship_name || "General Aid"}</div>
+                          <div className="font-semibold text-white">
+                            {req.student_name || "Student Applicant"}
+                          </div>
+                          <div className="text-[11px] text-slate-400 mt-0.5">
+                            {req.scholarship_name || "General Aid"}
+                          </div>
                         </td>
 
                         <td className="py-3.5 px-4 font-mono font-semibold text-slate-200">
-                          ${req.requested_amount.toLocaleString()} {req.currency}
+                          ${req.requested_amount.toLocaleString()}{" "}
+                          {req.currency}
                         </td>
 
                         <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
-                          {req.approved_amount ? `$${req.approved_amount.toLocaleString()}` : "—"}
+                          {req.approved_amount
+                            ? `$${req.approved_amount.toLocaleString()}`
+                            : "—"}
                         </td>
 
                         <td className="py-3.5 px-4 font-mono text-cyan-400 text-[11px]">
-                          {req.finance_disbursement_ref || "Pending Ledger Link"}
+                          {req.finance_disbursement_ref ||
+                            "Pending Ledger Link"}
                         </td>
 
                         <td className="py-3.5 px-4">
@@ -232,8 +268,8 @@ export default function ScholarshipsPage() {
                               req.status === "APPROVED"
                                 ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
                                 : req.status === "REJECTED"
-                                ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                                : "bg-amber-500/10 text-amber-300 border border-amber-500/30"
+                                  ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                                  : "bg-amber-500/10 text-amber-300 border border-amber-500/30"
                             }`}
                           >
                             {req.status}
@@ -252,7 +288,9 @@ export default function ScholarshipsPage() {
                               Disbursement Review
                             </button>
                           ) : (
-                            <span className="text-slate-500 text-[11px]">Ledger Linked</span>
+                            <span className="text-slate-500 text-[11px]">
+                              Ledger Linked
+                            </span>
                           )}
                         </td>
                       </tr>
@@ -280,13 +318,21 @@ export default function ScholarshipsPage() {
                 Approve Mobility Travel Grant Disbursement
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Scholar: <strong className="text-slate-200">{selectedFundingForApproval.student_name}</strong> · Requested:{" "}
-                <strong className="text-emerald-400">${selectedFundingForApproval.requested_amount}</strong>
+                Scholar:{" "}
+                <strong className="text-slate-200">
+                  {selectedFundingForApproval.student_name}
+                </strong>{" "}
+                · Requested:{" "}
+                <strong className="text-emerald-400">
+                  ${selectedFundingForApproval.requested_amount}
+                </strong>
               </p>
 
               <form onSubmit={handleApproveFunding} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Decision *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Decision *
+                  </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -314,7 +360,9 @@ export default function ScholarshipsPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Approved Grant Amount ($ USD) *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Approved Grant Amount ($ USD) *
+                  </label>
                   <input
                     required
                     type="number"
@@ -375,76 +423,116 @@ export default function ScholarshipsPage() {
                 Create Mobility Scholarship Program
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Establish an institutional travel subsidy or bilateral grant track for international scholars
+                Establish an institutional travel subsidy or bilateral grant
+                track for international scholars
               </p>
 
-              <form onSubmit={handleCreateScholarship} className="mt-5 space-y-4">
+              <form
+                onSubmit={handleCreateScholarship}
+                className="mt-5 space-y-4"
+              >
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Scholarship Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Scholarship Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. CampusOS Global Excellence Travel Fellowship"
                     value={form.scholarship_name}
-                    onChange={(e) => setForm({ ...form, scholarship_name: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, scholarship_name: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Funding Sponsor *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Funding Sponsor *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. Institutional Endowment"
                       value={form.funding_source}
-                      onChange={(e) => setForm({ ...form, funding_source: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, funding_source: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Grant Per Student ($ USD) *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Grant Per Student ($ USD) *
+                    </label>
                     <input
                       required
                       type="number"
                       value={form.award_amount_per_student}
-                      onChange={(e) => setForm({ ...form, award_amount_per_student: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          award_amount_per_student: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Total Available Slots *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Total Available Slots *
+                    </label>
                     <input
                       required
                       type="number"
                       value={form.total_available_slots}
-                      onChange={(e) => setForm({ ...form, total_available_slots: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          total_available_slots: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Application Deadline *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Application Deadline *
+                    </label>
                     <input
                       required
                       type="date"
                       value={form.application_deadline}
-                      onChange={(e) => setForm({ ...form, application_deadline: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          application_deadline: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Eligibility Criteria Notes</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Eligibility Criteria Notes
+                  </label>
                   <textarea
                     rows={2}
                     placeholder="Specify merit thresholds, minimum GPA, or target countries..."
                     value={form.eligibility_criteria_notes}
-                    onChange={(e) => setForm({ ...form, eligibility_criteria_notes: e.target.value })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        eligibility_criteria_notes: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>

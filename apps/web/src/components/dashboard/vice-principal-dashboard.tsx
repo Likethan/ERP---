@@ -133,7 +133,8 @@ export function VicePrincipalDashboard() {
             Academic Operations & Institutional Oversight
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Real-time curriculum delivery, teaching quality audits, faculty workloads, and statutory approvals for VSB Campus.
+            Real-time curriculum delivery, teaching quality audits, faculty
+            workloads, and statutory approvals for VSB Campus.
           </p>
         </div>
 
@@ -203,11 +204,16 @@ export function VicePrincipalDashboard() {
                   Department Academic Operations Matrix
                 </CardTitle>
                 <CardDescription className="text-xs text-slate-400">
-                  Head of Department academic progress, attendance adherence, and quality audits.
+                  Head of Department academic progress, attendance adherence,
+                  and quality audits.
                 </CardDescription>
               </div>
               <Link href="/app/departments">
-                <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="h-3.5 w-3.5" />}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+                >
                   View All
                 </Button>
               </Link>
@@ -227,34 +233,49 @@ export function VicePrincipalDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 font-medium">
                     {DEPARTMENT_ACADEMIC_HEALTH.map((dept) => (
-                      <tr key={dept.name} className="hover:bg-slate-900/40 transition-colors">
+                      <tr
+                        key={dept.name}
+                        className="hover:bg-slate-900/40 transition-colors"
+                      >
                         <td className="py-3">
-                          <div className="font-semibold text-slate-200">{dept.name}</div>
-                          <div className="text-[11px] text-slate-400">{dept.hod} • Ratio {dept.facultyRatio}</div>
+                          <div className="font-semibold text-slate-200">
+                            {dept.name}
+                          </div>
+                          <div className="text-[11px] text-slate-400">
+                            {dept.hod} • Ratio {dept.facultyRatio}
+                          </div>
                         </td>
-                        <td className="py-3 text-center text-slate-300 font-semibold">{dept.students}</td>
+                        <td className="py-3 text-center text-slate-300 font-semibold">
+                          {dept.students}
+                        </td>
                         <td className="py-3 text-center">
-                          <span className="font-semibold text-emerald-400">{dept.attendance}</span>
+                          <span className="font-semibold text-emerald-400">
+                            {dept.attendance}
+                          </span>
                         </td>
                         <td className="py-3 text-center">
-                          <span className="font-semibold text-sky-400">{dept.syllabusProgress}</span>
+                          <span className="font-semibold text-sky-400">
+                            {dept.syllabusProgress}
+                          </span>
                         </td>
-                        <td className="py-3 text-center font-bold text-slate-200">{dept.accreditationScore}</td>
+                        <td className="py-3 text-center font-bold text-slate-200">
+                          {dept.accreditationScore}
+                        </td>
                         <td className="py-3 text-right">
                           <Badge
                             variant={
                               dept.status === "EXEMPLARY"
                                 ? "success"
                                 : dept.status === "ON_TRACK"
-                                ? "info"
-                                : "warning"
+                                  ? "info"
+                                  : "warning"
                             }
                           >
                             {dept.status === "EXEMPLARY"
                               ? "Exemplary"
                               : dept.status === "ON_TRACK"
-                              ? "On Track"
-                              : "Review Needed"}
+                                ? "On Track"
+                                : "Review Needed"}
                           </Badge>
                         </td>
                       </tr>
@@ -279,9 +300,7 @@ export function VicePrincipalDashboard() {
                   Submissions requiring Vice Principal executive sign-off.
                 </CardDescription>
               </div>
-              <Badge variant="warning">
-                4 Pending
-              </Badge>
+              <Badge variant="warning">4 Pending</Badge>
             </CardHeader>
             <CardContent className="space-y-3">
               {PENDING_STATUTORY_APPROVALS.map((item) => (
@@ -290,20 +309,24 @@ export function VicePrincipalDashboard() {
                   className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 hover:border-slate-700 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="font-semibold text-xs text-slate-200">{item.type}</div>
+                    <div className="font-semibold text-xs text-slate-200">
+                      {item.type}
+                    </div>
                     <Badge
                       variant={
                         item.urgency === "CRITICAL"
                           ? "danger"
                           : item.urgency === "HIGH"
-                          ? "warning"
-                          : "neutral"
+                            ? "warning"
+                            : "neutral"
                       }
                     >
                       {item.urgency}
                     </Badge>
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-1">{item.dept}</div>
+                  <div className="text-[11px] text-slate-400 mt-1">
+                    {item.dept}
+                  </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-800/80 text-[10px] text-slate-400">
                     <span>By {item.submittedBy}</span>
                     <span>{item.date}</span>
@@ -311,7 +334,10 @@ export function VicePrincipalDashboard() {
                 </div>
               ))}
 
-              <Link href="/app/examinations/approvals" className="block w-full pt-1">
+              <Link
+                href="/app/examinations/approvals"
+                className="block w-full pt-1"
+              >
                 <Button variant="outline" size="sm" className="w-full text-xs">
                   Open Executive Approval Queue
                 </Button>

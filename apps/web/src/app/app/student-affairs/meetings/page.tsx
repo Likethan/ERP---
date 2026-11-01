@@ -32,12 +32,16 @@ function MeetingsHearingsContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
   const [meetings, setMeetings] = useState<CaseMeetingModel[]>([]);
 
   // Schedule modal
   const [title, setTitle] = useState("");
-  const [meetingType, setMeetingType] = useState<SAMeetingType>(SAMeetingType.HEARING_PANEL);
+  const [meetingType, setMeetingType] = useState<SAMeetingType>(
+    SAMeetingType.HEARING_PANEL,
+  );
   const [startDateTime, setStartDateTime] = useState("");
   const [endDateTime, setEndDateTime] = useState("");
   const [venueOrUrl, setVenueOrUrl] = useState("Administrative Block Room 204");
@@ -75,11 +79,15 @@ function MeetingsHearingsContent() {
         title,
         meetingType,
         scheduledStart: new Date(startDateTime).toISOString(),
-        scheduledEnd: endDateTime ? new Date(endDateTime).toISOString() : new Date(Date.now() + 3600000).toISOString(),
+        scheduledEnd: endDateTime
+          ? new Date(endDateTime).toISOString()
+          : new Date(Date.now() + 3600000).toISOString(),
         venueOrUrl,
         facilitatorId,
       });
-      setNotification(`Meeting "${title}" scheduled and invitations dispatched.`);
+      setNotification(
+        `Meeting "${title}" scheduled and invitations dispatched.`,
+      );
       setMeetings((prev) => [...prev, scheduled]);
       setTitle("");
       setStartDateTime("");
@@ -97,7 +105,10 @@ function MeetingsHearingsContent() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Meetings & Hearings", href: "/app/student-affairs/meetings" },
+          {
+            label: "Meetings & Hearings",
+            href: "/app/student-affairs/meetings",
+          },
         ]}
       />
 
@@ -107,7 +118,8 @@ function MeetingsHearingsContent() {
           Meetings, Committee Hearings & Mediation Sessions
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Coordinate grievance resolution conferences, witness inquiry panels, and voluntary peer mediation sessions with privacy-safe notices.
+          Coordinate grievance resolution conferences, witness inquiry panels,
+          and voluntary peer mediation sessions with privacy-safe notices.
         </p>
       </div>
 
@@ -119,7 +131,10 @@ function MeetingsHearingsContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setNotification("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -129,7 +144,9 @@ function MeetingsHearingsContent() {
       <div className="p-3.5 rounded-lg border border-slate-800 bg-slate-950/40 text-xs text-slate-300 flex items-center gap-2">
         <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
         <span>
-          <strong>Privacy Policy:</strong> Automatic audio/video recording is disabled. Any formal recording requires explicit multi-party consent under institutional governance standards.
+          <strong>Privacy Policy:</strong> Automatic audio/video recording is
+          disabled. Any formal recording requires explicit multi-party consent
+          under institutional governance standards.
         </span>
       </div>
 
@@ -147,9 +164,14 @@ function MeetingsHearingsContent() {
           ) : (
             <div className="space-y-3">
               {meetings.map((m) => (
-                <Card key={m.id} className="p-4 border-slate-800 bg-slate-900/40 space-y-2">
+                <Card
+                  key={m.id}
+                  className="p-4 border-slate-800 bg-slate-900/40 space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white text-xs">{m.title}</span>
+                    <span className="font-semibold text-white text-xs">
+                      {m.title}
+                    </span>
                     <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px]">
                       {m.meeting_type}
                     </Badge>
@@ -158,7 +180,9 @@ function MeetingsHearingsContent() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-400">
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5 text-slate-500" />
-                      <span>{new Date(m.scheduled_start).toLocaleString()}</span>
+                      <span>
+                        {new Date(m.scheduled_start).toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <MapPin className="h-3.5 w-3.5 text-slate-500" />
@@ -173,8 +197,15 @@ function MeetingsHearingsContent() {
                   )}
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-500">
-                    <span>Status: <strong className="text-slate-300">{m.status}</strong></span>
-                    <Button size="sm" variant="ghost" className="h-6 text-[10px] text-indigo-400">
+                    <span>
+                      Status:{" "}
+                      <strong className="text-slate-300">{m.status}</strong>
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 text-[10px] text-indigo-400"
+                    >
                       Record Minutes
                     </Button>
                   </div>
@@ -193,7 +224,9 @@ function MeetingsHearingsContent() {
             </h2>
             <form onSubmit={handleSchedule} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1">Target Case Ref *</label>
+                <label className="block text-slate-300 mb-1">
+                  Target Case Ref *
+                </label>
                 <select
                   value={selectedCaseId}
                   onChange={(e) => setSelectedCaseId(e.target.value)}
@@ -208,7 +241,9 @@ function MeetingsHearingsContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Session Title *</label>
+                <label className="block text-slate-300 mb-1">
+                  Session Title *
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Formal Hearing Panel / Mediation Session"
@@ -220,22 +255,38 @@ function MeetingsHearingsContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Meeting Type</label>
+                <label className="block text-slate-300 mb-1">
+                  Meeting Type
+                </label>
                 <select
                   value={meetingType}
-                  onChange={(e) => setMeetingType(e.target.value as SAMeetingType)}
+                  onChange={(e) =>
+                    setMeetingType(e.target.value as SAMeetingType)
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
                 >
-                  <option value={SAMeetingType.HEARING_PANEL}>HEARING PANEL (Formal disciplinary inquiry)</option>
-                  <option value={SAMeetingType.INTAKE_INTERVIEW}>INTAKE INTERVIEW (Preliminary grievance intake)</option>
-                  <option value={SAMeetingType.MEDIATION_SESSION}>MEDIATION SESSION (Voluntary dispute resolution)</option>
-                  <option value={SAMeetingType.RESOLUTION_CONFERENCE}>RESOLUTION CONFERENCE (Informal conciliation)</option>
-                  <option value={SAMeetingType.APPEAL_HEARING}>APPEAL HEARING (Appellate panel review)</option>
+                  <option value={SAMeetingType.HEARING_PANEL}>
+                    HEARING PANEL (Formal disciplinary inquiry)
+                  </option>
+                  <option value={SAMeetingType.INTAKE_INTERVIEW}>
+                    INTAKE INTERVIEW (Preliminary grievance intake)
+                  </option>
+                  <option value={SAMeetingType.MEDIATION_SESSION}>
+                    MEDIATION SESSION (Voluntary dispute resolution)
+                  </option>
+                  <option value={SAMeetingType.RESOLUTION_CONFERENCE}>
+                    RESOLUTION CONFERENCE (Informal conciliation)
+                  </option>
+                  <option value={SAMeetingType.APPEAL_HEARING}>
+                    APPEAL HEARING (Appellate panel review)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Date & Time *</label>
+                <label className="block text-slate-300 mb-1">
+                  Date & Time *
+                </label>
                 <input
                   type="datetime-local"
                   value={startDateTime}
@@ -246,7 +297,9 @@ function MeetingsHearingsContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Venue or Video URL</label>
+                <label className="block text-slate-300 mb-1">
+                  Venue or Video URL
+                </label>
                 <input
                   type="text"
                   value={venueOrUrl}
@@ -272,9 +325,14 @@ function MeetingsHearingsContent() {
 
 export default function MeetingsHearingsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading hearings...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading hearings...
+        </div>
+      }
+    >
       <MeetingsHearingsContent />
     </Suspense>
   );
 }
-

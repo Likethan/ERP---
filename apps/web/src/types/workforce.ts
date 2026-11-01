@@ -4,12 +4,7 @@
  */
 
 export type EmploymentType =
-  | "PERMANENT"
-  | "CONTRACT"
-  | "TEMPORARY"
-  | "VISITING"
-  | "ADJUNCT"
-  | "PROBATION";
+  "PERMANENT" | "CONTRACT" | "TEMPORARY" | "VISITING" | "ADJUNCT" | "PROBATION";
 
 export type EmploymentStatus =
   | "DRAFT"
@@ -49,11 +44,7 @@ export type LifecycleCaseStatus =
   | "BLOCKED";
 
 export type LifecycleTaskStatus =
-  | "PENDING"
-  | "IN_PROGRESS"
-  | "COMPLETED"
-  | "WAIVED"
-  | "BLOCKED";
+  "PENDING" | "IN_PROGRESS" | "COMPLETED" | "WAIVED" | "BLOCKED";
 
 export type LeaveRequestStatus =
   | "DRAFT"
@@ -74,11 +65,7 @@ export type HRCaseCategory =
   | "GENERAL_INQUIRY";
 
 export type HRCaseStatus =
-  | "OPEN"
-  | "IN_PROGRESS"
-  | "RESOLVED"
-  | "CLOSED"
-  | "REJECTED";
+  "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "REJECTED";
 
 export interface WorkforceEmployeeItem {
   id: string;

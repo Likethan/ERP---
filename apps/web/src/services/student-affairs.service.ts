@@ -69,8 +69,18 @@ class StudentAffairsService {
     return {
       ...MOCK_METRICS,
       total_cases: this.cases.length,
-      active_grievances: this.cases.filter((c) => c.case_type === "GRIEVANCE" && c.status !== "RESOLVED" && c.status !== "CLOSED").length,
-      active_disciplinary: this.cases.filter((c) => c.case_type === "DISCIPLINARY" && c.status !== "RESOLVED" && c.status !== "CLOSED").length,
+      active_grievances: this.cases.filter(
+        (c) =>
+          c.case_type === "GRIEVANCE" &&
+          c.status !== "RESOLVED" &&
+          c.status !== "CLOSED",
+      ).length,
+      active_disciplinary: this.cases.filter(
+        (c) =>
+          c.case_type === "DISCIPLINARY" &&
+          c.status !== "RESOLVED" &&
+          c.status !== "CLOSED",
+      ).length,
     };
   }
 
@@ -80,10 +90,14 @@ class StudentAffairsService {
       if (filters?.caseType) params.append("case_type", filters.caseType);
       if (filters?.status) params.append("status", filters.status);
       if (filters?.priority) params.append("priority", filters.priority);
-      if (filters?.confidentialityLevel) params.append("confidentiality_level", filters.confidentialityLevel);
-      if (filters?.assignedOfficerId) params.append("assigned_officer_id", filters.assignedOfficerId);
+      if (filters?.confidentialityLevel)
+        params.append("confidentiality_level", filters.confidentialityLevel);
+      if (filters?.assignedOfficerId)
+        params.append("assigned_officer_id", filters.assignedOfficerId);
 
-      const res = await fetch(`/api/v1/student-affairs/cases?${params.toString()}`);
+      const res = await fetch(
+        `/api/v1/student-affairs/cases?${params.toString()}`,
+      );
       if (res.ok) {
         return await res.json();
       }
@@ -107,7 +121,7 @@ class StudentAffairsService {
         (c) =>
           c.case_number.toLowerCase().includes(q) ||
           c.title.toLowerCase().includes(q) ||
-          c.description.toLowerCase().includes(q)
+          c.description.toLowerCase().includes(q),
       );
     }
     if (filters?.isEscalated !== undefined) {
@@ -168,14 +182,21 @@ class StudentAffairsService {
       requested_resolution: data.requestedResolution,
       status: SACaseStatus.SUBMITTED,
       priority: category?.default_priority || SACasePriority.MEDIUM,
-      confidentiality_level: data.confidentialityLevel || SAConfidentialityLevel.STANDARD,
+      confidentiality_level:
+        data.confidentialityLevel || SAConfidentialityLevel.STANDARD,
       is_anonymous: data.isAnonymous,
       submitter_type: data.submitterType || SASubmitterType.STUDENT,
       submitter_user_id: data.isAnonymous ? null : "usr-current-user",
-      submitter_name_redacted: data.isAnonymous ? "Anonymous Submitter (Identity Protected)" : "Student Submitter",
+      submitter_name_redacted: data.isAnonymous
+        ? "Anonymous Submitter (Identity Protected)"
+        : "Student Submitter",
       campus_id: data.campusId,
-      target_response_date: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
-      target_resolution_date: new Date(Date.now() + 10 * 86400 * 1000).toISOString(),
+      target_response_date: new Date(
+        Date.now() + 48 * 3600 * 1000,
+      ).toISOString(),
+      target_resolution_date: new Date(
+        Date.now() + 10 * 86400 * 1000,
+      ).toISOString(),
       is_escalated: false,
       reopen_count: 0,
       created_at: new Date().toISOString(),
@@ -218,16 +239,19 @@ class StudentAffairsService {
 
   async assignCase(data: CaseAssignmentForm): Promise<GrievanceCaseModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/assignments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          officer_id: data.officerId,
-          reassignment_reason: data.reassignmentReason,
-          priority: data.priority,
-          target_response_hours: data.targetResponseHours,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/assignments`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            officer_id: data.officerId,
+            reassignment_reason: data.reassignmentReason,
+            priority: data.priority,
+            target_response_hours: data.targetResponseHours,
+          }),
+        },
+      );
       if (res.ok) {
         return await res.json();
       }
@@ -255,7 +279,8 @@ class StudentAffairsService {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           reason: data.reason,
-          requested_reassignment_to_officer_id: data.requestedReassignmentToOfficerId,
+          requested_reassignment_to_officer_id:
+            data.requestedReassignmentToOfficerId,
         }),
       });
     } catch {
@@ -270,7 +295,7 @@ class StudentAffairsService {
   }
 
   async createDisciplinaryProceeding(
-    data: DisciplinaryProceedingForm
+    data: DisciplinaryProceedingForm,
   ): Promise<DisciplinaryProceedingModel> {
     try {
       const res = await fetch(
@@ -284,7 +309,7 @@ class StudentAffairsService {
             policy_provisions_violated: data.policyProvisionsViolated,
             investigator_id: data.investigatorId,
           }),
-        }
+        },
       );
       if (res.ok) return await res.json();
     } catch {
@@ -315,18 +340,21 @@ class StudentAffairsService {
 
   async recordFindings(
     caseId: string,
-    data: DisciplinaryFindingsForm
+    data: DisciplinaryFindingsForm,
   ): Promise<DisciplinaryProceedingModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${caseId}/findings`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          findings_summary: data.findingsSummary,
-          finding_status: data.findingStatus,
-          procedural_stage: data.proceduralStage,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${caseId}/findings`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            findings_summary: data.findingsSummary,
+            finding_status: data.findingStatus,
+            procedural_stage: data.proceduralStage,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -345,19 +373,22 @@ class StudentAffairsService {
 
   async approveSanction(
     caseId: string,
-    data: DisciplinarySanctionForm
+    data: DisciplinarySanctionForm,
   ): Promise<DisciplinaryProceedingModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${caseId}/sanctions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sanction_type: data.sanctionType,
-          sanction_details: data.sanctionDetails,
-          decision_maker_id: data.decisionMakerId,
-          appeal_deadline_days: data.appealDeadlineDays,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${caseId}/sanctions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sanction_type: data.sanctionType,
+            sanction_details: data.sanctionDetails,
+            decision_maker_id: data.decisionMakerId,
+            appeal_deadline_days: data.appealDeadlineDays,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -370,9 +401,10 @@ class StudentAffairsService {
       c.disciplinary_proceeding.decision_maker_id = data.decisionMakerId;
       c.disciplinary_proceeding.decision_date = new Date().toISOString();
       c.disciplinary_proceeding.appeal_deadline = new Date(
-        Date.now() + data.appealDeadlineDays * 86400 * 1000
+        Date.now() + data.appealDeadlineDays * 86400 * 1000,
       ).toISOString();
-      c.disciplinary_proceeding.procedural_stage = SADisciplinaryStage.SANCTION_APPROVED;
+      c.disciplinary_proceeding.procedural_stage =
+        SADisciplinaryStage.SANCTION_APPROVED;
       c.disciplinary_proceeding.is_communicated = true;
       c.status = SACaseStatus.RESOLVED;
       c.resolution_summary = `Approved Sanction: ${data.sanctionType}. ${data.sanctionDetails}`;
@@ -384,18 +416,21 @@ class StudentAffairsService {
 
   async uploadEvidence(data: EvidenceUploadForm): Promise<CaseEvidenceModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/evidence`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          evidence_type: data.evidenceType,
-          title: data.title,
-          description: data.description,
-          file_url: data.fileUrl,
-          file_size_bytes: data.fileSizeBytes,
-          confidentiality_level: data.confidentialityLevel,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/evidence`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            evidence_type: data.evidenceType,
+            title: data.title,
+            description: data.description,
+            file_url: data.fileUrl,
+            file_size_bytes: data.fileSizeBytes,
+            confidentiality_level: data.confidentialityLevel,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -425,16 +460,21 @@ class StudentAffairsService {
     return ev;
   }
 
-  async redactEvidence(data: EvidenceRedactionForm): Promise<CaseEvidenceModel> {
+  async redactEvidence(
+    data: EvidenceRedactionForm,
+  ): Promise<CaseEvidenceModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/evidence/${data.evidenceId}/redact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          redaction_summary: data.redactionSummary,
-          redacted_file_url: data.redactedFileUrl,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/evidence/${data.evidenceId}/redact`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            redaction_summary: data.redactionSummary,
+            redacted_file_url: data.redactedFileUrl,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -471,18 +511,21 @@ class StudentAffairsService {
 
   async scheduleMeeting(data: CaseMeetingForm): Promise<CaseMeetingModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/meetings`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: data.title,
-          meeting_type: data.meetingType,
-          scheduled_start: data.scheduledStart,
-          scheduled_end: data.scheduledEnd,
-          venue_or_url: data.venueOrUrl,
-          facilitator_id: data.facilitatorId,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/meetings`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: data.title,
+            meeting_type: data.meetingType,
+            scheduled_start: data.scheduledStart,
+            scheduled_end: data.scheduledEnd,
+            venue_or_url: data.venueOrUrl,
+            facilitator_id: data.facilitatorId,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -513,18 +556,23 @@ class StudentAffairsService {
     return meeting;
   }
 
-  async addResolutionAction(data: ResolutionActionForm): Promise<ResolutionActionModel> {
+  async addResolutionAction(
+    data: ResolutionActionForm,
+  ): Promise<ResolutionActionModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/actions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          description: data.description,
-          action_type: data.actionType,
-          assigned_owner_id: data.assignedOwnerId,
-          due_date: data.dueDate,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/actions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            description: data.description,
+            action_type: data.actionType,
+            assigned_owner_id: data.assignedOwnerId,
+            due_date: data.dueDate,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -552,14 +600,17 @@ class StudentAffairsService {
 
   async fileAppeal(data: AppealFilingForm): Promise<AppealRecordModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/appeals`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          appeal_grounds: data.appealGrounds,
-          grounds_statement: data.groundsStatement,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/appeals`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            appeal_grounds: data.appealGrounds,
+            grounds_statement: data.groundsStatement,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -583,7 +634,8 @@ class StudentAffairsService {
       c.appeals.push(appeal);
       c.status = SACaseStatus.UNDER_REVIEW;
       if (c.disciplinary_proceeding) {
-        c.disciplinary_proceeding.procedural_stage = SADisciplinaryStage.APPEAL_PENDING;
+        c.disciplinary_proceeding.procedural_stage =
+          SADisciplinaryStage.APPEAL_PENDING;
       }
     }
     return appeal;
@@ -591,15 +643,18 @@ class StudentAffairsService {
 
   async reviewAppeal(data: AppealReviewForm): Promise<AppealRecordModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/appeals/${data.appealId}/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assigned_reviewer_id: data.assignedReviewerId,
-          review_status: data.reviewStatus,
-          outcome_summary: data.outcomeSummary,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/appeals/${data.appealId}/review`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            assigned_reviewer_id: data.assignedReviewerId,
+            review_status: data.reviewStatus,
+            outcome_summary: data.outcomeSummary,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -609,8 +664,13 @@ class StudentAffairsService {
       const appeal = c.appeals?.find((a) => a.id === data.appealId);
       if (appeal) {
         // Enforce separation of duties
-        if (c.disciplinary_proceeding?.decision_maker_id === data.assignedReviewerId) {
-          throw new Error("Separation of Duties Violation: Original decision maker cannot review appeal.");
+        if (
+          c.disciplinary_proceeding?.decision_maker_id ===
+          data.assignedReviewerId
+        ) {
+          throw new Error(
+            "Separation of Duties Violation: Original decision maker cannot review appeal.",
+          );
         }
         appeal.assigned_reviewer_id = data.assignedReviewerId;
         appeal.review_status = data.reviewStatus;
@@ -620,7 +680,8 @@ class StudentAffairsService {
         c.status = SACaseStatus.RESOLVED;
         c.resolution_summary = `Appellate Review: ${data.reviewStatus}. ${data.outcomeSummary}`;
         if (c.disciplinary_proceeding) {
-          c.disciplinary_proceeding.procedural_stage = SADisciplinaryStage.CONCLUDED;
+          c.disciplinary_proceeding.procedural_stage =
+            SADisciplinaryStage.CONCLUDED;
         }
         return appeal;
       }
@@ -628,17 +689,22 @@ class StudentAffairsService {
     throw new Error("Appeal record not found");
   }
 
-  async triggerEscalation(data: UrgentEscalationForm): Promise<CaseEscalationModel> {
+  async triggerEscalation(
+    data: UrgentEscalationForm,
+  ): Promise<CaseEscalationModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/escalations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          escalation_level: data.escalationLevel,
-          trigger_reason: data.triggerReason,
-          safeguarding_lead_id: data.safeguardingLeadId,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/escalations`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            escalation_level: data.escalationLevel,
+            trigger_reason: data.triggerReason,
+            safeguarding_lead_id: data.safeguardingLeadId,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock
@@ -666,18 +732,21 @@ class StudentAffairsService {
   }
 
   async sendConfidentialMessage(
-    data: ConfidentialMessageForm
+    data: ConfidentialMessageForm,
   ): Promise<CaseCommunicationModel> {
     try {
-      const res = await fetch(`/api/v1/student-affairs/cases/${data.caseId}/communications`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message_body: data.messageBody,
-          is_internal_only: data.isInternalOnly,
-          attachment_url: data.attachmentUrl,
-        }),
-      });
+      const res = await fetch(
+        `/api/v1/student-affairs/cases/${data.caseId}/communications`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message_body: data.messageBody,
+            is_internal_only: data.isInternalOnly,
+            attachment_url: data.attachmentUrl,
+          }),
+        },
+      );
       if (res.ok) return await res.json();
     } catch {
       // Mock

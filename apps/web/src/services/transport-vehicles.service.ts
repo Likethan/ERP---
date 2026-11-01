@@ -26,7 +26,6 @@ class TransportVehiclesService {
     status?: VehicleStatus | string;
     search?: string;
   }): Promise<ApiResponse<TransportVehicle[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.vehicles];
 
     if (filters?.type && filters.type !== "ALL") {
@@ -53,7 +52,6 @@ class TransportVehiclesService {
   async getVehicleById(
     id: string,
   ): Promise<ApiResponse<TransportVehicle | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const vehicle =
       this.vehicles.find(
         (v) =>
@@ -74,7 +72,6 @@ class TransportVehiclesService {
       notes?: string;
     },
   ): Promise<ApiResponse<TransportVehicle | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const vehicle = this.vehicles.find((v) => v.id === id);
     if (!vehicle) return { success: false, data: null };
 
@@ -93,7 +90,6 @@ class TransportVehiclesService {
   async createVehicle(
     payload: Partial<TransportVehicle>,
   ): Promise<ApiResponse<TransportVehicle>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newVehicle: TransportVehicle = {
       id: `veh-${Date.now().toString(36)}`,
       registrationNumber:

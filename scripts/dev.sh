@@ -18,13 +18,5 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-echo "Starting Backend API (:8000)..."
-(cd apps/api && .venv/bin/uvicorn app.main:app --reload --port 8000) &
-API_PID=$!
-
-echo "Starting Frontend Web (:3000)..."
-npm run dev --workspace=apps/web &
-WEB_PID=$!
-
-trap "kill $API_PID $WEB_PID" EXIT
-wait
+echo "Starting CampusOS Unified Full-Stack (Backend :8000 + Frontend :3000)..."
+node scripts/dev.mjs

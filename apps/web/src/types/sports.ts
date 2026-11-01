@@ -376,7 +376,8 @@ export interface SportsEquipmentAssignmentItem {
 export interface SportsFeeItem {
   id: string;
   title: string;
-  activityType: "COMPETITION" | "TRAINING_PROGRAM" | "FACILITY_HIRE" | "EQUIPMENT_DAMAGE";
+  activityType:
+    "COMPETITION" | "TRAINING_PROGRAM" | "FACILITY_HIRE" | "EQUIPMENT_DAMAGE";
   referenceId: string;
   targetName: string;
   payerName: string;

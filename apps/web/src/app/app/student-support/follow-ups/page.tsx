@@ -39,7 +39,9 @@ export default function FollowUpManagementPage() {
   // Create Modal State
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
+  const [priority, setPriority] = useState<
+    "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  >("MEDIUM");
   const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -68,7 +70,8 @@ export default function FollowUpManagementPage() {
     try {
       await StudentSupportService.updateFollowUp(item.id, {
         status: nextStatus,
-        completed_at: nextStatus === "COMPLETED" ? new Date().toISOString() : undefined,
+        completed_at:
+          nextStatus === "COMPLETED" ? new Date().toISOString() : undefined,
       });
       loadFollowUps();
     } catch (err) {
@@ -107,11 +110,16 @@ export default function FollowUpManagementPage() {
   const now = new Date();
 
   const filteredFollowUps = followUps.filter((item) => {
-    const matchesPriority = priorityFilter === "ALL" || item.priority === priorityFilter;
-    const matchesStatus = statusFilter === "ALL" || item.status === statusFilter;
+    const matchesPriority =
+      priorityFilter === "ALL" || item.priority === priorityFilter;
+    const matchesStatus =
+      statusFilter === "ALL" || item.status === statusFilter;
     const matchesSearch =
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.assigned_to_name && item.assigned_to_name.toLowerCase().includes(searchQuery.toLowerCase()));
+      (item.assigned_to_name &&
+        item.assigned_to_name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()));
     return matchesPriority && matchesStatus && matchesSearch;
   });
 
@@ -132,7 +140,8 @@ export default function FollowUpManagementPage() {
               Support Action Items & Follow-Up Tasks
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Ensure accountability across faculty mentoring commitments, referral deadlines, and student milestones.
+              Ensure accountability across faculty mentoring commitments,
+              referral deadlines, and student milestones.
             </p>
           </div>
           <Button
@@ -153,7 +162,10 @@ export default function FollowUpManagementPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -196,7 +208,9 @@ export default function FollowUpManagementPage() {
 
       {/* Follow-up Tasks List */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading follow-up tasks...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading follow-up tasks...
+        </div>
       ) : filteredFollowUps.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
           No follow-up items found matching criteria.
@@ -204,7 +218,9 @@ export default function FollowUpManagementPage() {
       ) : (
         <div className="space-y-3">
           {filteredFollowUps.map((item) => {
-            const isOverdue = item.status === "PENDING" && new Date(item.due_date || item.dueDate || "") < now;
+            const isOverdue =
+              item.status === "PENDING" &&
+              new Date(item.due_date || item.dueDate || "") < now;
             return (
               <Card
                 key={item.id}
@@ -230,7 +246,9 @@ export default function FollowUpManagementPage() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`font-medium text-sm ${
-                          item.status === "COMPLETED" ? "line-through text-slate-500" : "text-white"
+                          item.status === "COMPLETED"
+                            ? "line-through text-slate-500"
+                            : "text-white"
                         }`}
                       >
                         {item.title}
@@ -252,17 +270,30 @@ export default function FollowUpManagementPage() {
                       )}
                     </div>
 
-                    {item.notes && <p className="text-xs text-slate-400">{item.notes}</p>}
+                    {item.notes && (
+                      <p className="text-xs text-slate-400">{item.notes}</p>
+                    )}
 
                     <div className="text-[11px] text-slate-500 flex items-center gap-3 pt-0.5">
-                      <span>Assigned to: {item.assigned_to_name ?? item.assignedUserName ?? "Faculty Staff"}</span>
+                      <span>
+                        Assigned to:{" "}
+                        {item.assigned_to_name ??
+                          item.assignedUserName ??
+                          "Faculty Staff"}
+                      </span>
                       <span>•</span>
-                      <span>Due: {new Date(item.due_date || item.dueDate || "").toLocaleDateString()}</span>
+                      <span>
+                        Due:{" "}
+                        {new Date(
+                          item.due_date || item.dueDate || "",
+                        ).toLocaleDateString()}
+                      </span>
                       {item.completed_at && (
                         <>
                           <span>•</span>
                           <span className="text-emerald-400">
-                            Completed on {new Date(item.completed_at).toLocaleDateString()}
+                            Completed on{" "}
+                            {new Date(item.completed_at).toLocaleDateString()}
                           </span>
                         </>
                       )}
@@ -295,7 +326,10 @@ export default function FollowUpManagementPage() {
               Create Support Follow-Up Task
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleCreateFollowUp} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleCreateFollowUp}
+            className="space-y-4 pt-2 text-xs"
+          >
             <div className="space-y-1">
               <label className="text-slate-400 font-medium">Task Title *</label>
               <Input
@@ -335,7 +369,9 @@ export default function FollowUpManagementPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Task Notes & Details</label>
+              <label className="text-slate-400 font-medium">
+                Task Notes & Details
+              </label>
               <Textarea
                 placeholder="Additional instructions or background..."
                 value={notes}

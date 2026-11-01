@@ -20,7 +20,11 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { FacultyMobilityDirection, FacultyMobilityRecord, InternationalPartner } from "@/types/international";
+import {
+  FacultyMobilityDirection,
+  FacultyMobilityRecord,
+  InternationalPartner,
+} from "@/types/international";
 
 export default function FacultyExchangePage() {
   const [records, setRecords] = useState<FacultyMobilityRecord[]>([]);
@@ -28,14 +32,17 @@ export default function FacultyExchangePage() {
   const [loading, setLoading] = useState(true);
   const [directionFilter, setDirectionFilter] = useState("ALL");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedRecordForApproval, setSelectedRecordForApproval] = useState<FacultyMobilityRecord | null>(null);
+  const [selectedRecordForApproval, setSelectedRecordForApproval] =
+    useState<FacultyMobilityRecord | null>(null);
 
   // New Faculty Mobility Form
   const [form, setForm] = useState({
     partner_id: "",
     mobility_type: "OUTBOUND" as FacultyMobilityDirection,
     visit_start_date: new Date().toISOString().split("T")[0],
-    visit_end_date: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
+    visit_end_date: new Date(Date.now() + 30 * 86400000)
+      .toISOString()
+      .split("T")[0],
     purpose_summary: "",
     academic_visit_plan: "",
   });
@@ -43,7 +50,9 @@ export default function FacultyExchangePage() {
 
   // Approval Form
   const [approvalLevel, setApprovalLevel] = useState<"HOD" | "VP">("HOD");
-  const [approvalDecision, setApprovalDecision] = useState<"APPROVED" | "REJECTED">("APPROVED");
+  const [approvalDecision, setApprovalDecision] = useState<
+    "APPROVED" | "REJECTED"
+  >("APPROVED");
   const [approvalComments, setApprovalComments] = useState("");
   const [submittingApproval, setSubmittingApproval] = useState(false);
 
@@ -76,7 +85,8 @@ export default function FacultyExchangePage() {
       const partner = partners.find((p) => p.id === form.partner_id);
       const res = await internationalService.createFacultyMobility({
         ...form,
-        partner_name: partner?.partner_name || partner?.name || "Partner Institution",
+        partner_name:
+          partner?.partner_name || partner?.name || "Partner Institution",
         faculty_name: "Prof. Current Faculty",
       });
       setRecords([res, ...records]);
@@ -99,9 +109,11 @@ export default function FacultyExchangePage() {
         selectedRecordForApproval.id,
         approvalLevel,
         approvalDecision,
-        approvalComments
+        approvalComments,
       );
-      alert(`Faculty mobility proposal ${approvalDecision.toLowerCase()} by ${approvalLevel}.`);
+      alert(
+        `Faculty mobility proposal ${approvalDecision.toLowerCase()} by ${approvalLevel}.`,
+      );
       setSelectedRecordForApproval(null);
       setApprovalComments("");
       loadData();
@@ -125,7 +137,8 @@ export default function FacultyExchangePage() {
               Faculty Mobility & Visiting Scholars
             </h2>
             <p className="text-xs text-slate-400">
-              Institutional endorsements, visiting professorships, and outbound academic fellowships requiring HOD & Vice Principal approval
+              Institutional endorsements, visiting professorships, and outbound
+              academic fellowships requiring HOD & Vice Principal approval
             </p>
           </div>
           <button
@@ -142,7 +155,9 @@ export default function FacultyExchangePage() {
           <button
             onClick={() => setDirectionFilter("ALL")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              directionFilter === "ALL" ? "bg-cyan-600 text-white" : "bg-slate-900 text-slate-400 border border-slate-800"
+              directionFilter === "ALL"
+                ? "bg-cyan-600 text-white"
+                : "bg-slate-900 text-slate-400 border border-slate-800"
             }`}
           >
             All Fellowships
@@ -150,7 +165,9 @@ export default function FacultyExchangePage() {
           <button
             onClick={() => setDirectionFilter("OUTBOUND")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              directionFilter === "OUTBOUND" ? "bg-cyan-600 text-white" : "bg-slate-900 text-slate-400 border border-slate-800"
+              directionFilter === "OUTBOUND"
+                ? "bg-cyan-600 text-white"
+                : "bg-slate-900 text-slate-400 border border-slate-800"
             }`}
           >
             Outbound Faculty
@@ -158,7 +175,9 @@ export default function FacultyExchangePage() {
           <button
             onClick={() => setDirectionFilter("INBOUND")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              directionFilter === "INBOUND" ? "bg-cyan-600 text-white" : "bg-slate-900 text-slate-400 border border-slate-800"
+              directionFilter === "INBOUND"
+                ? "bg-cyan-600 text-white"
+                : "bg-slate-900 text-slate-400 border border-slate-800"
             }`}
           >
             Inbound Visiting Professors
@@ -167,7 +186,9 @@ export default function FacultyExchangePage() {
 
         {/* Records Grid */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading faculty mobility dossiers...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading faculty mobility dossiers...
+          </div>
         ) : records.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
             No faculty mobility records found for this category.
@@ -201,7 +222,9 @@ export default function FacultyExchangePage() {
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white mt-3">{rec.faculty_name || "Faculty Scholar"}</h3>
+                  <h3 className="text-base font-bold text-white mt-3">
+                    {rec.faculty_name || "Faculty Scholar"}
+                  </h3>
 
                   <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
                     <Globe className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
@@ -209,7 +232,9 @@ export default function FacultyExchangePage() {
                   </p>
 
                   <div className="mt-3.5 p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 space-y-1">
-                    <span className="text-slate-500 font-semibold block text-[11px]">Academic Visit Purpose:</span>
+                    <span className="text-slate-500 font-semibold block text-[11px]">
+                      Academic Visit Purpose:
+                    </span>
                     <p className="line-clamp-2">{rec.purpose_summary}</p>
                   </div>
 
@@ -222,7 +247,9 @@ export default function FacultyExchangePage() {
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">Dual HOD & VP Endorsement</span>
+                  <span className="text-[11px] text-slate-500">
+                    Dual HOD & VP Endorsement
+                  </span>
                   <button
                     onClick={() => {
                       setSelectedRecordForApproval(rec);
@@ -254,29 +281,47 @@ export default function FacultyExchangePage() {
                 Faculty Mobility Endorsement
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Candidate: <strong className="text-slate-200">{selectedRecordForApproval.faculty_name}</strong> · Partner:{" "}
-                <strong className="text-slate-200">{selectedRecordForApproval.partner_name}</strong>
+                Candidate:{" "}
+                <strong className="text-slate-200">
+                  {selectedRecordForApproval.faculty_name}
+                </strong>{" "}
+                · Partner:{" "}
+                <strong className="text-slate-200">
+                  {selectedRecordForApproval.partner_name}
+                </strong>
               </p>
 
               <form onSubmit={handleApproval} className="mt-5 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Approval Authority Level</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Approval Authority Level
+                    </label>
                     <select
                       value={approvalLevel}
-                      onChange={(e) => setApprovalLevel(e.target.value as "HOD" | "VP")}
+                      onChange={(e) =>
+                        setApprovalLevel(e.target.value as "HOD" | "VP")
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="HOD">Head of Department (HOD)</option>
-                      <option value="VP">Vice Principal (Academic Affairs)</option>
+                      <option value="VP">
+                        Vice Principal (Academic Affairs)
+                      </option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Decision</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Decision
+                    </label>
                     <select
                       value={approvalDecision}
-                      onChange={(e) => setApprovalDecision(e.target.value as "APPROVED" | "REJECTED")}
+                      onChange={(e) =>
+                        setApprovalDecision(
+                          e.target.value as "APPROVED" | "REJECTED",
+                        )
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="APPROVED">Endorse & Approve</option>
@@ -286,7 +331,9 @@ export default function FacultyExchangePage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Academic Endorsement Comments *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Academic Endorsement Comments *
+                  </label>
                   <textarea
                     required
                     rows={3}
@@ -334,22 +381,28 @@ export default function FacultyExchangePage() {
                 Propose Faculty Mobility / Academic Fellowship
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Initiate formal institutional proposal for outbound teaching or international research fellowship
+                Initiate formal institutional proposal for outbound teaching or
+                international research fellowship
               </p>
 
               <form onSubmit={handleCreate} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Host Partner University *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Host Partner University *
+                  </label>
                   <select
                     required
                     value={form.partner_id}
-                    onChange={(e) => setForm({ ...form, partner_id: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, partner_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
                     <option value="">Select partner institution...</option>
                     {partners.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.partner_name || p.name} ({p.country_name || p.country || p.country_code})
+                        {p.partner_name || p.name} (
+                        {p.country_name || p.country || p.country_code})
                       </option>
                     ))}
                   </select>
@@ -357,10 +410,18 @@ export default function FacultyExchangePage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Mobility Direction</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Mobility Direction
+                    </label>
                     <select
                       value={form.mobility_type}
-                      onChange={(e) => setForm({ ...form, mobility_type: e.target.value as FacultyMobilityDirection })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          mobility_type: e.target
+                            .value as FacultyMobilityDirection,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="OUTBOUND">Outbound Faculty Member</option>
@@ -369,36 +430,48 @@ export default function FacultyExchangePage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Visit Start Date *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Visit Start Date *
+                    </label>
                     <input
                       required
                       type="date"
                       value={form.visit_start_date}
-                      onChange={(e) => setForm({ ...form, visit_start_date: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, visit_start_date: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Visit End Date *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Visit End Date *
+                    </label>
                     <input
                       required
                       type="date"
                       value={form.visit_end_date}
-                      onChange={(e) => setForm({ ...form, visit_end_date: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, visit_end_date: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Academic Purpose Summary *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Academic Purpose Summary *
+                  </label>
                   <textarea
                     required
                     rows={3}
                     placeholder="Briefly state the research or curriculum objective..."
                     value={form.purpose_summary}
-                    onChange={(e) => setForm({ ...form, purpose_summary: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, purpose_summary: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>

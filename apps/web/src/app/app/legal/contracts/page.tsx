@@ -36,7 +36,10 @@ const CATEGORIES: { label: string; value: ContractCategory }[] = [
   { label: "Industry Collaboration", value: "INDUSTRY_COLLABORATION" },
   { label: "Data Processing & NDA", value: "DATA_PROCESSING_NDA" },
   { label: "Facility Use & Partnership", value: "FACILITY_PARTNERSHIP" },
-  { label: "International Institutional", value: "INTERNATIONAL_INSTITUTIONAL" },
+  {
+    label: "International Institutional",
+    value: "INTERNATIONAL_INSTITUTIONAL",
+  },
   { label: "Other Configured Type", value: "OTHER" },
 ];
 
@@ -56,7 +59,9 @@ export default function ContractsRegisterPage() {
     purpose: "",
     counterparty_name: "",
     effective_date: new Date().toISOString().split("T")[0],
-    expiration_date: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+    expiration_date: new Date(Date.now() + 365 * 86400000)
+      .toISOString()
+      .split("T")[0],
     financial_value: 0,
     currency: "USD",
     confidentiality_level: "INTERNAL",
@@ -105,7 +110,9 @@ export default function ContractsRegisterPage() {
         purpose: "",
         counterparty_name: "",
         effective_date: new Date().toISOString().split("T")[0],
-        expiration_date: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+        expiration_date: new Date(Date.now() + 365 * 86400000)
+          .toISOString()
+          .split("T")[0],
         financial_value: 0,
         currency: "USD",
         confidentiality_level: "INTERNAL",
@@ -145,7 +152,8 @@ export default function ContractsRegisterPage() {
               Institutional Contracts Register
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Complete centralized lifecycle tracking across procurement, employment, research, and campus partnerships.
+              Complete centralized lifecycle tracking across procurement,
+              employment, research, and campus partnerships.
             </p>
           </div>
           <button
@@ -280,10 +288,13 @@ export default function ContractsRegisterPage() {
                           </span>
                         </td>
                         <td className="py-3 px-4 text-[11px] text-slate-600 dark:text-slate-300">
-                          {c.effective_date || "—"} &rarr; {c.expiration_date || "—"}
+                          {c.effective_date || "—"} &rarr;{" "}
+                          {c.expiration_date || "—"}
                         </td>
                         <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-white">
-                          {c.financial_value ? `$${c.financial_value.toLocaleString()}` : "N/A"}
+                          {c.financial_value
+                            ? `$${c.financial_value.toLocaleString()}`
+                            : "N/A"}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <Link
@@ -329,22 +340,33 @@ export default function ContractsRegisterPage() {
             <form onSubmit={handleCreate} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Contract Title *</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Contract Title *
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Campus Wide Cloud ERP Hosting Agreement"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Category *</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Category *
+                  </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value as ContractCategory })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        category: e.target.value as ContractCategory,
+                      })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     {CATEGORIES.map((c) => (
@@ -358,25 +380,39 @@ export default function ContractsRegisterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Counterparty Organization *</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Counterparty Organization *
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. AWS Cloud Services Inc."
                     value={formData.counterparty_name}
-                    onChange={(e) => setFormData({ ...formData, counterparty_name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        counterparty_name: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Financial Value ($ USD)</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Financial Value ($ USD)
+                  </label>
                   <input
                     type="number"
                     min="0"
                     step="100"
                     value={formData.financial_value || 0}
-                    onChange={(e) => setFormData({ ...formData, financial_value: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        financial_value: parseFloat(e.target.value) || 0,
+                      })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   />
                 </div>
@@ -384,33 +420,51 @@ export default function ContractsRegisterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Effective Date</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Effective Date
+                  </label>
                   <input
                     type="date"
                     value={formData.effective_date}
-                    onChange={(e) => setFormData({ ...formData, effective_date: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        effective_date: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-slate-700 dark:text-slate-300">Expiration Date</label>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300">
+                    Expiration Date
+                  </label>
                   <input
                     type="date"
                     value={formData.expiration_date}
-                    onChange={(e) => setFormData({ ...formData, expiration_date: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        expiration_date: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="font-semibold text-slate-700 dark:text-slate-300">Purpose & Scope Summary</label>
+                <label className="font-semibold text-slate-700 dark:text-slate-300">
+                  Purpose & Scope Summary
+                </label>
                 <textarea
                   rows={3}
                   placeholder="Summarize the core institutional commitments and contractual objectives..."
                   value={formData.purpose || ""}
-                  onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, purpose: e.target.value })
+                  }
                   className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                 />
               </div>

@@ -32,10 +32,16 @@ function DisciplinaryWorkspaceContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
-  const [findingStatus, setFindingStatus] = useState<SAFindingStatus>(SAFindingStatus.SUBSTANTIATED);
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
+  const [findingStatus, setFindingStatus] = useState<SAFindingStatus>(
+    SAFindingStatus.SUBSTANTIATED,
+  );
   const [findingsSummary, setFindingsSummary] = useState("");
-  const [sanctionType, setSanctionType] = useState<SASanctionType>(SASanctionType.FORMAL_WARNING);
+  const [sanctionType, setSanctionType] = useState<SASanctionType>(
+    SASanctionType.FORMAL_WARNING,
+  );
   const [sanctionDetails, setSanctionDetails] = useState("");
   const [decisionMakerId, setDecisionMakerId] = useState("usr-dean-001");
   const [appealDays, setAppealDays] = useState(14);
@@ -47,7 +53,7 @@ function DisciplinaryWorkspaceContent() {
       const allCases = await studentAffairsService.getCases();
       // Filter for disciplinary cases or all if none
       const dispCases = allCases.filter(
-        (c) => c.case_type === "DISCIPLINARY" || c.disciplinary_proceeding
+        (c) => c.case_type === "DISCIPLINARY" || c.disciplinary_proceeding,
       );
       setCases(dispCases.length > 0 ? dispCases : allCases);
       if (preselectedCaseId) {
@@ -61,7 +67,8 @@ function DisciplinaryWorkspaceContent() {
 
   const activeCase = cases.find((c) => c.id === selectedCaseId);
   const proceeding = activeCase?.disciplinary_proceeding;
-  const milestones = StudentAffairsCalculator.evaluateProceduralMilestones(proceeding);
+  const milestones =
+    StudentAffairsCalculator.evaluateProceduralMilestones(proceeding);
 
   async function handleRecordFindings(e: React.FormEvent) {
     e.preventDefault();
@@ -100,7 +107,9 @@ function DisciplinaryWorkspaceContent() {
         decisionMakerId,
         appealDeadlineDays: appealDays,
       });
-      setStatusMessage("Sanction officially approved and communicated. Appeal window activated.");
+      setStatusMessage(
+        "Sanction officially approved and communicated. Appeal window activated.",
+      );
       const updated = await studentAffairsService.getCases();
       setCases(updated);
     } catch {
@@ -116,7 +125,10 @@ function DisciplinaryWorkspaceContent() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Disciplinary Proceedings", href: "/app/student-affairs/disciplinary" },
+          {
+            label: "Disciplinary Proceedings",
+            href: "/app/student-affairs/disciplinary",
+          },
         ]}
       />
 
@@ -126,7 +138,8 @@ function DisciplinaryWorkspaceContent() {
           Formal Disciplinary Proceedings & Sanction Governance
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Manage code of conduct investigations, evidence evaluation, committee findings, and sanction authorization under due process.
+          Manage code of conduct investigations, evidence evaluation, committee
+          findings, and sanction authorization under due process.
         </p>
       </div>
 
@@ -139,8 +152,10 @@ function DisciplinaryWorkspaceContent() {
           Institutional Due Process Safeguards
         </div>
         <p className="text-[11px] text-slate-400 leading-relaxed">
-          Complaints and invigilator referrals are never treated as proven misconduct until committee inquiry findings are formally entered.
-          AI algorithms and opaque scoring are strictly prohibited from determining student penalties.
+          Complaints and invigilator referrals are never treated as proven
+          misconduct until committee inquiry findings are formally entered. AI
+          algorithms and opaque scoring are strictly prohibited from determining
+          student penalties.
         </p>
       </div>
 
@@ -150,7 +165,10 @@ function DisciplinaryWorkspaceContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{statusMessage}</span>
           </div>
-          <button onClick={() => setStatusMessage("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setStatusMessage("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -178,9 +196,13 @@ function DisciplinaryWorkspaceContent() {
       <Card className="p-6 border-slate-800 bg-slate-900/40 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Procedural Stage Milestones ({milestones.completionPercentage}% Complete)
+            Procedural Stage Milestones ({milestones.completionPercentage}%
+            Complete)
           </h2>
-          <Badge variant="outline" className="text-[10px] border-purple-500/30 text-purple-400">
+          <Badge
+            variant="outline"
+            className="text-[10px] border-purple-500/30 text-purple-400"
+          >
             {proceeding?.procedural_stage || "INTAKE"}
           </Badge>
         </div>
@@ -193,8 +215,8 @@ function DisciplinaryWorkspaceContent() {
                 m.isComplete
                   ? "border-emerald-500/30 bg-emerald-950/20 text-emerald-300"
                   : m.isCurrent
-                  ? "border-purple-500 bg-purple-950/40 text-purple-200 font-semibold ring-1 ring-purple-500"
-                  : "border-slate-800 bg-slate-950/40 text-slate-500"
+                    ? "border-purple-500 bg-purple-950/40 text-purple-200 font-semibold ring-1 ring-purple-500"
+                    : "border-slate-800 bg-slate-950/40 text-slate-500"
               }`}
             >
               <div className="text-[10px] opacity-75">Step {idx + 1}</div>
@@ -218,20 +240,33 @@ function DisciplinaryWorkspaceContent() {
               </label>
               <select
                 value={findingStatus}
-                onChange={(e) => setFindingStatus(e.target.value as SAFindingStatus)}
+                onChange={(e) =>
+                  setFindingStatus(e.target.value as SAFindingStatus)
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
               >
-                <option value={SAFindingStatus.PENDING}>PENDING (Inquiry in progress)</option>
-                <option value={SAFindingStatus.SUBSTANTIATED}>SUBSTANTIATED (Misconduct established by evidence)</option>
-                <option value={SAFindingStatus.UNSUBSTANTIATED}>UNSUBSTANTIATED (Allegation not supported)</option>
-                <option value={SAFindingStatus.INCONCLUSIVE}>INCONCLUSIVE (Insufficient verification)</option>
-                <option value={SAFindingStatus.DISMISSED}>DISMISSED (Outside institutional jurisdiction)</option>
+                <option value={SAFindingStatus.PENDING}>
+                  PENDING (Inquiry in progress)
+                </option>
+                <option value={SAFindingStatus.SUBSTANTIATED}>
+                  SUBSTANTIATED (Misconduct established by evidence)
+                </option>
+                <option value={SAFindingStatus.UNSUBSTANTIATED}>
+                  UNSUBSTANTIATED (Allegation not supported)
+                </option>
+                <option value={SAFindingStatus.INCONCLUSIVE}>
+                  INCONCLUSIVE (Insufficient verification)
+                </option>
+                <option value={SAFindingStatus.DISMISSED}>
+                  DISMISSED (Outside institutional jurisdiction)
+                </option>
               </select>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Committee Findings Summary <span className="text-rose-400">*</span>
+                Committee Findings Summary{" "}
+                <span className="text-rose-400">*</span>
               </label>
               <textarea
                 rows={4}
@@ -266,23 +301,42 @@ function DisciplinaryWorkspaceContent() {
               </label>
               <select
                 value={sanctionType}
-                onChange={(e) => setSanctionType(e.target.value as SASanctionType)}
+                onChange={(e) =>
+                  setSanctionType(e.target.value as SASanctionType)
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500"
               >
-                <option value={SASanctionType.FORMAL_WARNING}>FORMAL WARNING (Written reprimand)</option>
-                <option value={SASanctionType.DISCIPLINARY_PROBATION}>DISCIPLINARY PROBATION (Semester-long review)</option>
-                <option value={SASanctionType.COMMUNITY_SERVICE}>COMMUNITY SERVICE (Campus welfare contribution)</option>
-                <option value={SASanctionType.RESTITUTION}>RESTITUTION (Repair / compensation)</option>
-                <option value={SASanctionType.FACILITY_RESTRICTION}>FACILITY RESTRICTION (Lab / hostel limitation)</option>
-                <option value={SASanctionType.COUNSELING_REFERRAL}>COUNSELING REFERRAL (Student support service)</option>
-                <option value={SASanctionType.SUSPENSION}>SUSPENSION (Temporary exclusion)</option>
-                <option value={SASanctionType.EXPULSION}>EXPULSION (Permanent termination)</option>
+                <option value={SASanctionType.FORMAL_WARNING}>
+                  FORMAL WARNING (Written reprimand)
+                </option>
+                <option value={SASanctionType.DISCIPLINARY_PROBATION}>
+                  DISCIPLINARY PROBATION (Semester-long review)
+                </option>
+                <option value={SASanctionType.COMMUNITY_SERVICE}>
+                  COMMUNITY SERVICE (Campus welfare contribution)
+                </option>
+                <option value={SASanctionType.RESTITUTION}>
+                  RESTITUTION (Repair / compensation)
+                </option>
+                <option value={SASanctionType.FACILITY_RESTRICTION}>
+                  FACILITY RESTRICTION (Lab / hostel limitation)
+                </option>
+                <option value={SASanctionType.COUNSELING_REFERRAL}>
+                  COUNSELING REFERRAL (Student support service)
+                </option>
+                <option value={SASanctionType.SUSPENSION}>
+                  SUSPENSION (Temporary exclusion)
+                </option>
+                <option value={SASanctionType.EXPULSION}>
+                  EXPULSION (Permanent termination)
+                </option>
               </select>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Sanction Specifics & Corrective Terms <span className="text-rose-400">*</span>
+                Sanction Specifics & Corrective Terms{" "}
+                <span className="text-rose-400">*</span>
               </label>
               <textarea
                 rows={3}
@@ -338,9 +392,14 @@ function DisciplinaryWorkspaceContent() {
 
 export default function DisciplinaryWorkspacePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading disciplinary workspace...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading disciplinary workspace...
+        </div>
+      }
+    >
       <DisciplinaryWorkspaceContent />
     </Suspense>
   );
 }
-

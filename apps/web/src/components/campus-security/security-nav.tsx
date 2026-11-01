@@ -16,15 +16,48 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/app/campus-security", label: "Security Hub", icon: Shield, exact: true },
-  { href: "/app/campus-security/visitors", label: "Visitor Directory", icon: Users },
-  { href: "/app/campus-security/gate-operations", label: "Gate Operations", icon: DoorOpen },
-  { href: "/app/campus-security/contractors", label: "Contractor Access", icon: UserCheck },
+  {
+    href: "/app/campus-security",
+    label: "Security Hub",
+    icon: Shield,
+    exact: true,
+  },
+  {
+    href: "/app/campus-security/visitors",
+    label: "Visitor Directory",
+    icon: Users,
+  },
+  {
+    href: "/app/campus-security/gate-operations",
+    label: "Gate Operations",
+    icon: DoorOpen,
+  },
+  {
+    href: "/app/campus-security/contractors",
+    label: "Contractor Access",
+    icon: UserCheck,
+  },
   { href: "/app/campus-security/zones", label: "Security Zones", icon: Layers },
-  { href: "/app/campus-security/access-grants", label: "Access Grants", icon: KeyRound },
-  { href: "/app/campus-security/incidents", label: "Incidents", icon: AlertTriangle },
-  { href: "/app/campus-security/emergency", label: "Emergency Response", icon: Flame },
-  { href: "/app/campus-security/patrols", label: "Patrol Rounds", icon: Footprints },
+  {
+    href: "/app/campus-security/access-grants",
+    label: "Access Grants",
+    icon: KeyRound,
+  },
+  {
+    href: "/app/campus-security/incidents",
+    label: "Incidents",
+    icon: AlertTriangle,
+  },
+  {
+    href: "/app/campus-security/emergency",
+    label: "Emergency Response",
+    icon: Flame,
+  },
+  {
+    href: "/app/campus-security/patrols",
+    label: "Patrol Rounds",
+    icon: Footprints,
+  },
 ];
 
 export function SecurityNav() {
@@ -68,4 +101,3 @@ export function SecurityNav() {
     </div>
   );
 }
-

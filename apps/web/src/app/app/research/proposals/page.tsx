@@ -23,23 +23,32 @@ import {
 } from "lucide-react";
 
 export default function ProposalsLifecyclePage() {
-  const [applications, setApplications] = useState<ResearchGrantApplication[]>([]);
+  const [applications, setApplications] = useState<ResearchGrantApplication[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [internalFilter, setInternalFilter] = useState("ALL");
   const [externalFilter, setExternalFilter] = useState("ALL");
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Sponsor Decision Modal
   const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false);
-  const [selectedApp, setSelectedApp] = useState<ResearchGrantApplication | null>(null);
+  const [selectedApp, setSelectedApp] =
+    useState<ResearchGrantApplication | null>(null);
   const [decisionForm, setDecisionForm] = useState({
     decision: "AWARDED",
     award_number: `AWD-GRNT-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
     award_amount: 180000,
-    decision_notes: "Sponsor review score: Category 1 (Meritorious for Full Funding).",
-    sponsor_feedback: "Exemplary experimental methodology and strong interdisciplinary investigator team.",
-    award_letter_url: "https://docs.campusos.edu/awards/grant-sanction-letter.pdf",
+    decision_notes:
+      "Sponsor review score: Category 1 (Meritorious for Full Funding).",
+    sponsor_feedback:
+      "Exemplary experimental methodology and strong interdisciplinary investigator team.",
+    award_letter_url:
+      "https://docs.campusos.edu/awards/grant-sanction-letter.pdf",
     create_award_record: true,
   });
 
@@ -59,7 +68,10 @@ export default function ProposalsLifecyclePage() {
       });
       setApplications(data);
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to load proposals." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to load proposals.",
+      });
     } finally {
       setLoading(false);
     }
@@ -70,14 +82,22 @@ export default function ProposalsLifecyclePage() {
   }, [internalFilter, externalFilter]);
 
   const handleReviewDecision = async (appId: string, decision: string) => {
-    const comments = prompt("Enter formal review decision comments for audit ledger:");
+    const comments = prompt(
+      "Enter formal review decision comments for audit ledger:",
+    );
     if (!comments) return;
     try {
       await ResearchService.reviewGrantApplication(appId, decision, comments);
-      setFeedback({ type: "success", message: `Application recorded as ${decision}.` });
+      setFeedback({
+        type: "success",
+        message: `Application recorded as ${decision}.`,
+      });
       loadProposals();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Review action failed." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Review action failed.",
+      });
     }
   };
 
@@ -98,7 +118,10 @@ export default function ProposalsLifecyclePage() {
     e.preventDefault();
     if (!selectedApp) return;
     try {
-      await ResearchService.confirmExternalSubmission(selectedApp.id, submitForm);
+      await ResearchService.confirmExternalSubmission(
+        selectedApp.id,
+        submitForm,
+      );
       setFeedback({
         type: "success",
         message: `Submission to external sponsor agency confirmed with reference '${submitForm.external_submission_reference}'.`,
@@ -106,7 +129,10 @@ export default function ProposalsLifecyclePage() {
       setIsSubmitModalOpen(false);
       loadProposals();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "External submission confirmation failed." });
+      setFeedback({
+        type: "error",
+        message: err.message || "External submission confirmation failed.",
+      });
     }
   };
 
@@ -139,7 +165,10 @@ export default function ProposalsLifecyclePage() {
       setIsDecisionModalOpen(false);
       loadProposals();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Recording sponsor decision failed." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Recording sponsor decision failed.",
+      });
     }
   };
 
@@ -156,7 +185,8 @@ export default function ProposalsLifecyclePage() {
               Grant Proposal Lifecycle & Institutional Approval Chain
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Multi-round internal institutional review, separation of duties, external sponsor dispatch, and verified awards.
+              Multi-round internal institutional review, separation of duties,
+              external sponsor dispatch, and verified awards.
             </p>
           </div>
 
@@ -165,7 +195,9 @@ export default function ProposalsLifecyclePage() {
               onClick={loadProposals}
               className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`}
+              />
             </button>
           </div>
         </div>
@@ -180,7 +212,10 @@ export default function ProposalsLifecyclePage() {
             }`}
           >
             <span>{feedback.message}</span>
-            <button onClick={() => setFeedback(null)} className="text-xs underline ml-4">
+            <button
+              onClick={() => setFeedback(null)}
+              className="text-xs underline ml-4"
+            >
               Dismiss
             </button>
           </div>
@@ -201,7 +236,9 @@ export default function ProposalsLifecyclePage() {
 
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 font-medium">Internal Review:</span>
+              <span className="text-xs text-slate-400 font-medium">
+                Internal Review:
+              </span>
               <select
                 value={internalFilter}
                 onChange={(e) => setInternalFilter(e.target.value)}
@@ -210,13 +247,17 @@ export default function ProposalsLifecyclePage() {
                 <option value="ALL">All Internal</option>
                 <option value="DRAFT">Draft</option>
                 <option value="SUBMITTED_INTERNAL">Submitted Internal</option>
-                <option value="INSTITUTIONALLY_APPROVED">Institutionally Approved</option>
+                <option value="INSTITUTIONALLY_APPROVED">
+                  Institutionally Approved
+                </option>
                 <option value="REJECTED_INTERNAL">Rejected</option>
               </select>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 font-medium">Sponsor Outcome:</span>
+              <span className="text-xs text-slate-400 font-medium">
+                Sponsor Outcome:
+              </span>
               <select
                 value={externalFilter}
                 onChange={(e) => setExternalFilter(e.target.value)}
@@ -241,8 +282,13 @@ export default function ProposalsLifecyclePage() {
         ) : applications.length === 0 ? (
           <div className="py-20 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 space-y-3">
             <FileEdit className="h-12 w-12 text-slate-600 mx-auto" />
-            <h3 className="text-base font-semibold text-white">No grant proposals in pipeline</h3>
-            <p className="text-xs text-slate-400">Create a proposal draft linked to an institutional research project.</p>
+            <h3 className="text-base font-semibold text-white">
+              No grant proposals in pipeline
+            </h3>
+            <p className="text-xs text-slate-400">
+              Create a proposal draft linked to an institutional research
+              project.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -258,7 +304,8 @@ export default function ProposalsLifecyclePage() {
                     </span>
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                        app.internal_review_status === "INSTITUTIONALLY_APPROVED"
+                        app.internal_review_status ===
+                        "INSTITUTIONALLY_APPROVED"
                           ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
                           : "bg-slate-800 text-slate-400 border-slate-700"
                       }`}
@@ -269,28 +316,37 @@ export default function ProposalsLifecyclePage() {
                       className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                         app.external_submission_status === "AWARDED"
                           ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                          : app.external_submission_status === "SUBMITTED_EXTERNAL"
-                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                          : "bg-slate-800 text-slate-500 border-slate-700"
+                          : app.external_submission_status ===
+                              "SUBMITTED_EXTERNAL"
+                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                            : "bg-slate-800 text-slate-500 border-slate-700"
                       }`}
                     >
                       Sponsor: {app.external_submission_status}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white">{app.title}</h3>
-                  <p className="text-xs text-slate-400 line-clamp-2">{app.research_proposal_summary}</p>
+                  <h3 className="text-base font-bold text-white">
+                    {app.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 line-clamp-2">
+                    {app.research_proposal_summary}
+                  </p>
 
                   <div className="flex items-center gap-4 text-xs text-slate-400">
                     <span>
                       Requested:{" "}
                       <strong className="text-emerald-400 font-mono">
-                        {app.currency} {Number(app.proposed_budget).toLocaleString()}
+                        {app.currency}{" "}
+                        {Number(app.proposed_budget).toLocaleString()}
                       </strong>
                     </span>
                     {app.external_reference_number && (
                       <span>
-                        Sponsor Ref: <strong className="font-mono text-slate-300">{app.external_reference_number}</strong>
+                        Sponsor Ref:{" "}
+                        <strong className="font-mono text-slate-300">
+                          {app.external_reference_number}
+                        </strong>
                       </span>
                     )}
                   </div>
@@ -298,9 +354,12 @@ export default function ProposalsLifecyclePage() {
 
                 <div className="flex flex-wrap items-center gap-2">
                   {/* Step 1: Internal Review */}
-                  {app.internal_review_status !== "INSTITUTIONALLY_APPROVED" && (
+                  {app.internal_review_status !==
+                    "INSTITUTIONALLY_APPROVED" && (
                     <button
-                      onClick={() => handleReviewDecision(app.id, "INSTITUTIONALLY_APPROVED")}
+                      onClick={() =>
+                        handleReviewDecision(app.id, "INSTITUTIONALLY_APPROVED")
+                      }
                       className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-sm"
                     >
                       Institutional Approval
@@ -321,7 +380,7 @@ export default function ProposalsLifecyclePage() {
 
                   {/* Step 3: Record Verified Sponsor Decision */}
                   {["SUBMITTED_EXTERNAL", "UNDER_EXTERNAL_REVIEW"].includes(
-                    app.external_submission_status
+                    app.external_submission_status,
                   ) && (
                     <button
                       onClick={() => handleOpenDecision(app)}
@@ -347,17 +406,23 @@ export default function ProposalsLifecyclePage() {
               Confirm External Grant Submission
             </h3>
             <p className="text-xs text-slate-400">
-              Only institutionally approved proposals may be confirmed for external dispatch to sponsor portals.
+              Only institutionally approved proposals may be confirmed for
+              external dispatch to sponsor portals.
             </p>
 
             <form onSubmit={handleConfirmSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Agency Submission Reference / ID</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Agency Submission Reference / ID
+                </label>
                 <input
                   type="text"
                   value={submitForm.external_submission_reference}
                   onChange={(e) =>
-                    setSubmitForm({ ...submitForm, external_submission_reference: e.target.value })
+                    setSubmitForm({
+                      ...submitForm,
+                      external_submission_reference: e.target.value,
+                    })
                   }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
@@ -365,11 +430,15 @@ export default function ProposalsLifecyclePage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Submission Portal URL</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Submission Portal URL
+                </label>
                 <input
                   type="url"
                   value={submitForm.portal_url}
-                  onChange={(e) => setSubmitForm({ ...submitForm, portal_url: e.target.value })}
+                  onChange={(e) =>
+                    setSubmitForm({ ...submitForm, portal_url: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
@@ -403,63 +472,101 @@ export default function ProposalsLifecyclePage() {
               Record Verified External Sponsor Funding Decision
             </h3>
             <p className="text-xs text-slate-400">
-              Preserves institutional audit history and synchronizes sanctioned grant awards directly into project budget planning.
+              Preserves institutional audit history and synchronizes sanctioned
+              grant awards directly into project budget planning.
             </p>
 
             <form onSubmit={handleRecordDecision} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Sponsor Decision</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Sponsor Decision
+                  </label>
                   <select
                     value={decisionForm.decision}
-                    onChange={(e) => setDecisionForm({ ...decisionForm, decision: e.target.value })}
+                    onChange={(e) =>
+                      setDecisionForm({
+                        ...decisionForm,
+                        decision: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   >
                     <option value="AWARDED">AWARDED (Sanctioned)</option>
                     <option value="DECLINED">DECLINED</option>
                     <option value="WITHDRAWN">WITHDRAWN</option>
-                    <option value="RESUBMISSION_REQUESTED">RESUBMISSION REQUESTED</option>
+                    <option value="RESUBMISSION_REQUESTED">
+                      RESUBMISSION REQUESTED
+                    </option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Sanctioned Award Number</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Sanctioned Award Number
+                  </label>
                   <input
                     type="text"
                     value={decisionForm.award_number}
-                    onChange={(e) => setDecisionForm({ ...decisionForm, award_number: e.target.value })}
+                    onChange={(e) =>
+                      setDecisionForm({
+                        ...decisionForm,
+                        award_number: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Sanctioned Funding Amount ({selectedApp.currency})</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Sanctioned Funding Amount ({selectedApp.currency})
+                </label>
                 <input
                   type="number"
                   value={decisionForm.award_amount}
-                  onChange={(e) => setDecisionForm({ ...decisionForm, award_amount: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setDecisionForm({
+                      ...decisionForm,
+                      award_amount: Number(e.target.value),
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Sponsor Evaluation Notes</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Sponsor Evaluation Notes
+                </label>
                 <textarea
                   rows={2}
                   value={decisionForm.decision_notes}
-                  onChange={(e) => setDecisionForm({ ...decisionForm, decision_notes: e.target.value })}
+                  onChange={(e) =>
+                    setDecisionForm({
+                      ...decisionForm,
+                      decision_notes: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Award Letter URL (Evidence Document)</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Award Letter URL (Evidence Document)
+                </label>
                 <input
                   type="url"
                   value={decisionForm.award_letter_url}
-                  onChange={(e) => setDecisionForm({ ...decisionForm, award_letter_url: e.target.value })}
+                  onChange={(e) =>
+                    setDecisionForm({
+                      ...decisionForm,
+                      award_letter_url: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
@@ -470,12 +577,16 @@ export default function ProposalsLifecyclePage() {
                   id="create_award_flag"
                   checked={decisionForm.create_award_record}
                   onChange={(e) =>
-                    setDecisionForm({ ...decisionForm, create_award_record: e.target.checked })
+                    setDecisionForm({
+                      ...decisionForm,
+                      create_award_record: e.target.checked,
+                    })
                   }
                   className="rounded bg-slate-950 border-slate-800 text-emerald-600"
                 />
                 <label htmlFor="create_award_flag" className="text-slate-300">
-                  Automatically create and attach authoritative ResearchGrantAward to project
+                  Automatically create and attach authoritative
+                  ResearchGrantAward to project
                 </label>
               </div>
 

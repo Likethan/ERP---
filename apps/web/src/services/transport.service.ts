@@ -57,7 +57,8 @@ export interface TransportVehicleDetail {
   fitnessCertificateExpiry: string;
   fuelType: string;
   operationalDepot?: string;
-  status: "ACTIVE" | "MAINTENANCE" | "DECOMMISSIONED" | "STANDBY" | "OUT_OF_SERVICE";
+  status:
+    "ACTIVE" | "MAINTENANCE" | "DECOMMISSIONED" | "STANDBY" | "OUT_OF_SERVICE";
   currentOdometerKm: number;
   isActive: boolean;
 }
@@ -112,7 +113,14 @@ export interface TransportTripItem {
   actualEndTime?: string;
   startOdometerKm?: number;
   endOdometerKm?: number;
-  status: "SCHEDULED" | "READY" | "DEPARTED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISRUPTED";
+  status:
+    | "SCHEDULED"
+    | "READY"
+    | "DEPARTED"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED"
+    | "DISRUPTED";
   preTripChecklistCompleted: boolean;
   checklistNotes?: Record<string, any>;
   cancellationReason?: string;
@@ -184,7 +192,13 @@ export interface TransportApplicationItem {
   preferredRouteId: string;
   preferredStopId: string;
   serviceType: string;
-  status: "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "WAITLISTED" | "CANCELLED";
+  status:
+    | "SUBMITTED"
+    | "UNDER_REVIEW"
+    | "APPROVED"
+    | "REJECTED"
+    | "WAITLISTED"
+    | "CANCELLED";
   priorityScore: number;
   accessibilityNeeded: boolean;
   specialRequests?: string;
@@ -195,7 +209,9 @@ class TransportService {
   /**
    * Executive transport operations dashboard
    */
-  async getTransportDashboard(campusId?: string): Promise<ApiResponse<TransportDashboardData>> {
+  async getTransportDashboard(
+    campusId?: string,
+  ): Promise<ApiResponse<TransportDashboardData>> {
     const qs = campusId && campusId !== "ALL" ? `?campus_id=${campusId}` : "";
     try {
       const res = await apiFetch<any>(`/api/v1/transport/dashboard${qs}`);
@@ -206,12 +222,14 @@ class TransportService {
             activeRoutesCount: res.data.active_routes_count ?? 0,
             totalStopsCount: res.data.total_stops_count ?? 0,
             activeVehiclesCount: res.data.active_vehicles_count ?? 0,
-            vehiclesUnderMaintenanceCount: res.data.vehicles_under_maintenance_count ?? 0,
+            vehiclesUnderMaintenanceCount:
+              res.data.vehicles_under_maintenance_count ?? 0,
             activeDriversCount: res.data.active_drivers_count ?? 0,
             studentsAllocatedCount: res.data.students_allocated_count ?? 0,
             routeCapacityUtilization: res.data.route_capacity_utilization ?? 0,
             unassignedStudentsCount: res.data.unassigned_students_count ?? 0,
-            upcomingVehicleMaintenanceCount: res.data.upcoming_vehicle_maintenance_count ?? 0,
+            upcomingVehicleMaintenanceCount:
+              res.data.upcoming_vehicle_maintenance_count ?? 0,
             activeTripsToday: res.data.active_trips_today ?? 0,
             completedTripsToday: res.data.completed_trips_today ?? 0,
             incidentsReportedCount: res.data.incidents_reported_count ?? 0,
@@ -239,9 +257,13 @@ class TransportService {
 
     const activeRoutes = routes.filter((r) => r.status === "ACTIVE").length;
     const activeVehicles = vehicles.filter((v) => v.status === "ACTIVE").length;
-    const maintVehicles = vehicles.filter((v) => v.status === "MAINTENANCE").length;
+    const maintVehicles = vehicles.filter(
+      (v) => v.status === "MAINTENANCE",
+    ).length;
     const activeDrivers = drivers.filter((d) => d.status === "ACTIVE").length;
-    const allocatedStudents = allocations.filter((a) => a.status === "ACTIVE").length;
+    const allocatedStudents = allocations.filter(
+      (a) => a.status === "ACTIVE",
+    ).length;
 
     const totalCapacity = routes.reduce((acc, r) => acc + (r.capacity || 0), 0);
     const totalAllocatedInRoutes = routes.reduce(
@@ -276,11 +298,18 @@ class TransportService {
   // FLEET & VEHICLE COMPLIANCE
   // ===========================================================================
 
-  async checkVehicleCompliance(vehicleId: string): Promise<ApiResponse<VehicleComplianceStatus>> {
-    return apiFetch<VehicleComplianceStatus>(`/api/v1/transport/vehicles/${vehicleId}/compliance`);
+  async checkVehicleCompliance(
+    vehicleId: string,
+  ): Promise<ApiResponse<VehicleComplianceStatus>> {
+    return apiFetch<VehicleComplianceStatus>(
+      `/api/v1/transport/vehicles/${vehicleId}/compliance`,
+    );
   }
 
-  async reportVehicleDefect(vehicleId: string, defectDescription: string): Promise<ApiResponse<any>> {
+  async reportVehicleDefect(
+    vehicleId: string,
+    defectDescription: string,
+  ): Promise<ApiResponse<any>> {
     return apiFetch<any>(`/api/v1/transport/vehicles/${vehicleId}/defect`, {
       method: "POST",
       body: JSON.stringify({ defect_description: defectDescription }),
@@ -291,19 +320,29 @@ class TransportService {
   // DRIVER COMPLIANCE
   // ===========================================================================
 
-  async checkDriverCompliance(driverId: string): Promise<ApiResponse<DriverComplianceStatus>> {
-    return apiFetch<DriverComplianceStatus>(`/api/v1/transport/drivers/${driverId}/compliance`);
+  async checkDriverCompliance(
+    driverId: string,
+  ): Promise<ApiResponse<DriverComplianceStatus>> {
+    return apiFetch<DriverComplianceStatus>(
+      `/api/v1/transport/drivers/${driverId}/compliance`,
+    );
   }
 
   // ===========================================================================
   // TRIP SCHEDULING & OPERATIONAL DISPATCH
   // ===========================================================================
 
-  async listTrips(params?: { tripDate?: string; routeId?: string; status?: string }): Promise<ApiResponse<TransportTripItem[]>> {
+  async listTrips(params?: {
+    tripDate?: string;
+    routeId?: string;
+    status?: string;
+  }): Promise<ApiResponse<TransportTripItem[]>> {
     const query = new URLSearchParams();
     if (params?.tripDate) query.append("trip_date", params.tripDate);
-    if (params?.routeId && params.routeId !== "ALL") query.append("route_id", params.routeId);
-    if (params?.status && params.status !== "ALL") query.append("status", params.status);
+    if (params?.routeId && params.routeId !== "ALL")
+      query.append("route_id", params.routeId);
+    if (params?.status && params.status !== "ALL")
+      query.append("status", params.status);
     const qs = query.toString() ? `?${query.toString()}` : "";
     return apiFetch<TransportTripItem[]>(`/api/v1/transport/trips${qs}`);
   }
@@ -331,53 +370,78 @@ class TransportService {
     });
   }
 
-  async dispatchTrip(tripId: string, payload: {
-    startOdometerKm: number;
-    substituteVehicleId?: string;
-    substituteDriverId?: string;
-    preTripChecklistCompleted: boolean;
-    checklistNotes?: Record<string, any>;
-  }): Promise<ApiResponse<TransportTripItem>> {
-    return apiFetch<TransportTripItem>(`/api/v1/transport/trips/${tripId}/dispatch`, {
-      method: "POST",
-      body: JSON.stringify({
-        start_odometer_km: payload.startOdometerKm,
-        substitute_vehicle_id: payload.substituteVehicleId,
-        substitute_driver_id: payload.substituteDriverId,
-        pre_trip_checklist_completed: payload.preTripChecklistCompleted,
-        checklist_notes: payload.checklistNotes,
-      }),
-    });
+  async dispatchTrip(
+    tripId: string,
+    payload: {
+      startOdometerKm: number;
+      substituteVehicleId?: string;
+      substituteDriverId?: string;
+      preTripChecklistCompleted: boolean;
+      checklistNotes?: Record<string, any>;
+    },
+  ): Promise<ApiResponse<TransportTripItem>> {
+    return apiFetch<TransportTripItem>(
+      `/api/v1/transport/trips/${tripId}/dispatch`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          start_odometer_km: payload.startOdometerKm,
+          substitute_vehicle_id: payload.substituteVehicleId,
+          substitute_driver_id: payload.substituteDriverId,
+          pre_trip_checklist_completed: payload.preTripChecklistCompleted,
+          checklist_notes: payload.checklistNotes,
+        }),
+      },
+    );
   }
 
-  async completeTrip(tripId: string, endOdometerKm: number): Promise<ApiResponse<TransportTripItem>> {
-    return apiFetch<TransportTripItem>(`/api/v1/transport/trips/${tripId}/complete`, {
-      method: "POST",
-      body: JSON.stringify({ end_odometer_km: endOdometerKm }),
-    });
+  async completeTrip(
+    tripId: string,
+    endOdometerKm: number,
+  ): Promise<ApiResponse<TransportTripItem>> {
+    return apiFetch<TransportTripItem>(
+      `/api/v1/transport/trips/${tripId}/complete`,
+      {
+        method: "POST",
+        body: JSON.stringify({ end_odometer_km: endOdometerKm }),
+      },
+    );
   }
 
-  async cancelTrip(tripId: string, reason: string): Promise<ApiResponse<TransportTripItem>> {
-    return apiFetch<TransportTripItem>(`/api/v1/transport/trips/${tripId}/cancel`, {
-      method: "POST",
-      body: JSON.stringify({ reason }),
-    });
+  async cancelTrip(
+    tripId: string,
+    reason: string,
+  ): Promise<ApiResponse<TransportTripItem>> {
+    return apiFetch<TransportTripItem>(
+      `/api/v1/transport/trips/${tripId}/cancel`,
+      {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      },
+    );
   }
 
   // ===========================================================================
   // PASSENGER MANIFEST & BOARDING VERIFICATION
   // ===========================================================================
 
-  async getTripManifest(tripId: string): Promise<ApiResponse<TripManifestData>> {
-    return apiFetch<TripManifestData>(`/api/v1/transport/trips/${tripId}/manifest`);
+  async getTripManifest(
+    tripId: string,
+  ): Promise<ApiResponse<TripManifestData>> {
+    return apiFetch<TripManifestData>(
+      `/api/v1/transport/trips/${tripId}/manifest`,
+    );
   }
 
-  async recordBoarding(tripId: string, payload: {
-    studentId: string;
-    stopId: string;
-    verificationMethod: string;
-    boardingStatus: string;
-  }): Promise<ApiResponse<any>> {
+  async recordBoarding(
+    tripId: string,
+    payload: {
+      studentId: string;
+      stopId: string;
+      verificationMethod: string;
+      boardingStatus: string;
+    },
+  ): Promise<ApiResponse<any>> {
     return apiFetch<any>(`/api/v1/transport/trips/${tripId}/boarding`, {
       method: "POST",
       body: JSON.stringify({
@@ -393,15 +457,22 @@ class TransportService {
   // TRUTHFUL LIVE TRACKING & TELEMATICS
   // ===========================================================================
 
-  async getLiveTelemetry(vehicleId: string): Promise<ApiResponse<TransportLiveTelemetry>> {
-    return apiFetch<TransportLiveTelemetry>(`/api/v1/transport/tracking/${vehicleId}`);
+  async getLiveTelemetry(
+    vehicleId: string,
+  ): Promise<ApiResponse<TransportLiveTelemetry>> {
+    return apiFetch<TransportLiveTelemetry>(
+      `/api/v1/transport/tracking/${vehicleId}`,
+    );
   }
 
-  async configureTracking(vehicleId: string, payload: {
-    providerName: string;
-    deviceIdentifier?: string;
-    isEnabled: boolean;
-  }): Promise<ApiResponse<any>> {
+  async configureTracking(
+    vehicleId: string,
+    payload: {
+      providerName: string;
+      deviceIdentifier?: string;
+      isEnabled: boolean;
+    },
+  ): Promise<ApiResponse<any>> {
     return apiFetch<any>(`/api/v1/transport/tracking/${vehicleId}/config`, {
       method: "POST",
       body: JSON.stringify({
@@ -420,12 +491,14 @@ class TransportService {
     allocationIds?: string[];
     routeId?: string;
     dueDays?: number;
-  }): Promise<ApiResponse<{
-    invoices_created: number;
-    invoice_ids: string[];
-    skipped_count: number;
-    total_billed_amount: number;
-  }>> {
+  }): Promise<
+    ApiResponse<{
+      invoices_created: number;
+      invoice_ids: string[];
+      skipped_count: number;
+      total_billed_amount: number;
+    }>
+  > {
     return apiFetch<any>("/api/v1/transport/generate-invoices", {
       method: "POST",
       body: JSON.stringify({
@@ -440,12 +513,19 @@ class TransportService {
   // INCIDENTS & SAFETY
   // ===========================================================================
 
-  async listIncidents(params?: { severity?: string; status?: string }): Promise<ApiResponse<TransportIncidentItem[]>> {
+  async listIncidents(params?: {
+    severity?: string;
+    status?: string;
+  }): Promise<ApiResponse<TransportIncidentItem[]>> {
     const query = new URLSearchParams();
-    if (params?.severity && params.severity !== "ALL") query.append("severity", params.severity);
-    if (params?.status && params.status !== "ALL") query.append("status", params.status);
+    if (params?.severity && params.severity !== "ALL")
+      query.append("severity", params.severity);
+    if (params?.status && params.status !== "ALL")
+      query.append("status", params.status);
     const qs = query.toString() ? `?${query.toString()}` : "";
-    return apiFetch<TransportIncidentItem[]>(`/api/v1/transport/incidents${qs}`);
+    return apiFetch<TransportIncidentItem[]>(
+      `/api/v1/transport/incidents${qs}`,
+    );
   }
 
   async reportIncident(payload: {
@@ -471,21 +551,29 @@ class TransportService {
         severity: payload.severity,
         location_description: payload.locationDescription,
         description: payload.description,
-        emergency_services_contacted: payload.emergencyServicesContacted ?? false,
+        emergency_services_contacted:
+          payload.emergencyServicesContacted ?? false,
         involved_student_ids: payload.involvedStudentIds,
       }),
     });
   }
 
-  async resolveIncident(incidentId: string, resolutionNotes: string, actionTaken?: string): Promise<ApiResponse<TransportIncidentItem>> {
-    return apiFetch<TransportIncidentItem>(`/api/v1/transport/incidents/${incidentId}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        status: "RESOLVED",
-        resolution_notes: resolutionNotes,
-        action_taken: actionTaken,
-      }),
-    });
+  async resolveIncident(
+    incidentId: string,
+    resolutionNotes: string,
+    actionTaken?: string,
+  ): Promise<ApiResponse<TransportIncidentItem>> {
+    return apiFetch<TransportIncidentItem>(
+      `/api/v1/transport/incidents/${incidentId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          status: "RESOLVED",
+          resolution_notes: resolutionNotes,
+          action_taken: actionTaken,
+        }),
+      },
+    );
   }
 }
 

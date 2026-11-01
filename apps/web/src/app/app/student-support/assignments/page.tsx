@@ -47,7 +47,8 @@ export default function MentorAssignmentManagementPage() {
 
   // Reassign Modal State
   const [reassignModalOpen, setReassignModalOpen] = useState(false);
-  const [selectedAssignment, setSelectedAssignment] = useState<MentorAssignmentItem | null>(null);
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<MentorAssignmentItem | null>(null);
   const [newFacultyId, setNewFacultyId] = useState("");
   const [reassignReason, setReassignReason] = useState("");
   const [submittingReassign, setSubmittingReassign] = useState(false);
@@ -67,11 +68,12 @@ export default function MentorAssignmentManagementPage() {
   async function loadData() {
     setLoading(true);
     try {
-      const [allAssignments, unassignedStudents, policyConfig] = await Promise.all([
-        StudentSupportService.getMentorAssignments(),
-        StudentSupportService.getUnassignedStudents(),
-        StudentSupportService.getPolicyConfig(),
-      ]);
+      const [allAssignments, unassignedStudents, policyConfig] =
+        await Promise.all([
+          StudentSupportService.getMentorAssignments(),
+          StudentSupportService.getUnassignedStudents(),
+          StudentSupportService.getPolicyConfig(),
+        ]);
       setAssignments(allAssignments);
       setUnassigned(unassignedStudents);
       setConfig(policyConfig);
@@ -91,7 +93,9 @@ export default function MentorAssignmentManagementPage() {
         new_faculty_staff_id: newFacultyId,
         reassignment_reason: reassignReason,
       });
-      setNotification(`Mentor reassignment successful for student ${selectedAssignment.student_name}.`);
+      setNotification(
+        `Mentor reassignment successful for student ${selectedAssignment.student_name}.`,
+      );
       setReassignModalOpen(false);
       setSelectedAssignment(null);
       setNewFacultyId("");
@@ -140,7 +144,8 @@ export default function MentorAssignmentManagementPage() {
       sReg.toLowerCase().includes(searchQuery.toLowerCase()) ||
       fName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "ALL" || a.status === statusFilter;
-    const matchesDept = departmentFilter === "ALL" || dName.includes(departmentFilter);
+    const matchesDept =
+      departmentFilter === "ALL" || dName.includes(departmentFilter);
     return matchesSearch && matchesStatus && matchesDept;
   });
 
@@ -151,7 +156,10 @@ export default function MentorAssignmentManagementPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Mentor Assignments", href: "/app/student-support/assignments" },
+            {
+              label: "Mentor Assignments",
+              href: "/app/student-support/assignments",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -161,7 +169,8 @@ export default function MentorAssignmentManagementPage() {
               Faculty Mentor Allocations
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Administer institution-wide faculty-student mentorship relationships, capacity limits, and reassignment trails.
+              Administer institution-wide faculty-student mentorship
+              relationships, capacity limits, and reassignment trails.
             </p>
           </div>
           <div className="flex gap-2">
@@ -184,7 +193,10 @@ export default function MentorAssignmentManagementPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -196,8 +208,13 @@ export default function MentorAssignmentManagementPage() {
           <div className="flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0" />
             <div className="text-xs">
-              <span className="font-semibold text-white">{unassigned.length} Eligible Students Awaiting Mentor Allocation</span>
-              <p className="text-slate-400 mt-0.5">Ensure all enrolled students have an assigned academic mentor in compliance with institutional policy.</p>
+              <span className="font-semibold text-white">
+                {unassigned.length} Eligible Students Awaiting Mentor Allocation
+              </span>
+              <p className="text-slate-400 mt-0.5">
+                Ensure all enrolled students have an assigned academic mentor in
+                compliance with institutional policy.
+              </p>
             </div>
           </div>
           <Button
@@ -214,7 +231,13 @@ export default function MentorAssignmentManagementPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Active Assignments"
-          value={loading ? "..." : assignments.filter((a) => a.status === "ACTIVE").length.toString()}
+          value={
+            loading
+              ? "..."
+              : assignments
+                  .filter((a) => a.status === "ACTIVE")
+                  .length.toString()
+          }
           icon={<UserCheck className="h-5 w-5 text-indigo-400" />}
           description="Current active mentoring pairs"
         />
@@ -226,13 +249,21 @@ export default function MentorAssignmentManagementPage() {
         />
         <StatCard
           title="Workload Quota"
-          value={loading ? "..." : `${config?.max_mentees_per_mentor ?? 20} Mentees / Faculty`}
+          value={
+            loading
+              ? "..."
+              : `${config?.max_mentees_per_mentor ?? 20} Mentees / Faculty`
+          }
           icon={<Users className="h-5 w-5 text-emerald-400" />}
           description="Configured institutional ceiling"
         />
         <StatCard
           title="Reassignment Rate"
-          value={loading ? "..." : `${assignments.filter((a) => a.status === "REASSIGNED").length} historical`}
+          value={
+            loading
+              ? "..."
+              : `${assignments.filter((a) => a.status === "REASSIGNED").length} historical`
+          }
           icon={<ArrowRightLeft className="h-5 w-5 text-cyan-400" />}
           description="Tracked reallocations"
         />
@@ -307,21 +338,32 @@ export default function MentorAssignmentManagementPage() {
                 filteredAssignments.map((a) => (
                   <tr key={a.id} className="hover:bg-slate-800/30 transition">
                     <td className="py-3 px-4">
-                      <div className="font-medium text-white">{a.student_name}</div>
-                      <div className="text-[11px] text-slate-500">{a.student_reg_no}</div>
+                      <div className="font-medium text-white">
+                        {a.student_name}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {a.student_reg_no}
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <div>{a.department_name}</div>
-                      <div className="text-[11px] text-slate-500">{a.program_name} • {a.academic_year}</div>
+                      <div className="text-[11px] text-slate-500">
+                        {a.program_name} • {a.academic_year}
+                      </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-medium text-indigo-300">{a.faculty_name}</div>
-                      <div className="text-[11px] text-slate-500">{a.faculty_email}</div>
+                      <div className="font-medium text-indigo-300">
+                        {a.faculty_name}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {a.faculty_email}
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1.5">
                         <span className="font-semibold text-slate-200">
-                          {a.faculty_workload_count ?? 12} / {config?.max_mentees_per_mentor ?? 20}
+                          {a.faculty_workload_count ?? 12} /{" "}
+                          {config?.max_mentees_per_mentor ?? 20}
                         </span>
                         <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-800/30">
                           Within Quota
@@ -329,7 +371,10 @@ export default function MentorAssignmentManagementPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <Badge variant="outline" className="border-slate-700 text-slate-400 text-[10px]">
+                      <Badge
+                        variant="outline"
+                        className="border-slate-700 text-slate-400 text-[10px]"
+                      >
                         {a.assignment_type}
                       </Badge>
                     </td>
@@ -340,8 +385,8 @@ export default function MentorAssignmentManagementPage() {
                           a.status === "ACTIVE"
                             ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-[10px]"
                             : a.status === "REASSIGNED"
-                            ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-[10px]"
-                            : "border-slate-700 text-slate-400 text-[10px]"
+                              ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-[10px]"
+                              : "border-slate-700 text-slate-400 text-[10px]"
                         }
                       >
                         {a.status}
@@ -385,16 +430,23 @@ export default function MentorAssignmentManagementPage() {
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs space-y-1">
                 <div>
                   <span className="text-slate-400">Student: </span>
-                  <strong className="text-white">{selectedAssignment.student_name}</strong> ({selectedAssignment.student_reg_no})
+                  <strong className="text-white">
+                    {selectedAssignment.student_name}
+                  </strong>{" "}
+                  ({selectedAssignment.student_reg_no})
                 </div>
                 <div>
                   <span className="text-slate-400">Current Mentor: </span>
-                  <span className="text-indigo-300">{selectedAssignment.faculty_name}</span>
+                  <span className="text-indigo-300">
+                    {selectedAssignment.faculty_name}
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">New Faculty Staff ID *</label>
+                <label className="text-xs text-slate-400">
+                  New Faculty Staff ID *
+                </label>
                 <Input
                   required
                   placeholder="e.g. FAC-CSE-003 or faculty UUID"
@@ -405,7 +457,9 @@ export default function MentorAssignmentManagementPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">Reassignment Reason / Justification *</label>
+                <label className="text-xs text-slate-400">
+                  Reassignment Reason / Justification *
+                </label>
                 <Input
                   required
                   placeholder="e.g. Faculty sabbatical coverage, specialization realignment"
@@ -429,7 +483,9 @@ export default function MentorAssignmentManagementPage() {
                   disabled={submittingReassign}
                   className="bg-indigo-600 hover:bg-indigo-700 text-xs text-white"
                 >
-                  {submittingReassign ? "Processing..." : "Confirm Reassignment"}
+                  {submittingReassign
+                    ? "Processing..."
+                    : "Confirm Reassignment"}
                 </Button>
               </DialogFooter>
             </form>
@@ -459,7 +515,8 @@ export default function MentorAssignmentManagementPage() {
                   <option value="">-- Choose unassigned student --</option>
                   {unassigned.map((st) => (
                     <option key={st.student_id} value={st.student_id}>
-                      {st.student_name} ({st.student_reg_no}) - {st.program_name}
+                      {st.student_name} ({st.student_reg_no}) -{" "}
+                      {st.program_name}
                     </option>
                   ))}
                 </select>
@@ -475,7 +532,9 @@ export default function MentorAssignmentManagementPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-slate-400">Faculty Staff ID *</label>
+              <label className="text-xs text-slate-400">
+                Faculty Staff ID *
+              </label>
               <Input
                 required
                 placeholder="e.g. FAC-CSE-001 or faculty UUID"
@@ -484,7 +543,8 @@ export default function MentorAssignmentManagementPage() {
                 className="bg-slate-950 border-slate-800 text-xs"
               />
               <p className="text-[11px] text-slate-500">
-                System enforces maximum {config?.max_mentees_per_mentor ?? 20} mentees per faculty mentor.
+                System enforces maximum {config?.max_mentees_per_mentor ?? 20}{" "}
+                mentees per faculty mentor.
               </p>
             </div>
 

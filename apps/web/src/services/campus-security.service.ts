@@ -33,7 +33,8 @@ import {
   VisitorRequest,
 } from "../types/campus-security";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 // In-memory state for offline/mock mode
 const overviewState: SecurityOperationsOverview = { ...MOCK_SECURITY_OVERVIEW };
@@ -52,7 +53,7 @@ const patrolRecordsState: PatrolCheckpointRecord[] = [...MOCK_PATROL_RECORDS];
 async function fetchWithFallback<T>(
   endpoint: string,
   options: RequestInit = {},
-  fallbackData: T
+  fallbackData: T,
 ): Promise<T> {
   try {
     const res = await fetch(`${API_BASE}/campus-security${endpoint}`, {
@@ -81,7 +82,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<SecurityOperationsOverview>(
       "/overview",
       { method: "GET" },
-      overviewState
+      overviewState,
     );
   },
 
@@ -96,7 +97,7 @@ export const CampusSecurityService = {
       { method: "GET" },
       isManned !== undefined
         ? checkpointsState.filter((c) => c.is_manned === isManned)
-        : checkpointsState
+        : checkpointsState,
     );
   },
 
@@ -127,7 +128,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<SecurityCheckpoint>(
       "/checkpoints",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -138,7 +139,7 @@ export const CampusSecurityService = {
       { method: "GET" },
       clearanceLevel
         ? zonesState.filter((z) => z.clearance_level === clearanceLevel)
-        : zonesState
+        : zonesState,
     );
   },
 
@@ -171,7 +172,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<SecurityZone>(
       "/zones",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -207,7 +208,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorProfile>(
       "/visitors",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -221,9 +222,9 @@ export const CampusSecurityService = {
             (v) =>
               v.full_name.toLowerCase().includes(search.toLowerCase()) ||
               v.email.toLowerCase().includes(search.toLowerCase()) ||
-              v.phone.includes(search)
+              v.phone.includes(search),
           )
-        : visitorsState
+        : visitorsState,
     );
   },
 
@@ -232,7 +233,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorRequest[]>(
       `/requests${query}`,
       { method: "GET" },
-      status ? requestsState.filter((r) => r.status === status) : requestsState
+      status ? requestsState.filter((r) => r.status === status) : requestsState,
     );
   },
 
@@ -282,14 +283,14 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorRequest>(
       "/requests",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async reviewRequest(
     requestId: string,
     decision: "APPROVED" | "REJECTED",
-    rejectionReason?: string
+    rejectionReason?: string,
   ): Promise<VisitorRequest> {
     const req = requestsState.find((r) => r.id === requestId);
     if (req) {
@@ -323,8 +324,11 @@ export const CampusSecurityService = {
     }
     return fetchWithFallback<VisitorRequest>(
       `/requests/${requestId}/review`,
-      { method: "POST", body: JSON.stringify({ decision, rejection_reason: rejectionReason }) },
-      req || requestsState[0]
+      {
+        method: "POST",
+        body: JSON.stringify({ decision, rejection_reason: rejectionReason }),
+      },
+      req || requestsState[0],
     );
   },
 
@@ -332,7 +336,10 @@ export const CampusSecurityService = {
     return this.submitRequest(data);
   },
 
-  async approveVisitorRequest(requestId: string, approvedByUserId?: string): Promise<VisitorRequest> {
+  async approveVisitorRequest(
+    requestId: string,
+    approvedByUserId?: string,
+  ): Promise<VisitorRequest> {
     const res = await this.reviewRequest(requestId, "APPROVED");
     if (approvedByUserId && res) {
       res.approved_by_user_id = approvedByUserId;
@@ -340,11 +347,17 @@ export const CampusSecurityService = {
     return res;
   },
 
-  async rejectVisitorRequest(requestId: string, reason?: string): Promise<VisitorRequest> {
+  async rejectVisitorRequest(
+    requestId: string,
+    reason?: string,
+  ): Promise<VisitorRequest> {
     return this.reviewRequest(requestId, "REJECTED", reason);
   },
 
-  async generateVisitorPass(requestId: string, hoursValid: number = 8): Promise<VisitorPass> {
+  async generateVisitorPass(
+    requestId: string,
+    hoursValid: number = 8,
+  ): Promise<VisitorPass> {
     const req = requestsState.find((r) => r.id === requestId);
     const passNumber = `VPASS-2026-${String(passesState.length + 1).padStart(4, "0")}`;
     const now = new Date();
@@ -371,7 +384,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorPass>(
       `/requests/${requestId}/generate-pass`,
       { method: "POST", body: JSON.stringify({ hours_valid: hoursValid }) },
-      fallback
+      fallback,
     );
   },
 
@@ -384,7 +397,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorPass[]>(
       `/passes${query}`,
       { method: "GET" },
-      status ? passesState.filter((p) => p.status === status) : passesState
+      status ? passesState.filter((p) => p.status === status) : passesState,
     );
   },
 
@@ -396,11 +409,13 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorPass>(
       "/passes/verify",
       { method: "POST", body: JSON.stringify({ signed_token: signedToken }) },
-      fallback
+      fallback,
     );
   },
 
-  async verifyVisitorPassToken(signedToken: string): Promise<{ valid: boolean; message: string; pass?: VisitorPass }> {
+  async verifyVisitorPassToken(
+    signedToken: string,
+  ): Promise<{ valid: boolean; message: string; pass?: VisitorPass }> {
     const pass = passesState.find((p) => p.signed_token === signedToken);
     if (!pass) {
       return { valid: false, message: "Invalid or untrusted visitor QR token" };
@@ -411,14 +426,17 @@ export const CampusSecurityService = {
   async checkInVisitor(
     signedToken: string,
     checkpointId: string,
-    officerId?: string
+    officerId?: string,
   ): Promise<{ success: boolean; message: string; pass?: VisitorPass }> {
     const pass = passesState.find((p) => p.signed_token === signedToken);
     if (!pass) {
       return { success: false, message: "Pass not found for token" };
     }
     if (pass.status === "CHECKED_IN") {
-      return { success: false, message: "Duplicate check-in rejected: Already checked in" };
+      return {
+        success: false,
+        message: "Duplicate check-in rejected: Already checked in",
+      };
     }
     pass.status = "CHECKED_IN";
     pass.check_in_at = new Date().toISOString();
@@ -432,7 +450,7 @@ export const CampusSecurityService = {
   async checkOutVisitor(
     signedToken: string,
     checkpointId: string,
-    officerId?: string
+    officerId?: string,
   ): Promise<{ success: boolean; message: string; pass?: VisitorPass }> {
     const pass = passesState.find((p) => p.signed_token === signedToken);
     if (!pass) {
@@ -444,23 +462,31 @@ export const CampusSecurityService = {
     pass.check_out_officer_id = officerId;
     pass.is_overdue = false;
     pass.updated_at = new Date().toISOString();
-    overviewState.visitors_currently_on_campus = Math.max(0, overviewState.visitors_currently_on_campus - 1);
+    overviewState.visitors_currently_on_campus = Math.max(
+      0,
+      overviewState.visitors_currently_on_campus - 1,
+    );
     return { success: true, message: "Visitor checked out successfully", pass };
   },
 
-  async revokeVisitorPass(passId: string, reason: string): Promise<VisitorPass> {
+  async revokeVisitorPass(
+    passId: string,
+    reason: string,
+  ): Promise<VisitorPass> {
     return this.revokePass(passId, reason);
   },
 
   async gateCheckIn(
     passId: string,
     checkpointId: string,
-    vehicleNumber?: string
+    vehicleNumber?: string,
   ): Promise<VisitorPass> {
     const pass = passesState.find((p) => p.id === passId);
     if (pass) {
       if (pass.status === "CHECKED_IN") {
-        throw new Error("Duplicate check-in rejected: visitor is already checked in");
+        throw new Error(
+          "Duplicate check-in rejected: visitor is already checked in",
+        );
       }
       pass.status = "CHECKED_IN";
       pass.check_in_at = new Date().toISOString();
@@ -470,12 +496,21 @@ export const CampusSecurityService = {
     }
     return fetchWithFallback<VisitorPass>(
       `/passes/${passId}/check-in`,
-      { method: "POST", body: JSON.stringify({ checkpoint_id: checkpointId, vehicle_number: vehicleNumber }) },
-      pass || passesState[0]
+      {
+        method: "POST",
+        body: JSON.stringify({
+          checkpoint_id: checkpointId,
+          vehicle_number: vehicleNumber,
+        }),
+      },
+      pass || passesState[0],
     );
   },
 
-  async gateCheckOut(passId: string, checkpointId: string): Promise<VisitorPass> {
+  async gateCheckOut(
+    passId: string,
+    checkpointId: string,
+  ): Promise<VisitorPass> {
     const pass = passesState.find((p) => p.id === passId);
     if (pass) {
       pass.status = "CHECKED_OUT";
@@ -483,12 +518,15 @@ export const CampusSecurityService = {
       pass.check_out_checkpoint_id = checkpointId;
       pass.is_overdue = false;
       pass.updated_at = new Date().toISOString();
-      overviewState.visitors_currently_on_campus = Math.max(0, overviewState.visitors_currently_on_campus - 1);
+      overviewState.visitors_currently_on_campus = Math.max(
+        0,
+        overviewState.visitors_currently_on_campus - 1,
+      );
     }
     return fetchWithFallback<VisitorPass>(
       `/passes/${passId}/check-out`,
       { method: "POST", body: JSON.stringify({ checkpoint_id: checkpointId }) },
-      pass || passesState[0]
+      pass || passesState[0],
     );
   },
 
@@ -503,7 +541,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<VisitorPass>(
       `/passes/${passId}/revoke`,
       { method: "POST", body: JSON.stringify({ revocation_reason: reason }) },
-      pass || passesState[0]
+      pass || passesState[0],
     );
   },
 
@@ -516,7 +554,9 @@ export const CampusSecurityService = {
     return fetchWithFallback<ContractorAccessProfile[]>(
       `/contractors${query}`,
       { method: "GET" },
-      status ? contractorsState.filter((c) => c.status === status) : contractorsState
+      status
+        ? contractorsState.filter((c) => c.status === status)
+        : contractorsState,
     );
   },
 
@@ -543,7 +583,8 @@ export const CampusSecurityService = {
       work_order_reference: data.work_order_reference,
       valid_from: data.valid_from,
       valid_until: data.valid_until,
-      is_safety_induction_completed: data.is_safety_induction_completed ?? false,
+      is_safety_induction_completed:
+        data.is_safety_induction_completed ?? false,
       status: "ACTIVE",
       authorized_zone_ids: data.authorized_zone_ids || [],
       created_at: new Date().toISOString(),
@@ -553,7 +594,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<ContractorAccessProfile>(
       "/contractors",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -561,7 +602,9 @@ export const CampusSecurityService = {
     return this.createContractor(data);
   },
 
-  async verifyContractorSafetyInduction(contractorId: string): Promise<ContractorAccessProfile> {
+  async verifyContractorSafetyInduction(
+    contractorId: string,
+  ): Promise<ContractorAccessProfile> {
     const contractor = contractorsState.find((c) => c.id === contractorId);
     if (contractor) {
       contractor.is_safety_induction_completed = true;
@@ -571,18 +614,21 @@ export const CampusSecurityService = {
     return fetchWithFallback<ContractorAccessProfile>(
       `/contractors/${contractorId}/safety-induction`,
       { method: "POST" },
-      contractor || contractorsState[0]
+      contractor || contractorsState[0],
     );
   },
 
-  async listAccessGrants(zoneId?: string, status?: string): Promise<AccessGrant[]> {
+  async listAccessGrants(
+    zoneId?: string,
+    status?: string,
+  ): Promise<AccessGrant[]> {
     let list = [...grantsState];
     if (zoneId) list = list.filter((g) => g.zone_id === zoneId);
     if (status) list = list.filter((g) => g.status === status);
     return fetchWithFallback<AccessGrant[]>(
       `/access-grants${status ? `?status=${status}` : ""}`,
       { method: "GET" },
-      list
+      list,
     );
   },
 
@@ -617,11 +663,14 @@ export const CampusSecurityService = {
     return fetchWithFallback<AccessGrant>(
       "/access-grants",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
-  async revokeAccessGrant(grantId: string, reason: string): Promise<AccessGrant> {
+  async revokeAccessGrant(
+    grantId: string,
+    reason: string,
+  ): Promise<AccessGrant> {
     const grant = grantsState.find((g) => g.id === grantId);
     if (grant) {
       grant.status = "REVOKED";
@@ -632,7 +681,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<AccessGrant>(
       `/access-grants/${grantId}/revoke`,
       { method: "POST", body: JSON.stringify({ revocation_reason: reason }) },
-      grant || grantsState[0]
+      grant || grantsState[0],
     );
   },
 
@@ -640,14 +689,17 @@ export const CampusSecurityService = {
   // 6. PHYSICAL SECURITY INCIDENTS
   // =========================================================================
 
-  async listIncidents(status?: string, severity?: string): Promise<CampusSecurityIncident[]> {
+  async listIncidents(
+    status?: string,
+    severity?: string,
+  ): Promise<CampusSecurityIncident[]> {
     let list = [...incidentsState];
     if (status) list = list.filter((i) => i.status === status);
     if (severity) list = list.filter((i) => i.severity === severity);
     return fetchWithFallback<CampusSecurityIncident[]>(
       "/incidents",
       { method: "GET" },
-      list
+      list,
     );
   },
 
@@ -684,11 +736,15 @@ export const CampusSecurityService = {
     return fetchWithFallback<CampusSecurityIncident>(
       "/incidents",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
-  async escalateIncident(incidentId: string, reason: string, targetTeam?: string): Promise<CampusSecurityIncident> {
+  async escalateIncident(
+    incidentId: string,
+    reason: string,
+    targetTeam?: string,
+  ): Promise<CampusSecurityIncident> {
     const inc = incidentsState.find((i) => i.id === incidentId);
     if (inc) {
       inc.is_escalated = true;
@@ -700,12 +756,22 @@ export const CampusSecurityService = {
     }
     return fetchWithFallback<CampusSecurityIncident>(
       `/incidents/${incidentId}/escalate`,
-      { method: "POST", body: JSON.stringify({ escalation_reason: reason, target_team: targetTeam }) },
-      inc || incidentsState[0]
+      {
+        method: "POST",
+        body: JSON.stringify({
+          escalation_reason: reason,
+          target_team: targetTeam,
+        }),
+      },
+      inc || incidentsState[0],
     );
   },
 
-  async resolveIncident(incidentId: string, summary: string, correctiveNotes?: string): Promise<CampusSecurityIncident> {
+  async resolveIncident(
+    incidentId: string,
+    summary: string,
+    correctiveNotes?: string,
+  ): Promise<CampusSecurityIncident> {
     const inc = incidentsState.find((i) => i.id === incidentId);
     if (inc) {
       inc.status = "RESOLVED";
@@ -724,7 +790,7 @@ export const CampusSecurityService = {
           corrective_action_notes: correctiveNotes,
         }),
       },
-      inc || incidentsState[0]
+      inc || incidentsState[0],
     );
   },
 
@@ -736,7 +802,9 @@ export const CampusSecurityService = {
     return fetchWithFallback<EmergencyEvent[]>(
       "/emergency/events",
       { method: "GET" },
-      status ? emergencyEventsState.filter((e) => e.status === status) : emergencyEventsState
+      status
+        ? emergencyEventsState.filter((e) => e.status === status)
+        : emergencyEventsState,
     );
   },
 
@@ -770,28 +838,30 @@ export const CampusSecurityService = {
     return fetchWithFallback<EmergencyEvent>(
       "/emergency/events",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async updateEmergencyEvent(
     eventId: string,
-    data: { status?: any; after_action_report?: string }
+    data: { status?: any; after_action_report?: string },
   ): Promise<EmergencyEvent> {
     const ev = emergencyEventsState.find((e) => e.id === eventId);
     if (ev) {
       if (data.status) {
         ev.status = data.status;
-        if (data.status === "ALL_CLEAR") ev.all_clear_at = new Date().toISOString();
+        if (data.status === "ALL_CLEAR")
+          ev.all_clear_at = new Date().toISOString();
         if (data.status === "CLOSED") ev.closed_at = new Date().toISOString();
       }
-      if (data.after_action_report) ev.after_action_report = data.after_action_report;
+      if (data.after_action_report)
+        ev.after_action_report = data.after_action_report;
       ev.updated_at = new Date().toISOString();
     }
     return fetchWithFallback<EmergencyEvent>(
       `/emergency/events/${eventId}`,
       { method: "PUT", body: JSON.stringify(data) },
-      ev || emergencyEventsState[0]
+      ev || emergencyEventsState[0],
     );
   },
 
@@ -824,7 +894,10 @@ export const CampusSecurityService = {
     return ev;
   },
 
-  async completeEmergencyTask(taskId: string, notes?: string): Promise<EmergencyResponseTask> {
+  async completeEmergencyTask(
+    taskId: string,
+    notes?: string,
+  ): Promise<EmergencyResponseTask> {
     let task: EmergencyResponseTask | undefined;
     for (const ev of emergencyEventsState) {
       if (ev.tasks) {
@@ -853,12 +926,17 @@ export const CampusSecurityService = {
     return fetchWithFallback<EmergencyResponseTask>(
       `/emergency/tasks/${taskId}`,
       { method: "PUT", body: JSON.stringify({ status: "COMPLETED", notes }) },
-      fallback
+      fallback,
     );
   },
 
-  async submitAfterActionReport(eventId: string, afterActionReport: string): Promise<EmergencyEvent> {
-    return this.updateEmergencyEvent(eventId, { after_action_report: afterActionReport });
+  async submitAfterActionReport(
+    eventId: string,
+    afterActionReport: string,
+  ): Promise<EmergencyEvent> {
+    return this.updateEmergencyEvent(eventId, {
+      after_action_report: afterActionReport,
+    });
   },
 
   async closeEmergencyEvent(eventId: string): Promise<EmergencyEvent> {
@@ -873,7 +951,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<SecurityPatrolPlan[]>(
       "/patrols/plans",
       { method: "GET" },
-      patrolPlansState
+      patrolPlansState,
     );
   },
 
@@ -881,7 +959,9 @@ export const CampusSecurityService = {
     return fetchWithFallback<PatrolCheckpointRecord[]>(
       `/patrols/records${planId ? `?plan_id=${planId}` : ""}`,
       { method: "GET" },
-      planId ? patrolRecordsState.filter((r) => r.plan_id === planId) : patrolRecordsState
+      planId
+        ? patrolRecordsState.filter((r) => r.plan_id === planId)
+        : patrolRecordsState,
     );
   },
 
@@ -910,7 +990,7 @@ export const CampusSecurityService = {
     return fetchWithFallback<SecurityPatrolPlan>(
       "/patrols/plans",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -955,11 +1035,14 @@ export const CampusSecurityService = {
     return fetchWithFallback<PatrolCheckpointRecord>(
       "/patrols/records",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
-  async reviewPatrolRecord(recordId: string, notes: string): Promise<PatrolCheckpointRecord> {
+  async reviewPatrolRecord(
+    recordId: string,
+    notes: string,
+  ): Promise<PatrolCheckpointRecord> {
     const rec = patrolRecordsState.find((r) => r.id === recordId);
     if (rec) {
       rec.supervisor_reviewed = true;
@@ -968,9 +1051,11 @@ export const CampusSecurityService = {
     }
     return fetchWithFallback<PatrolCheckpointRecord>(
       `/patrols/records/${recordId}/review`,
-      { method: "POST", body: JSON.stringify({ supervisor_review_notes: notes }) },
-      rec || patrolRecordsState[0]
+      {
+        method: "POST",
+        body: JSON.stringify({ supervisor_review_notes: notes }),
+      },
+      rec || patrolRecordsState[0],
     );
   },
 };
-

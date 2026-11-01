@@ -58,7 +58,9 @@ export default function InternationalPolicyConfigPage() {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <InternationalNav />
-        <div className="p-12 text-center text-xs text-slate-500">Loading policy parameters...</div>
+        <div className="p-12 text-center text-xs text-slate-500">
+          Loading policy parameters...
+        </div>
       </div>
     );
   }
@@ -74,14 +76,18 @@ export default function InternationalPolicyConfigPage() {
             Global Mobility & Treaty Governance Policies
           </h2>
           <p className="text-xs text-slate-400">
-            Configure institutional compliance thresholds, approval hierarchies, and automated MoU renewal notice horizons
+            Configure institutional compliance thresholds, approval hierarchies,
+            and automated MoU renewal notice horizons
           </p>
         </div>
 
         {successMessage && (
           <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            <span>Policy configurations updated and published to active tenant profile successfully.</span>
+            <span>
+              Policy configurations updated and published to active tenant
+              profile successfully.
+            </span>
           </div>
         )}
 
@@ -101,7 +107,11 @@ export default function InternationalPolicyConfigPage() {
                 type="number"
                 min={30}
                 max={365}
-                value={config.agreement_warning_days || config.agreementWarningDays || 90}
+                value={
+                  config.agreement_warning_days ||
+                  config.agreementWarningDays ||
+                  90
+                }
                 onChange={(e) =>
                   setConfig({
                     ...config,
@@ -112,7 +122,9 @@ export default function InternationalPolicyConfigPage() {
                 className="w-full sm:w-64 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Institutional agreements with expiration dates within this window will trigger automated notification sweeps and flagged dashboard badges.
+                Institutional agreements with expiration dates within this
+                window will trigger automated notification sweeps and flagged
+                dashboard badges.
               </p>
             </div>
           </div>
@@ -128,7 +140,11 @@ export default function InternationalPolicyConfigPage() {
               <label className="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-slate-850 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={config.require_department_approval_first ?? config.requireDepartmentApprovalFirst ?? true}
+                  checked={
+                    config.require_department_approval_first ??
+                    config.requireDepartmentApprovalFirst ??
+                    true
+                  }
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -140,10 +156,12 @@ export default function InternationalPolicyConfigPage() {
                 />
                 <div>
                   <span className="text-xs font-semibold text-white block">
-                    Require Department Faculty Coordinator Endorsement Before International Office
+                    Require Department Faculty Coordinator Endorsement Before
+                    International Office
                   </span>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Ensures academic curriculum viability and prerequisite readiness before legal nomination to partner institutions.
+                    Ensures academic curriculum viability and prerequisite
+                    readiness before legal nomination to partner institutions.
                   </p>
                 </div>
               </label>
@@ -151,7 +169,11 @@ export default function InternationalPolicyConfigPage() {
               <label className="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-slate-850 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={config.require_vp_approval_for_faculty ?? config.requireVpApprovalForFaculty ?? true}
+                  checked={
+                    config.require_vp_approval_for_faculty ??
+                    config.requireVpApprovalForFaculty ??
+                    true
+                  }
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -163,10 +185,12 @@ export default function InternationalPolicyConfigPage() {
                 />
                 <div>
                   <span className="text-xs font-semibold text-white block">
-                    Require Vice Principal Approval for All Faculty Mobility Proposals
+                    Require Vice Principal Approval for All Faculty Mobility
+                    Proposals
                   </span>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Faculty teaching exchanges and research fellowships must receive formal VP endorsement following HOD review.
+                    Faculty teaching exchanges and research fellowships must
+                    receive formal VP endorsement following HOD review.
                   </p>
                 </div>
               </label>
@@ -192,7 +216,8 @@ export default function InternationalPolicyConfigPage() {
                   onChange={(e) =>
                     setConfig({
                       ...config,
-                      credit_transfer_requires_academic_council: e.target.checked,
+                      credit_transfer_requires_academic_council:
+                        e.target.checked,
                       creditTransferRequiresAcademicCouncil: e.target.checked,
                     })
                   }
@@ -200,10 +225,13 @@ export default function InternationalPolicyConfigPage() {
                 />
                 <div>
                   <span className="text-xs font-semibold text-white block">
-                    Credit Transfers Strictly Require Academic Council Resolution Reference
+                    Credit Transfers Strictly Require Academic Council
+                    Resolution Reference
                   </span>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Mandates that no academic credits can be automatically recognized without authorized committee review and council resolution tracking.
+                    Mandates that no academic credits can be automatically
+                    recognized without authorized committee review and council
+                    resolution tracking.
                   </p>
                 </div>
               </label>
@@ -211,7 +239,11 @@ export default function InternationalPolicyConfigPage() {
               <label className="flex items-start gap-3 p-3 rounded-lg bg-slate-950/60 border border-slate-850 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={config.inbound_orientation_mandatory ?? config.inboundOrientationMandatory ?? true}
+                  checked={
+                    config.inbound_orientation_mandatory ??
+                    config.inboundOrientationMandatory ??
+                    true
+                  }
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -223,10 +255,13 @@ export default function InternationalPolicyConfigPage() {
                 />
                 <div>
                   <span className="text-xs font-semibold text-white block">
-                    Mandate Campus Orientation Check-In Before Inbound Course Enrollment
+                    Mandate Campus Orientation Check-In Before Inbound Course
+                    Enrollment
                   </span>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Foreign exchange students must complete safety induction and in-person document verification to unlock course registration.
+                    Foreign exchange students must complete safety induction and
+                    in-person document verification to unlock course
+                    registration.
                   </p>
                 </div>
               </label>

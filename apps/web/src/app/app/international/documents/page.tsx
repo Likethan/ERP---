@@ -28,8 +28,11 @@ export default function DocumentsChecklistPage() {
   const [documents, setDocuments] = useState<MobilityDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [selectedDocForVerification, setSelectedDocForVerification] = useState<MobilityDocument | null>(null);
-  const [verifyStatus, setVerifyStatus] = useState<"VERIFIED" | "REJECTED">("VERIFIED");
+  const [selectedDocForVerification, setSelectedDocForVerification] =
+    useState<MobilityDocument | null>(null);
+  const [verifyStatus, setVerifyStatus] = useState<"VERIFIED" | "REJECTED">(
+    "VERIFIED",
+  );
   const [rejectionReason, setRejectionReason] = useState("");
   const [submittingVerification, setSubmittingVerification] = useState(false);
 
@@ -59,7 +62,7 @@ export default function DocumentsChecklistPage() {
       await internationalService.verifyDocument(
         selectedDocForVerification.id,
         verifyStatus,
-        rejectionReason
+        rejectionReason,
       );
       alert(`Document ${verifyStatus.toLowerCase()} successfully.`);
       setSelectedDocForVerification(null);
@@ -85,7 +88,8 @@ export default function DocumentsChecklistPage() {
               Mobility Documents & Compliance Verification
             </h2>
             <p className="text-xs text-slate-400">
-              Administrative repository for passports, health coverage certificates, official transcripts, and foreign visas
+              Administrative repository for passports, health coverage
+              certificates, official transcripts, and foreign visas
             </p>
           </div>
 
@@ -131,7 +135,10 @@ export default function DocumentsChecklistPage() {
                   </tr>
                 ) : (
                   documents.map((doc) => (
-                    <tr key={doc.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={doc.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-white flex items-center gap-2">
                           <FileText className="h-4 w-4 text-cyan-400" />
@@ -149,17 +156,21 @@ export default function DocumentsChecklistPage() {
                       </td>
 
                       <td className="py-3.5 px-4 text-slate-400">
-                        {doc.document_expiry_date || doc.documentExpiryDate || "Indefinite"}
+                        {doc.document_expiry_date ||
+                          doc.documentExpiryDate ||
+                          "Indefinite"}
                       </td>
 
                       <td className="py-3.5 px-4">
                         <span
                           className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${
-                            (doc.verification_status || doc.verificationStatus) === "VERIFIED"
+                            (doc.verification_status ||
+                              doc.verificationStatus) === "VERIFIED"
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                              : (doc.verification_status || doc.verificationStatus) === "REJECTED"
-                              ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                              : "bg-amber-500/10 text-amber-300 border border-amber-500/30"
+                              : (doc.verification_status ||
+                                    doc.verificationStatus) === "REJECTED"
+                                ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                                : "bg-amber-500/10 text-amber-300 border border-amber-500/30"
                           }`}
                         >
                           {doc.verification_status || doc.verificationStatus}
@@ -210,13 +221,18 @@ export default function DocumentsChecklistPage() {
                 Audit & Verify Mobility Document
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Document: <strong className="text-slate-200">{selectedDocForVerification.document_name}</strong> (
-                {selectedDocForVerification.document_type})
+                Document:{" "}
+                <strong className="text-slate-200">
+                  {selectedDocForVerification.document_name}
+                </strong>{" "}
+                ({selectedDocForVerification.document_type})
               </p>
 
               <form onSubmit={handleVerify} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Verification Status *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Verification Status *
+                  </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -245,7 +261,9 @@ export default function DocumentsChecklistPage() {
 
                 {verifyStatus === "REJECTED" && (
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Reason for Rejection *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Reason for Rejection *
+                    </label>
                     <input
                       required
                       type="text"
@@ -270,7 +288,9 @@ export default function DocumentsChecklistPage() {
                     disabled={submittingVerification}
                     className="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold shadow-md shadow-cyan-900/30 disabled:opacity-50"
                   >
-                    {submittingVerification ? "Committing..." : "Commit Verification"}
+                    {submittingVerification
+                      ? "Committing..."
+                      : "Commit Verification"}
                   </button>
                 </div>
               </form>

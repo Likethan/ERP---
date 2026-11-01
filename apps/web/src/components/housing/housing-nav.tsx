@@ -26,19 +26,66 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { name: "Housing Hub", href: "/app/housing", icon: HomeModernIcon },
-  { name: "Properties", href: "/app/housing/properties", icon: BuildingOffice2Icon },
-  { name: "Providers & Landlords", href: "/app/housing/providers", icon: UserGroupIcon },
-  { name: "Unit & Bed Inventory", href: "/app/housing/inventory", icon: KeyIcon },
-  { name: "Requests & Waitlist", href: "/app/housing/requests", icon: InboxStackIcon, badge: "Active" },
-  { name: "Allocations & Offers", href: "/app/housing/allocations", icon: ArrowPathRoundedSquareIcon },
-  { name: "Leases & Agreements", href: "/app/housing/agreements", icon: DocumentCheckIcon },
-  { name: "Check-In / Out", href: "/app/housing/check-in-out", icon: ClipboardDocumentListIcon },
-  { name: "Inspections & Safety", href: "/app/housing/inspections", icon: ShieldCheckIcon },
-  { name: "Maintenance", href: "/app/housing/maintenance", icon: WrenchScrewdriverIcon },
-  { name: "Occupancy Analytics", href: "/app/housing/analytics", icon: ChartBarIcon },
+  {
+    name: "Properties",
+    href: "/app/housing/properties",
+    icon: BuildingOffice2Icon,
+  },
+  {
+    name: "Providers & Landlords",
+    href: "/app/housing/providers",
+    icon: UserGroupIcon,
+  },
+  {
+    name: "Unit & Bed Inventory",
+    href: "/app/housing/inventory",
+    icon: KeyIcon,
+  },
+  {
+    name: "Requests & Waitlist",
+    href: "/app/housing/requests",
+    icon: InboxStackIcon,
+    badge: "Active",
+  },
+  {
+    name: "Allocations & Offers",
+    href: "/app/housing/allocations",
+    icon: ArrowPathRoundedSquareIcon,
+  },
+  {
+    name: "Leases & Agreements",
+    href: "/app/housing/agreements",
+    icon: DocumentCheckIcon,
+  },
+  {
+    name: "Check-In / Out",
+    href: "/app/housing/check-in-out",
+    icon: ClipboardDocumentListIcon,
+  },
+  {
+    name: "Inspections & Safety",
+    href: "/app/housing/inspections",
+    icon: ShieldCheckIcon,
+  },
+  {
+    name: "Maintenance",
+    href: "/app/housing/maintenance",
+    icon: WrenchScrewdriverIcon,
+  },
+  {
+    name: "Occupancy Analytics",
+    href: "/app/housing/analytics",
+    icon: ChartBarIcon,
+  },
 ];
 
-export function HousingNav({ title, subtitle }: { title?: string; subtitle?: string }) {
+export function HousingNav({
+  title,
+  subtitle,
+}: {
+  title?: string;
+  subtitle?: string;
+}) {
   const pathname = usePathname();
 
   return (
@@ -104,4 +151,3 @@ export function HousingNav({ title, subtitle }: { title?: string; subtitle?: str
     </div>
   );
 }
-

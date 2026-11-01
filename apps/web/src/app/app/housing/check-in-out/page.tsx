@@ -47,7 +47,10 @@ export default function CheckInOutPage() {
       setRecords(allRecords);
       setAssignments(allAssignments);
       if (allAssignments.length > 0) {
-        setFormData((prev) => ({ ...prev, assignment_id: allAssignments[0].id }));
+        setFormData((prev) => ({
+          ...prev,
+          assignment_id: allAssignments[0].id,
+        }));
       }
     } catch (err) {
       console.error("Failed to load check-in records", err);
@@ -87,7 +90,8 @@ export default function CheckInOutPage() {
               Check-In, Check-Out & Room Inventory Condition Audits
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Physical asset handovers, biometric/RFID access card logging, and move-out security deposit damage reconciliation.
+              Physical asset handovers, biometric/RFID access card logging, and
+              move-out security deposit damage reconciliation.
             </p>
           </div>
 
@@ -102,10 +106,14 @@ export default function CheckInOutPage() {
 
         {/* Records Table */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading check-in & handover records...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading check-in & handover records...
+          </div>
         ) : records.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No move-in or move-out inspections recorded yet.</p>
+            <p className="text-slate-400">
+              No move-in or move-out inspections recorded yet.
+            </p>
           </div>
         ) : (
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
@@ -123,7 +131,10 @@ export default function CheckInOutPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {records.map((rec) => (
-                    <tr key={rec.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr
+                      key={rec.id}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
                       <td className="px-5 py-4">
                         {rec.record_type === "CHECK_IN" ? (
                           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
@@ -153,7 +164,11 @@ export default function CheckInOutPage() {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-1 text-xs text-slate-200">
                           <Key className="w-3.5 h-3.5 text-indigo-400" />
-                          <span>{rec.key_card_issued_or_returned ? "Key Issued" : "Pending Key"}</span>
+                          <span>
+                            {rec.key_card_issued_or_returned
+                              ? "Key Issued"
+                              : "Pending Key"}
+                          </span>
                         </div>
                         {rec.key_identifier && (
                           <div className="text-[11px] font-mono text-slate-500">
@@ -163,14 +178,16 @@ export default function CheckInOutPage() {
                       </td>
                       <td className="px-5 py-4">
                         <div className="text-xs text-slate-300 max-w-xs truncate">
-                          {rec.notes || "All checklist items verified by resident & warden."}
+                          {rec.notes ||
+                            "All checklist items verified by resident & warden."}
                         </div>
                       </td>
                       <td className="px-5 py-4">
                         {rec.damage_assessed_amount > 0 ? (
                           <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-400">
                             <AlertTriangle className="w-3.5 h-3.5" />
-                            -₹{rec.damage_assessed_amount.toLocaleString("en-IN")}
+                            -₹
+                            {rec.damage_assessed_amount.toLocaleString("en-IN")}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-xs text-emerald-400 font-medium">
@@ -196,7 +213,10 @@ export default function CheckInOutPage() {
                   <ClipboardCheck className="w-5 h-5 text-indigo-400" />
                   Perform Physical Handover Audit
                 </h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-slate-400 hover:text-white"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -209,12 +229,18 @@ export default function CheckInOutPage() {
                   <select
                     required
                     value={formData.assignment_id}
-                    onChange={(e) => setFormData({ ...formData, assignment_id: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        assignment_id: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                   >
                     {assignments.map((asg) => (
                       <option key={asg.id} value={asg.id}>
-                        {asg.student_name} — Bed {asg.bed_code} ({asg.property_name})
+                        {asg.student_name} — Bed {asg.bed_code} (
+                        {asg.property_name})
                       </option>
                     ))}
                   </select>
@@ -230,7 +256,8 @@ export default function CheckInOutPage() {
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          record_type: e.target.value as "CHECK_IN" | "CHECK_OUT",
+                          record_type: e.target.value as
+                            "CHECK_IN" | "CHECK_OUT",
                         })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -249,7 +276,10 @@ export default function CheckInOutPage() {
                       type="date"
                       value={formData.scheduled_date}
                       onChange={(e) =>
-                        setFormData({ ...formData, scheduled_date: e.target.value })
+                        setFormData({
+                          ...formData,
+                          scheduled_date: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -264,7 +294,10 @@ export default function CheckInOutPage() {
                     type="text"
                     value={formData.key_identifier || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, key_identifier: e.target.value })
+                      setFormData({
+                        ...formData,
+                        key_identifier: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 font-mono"
                     placeholder="RFID-CARD-8819"
@@ -287,7 +320,8 @@ export default function CheckInOutPage() {
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              damage_assessed_amount: parseFloat(e.target.value) || 0,
+                              damage_assessed_amount:
+                                parseFloat(e.target.value) || 0,
                             })
                           }
                           className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -301,7 +335,10 @@ export default function CheckInOutPage() {
                           type="text"
                           value={formData.damage_description || ""}
                           onChange={(e) =>
-                            setFormData({ ...formData, damage_description: e.target.value })
+                            setFormData({
+                              ...formData,
+                              damage_description: e.target.value,
+                            })
                           }
                           placeholder="e.g. Broken wardrobe lock cylinder"
                           className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -318,7 +355,9 @@ export default function CheckInOutPage() {
                   <textarea
                     rows={2}
                     value={formData.notes || ""}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, notes: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 text-xs"
                   />
                 </div>

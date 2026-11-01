@@ -19,7 +19,11 @@ import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
 import { MobilityProgram } from "@/types/international";
 
-export default function ProgramDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ProgramDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const programId = resolvedParams.id;
 
@@ -44,7 +48,9 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <InternationalNav />
-        <div className="p-12 text-center text-xs text-slate-500">Loading mobility program specifications...</div>
+        <div className="p-12 text-center text-xs text-slate-500">
+          Loading mobility program specifications...
+        </div>
       </div>
     );
   }
@@ -53,7 +59,9 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <InternationalNav />
-        <div className="p-12 text-center text-xs text-rose-400">Mobility program not found.</div>
+        <div className="p-12 text-center text-xs text-rose-400">
+          Mobility program not found.
+        </div>
       </div>
     );
   }
@@ -77,7 +85,8 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-semibold tracking-wider uppercase">
-                  {program.term_type || program.termType} · {program.academic_year || program.academicYear}
+                  {program.term_type || program.termType} ·{" "}
+                  {program.academic_year || program.academicYear}
                 </span>
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
                   {program.program_code || program.programCode}
@@ -93,7 +102,9 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
                 <span className="font-semibold text-slate-200">
                   {program.partner_name || program.partnerName}
                 </span>
-                <span>({program.partner_country || program.partnerCountry})</span>
+                <span>
+                  ({program.partner_country || program.partnerCountry})
+                </span>
               </p>
             </div>
 
@@ -107,7 +118,8 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
               </Link>
               <span className="text-[11px] text-amber-400/90 text-center flex items-center justify-center gap-1">
                 <Clock className="h-3 w-3" />
-                Deadline: {program.application_deadline || program.applicationDeadline}
+                Deadline:{" "}
+                {program.application_deadline || program.applicationDeadline}
               </span>
             </div>
           </div>
@@ -123,13 +135,21 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
             <div>
               <span className="text-slate-500 block">Minimum CGPA</span>
               <span className="text-base font-bold text-slate-200 mt-0.5 block">
-                {program.min_cgpa_requirement || program.minCgpaRequirement || "7.0"} / 10.0
+                {program.min_cgpa_requirement ||
+                  program.minCgpaRequirement ||
+                  "7.0"}{" "}
+                / 10.0
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block">Min Completed Credits</span>
+              <span className="text-slate-500 block">
+                Min Completed Credits
+              </span>
               <span className="text-base font-bold text-slate-200 mt-0.5 block">
-                {program.min_credits_completed || program.minCreditsCompleted || "30"} Credits
+                {program.min_credits_completed ||
+                  program.minCreditsCompleted ||
+                  "30"}{" "}
+                Credits
               </span>
             </div>
             <div>
@@ -152,30 +172,39 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
                 <span>
-                  Enrolled as a full-time undergraduate or master’s student in accredited departments.
+                  Enrolled as a full-time undergraduate or master’s student in
+                  accredited departments.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
                 <span>
                   Cumulative CGPA strictly verified at or above{" "}
-                  <strong>{program.min_cgpa_requirement || program.minCgpaRequirement || 7.0}</strong> at time of application.
+                  <strong>
+                    {program.min_cgpa_requirement ||
+                      program.minCgpaRequirement ||
+                      7.0}
+                  </strong>{" "}
+                  at time of application.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
                 <span>
-                  No active standing academic disciplinary sanctions or examination backlogs.
+                  No active standing academic disciplinary sanctions or
+                  examination backlogs.
                 </span>
               </li>
-              {program.language_requirements && program.language_requirements.length > 0 && (
-                <li className="flex items-start gap-2">
-                  <span className="text-cyan-400 font-bold">•</span>
-                  <span>
-                    Language Proficiency: {program.language_requirements.join(", ")}.
-                  </span>
-                </li>
-              )}
+              {program.language_requirements &&
+                program.language_requirements.length > 0 && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 font-bold">•</span>
+                    <span>
+                      Language Proficiency:{" "}
+                      {program.language_requirements.join(", ")}.
+                    </span>
+                  </li>
+                )}
             </ul>
           </div>
 
@@ -185,12 +214,16 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
               Required Documentation Checklist
             </h3>
             <p className="text-xs text-slate-400">
-              Ensure high-resolution PDF scans are prepared before opening the application:
+              Ensure high-resolution PDF scans are prepared before opening the
+              application:
             </p>
             <ul className="space-y-2 text-xs text-slate-300">
               <li className="flex items-center gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
-                <span>Valid International Passport (Bio-page with &gt; 6 months validity)</span>
+                <span>
+                  Valid International Passport (Bio-page with &gt; 6 months
+                  validity)
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
@@ -198,11 +231,16 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
-                <span>Statement of Purpose detailing proposed courses and academic goals</span>
+                <span>
+                  Statement of Purpose detailing proposed courses and academic
+                  goals
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-cyan-400 font-bold">•</span>
-                <span>Preliminary Learning Agreement with proposed subject mappings</span>
+                <span>
+                  Preliminary Learning Agreement with proposed subject mappings
+                </span>
               </li>
             </ul>
           </div>
@@ -211,9 +249,12 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
         {/* Application Callout Footer */}
         <div className="p-5 rounded-xl bg-cyan-950/30 border border-cyan-800/40 flex items-center justify-between gap-4">
           <div>
-            <h4 className="text-sm font-bold text-cyan-200">Ready to expand your global horizons?</h4>
+            <h4 className="text-sm font-bold text-cyan-200">
+              Ready to expand your global horizons?
+            </h4>
             <p className="text-xs text-cyan-300/80">
-              Applications are reviewed continuously by Department Faculty Coordinators and the International Office.
+              Applications are reviewed continuously by Department Faculty
+              Coordinators and the International Office.
             </p>
           </div>
           <Link

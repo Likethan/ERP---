@@ -26,7 +26,8 @@ export default function EngagementPartnersPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState<CommunityPartner | null>(null);
+  const [selectedPartner, setSelectedPartner] =
+    useState<CommunityPartner | null>(null);
 
   // Form State
   const [name, setName] = useState("");
@@ -35,9 +36,11 @@ export default function EngagementPartnersPage() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [mouRef, setMouRef] = useState("");
-  const [validFrom, setValidFrom] = useState(new Date().toISOString().split("T")[0]);
+  const [validFrom, setValidFrom] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [validTo, setValidTo] = useState(
-    new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0]
+    new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
   );
   const [purpose, setPurpose] = useState("");
   const [city, setCity] = useState("Chennai");
@@ -102,7 +105,8 @@ export default function EngagementPartnersPage() {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.contact_person_name.toLowerCase().includes(search.toLowerCase()) ||
-      (p.purpose_statement && p.purpose_statement.toLowerCase().includes(search.toLowerCase()));
+      (p.purpose_statement &&
+        p.purpose_statement.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === "ALL" || p.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -116,7 +120,10 @@ export default function EngagementPartnersPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -130,7 +137,8 @@ export default function EngagementPartnersPage() {
               Community Partner Directory
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Verified NGOs, non-profits, healthcare foundations, and civic bodies with active MoUs
+              Verified NGOs, non-profits, healthcare foundations, and civic
+              bodies with active MoUs
             </p>
           </div>
 
@@ -188,9 +196,12 @@ export default function EngagementPartnersPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-foreground line-clamp-1">{partner.name}</h3>
+                  <h3 className="text-base font-bold text-foreground line-clamp-1">
+                    {partner.name}
+                  </h3>
                   <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                    {partner.purpose_statement || "Community service and social impact collaborator."}
+                    {partner.purpose_statement ||
+                      "Community service and social impact collaborator."}
                   </p>
                 </div>
 
@@ -259,50 +270,79 @@ export default function EngagementPartnersPage() {
                     {selectedPartner.name}
                   </h2>
                 </div>
-                <button onClick={() => setSelectedPartner(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedPartner(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
-                <p className="text-muted-foreground">{selectedPartner.purpose_statement}</p>
+                <p className="text-muted-foreground">
+                  {selectedPartner.purpose_statement}
+                </p>
 
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-2">
-                  <h4 className="font-semibold text-foreground">Authorized Contact & Address</h4>
+                  <h4 className="font-semibold text-foreground">
+                    Authorized Contact & Address
+                  </h4>
                   <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                     <div>
                       <span>Representative:</span>
-                      <p className="text-foreground font-medium">{selectedPartner.contact_person_name}</p>
+                      <p className="text-foreground font-medium">
+                        {selectedPartner.contact_person_name}
+                      </p>
                     </div>
                     <div>
                       <span>Email:</span>
-                      <p className="text-foreground font-medium">{selectedPartner.contact_email}</p>
+                      <p className="text-foreground font-medium">
+                        {selectedPartner.contact_email}
+                      </p>
                     </div>
                     <div>
                       <span>Phone:</span>
-                      <p className="text-foreground font-medium">{selectedPartner.contact_phone || "Not listed"}</p>
+                      <p className="text-foreground font-medium">
+                        {selectedPartner.contact_phone || "Not listed"}
+                      </p>
                     </div>
                     <div>
                       <span>Location:</span>
-                      <p className="text-foreground font-medium">{selectedPartner.city}, {selectedPartner.state}</p>
+                      <p className="text-foreground font-medium">
+                        {selectedPartner.city}, {selectedPartner.state}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-2">
-                  <h4 className="font-semibold text-foreground">MoU Agreement & Audited Contributions</h4>
+                  <h4 className="font-semibold text-foreground">
+                    MoU Agreement & Audited Contributions
+                  </h4>
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="bg-background p-2 rounded border border-border">
-                      <span className="text-[10px] text-muted-foreground block">Programs Hosted</span>
-                      <span className="text-sm font-bold text-foreground">{selectedPartner.programs_hosted}</span>
+                      <span className="text-[10px] text-muted-foreground block">
+                        Programs Hosted
+                      </span>
+                      <span className="text-sm font-bold text-foreground">
+                        {selectedPartner.programs_hosted}
+                      </span>
                     </div>
                     <div className="bg-background p-2 rounded border border-border">
-                      <span className="text-[10px] text-muted-foreground block">Volunteers</span>
-                      <span className="text-sm font-bold text-foreground">{selectedPartner.total_volunteers_engaged}</span>
+                      <span className="text-[10px] text-muted-foreground block">
+                        Volunteers
+                      </span>
+                      <span className="text-sm font-bold text-foreground">
+                        {selectedPartner.total_volunteers_engaged}
+                      </span>
                     </div>
                     <div className="bg-background p-2 rounded border border-border">
-                      <span className="text-[10px] text-muted-foreground block">Verified Hours</span>
-                      <span className="text-sm font-bold text-emerald-500">{selectedPartner.verified_hours_contributed}</span>
+                      <span className="text-[10px] text-muted-foreground block">
+                        Verified Hours
+                      </span>
+                      <span className="text-sm font-bold text-emerald-500">
+                        {selectedPartner.verified_hours_contributed}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -312,7 +352,9 @@ export default function EngagementPartnersPage() {
                     <h5 className="font-semibold text-emerald-500 mb-1 flex items-center gap-1.5">
                       <TrendingUp className="h-3.5 w-3.5" /> Impact Summary
                     </h5>
-                    <p className="text-muted-foreground">{selectedPartner.impact_summary}</p>
+                    <p className="text-muted-foreground">
+                      {selectedPartner.impact_summary}
+                    </p>
                   </div>
                 )}
               </div>
@@ -338,14 +380,19 @@ export default function EngagementPartnersPage() {
                   <PlusCircle className="h-5 w-5 text-blue-500" />
                   Register Community Partner
                 </h2>
-                <button onClick={() => setIsRegisterOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsRegisterOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleRegisterPartner} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Organization Name *</label>
+                  <label className="font-semibold text-foreground">
+                    Organization Name *
+                  </label>
                   <input
                     type="text"
                     required
@@ -358,21 +405,33 @@ export default function EngagementPartnersPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Organization Type *</label>
+                    <label className="font-semibold text-foreground">
+                      Organization Type *
+                    </label>
                     <select
                       value={orgType}
                       onChange={(e) => setOrgType(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground"
                     >
-                      <option value="Non-Governmental Organization (NGO)">NGO</option>
+                      <option value="Non-Governmental Organization (NGO)">
+                        NGO
+                      </option>
                       <option value="Registered Trust">Registered Trust</option>
-                      <option value="Healthcare Foundation">Healthcare Foundation</option>
-                      <option value="Civic/Municipal Body">Civic/Municipal Body</option>
-                      <option value="Educational Non-Profit">Educational Non-Profit</option>
+                      <option value="Healthcare Foundation">
+                        Healthcare Foundation
+                      </option>
+                      <option value="Civic/Municipal Body">
+                        Civic/Municipal Body
+                      </option>
+                      <option value="Educational Non-Profit">
+                        Educational Non-Profit
+                      </option>
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">MoU Reference Code</label>
+                    <label className="font-semibold text-foreground">
+                      MoU Reference Code
+                    </label>
                     <input
                       type="text"
                       placeholder="e.g. MOU/2026/CIVIC-099"
@@ -385,7 +444,9 @@ export default function EngagementPartnersPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Authorized Representative *</label>
+                    <label className="font-semibold text-foreground">
+                      Authorized Representative *
+                    </label>
                     <input
                       type="text"
                       required
@@ -396,7 +457,9 @@ export default function EngagementPartnersPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Official Email *</label>
+                    <label className="font-semibold text-foreground">
+                      Official Email *
+                    </label>
                     <input
                       type="email"
                       required
@@ -410,7 +473,9 @@ export default function EngagementPartnersPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Contact Phone</label>
+                    <label className="font-semibold text-foreground">
+                      Contact Phone
+                    </label>
                     <input
                       type="text"
                       placeholder="+91 98450 12345"
@@ -420,7 +485,9 @@ export default function EngagementPartnersPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Operating City</label>
+                    <label className="font-semibold text-foreground">
+                      Operating City
+                    </label>
                     <input
                       type="text"
                       value={city}
@@ -431,7 +498,9 @@ export default function EngagementPartnersPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Partnership Mission & Scope</label>
+                  <label className="font-semibold text-foreground">
+                    Partnership Mission & Scope
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Describe collaboration goals, student volunteering modalities, and institutional alignment..."
@@ -464,4 +533,3 @@ export default function EngagementPartnersPage() {
     </div>
   );
 }
-

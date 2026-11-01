@@ -29,11 +29,15 @@ function EscalationQueueContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
   const [escalations, setEscalations] = useState<CaseEscalationModel[]>([]);
 
   // Trigger form
-  const [level, setLevel] = useState<SAEscalationLevel>(SAEscalationLevel.LEVEL_2_DIRECTOR);
+  const [level, setLevel] = useState<SAEscalationLevel>(
+    SAEscalationLevel.LEVEL_2_DIRECTOR,
+  );
   const [triggerReason, setTriggerReason] = useState("");
   const [safeguardingLeadId, setSafeguardingLeadId] = useState("usr-icc-001");
   const [loading, setLoading] = useState(false);
@@ -57,7 +61,9 @@ function EscalationQueueContent() {
         case_id: c.id,
         escalation_level: SAEscalationLevel.LEVEL_2_DIRECTOR,
         status: SAEscalationStatus.ACTIVE,
-        trigger_reason: c.escalation_reason || "Urgent safeguarding report flagged for immediate review.",
+        trigger_reason:
+          c.escalation_reason ||
+          "Urgent safeguarding report flagged for immediate review.",
         escalated_by_id: "usr-current-officer",
         safeguarding_lead_id: "usr-icc-001",
         created_at: c.created_at,
@@ -80,7 +86,9 @@ function EscalationQueueContent() {
         triggerReason,
         safeguardingLeadId,
       });
-      setNotification(`Case escalated to ${level}. Priority elevated to Critical Urgent.`);
+      setNotification(
+        `Case escalated to ${level}. Priority elevated to Critical Urgent.`,
+      );
       setEscalations((prev) => [created, ...prev]);
       setTriggerReason("");
     } catch {
@@ -96,7 +104,10 @@ function EscalationQueueContent() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Escalation Queue", href: "/app/student-affairs/escalations" },
+          {
+            label: "Escalation Queue",
+            href: "/app/student-affairs/escalations",
+          },
         ]}
       />
 
@@ -106,7 +117,8 @@ function EscalationQueueContent() {
           Urgent Safeguarding & Executive Escalation Queue
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          High-priority incident dispatch for anti-ragging, safety threats, acute harassment, and Dean-level intervention.
+          High-priority incident dispatch for anti-ragging, safety threats,
+          acute harassment, and Dean-level intervention.
         </p>
       </div>
 
@@ -117,9 +129,12 @@ function EscalationQueueContent() {
         <div className="flex items-center gap-3">
           <PhoneCall className="h-5 w-5 text-rose-400 shrink-0" />
           <div>
-            <strong>Campus Security Emergency Hotlines:</strong> Extension 100 / Mobile +91 80 2345 6799
+            <strong>Campus Security Emergency Hotlines:</strong> Extension 100 /
+            Mobile +91 80 2345 6799
             <p className="text-[11px] text-rose-300/70 mt-0.5">
-              This digital workflow manages administrative safeguarding. In immediate danger or medical crises, contact local emergency services immediately.
+              This digital workflow manages administrative safeguarding. In
+              immediate danger or medical crises, contact local emergency
+              services immediately.
             </p>
           </div>
         </div>
@@ -131,7 +146,10 @@ function EscalationQueueContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setNotification("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -164,16 +182,29 @@ function EscalationQueueContent() {
                         {esc.escalation_level}
                       </Badge>
                     </div>
-                    <Badge variant="outline" className="border-slate-700 text-slate-300 text-[10px]">
+                    <Badge
+                      variant="outline"
+                      className="border-slate-700 text-slate-300 text-[10px]"
+                    >
                       {esc.status}
                     </Badge>
                   </div>
 
-                  <p className="text-xs text-slate-300 font-medium">{esc.trigger_reason}</p>
+                  <p className="text-xs text-slate-300 font-medium">
+                    {esc.trigger_reason}
+                  </p>
 
                   <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60">
-                    <span>Designated Lead: <strong className="text-slate-200">Prof. Radhika Menon (ICC)</strong></span>
-                    <span>Flagged on: {new Date(esc.created_at).toLocaleDateString()}</span>
+                    <span>
+                      Designated Lead:{" "}
+                      <strong className="text-slate-200">
+                        Prof. Radhika Menon (ICC)
+                      </strong>
+                    </span>
+                    <span>
+                      Flagged on:{" "}
+                      {new Date(esc.created_at).toLocaleDateString()}
+                    </span>
                   </div>
                 </Card>
               ))}
@@ -189,9 +220,14 @@ function EscalationQueueContent() {
               Elevate Case to Escalation
             </h2>
 
-            <form onSubmit={handleTriggerEscalation} className="space-y-3.5 text-xs">
+            <form
+              onSubmit={handleTriggerEscalation}
+              className="space-y-3.5 text-xs"
+            >
               <div>
-                <label className="block text-slate-300 mb-1">Target Case Ref *</label>
+                <label className="block text-slate-300 mb-1">
+                  Target Case Ref *
+                </label>
                 <select
                   value={selectedCaseId}
                   onChange={(e) => setSelectedCaseId(e.target.value)}
@@ -206,20 +242,34 @@ function EscalationQueueContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Escalation Tier *</label>
+                <label className="block text-slate-300 mb-1">
+                  Escalation Tier *
+                </label>
                 <select
                   value={level}
-                  onChange={(e) => setLevel(e.target.value as SAEscalationLevel)}
+                  onChange={(e) =>
+                    setLevel(e.target.value as SAEscalationLevel)
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
                 >
-                  <option value={SAEscalationLevel.LEVEL_1_LEAD}>LEVEL 1 - Department Head / Lead Officer</option>
-                  <option value={SAEscalationLevel.LEVEL_2_DIRECTOR}>LEVEL 2 - Dean / Safeguarding Director</option>
-                  <option value={SAEscalationLevel.LEVEL_3_EXECUTIVE_SAFEGUARDING}>LEVEL 3 - Executive Syndicate / Anti-Ragging Council</option>
+                  <option value={SAEscalationLevel.LEVEL_1_LEAD}>
+                    LEVEL 1 - Department Head / Lead Officer
+                  </option>
+                  <option value={SAEscalationLevel.LEVEL_2_DIRECTOR}>
+                    LEVEL 2 - Dean / Safeguarding Director
+                  </option>
+                  <option
+                    value={SAEscalationLevel.LEVEL_3_EXECUTIVE_SAFEGUARDING}
+                  >
+                    LEVEL 3 - Executive Syndicate / Anti-Ragging Council
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Trigger Rationale & Threats *</label>
+                <label className="block text-slate-300 mb-1">
+                  Trigger Rationale & Threats *
+                </label>
                 <textarea
                   rows={4}
                   placeholder="State the safety threat, pattern of harassment, or non-responsive deadline..."
@@ -247,9 +297,14 @@ function EscalationQueueContent() {
 
 export default function EscalationQueuePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-400">Loading escalation queue...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-400">
+          Loading escalation queue...
+        </div>
+      }
+    >
       <EscalationQueueContent />
     </Suspense>
   );
 }
-

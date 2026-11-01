@@ -26,7 +26,9 @@ export const payrollService = {
   async listSalaryGrades(isActive?: boolean): Promise<SalaryGrade[]> {
     const params = new URLSearchParams();
     if (isActive !== undefined) params.append("is_active", String(isActive));
-    const res = await apiFetch<SalaryGrade[]>(`/api/v1/payroll/salary-grades?${params.toString()}`);
+    const res = await apiFetch<SalaryGrade[]>(
+      `/api/v1/payroll/salary-grades?${params.toString()}`,
+    );
     return res.data || [];
   },
 
@@ -45,10 +47,14 @@ export const payrollService = {
   },
 
   // 2. Salary Components
-  async listSalaryComponents(componentType?: string): Promise<SalaryComponent[]> {
+  async listSalaryComponents(
+    componentType?: string,
+  ): Promise<SalaryComponent[]> {
     const params = new URLSearchParams();
     if (componentType) params.append("component_type", componentType);
-    const res = await apiFetch<SalaryComponent[]>(`/api/v1/payroll/salary-components?${params.toString()}`);
+    const res = await apiFetch<SalaryComponent[]>(
+      `/api/v1/payroll/salary-components?${params.toString()}`,
+    );
     return res.data || [];
   },
 
@@ -62,16 +68,21 @@ export const payrollService = {
     is_statutory?: boolean;
     taxability?: string;
   }): Promise<SalaryComponent> {
-    const res = await apiFetch<SalaryComponent>("/api/v1/payroll/salary-components", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<SalaryComponent>(
+      "/api/v1/payroll/salary-components",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
   // 3. Salary Structures
   async listSalaryStructures(): Promise<SalaryStructure[]> {
-    const res = await apiFetch<SalaryStructure[]>("/api/v1/payroll/salary-structures");
+    const res = await apiFetch<SalaryStructure[]>(
+      "/api/v1/payroll/salary-structures",
+    );
     return res.data || [];
   },
 
@@ -89,18 +100,25 @@ export const payrollService = {
       sequence?: number;
     }>;
   }): Promise<SalaryStructure> {
-    const res = await apiFetch<SalaryStructure>("/api/v1/payroll/salary-structures", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<SalaryStructure>(
+      "/api/v1/payroll/salary-structures",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
   // 4. Employee Compensation & Bank Details
-  async listEmployeeCompensations(employeeId?: string): Promise<EmployeeCompensation[]> {
+  async listEmployeeCompensations(
+    employeeId?: string,
+  ): Promise<EmployeeCompensation[]> {
     const params = new URLSearchParams();
     if (employeeId) params.append("employee_id", employeeId);
-    const res = await apiFetch<EmployeeCompensation[]>(`/api/v1/payroll/employee-compensations?${params.toString()}`);
+    const res = await apiFetch<EmployeeCompensation[]>(
+      `/api/v1/payroll/employee-compensations?${params.toString()}`,
+    );
     return res.data || [];
   },
 
@@ -115,15 +133,22 @@ export const payrollService = {
     effective_to?: string;
     notes?: string;
   }): Promise<EmployeeCompensation> {
-    const res = await apiFetch<EmployeeCompensation>("/api/v1/payroll/employee-compensations", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<EmployeeCompensation>(
+      "/api/v1/payroll/employee-compensations",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
-  async getEmployeeBankDetails(employeeId: string): Promise<EmployeeBankDetail> {
-    const res = await apiFetch<EmployeeBankDetail>(`/api/v1/payroll/employees/${employeeId}/bank-details`);
+  async getEmployeeBankDetails(
+    employeeId: string,
+  ): Promise<EmployeeBankDetail> {
+    const res = await apiFetch<EmployeeBankDetail>(
+      `/api/v1/payroll/employees/${employeeId}/bank-details`,
+    );
     return res.data;
   },
 
@@ -135,28 +160,40 @@ export const payrollService = {
       account_number: string;
       ifsc_code: string;
       branch_name: string;
-    }
+    },
   ): Promise<EmployeeBankDetail> {
-    const res = await apiFetch<EmployeeBankDetail>(`/api/v1/payroll/employees/${employeeId}/bank-details`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<EmployeeBankDetail>(
+      `/api/v1/payroll/employees/${employeeId}/bank-details`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
-  async verifyEmployeeBankDetails(employeeId: string): Promise<EmployeeBankDetail> {
-    const res = await apiFetch<EmployeeBankDetail>(`/api/v1/payroll/employees/${employeeId}/bank-details/verify`, {
-      method: "POST",
-      body: JSON.stringify({ is_verified: true }),
-    });
+  async verifyEmployeeBankDetails(
+    employeeId: string,
+  ): Promise<EmployeeBankDetail> {
+    const res = await apiFetch<EmployeeBankDetail>(
+      `/api/v1/payroll/employees/${employeeId}/bank-details/verify`,
+      {
+        method: "POST",
+        body: JSON.stringify({ is_verified: true }),
+      },
+    );
     return res.data;
   },
 
   // 5. Statutory Compliance Rules
-  async listStatutoryRules(jurisdiction?: string): Promise<StatutoryComplianceRule[]> {
+  async listStatutoryRules(
+    jurisdiction?: string,
+  ): Promise<StatutoryComplianceRule[]> {
     const params = new URLSearchParams();
     if (jurisdiction) params.append("jurisdiction", jurisdiction);
-    const res = await apiFetch<StatutoryComplianceRule[]>(`/api/v1/payroll/statutory-rules?${params.toString()}`);
+    const res = await apiFetch<StatutoryComplianceRule[]>(
+      `/api/v1/payroll/statutory-rules?${params.toString()}`,
+    );
     return res.data || [];
   },
 
@@ -171,10 +208,13 @@ export const payrollService = {
     effective_from: string;
     slab_configuration?: Array<Record<string, any>>;
   }): Promise<StatutoryComplianceRule> {
-    const res = await apiFetch<StatutoryComplianceRule>("/api/v1/payroll/statutory-rules", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<StatutoryComplianceRule>(
+      "/api/v1/payroll/statutory-rules",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
@@ -200,7 +240,9 @@ export const payrollService = {
   async listPayrollPeriods(calendarId?: string): Promise<PayrollPeriod[]> {
     const params = new URLSearchParams();
     if (calendarId) params.append("calendar_id", calendarId);
-    const res = await apiFetch<PayrollPeriod[]>(`/api/v1/payroll/periods?${params.toString()}`);
+    const res = await apiFetch<PayrollPeriod[]>(
+      `/api/v1/payroll/periods?${params.toString()}`,
+    );
     return res.data || [];
   },
 
@@ -219,7 +261,11 @@ export const payrollService = {
   },
 
   // 7. Payroll Runs
-  async listPayrollRuns(params?: { period_id?: string; calendar_id?: string; status?: string }): Promise<PayrollRun[]> {
+  async listPayrollRuns(params?: {
+    period_id?: string;
+    calendar_id?: string;
+    status?: string;
+  }): Promise<PayrollRun[]> {
     const q = new URLSearchParams();
     if (params?.period_id) q.set("period_id", params.period_id);
     if (params?.calendar_id) q.set("calendar_id", params.calendar_id);
@@ -249,35 +295,50 @@ export const payrollService = {
     return res.data;
   },
 
-  async calculatePayrollRun(runId: string, payload?: { force_recalculate?: boolean }): Promise<PayrollRun> {
-    const res = await apiFetch<PayrollRun>(`/api/v1/payroll/runs/${runId}/calculate`, {
-      method: "POST",
-      body: JSON.stringify(payload || {}),
-    });
+  async calculatePayrollRun(
+    runId: string,
+    payload?: { force_recalculate?: boolean },
+  ): Promise<PayrollRun> {
+    const res = await apiFetch<PayrollRun>(
+      `/api/v1/payroll/runs/${runId}/calculate`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload || {}),
+      },
+    );
     return res.data;
   },
 
   async approvePayrollRun(runId: string, notes?: string): Promise<PayrollRun> {
     const params = new URLSearchParams();
     if (notes) params.append("notes", notes);
-    const res = await apiFetch<PayrollRun>(`/api/v1/payroll/runs/${runId}/approve?${params.toString()}`, {
-      method: "POST",
-    });
+    const res = await apiFetch<PayrollRun>(
+      `/api/v1/payroll/runs/${runId}/approve?${params.toString()}`,
+      {
+        method: "POST",
+      },
+    );
     return res.data;
   },
 
   async cancelPayrollRun(runId: string, reason: string): Promise<PayrollRun> {
-    const res = await apiFetch<PayrollRun>(`/api/v1/payroll/runs/${runId}/cancel`, {
-      method: "POST",
-      body: JSON.stringify({ reason }),
-    });
+    const res = await apiFetch<PayrollRun>(
+      `/api/v1/payroll/runs/${runId}/cancel`,
+      {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      },
+    );
     return res.data;
   },
 
   async postPayrollRun(runId: string): Promise<PayrollJournalEntry> {
-    const res = await apiFetch<PayrollJournalEntry>(`/api/v1/payroll/runs/${runId}/post`, {
-      method: "POST",
-    });
+    const res = await apiFetch<PayrollJournalEntry>(
+      `/api/v1/payroll/runs/${runId}/post`,
+      {
+        method: "POST",
+      },
+    );
     return res.data;
   },
 
@@ -286,13 +347,17 @@ export const payrollService = {
   },
 
   async getPayrollJournal(runId: string): Promise<PayrollJournalEntry> {
-    const res = await apiFetch<PayrollJournalEntry>(`/api/v1/payroll/runs/${runId}/journal`);
+    const res = await apiFetch<PayrollJournalEntry>(
+      `/api/v1/payroll/runs/${runId}/journal`,
+    );
     return res.data;
   },
 
   // 8. Payment Batches
   async listPaymentBatches(): Promise<PayrollPaymentBatch[]> {
-    const res = await apiFetch<PayrollPaymentBatch[]>("/api/v1/payroll/payment-batches");
+    const res = await apiFetch<PayrollPaymentBatch[]>(
+      "/api/v1/payroll/payment-batches",
+    );
     return res.data || [];
   },
 
@@ -301,15 +366,20 @@ export const payrollService = {
     payment_method?: string;
     export_format?: string;
   }): Promise<PayrollPaymentBatch> {
-    const res = await apiFetch<PayrollPaymentBatch>("/api/v1/payroll/payment-batches", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<PayrollPaymentBatch>(
+      "/api/v1/payroll/payment-batches",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
   async getPaymentBatch(batchId: string): Promise<PayrollPaymentBatch> {
-    const res = await apiFetch<PayrollPaymentBatch>(`/api/v1/payroll/payment-batches/${batchId}`);
+    const res = await apiFetch<PayrollPaymentBatch>(
+      `/api/v1/payroll/payment-batches/${batchId}`,
+    );
     return res.data;
   },
 
@@ -321,28 +391,37 @@ export const payrollService = {
         status: string;
         transaction_reference?: string;
       }>;
-    }
+    },
   ): Promise<PayrollPaymentBatch> {
-    const res = await apiFetch<PayrollPaymentBatch>(`/api/v1/payroll/payment-batches/${batchId}/reconcile`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<PayrollPaymentBatch>(
+      `/api/v1/payroll/payment-batches/${batchId}/reconcile`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   },
 
   // 9. Payslips & Employee Self-Service
   async getMyPayslips(): Promise<Payslip[]> {
-    const res = await apiFetch<Payslip[]>("/api/v1/payroll/payslips/my-payslips");
+    const res = await apiFetch<Payslip[]>(
+      "/api/v1/payroll/payslips/my-payslips",
+    );
     return res.data || [];
   },
 
   async getEmployeePayslips(employeeId: string): Promise<Payslip[]> {
-    const res = await apiFetch<Payslip[]>(`/api/v1/payroll/employees/${employeeId}/payslips`);
+    const res = await apiFetch<Payslip[]>(
+      `/api/v1/payroll/employees/${employeeId}/payslips`,
+    );
     return res.data || [];
   },
 
   async getPayslipByToken(token: string): Promise<Payslip> {
-    const res = await apiFetch<Payslip>(`/api/v1/payroll/payslips/token/${token}`);
+    const res = await apiFetch<Payslip>(
+      `/api/v1/payroll/payslips/token/${token}`,
+    );
     return res.data;
   },
 
@@ -350,7 +429,11 @@ export const payrollService = {
     subject: string;
     description: string;
   }): Promise<{ status: string; case_number: string; message: string }> {
-    const res = await apiFetch<{ status: string; case_number: string; message: string }>("/api/v1/payroll/payslips/dispute", {
+    const res = await apiFetch<{
+      status: string;
+      case_number: string;
+      message: string;
+    }>("/api/v1/payroll/payslips/dispute", {
       method: "POST",
       body: JSON.stringify(payload),
     });

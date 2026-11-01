@@ -5,7 +5,11 @@ import Link from "next/link";
 import { ResearchNav } from "@/components/research/research-nav";
 import { ResearchService } from "@/services/research.service";
 import { calculateProjectHealth } from "@/services/research-calculator";
-import { ResearchProject, ResearchProjectCategory, ResearchProjectStatus } from "@/types/research";
+import {
+  ResearchProject,
+  ResearchProjectCategory,
+  ResearchProjectStatus,
+} from "@/types/research";
 import {
   FolderKanban,
   Search,
@@ -30,7 +34,10 @@ export default function ProjectsPortfolioPage() {
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Form State
   const [form, setForm] = useState({
@@ -43,7 +50,9 @@ export default function ProjectsPortfolioPage() {
     currency: "USD",
     requires_ethics_approval: false,
     start_date: new Date().toISOString().split("T")[0],
-    planned_end_date: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+    planned_end_date: new Date(Date.now() + 365 * 86400000)
+      .toISOString()
+      .split("T")[0],
   });
 
   const loadProjects = async () => {
@@ -56,7 +65,10 @@ export default function ProjectsPortfolioPage() {
       });
       setProjects(data);
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to load projects." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to load projects.",
+      });
     } finally {
       setLoading(false);
     }
@@ -74,26 +86,40 @@ export default function ProjectsPortfolioPage() {
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.abstract.trim()) {
-      setFeedback({ type: "error", message: "Please enter project title and abstract." });
+      setFeedback({
+        type: "error",
+        message: "Please enter project title and abstract.",
+      });
       return;
     }
     try {
       const created = await ResearchService.createProject(form as any);
-      setFeedback({ type: "success", message: `Project ${created.project_code} registered in portfolio.` });
+      setFeedback({
+        type: "success",
+        message: `Project ${created.project_code} registered in portfolio.`,
+      });
       setIsNewProjectModalOpen(false);
       loadProjects();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to register project." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to register project.",
+      });
     }
   };
 
   const statusBadge = (status: string) => {
     const s = status.toUpperCase();
-    if (s === "ACTIVE") return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
-    if (s === "APPROVED") return "bg-blue-500/10 text-blue-400 border-blue-500/20";
-    if (s === "UNDER_REVIEW") return "bg-amber-500/10 text-amber-400 border-amber-500/20";
-    if (s === "COMPLETED") return "bg-purple-500/10 text-purple-400 border-purple-500/20";
-    if (s === "CLOSED") return "bg-slate-500/10 text-slate-400 border-slate-500/20";
+    if (s === "ACTIVE")
+      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+    if (s === "APPROVED")
+      return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+    if (s === "UNDER_REVIEW")
+      return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    if (s === "COMPLETED")
+      return "bg-purple-500/10 text-purple-400 border-purple-500/20";
+    if (s === "CLOSED")
+      return "bg-slate-500/10 text-slate-400 border-slate-500/20";
     return "bg-slate-800 text-slate-400 border-slate-700";
   };
 
@@ -110,7 +136,8 @@ export default function ProjectsPortfolioPage() {
               Institutional Project Portfolio
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Unified operational portfolio covering faculty, student, sponsored, and international research.
+              Unified operational portfolio covering faculty, student,
+              sponsored, and international research.
             </p>
           </div>
 
@@ -127,7 +154,9 @@ export default function ProjectsPortfolioPage() {
               className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
               title="Refresh Portfolio"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`}
+              />
             </button>
           </div>
         </div>
@@ -142,7 +171,10 @@ export default function ProjectsPortfolioPage() {
             }`}
           >
             <span>{feedback.message}</span>
-            <button onClick={() => setFeedback(null)} className="text-xs underline ml-4">
+            <button
+              onClick={() => setFeedback(null)}
+              className="text-xs underline ml-4"
+            >
               Dismiss
             </button>
           </div>
@@ -150,7 +182,10 @@ export default function ProjectsPortfolioPage() {
 
         {/* Search & Filter Bar */}
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm flex flex-col md:flex-row items-center justify-between gap-4">
-          <form onSubmit={handleSearchSubmit} className="relative w-full md:w-96">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="relative w-full md:w-96"
+          >
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
@@ -163,7 +198,9 @@ export default function ProjectsPortfolioPage() {
 
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 font-medium">Category:</span>
+              <span className="text-xs text-slate-400 font-medium">
+                Category:
+              </span>
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
@@ -174,12 +211,16 @@ export default function ProjectsPortfolioPage() {
                 <option value="GOVERNMENT_FUNDED">Government-Funded</option>
                 <option value="INDUSTRY_SPONSORED">Industry-Sponsored</option>
                 <option value="APPLIED_INNOVATION">Applied Innovation</option>
-                <option value="INTERNATIONAL_COLLABORATION">International</option>
+                <option value="INTERNATIONAL_COLLABORATION">
+                  International
+                </option>
               </select>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 font-medium">Status:</span>
+              <span className="text-xs text-slate-400 font-medium">
+                Status:
+              </span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -203,15 +244,20 @@ export default function ProjectsPortfolioPage() {
         {loading ? (
           <div className="py-20 text-center space-y-3">
             <RefreshCw className="h-8 w-8 animate-spin text-emerald-400 mx-auto" />
-            <p className="text-sm text-slate-400">Loading project records from institutional repository...</p>
+            <p className="text-sm text-slate-400">
+              Loading project records from institutional repository...
+            </p>
           </div>
         ) : projects.length === 0 ? (
           <div className="py-20 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 space-y-4">
             <FolderKanban className="h-12 w-12 text-slate-600 mx-auto" />
             <div className="space-y-1">
-              <h3 className="text-base font-semibold text-white">No research projects match your criteria</h3>
+              <h3 className="text-base font-semibold text-white">
+                No research projects match your criteria
+              </h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                Try clearing active filters or register a new research project in the institutional portfolio.
+                Try clearing active filters or register a new research project
+                in the institutional portfolio.
               </p>
             </div>
             <button
@@ -236,7 +282,7 @@ export default function ProjectsPortfolioPage() {
                     </span>
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${statusBadge(
-                        proj.status
+                        proj.status,
                       )}`}
                     >
                       {proj.status}
@@ -247,18 +293,23 @@ export default function ProjectsPortfolioPage() {
                     <h3 className="text-base font-semibold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">
                       {proj.title}
                     </h3>
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">{proj.abstract}</p>
+                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                      {proj.abstract}
+                    </p>
                   </div>
 
                   <div className="space-y-1 text-xs text-slate-400 border-t border-slate-800/60 pt-3">
                     <div className="flex items-center justify-between">
                       <span className="text-slate-500">Domain:</span>
-                      <span className="text-slate-300 font-medium">{proj.research_domain}</span>
+                      <span className="text-slate-300 font-medium">
+                        {proj.research_domain}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-slate-500">Allocation:</span>
                       <span className="text-emerald-400 font-semibold font-mono">
-                        {proj.currency} {Number(proj.total_budget_allocated).toLocaleString()}
+                        {proj.currency}{" "}
+                        {Number(proj.total_budget_allocated).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -277,7 +328,9 @@ export default function ProjectsPortfolioPage() {
                       Ethics Required
                     </span>
                   ) : (
-                    <span className="text-[11px] text-slate-500">Standard Protocol</span>
+                    <span className="text-[11px] text-slate-500">
+                      Standard Protocol
+                    </span>
                   )}
 
                   <Link
@@ -314,21 +367,29 @@ export default function ProjectsPortfolioPage() {
             <form onSubmit={handleCreateProject} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Project Code</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Project Code
+                  </label>
                   <input
                     type="text"
                     value={form.project_code}
-                    onChange={(e) => setForm({ ...form, project_code: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, project_code: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Research Domain</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Research Domain
+                  </label>
                   <input
                     type="text"
                     value={form.research_domain}
-                    onChange={(e) => setForm({ ...form, research_domain: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, research_domain: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                     required
                   />
@@ -336,7 +397,9 @@ export default function ProjectsPortfolioPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Project Title</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Project Title
+                </label>
                 <input
                   type="text"
                   placeholder="e.g., Deep Learning Architectures for Autonomous Electric Grid Management"
@@ -348,12 +411,16 @@ export default function ProjectsPortfolioPage() {
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Abstract & Scope</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Abstract & Scope
+                </label>
                 <textarea
                   rows={3}
                   placeholder="Detail problem statement, scientific methodology, and target institutional deliverables..."
                   value={form.abstract}
-                  onChange={(e) => setForm({ ...form, abstract: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, abstract: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
@@ -361,38 +428,59 @@ export default function ProjectsPortfolioPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Category</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Category
+                  </label>
                   <select
                     value={form.research_category}
-                    onChange={(e) => setForm({ ...form, research_category: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, research_category: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   >
                     <option value="FACULTY_LED">Faculty-Led</option>
-                    <option value="APPLIED_INNOVATION">Applied Innovation</option>
+                    <option value="APPLIED_INNOVATION">
+                      Applied Innovation
+                    </option>
                     <option value="GOVERNMENT_FUNDED">Government-Funded</option>
-                    <option value="INDUSTRY_SPONSORED">Industry-Sponsored</option>
+                    <option value="INDUSTRY_SPONSORED">
+                      Industry-Sponsored
+                    </option>
                     <option value="STUDENT_RESEARCH">Student Research</option>
-                    <option value="INTERNATIONAL_COLLABORATION">International Collaboration</option>
+                    <option value="INTERNATIONAL_COLLABORATION">
+                      International Collaboration
+                    </option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Proposed Budget</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Proposed Budget
+                  </label>
                   <input
                     type="number"
                     value={form.proposed_budget}
-                    onChange={(e) => setForm({ ...form, proposed_budget: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        proposed_budget: Number(e.target.value),
+                      })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Currency</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Currency
+                  </label>
                   <input
                     type="text"
                     value={form.currency}
-                    onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, currency: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   />
                 </div>
@@ -400,21 +488,29 @@ export default function ProjectsPortfolioPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Start Date</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Start Date
+                  </label>
                   <input
                     type="date"
                     value={form.start_date}
-                    onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, start_date: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Planned End Date</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Planned End Date
+                  </label>
                   <input
                     type="date"
                     value={form.planned_end_date}
-                    onChange={(e) => setForm({ ...form, planned_end_date: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, planned_end_date: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                     required
                   />
@@ -426,11 +522,17 @@ export default function ProjectsPortfolioPage() {
                   type="checkbox"
                   id="ethics_checkbox"
                   checked={form.requires_ethics_approval}
-                  onChange={(e) => setForm({ ...form, requires_ethics_approval: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      requires_ethics_approval: e.target.checked,
+                    })
+                  }
                   className="rounded bg-slate-950 border-slate-800 text-emerald-600 focus:ring-0"
                 />
                 <label htmlFor="ethics_checkbox" className="text-slate-300">
-                  Project involves human subjects, animal assays, or biohazardous materials (Requires institutional ethics review)
+                  Project involves human subjects, animal assays, or
+                  biohazardous materials (Requires institutional ethics review)
                 </label>
               </div>
 

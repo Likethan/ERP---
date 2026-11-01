@@ -43,7 +43,9 @@ import {
 } from "@/types/legal";
 
 export default function ComplianceEvidencePage() {
-  const [obligations, setObligations] = useState<InstitutionalComplianceObligation[]>([]);
+  const [obligations, setObligations] = useState<
+    InstitutionalComplianceObligation[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
@@ -52,19 +54,25 @@ export default function ComplianceEvidencePage() {
   // Modals
   const [isAssessOpen, setIsAssessOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedObligation, setSelectedObligation] = useState<InstitutionalComplianceObligation | null>(null);
+  const [selectedObligation, setSelectedObligation] =
+    useState<InstitutionalComplianceObligation | null>(null);
 
   // Assess form
-  const [assessStatus, setAssessStatus] = useState<ComplianceStatus>("COMPLIANT");
+  const [assessStatus, setAssessStatus] =
+    useState<ComplianceStatus>("COMPLIANT");
   const [assessFindings, setAssessFindings] = useState("");
   const [evidenceRef, setEvidenceRef] = useState("");
   const [actionTitle, setActionTitle] = useState("");
-  const [actionOwner, setActionOwner] = useState("University Compliance Director");
+  const [actionOwner, setActionOwner] = useState(
+    "University Compliance Director",
+  );
   const [actionDueDate, setActionDueDate] = useState("");
 
   // Create form
   const [newTitle, setNewTitle] = useState("");
-  const [newCategory, setNewCategory] = useState<ComplianceCategory>("DATA_PRIVACY_SECURITY");
+  const [newCategory, setNewCategory] = useState<ComplianceCategory>(
+    "DATA_PRIVACY_SECURITY",
+  );
   const [newAuthority, setNewAuthority] = useState("");
   const [newSourceRef, setNewSourceRef] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -173,7 +181,8 @@ export default function ComplianceEvidencePage() {
 
   const filteredObligations = obligations.filter((item) => {
     const titleVal = item.title || item.name || "";
-    const authVal = item.governing_authority || item.authoritative_source_reference || "";
+    const authVal =
+      item.governing_authority || item.authoritative_source_reference || "";
     if (
       searchTerm &&
       !titleVal.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -194,10 +203,12 @@ export default function ComplianceEvidencePage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <ShieldCheck className="h-6 w-6 text-indigo-600" /> Statutory Compliance & Evidence Assessment
+              <ShieldCheck className="h-6 w-6 text-indigo-600" /> Statutory
+              Compliance & Evidence Assessment
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Institutional compliance oversight for Accreditation, FERPA, Title IX, Clery Act, Research Ethics, and Financial Aid regulations.
+              Institutional compliance oversight for Accreditation, FERPA, Title
+              IX, Clery Act, Research Ethics, and Financial Aid regulations.
             </p>
           </div>
           <button
@@ -229,14 +240,24 @@ export default function ComplianceEvidencePage() {
                 className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
               >
                 <option value="ALL">All Statutory Frameworks</option>
-                <option value="ACCREDITATION">Accreditation (Regional / Professional)</option>
+                <option value="ACCREDITATION">
+                  Accreditation (Regional / Professional)
+                </option>
                 <option value="FERPA_PRIVACY">FERPA & Student Privacy</option>
                 <option value="TITLE_IX">Title IX & Gender Equity</option>
                 <option value="CLERY_ACT">Clery Act & Campus Safety</option>
-                <option value="RESEARCH_ETHICS">Research Ethics & Animal Welfare</option>
-                <option value="ADA_ACCESSIBILITY">ADA & Digital Accessibility</option>
-                <option value="ENVIRONMENTAL_SAFETY">OSHA & Environmental Safety</option>
-                <option value="FINANCIAL_AID">Financial Aid (Title IV HEA)</option>
+                <option value="RESEARCH_ETHICS">
+                  Research Ethics & Animal Welfare
+                </option>
+                <option value="ADA_ACCESSIBILITY">
+                  ADA & Digital Accessibility
+                </option>
+                <option value="ENVIRONMENTAL_SAFETY">
+                  OSHA & Environmental Safety
+                </option>
+                <option value="FINANCIAL_AID">
+                  Financial Aid (Title IV HEA)
+                </option>
               </select>
 
               <select
@@ -248,7 +269,9 @@ export default function ComplianceEvidencePage() {
                 <option value="COMPLIANT">Compliant</option>
                 <option value="PARTIALLY_COMPLIANT">Partially Compliant</option>
                 <option value="EVIDENCE_REQUIRED">Evidence Required</option>
-                <option value="REMEDIATION_IN_PROGRESS">Remediation in Progress</option>
+                <option value="REMEDIATION_IN_PROGRESS">
+                  Remediation in Progress
+                </option>
                 <option value="UNDER_REVIEW">Under Review</option>
                 <option value="NOT_ASSESSED">Not Assessed</option>
                 <option value="NON_COMPLIANT">Non-Compliant</option>
@@ -270,13 +293,19 @@ export default function ComplianceEvidencePage() {
           {loading ? (
             <div className="p-12 text-center text-slate-400">
               <RefreshCw className="h-6 w-6 animate-spin mx-auto mb-2 text-indigo-600" />
-              <p className="text-xs">Loading statutory compliance obligations...</p>
+              <p className="text-xs">
+                Loading statutory compliance obligations...
+              </p>
             </div>
           ) : filteredObligations.length === 0 ? (
             <div className="p-12 text-center text-slate-400 space-y-2">
               <CheckCircle2 className="h-8 w-8 mx-auto text-slate-300" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Compliance Records Found</p>
-              <p className="text-xs text-slate-500">No records match your query.</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                No Compliance Records Found
+              </p>
+              <p className="text-xs text-slate-500">
+                No records match your query.
+              </p>
             </div>
           ) : (
             <table className="w-full text-left text-sm">
@@ -292,22 +321,32 @@ export default function ComplianceEvidencePage() {
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {filteredObligations.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={item.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
+                  >
                     <td className="px-6 py-4">
-                      <strong className="block text-slate-900 dark:text-white">{item.title || item.name}</strong>
-                      {(item.source_reference || item.authoritative_source_reference) && (
+                      <strong className="block text-slate-900 dark:text-white">
+                        {item.title || item.name}
+                      </strong>
+                      {(item.source_reference ||
+                        item.authoritative_source_reference) && (
                         <span className="text-xs font-mono text-slate-400 block mt-0.5">
-                          Ref: {item.source_reference || item.authoritative_source_reference}
+                          Ref:{" "}
+                          {item.source_reference ||
+                            item.authoritative_source_reference}
                         </span>
                       )}
                       {(item.review_findings || item.assessment_findings) && (
                         <span className="text-xs text-slate-500 block mt-1">
-                          Findings: {item.review_findings || item.assessment_findings}
+                          Findings:{" "}
+                          {item.review_findings || item.assessment_findings}
                         </span>
                       )}
                       {item.corrective_action_plan && (
                         <span className="text-xs text-amber-600 font-medium block mt-1 flex items-center gap-1">
-                          <Wrench className="h-3 w-3" /> CAP: {item.corrective_action_plan.action}
+                          <Wrench className="h-3 w-3" /> CAP:{" "}
+                          {item.corrective_action_plan.action}
                         </span>
                       )}
                     </td>
@@ -318,12 +357,16 @@ export default function ComplianceEvidencePage() {
                       {item.category.replace(/_/g, " ")}
                     </td>
                     <td className="px-6 py-4 text-xs font-mono">
-                      {formatLegalDate(item.next_review_due || item.next_review_date || item.due_date)}
+                      {formatLegalDate(
+                        item.next_review_due ||
+                          item.next_review_date ||
+                          item.due_date,
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <span
                         className={`text-xs px-2.5 py-1 rounded-full font-medium ${getComplianceStatusBadge(
-                          item.status
+                          item.status,
                         )}`}
                       >
                         {item.status.replace(/_/g, " ")}
@@ -351,7 +394,8 @@ export default function ComplianceEvidencePage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-indigo-600" /> Record Compliance Assessment
+                <FileCheck className="h-5 w-5 text-indigo-600" /> Record
+                Compliance Assessment
               </h3>
               <button
                 onClick={() => setIsAssessOpen(false)}
@@ -362,7 +406,14 @@ export default function ComplianceEvidencePage() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Evaluating: <strong>{selectedObligation.title || selectedObligation.name}</strong> ({selectedObligation.governing_authority || selectedObligation.category})
+              Evaluating:{" "}
+              <strong>
+                {selectedObligation.title || selectedObligation.name}
+              </strong>{" "}
+              (
+              {selectedObligation.governing_authority ||
+                selectedObligation.category}
+              )
             </p>
 
             <form onSubmit={handleAssessSubmit} className="space-y-4 text-sm">
@@ -372,15 +423,29 @@ export default function ComplianceEvidencePage() {
                 </label>
                 <select
                   value={assessStatus}
-                  onChange={(e) => setAssessStatus(e.target.value as ComplianceStatus)}
+                  onChange={(e) =>
+                    setAssessStatus(e.target.value as ComplianceStatus)
+                  }
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
-                  <option value="COMPLIANT">COMPLIANT — All controls and audits verified</option>
-                  <option value="PARTIALLY_COMPLIANT">PARTIALLY_COMPLIANT — Minor gaps identified</option>
-                  <option value="EVIDENCE_REQUIRED">EVIDENCE_REQUIRED — Pending documentation</option>
-                  <option value="REMEDIATION_IN_PROGRESS">REMEDIATION_IN_PROGRESS — Active corrective plan</option>
-                  <option value="NON_COMPLIANT">NON_COMPLIANT — Material deficiency</option>
-                  <option value="UNDER_REVIEW">UNDER_REVIEW — External audit underway</option>
+                  <option value="COMPLIANT">
+                    COMPLIANT — All controls and audits verified
+                  </option>
+                  <option value="PARTIALLY_COMPLIANT">
+                    PARTIALLY_COMPLIANT — Minor gaps identified
+                  </option>
+                  <option value="EVIDENCE_REQUIRED">
+                    EVIDENCE_REQUIRED — Pending documentation
+                  </option>
+                  <option value="REMEDIATION_IN_PROGRESS">
+                    REMEDIATION_IN_PROGRESS — Active corrective plan
+                  </option>
+                  <option value="NON_COMPLIANT">
+                    NON_COMPLIANT — Material deficiency
+                  </option>
+                  <option value="UNDER_REVIEW">
+                    UNDER_REVIEW — External audit underway
+                  </option>
                 </select>
               </div>
 
@@ -414,7 +479,8 @@ export default function ComplianceEvidencePage() {
               {/* Corrective Action Plan section */}
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3">
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block flex items-center gap-1.5">
-                  <Wrench className="h-3.5 w-3.5 text-amber-500" /> Corrective Action Plan (Optional)
+                  <Wrench className="h-3.5 w-3.5 text-amber-500" /> Corrective
+                  Action Plan (Optional)
                 </span>
                 <div>
                   <input
@@ -475,7 +541,8 @@ export default function ComplianceEvidencePage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Plus className="h-5 w-5 text-indigo-600" /> Register Compliance Requirement
+                <Plus className="h-5 w-5 text-indigo-600" /> Register Compliance
+                Requirement
               </h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -507,7 +574,9 @@ export default function ComplianceEvidencePage() {
                   </label>
                   <select
                     value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as ComplianceCategory)}
+                    onChange={(e) =>
+                      setNewCategory(e.target.value as ComplianceCategory)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="ACCREDITATION">ACCREDITATION</option>
@@ -516,7 +585,9 @@ export default function ComplianceEvidencePage() {
                     <option value="CLERY_ACT">CLERY_ACT</option>
                     <option value="RESEARCH_ETHICS">RESEARCH_ETHICS</option>
                     <option value="ADA_ACCESSIBILITY">ADA_ACCESSIBILITY</option>
-                    <option value="ENVIRONMENTAL_SAFETY">ENVIRONMENTAL_SAFETY</option>
+                    <option value="ENVIRONMENTAL_SAFETY">
+                      ENVIRONMENTAL_SAFETY
+                    </option>
                     <option value="FINANCIAL_AID">FINANCIAL_AID</option>
                   </select>
                 </div>

@@ -3,27 +3,90 @@
  * Product Principle: "One Campus. One System. One Source of Truth."
  */
 
-export type MentorAssignmentType = "MANUAL" | "RULE_BASED" | "REASSIGNED" | "TEMPORARY_COVERAGE";
-export type MentorAssignmentStatus = "ACTIVE" | "INACTIVE" | "REASSIGNED" | "COMPLETED";
+export type MentorAssignmentType =
+  "MANUAL" | "RULE_BASED" | "REASSIGNED" | "TEMPORARY_COVERAGE";
+export type MentorAssignmentStatus =
+  "ACTIVE" | "INACTIVE" | "REASSIGNED" | "COMPLETED";
 
-export type SessionType = "ONE_ON_ONE" | "GROUP" | "CHECK_IN" | "ACADEMIC_REVIEW" | "CAREER_DISCUSSIONS";
-export type SessionStatus = "SCHEDULED" | "COMPLETED" | "CANCELLED" | "RESCHEDULED" | "NO_SHOW";
-export type SessionAttendanceStatus = "PRESENT" | "ABSENT" | "EXCUSED" | "PENDING";
+export type SessionType =
+  | "ONE_ON_ONE"
+  | "GROUP"
+  | "CHECK_IN"
+  | "ACADEMIC_REVIEW"
+  | "CAREER_DISCUSSIONS";
+export type SessionStatus =
+  "SCHEDULED" | "COMPLETED" | "CANCELLED" | "RESCHEDULED" | "NO_SHOW";
+export type SessionAttendanceStatus =
+  "PRESENT" | "ABSENT" | "EXCUSED" | "PENDING";
 
-export type AppointmentCategory = "ACADEMIC_STRESS" | "PERSONAL_WELLBEING" | "CAREER_COUNSELLING" | "CRISIS_SUPPORT" | "ADAPTATION_SUPPORT" | "GENERAL_COUNSELLING" | "CAREER_ANXIETY" | "PEER_RELATIONSHIPS" | "TIME_MANAGEMENT" | "OTHER";
-export type AppointmentMode = "IN_PERSON" | "ONLINE_VIDEO" | "ONLINE" | "TELEPHONIC";
-export type AppointmentStatus = "REQUESTED" | "BOOKED" | "CONFIRMED" | "RESCHEDULED" | "CANCELLED" | "CHECKED_IN" | "COMPLETED" | "NO_SHOW";
-export type InterventionType = "INITIAL_INTAKE" | "SOLUTION_FOCUSED" | "COGNITIVE_GUIDANCE" | "STRESS_MANAGEMENT" | "CRISIS_DE_ESCALATION" | "REFERRAL_CONSULTATION" | "FOLLOW_UP_REVIEW";
+export type AppointmentCategory =
+  | "ACADEMIC_STRESS"
+  | "PERSONAL_WELLBEING"
+  | "CAREER_COUNSELLING"
+  | "CRISIS_SUPPORT"
+  | "ADAPTATION_SUPPORT"
+  | "GENERAL_COUNSELLING"
+  | "CAREER_ANXIETY"
+  | "PEER_RELATIONSHIPS"
+  | "TIME_MANAGEMENT"
+  | "OTHER";
+export type AppointmentMode =
+  "IN_PERSON" | "ONLINE_VIDEO" | "ONLINE" | "TELEPHONIC";
+export type AppointmentStatus =
+  | "REQUESTED"
+  | "BOOKED"
+  | "CONFIRMED"
+  | "RESCHEDULED"
+  | "CANCELLED"
+  | "CHECKED_IN"
+  | "COMPLETED"
+  | "NO_SHOW";
+export type InterventionType =
+  | "INITIAL_INTAKE"
+  | "SOLUTION_FOCUSED"
+  | "COGNITIVE_GUIDANCE"
+  | "STRESS_MANAGEMENT"
+  | "CRISIS_DE_ESCALATION"
+  | "REFERRAL_CONSULTATION"
+  | "FOLLOW_UP_REVIEW";
 
-export type PlanStatus = "DRAFT" | "ACTIVE" | "UNDER_REVIEW" | "COMPLETED" | "ARCHIVED";
-export type GoalCategory = "ACADEMIC" | "ACADEMIC_EXCELLENCE" | "PROFESSIONAL_SKILLS" | "COMMUNICATION" | "LEADERSHIP" | "PERSONAL_WELLBEING" | "CAREER_EXPLORATION" | "CAREER" | "TECHNICAL" | "PERSONAL";
-export type GoalStatus = "PENDING" | "ACTIVE" | "IN_PROGRESS" | "COMPLETED" | "DEFERRED";
-export type ActionItemStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
+export type PlanStatus =
+  "DRAFT" | "ACTIVE" | "UNDER_REVIEW" | "COMPLETED" | "ARCHIVED";
+export type GoalCategory =
+  | "ACADEMIC"
+  | "ACADEMIC_EXCELLENCE"
+  | "PROFESSIONAL_SKILLS"
+  | "COMMUNICATION"
+  | "LEADERSHIP"
+  | "PERSONAL_WELLBEING"
+  | "CAREER_EXPLORATION"
+  | "CAREER"
+  | "TECHNICAL"
+  | "PERSONAL";
+export type GoalStatus =
+  "PENDING" | "ACTIVE" | "IN_PROGRESS" | "COMPLETED" | "DEFERRED";
+export type ActionItemStatus =
+  "PENDING" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
 
-export type SupportServiceCategory = "ACADEMIC_ADVISING" | "CAREER_SERVICES" | "COUNSELLING_SERVICES" | "DISABILITY_SUPPORT" | "FINANCIAL_AID" | "STUDENT_AFFAIRS" | "HEALTH_SERVICES";
-export type ReferralPriority = "LOW" | "STANDARD" | "MEDIUM" | "HIGH" | "URGENT" | "IMMEDIATE";
-export type ReferralStatus = "PENDING" | "ACCEPTED" | "IN_PROGRESS" | "COMPLETED" | "DECLINED" | "CANCELLED";
-export type FollowUpStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "OVERDUE" | "CANCELLED";
+export type SupportServiceCategory =
+  | "ACADEMIC_ADVISING"
+  | "CAREER_SERVICES"
+  | "COUNSELLING_SERVICES"
+  | "DISABILITY_SUPPORT"
+  | "FINANCIAL_AID"
+  | "STUDENT_AFFAIRS"
+  | "HEALTH_SERVICES";
+export type ReferralPriority =
+  "LOW" | "STANDARD" | "MEDIUM" | "HIGH" | "URGENT" | "IMMEDIATE";
+export type ReferralStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "DECLINED"
+  | "CANCELLED";
+export type FollowUpStatus =
+  "PENDING" | "IN_PROGRESS" | "COMPLETED" | "OVERDUE" | "CANCELLED";
 
 // =============================================================================
 // ENTITY INTERFACES (Dual CamelCase & SnakeCase Compatible)

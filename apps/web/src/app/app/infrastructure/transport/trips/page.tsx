@@ -10,7 +10,11 @@ import {
 import { transportRoutesService } from "@/services/transport-routes.service";
 import { transportVehiclesService } from "@/services/transport-vehicles.service";
 import { transportDriversService } from "@/services/transport-drivers.service";
-import { TransportRoute, TransportVehicle, TransportDriver } from "@campusos/types";
+import {
+  TransportRoute,
+  TransportVehicle,
+  TransportDriver,
+} from "@campusos/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -56,7 +60,9 @@ export default function TransportTripsPage() {
   const [scheduleRouteId, setScheduleRouteId] = useState("");
   const [scheduleVehicleId, setScheduleVehicleId] = useState("");
   const [scheduleDriverId, setScheduleDriverId] = useState("");
-  const [scheduleDate, setScheduleDate] = useState(new Date().toISOString().split("T")[0]);
+  const [scheduleDate, setScheduleDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [scheduleWindow, setScheduleWindow] = useState("MORNING_PICKUP");
 
   // Dispatch modal
@@ -71,14 +77,19 @@ export default function TransportTripsPage() {
 
   // Manifest modal
   const [isManifestOpen, setIsManifestOpen] = useState(false);
-  const [manifestData, setManifestData] = useState<TripManifestData | null>(null);
+  const [manifestData, setManifestData] = useState<TripManifestData | null>(
+    null,
+  );
 
   // Complete Trip modal
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [endOdometer, setEndOdometer] = useState(50025);
 
   // Action status message
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   async function loadData() {
     setLoading(true);
@@ -135,7 +146,8 @@ export default function TransportTripsPage() {
       }
 
       if (routesRes.success && routesRes.data) setRoutes(routesRes.data);
-      if (vehiclesRes.success && vehiclesRes.data) setVehicles(vehiclesRes.data);
+      if (vehiclesRes.success && vehiclesRes.data)
+        setVehicles(vehiclesRes.data);
       if (driversRes.success && driversRes.data) setDrivers(driversRes.data);
     } finally {
       setLoading(false);
@@ -148,7 +160,10 @@ export default function TransportTripsPage() {
 
   async function handleScheduleSubmit() {
     if (!scheduleRouteId || !scheduleVehicleId || !scheduleDriverId) {
-      setFeedback({ type: "error", message: "Please select route, vehicle, and authorized driver." });
+      setFeedback({
+        type: "error",
+        message: "Please select route, vehicle, and authorized driver.",
+      });
       return;
     }
 
@@ -164,14 +179,23 @@ export default function TransportTripsPage() {
       });
 
       if (res.success) {
-        setFeedback({ type: "success", message: `Trip ${res.data.tripNumber} scheduled successfully!` });
+        setFeedback({
+          type: "success",
+          message: `Trip ${res.data.tripNumber} scheduled successfully!`,
+        });
         setIsScheduleOpen(false);
         loadData();
       } else {
-        setFeedback({ type: "error", message: "Failed to schedule trip: compliance or conflict detected." });
+        setFeedback({
+          type: "error",
+          message: "Failed to schedule trip: compliance or conflict detected.",
+        });
       }
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to schedule trip" });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to schedule trip",
+      });
     }
   }
 
@@ -180,33 +204,58 @@ export default function TransportTripsPage() {
     try {
       const res = await transportService.dispatchTrip(activeTrip.id, {
         startOdometerKm: Number(startOdometer),
-        preTripChecklistCompleted: brakesOk && tiresOk && lightsOk && emergencyExitOk && firstAidKitOk,
-        checklistNotes: { brakesOk, tiresOk, lightsOk, emergencyExitOk, firstAidKitOk },
+        preTripChecklistCompleted:
+          brakesOk && tiresOk && lightsOk && emergencyExitOk && firstAidKitOk,
+        checklistNotes: {
+          brakesOk,
+          tiresOk,
+          lightsOk,
+          emergencyExitOk,
+          firstAidKitOk,
+        },
       });
 
       if (res.success) {
-        setFeedback({ type: "success", message: `Trip ${activeTrip.tripNumber} dispatched successfully!` });
+        setFeedback({
+          type: "success",
+          message: `Trip ${activeTrip.tripNumber} dispatched successfully!`,
+        });
         setIsDispatchOpen(false);
         loadData();
       } else {
-        setFeedback({ type: "error", message: "Dispatch blocked by pre-trip safety checks." });
+        setFeedback({
+          type: "error",
+          message: "Dispatch blocked by pre-trip safety checks.",
+        });
       }
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to dispatch trip" });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to dispatch trip",
+      });
     }
   }
 
   async function handleCompleteSubmit() {
     if (!activeTrip) return;
     try {
-      const res = await transportService.completeTrip(activeTrip.id, Number(endOdometer));
+      const res = await transportService.completeTrip(
+        activeTrip.id,
+        Number(endOdometer),
+      );
       if (res.success) {
-        setFeedback({ type: "success", message: `Trip ${activeTrip.tripNumber} completed. Vehicle odometer updated.` });
+        setFeedback({
+          type: "success",
+          message: `Trip ${activeTrip.tripNumber} completed. Vehicle odometer updated.`,
+        });
         setIsCompleteOpen(false);
         loadData();
       }
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to complete trip" });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to complete trip",
+      });
     }
   }
 
@@ -285,18 +334,29 @@ export default function TransportTripsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-            <Link href="/app/infrastructure/transport" className="hover:underline">
+            <Link
+              href="/app/infrastructure/transport"
+              className="hover:underline"
+            >
               Transport Operations
             </Link>
             <span>/</span>
-            <span className="text-foreground font-medium">Trip Scheduling & Dispatch</span>
+            <span className="text-foreground font-medium">
+              Trip Scheduling & Dispatch
+            </span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Trip Dispatch Operations</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Trip Dispatch Operations
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Schedule transit runs, conduct pre-trip safety checks, dispatch vehicles, and track passenger boarding.
+            Schedule transit runs, conduct pre-trip safety checks, dispatch
+            vehicles, and track passenger boarding.
           </p>
         </div>
-        <Button onClick={() => setIsScheduleOpen(true)} className="gap-2 bg-blue-600 hover:bg-blue-700">
+        <Button
+          onClick={() => setIsScheduleOpen(true)}
+          className="gap-2 bg-blue-600 hover:bg-blue-700"
+        >
           <Calendar className="h-4 w-4" />
           Schedule New Trip
         </Button>
@@ -312,10 +372,17 @@ export default function TransportTripsPage() {
           }`}
         >
           <div className="flex items-center gap-2">
-            {feedback.type === "success" ? <CheckCircle2 className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
+            {feedback.type === "success" ? (
+              <CheckCircle2 className="h-4 w-4" />
+            ) : (
+              <ShieldAlert className="h-4 w-4" />
+            )}
             <span>{feedback.message}</span>
           </div>
-          <button onClick={() => setFeedback(null)} className="text-xs underline hover:no-underline">
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-xs underline hover:no-underline"
+          >
             Dismiss
           </button>
         </div>
@@ -360,7 +427,9 @@ export default function TransportTripsPage() {
         <div className="text-center p-12 bg-muted/20 border rounded-xl space-y-3">
           <Bus className="h-10 w-10 text-muted-foreground mx-auto" />
           <h3 className="text-lg font-semibold">No Scheduled Trips</h3>
-          <p className="text-sm text-muted-foreground">No transit runs scheduled for the selected filters.</p>
+          <p className="text-sm text-muted-foreground">
+            No transit runs scheduled for the selected filters.
+          </p>
         </div>
       ) : (
         <div className="border rounded-xl overflow-hidden bg-card shadow-sm">
@@ -378,7 +447,10 @@ export default function TransportTripsPage() {
             </thead>
             <tbody className="divide-y">
               {trips.map((trip) => (
-                <tr key={trip.id} className="hover:bg-muted/30 transition-colors">
+                <tr
+                  key={trip.id}
+                  className="hover:bg-muted/30 transition-colors"
+                >
                   <td className="p-4">
                     <div className="font-semibold">{trip.tripNumber}</div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
@@ -387,16 +459,29 @@ export default function TransportTripsPage() {
                     </div>
                   </td>
                   <td className="p-4">
-                    <div className="font-medium text-foreground">{trip.routeName || "Gandhipuram Express"}</div>
+                    <div className="font-medium text-foreground">
+                      {trip.routeName || "Gandhipuram Express"}
+                    </div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                       <Clock className="h-3 w-3" />
-                      {new Date(trip.scheduledStartTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
-                      {new Date(trip.scheduledEndTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(trip.scheduledStartTime).toLocaleTimeString(
+                        [],
+                        { hour: "2-digit", minute: "2-digit" },
+                      )}{" "}
+                      -{" "}
+                      {new Date(trip.scheduledEndTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
                   </td>
                   <td className="p-4">
-                    <div className="font-medium">{trip.vehicleRegistration || "TN-38-BZ-1001"}</div>
-                    <div className="text-xs text-muted-foreground">{trip.driverName || "Authorized Driver"}</div>
+                    <div className="font-medium">
+                      {trip.vehicleRegistration || "TN-38-BZ-1001"}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {trip.driverName || "Authorized Driver"}
+                    </div>
                   </td>
                   <td className="p-4">
                     <Badge variant="outline" className="text-xs">
@@ -422,10 +507,10 @@ export default function TransportTripsPage() {
                         trip.status === "COMPLETED"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300"
                           : trip.status === "IN_PROGRESS"
-                          ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 animate-pulse"
-                          : trip.status === "SCHEDULED"
-                          ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300"
-                          : "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300"
+                            ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 animate-pulse"
+                            : trip.status === "SCHEDULED"
+                              ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300"
+                              : "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300"
                       }
                     >
                       {trip.status}
@@ -433,7 +518,12 @@ export default function TransportTripsPage() {
                   </td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => openManifest(trip)} className="gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => openManifest(trip)}
+                        className="gap-1"
+                      >
                         <FileText className="h-3.5 w-3.5" />
                         Manifest
                       </Button>
@@ -480,7 +570,8 @@ export default function TransportTripsPage() {
           <DialogHeader>
             <DialogTitle>Schedule Transit Run</DialogTitle>
             <DialogDescription>
-              Assign a compliant vehicle and licensed driver to an authorized transit route corridor.
+              Assign a compliant vehicle and licensed driver to an authorized
+              transit route corridor.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -510,7 +601,8 @@ export default function TransportTripsPage() {
                 <option value="">Select vehicle</option>
                 {vehicles.map((v) => (
                   <option key={v.id} value={v.id}>
-                    {v.registrationNumber} ({v.type || "BUS"} - Cap: {v.capacity})
+                    {v.registrationNumber} ({v.type || "BUS"} - Cap:{" "}
+                    {v.capacity})
                   </option>
                 ))}
               </select>
@@ -560,7 +652,10 @@ export default function TransportTripsPage() {
             <Button variant="outline" onClick={() => setIsScheduleOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleScheduleSubmit} className="bg-blue-600 hover:bg-blue-700">
+            <Button
+              onClick={handleScheduleSubmit}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
               Confirm Schedule
             </Button>
           </DialogFooter>
@@ -573,19 +668,23 @@ export default function TransportTripsPage() {
           <DialogHeader>
             <DialogTitle>Pre-Trip Safety Inspection & Dispatch</DialogTitle>
             <DialogDescription>
-              Verify mandatory safety equipment and record vehicle starting odometer before authorization.
+              Verify mandatory safety equipment and record vehicle starting
+              odometer before authorization.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="bg-muted/40 p-3 rounded-lg text-xs space-y-1">
               <div>
-                <span className="text-muted-foreground">Trip:</span> {activeTrip?.tripNumber}
+                <span className="text-muted-foreground">Trip:</span>{" "}
+                {activeTrip?.tripNumber}
               </div>
               <div>
-                <span className="text-muted-foreground">Route:</span> {activeTrip?.routeName}
+                <span className="text-muted-foreground">Route:</span>{" "}
+                {activeTrip?.routeName}
               </div>
               <div>
-                <span className="text-muted-foreground">Vehicle:</span> {activeTrip?.vehicleRegistration}
+                <span className="text-muted-foreground">Vehicle:</span>{" "}
+                {activeTrip?.vehicleRegistration}
               </div>
             </div>
 
@@ -600,7 +699,9 @@ export default function TransportTripsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-semibold">Mandatory Safety Checklist</Label>
+              <Label className="text-xs font-semibold">
+                Mandatory Safety Checklist
+              </Label>
               <div className="space-y-2 text-sm">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -645,7 +746,9 @@ export default function TransportTripsPage() {
                     onChange={(e) => setFirstAidKitOk(e.target.checked)}
                     className="rounded text-blue-600"
                   />
-                  <span>First Aid Kit & Fire Extinguisher Present and Valid</span>
+                  <span>
+                    First Aid Kit & Fire Extinguisher Present and Valid
+                  </span>
                 </label>
               </div>
             </div>
@@ -656,7 +759,13 @@ export default function TransportTripsPage() {
             </Button>
             <Button
               onClick={handleDispatchSubmit}
-              disabled={!brakesOk || !tiresOk || !lightsOk || !emergencyExitOk || !firstAidKitOk}
+              disabled={
+                !brakesOk ||
+                !tiresOk ||
+                !lightsOk ||
+                !emergencyExitOk ||
+                !firstAidKitOk
+              }
               className="bg-emerald-600 hover:bg-emerald-700"
             >
               Authorize Dispatch
@@ -669,34 +778,53 @@ export default function TransportTripsPage() {
       <Dialog open={isManifestOpen} onOpenChange={setIsManifestOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Passenger Manifest & Boarding Reconciliation</DialogTitle>
+            <DialogTitle>
+              Passenger Manifest & Boarding Reconciliation
+            </DialogTitle>
             <DialogDescription>
-              Trip: {activeTrip?.tripNumber} | Passenger Count: {manifestData?.totalManifestCount}
+              Trip: {activeTrip?.tripNumber} | Passenger Count:{" "}
+              {manifestData?.totalManifestCount}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 bg-muted/40 rounded-xl border text-center">
-                <div className="text-xl font-bold text-foreground">{manifestData?.totalManifestCount}</div>
+                <div className="text-xl font-bold text-foreground">
+                  {manifestData?.totalManifestCount}
+                </div>
                 <div className="text-xs text-muted-foreground">Expected</div>
               </div>
               <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-900 text-center">
-                <div className="text-xl font-bold text-emerald-600">{manifestData?.boardedCount}</div>
-                <div className="text-xs text-emerald-700 dark:text-emerald-300">Boarded</div>
+                <div className="text-xl font-bold text-emerald-600">
+                  {manifestData?.boardedCount}
+                </div>
+                <div className="text-xs text-emerald-700 dark:text-emerald-300">
+                  Boarded
+                </div>
               </div>
               <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-900 text-center">
-                <div className="text-xl font-bold text-amber-600">{manifestData?.pendingCount}</div>
-                <div className="text-xs text-amber-700 dark:text-amber-300">Pending</div>
+                <div className="text-xl font-bold text-amber-600">
+                  {manifestData?.pendingCount}
+                </div>
+                <div className="text-xs text-amber-700 dark:text-amber-300">
+                  Pending
+                </div>
               </div>
             </div>
 
             <div className="border rounded-xl divide-y">
               {manifestData?.passengers.map((p) => (
-                <div key={p.id} className="p-3 flex items-center justify-between hover:bg-muted/30">
+                <div
+                  key={p.id}
+                  className="p-3 flex items-center justify-between hover:bg-muted/30"
+                >
                   <div>
-                    <div className="font-semibold text-sm">{p.studentName || "Aditya Varma"}</div>
+                    <div className="font-semibold text-sm">
+                      {p.studentName || "Aditya Varma"}
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      Pass: {p.admissionNumber || "ADM-2026-001"} | Stop: {p.stopName || "Gandhipuram"}
+                      Pass: {p.admissionNumber || "ADM-2026-001"} | Stop:{" "}
+                      {p.stopName || "Gandhipuram"}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -726,7 +854,9 @@ export default function TransportTripsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={() => setIsManifestOpen(false)}>Close Manifest</Button>
+            <Button onClick={() => setIsManifestOpen(false)}>
+              Close Manifest
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -737,7 +867,8 @@ export default function TransportTripsPage() {
           <DialogHeader>
             <DialogTitle>Complete Trip</DialogTitle>
             <DialogDescription>
-              Record concluding odometer reading to close out operational run {activeTrip?.tripNumber}.
+              Record concluding odometer reading to close out operational run{" "}
+              {activeTrip?.tripNumber}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -750,7 +881,8 @@ export default function TransportTripsPage() {
                 className="mt-1"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Must be greater than start odometer ({activeTrip?.startOdometerKm || 50000} km).
+                Must be greater than start odometer (
+                {activeTrip?.startOdometerKm || 50000} km).
               </p>
             </div>
           </div>
@@ -758,7 +890,10 @@ export default function TransportTripsPage() {
             <Button variant="outline" onClick={() => setIsCompleteOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCompleteSubmit} className="bg-blue-600 hover:bg-blue-700">
+            <Button
+              onClick={handleCompleteSubmit}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
               Confirm Trip Completion
             </Button>
           </DialogFooter>

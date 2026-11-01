@@ -41,8 +41,11 @@ import {
 export default function TransportTrackingPage() {
   const [loading, setLoading] = useState(true);
   const [vehicles, setVehicles] = useState<TransportVehicle[]>([]);
-  const [telemetryMap, setTelemetryMap] = useState<Record<string, TransportLiveTelemetry>>({});
-  const [selectedVehicle, setSelectedVehicle] = useState<TransportVehicle | null>(null);
+  const [telemetryMap, setTelemetryMap] = useState<
+    Record<string, TransportLiveTelemetry>
+  >({});
+  const [selectedVehicle, setSelectedVehicle] =
+    useState<TransportVehicle | null>(null);
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
   const [providerName, setProviderName] = useState("AIS140_STANDARD");
   const [deviceIdentifier, setDeviceIdentifier] = useState("");
@@ -75,10 +78,11 @@ export default function TransportTrackingPage() {
             trackingEnabled: false,
             status: "NOT_CONFIGURED",
             isDataStale: false,
-            telemetryMessage: "No authorized telematics modem connected to this asset.",
+            telemetryMessage:
+              "No authorized telematics modem connected to this asset.",
           };
           return [v.id, defaultTelem] as const;
-        })
+        }),
       );
 
       const mapping: Record<string, TransportLiveTelemetry> = {};
@@ -105,7 +109,11 @@ export default function TransportTrackingPage() {
     setSelectedVehicle(v);
     const curr = telemetryMap[v.id];
     setProviderName("AIS140_STANDARD");
-    setDeviceIdentifier(v.registrationNumber ? `MODEM-${v.registrationNumber.replace(/[^A-Za-z0-9]/g, "")}` : "");
+    setDeviceIdentifier(
+      v.registrationNumber
+        ? `MODEM-${v.registrationNumber.replace(/[^A-Za-z0-9]/g, "")}`
+        : "",
+    );
     setIsEnabled(curr?.trackingEnabled ?? true);
     setConfigDialogOpen(true);
   };
@@ -134,9 +142,15 @@ export default function TransportTrackingPage() {
     return t?.status === statusFilter;
   });
 
-  const activeCount = Object.values(telemetryMap).filter((t) => t.status === "ACTIVE").length;
-  const offlineCount = Object.values(telemetryMap).filter((t) => t.status === "OFFLINE").length;
-  const unconfiguredCount = Object.values(telemetryMap).filter((t) => t.status === "NOT_CONFIGURED").length;
+  const activeCount = Object.values(telemetryMap).filter(
+    (t) => t.status === "ACTIVE",
+  ).length;
+  const offlineCount = Object.values(telemetryMap).filter(
+    (t) => t.status === "OFFLINE",
+  ).length;
+  const unconfiguredCount = Object.values(telemetryMap).filter(
+    (t) => t.status === "NOT_CONFIGURED",
+  ).length;
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -166,7 +180,9 @@ export default function TransportTrackingPage() {
             Vehicle Telematics & Status
           </h1>
           <p className="text-slate-400 text-sm mt-1 max-w-3xl">
-            Privacy-conscious fleet telemetry. Status is only reported when an authorized AIS-140 GPS or telematics gateway transmits verified signals. Location data is never fabricated or simulated.
+            Privacy-conscious fleet telemetry. Status is only reported when an
+            authorized AIS-140 GPS or telematics gateway transmits verified
+            signals. Location data is never fabricated or simulated.
           </p>
         </div>
 
@@ -178,11 +194,16 @@ export default function TransportTrackingPage() {
             disabled={refreshing || loading}
             className="border-slate-800 text-slate-300 hover:text-white gap-2"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+            />
             Refresh Telematics
           </Button>
           <Link href="/app/infrastructure/transport/trips">
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-500 text-white gap-2">
+            <Button
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-500 text-white gap-2"
+            >
               <Compass className="w-4 h-4" />
               View Trip Dispatch
             </Button>
@@ -194,9 +215,14 @@ export default function TransportTrackingPage() {
       <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-start gap-3">
         <ShieldCheck className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
         <div className="text-xs text-slate-300 space-y-1">
-          <strong className="text-white font-medium">Compliance & Privacy Policy:</strong>
+          <strong className="text-white font-medium">
+            Compliance & Privacy Policy:
+          </strong>
           <p className="text-slate-400">
-            Per institutional safety standards, student identities are decoupled from raw GPS streams. Passenger manifests only record authorized boarding events at designated stops. Geolocation is restricted to fleet operations personnel and vehicle maintenance coordinators.
+            Per institutional safety standards, student identities are decoupled
+            from raw GPS streams. Passenger manifests only record authorized
+            boarding events at designated stops. Geolocation is restricted to
+            fleet operations personnel and vehicle maintenance coordinators.
           </p>
         </div>
       </div>
@@ -206,54 +232,80 @@ export default function TransportTrackingPage() {
         <div
           onClick={() => setStatusFilter("ALL")}
           className={`p-4 rounded-xl bg-slate-900/60 border cursor-pointer transition-all ${
-            statusFilter === "ALL" ? "border-blue-500/50 bg-blue-500/5" : "border-slate-800 hover:border-slate-700"
+            statusFilter === "ALL"
+              ? "border-blue-500/50 bg-blue-500/5"
+              : "border-slate-800 hover:border-slate-700"
           }`}
         >
-          <div className="text-xs text-slate-400 font-medium">Total Registered Fleet</div>
-          <div className="text-2xl font-bold text-white mt-1">{vehicles.length}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Asset Registry Connected</div>
+          <div className="text-xs text-slate-400 font-medium">
+            Total Registered Fleet
+          </div>
+          <div className="text-2xl font-bold text-white mt-1">
+            {vehicles.length}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Asset Registry Connected
+          </div>
         </div>
 
         <div
           onClick={() => setStatusFilter("ACTIVE")}
           className={`p-4 rounded-xl bg-slate-900/60 border cursor-pointer transition-all ${
-            statusFilter === "ACTIVE" ? "border-emerald-500/50 bg-emerald-500/5" : "border-slate-800 hover:border-slate-700"
+            statusFilter === "ACTIVE"
+              ? "border-emerald-500/50 bg-emerald-500/5"
+              : "border-slate-800 hover:border-slate-700"
           }`}
         >
           <div className="text-xs text-emerald-400 font-medium flex items-center gap-1.5">
             <Signal className="w-3.5 h-3.5" />
             Online & Transmitting
           </div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{activeCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Fresh telemetry pings</div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {activeCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Fresh telemetry pings
+          </div>
         </div>
 
         <div
           onClick={() => setStatusFilter("OFFLINE")}
           className={`p-4 rounded-xl bg-slate-900/60 border cursor-pointer transition-all ${
-            statusFilter === "OFFLINE" ? "border-amber-500/50 bg-amber-500/5" : "border-slate-800 hover:border-slate-700"
+            statusFilter === "OFFLINE"
+              ? "border-amber-500/50 bg-amber-500/5"
+              : "border-slate-800 hover:border-slate-700"
           }`}
         >
           <div className="text-xs text-amber-400 font-medium flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
             Stale / Offline
           </div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{offlineCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Signal timed out (&gt;15 min)</div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">
+            {offlineCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Signal timed out (&gt;15 min)
+          </div>
         </div>
 
         <div
           onClick={() => setStatusFilter("NOT_CONFIGURED")}
           className={`p-4 rounded-xl bg-slate-900/60 border cursor-pointer transition-all ${
-            statusFilter === "NOT_CONFIGURED" ? "border-slate-600 bg-slate-800/40" : "border-slate-800 hover:border-slate-700"
+            statusFilter === "NOT_CONFIGURED"
+              ? "border-slate-600 bg-slate-800/40"
+              : "border-slate-800 hover:border-slate-700"
           }`}
         >
           <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
             <SignalZero className="w-3.5 h-3.5" />
             Unconfigured Telematics
           </div>
-          <div className="text-2xl font-bold text-slate-300 mt-1">{unconfiguredCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Modem registration pending</div>
+          <div className="text-2xl font-bold text-slate-300 mt-1">
+            {unconfiguredCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Modem registration pending
+          </div>
         </div>
       </div>
 
@@ -266,11 +318,18 @@ export default function TransportTrackingPage() {
       ) : filteredVehicles.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-slate-900/40 border border-slate-800 space-y-3">
           <Bus className="w-10 h-10 text-slate-600 mx-auto" />
-          <h3 className="text-base font-semibold text-white">No Vehicles Match Filter</h3>
+          <h3 className="text-base font-semibold text-white">
+            No Vehicles Match Filter
+          </h3>
           <p className="text-xs text-slate-400">
-            Switch filter to &quot;All&quot; to review the complete institutional fleet.
+            Switch filter to &quot;All&quot; to review the complete
+            institutional fleet.
           </p>
-          <Button size="sm" variant="outline" onClick={() => setStatusFilter("ALL")}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setStatusFilter("ALL")}
+          >
             Reset Filter
           </Button>
         </div>
@@ -306,12 +365,16 @@ export default function TransportTrackingPage() {
                         isOnline
                           ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 gap-1.5"
                           : isOffline
-                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20 gap-1.5"
-                          : "bg-slate-800 text-slate-400 border-slate-700 gap-1.5"
+                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20 gap-1.5"
+                            : "bg-slate-800 text-slate-400 border-slate-700 gap-1.5"
                       }
                     >
-                      {isOnline && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
-                      {isOffline && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
+                      {isOnline && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      )}
+                      {isOffline && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      )}
                       {isNotConfigured && <SignalZero className="w-3 h-3" />}
                       {telem?.status || "NOT_CONFIGURED"}
                     </Badge>
@@ -327,7 +390,8 @@ export default function TransportTrackingPage() {
                             GPS Position:
                           </span>
                           <span className="font-mono text-white">
-                            {telem.lastKnownLocation.latitude.toFixed(4)}°N, {telem.lastKnownLocation.longitude.toFixed(4)}°E
+                            {telem.lastKnownLocation.latitude.toFixed(4)}°N,{" "}
+                            {telem.lastKnownLocation.longitude.toFixed(4)}°E
                           </span>
                         </div>
                         <div className="flex justify-between items-center text-slate-400">
@@ -336,7 +400,8 @@ export default function TransportTrackingPage() {
                             Speed & Heading:
                           </span>
                           <span className="font-mono text-white">
-                            {telem.lastKnownLocation.speedKmh} km/h • {telem.lastKnownLocation.headingDegrees ?? 0}°
+                            {telem.lastKnownLocation.speedKmh} km/h •{" "}
+                            {telem.lastKnownLocation.headingDegrees ?? 0}°
                           </span>
                         </div>
                         <div className="flex justify-between items-center text-slate-400 pt-1 border-t border-slate-800/60">
@@ -345,7 +410,9 @@ export default function TransportTrackingPage() {
                             Last Ping:
                           </span>
                           <span className="text-slate-400 text-[11px]">
-                            {new Date(telem.lastKnownLocation.recordedAt).toLocaleTimeString("en-IN", {
+                            {new Date(
+                              telem.lastKnownLocation.recordedAt,
+                            ).toLocaleTimeString("en-IN", {
                               hour: "2-digit",
                               minute: "2-digit",
                               second: "2-digit",
@@ -360,7 +427,9 @@ export default function TransportTrackingPage() {
                           Modem Signal Stale
                         </div>
                         <p className="text-[11px] text-slate-400 leading-relaxed">
-                          Last heartbeat received over 15 minutes ago. Vehicle ignition may be OFF or operating in an area with restricted cellular signal.
+                          Last heartbeat received over 15 minutes ago. Vehicle
+                          ignition may be OFF or operating in an area with
+                          restricted cellular signal.
                         </p>
                       </div>
                     ) : (
@@ -370,7 +439,8 @@ export default function TransportTrackingPage() {
                           Truthful Telematics State
                         </div>
                         <p className="text-[11px] text-slate-500 leading-relaxed">
-                          No GPS modem connected to this asset. In accordance with system policy, coordinates are not simulated.
+                          No GPS modem connected to this asset. In accordance
+                          with system policy, coordinates are not simulated.
                         </p>
                       </div>
                     )}
@@ -407,28 +477,42 @@ export default function TransportTrackingPage() {
               Configure Telematics Modem
             </DialogTitle>
             <DialogDescription className="text-slate-400 text-xs">
-              Link an authorized AIS-140 GPS or IoT tracking device to institutional vehicle{" "}
-              <strong className="text-white">{selectedVehicle?.registrationNumber}</strong>.
+              Link an authorized AIS-140 GPS or IoT tracking device to
+              institutional vehicle{" "}
+              <strong className="text-white">
+                {selectedVehicle?.registrationNumber}
+              </strong>
+              .
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-3">
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-300">Telematics Protocol / Provider</Label>
+              <Label className="text-xs text-slate-300">
+                Telematics Protocol / Provider
+              </Label>
               <select
                 value={providerName}
                 onChange={(e) => setProviderName(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
               >
-                <option value="AIS140_STANDARD">AIS-140 Certified Commercial GPS</option>
-                <option value="TELTONIKA_FMB">Teltonika FMB920 Fleet Tracker</option>
+                <option value="AIS140_STANDARD">
+                  AIS-140 Certified Commercial GPS
+                </option>
+                <option value="TELTONIKA_FMB">
+                  Teltonika FMB920 Fleet Tracker
+                </option>
                 <option value="GEOTAB_GO9">Geotab GO9 Telematics Unit</option>
-                <option value="CAMPUS_WEBHOOK">Institutional IoT Gateway (Webhook)</option>
+                <option value="CAMPUS_WEBHOOK">
+                  Institutional IoT Gateway (Webhook)
+                </option>
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-300">Device Hardware IMEI / Serial Number</Label>
+              <Label className="text-xs text-slate-300">
+                Device Hardware IMEI / Serial Number
+              </Label>
               <Input
                 value={deviceIdentifier}
                 onChange={(e) => setDeviceIdentifier(e.target.value)}
@@ -436,13 +520,16 @@ export default function TransportTrackingPage() {
                 className="bg-slate-950 border-slate-800 text-xs text-white"
               />
               <p className="text-[11px] text-slate-500">
-                Found on the physical modem label or vehicle telematics registration logbook.
+                Found on the physical modem label or vehicle telematics
+                registration logbook.
               </p>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800">
               <div className="space-y-0.5">
-                <div className="text-xs font-medium text-white">Enable Telemetry Stream</div>
+                <div className="text-xs font-medium text-white">
+                  Enable Telemetry Stream
+                </div>
                 <div className="text-[11px] text-slate-400">
                   Allow verified incoming location pings for dispatch tracking.
                 </div>

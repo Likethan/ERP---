@@ -49,16 +49,21 @@ export default function EngagementProgramsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<EngagementProgram | null>(null);
+  const [selectedProgram, setSelectedProgram] =
+    useState<EngagementProgram | null>(null);
 
   // Form state
   const [formCode, setFormCode] = useState("");
   const [formName, setFormName] = useState("");
-  const [formCategory, setFormCategory] = useState<ProgramCategory>("ENVIRONMENTAL_SUSTAINABILITY");
+  const [formCategory, setFormCategory] = useState<ProgramCategory>(
+    "ENVIRONMENTAL_SUSTAINABILITY",
+  );
   const [formPartnerId, setFormPartnerId] = useState("");
-  const [formStartDate, setFormStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [formStartDate, setFormStartDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [formEndDate, setFormEndDate] = useState(
-    new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0]
+    new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
   );
   const [formHours, setFormHours] = useState(15);
   const [formCapacity, setFormCapacity] = useState(50);
@@ -125,7 +130,9 @@ export default function EngagementProgramsPage() {
       setActionMessage(`Program transitioned to ${targetStatus}.`);
       await loadData();
       if (selectedProgram && selectedProgram.id === progId) {
-        setSelectedProgram((prev) => (prev ? { ...prev, status: targetStatus } : null));
+        setSelectedProgram((prev) =>
+          prev ? { ...prev, status: targetStatus } : null,
+        );
       }
     } catch (err: any) {
       setActionMessage(`Status transition failed: ${err.message}`);
@@ -143,7 +150,8 @@ export default function EngagementProgramsPage() {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.code.toLowerCase().includes(search.toLowerCase()) ||
-      (p.description && p.description.toLowerCase().includes(search.toLowerCase()));
+      (p.description &&
+        p.description.toLowerCase().includes(search.toLowerCase()));
 
     const matchesCategory =
       selectedCategory === "ALL" || p.category === selectedCategory;
@@ -163,7 +171,10 @@ export default function EngagementProgramsPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -177,7 +188,8 @@ export default function EngagementProgramsPage() {
               Community Engagement Programs
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Institution-approved civic service, volunteering missions, and outreach initiatives
+              Institution-approved civic service, volunteering missions, and
+              outreach initiatives
             </p>
           </div>
 
@@ -248,13 +260,14 @@ export default function EngagementProgramsPage() {
                   </span>
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
-                      prog.status === "PUBLISHED" || prog.status === "IN_PROGRESS"
+                      prog.status === "PUBLISHED" ||
+                      prog.status === "IN_PROGRESS"
                         ? "bg-emerald-500/10 text-emerald-500"
                         : prog.status === "APPROVED"
-                        ? "bg-blue-500/10 text-blue-500"
-                        : prog.status === "PENDING_APPROVAL"
-                        ? "bg-amber-500/10 text-amber-500"
-                        : "bg-muted text-muted-foreground"
+                          ? "bg-blue-500/10 text-blue-500"
+                          : prog.status === "PENDING_APPROVAL"
+                            ? "bg-amber-500/10 text-amber-500"
+                            : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {prog.status.replace(/_/g, " ")}
@@ -262,9 +275,12 @@ export default function EngagementProgramsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-foreground line-clamp-1">{prog.name}</h3>
+                  <h3 className="text-base font-bold text-foreground line-clamp-1">
+                    {prog.name}
+                  </h3>
                   <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                    {prog.description || "Institution civic engagement initiative."}
+                    {prog.description ||
+                      "Institution civic engagement initiative."}
                   </p>
                 </div>
 
@@ -282,7 +298,9 @@ export default function EngagementProgramsPage() {
                     <span className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5" /> Target Hours:
                     </span>
-                    <span className="text-foreground font-medium">{prog.target_service_hours} hrs</span>
+                    <span className="text-foreground font-medium">
+                      {prog.target_service_hours} hrs
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -290,7 +308,8 @@ export default function EngagementProgramsPage() {
                       <Users2 className="h-3.5 w-3.5" /> Enrolled Capacity:
                     </span>
                     <span className="text-foreground font-medium">
-                      {prog.current_enrolled_count} / {prog.max_participants || "Open"}
+                      {prog.current_enrolled_count} /{" "}
+                      {prog.max_participants || "Open"}
                     </span>
                   </div>
 
@@ -312,7 +331,9 @@ export default function EngagementProgramsPage() {
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {prog.status === "DRAFT" && (
                     <button
-                      onClick={() => handleTransition(prog.id, "PENDING_APPROVAL")}
+                      onClick={() =>
+                        handleTransition(prog.id, "PENDING_APPROVAL")
+                      }
                       className="px-2.5 py-1 rounded bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 text-[11px] font-semibold"
                     >
                       Submit for Review
@@ -365,7 +386,9 @@ export default function EngagementProgramsPage() {
         {filteredPrograms.length === 0 && !loading && (
           <div className="p-12 text-center bg-card border border-dashed border-border rounded-xl space-y-3">
             <HandHeart className="h-10 w-10 text-muted-foreground mx-auto" />
-            <h3 className="text-sm font-semibold text-foreground">No programs match criteria</h3>
+            <h3 className="text-sm font-semibold text-foreground">
+              No programs match criteria
+            </h3>
             <p className="text-xs text-muted-foreground">
               Try adjusting your search query, status, or category filter.
             </p>
@@ -381,15 +404,23 @@ export default function EngagementProgramsPage() {
                   <PlusCircle className="h-5 w-5 text-emerald-500" />
                   Create Civic Engagement Program
                 </h2>
-                <button onClick={() => setIsCreateOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsCreateOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              <form onSubmit={handleCreateProgram} className="space-y-4 text-xs">
+              <form
+                onSubmit={handleCreateProgram}
+                className="space-y-4 text-xs"
+              >
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Program Code *</label>
+                    <label className="font-semibold text-foreground">
+                      Program Code *
+                    </label>
                     <input
                       type="text"
                       required
@@ -400,10 +431,14 @@ export default function EngagementProgramsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Category *</label>
+                    <label className="font-semibold text-foreground">
+                      Category *
+                    </label>
                     <select
                       value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value as ProgramCategory)}
+                      onChange={(e) =>
+                        setFormCategory(e.target.value as ProgramCategory)
+                      }
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground"
                     >
                       {CATEGORIES.map((c) => (
@@ -416,7 +451,9 @@ export default function EngagementProgramsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Program Title *</label>
+                  <label className="font-semibold text-foreground">
+                    Program Title *
+                  </label>
                   <input
                     type="text"
                     required
@@ -428,13 +465,17 @@ export default function EngagementProgramsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Community Partner Organization</label>
+                  <label className="font-semibold text-foreground">
+                    Community Partner Organization
+                  </label>
                   <select
                     value={formPartnerId}
                     onChange={(e) => setFormPartnerId(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground"
                   >
-                    <option value="">Internal Campus Initiative (No External Partner)</option>
+                    <option value="">
+                      Internal Campus Initiative (No External Partner)
+                    </option>
                     {partners.map((p) => (
                       <option key={p.id} value={p.id}>
                         {p.name} ({p.organization_type})
@@ -444,7 +485,9 @@ export default function EngagementProgramsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Program Description & Objectives</label>
+                  <label className="font-semibold text-foreground">
+                    Program Description & Objectives
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Describe program goals, student community deliverables, and impact target..."
@@ -456,7 +499,9 @@ export default function EngagementProgramsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Start Date *</label>
+                    <label className="font-semibold text-foreground">
+                      Start Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -466,7 +511,9 @@ export default function EngagementProgramsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">End Date *</label>
+                    <label className="font-semibold text-foreground">
+                      End Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -479,7 +526,9 @@ export default function EngagementProgramsPage() {
 
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Target Hours *</label>
+                    <label className="font-semibold text-foreground">
+                      Target Hours *
+                    </label>
                     <input
                       type="number"
                       min={1}
@@ -490,7 +539,9 @@ export default function EngagementProgramsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Max Capacity</label>
+                    <label className="font-semibold text-foreground">
+                      Max Capacity
+                    </label>
                     <input
                       type="number"
                       min={1}
@@ -500,10 +551,14 @@ export default function EngagementProgramsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Delivery Mode</label>
+                    <label className="font-semibold text-foreground">
+                      Delivery Mode
+                    </label>
                     <select
                       value={formDelivery}
-                      onChange={(e) => setFormDelivery(e.target.value as DeliveryMode)}
+                      onChange={(e) =>
+                        setFormDelivery(e.target.value as DeliveryMode)
+                      }
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground"
                     >
                       <option value="ON_SITE">On Site</option>
@@ -514,7 +569,9 @@ export default function EngagementProgramsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Location / Field Site</label>
+                  <label className="font-semibold text-foreground">
+                    Location / Field Site
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Marina Beach Sector 4 / Remote Portal"
@@ -557,58 +614,79 @@ export default function EngagementProgramsPage() {
                     {selectedProgram.name}
                   </h2>
                 </div>
-                <button onClick={() => setSelectedProgram(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedProgram(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
-                <p className="text-muted-foreground">{selectedProgram.description}</p>
+                <p className="text-muted-foreground">
+                  {selectedProgram.description}
+                </p>
 
                 <div className="grid grid-cols-2 gap-4 bg-muted/30 p-3 rounded-lg border border-border">
                   <div>
-                    <span className="text-muted-foreground block">Category</span>
+                    <span className="text-muted-foreground block">
+                      Category
+                    </span>
                     <span className="font-semibold text-foreground">
                       {selectedProgram.category.replace(/_/g, " ")}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">Lifecycle Status</span>
+                    <span className="text-muted-foreground block">
+                      Lifecycle Status
+                    </span>
                     <span className="font-semibold text-emerald-500">
                       {selectedProgram.status.replace(/_/g, " ")}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">Duration</span>
+                    <span className="text-muted-foreground block">
+                      Duration
+                    </span>
                     <span className="font-semibold text-foreground">
                       {selectedProgram.start_date} to {selectedProgram.end_date}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">Target Service Hours</span>
+                    <span className="text-muted-foreground block">
+                      Target Service Hours
+                    </span>
                     <span className="font-semibold text-foreground">
                       {selectedProgram.target_service_hours} hrs
                     </span>
                   </div>
                 </div>
 
-                {selectedProgram.objectives && selectedProgram.objectives.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">Key Objectives:</h4>
-                    <ul className="list-disc pl-5 text-muted-foreground space-y-0.5">
-                      {selectedProgram.objectives.map((obj, i) => (
-                        <li key={i}>{obj}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {selectedProgram.objectives &&
+                  selectedProgram.objectives.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">
+                        Key Objectives:
+                      </h4>
+                      <ul className="list-disc pl-5 text-muted-foreground space-y-0.5">
+                        {selectedProgram.objectives.map((obj, i) => (
+                          <li key={i}>{obj}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                 {selectedProgram.un_sdg_goals && (
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">UN SDG Alignments:</h4>
+                    <h4 className="font-semibold text-foreground mb-1">
+                      UN SDG Alignments:
+                    </h4>
                     <div className="flex flex-wrap gap-1">
                       {selectedProgram.un_sdg_goals.map((g) => (
-                        <span key={g} className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-medium">
+                        <span
+                          key={g}
+                          className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-medium"
+                        >
                           SDG {g}
                         </span>
                       ))}
@@ -632,4 +710,3 @@ export default function EngagementProgramsPage() {
     </div>
   );
 }
-

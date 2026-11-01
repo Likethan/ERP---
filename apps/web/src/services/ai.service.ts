@@ -70,7 +70,7 @@ class MockAiService implements IAiService {
     message: string,
     context?: AiAssistantContext,
   ): Promise<ApiResponse<AiChatMessage>> {
-    await new Promise((r) => setTimeout(r, 600)); // Natural simulated latency
+    // Natural simulated latency
 
     const lower = message.toLowerCase();
     let reply = "";

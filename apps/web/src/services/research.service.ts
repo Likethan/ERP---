@@ -24,7 +24,8 @@ import {
   ResearcherWorkloadResponse,
 } from "@/types/research";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1/research";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1/research";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -38,7 +39,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    const message = errorBody?.detail || errorBody?.message || `Request failed with status ${res.status}`;
+    const message =
+      errorBody?.detail ||
+      errorBody?.message ||
+      `Request failed with status ${res.status}`;
     throw new Error(message);
   }
 
@@ -80,22 +84,35 @@ export const ResearchService = {
     return request<ResearchProject>(`/projects/${projectId}`);
   },
 
-  async getProjectHealth(projectId: string): Promise<ResearchProjectHealthReport> {
-    return request<ResearchProjectHealthReport>(`/projects/${projectId}/health`);
+  async getProjectHealth(
+    projectId: string,
+  ): Promise<ResearchProjectHealthReport> {
+    return request<ResearchProjectHealthReport>(
+      `/projects/${projectId}/health`,
+    );
   },
 
-  async getProjectDetails(projectId: string): Promise<ResearchProjectDetailResponse> {
-    return request<ResearchProjectDetailResponse>(`/projects/${projectId}/details`);
+  async getProjectDetails(
+    projectId: string,
+  ): Promise<ResearchProjectDetailResponse> {
+    return request<ResearchProjectDetailResponse>(
+      `/projects/${projectId}/details`,
+    );
   },
 
-  async createProject(payload: Partial<ResearchProject>): Promise<ResearchProject> {
+  async createProject(
+    payload: Partial<ResearchProject>,
+  ): Promise<ResearchProject> {
     return request<ResearchProject>("/projects", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
-  async updateProject(projectId: string, payload: Partial<ResearchProject>): Promise<ResearchProject> {
+  async updateProject(
+    projectId: string,
+    payload: Partial<ResearchProject>,
+  ): Promise<ResearchProject> {
     return request<ResearchProject>(`/projects/${projectId}`, {
       method: "PATCH",
       body: JSON.stringify(payload),
@@ -105,7 +122,7 @@ export const ResearchService = {
   async transitionProjectStatus(
     projectId: string,
     targetStatus: string,
-    reason?: string
+    reason?: string,
   ): Promise<ResearchProject> {
     return request<ResearchProject>(`/projects/${projectId}/transition`, {
       method: "POST",
@@ -125,15 +142,22 @@ export const ResearchService = {
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async addTeamMember(projectId: string, payload: Partial<ResearchTeamMember>): Promise<ResearchTeamMember> {
+  async addTeamMember(
+    projectId: string,
+    payload: Partial<ResearchTeamMember>,
+  ): Promise<ResearchTeamMember> {
     return request<ResearchTeamMember>(`/projects/${projectId}/team`, {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
-  async getResearcherWorkload(userId: string): Promise<ResearcherWorkloadResponse> {
-    return request<ResearcherWorkloadResponse>(`/team/users/${userId}/workload`);
+  async getResearcherWorkload(
+    userId: string,
+  ): Promise<ResearcherWorkloadResponse> {
+    return request<ResearcherWorkloadResponse>(
+      `/team/users/${userId}/workload`,
+    );
   },
 
   async getMyProjects(): Promise<ResearcherWorkloadResponse> {
@@ -161,22 +185,34 @@ export const ResearchService = {
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async getFundingOpportunity(opportunityId: string): Promise<ResearchFundingOpportunity> {
-    return request<ResearchFundingOpportunity>(`/opportunities/${opportunityId}`);
+  async getFundingOpportunity(
+    opportunityId: string,
+  ): Promise<ResearchFundingOpportunity> {
+    return request<ResearchFundingOpportunity>(
+      `/opportunities/${opportunityId}`,
+    );
   },
 
-  async createFundingOpportunity(payload: Partial<ResearchFundingOpportunity>): Promise<ResearchFundingOpportunity> {
+  async createFundingOpportunity(
+    payload: Partial<ResearchFundingOpportunity>,
+  ): Promise<ResearchFundingOpportunity> {
     return request<ResearchFundingOpportunity>("/opportunities", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
-  async saveOpportunity(opportunityId: string, saved: boolean): Promise<ResearchFundingOpportunity> {
-    return request<ResearchFundingOpportunity>(`/opportunities/${opportunityId}/save`, {
-      method: "POST",
-      body: JSON.stringify({ saved }),
-    });
+  async saveOpportunity(
+    opportunityId: string,
+    saved: boolean,
+  ): Promise<ResearchFundingOpportunity> {
+    return request<ResearchFundingOpportunity>(
+      `/opportunities/${opportunityId}/save`,
+      {
+        method: "POST",
+        body: JSON.stringify({ saved }),
+      },
+    );
   },
 
   async recordOpportunityEOI(
@@ -186,12 +222,15 @@ export const ResearchService = {
       principal_investigator_id: string;
       notes: string;
       estimated_budget?: number | null;
-    }
+    },
   ): Promise<ResearchFundingOpportunity> {
-    return request<ResearchFundingOpportunity>(`/opportunities/${opportunityId}/eoi`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    return request<ResearchFundingOpportunity>(
+      `/opportunities/${opportunityId}/eoi`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
   },
 
   // =========================================================================
@@ -207,21 +246,31 @@ export const ResearchService = {
   }): Promise<ResearchGrantApplication[]> {
     const query = new URLSearchParams();
     if (params?.project_id) query.set("project_id", params.project_id);
-    if (params?.internal_status) query.set("internal_status", params.internal_status);
-    if (params?.external_status) query.set("external_status", params.external_status);
+    if (params?.internal_status)
+      query.set("internal_status", params.internal_status);
+    if (params?.external_status)
+      query.set("external_status", params.external_status);
     if (params?.limit) query.set("limit", String(params.limit));
     if (params?.offset) query.set("offset", String(params.offset));
 
     const qs = query.toString();
-    const data = await request<any>(`/grants/applications${qs ? `?${qs}` : ""}`);
+    const data = await request<any>(
+      `/grants/applications${qs ? `?${qs}` : ""}`,
+    );
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async getGrantApplication(applicationId: string): Promise<ResearchGrantApplication> {
-    return request<ResearchGrantApplication>(`/grants/applications/${applicationId}`);
+  async getGrantApplication(
+    applicationId: string,
+  ): Promise<ResearchGrantApplication> {
+    return request<ResearchGrantApplication>(
+      `/grants/applications/${applicationId}`,
+    );
   },
 
-  async createGrantApplication(payload: Partial<ResearchGrantApplication>): Promise<ResearchGrantApplication> {
+  async createGrantApplication(
+    payload: Partial<ResearchGrantApplication>,
+  ): Promise<ResearchGrantApplication> {
     return request<ResearchGrantApplication>("/grants/applications", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -231,12 +280,15 @@ export const ResearchService = {
   async reviewGrantApplication(
     applicationId: string,
     decision: string,
-    comments: string
+    comments: string,
   ): Promise<ResearchGrantApplication> {
-    return request<ResearchGrantApplication>(`/grants/applications/${applicationId}/review`, {
-      method: "POST",
-      body: JSON.stringify({ decision, comments }),
-    });
+    return request<ResearchGrantApplication>(
+      `/grants/applications/${applicationId}/review`,
+      {
+        method: "POST",
+        body: JSON.stringify({ decision, comments }),
+      },
+    );
   },
 
   async confirmExternalSubmission(
@@ -245,12 +297,15 @@ export const ResearchService = {
       external_submission_reference: string;
       submission_date?: string;
       portal_url?: string;
-    }
+    },
   ): Promise<ResearchGrantApplication> {
-    return request<ResearchGrantApplication>(`/grants/applications/${applicationId}/confirm-submission`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    return request<ResearchGrantApplication>(
+      `/grants/applications/${applicationId}/confirm-submission`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
   },
 
   async recordSponsorDecision(
@@ -264,12 +319,15 @@ export const ResearchService = {
       decision_notes?: string;
       award_letter_url?: string;
       create_award_record?: boolean;
-    }
+    },
   ): Promise<ResearchGrantApplication> {
-    return request<ResearchGrantApplication>(`/grants/applications/${applicationId}/sponsor-decision`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    return request<ResearchGrantApplication>(
+      `/grants/applications/${applicationId}/sponsor-decision`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
   },
 
   // =========================================================================
@@ -323,7 +381,7 @@ export const ResearchService = {
       extended_end_date?: string;
       budget_adjustment?: number;
       document_url?: string;
-    }
+    },
   ): Promise<ResearchGrantAward> {
     return request<ResearchGrantAward>(`/agreements/${awardId}/amendments`, {
       method: "POST",
@@ -335,8 +393,12 @@ export const ResearchService = {
   // 6. BUDGETS & RECONCILED FINANCIALS
   // =========================================================================
 
-  async getProjectFinancialSummary(projectId: string): Promise<ResearchFinancialSummaryResponse> {
-    return request<ResearchFinancialSummaryResponse>(`/budgets/projects/${projectId}/financial-summary`);
+  async getProjectFinancialSummary(
+    projectId: string,
+  ): Promise<ResearchFinancialSummaryResponse> {
+    return request<ResearchFinancialSummaryResponse>(
+      `/budgets/projects/${projectId}/financial-summary`,
+    );
   },
 
   async getBudgetPlans(projectId?: string): Promise<ResearchBudgetPlan[]> {
@@ -345,7 +407,9 @@ export const ResearchService = {
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createBudgetPlan(payload: Partial<ResearchBudgetPlan>): Promise<ResearchBudgetPlan> {
+  async createBudgetPlan(
+    payload: Partial<ResearchBudgetPlan>,
+  ): Promise<ResearchBudgetPlan> {
     return request<ResearchBudgetPlan>("/budgets", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -357,12 +421,16 @@ export const ResearchService = {
   // =========================================================================
 
   async getMilestones(projectId?: string): Promise<ResearchMilestone[]> {
-    const path = projectId ? `/milestones/projects/${projectId}` : "/milestones";
+    const path = projectId
+      ? `/milestones/projects/${projectId}`
+      : "/milestones";
     const data = await request<any>(path);
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createMilestone(payload: Partial<ResearchMilestone>): Promise<ResearchMilestone> {
+  async createMilestone(
+    payload: Partial<ResearchMilestone>,
+  ): Promise<ResearchMilestone> {
     return request<ResearchMilestone>("/milestones", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -372,7 +440,7 @@ export const ResearchService = {
   async verifyMilestone(
     milestoneId: string,
     decision: string,
-    notes: string
+    notes: string,
   ): Promise<ResearchMilestone> {
     return request<ResearchMilestone>(`/milestones/${milestoneId}/verify`, {
       method: "POST",
@@ -384,13 +452,17 @@ export const ResearchService = {
   // 8. ETHICS & COMPLIANCE
   // =========================================================================
 
-  async getEthicsApprovals(projectId?: string): Promise<ResearchEthicsApproval[]> {
+  async getEthicsApprovals(
+    projectId?: string,
+  ): Promise<ResearchEthicsApproval[]> {
     const path = projectId ? `/ethics/projects/${projectId}` : "/ethics";
     const data = await request<any>(path);
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createEthicsApproval(payload: Partial<ResearchEthicsApproval>): Promise<ResearchEthicsApproval> {
+  async createEthicsApproval(
+    payload: Partial<ResearchEthicsApproval>,
+  ): Promise<ResearchEthicsApproval> {
     return request<ResearchEthicsApproval>("/ethics", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -404,7 +476,7 @@ export const ResearchService = {
       decision_rationale: string;
       conditions_and_restrictions?: string;
       expiry_date?: string;
-    }
+    },
   ): Promise<ResearchEthicsApproval> {
     return request<ResearchEthicsApproval>(`/ethics/${approvalId}/decision`, {
       method: "POST",
@@ -422,20 +494,28 @@ export const ResearchService = {
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createResearchOutput(payload: Partial<ResearchOutput>): Promise<ResearchOutput> {
+  async createResearchOutput(
+    payload: Partial<ResearchOutput>,
+  ): Promise<ResearchOutput> {
     return request<ResearchOutput>("/outputs", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
-  async getInventionDisclosures(projectId?: string): Promise<ResearchInventionDisclosure[]> {
-    const path = projectId ? `/ip/disclosures?project_id=${projectId}` : "/ip/disclosures";
+  async getInventionDisclosures(
+    projectId?: string,
+  ): Promise<ResearchInventionDisclosure[]> {
+    const path = projectId
+      ? `/ip/disclosures?project_id=${projectId}`
+      : "/ip/disclosures";
     const data = await request<any>(path);
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createInventionDisclosure(payload: Partial<ResearchInventionDisclosure>): Promise<ResearchInventionDisclosure> {
+  async createInventionDisclosure(
+    payload: Partial<ResearchInventionDisclosure>,
+  ): Promise<ResearchInventionDisclosure> {
     return request<ResearchInventionDisclosure>("/ip/disclosures", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -451,7 +531,9 @@ export const ResearchService = {
     return Array.isArray(data) ? data : data?.items || [];
   },
 
-  async createProjectRisk(payload: Partial<ResearchProjectRisk>): Promise<ResearchProjectRisk> {
+  async createProjectRisk(
+    payload: Partial<ResearchProjectRisk>,
+  ): Promise<ResearchProjectRisk> {
     return request<ResearchProjectRisk>("/risks", {
       method: "POST",
       body: JSON.stringify(payload),

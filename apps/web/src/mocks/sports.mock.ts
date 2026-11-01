@@ -36,7 +36,8 @@ export const MOCK_SPORTS_DEPARTMENTS: SportsDepartmentItem[] = [
     name: "Directorate of Physical Education & Athletics",
     campusId: "campus-main",
     campusName: "Main Campus (Kolkata)",
-    description: "Central institutional athletic governing unit coordinating varsity sports and stadium complexes.",
+    description:
+      "Central institutional athletic governing unit coordinating varsity sports and stadium complexes.",
     status: "ACTIVE",
     headUserId: "user-coach-01",
     headUserName: "Dr. Arvind Swaminathan (Director of Athletics)",
@@ -60,7 +61,8 @@ export const MOCK_SPORTS_DEPARTMENTS: SportsDepartmentItem[] = [
     name: "Aquatics & Indoor Recreation Center",
     campusId: "campus-main",
     campusName: "Main Campus (Kolkata)",
-    description: "Multi-court indoor arena, Olympic pool, and recreation halls.",
+    description:
+      "Multi-court indoor arena, Olympic pool, and recreation halls.",
     status: "ACTIVE",
     headUserId: "user-coach-02",
     headUserName: "Coach Shalini Menon (Aquatics Supervisor)",
@@ -78,7 +80,8 @@ export const MOCK_SPORTS_DEPARTMENTS: SportsDepartmentItem[] = [
     name: "Student Fitness & High-Performance Conditioning",
     campusId: "campus-north",
     campusName: "North Campus (Siliguri)",
-    description: "Modern fitness suites, strength and conditioning gyms, and wellness classes.",
+    description:
+      "Modern fitness suites, strength and conditioning gyms, and wellness classes.",
     status: "ACTIVE",
     headUserId: "user-coach-03",
     headUserName: "Marcus Roy (Lead Strength Coach)",
@@ -109,10 +112,14 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: false,
     capacity: 2500,
     status: "AVAILABLE",
-    maintenanceNotes: "Pitch rolled and manicured. Floodlight towers operational.",
+    maintenanceNotes:
+      "Pitch rolled and manicured. Floodlight towers operational.",
     equipmentAssetIds: ["asset-cricket-roller-01", "asset-sight-screen-01"],
     operatingHours: { open: "06:00", close: "19:00" },
-    accessibilityInfo: { wheelchairAccess: true, rampLocations: ["North Gate", "Pavilion"] },
+    accessibilityInfo: {
+      wheelchairAccess: true,
+      rampLocations: ["North Gate", "Pavilion"],
+    },
     activeBookingsCount: 3,
     createdAt: "2025-06-10T10:00:00Z",
   },
@@ -129,7 +136,8 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: false,
     capacity: 1800,
     status: "AVAILABLE",
-    maintenanceNotes: "Subsurface drainage inspected and certified for monsoon play.",
+    maintenanceNotes:
+      "Subsurface drainage inspected and certified for monsoon play.",
     equipmentAssetIds: ["asset-goal-posts-01"],
     operatingHours: { open: "06:00", close: "20:00" },
     activeBookingsCount: 4,
@@ -148,7 +156,8 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: true,
     capacity: 650,
     status: "AVAILABLE",
-    maintenanceNotes: "Maple hardwood resurfaced Sep 2026. Electronic scoreboard synchronized.",
+    maintenanceNotes:
+      "Maple hardwood resurfaced Sep 2026. Electronic scoreboard synchronized.",
     operatingHours: { open: "06:00", close: "22:00" },
     activeBookingsCount: 5,
     createdAt: "2025-06-12T10:00:00Z",
@@ -166,7 +175,8 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: false,
     capacity: 200,
     status: "MAINTENANCE_CLOSED",
-    maintenanceNotes: "Surface crack resurfacing and hoop bracket reinforcement underway.",
+    maintenanceNotes:
+      "Surface crack resurfacing and hoop bracket reinforcement underway.",
     operatingHours: { open: "06:00", close: "19:00" },
     activeBookingsCount: 0,
     createdAt: "2025-06-12T10:00:00Z",
@@ -202,7 +212,8 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: true,
     capacity: 500,
     status: "AVAILABLE",
-    maintenanceNotes: "Water pH 7.4, Chlorine 1.5 ppm, Temperature 26.5°C constant.",
+    maintenanceNotes:
+      "Water pH 7.4, Chlorine 1.5 ppm, Temperature 26.5°C constant.",
     operatingHours: { open: "05:30", close: "20:30" },
     activeBookingsCount: 3,
     createdAt: "2025-06-20T10:00:00Z",
@@ -220,7 +231,8 @@ export const MOCK_SPORTS_FACILITIES: SportsFacilityItem[] = [
     isIndoor: true,
     capacity: 120,
     status: "AVAILABLE",
-    maintenanceNotes: "Olympic barbell cages and dumbbell racks certified safe.",
+    maintenanceNotes:
+      "Olympic barbell cages and dumbbell racks certified safe.",
     operatingHours: { open: "06:00", close: "22:00" },
     activeBookingsCount: 2,
     createdAt: "2025-08-01T10:00:00Z",
@@ -363,8 +375,15 @@ export const MOCK_SPORTS_PARTICIPANTS: SportsParticipantItem[] = [
     clearanceExpiry: "2027-04-30",
     consentRecorded: true,
     consentDate: "2026-08-15",
-    operationalRestrictions: { maxSessionMinutes: 90, requiresProtectiveGoggles: false },
-    sportsHistory: { varsitySeasons: 2, stateTournaments: 4, awards: ["All-Star Point Guard 2025"] },
+    operationalRestrictions: {
+      maxSessionMinutes: 90,
+      requiresProtectiveGoggles: false,
+    },
+    sportsHistory: {
+      varsitySeasons: 2,
+      stateTournaments: 4,
+      awards: ["All-Star Point Guard 2025"],
+    },
     notes: "Team captain and point guard; clear for high-contact drills.",
     activeTeamsCount: 1,
     createdAt: "2025-08-01T10:00:00Z",
@@ -423,7 +442,10 @@ export const MOCK_SPORTS_PARTICIPANTS: SportsParticipantItem[] = [
     clearanceExpiry: "2026-12-15",
     consentRecorded: true,
     consentDate: "2026-09-01",
-    operationalRestrictions: { maxSinglesMatchesPerWeek: 2, mandatoryPhysioCooldown: true },
+    operationalRestrictions: {
+      maxSinglesMatchesPerWeek: 2,
+      mandatoryPhysioCooldown: true,
+    },
     sportsHistory: { zonalSilver: true },
     notes: "Recovering from patellar tendonitis; cleared for doubles play.",
     activeTeamsCount: 1,
@@ -461,7 +483,9 @@ export const MOCK_SPORTS_PARTICIPANTS: SportsParticipantItem[] = [
     clearanceStatus: "SUSPENDED",
     clearanceExpiry: "2026-10-01",
     consentRecorded: false,
-    operationalRestrictions: { clearanceSuspendedDueTo: "Pending medical clearance checkup" },
+    operationalRestrictions: {
+      clearanceSuspendedDueTo: "Pending medical clearance checkup",
+    },
     sportsHistory: { intramuralCaptain: 2025 },
     notes: "Awaiting sports medicine clearance card renewal.",
     activeTeamsCount: 0,
@@ -686,7 +710,8 @@ export const MOCK_COACHING_ASSIGNMENTS: CoachingAssignmentItem[] = [
     teamName: "Campus High Performance",
     sport: "Athletics",
     role: "FITNESS_TRAINER",
-    certificationLevel: "NSCA Certified Strength & Conditioning Specialist (CSCS)",
+    certificationLevel:
+      "NSCA Certified Strength & Conditioning Specialist (CSCS)",
     isPrimary: false,
     startDate: "2025-01-10",
     status: "ACTIVE",
@@ -964,7 +989,11 @@ export const MOCK_MATCH_FIXTURES: MatchFixtureItem[] = [
       isAbandoned: false,
       homeScore: 3,
       awayScore: 1,
-      scoreBreakdown: { halfTime: "1-0", fullTime: "3-1", scorers: ["Ananya Deshmukh (22', 68')", "P. Das (84')"] },
+      scoreBreakdown: {
+        halfTime: "1-0",
+        fullTime: "3-1",
+        scorers: ["Ananya Deshmukh (22', 68')", "P. Das (84')"],
+      },
       verifiedByUserId: "user-coach-01",
       verifiedByName: "Dr. Arvind Swaminathan (Match Commissioner)",
       verifiedAt: "2026-10-24T18:00:00Z",
@@ -1115,7 +1144,8 @@ export const MOCK_SPORTS_ACHIEVEMENTS: SportsAchievementItem[] = [
     level: "ZONAL",
     medal: "GOLD",
     awardDate: "2025-12-18",
-    citation: "Undefeated championship run across 6 matches with 84-point differential.",
+    citation:
+      "Undefeated championship run across 6 matches with 84-point differential.",
     certificateNumber: "EZ-BASK-2025-01",
   },
   {
@@ -1128,7 +1158,8 @@ export const MOCK_SPORTS_ACHIEVEMENTS: SportsAchievementItem[] = [
     level: "UNIVERSITY",
     medal: "GOLD",
     awardDate: "2026-03-24",
-    citation: "Broke the 9-year institutional record at the Annual Aquatics Gala.",
+    citation:
+      "Broke the 9-year institutional record at the Annual Aquatics Gala.",
     certificateNumber: "REC-AQUA-2026-04",
   },
   {
@@ -1168,7 +1199,8 @@ export const MOCK_EQUIPMENT_ASSIGNMENTS: SportsEquipmentAssignmentItem[] = [
     dueDate: "2026-11-30",
     status: "ISSUED",
     returnCondition: "EXCELLENT",
-    conditionNotes: "Checked out for seasonal practice; inspected with proper PSI pressure.",
+    conditionNotes:
+      "Checked out for seasonal practice; inspected with proper PSI pressure.",
   },
   {
     id: "eq-asgn-002",
@@ -1188,7 +1220,8 @@ export const MOCK_EQUIPMENT_ASSIGNMENTS: SportsEquipmentAssignmentItem[] = [
     returnDate: "2026-10-23",
     status: "RETURNED",
     returnCondition: "FAIR",
-    conditionNotes: "Returned 1 day late; rubber grip on 1 bat worn, replaced under standard upkeep.",
+    conditionNotes:
+      "Returned 1 day late; rubber grip on 1 bat worn, replaced under standard upkeep.",
   },
   {
     id: "eq-asgn-003",
@@ -1282,7 +1315,9 @@ export const MOCK_SPORTS_DASHBOARD: SportsDashboardData = {
   ),
   upcomingTrainingSessions: MOCK_TRAINING_SESSIONS,
   activeTournamentsList: MOCK_COMPETITIONS,
-  overdueEquipmentList: MOCK_EQUIPMENT_ASSIGNMENTS.filter((e) => e.status === "OVERDUE"),
+  overdueEquipmentList: MOCK_EQUIPMENT_ASSIGNMENTS.filter(
+    (e) => e.status === "OVERDUE",
+  ),
   facilitiesInMaintenanceList: MOCK_SPORTS_FACILITIES.filter(
     (f) => f.status === "MAINTENANCE_CLOSED",
   ),

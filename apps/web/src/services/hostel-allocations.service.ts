@@ -31,7 +31,6 @@ class HostelAllocationsService {
     year?: number | string;
     search?: string;
   }): Promise<ApiResponse<HostelAllocation[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.allocations];
 
     if (filters?.hostelId && filters.hostelId !== "ALL") {
@@ -67,7 +66,6 @@ class HostelAllocationsService {
   async getAllocationById(
     id: string,
   ): Promise<ApiResponse<HostelAllocation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const alloc = this.allocations.find((a) => a.id === id) || null;
     return { success: true, data: alloc };
   }
@@ -95,8 +93,6 @@ class HostelAllocationsService {
     remarks?: string;
     allocatedBy?: string;
   }): Promise<ApiResponse<HostelAllocation>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     const newAlloc: HostelAllocation = {
       id: `alloc-${Date.now().toString(36)}`,
       studentId: payload.studentId,
@@ -167,7 +163,6 @@ class HostelAllocationsService {
       transferredBy?: string;
     },
   ): Promise<ApiResponse<HostelAllocation | null>> {
-    await new Promise((r) => setTimeout(r, 60));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };
 
@@ -220,7 +215,6 @@ class HostelAllocationsService {
     reason?: string,
     vacatedBy?: string,
   ): Promise<ApiResponse<HostelAllocation | null>> {
-    await new Promise((r) => setTimeout(r, 60));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };
 

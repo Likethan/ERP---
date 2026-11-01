@@ -23,8 +23,10 @@ import { MobilityApplication } from "@/types/international";
 export default function PartnerNominationsPage() {
   const [applications, setApplications] = useState<MobilityApplication[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAppForNomination, setSelectedAppForNomination] = useState<MobilityApplication | null>(null);
-  const [selectedAppForDecision, setSelectedAppForDecision] = useState<MobilityApplication | null>(null);
+  const [selectedAppForNomination, setSelectedAppForNomination] =
+    useState<MobilityApplication | null>(null);
+  const [selectedAppForDecision, setSelectedAppForDecision] =
+    useState<MobilityApplication | null>(null);
 
   // Nomination Form
   const [nominationNotes, setNominationNotes] = useState("");
@@ -58,7 +60,11 @@ export default function PartnerNominationsPage() {
     if (!selectedAppForNomination) return;
     setSubmittingNomination(true);
     try {
-      await internationalService.nominateStudent(selectedAppForNomination.id, nominationNotes, partnerEmail);
+      await internationalService.nominateStudent(
+        selectedAppForNomination.id,
+        nominationNotes,
+        partnerEmail,
+      );
       alert("Candidate successfully nominated to host university!");
       setSelectedAppForNomination(null);
       setNominationNotes("");
@@ -77,7 +83,11 @@ export default function PartnerNominationsPage() {
     if (!selectedAppForDecision) return;
     setSubmittingDecision(true);
     try {
-      await internationalService.recordPartnerDecision(selectedAppForDecision.id, decision, decisionNotes);
+      await internationalService.recordPartnerDecision(
+        selectedAppForDecision.id,
+        decision,
+        decisionNotes,
+      );
       alert(`Partner decision recorded: ${decision}`);
       setSelectedAppForDecision(null);
       setDecisionNotes("");
@@ -101,7 +111,8 @@ export default function PartnerNominationsPage() {
             Partner Nominations & Acceptance Coordination
           </h2>
           <p className="text-xs text-slate-400">
-            Transmit approved student rosters to host university international offices and log admissions
+            Transmit approved student rosters to host university international
+            offices and log admissions
           </p>
         </div>
 
@@ -133,13 +144,19 @@ export default function PartnerNominationsPage() {
                   </tr>
                 ) : (
                   applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={app.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-white">
-                          {app.student_name || app.studentName || "Student Candidate"}
+                          {app.student_name ||
+                            app.studentName ||
+                            "Student Candidate"}
                         </div>
                         <div className="text-[11px] text-slate-500 font-mono mt-0.5">
-                          {app.application_reference_number || app.applicationReferenceNumber}
+                          {app.application_reference_number ||
+                            app.applicationReferenceNumber}
                         </div>
                       </td>
 
@@ -154,13 +171,14 @@ export default function PartnerNominationsPage() {
                       <td className="py-3.5 px-4">
                         <span
                           className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${
-                            app.status === "PARTNER_ACCEPTED" || app.status === "ACTIVE_MOBILITY"
+                            app.status === "PARTNER_ACCEPTED" ||
+                            app.status === "ACTIVE_MOBILITY"
                               ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
                               : app.status === "PARTNER_NOMINATED"
-                              ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
-                              : app.status === "PARTNER_REJECTED"
-                              ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                              : "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30"
+                                ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
+                                : app.status === "PARTNER_REJECTED"
+                                  ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                                  : "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30"
                           }`}
                         >
                           {app.status}
@@ -184,9 +202,12 @@ export default function PartnerNominationsPage() {
                             Record Decision
                           </button>
                         )}
-                        {app.status !== "APPROVED" && app.status !== "PARTNER_NOMINATED" && (
-                          <span className="text-slate-500 text-[11px]">Finalized</span>
-                        )}
+                        {app.status !== "APPROVED" &&
+                          app.status !== "PARTNER_NOMINATED" && (
+                            <span className="text-slate-500 text-[11px]">
+                              Finalized
+                            </span>
+                          )}
                       </td>
                     </tr>
                   ))
@@ -212,8 +233,14 @@ export default function PartnerNominationsPage() {
                 Nominate Candidate to Host Institution
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Candidate: <strong className="text-slate-200">{selectedAppForNomination.student_name}</strong> to{" "}
-                <strong className="text-slate-200">{selectedAppForNomination.partner_name}</strong>
+                Candidate:{" "}
+                <strong className="text-slate-200">
+                  {selectedAppForNomination.student_name}
+                </strong>{" "}
+                to{" "}
+                <strong className="text-slate-200">
+                  {selectedAppForNomination.partner_name}
+                </strong>
               </p>
 
               <form onSubmit={handleNominate} className="mt-5 space-y-4">
@@ -231,7 +258,9 @@ export default function PartnerNominationsPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Official Nomination Dossier Notes</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Official Nomination Dossier Notes
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Provide candidate ranking, scholarship recommendation, or host course approvals..."
@@ -254,7 +283,9 @@ export default function PartnerNominationsPage() {
                     disabled={submittingNomination}
                     className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-md shadow-purple-900/30 disabled:opacity-50"
                   >
-                    {submittingNomination ? "Submitting..." : "Send Formal Nomination"}
+                    {submittingNomination
+                      ? "Submitting..."
+                      : "Send Formal Nomination"}
                   </button>
                 </div>
               </form>
@@ -278,12 +309,17 @@ export default function PartnerNominationsPage() {
                 Record Host University Admission Decision
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Candidate: <strong className="text-slate-200">{selectedAppForDecision.student_name}</strong>
+                Candidate:{" "}
+                <strong className="text-slate-200">
+                  {selectedAppForDecision.student_name}
+                </strong>
               </p>
 
               <form onSubmit={handleDecision} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Partner Decision *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Partner Decision *
+                  </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -311,7 +347,9 @@ export default function PartnerNominationsPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Official Notes / Reference Code</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Official Notes / Reference Code
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Enter partner reference number, admission package details, or rejection rationale..."
@@ -334,7 +372,9 @@ export default function PartnerNominationsPage() {
                     disabled={submittingDecision}
                     className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-900/30 disabled:opacity-50"
                   >
-                    {submittingDecision ? "Saving..." : "Commit Partner Decision"}
+                    {submittingDecision
+                      ? "Saving..."
+                      : "Commit Partner Decision"}
                   </button>
                 </div>
               </form>

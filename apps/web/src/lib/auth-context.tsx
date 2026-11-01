@@ -21,7 +21,10 @@ interface AuthContextValue {
   hasPermission: (permissionCode: string) => boolean;
   hasRole: (roleName: string) => boolean;
   switchPersona: (roleOrId: string) => void;
-  login: (credentials: { email: string; password?: string }) => Promise<AuthenticatedUser | null>;
+  login: (credentials: {
+    email: string;
+    password?: string;
+  }) => Promise<AuthenticatedUser | null>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -89,12 +92,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch {
-      // Backend unavailable; maintain mock persona
-      setUser(personaToUser(activePersona));
+      // Backend unavailable; maintain current persona
     } finally {
       setIsLoading(false);
     }
-  }, [activePersona]);
+  }, []);
 
   useEffect(() => {
     refreshUser();
@@ -116,7 +118,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = async (credentials: { email: string; password?: string }): Promise<AuthenticatedUser | null> => {
+  const login = async (credentials: {
+    email: string;
+    password?: string;
+  }): Promise<AuthenticatedUser | null> => {
     setIsLoading(true);
     try {
       const response = await apiFetch<AuthenticatedUser>("/api/v1/auth/login", {

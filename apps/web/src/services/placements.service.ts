@@ -14,12 +14,10 @@ class PlacementsService {
   private offers: PlacementOfferItem[] = [...MOCK_OFFERS];
 
   async getCompanies(): Promise<ApiResponse<CompanyProfileItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: this.companies };
   }
 
   async getDrives(status?: string): Promise<ApiResponse<JobDriveItem[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     let items = [...this.drives];
     if (status) {
       items = items.filter((d) => d.status === status);
@@ -28,20 +26,17 @@ class PlacementsService {
   }
 
   async getDriveById(id: string): Promise<ApiResponse<JobDriveItem | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const drive = this.drives.find((d) => d.id === id) || null;
     return { success: true, data: drive };
   }
 
   async getOffers(): Promise<ApiResponse<PlacementOfferItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: this.offers };
   }
 
   async createDrive(
     data: Partial<JobDriveItem>,
   ): Promise<ApiResponse<JobDriveItem>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newDrive: JobDriveItem = {
       id: `drive-${Date.now()}`,
       companyName: data.companyName || "Recruiter",
@@ -76,7 +71,6 @@ class PlacementsService {
       total_offers_extended: number;
     }>
   > {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: {
@@ -97,7 +91,6 @@ class PlacementsService {
   async createCompany(
     data: Partial<CompanyProfileItem>,
   ): Promise<ApiResponse<CompanyProfileItem>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newComp: CompanyProfileItem = {
       id: `comp-${Date.now()}`,
       name: data.name || "Enterprise Partner",
@@ -121,7 +114,6 @@ class PlacementsService {
   async applyToDrive(
     driveId: string,
   ): Promise<ApiResponse<{ applicationNumber: string }>> {
-    await new Promise((r) => setTimeout(r, 90));
     const drive = this.drives.find((d) => d.id === driveId);
     if (drive) {
       drive.totalApplicants += 1;
@@ -138,7 +130,6 @@ class PlacementsService {
     offerId: string,
     decision: "ACCEPT" | "DECLINE",
   ): Promise<ApiResponse<PlacementOfferItem>> {
-    await new Promise((r) => setTimeout(r, 80));
     const offer = this.offers.find((o) => o.id === offerId);
     if (offer) {
       offer.acceptanceStatus = decision === "ACCEPT" ? "ACCEPTED" : "DECLINED";

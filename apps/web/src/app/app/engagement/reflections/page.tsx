@@ -22,21 +22,28 @@ import {
   ReflectionSubmitInput,
 } from "@/types/engagement";
 
-const AVAILABLE_SDGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+const AVAILABLE_SDGS = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+];
 
 export default function EngagementReflectionsPage() {
   const [reflections, setReflections] = useState<ReflectionSubmission[]>([]);
   const [programs, setPrograms] = useState<EngagementProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedReflection, setSelectedReflection] = useState<ReflectionSubmission | null>(null);
+  const [selectedReflection, setSelectedReflection] =
+    useState<ReflectionSubmission | null>(null);
 
   // Submit Reflection Modal State
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [progId, setProgId] = useState("");
   const [reflectionText, setReflectionText] = useState("");
-  const [learningOutcomes, setLearningOutcomes] = useState("Environmental auditing, Field safety protocols");
-  const [skillsAcquired, setSkillsAcquired] = useState("Team Leadership, Data Logging");
+  const [learningOutcomes, setLearningOutcomes] = useState(
+    "Environmental auditing, Field safety protocols",
+  );
+  const [skillsAcquired, setSkillsAcquired] = useState(
+    "Team Leadership, Data Logging",
+  );
   const [impactSummary, setImpactSummary] = useState("");
   const [selectedSdgs, setSelectedSdgs] = useState<number[]>([11, 13]);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -78,14 +85,22 @@ export default function EngagementReflectionsPage() {
       const input: ReflectionSubmitInput = {
         program_id: progId,
         reflection_text: reflectionText,
-        learning_outcomes: learningOutcomes.split(",").map((s) => s.trim()).filter(Boolean),
-        skills_acquired: skillsAcquired.split(",").map((s) => s.trim()).filter(Boolean),
+        learning_outcomes: learningOutcomes
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        skills_acquired: skillsAcquired
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
         community_impact_summary: impactSummary,
         un_sdg_contributions: selectedSdgs,
       };
 
       await EngagementService.submitReflection(input);
-      setActionMessage("Civic reflection submitted successfully for faculty review!");
+      setActionMessage(
+        "Civic reflection submitted successfully for faculty review!",
+      );
       setIsSubmitOpen(false);
       setReflectionText("");
       setImpactSummary("");
@@ -97,9 +112,11 @@ export default function EngagementReflectionsPage() {
 
   const filteredReflections = reflections.filter((r) => {
     return (
-      (r.student_name && r.student_name.toLowerCase().includes(search.toLowerCase())) ||
+      (r.student_name &&
+        r.student_name.toLowerCase().includes(search.toLowerCase())) ||
       r.reflection_text.toLowerCase().includes(search.toLowerCase()) ||
-      (r.community_impact_summary && r.community_impact_summary.toLowerCase().includes(search.toLowerCase()))
+      (r.community_impact_summary &&
+        r.community_impact_summary.toLowerCase().includes(search.toLowerCase()))
     );
   });
 
@@ -111,7 +128,10 @@ export default function EngagementReflectionsPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -125,7 +145,8 @@ export default function EngagementReflectionsPage() {
               Student Reflections & SDG Impact Evidence
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Reflective learning synthesis, acquired skills, and audited UN Sustainable Development Goal alignments
+              Reflective learning synthesis, acquired skills, and audited UN
+              Sustainable Development Goal alignments
             </p>
           </div>
 
@@ -178,7 +199,10 @@ export default function EngagementReflectionsPage() {
                   <div className="flex flex-wrap gap-1 items-center">
                     <Globe2 className="h-3.5 w-3.5 text-emerald-500 mr-1" />
                     {refl.un_sdg_contributions.map((g) => (
-                      <span key={g} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-medium">
+                      <span
+                        key={g}
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-medium"
+                      >
                         SDG {g}
                       </span>
                     ))}
@@ -189,7 +213,10 @@ export default function EngagementReflectionsPage() {
                 {refl.skills_acquired && refl.skills_acquired.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {refl.skills_acquired.map((skill, i) => (
-                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 font-medium">
+                      <span
+                        key={i}
+                        className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 font-medium"
+                      >
                         {skill}
                       </span>
                     ))}
@@ -203,11 +230,14 @@ export default function EngagementReflectionsPage() {
                       <span>Faculty Reviewer Feedback</span>
                       {refl.rubric_score && (
                         <span className="text-emerald-500 font-bold flex items-center gap-0.5">
-                          <Star className="h-3 w-3 fill-emerald-500" /> {refl.rubric_score}/100
+                          <Star className="h-3 w-3 fill-emerald-500" />{" "}
+                          {refl.rubric_score}/100
                         </span>
                       )}
                     </div>
-                    <p className="text-muted-foreground italic text-[11px]">&ldquo;{refl.reviewer_feedback}&rdquo;</p>
+                    <p className="text-muted-foreground italic text-[11px]">
+                      &ldquo;{refl.reviewer_feedback}&rdquo;
+                    </p>
                   </div>
                 )}
               </div>
@@ -230,32 +260,47 @@ export default function EngagementReflectionsPage() {
             <div className="bg-card border border-border rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto text-xs">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
-                  <span className="text-[10px] text-muted-foreground block">Reflection Synthesis</span>
+                  <span className="text-[10px] text-muted-foreground block">
+                    Reflection Synthesis
+                  </span>
                   <h2 className="text-base font-bold text-foreground">
                     {selectedReflection.student_name || "Volunteer Reflection"}
                   </h2>
                 </div>
-                <button onClick={() => setSelectedReflection(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedReflection(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-1">
-                  <h4 className="font-semibold text-foreground">Student Civic Reflection</h4>
-                  <p className="text-muted-foreground whitespace-pre-wrap">{selectedReflection.reflection_text}</p>
+                  <h4 className="font-semibold text-foreground">
+                    Student Civic Reflection
+                  </h4>
+                  <p className="text-muted-foreground whitespace-pre-wrap">
+                    {selectedReflection.reflection_text}
+                  </p>
                 </div>
 
                 {selectedReflection.community_impact_summary && (
                   <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20 space-y-1">
-                    <h4 className="font-semibold text-emerald-500">Documented Community Outcomes:</h4>
-                    <p className="text-foreground">{selectedReflection.community_impact_summary}</p>
+                    <h4 className="font-semibold text-emerald-500">
+                      Documented Community Outcomes:
+                    </h4>
+                    <p className="text-foreground">
+                      {selectedReflection.community_impact_summary}
+                    </p>
                   </div>
                 )}
 
                 {selectedReflection.learning_outcomes && (
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">Learning Outcomes:</h4>
+                    <h4 className="font-semibold text-foreground mb-1">
+                      Learning Outcomes:
+                    </h4>
                     <ul className="list-disc pl-5 text-muted-foreground space-y-0.5">
                       {selectedReflection.learning_outcomes.map((lo, i) => (
                         <li key={i}>{lo}</li>
@@ -286,14 +331,19 @@ export default function EngagementReflectionsPage() {
                   <Sparkles className="h-5 w-5 text-emerald-500" />
                   Submit Civic Service Reflection
                 </h2>
-                <button onClick={() => setIsSubmitOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsSubmitOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleSubmitReflection} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Completed Program *</label>
+                  <label className="font-semibold text-foreground">
+                    Completed Program *
+                  </label>
                   <select
                     value={progId}
                     onChange={(e) => setProgId(e.target.value)}
@@ -309,7 +359,9 @@ export default function EngagementReflectionsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Civic & Personal Reflection *</label>
+                  <label className="font-semibold text-foreground">
+                    Civic & Personal Reflection *
+                  </label>
                   <textarea
                     rows={4}
                     required
@@ -321,7 +373,9 @@ export default function EngagementReflectionsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Learning Outcomes (comma separated)</label>
+                  <label className="font-semibold text-foreground">
+                    Learning Outcomes (comma separated)
+                  </label>
                   <input
                     type="text"
                     value={learningOutcomes}
@@ -331,7 +385,9 @@ export default function EngagementReflectionsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Skills Developed (comma separated)</label>
+                  <label className="font-semibold text-foreground">
+                    Skills Developed (comma separated)
+                  </label>
                   <input
                     type="text"
                     value={skillsAcquired}
@@ -341,7 +397,9 @@ export default function EngagementReflectionsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Tangible Community Deliverable Summary</label>
+                  <label className="font-semibold text-foreground">
+                    Tangible Community Deliverable Summary
+                  </label>
                   <textarea
                     rows={2}
                     placeholder="e.g. Cleared 2 km of shoreline, tutored 14 children..."
@@ -352,7 +410,9 @@ export default function EngagementReflectionsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Select Contributing UN SDGs:</label>
+                  <label className="font-semibold text-foreground">
+                    Select Contributing UN SDGs:
+                  </label>
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {AVAILABLE_SDGS.map((sdg) => {
                       const isSelected = selectedSdgs.includes(sdg);
@@ -397,4 +457,3 @@ export default function EngagementReflectionsPage() {
     </div>
   );
 }
-

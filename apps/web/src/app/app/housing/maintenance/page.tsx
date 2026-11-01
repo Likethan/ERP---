@@ -37,7 +37,8 @@ export default function MaintenanceTicketsPage() {
   const [priorityFilter, setPriorityFilter] = useState<string>("ALL");
 
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  const [selectedTicketToUpdate, setSelectedTicketToUpdate] = useState<HousingMaintenanceRequest | null>(null);
+  const [selectedTicketToUpdate, setSelectedTicketToUpdate] =
+    useState<HousingMaintenanceRequest | null>(null);
 
   const [newTicket, setNewTicket] = useState<HousingMaintenanceCreateInput>({
     property_id: "",
@@ -119,7 +120,10 @@ export default function MaintenanceTicketsPage() {
     if (!selectedTicketToUpdate) return;
     setActionLoading(true);
     try {
-      await HousingService.updateMaintenance(selectedTicketToUpdate.id, updateData);
+      await HousingService.updateMaintenance(
+        selectedTicketToUpdate.id,
+        updateData,
+      );
       setSelectedTicketToUpdate(null);
       loadData();
     } catch (err) {
@@ -135,7 +139,8 @@ export default function MaintenanceTicketsPage() {
       t.description.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus = statusFilter === "ALL" || t.status === statusFilter;
-    const matchesPriority = priorityFilter === "ALL" || t.priority === priorityFilter;
+    const matchesPriority =
+      priorityFilter === "ALL" || t.priority === priorityFilter;
 
     return matchesSearch && matchesStatus && matchesPriority;
   });
@@ -219,7 +224,8 @@ export default function MaintenanceTicketsPage() {
               Residential Maintenance Tickets & Facility Work Orders
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Student defect reports, ERP work order linkages, certified artisan dispatch, and tenant satisfaction auditing.
+              Student defect reports, ERP work order linkages, certified artisan
+              dispatch, and tenant satisfaction auditing.
             </p>
           </div>
 
@@ -276,10 +282,14 @@ export default function MaintenanceTicketsPage() {
 
         {/* Table */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading maintenance tickets...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading maintenance tickets...
+          </div>
         ) : filteredTickets.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No maintenance tickets matching your filters.</p>
+            <p className="text-slate-400">
+              No maintenance tickets matching your filters.
+            </p>
           </div>
         ) : (
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
@@ -297,32 +307,47 @@ export default function MaintenanceTicketsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {filteredTickets.map((t) => (
-                    <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr
+                      key={t.id}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
                       <td className="px-5 py-4">
-                        <div className="font-semibold text-white mt-0.5">{t.title}</div>
-                        <div className="text-xs text-slate-400 line-clamp-1">{t.description}</div>
+                        <div className="font-semibold text-white mt-0.5">
+                          {t.title}
+                        </div>
+                        <div className="text-xs text-slate-400 line-clamp-1">
+                          {t.description}
+                        </div>
                       </td>
                       <td className="px-5 py-4">
                         <div className="text-xs text-slate-200">
                           {t.property_name || "Facility"}
                         </div>
                         <div className="text-[11px] text-slate-500">
-                          {t.unit_number ? `Room ${t.unit_number}` : "Common Area"}
+                          {t.unit_number
+                            ? `Room ${t.unit_number}`
+                            : "Common Area"}
                         </div>
                       </td>
                       <td className="px-5 py-4">
                         <div className="text-xs text-slate-300 font-medium">
                           {t.category.replace(/_/g, " ")}
                         </div>
-                        <div className="mt-1">{getPriorityBadge(t.priority)}</div>
+                        <div className="mt-1">
+                          {getPriorityBadge(t.priority)}
+                        </div>
                       </td>
                       <td className="px-5 py-4">
                         {t.assigned_technician_name ? (
                           <div className="text-xs text-slate-200">
-                            <span className="font-medium">{t.assigned_technician_name}</span>
+                            <span className="font-medium">
+                              {t.assigned_technician_name}
+                            </span>
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-500 italic">Unassigned</span>
+                          <span className="text-xs text-slate-500 italic">
+                            Unassigned
+                          </span>
                         )}
                         {t.tenant_satisfaction_rating && (
                           <div className="flex items-center gap-1 text-amber-400 text-xs mt-1">
@@ -338,9 +363,11 @@ export default function MaintenanceTicketsPage() {
                             setSelectedTicketToUpdate(t);
                             setUpdateData({
                               status: t.status,
-                              assigned_technician_name: t.assigned_technician_name || "",
+                              assigned_technician_name:
+                                t.assigned_technician_name || "",
                               completion_notes: t.completion_notes || "",
-                              tenant_satisfaction_rating: t.tenant_satisfaction_rating || 5,
+                              tenant_satisfaction_rating:
+                                t.tenant_satisfaction_rating || 5,
                             });
                           }}
                           className="px-3 py-1.5 text-xs font-medium rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors"
@@ -374,8 +401,12 @@ export default function MaintenanceTicketsPage() {
               </div>
 
               <div className="p-3 bg-slate-950 rounded-lg text-xs space-y-1">
-                <div className="font-semibold text-white">{selectedTicketToUpdate.title}</div>
-                <div className="text-slate-400">{selectedTicketToUpdate.description}</div>
+                <div className="font-semibold text-white">
+                  {selectedTicketToUpdate.title}
+                </div>
+                <div className="text-slate-400">
+                  {selectedTicketToUpdate.description}
+                </div>
               </div>
 
               <form onSubmit={handleUpdate} className="space-y-4 text-sm">
@@ -397,7 +428,9 @@ export default function MaintenanceTicketsPage() {
                     <option value="ASSIGNED">Assigned</option>
                     <option value="IN_PROGRESS">In Progress</option>
                     <option value="COMPLETED">Completed</option>
-                    <option value="VERIFIED_BY_TENANT">Verified by Tenant</option>
+                    <option value="VERIFIED_BY_TENANT">
+                      Verified by Tenant
+                    </option>
                   </select>
                 </div>
 
@@ -447,7 +480,8 @@ export default function MaintenanceTicketsPage() {
                       onChange={(e) =>
                         setUpdateData({
                           ...updateData,
-                          tenant_satisfaction_rating: parseInt(e.target.value) || 5,
+                          tenant_satisfaction_rating:
+                            parseInt(e.target.value) || 5,
                         })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -487,7 +521,9 @@ export default function MaintenanceTicketsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-lg font-bold text-white">Report Maintenance / Facility Defect</h3>
+                <h3 className="text-lg font-bold text-white">
+                  Report Maintenance / Facility Defect
+                </h3>
                 <button
                   onClick={() => setIsSubmitModalOpen(false)}
                   className="text-slate-400 hover:text-white"
@@ -505,7 +541,10 @@ export default function MaintenanceTicketsPage() {
                     required
                     value={newTicket.property_id}
                     onChange={(e) =>
-                      setNewTicket({ ...newTicket, property_id: e.target.value })
+                      setNewTicket({
+                        ...newTicket,
+                        property_id: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                   >
@@ -611,7 +650,10 @@ export default function MaintenanceTicketsPage() {
                     rows={3}
                     value={newTicket.description}
                     onChange={(e) =>
-                      setNewTicket({ ...newTicket, description: e.target.value })
+                      setNewTicket({
+                        ...newTicket,
+                        description: e.target.value,
+                      })
                     }
                     placeholder="Describe the defect, when it started, and exact room location..."
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 text-xs"

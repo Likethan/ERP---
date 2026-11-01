@@ -30,8 +30,11 @@ export default function InventoryUnitsPage() {
   const [loading, setLoading] = useState(true);
   const [unitsLoading, setUnitsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBedToBlock, setSelectedBedToBlock] = useState<AccommodationBed | null>(null);
-  const [blockReason, setBlockReason] = useState("Annual maintenance repainting & electrical overhaul");
+  const [selectedBedToBlock, setSelectedBedToBlock] =
+    useState<AccommodationBed | null>(null);
+  const [blockReason, setBlockReason] = useState(
+    "Annual maintenance repainting & electrical overhaul",
+  );
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<UnitCreateInput>({
@@ -115,7 +118,7 @@ export default function InventoryUnitsPage() {
       await HousingService.toggleBedBlock(
         bed.id,
         block,
-        block ? blockReason : undefined
+        block ? blockReason : undefined,
       );
       setSelectedBedToBlock(null);
       const data = await HousingService.listUnits(selectedPropertyId);
@@ -177,7 +180,8 @@ export default function InventoryUnitsPage() {
               Units & Addressable Bed Capacity Inventory
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Live unit configurations, individual bed assignment slots, concurrency locks, and quarantine maintenance blocks.
+              Live unit configurations, individual bed assignment slots,
+              concurrency locks, and quarantine maintenance blocks.
             </p>
           </div>
 
@@ -196,7 +200,9 @@ export default function InventoryUnitsPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Building2 className="w-5 h-5 text-indigo-400" />
-            <span className="text-sm font-semibold text-slate-300">Select Facility:</span>
+            <span className="text-sm font-semibold text-slate-300">
+              Select Facility:
+            </span>
             <select
               value={selectedPropertyId}
               onChange={(e) => setSelectedPropertyId(e.target.value)}
@@ -213,13 +219,22 @@ export default function InventoryUnitsPage() {
           {selectedProperty && (
             <div className="flex items-center gap-6 text-xs text-slate-400">
               <div>
-                Total Capacity: <span className="font-semibold text-white">{selectedProperty.total_bed_capacity} Beds</span>
+                Total Capacity:{" "}
+                <span className="font-semibold text-white">
+                  {selectedProperty.total_bed_capacity} Beds
+                </span>
               </div>
               <div>
-                Occupied: <span className="font-semibold text-indigo-400">{selectedProperty.occupied_beds}</span>
+                Occupied:{" "}
+                <span className="font-semibold text-indigo-400">
+                  {selectedProperty.occupied_beds}
+                </span>
               </div>
               <div>
-                Available: <span className="font-semibold text-emerald-400">{selectedProperty.available_beds}</span>
+                Available:{" "}
+                <span className="font-semibold text-emerald-400">
+                  {selectedProperty.available_beds}
+                </span>
               </div>
             </div>
           )}
@@ -227,10 +242,14 @@ export default function InventoryUnitsPage() {
 
         {/* Units & Beds List */}
         {loading || unitsLoading ? (
-          <div className="py-20 text-center text-slate-400">Loading units and real-time bed inventories...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading units and real-time bed inventories...
+          </div>
         ) : units.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No rooms/units configured yet for this property.</p>
+            <p className="text-slate-400">
+              No rooms/units configured yet for this property.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -254,11 +273,32 @@ export default function InventoryUnitsPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-2">
-                      <span>Rent: <strong className="text-slate-200">₹{unit.rent_per_bed.toLocaleString("en-IN")}/mo</strong></span>
-                      <span>Deposit: <strong className="text-slate-200">₹{unit.security_deposit_per_bed.toLocaleString("en-IN")}</strong></span>
-                      {unit.has_attached_bath && <span className="text-teal-400">Ensuite Bath</span>}
-                      {unit.is_furnished && <span className="text-emerald-400">Furnished</span>}
-                      {unit.is_accessible && <span className="text-purple-400 font-medium">♿ Accessible</span>}
+                      <span>
+                        Rent:{" "}
+                        <strong className="text-slate-200">
+                          ₹{unit.rent_per_bed.toLocaleString("en-IN")}/mo
+                        </strong>
+                      </span>
+                      <span>
+                        Deposit:{" "}
+                        <strong className="text-slate-200">
+                          ₹
+                          {unit.security_deposit_per_bed.toLocaleString(
+                            "en-IN",
+                          )}
+                        </strong>
+                      </span>
+                      {unit.has_attached_bath && (
+                        <span className="text-teal-400">Ensuite Bath</span>
+                      )}
+                      {unit.is_furnished && (
+                        <span className="text-emerald-400">Furnished</span>
+                      )}
+                      {unit.is_accessible && (
+                        <span className="text-purple-400 font-medium">
+                          ♿ Accessible
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -285,10 +325,10 @@ export default function InventoryUnitsPage() {
                           bed.status === "AVAILABLE"
                             ? "bg-slate-950/80 border-slate-800"
                             : bed.status === "OCCUPIED"
-                            ? "bg-indigo-950/20 border-indigo-900/40"
-                            : bed.status === "BLOCKED_MAINTENANCE"
-                            ? "bg-rose-950/20 border-rose-900/40"
-                            : "bg-amber-950/20 border-amber-900/40"
+                              ? "bg-indigo-950/20 border-indigo-900/40"
+                              : bed.status === "BLOCKED_MAINTENANCE"
+                                ? "bg-rose-950/20 border-rose-900/40"
+                                : "bg-amber-950/20 border-amber-900/40"
                         }`}
                       >
                         <div>
@@ -353,7 +393,8 @@ export default function InventoryUnitsPage() {
               </div>
 
               <p className="text-xs text-slate-300">
-                Blocking this bed removes it from available student allocation inventory until repairs or sanitization are verified.
+                Blocking this bed removes it from available student allocation
+                inventory until repairs or sanitization are verified.
               </p>
 
               <div>
@@ -394,7 +435,9 @@ export default function InventoryUnitsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h2 className="text-lg font-bold text-white">Add Room / Unit to Facility</h2>
+                <h2 className="text-lg font-bold text-white">
+                  Add Room / Unit to Facility
+                </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="text-slate-400 hover:text-white"
@@ -413,7 +456,12 @@ export default function InventoryUnitsPage() {
                       required
                       type="text"
                       value={formData.unit_number}
-                      onChange={(e) => setFormData({ ...formData, unit_number: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          unit_number: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                       placeholder="e.g. 204"
                     />
@@ -427,7 +475,10 @@ export default function InventoryUnitsPage() {
                       type="number"
                       value={formData.floor_number || 1}
                       onChange={(e) =>
-                        setFormData({ ...formData, floor_number: parseInt(e.target.value) || 1 })
+                        setFormData({
+                          ...formData,
+                          floor_number: parseInt(e.target.value) || 1,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -455,12 +506,20 @@ export default function InventoryUnitsPage() {
                       }}
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     >
-                      <option value="SINGLE_OCCUPANCY">Single Occupancy (1 Bed)</option>
-                      <option value="DOUBLE_OCCUPANCY">Double Occupancy (2 Beds)</option>
-                      <option value="TRIPLE_OCCUPANCY">Triple Occupancy (3 Beds)</option>
+                      <option value="SINGLE_OCCUPANCY">
+                        Single Occupancy (1 Bed)
+                      </option>
+                      <option value="DOUBLE_OCCUPANCY">
+                        Double Occupancy (2 Beds)
+                      </option>
+                      <option value="TRIPLE_OCCUPANCY">
+                        Triple Occupancy (3 Beds)
+                      </option>
                       <option value="DORMITORY">Dormitory (4+ Beds)</option>
                       <option value="STUDIO_APARTMENT">Studio Apartment</option>
-                      <option value="MULTI_BED_APARTMENT">Multi-Bed Apartment</option>
+                      <option value="MULTI_BED_APARTMENT">
+                        Multi-Bed Apartment
+                      </option>
                     </select>
                   </div>
 
@@ -472,7 +531,10 @@ export default function InventoryUnitsPage() {
                       type="number"
                       value={formData.bed_capacity}
                       onChange={(e) =>
-                        setFormData({ ...formData, bed_capacity: parseInt(e.target.value) || 1 })
+                        setFormData({
+                          ...formData,
+                          bed_capacity: parseInt(e.target.value) || 1,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -508,7 +570,8 @@ export default function InventoryUnitsPage() {
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          security_deposit_per_bed: parseFloat(e.target.value) || 0,
+                          security_deposit_per_bed:
+                            parseFloat(e.target.value) || 0,
                         })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
@@ -526,7 +589,10 @@ export default function InventoryUnitsPage() {
                         type="checkbox"
                         checked={formData.has_attached_bath}
                         onChange={(e) =>
-                          setFormData({ ...formData, has_attached_bath: e.target.checked })
+                          setFormData({
+                            ...formData,
+                            has_attached_bath: e.target.checked,
+                          })
                         }
                         className="rounded bg-slate-950 border-slate-800 text-indigo-600"
                       />
@@ -537,7 +603,10 @@ export default function InventoryUnitsPage() {
                         type="checkbox"
                         checked={formData.is_furnished}
                         onChange={(e) =>
-                          setFormData({ ...formData, is_furnished: e.target.checked })
+                          setFormData({
+                            ...formData,
+                            is_furnished: e.target.checked,
+                          })
                         }
                         className="rounded bg-slate-950 border-slate-800 text-indigo-600"
                       />
@@ -548,7 +617,10 @@ export default function InventoryUnitsPage() {
                         type="checkbox"
                         checked={formData.is_accessible}
                         onChange={(e) =>
-                          setFormData({ ...formData, is_accessible: e.target.checked })
+                          setFormData({
+                            ...formData,
+                            is_accessible: e.target.checked,
+                          })
                         }
                         className="rounded bg-slate-950 border-slate-800 text-indigo-600"
                       />

@@ -84,7 +84,6 @@ class DocumentUploadService {
   ): Promise<SimulatedUploadResult> {
     const steps = [15, 45, 75, 100];
     for (const step of steps) {
-      await new Promise((r) => setTimeout(r, 60));
       if (onProgress) onProgress(step);
     }
 

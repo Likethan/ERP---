@@ -1,14 +1,56 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/lib/auth-context";
-import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
-import { StudentDashboard } from "@/components/dashboard/student-dashboard";
-import { FacultyDashboard } from "@/components/dashboard/faculty-dashboard";
-import { HodDashboard } from "@/components/dashboard/hod-dashboard";
-import { AccountsDashboard } from "@/components/dashboard/accounts-dashboard";
-import { PlacementDashboard } from "@/components/dashboard/placement-dashboard";
-import { VicePrincipalDashboard } from "@/components/dashboard/vice-principal-dashboard";
+
+const AdminDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/admin-dashboard").then(
+      (m) => m.AdminDashboard,
+    ),
+  { ssr: false },
+);
+const StudentDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/student-dashboard").then(
+      (m) => m.StudentDashboard,
+    ),
+  { ssr: false },
+);
+const FacultyDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/faculty-dashboard").then(
+      (m) => m.FacultyDashboard,
+    ),
+  { ssr: false },
+);
+const HodDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/hod-dashboard").then((m) => m.HodDashboard),
+  { ssr: false },
+);
+const AccountsDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/accounts-dashboard").then(
+      (m) => m.AccountsDashboard,
+    ),
+  { ssr: false },
+);
+const PlacementDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/placement-dashboard").then(
+      (m) => m.PlacementDashboard,
+    ),
+  { ssr: false },
+);
+const VicePrincipalDashboard = dynamic(
+  () =>
+    import("@/components/dashboard/vice-principal-dashboard").then(
+      (m) => m.VicePrincipalDashboard,
+    ),
+  { ssr: false },
+);
 
 export default function DashboardPage() {
   const { user, activePersona } = useAuth();

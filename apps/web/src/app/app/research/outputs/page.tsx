@@ -28,15 +28,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ResearchOutputsPage() {
-  const [activeTab, setActiveTab] = useState<"outputs" | "disclosures">("outputs");
+  const [activeTab, setActiveTab] = useState<"outputs" | "disclosures">(
+    "outputs",
+  );
   const [outputs, setOutputs] = useState<ResearchOutput[]>([]);
-  const [disclosures, setDisclosures] = useState<ResearchInventionDisclosure[]>([]);
+  const [disclosures, setDisclosures] = useState<ResearchInventionDisclosure[]>(
+    [],
+  );
   const [projects, setProjects] = useState<ResearchProject[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -44,9 +53,12 @@ export default function ResearchOutputsPage() {
 
   // Modals
   const [showCreateOutputModal, setShowCreateOutputModal] = useState(false);
-  const [showCreateDisclosureModal, setShowCreateDisclosureModal] = useState(false);
+  const [showCreateDisclosureModal, setShowCreateDisclosureModal] =
+    useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [selectedOutput, setSelectedOutput] = useState<ResearchOutput | null>(null);
+  const [selectedOutput, setSelectedOutput] = useState<ResearchOutput | null>(
+    null,
+  );
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -115,7 +127,9 @@ export default function ResearchOutputsPage() {
   async function handleCreateOutput(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedProjectId) {
-      setErrorMsg("Please select a project to attribute this publication/output to.");
+      setErrorMsg(
+        "Please select a project to attribute this publication/output to.",
+      );
       return;
     }
     if (!newOutput.title) {
@@ -162,7 +176,9 @@ export default function ResearchOutputsPage() {
       setErrorMsg(null);
       await ResearchService.createInventionDisclosure({
         project_id: selectedProjectId,
-        disclosure_code: newDisclosure.disclosure_code || `IP-${Date.now().toString().slice(-6)}`,
+        disclosure_code:
+          newDisclosure.disclosure_code ||
+          `IP-${Date.now().toString().slice(-6)}`,
         title: newDisclosure.title,
         summary_of_invention: newDisclosure.summary_of_invention,
         commercial_potential: newDisclosure.commercial_potential,
@@ -184,20 +200,27 @@ export default function ResearchOutputsPage() {
     try {
       setSubmitting(true);
       setErrorMsg(null);
-      const res = await fetch(`http://localhost:8000/api/v1/research/outputs/${selectedOutput.id}/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          is_verified: true,
-          verification_notes: verifyData.verification_notes || "Verified via institutional bibliographic index",
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:8000/api/v1/research/outputs/${selectedOutput.id}/verify`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            is_verified: true,
+            verification_notes:
+              verifyData.verification_notes ||
+              "Verified via institutional bibliographic index",
+          }),
+        },
+      );
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.detail || "Verification failed");
       }
-      setSuccessMsg("Publication verified and confirmed in institutional repository.");
+      setSuccessMsg(
+        "Publication verified and confirmed in institutional repository.",
+      );
       setShowVerifyModal(false);
       await loadData();
     } catch (err: any) {
@@ -234,7 +257,12 @@ export default function ResearchOutputsPage() {
               <ShieldAlert className="h-4 w-4 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-200">✕</button>
+            <button
+              onClick={() => setErrorMsg(null)}
+              className="text-rose-400 hover:text-rose-200"
+            >
+              ✕
+            </button>
           </div>
         )}
         {successMsg && (
@@ -243,7 +271,12 @@ export default function ResearchOutputsPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200">✕</button>
+            <button
+              onClick={() => setSuccessMsg(null)}
+              className="text-emerald-400 hover:text-emerald-200"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -255,7 +288,8 @@ export default function ResearchOutputsPage() {
               Research Outputs, Scholarly Impact & Intellectual Property
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Peer-reviewed publications, open datasets, invention disclosures, and patent filings.
+              Peer-reviewed publications, open datasets, invention disclosures,
+              and patent filings.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -294,28 +328,51 @@ export default function ResearchOutputsPage() {
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Publications</span>
-            <div className="text-2xl font-bold text-white mt-1">{outputs.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Articles & manuscripts</p>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Publications
+            </span>
+            <div className="text-2xl font-bold text-white mt-1">
+              {outputs.length}
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Articles & manuscripts
+            </p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">DOI Verified</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              DOI Verified
+            </span>
             <div className="text-2xl font-bold text-emerald-400 mt-1">
               {outputs.filter((o) => o.is_verified).length}
             </div>
             <p className="text-xs text-slate-500 mt-1">Indexed in repository</p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Invention Disclosures</span>
-            <div className="text-2xl font-bold text-indigo-400 mt-1">{disclosures.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Tech transfer evaluations</p>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Invention Disclosures
+            </span>
+            <div className="text-2xl font-bold text-indigo-400 mt-1">
+              {disclosures.length}
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Tech transfer evaluations
+            </p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Patents Filed</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Patents Filed
+            </span>
             <div className="text-2xl font-bold text-amber-400 mt-1">
-              {disclosures.filter((d) => d.patent_filing_status && d.patent_filing_status !== "NONE").length}
+              {
+                disclosures.filter(
+                  (d) =>
+                    d.patent_filing_status && d.patent_filing_status !== "NONE",
+                ).length
+              }
             </div>
-            <p className="text-xs text-slate-500 mt-1">Patent office applications</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Patent office applications
+            </p>
           </Card>
         </div>
 
@@ -375,24 +432,38 @@ export default function ResearchOutputsPage() {
                 <tbody className="divide-y divide-slate-800/60">
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-slate-500"
+                      >
                         <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-400" />
                         Loading publications...
                       </td>
                     </tr>
                   ) : filteredOutputs.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
-                        No publications found. Click &quot;Register Publication&quot; to index a research output.
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-slate-500"
+                      >
+                        No publications found. Click &quot;Register
+                        Publication&quot; to index a research output.
                       </td>
                     </tr>
                   ) : (
                     filteredOutputs.map((out) => (
-                      <tr key={out.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={out.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4">
-                          <span className="font-semibold text-white block">{out.title}</span>
+                          <span className="font-semibold text-white block">
+                            {out.title}
+                          </span>
                           <span className="text-xs text-slate-400">
-                            {Array.isArray(out.authors_json) ? out.authors_json.join(", ") : "Contributors"}
+                            {Array.isArray(out.authors_json)
+                              ? out.authors_json.join(", ")
+                              : "Contributors"}
                           </span>
                         </td>
                         <td className="py-3 px-4">
@@ -483,26 +554,43 @@ export default function ResearchOutputsPage() {
                 <tbody className="divide-y divide-slate-800/60">
                   {loading ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-slate-500"
+                      >
                         <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-400" />
                         Loading disclosures...
                       </td>
                     </tr>
                   ) : filteredDisclosures.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-slate-500">
-                        No invention disclosures found. Click &quot;New Invention Disclosure&quot; to record intellectual property.
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-slate-500"
+                      >
+                        No invention disclosures found. Click &quot;New
+                        Invention Disclosure&quot; to record intellectual
+                        property.
                       </td>
                     </tr>
                   ) : (
                     filteredDisclosures.map((d) => (
-                      <tr key={d.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={d.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4">
-                          <span className="font-semibold text-white block">{d.disclosure_code}</span>
-                          <span className="text-xs text-slate-500">ID: {d.id.slice(0, 8)}...</span>
+                          <span className="font-semibold text-white block">
+                            {d.disclosure_code}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            ID: {d.id.slice(0, 8)}...
+                          </span>
                         </td>
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-white">{d.title}</div>
+                          <div className="font-semibold text-white">
+                            {d.title}
+                          </div>
                           <div className="text-xs text-slate-400 line-clamp-1 mt-0.5">
                             {d.summary_of_invention}
                           </div>
@@ -515,8 +603,12 @@ export default function ResearchOutputsPage() {
                         <td className="py-3 px-4 text-xs">
                           {d.patent_application_number ? (
                             <div>
-                              <span className="font-mono text-emerald-400">{d.patent_application_number}</span>
-                              <div className="text-slate-500">{d.patent_filing_status}</div>
+                              <span className="font-mono text-emerald-400">
+                                {d.patent_application_number}
+                              </span>
+                              <div className="text-slate-500">
+                                {d.patent_filing_status}
+                              </div>
                             </div>
                           ) : (
                             <span className="text-slate-500">Unfiled</span>
@@ -535,7 +627,10 @@ export default function ResearchOutputsPage() {
         )}
 
         {/* Modal: Register Publication */}
-        <Dialog open={showCreateOutputModal} onOpenChange={setShowCreateOutputModal}>
+        <Dialog
+          open={showCreateOutputModal}
+          onOpenChange={setShowCreateOutputModal}
+        >
           <DialogContent className="max-w-lg bg-slate-900 border-slate-800 text-slate-100">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-white">
@@ -546,7 +641,9 @@ export default function ResearchOutputsPage() {
 
             <form onSubmit={handleCreateOutput} className="space-y-4 pt-2">
               <div>
-                <Label className="text-xs text-slate-400">Attributed Research Project *</Label>
+                <Label className="text-xs text-slate-400">
+                  Attributed Research Project *
+                </Label>
                 <select
                   required
                   className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
@@ -563,77 +660,124 @@ export default function ResearchOutputsPage() {
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Publication Title *</Label>
+                <Label className="text-xs text-slate-400">
+                  Publication Title *
+                </Label>
                 <Input
                   required
                   placeholder="e.g. Distributed Consensus in Mission-Critical Satellite Swarms"
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={newOutput.title}
-                  onChange={(e) => setNewOutput({ ...newOutput, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewOutput({ ...newOutput, title: e.target.value })
+                  }
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Output Classification *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Output Classification *
+                  </Label>
                   <select
                     className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                     value={newOutput.output_type}
-                    onChange={(e) => setNewOutput({ ...newOutput, output_type: e.target.value })}
+                    onChange={(e) =>
+                      setNewOutput({
+                        ...newOutput,
+                        output_type: e.target.value,
+                      })
+                    }
                   >
-                    <option value="JOURNAL_ARTICLE">Peer-Reviewed Journal Article</option>
-                    <option value="CONFERENCE_PROCEEDING">Conference Proceeding</option>
+                    <option value="JOURNAL_ARTICLE">
+                      Peer-Reviewed Journal Article
+                    </option>
+                    <option value="CONFERENCE_PROCEEDING">
+                      Conference Proceeding
+                    </option>
                     <option value="BOOK_CHAPTER">Book Chapter</option>
                     <option value="DATASET">Open Research Dataset</option>
-                    <option value="SOFTWARE_ARTIFACT">Software / Algorithm Artifact</option>
+                    <option value="SOFTWARE_ARTIFACT">
+                      Software / Algorithm Artifact
+                    </option>
                   </select>
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Venue / Journal Name</Label>
+                  <Label className="text-xs text-slate-400">
+                    Venue / Journal Name
+                  </Label>
                   <Input
                     placeholder="e.g. IEEE Transactions on Robotics"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newOutput.publication_venue}
-                    onChange={(e) => setNewOutput({ ...newOutput, publication_venue: e.target.value })}
+                    onChange={(e) =>
+                      setNewOutput({
+                        ...newOutput,
+                        publication_venue: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Digital Object Identifier (DOI)</Label>
+                  <Label className="text-xs text-slate-400">
+                    Digital Object Identifier (DOI)
+                  </Label>
                   <Input
                     placeholder="e.g. 10.1109/TRO.2026.1234567"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newOutput.doi}
-                    onChange={(e) => setNewOutput({ ...newOutput, doi: e.target.value })}
+                    onChange={(e) =>
+                      setNewOutput({ ...newOutput, doi: e.target.value })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Open Access Repository URL</Label>
+                  <Label className="text-xs text-slate-400">
+                    Open Access Repository URL
+                  </Label>
                   <Input
                     placeholder="e.g. https://github.com/campus/research"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newOutput.repository_url}
-                    onChange={(e) => setNewOutput({ ...newOutput, repository_url: e.target.value })}
+                    onChange={(e) =>
+                      setNewOutput({
+                        ...newOutput,
+                        repository_url: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Contributing Authors (Comma-separated)</Label>
+                <Label className="text-xs text-slate-400">
+                  Contributing Authors (Comma-separated)
+                </Label>
                 <Input
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={newOutput.authors}
-                  onChange={(e) => setNewOutput({ ...newOutput, authors: e.target.value })}
+                  onChange={(e) =>
+                    setNewOutput({ ...newOutput, authors: e.target.value })
+                  }
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateOutputModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateOutputModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Registering..." : "Register Output"}
                 </Button>
               </div>
@@ -642,7 +786,10 @@ export default function ResearchOutputsPage() {
         </Dialog>
 
         {/* Modal: New Invention Disclosure */}
-        <Dialog open={showCreateDisclosureModal} onOpenChange={setShowCreateDisclosureModal}>
+        <Dialog
+          open={showCreateDisclosureModal}
+          onOpenChange={setShowCreateDisclosureModal}
+        >
           <DialogContent className="max-w-lg bg-slate-900 border-slate-800 text-slate-100">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-white">
@@ -653,7 +800,9 @@ export default function ResearchOutputsPage() {
 
             <form onSubmit={handleCreateDisclosure} className="space-y-4 pt-2">
               <div>
-                <Label className="text-xs text-slate-400">Originating Project *</Label>
+                <Label className="text-xs text-slate-400">
+                  Originating Project *
+                </Label>
                 <select
                   required
                   className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -670,44 +819,73 @@ export default function ResearchOutputsPage() {
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Invention Title *</Label>
+                <Label className="text-xs text-slate-400">
+                  Invention Title *
+                </Label>
                 <Input
                   required
                   placeholder="e.g. Nanocomposite Self-Healing Ceramic Matrix"
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={newDisclosure.title}
-                  onChange={(e) => setNewDisclosure({ ...newDisclosure, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosure({
+                      ...newDisclosure,
+                      title: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Technical Summary of Invention *</Label>
+                <Label className="text-xs text-slate-400">
+                  Technical Summary of Invention *
+                </Label>
                 <Textarea
                   required
                   placeholder="Describe the novelty, mechanism, and distinguishing prior art characteristics..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={newDisclosure.summary_of_invention}
-                  onChange={(e) => setNewDisclosure({ ...newDisclosure, summary_of_invention: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosure({
+                      ...newDisclosure,
+                      summary_of_invention: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Commercial & Licensing Potential</Label>
+                <Label className="text-xs text-slate-400">
+                  Commercial & Licensing Potential
+                </Label>
                 <Textarea
                   placeholder="Target market sectors, potential corporate licensees, and commercial viability..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={2}
                   value={newDisclosure.commercial_potential}
-                  onChange={(e) => setNewDisclosure({ ...newDisclosure, commercial_potential: e.target.value })}
+                  onChange={(e) =>
+                    setNewDisclosure({
+                      ...newDisclosure,
+                      commercial_potential: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateDisclosureModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateDisclosureModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   {submitting ? "Registering..." : "Submit Disclosure"}
                 </Button>
               </div>
@@ -727,27 +905,46 @@ export default function ResearchOutputsPage() {
 
             <form onSubmit={handleVerifyOutput} className="space-y-4 pt-2">
               <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800 text-xs">
-                <div className="font-semibold text-white">{selectedOutput?.title}</div>
-                <div className="text-slate-400 mt-1">DOI: {selectedOutput?.doi || "Not provided"}</div>
+                <div className="font-semibold text-white">
+                  {selectedOutput?.title}
+                </div>
+                <div className="text-slate-400 mt-1">
+                  DOI: {selectedOutput?.doi || "Not provided"}
+                </div>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Verification Notes *</Label>
+                <Label className="text-xs text-slate-400">
+                  Verification Notes *
+                </Label>
                 <Textarea
                   required
                   placeholder="Confirm journal indexing in Scopus/WoS/IEEE Xplore or crossref DOI confirmation..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={verifyData.verification_notes}
-                  onChange={(e) => setVerifyData({ ...verifyData, verification_notes: e.target.value })}
+                  onChange={(e) =>
+                    setVerifyData({
+                      ...verifyData,
+                      verification_notes: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowVerifyModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowVerifyModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Verifying..." : "Confirm Indexing"}
                 </Button>
               </div>

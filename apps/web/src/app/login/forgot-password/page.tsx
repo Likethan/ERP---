@@ -75,9 +75,12 @@ export default function ForgotPasswordPage() {
             <div className="inline-flex p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
               <KeyRound className="h-5 w-5" />
             </div>
-            <h2 className="text-lg font-bold text-white">Reset Account Password</h2>
+            <h2 className="text-lg font-bold text-white">
+              Reset Account Password
+            </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Enter your registered institutional email to receive a secure, time-limited password reset link.
+              Enter your registered institutional email to receive a secure,
+              time-limited password reset link.
             </p>
           </div>
 
@@ -86,9 +89,16 @@ export default function ForgotPasswordPage() {
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs text-emerald-200 flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <div className="font-semibold text-emerald-100">Recovery Instructions Dispatched</div>
+                  <div className="font-semibold text-emerald-100">
+                    Recovery Instructions Dispatched
+                  </div>
                   <p className="text-[11px] text-emerald-300/90 leading-relaxed">
-                    If an active institutional account exists for <span className="font-mono font-semibold text-emerald-200">{email}</span>, password reset instructions have been dispatched. Please inspect your institutional inbox and spam filter.
+                    If an active institutional account exists for{" "}
+                    <span className="font-mono font-semibold text-emerald-200">
+                      {email}
+                    </span>
+                    , password reset instructions have been dispatched. Please
+                    inspect your institutional inbox and spam filter.
                   </p>
                 </div>
               </div>
@@ -127,7 +137,8 @@ export default function ForgotPasswordPage() {
                   />
                 </div>
                 <p className="text-[10px] text-slate-500 mt-1">
-                  Must be the email linked to your institutional student, faculty, or staff profile.
+                  Must be the email linked to your institutional student,
+                  faculty, or staff profile.
                 </p>
               </div>
 
@@ -156,7 +167,8 @@ export default function ForgotPasswordPage() {
 
         {/* Footer */}
         <div className="text-center text-[11px] text-slate-500">
-          Strict tenant boundary enforced • Vidyasagar State University (VSB Campus)
+          Strict tenant boundary enforced • Vidyasagar State University (VSB
+          Campus)
         </div>
       </div>
     </div>

@@ -20,7 +20,6 @@ class TransportDriversService {
     licenseStatus?: string;
     search?: string;
   }): Promise<ApiResponse<TransportDriver[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.drivers];
 
     if (filters?.status && filters.status !== "ALL") {
@@ -48,7 +47,6 @@ class TransportDriversService {
   async getDriverById(
     id: string,
   ): Promise<ApiResponse<TransportDriver | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const driver =
       this.drivers.find((d) => d.id === id || d.employeeId === id) || null;
     return { success: true, data: driver };
@@ -57,7 +55,6 @@ class TransportDriversService {
   async createDriver(
     payload: Partial<TransportDriver>,
   ): Promise<ApiResponse<TransportDriver>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newDriver: TransportDriver = {
       id: `drv-${Date.now().toString(36)}`,
       name: payload.name || "New Fleet Driver",

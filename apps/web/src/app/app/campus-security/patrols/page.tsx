@@ -42,11 +42,15 @@ export default function SecurityPatrolsPage() {
   const [scanSubmitting, setScanSubmitting] = useState(false);
 
   // Supervisor Review Modal
-  const [reviewingRecord, setReviewingRecord] = useState<PatrolCheckpointRecord | null>(null);
+  const [reviewingRecord, setReviewingRecord] =
+    useState<PatrolCheckpointRecord | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // New Plan Form
   const [planForm, setPlanForm] = useState({
@@ -84,7 +88,10 @@ export default function SecurityPatrolsPage() {
         setScanForm((prev) => ({ ...prev, plan_id: plansData[0].id }));
       }
       if (checkpointsData.length > 0 && !scanForm.checkpoint_id) {
-        setScanForm((prev) => ({ ...prev, checkpoint_id: checkpointsData[0].id }));
+        setScanForm((prev) => ({
+          ...prev,
+          checkpoint_id: checkpointsData[0].id,
+        }));
       }
     } catch (err) {
       console.error("Failed to load patrol operations:", err);
@@ -103,9 +110,10 @@ export default function SecurityPatrolsPage() {
 
     try {
       setPlanSubmitting(true);
-      const sequence = planForm.checkpoints_sequence.length > 0
-        ? planForm.checkpoints_sequence
-        : checkpoints.map((c) => c.id);
+      const sequence =
+        planForm.checkpoints_sequence.length > 0
+          ? planForm.checkpoints_sequence
+          : checkpoints.map((c) => c.id);
 
       await CampusSecurityService.createPatrolPlan({
         title: planForm.title,
@@ -148,7 +156,9 @@ export default function SecurityPatrolsPage() {
         plan_id: scanForm.plan_id,
         checkpoint_id: scanForm.checkpoint_id,
         officer_name: scanForm.officer_name,
-        scheduled_round_time: new Date(scanForm.scheduled_round_time).toISOString(),
+        scheduled_round_time: new Date(
+          scanForm.scheduled_round_time,
+        ).toISOString(),
         status: scanForm.status,
         verification_token: scanForm.verification_token,
         observations: scanForm.observations,
@@ -180,7 +190,10 @@ export default function SecurityPatrolsPage() {
 
     try {
       setReviewSubmitting(true);
-      await CampusSecurityService.reviewPatrolRecord(reviewingRecord.id, reviewNotes);
+      await CampusSecurityService.reviewPatrolRecord(
+        reviewingRecord.id,
+        reviewNotes,
+      );
       setNotification({
         type: "success",
         message: "Patrol round scan reviewed and approved by supervisor.",
@@ -201,17 +214,24 @@ export default function SecurityPatrolsPage() {
   const filteredRecords = records.filter((r) => {
     const matchesSearch =
       r.officer_name.toLowerCase().includes(search.toLowerCase()) ||
-      (r.observations && r.observations.toLowerCase().includes(search.toLowerCase())) ||
-      (r.verification_token && r.verification_token.toLowerCase().includes(search.toLowerCase()));
+      (r.observations &&
+        r.observations.toLowerCase().includes(search.toLowerCase())) ||
+      (r.verification_token &&
+        r.verification_token.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === "ALL" || r.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const completedCount = records.filter((r) => r.status === "COMPLETED").length;
-  const exceptionCount = records.filter((r) => r.status === "EXCEPTION_NOTED" || r.status === "MISSED").length;
+  const exceptionCount = records.filter(
+    (r) => r.status === "EXCEPTION_NOTED" || r.status === "MISSED",
+  ).length;
   const reviewedCount = records.filter((r) => r.supervisor_reviewed).length;
-  const completionRate = records.length > 0 ? Math.round((completedCount / records.length) * 100) : 100;
+  const completionRate =
+    records.length > 0
+      ? Math.round((completedCount / records.length) * 100)
+      : 100;
 
   const getCheckpointName = (id: string) => {
     const cp = checkpoints.find((c) => c.id === id);
@@ -267,7 +287,8 @@ export default function SecurityPatrolsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Schedule recurring security patrol routes, record cryptographic NFC checkpoint scans, and audit supervisor reviews.
+            Schedule recurring security patrol routes, record cryptographic NFC
+            checkpoint scans, and audit supervisor reviews.
           </p>
         </div>
 
@@ -315,38 +336,62 @@ export default function SecurityPatrolsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Patrol Plans</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Patrol Plans
+            </span>
             <Footprints className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{plans.length}</div>
-          <div className="text-xs text-slate-500 mt-1">Scheduled campus routes</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {plans.length}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Scheduled campus routes
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Completion Rate</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Completion Rate
+            </span>
             <ShieldCheck className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">{completionRate}%</div>
-          <div className="text-xs text-slate-500 mt-1">{completedCount} of {records.length} scans on time</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+            {completionRate}%
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            {completedCount} of {records.length} scans on time
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Exceptions / Missed</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Exceptions / Missed
+            </span>
             <AlertTriangle className="w-5 h-5 text-amber-500" />
           </div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">{exceptionCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Discrepancies flagged by guards</div>
+          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">
+            {exceptionCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Discrepancies flagged by guards
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Supervisor Reviews</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Supervisor Reviews
+            </span>
             <BadgeCheck className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{reviewedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Formally signed off tours</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {reviewedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Formally signed off tours
+          </div>
         </div>
       </div>
 
@@ -364,18 +409,29 @@ export default function SecurityPatrolsPage() {
               className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-2"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400">{p.plan_code}</span>
+                <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                  {p.plan_code}
+                </span>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
                   {p.shift_name.replace(/_/g, " ")}
                 </span>
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm">{p.title}</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                {p.title}
+              </h3>
               <div className="text-xs text-slate-500">
-                Team: <strong className="text-slate-700 dark:text-slate-300">{p.assigned_team_name}</strong> | Every{" "}
-                <strong className="text-slate-700 dark:text-slate-300">{p.frequency_hours} hrs</strong>
+                Team:{" "}
+                <strong className="text-slate-700 dark:text-slate-300">
+                  {p.assigned_team_name}
+                </strong>{" "}
+                | Every{" "}
+                <strong className="text-slate-700 dark:text-slate-300">
+                  {p.frequency_hours} hrs
+                </strong>
               </div>
               <div className="text-xs text-slate-400">
-                Sequence: {p.checkpoints_sequence?.length || 0} Checkpoints configured
+                Sequence: {p.checkpoints_sequence?.length || 0} Checkpoints
+                configured
               </div>
             </div>
           ))}
@@ -428,22 +484,33 @@ export default function SecurityPatrolsPage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     Loading patrol scans...
                   </td>
                 </tr>
               ) : filteredRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     No checkpoint scans recorded matching criteria.
                   </td>
                 </tr>
               ) : (
                 filteredRecords.map((rec) => (
-                  <tr key={rec.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                  <tr
+                    key={rec.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors"
+                  >
                     <td className="px-6 py-4">
                       <div className="font-semibold text-slate-900 dark:text-white">
-                        {rec.scanned_at ? new Date(rec.scanned_at).toLocaleTimeString() : "Pending"}
+                        {rec.scanned_at
+                          ? new Date(rec.scanned_at).toLocaleTimeString()
+                          : "Pending"}
                       </div>
                       <div className="font-mono text-[11px] text-indigo-600 dark:text-indigo-400 mt-0.5">
                         {rec.verification_token || "NFC-UNVERIFIED"}
@@ -466,8 +533,13 @@ export default function SecurityPatrolsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">{getStatusBadge(rec.status)}</td>
-                    <td className="px-6 py-4 max-w-xs truncate" title={rec.observations}>
-                      <span className="text-xs text-slate-600 dark:text-slate-400">{rec.observations || "—"}</span>
+                    <td
+                      className="px-6 py-4 max-w-xs truncate"
+                      title={rec.observations}
+                    >
+                      <span className="text-xs text-slate-600 dark:text-slate-400">
+                        {rec.observations || "—"}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       {rec.supervisor_reviewed ? (
@@ -518,7 +590,9 @@ export default function SecurityPatrolsPage() {
                   required
                   placeholder="e.g. North Perimeter & Research Wing Sweep"
                   value={planForm.title}
-                  onChange={(e) => setPlanForm({ ...planForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setPlanForm({ ...planForm, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -530,12 +604,23 @@ export default function SecurityPatrolsPage() {
                   </label>
                   <select
                     value={planForm.shift_name}
-                    onChange={(e) => setPlanForm({ ...planForm, shift_name: e.target.value as any })}
+                    onChange={(e) =>
+                      setPlanForm({
+                        ...planForm,
+                        shift_name: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
-                    <option value="MORNING_SHIFT">Morning Shift (06:00 - 14:00)</option>
-                    <option value="AFTERNOON_SHIFT">Afternoon Shift (14:00 - 22:00)</option>
-                    <option value="NIGHT_SHIFT">Night Shift (22:00 - 06:00)</option>
+                    <option value="MORNING_SHIFT">
+                      Morning Shift (06:00 - 14:00)
+                    </option>
+                    <option value="AFTERNOON_SHIFT">
+                      Afternoon Shift (14:00 - 22:00)
+                    </option>
+                    <option value="NIGHT_SHIFT">
+                      Night Shift (22:00 - 06:00)
+                    </option>
                     <option value="WEEKEND_SHIFT">Weekend Shift</option>
                   </select>
                 </div>
@@ -548,7 +633,12 @@ export default function SecurityPatrolsPage() {
                     min={1}
                     max={24}
                     value={planForm.frequency_hours}
-                    onChange={(e) => setPlanForm({ ...planForm, frequency_hours: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setPlanForm({
+                        ...planForm,
+                        frequency_hours: Number(e.target.value),
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -563,7 +653,12 @@ export default function SecurityPatrolsPage() {
                   required
                   placeholder="e.g. Patrol Squad Beta"
                   value={planForm.assigned_team_name}
-                  onChange={(e) => setPlanForm({ ...planForm, assigned_team_name: e.target.value })}
+                  onChange={(e) =>
+                    setPlanForm({
+                      ...planForm,
+                      assigned_team_name: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -613,7 +708,9 @@ export default function SecurityPatrolsPage() {
                 </label>
                 <select
                   value={scanForm.plan_id}
-                  onChange={(e) => setScanForm({ ...scanForm, plan_id: e.target.value })}
+                  onChange={(e) =>
+                    setScanForm({ ...scanForm, plan_id: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 >
                   {plans.map((p) => (
@@ -630,7 +727,9 @@ export default function SecurityPatrolsPage() {
                 </label>
                 <select
                   value={scanForm.checkpoint_id}
-                  onChange={(e) => setScanForm({ ...scanForm, checkpoint_id: e.target.value })}
+                  onChange={(e) =>
+                    setScanForm({ ...scanForm, checkpoint_id: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 >
                   {checkpoints.map((cp) => (
@@ -650,7 +749,9 @@ export default function SecurityPatrolsPage() {
                     type="text"
                     required
                     value={scanForm.officer_name}
-                    onChange={(e) => setScanForm({ ...scanForm, officer_name: e.target.value })}
+                    onChange={(e) =>
+                      setScanForm({ ...scanForm, officer_name: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -660,7 +761,12 @@ export default function SecurityPatrolsPage() {
                   </label>
                   <select
                     value={scanForm.status}
-                    onChange={(e) => setScanForm({ ...scanForm, status: e.target.value as any })}
+                    onChange={(e) =>
+                      setScanForm({
+                        ...scanForm,
+                        status: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
                     <option value="COMPLETED">COMPLETED (Normal)</option>
@@ -678,7 +784,12 @@ export default function SecurityPatrolsPage() {
                 <input
                   type="text"
                   value={scanForm.verification_token}
-                  onChange={(e) => setScanForm({ ...scanForm, verification_token: e.target.value })}
+                  onChange={(e) =>
+                    setScanForm({
+                      ...scanForm,
+                      verification_token: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white font-mono"
                 />
               </div>
@@ -690,7 +801,9 @@ export default function SecurityPatrolsPage() {
                 <textarea
                   rows={3}
                   value={scanForm.observations}
-                  onChange={(e) => setScanForm({ ...scanForm, observations: e.target.value })}
+                  onChange={(e) =>
+                    setScanForm({ ...scanForm, observations: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -736,8 +849,14 @@ export default function SecurityPatrolsPage() {
             <form onSubmit={handleReviewRecord} className="p-6 space-y-4">
               <p className="text-sm text-slate-600 dark:text-slate-300">
                 You are reviewing patrol record for officer{" "}
-                <strong className="text-slate-900 dark:text-white">{reviewingRecord.officer_name}</strong> at{" "}
-                <strong className="text-slate-900 dark:text-white">{getCheckpointName(reviewingRecord.checkpoint_id)}</strong>.
+                <strong className="text-slate-900 dark:text-white">
+                  {reviewingRecord.officer_name}
+                </strong>{" "}
+                at{" "}
+                <strong className="text-slate-900 dark:text-white">
+                  {getCheckpointName(reviewingRecord.checkpoint_id)}
+                </strong>
+                .
               </p>
 
               <div>
@@ -776,4 +895,3 @@ export default function SecurityPatrolsPage() {
     </div>
   );
 }
-

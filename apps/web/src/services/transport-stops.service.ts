@@ -20,7 +20,6 @@ class TransportStopsService {
     status?: StopStatus | string;
     search?: string;
   }): Promise<ApiResponse<TransportStop[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.stops];
 
     if (filters?.routeId && filters.routeId !== "ALL") {
@@ -47,7 +46,6 @@ class TransportStopsService {
   }
 
   async getStopById(id: string): Promise<ApiResponse<TransportStop | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const stop = this.stops.find((s) => s.id === id || s.code === id) || null;
     return { success: true, data: stop };
   }
@@ -55,7 +53,6 @@ class TransportStopsService {
   async createStop(
     payload: Partial<TransportStop>,
   ): Promise<ApiResponse<TransportStop>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newStop: TransportStop = {
       id: `stp-${Date.now().toString(36)}`,
       routeId: payload.routeId || "route-01",

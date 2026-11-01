@@ -44,9 +44,15 @@ export default function CampusOSPortalPage() {
     async function checkApi() {
       try {
         const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+          process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+        const signal =
+          typeof AbortSignal !== "undefined" &&
+          typeof AbortSignal.timeout === "function"
+            ? AbortSignal.timeout(2000)
+            : undefined;
         const res = await fetch(`${apiUrl}/api/v1/health`, {
           cache: "no-store",
+          signal,
         });
         if (res.ok) {
           const data = await res.json();

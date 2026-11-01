@@ -2,10 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StudentSupportService } from "@/services/student-support.service";
-import {
-  SupportReferralItem,
-  MenteeItem,
-} from "@/types/student-support";
+import { SupportReferralItem, MenteeItem } from "@/types/student-support";
 import { StudentSupportNav } from "@/components/student-support/student-support-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -54,15 +51,21 @@ export default function StudentSupportReferralsPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [studentId, setStudentId] = useState("");
   const [targetService, setTargetService] = useState("CAREER_SERVICES");
-  const [reasonCategory, setReasonCategory] = useState("Skill Gap & Placement Strategy");
+  const [reasonCategory, setReasonCategory] = useState(
+    "Skill Gap & Placement Strategy",
+  );
   const [studentConsent, setStudentConsent] = useState(true);
   const [referralNotes, setReferralNotes] = useState("");
   const [submittingReferral, setSubmittingReferral] = useState(false);
 
   // Status Transition Modal State
   const [statusModalOpen, setStatusModalOpen] = useState(false);
-  const [selectedRef, setSelectedRef] = useState<SupportReferralItem | null>(null);
-  const [newStatus, setNewStatus] = useState<"ACCEPTED" | "IN_PROGRESS" | "COMPLETED" | "DECLINED">("ACCEPTED");
+  const [selectedRef, setSelectedRef] = useState<SupportReferralItem | null>(
+    null,
+  );
+  const [newStatus, setNewStatus] = useState<
+    "ACCEPTED" | "IN_PROGRESS" | "COMPLETED" | "DECLINED"
+  >("ACCEPTED");
   const [statusNotes, setStatusNotes] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
@@ -104,7 +107,9 @@ export default function StudentSupportReferralsPage() {
         referrer_role: "FACULTY_MENTOR",
       });
 
-      setNotification("Support referral initiated and transmitted to receiving department.");
+      setNotification(
+        "Support referral initiated and transmitted to receiving department.",
+      );
       setCreateModalOpen(false);
       setReferralNotes("");
       loadReferrals();
@@ -126,7 +131,9 @@ export default function StudentSupportReferralsPage() {
         status_notes: statusNotes,
       });
 
-      setNotification(`Referral ${selectedRef.referral_number} updated to ${newStatus}.`);
+      setNotification(
+        `Referral ${selectedRef.referral_number} updated to ${newStatus}.`,
+      );
       setStatusModalOpen(false);
       setSelectedRef(null);
       setStatusNotes("");
@@ -145,7 +152,8 @@ export default function StudentSupportReferralsPage() {
     const refNum = r.referral_number || r.referralCode || "";
     const tService = r.target_service || r.targetService || "";
     const matchesStatus = statusFilter === "ALL" || r.status === statusFilter;
-    const matchesService = serviceFilter === "ALL" || tService === serviceFilter;
+    const matchesService =
+      serviceFilter === "ALL" || tService === serviceFilter;
     const matchesSearch =
       sName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sReg.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -160,7 +168,10 @@ export default function StudentSupportReferralsPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Support Referrals", href: "/app/student-support/referrals" },
+            {
+              label: "Support Referrals",
+              href: "/app/student-support/referrals",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -170,7 +181,8 @@ export default function StudentSupportReferralsPage() {
               Cross-Department Student Referrals
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Coordinated referral pipelines across academic advising, career guidance, counselling, financial aid, and health services.
+              Coordinated referral pipelines across academic advising, career
+              guidance, counselling, financial aid, and health services.
             </p>
           </div>
           <Button
@@ -190,7 +202,13 @@ export default function StudentSupportReferralsPage() {
         <div className="flex items-start gap-3">
           <ShieldCheck className="h-5 w-5 text-cyan-400 mt-0.5 shrink-0" />
           <div className="text-xs text-slate-300">
-            <span className="font-semibold text-white">Controlled Referral Policy:</span> Initiating a referral informs the receiving service of the general guidance category. Referrals do not grant the receiving department access to the originating unit's confidential clinical notes or internal observations.
+            <span className="font-semibold text-white">
+              Controlled Referral Policy:
+            </span>{" "}
+            Initiating a referral informs the receiving service of the general
+            guidance category. Referrals do not grant the receiving department
+            access to the originating unit's confidential clinical notes or
+            internal observations.
           </div>
         </div>
       </div>
@@ -201,7 +219,10 @@ export default function StudentSupportReferralsPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -281,14 +302,26 @@ export default function StudentSupportReferralsPage() {
                       {ref.referral_number || ref.referralCode}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-medium text-white">{ref.student_name || ref.studentName}</div>
-                      <div className="text-[11px] text-slate-500">{ref.student_reg_no || ref.studentId}</div>
+                      <div className="font-medium text-white">
+                        {ref.student_name || ref.studentName}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {ref.student_reg_no || ref.studentId}
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <span className="font-semibold text-cyan-300">
-                        {String(ref.target_service || ref.targetService || "").replace("_", " ")}
+                        {String(
+                          ref.target_service || ref.targetService || "",
+                        ).replace("_", " ")}
                       </span>
-                      <div className="text-[11px] text-slate-500">By: {ref.referrer_role || ref.referring_role || ref.referringRole || "Faculty"}</div>
+                      <div className="text-[11px] text-slate-500">
+                        By:{" "}
+                        {ref.referrer_role ||
+                          ref.referring_role ||
+                          ref.referringRole ||
+                          "Faculty"}
+                      </div>
                     </td>
                     <td className="py-3 px-4">{ref.reason_category}</td>
                     <td className="py-3 px-4">
@@ -309,29 +342,30 @@ export default function StudentSupportReferralsPage() {
                           ref.status === "COMPLETED"
                             ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-[10px]"
                             : ref.status === "IN_PROGRESS"
-                            ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-[10px]"
-                            : ref.status === "PENDING"
-                            ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-[10px]"
-                            : "border-slate-700 text-slate-400 text-[10px]"
+                              ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-[10px]"
+                              : ref.status === "PENDING"
+                                ? "border-amber-500/30 text-amber-400 bg-amber-500/10 text-[10px]"
+                                : "border-slate-700 text-slate-400 text-[10px]"
                         }
                       >
                         {ref.status}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
-                      {ref.status !== "COMPLETED" && ref.status !== "DECLINED" && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedRef(ref);
-                            setStatusModalOpen(true);
-                          }}
-                          className="text-xs text-indigo-400 hover:text-indigo-300"
-                        >
-                          Update Status
-                        </Button>
-                      )}
+                      {ref.status !== "COMPLETED" &&
+                        ref.status !== "DECLINED" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedRef(ref);
+                              setStatusModalOpen(true);
+                            }}
+                            className="text-xs text-indigo-400 hover:text-indigo-300"
+                          >
+                            Update Status
+                          </Button>
+                        )}
                     </td>
                   </tr>
                 ))
@@ -350,24 +384,35 @@ export default function StudentSupportReferralsPage() {
               Initiate Student Support Referral
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleCreateReferral} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleCreateReferral}
+            className="space-y-4 pt-2 text-xs"
+          >
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Select Student *</label>
+              <label className="text-slate-400 font-medium">
+                Select Student *
+              </label>
               <select
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white"
               >
                 {mentees.map((m) => (
-                  <option key={m.student_id || m.studentId} value={m.student_id || m.studentId}>
-                    {m.student_name || m.studentName} ({m.student_reg_no || m.rollNumber})
+                  <option
+                    key={m.student_id || m.studentId}
+                    value={m.student_id || m.studentId}
+                  >
+                    {m.student_name || m.studentName} (
+                    {m.student_reg_no || m.rollNumber})
                   </option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Receiving Institutional Service *</label>
+              <label className="text-slate-400 font-medium">
+                Receiving Institutional Service *
+              </label>
               <select
                 value={targetService}
                 onChange={(e) => setTargetService(e.target.value)}
@@ -382,7 +427,9 @@ export default function StudentSupportReferralsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Reason / Referral Objective *</label>
+              <label className="text-slate-400 font-medium">
+                Reason / Referral Objective *
+              </label>
               <Input
                 required
                 placeholder="e.g. Guidance on financial aid eligibility, placement resume coaching"
@@ -401,7 +448,8 @@ export default function StudentSupportReferralsPage() {
                   className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0"
                 />
                 <span className="text-slate-300">
-                  Student informed consent has been obtained for this service referral
+                  Student informed consent has been obtained for this service
+                  referral
                 </span>
               </label>
             </div>
@@ -436,10 +484,16 @@ export default function StudentSupportReferralsPage() {
               Update Referral Status
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleUpdateStatus} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleUpdateStatus}
+            className="space-y-4 pt-2 text-xs"
+          >
             <div className="p-2.5 rounded bg-slate-950 border border-slate-800">
               <span className="text-slate-400">Referral: </span>
-              <strong className="text-white">{selectedRef?.referral_number}</strong> for{" "}
+              <strong className="text-white">
+                {selectedRef?.referral_number}
+              </strong>{" "}
+              for{" "}
               <span className="text-cyan-300">{selectedRef?.student_name}</span>
             </div>
 
@@ -458,7 +512,9 @@ export default function StudentSupportReferralsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Resolution Notes / Comments</label>
+              <label className="text-slate-400 font-medium">
+                Resolution Notes / Comments
+              </label>
               <Textarea
                 placeholder="Brief notes on resolution or referral progress..."
                 value={statusNotes}

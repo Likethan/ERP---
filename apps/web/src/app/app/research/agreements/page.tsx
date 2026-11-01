@@ -23,7 +23,12 @@ import { ResearchGrantAward, ResearchProject } from "@/types/research";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,7 +38,9 @@ export default function SponsoredAgreementsPage() {
   const [projects, setProjects] = useState<ResearchProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedAward, setSelectedAward] = useState<ResearchGrantAward | null>(null);
+  const [selectedAward, setSelectedAward] = useState<ResearchGrantAward | null>(
+    null,
+  );
 
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -88,7 +95,11 @@ export default function SponsoredAgreementsPage() {
 
   async function handleCreateAgreement(e: React.FormEvent) {
     e.preventDefault();
-    if (!newAgreement.agreement_number || !newAgreement.project_id || !newAgreement.funding_organization) {
+    if (
+      !newAgreement.agreement_number ||
+      !newAgreement.project_id ||
+      !newAgreement.funding_organization
+    ) {
       setErrorMsg("Please complete all required agreement fields.");
       return;
     }
@@ -106,8 +117,16 @@ export default function SponsoredAgreementsPage() {
         end_date: newAgreement.end_date,
         scope_of_work: newAgreement.scope_of_work,
         payment_milestones: [
-          { milestone: newAgreement.milestone_1_title, amount: Number(newAgreement.milestone_1_amount), status: "PENDING" },
-          { milestone: newAgreement.milestone_2_title, amount: Number(newAgreement.milestone_2_amount), status: "PENDING" },
+          {
+            milestone: newAgreement.milestone_1_title,
+            amount: Number(newAgreement.milestone_1_amount),
+            status: "PENDING",
+          },
+          {
+            milestone: newAgreement.milestone_2_title,
+            amount: Number(newAgreement.milestone_2_amount),
+            status: "PENDING",
+          },
         ],
       });
       setSuccessMsg("Sponsored agreement executed successfully.");
@@ -162,9 +181,18 @@ export default function SponsoredAgreementsPage() {
     return num.includes(q) || sponsor.includes(q);
   });
 
-  const totalCommitted = agreements.reduce((acc, a) => acc + Number(a.award_amount || 0), 0);
-  const totalDisbursed = agreements.reduce((acc, a) => acc + Number(a.disbursed_amount || 0), 0);
-  const totalRemaining = agreements.reduce((acc, a) => acc + Number(a.remaining_balance || 0), 0);
+  const totalCommitted = agreements.reduce(
+    (acc, a) => acc + Number(a.award_amount || 0),
+    0,
+  );
+  const totalDisbursed = agreements.reduce(
+    (acc, a) => acc + Number(a.disbursed_amount || 0),
+    0,
+  );
+  const totalRemaining = agreements.reduce(
+    (acc, a) => acc + Number(a.remaining_balance || 0),
+    0,
+  );
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -178,7 +206,12 @@ export default function SponsoredAgreementsPage() {
               <ShieldAlert className="h-4 w-4 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-200">✕</button>
+            <button
+              onClick={() => setErrorMsg(null)}
+              className="text-rose-400 hover:text-rose-200"
+            >
+              ✕
+            </button>
           </div>
         )}
         {successMsg && (
@@ -187,7 +220,12 @@ export default function SponsoredAgreementsPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200">✕</button>
+            <button
+              onClick={() => setSuccessMsg(null)}
+              className="text-emerald-400 hover:text-emerald-200"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -199,7 +237,8 @@ export default function SponsoredAgreementsPage() {
               Sponsored Research Agreements & Awards
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Legally binding contracts, sponsor disbursement tranches, deliverables, and audited amendments.
+              Legally binding contracts, sponsor disbursement tranches,
+              deliverables, and audited amendments.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -216,25 +255,46 @@ export default function SponsoredAgreementsPage() {
         {/* Financial Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="p-4 bg-slate-900/60 border-slate-800 backdrop-blur-sm">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Contract Commitments</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Total Contract Commitments
+            </span>
             <div className="text-2xl font-bold text-white mt-1">
-              ${totalCommitted.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              $
+              {totalCommitted.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
             </div>
-            <p className="text-xs text-slate-500 mt-1">{agreements.length} active agreements</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {agreements.length} active agreements
+            </p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800 backdrop-blur-sm">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Disbursed to Date</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Disbursed to Date
+            </span>
             <div className="text-2xl font-bold text-emerald-400 mt-1">
-              ${totalDisbursed.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              $
+              {totalDisbursed.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Reconciled against verified ledger</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Reconciled against verified ledger
+            </p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800 backdrop-blur-sm">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Undisbursed Sponsor Balance</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Undisbursed Sponsor Balance
+            </span>
             <div className="text-2xl font-bold text-amber-400 mt-1">
-              ${totalRemaining.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              $
+              {totalRemaining.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Pending deliverable milestones</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Pending deliverable milestones
+            </p>
           </Card>
         </div>
 
@@ -267,37 +327,62 @@ export default function SponsoredAgreementsPage() {
                 <tbody className="divide-y divide-slate-800/60">
                   {loading ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={7}
+                        className="py-8 text-center text-slate-500"
+                      >
                         <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-400" />
                         Loading agreements...
                       </td>
                     </tr>
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
-                        No sponsored research agreements found. Click &quot;Execute Agreement&quot; to register a sponsored contract.
+                      <td
+                        colSpan={7}
+                        className="py-8 text-center text-slate-500"
+                      >
+                        No sponsored research agreements found. Click
+                        &quot;Execute Agreement&quot; to register a sponsored
+                        contract.
                       </td>
                     </tr>
                   ) : (
                     filtered.map((award) => {
                       const amendments = (award.amendments_json as any[]) || [];
-                      const milestones = (award.disbursement_schedule_json as any[]) || [];
+                      const milestones =
+                        (award.disbursement_schedule_json as any[]) || [];
 
                       return (
-                        <tr key={award.id} className="hover:bg-slate-800/30 transition-colors">
+                        <tr
+                          key={award.id}
+                          className="hover:bg-slate-800/30 transition-colors"
+                        >
                           <td className="py-3 px-4">
-                            <span className="font-semibold text-white block">{award.award_number}</span>
-                            <span className="text-xs text-slate-500">ID: {award.id.slice(0, 8)}...</span>
+                            <span className="font-semibold text-white block">
+                              {award.award_number}
+                            </span>
+                            <span className="text-xs text-slate-500">
+                              ID: {award.id.slice(0, 8)}...
+                            </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="text-slate-200 font-medium">{award.funding_organization}</span>
+                            <span className="text-slate-200 font-medium">
+                              {award.funding_organization}
+                            </span>
                           </td>
                           <td className="py-3 px-4">
                             <span className="text-white font-semibold">
-                              ${Number(award.award_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                              $
+                              {Number(award.award_amount).toLocaleString(
+                                undefined,
+                                { minimumFractionDigits: 2 },
+                              )}
                             </span>
                             <div className="text-[11px] text-emerald-400">
-                              Disbursed: ${Number(award.disbursed_amount || 0).toLocaleString()}
+                              Disbursed: $
+                              {Number(
+                                award.disbursed_amount || 0,
+                              ).toLocaleString()}
                             </div>
                           </td>
                           <td className="py-3 px-4 text-xs text-slate-400">
@@ -308,13 +393,21 @@ export default function SponsoredAgreementsPage() {
                             <div className="flex flex-col gap-1">
                               {milestones.length > 0 ? (
                                 milestones.map((m: any, i: number) => (
-                                  <span key={i} className="text-xs text-slate-400 flex items-center gap-1.5">
+                                  <span
+                                    key={i}
+                                    className="text-xs text-slate-400 flex items-center gap-1.5"
+                                  >
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                    {m.milestone || m.title || `Tranche ${i + 1}`}: ${Number(m.amount || 0).toLocaleString()}
+                                    {m.milestone ||
+                                      m.title ||
+                                      `Tranche ${i + 1}`}
+                                    : ${Number(m.amount || 0).toLocaleString()}
                                   </span>
                                 ))
                               ) : (
-                                <span className="text-xs text-slate-500">Standard single disbursement</span>
+                                <span className="text-xs text-slate-500">
+                                  Standard single disbursement
+                                </span>
                               )}
                             </div>
                           </td>
@@ -324,7 +417,9 @@ export default function SponsoredAgreementsPage() {
                                 {amendments.length} amended
                               </Badge>
                             ) : (
-                              <span className="text-xs text-slate-500">Original</span>
+                              <span className="text-xs text-slate-500">
+                                Original
+                              </span>
                             )}
                           </td>
                           <td className="py-3 px-4 text-right">
@@ -374,22 +469,36 @@ export default function SponsoredAgreementsPage() {
             <form onSubmit={handleCreateAgreement} className="space-y-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Agreement Contract Number *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Agreement Contract Number *
+                  </Label>
                   <Input
                     required
                     placeholder="e.g. SRA-2026-IND-01"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newAgreement.agreement_number}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, agreement_number: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        agreement_number: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Institutional Project Link *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Institutional Project Link *
+                  </Label>
                   <select
                     required
                     className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                     value={newAgreement.project_id}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, project_id: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        project_id: e.target.value,
+                      })
+                    }
                   >
                     <option value="">Select Research Project</option>
                     {projects.map((p) => (
@@ -403,74 +512,121 @@ export default function SponsoredAgreementsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Sponsoring Organization *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Sponsoring Organization *
+                  </Label>
                   <Input
                     required
                     placeholder="e.g. National Science Foundation / Boeing"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newAgreement.funding_organization}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, funding_organization: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        funding_organization: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Award Commitment ($) *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Award Commitment ($) *
+                  </Label>
                   <Input
                     type="number"
                     required
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newAgreement.award_amount}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, award_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        award_amount: Number(e.target.value),
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Contract Start Date</Label>
+                  <Label className="text-xs text-slate-400">
+                    Contract Start Date
+                  </Label>
                   <Input
                     type="date"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newAgreement.start_date}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, start_date: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        start_date: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Contract Expiration Date</Label>
+                  <Label className="text-xs text-slate-400">
+                    Contract Expiration Date
+                  </Label>
                   <Input
                     type="date"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newAgreement.end_date}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, end_date: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        end_date: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Agreed Scope of Work & Reporting Commitments</Label>
+                <Label className="text-xs text-slate-400">
+                  Agreed Scope of Work & Reporting Commitments
+                </Label>
                 <Textarea
                   placeholder="Outline the agreed contractual deliverables, IP assignment clauses, and quarterly reporting schedules..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={newAgreement.scope_of_work}
-                  onChange={(e) => setNewAgreement({ ...newAgreement, scope_of_work: e.target.value })}
+                  onChange={(e) =>
+                    setNewAgreement({
+                      ...newAgreement,
+                      scope_of_work: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="p-3 bg-slate-950/70 rounded-lg border border-slate-800 space-y-3">
-                <span className="text-xs font-semibold text-emerald-400 block">Payment Disbursement Tranches</span>
+                <span className="text-xs font-semibold text-emerald-400 block">
+                  Payment Disbursement Tranches
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   <Input
                     placeholder="Tranche 1 Title"
                     className="bg-slate-900 border-slate-800 text-xs"
                     value={newAgreement.milestone_1_title}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, milestone_1_title: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        milestone_1_title: e.target.value,
+                      })
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="Tranche 1 Amount ($)"
                     className="bg-slate-900 border-slate-800 text-xs"
                     value={newAgreement.milestone_1_amount}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, milestone_1_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        milestone_1_amount: Number(e.target.value),
+                      })
+                    }
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -478,23 +634,41 @@ export default function SponsoredAgreementsPage() {
                     placeholder="Tranche 2 Title"
                     className="bg-slate-900 border-slate-800 text-xs"
                     value={newAgreement.milestone_2_title}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, milestone_2_title: e.target.value })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        milestone_2_title: e.target.value,
+                      })
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="Tranche 2 Amount ($)"
                     className="bg-slate-900 border-slate-800 text-xs"
                     value={newAgreement.milestone_2_amount}
-                    onChange={(e) => setNewAgreement({ ...newAgreement, milestone_2_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewAgreement({
+                        ...newAgreement,
+                        milestone_2_amount: Number(e.target.value),
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Executing..." : "Execute Agreement"}
                 </Button>
               </div>
@@ -514,55 +688,91 @@ export default function SponsoredAgreementsPage() {
 
             <form onSubmit={handleRecordAmendment} className="space-y-4 pt-2">
               <div>
-                <Label className="text-xs text-slate-400">Amendment Reference *</Label>
+                <Label className="text-xs text-slate-400">
+                  Amendment Reference *
+                </Label>
                 <Input
                   required
                   placeholder="e.g. AMD-01, MOD-2026-A"
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={amendmentData.amendment_number}
-                  onChange={(e) => setAmendmentData({ ...amendmentData, amendment_number: e.target.value })}
+                  onChange={(e) =>
+                    setAmendmentData({
+                      ...amendmentData,
+                      amendment_number: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Amendment Justification / Description *</Label>
+                <Label className="text-xs text-slate-400">
+                  Amendment Justification / Description *
+                </Label>
                 <Textarea
                   required
                   placeholder="Reason for contract renewal, scope change, or supplemental award addition..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={amendmentData.description}
-                  onChange={(e) => setAmendmentData({ ...amendmentData, description: e.target.value })}
+                  onChange={(e) =>
+                    setAmendmentData({
+                      ...amendmentData,
+                      description: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Extended End Date</Label>
+                  <Label className="text-xs text-slate-400">
+                    Extended End Date
+                  </Label>
                   <Input
                     type="date"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={amendmentData.extended_end_date}
-                    onChange={(e) => setAmendmentData({ ...amendmentData, extended_end_date: e.target.value })}
+                    onChange={(e) =>
+                      setAmendmentData({
+                        ...amendmentData,
+                        extended_end_date: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Budget Adjustment ($)</Label>
+                  <Label className="text-xs text-slate-400">
+                    Budget Adjustment ($)
+                  </Label>
                   <Input
                     type="number"
                     placeholder="e.g. 25000"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={amendmentData.budget_adjustment}
-                    onChange={(e) => setAmendmentData({ ...amendmentData, budget_adjustment: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setAmendmentData({
+                        ...amendmentData,
+                        budget_adjustment: Number(e.target.value),
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowAmendmentModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAmendmentModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   {submitting ? "Recording..." : "Record Audited Amendment"}
                 </Button>
               </div>

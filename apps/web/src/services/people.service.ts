@@ -19,7 +19,6 @@ class PeopleService {
   ];
 
   async getMetrics(): Promise<ApiResponse<PeopleSummaryMetrics>> {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.metrics,
@@ -29,7 +28,6 @@ class PeopleService {
   async getDepartmentDistribution(): Promise<
     ApiResponse<DepartmentPeopleDistribution[]>
   > {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.departments,
@@ -39,7 +37,6 @@ class PeopleService {
   async searchPeople(
     query: string,
   ): Promise<ApiResponse<UnifiedPersonSearchResult[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     const q = query.toLowerCase().trim();
     if (!q) return { success: true, data: [] };
 

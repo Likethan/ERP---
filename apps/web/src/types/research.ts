@@ -57,7 +57,8 @@ export type ResearchEthicsApprovalStatus =
 
 export type ResearchRiskSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
-export type ResearchRiskStatus = "IDENTIFIED" | "MONITORED" | "MITIGATED" | "ACCEPTED" | "CLOSED";
+export type ResearchRiskStatus =
+  "IDENTIFIED" | "MONITORED" | "MITIGATED" | "ACCEPTED" | "CLOSED";
 
 export type ResearchTeamRole =
   | "PRINCIPAL_INVESTIGATOR"
@@ -71,7 +72,8 @@ export type ResearchTeamRole =
   | "PROJECT_MANAGER"
   | "RESEARCH_ASSISTANT";
 
-export type ResearchOpportunityStatus = "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED" | "CANCELLED";
+export type ResearchOpportunityStatus =
+  "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED" | "CANCELLED";
 
 export type ResearchGrantInternalReviewStatus =
   | "DRAFT"

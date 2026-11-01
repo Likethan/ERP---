@@ -130,8 +130,6 @@ class ExaminationsService {
   // ==========================================
 
   async getDashboardSummary(): Promise<ApiResponse<ExamDashboardSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
-
     const distribution = calculateGradeDistribution(this.results);
     const summary: ExamDashboardSummary = {
       ...MOCK_EXAM_OPERATIONS_SUMMARY,
@@ -178,7 +176,6 @@ class ExaminationsService {
       upcoming_schedules?: ExamSchedule[];
     }>
   > {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: {
@@ -207,7 +204,6 @@ class ExaminationsService {
     status?: string;
     semester?: number;
   }): Promise<ApiResponse<Examination[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.examinations];
     if (filters?.status && filters.status !== "ALL") {
       items = items.filter((e) => e.status === filters.status);
@@ -219,7 +215,6 @@ class ExaminationsService {
   }
 
   async getExaminationById(id: string): Promise<ApiResponse<Examination>> {
-    await new Promise((r) => setTimeout(r, 30));
     const found = this.examinations.find((e) => e.id === id);
     if (!found) {
       throw new Error(`Examination cycle '${id}' not found`);
@@ -230,7 +225,6 @@ class ExaminationsService {
   async createExamination(
     data: Partial<Examination>,
   ): Promise<ApiResponse<Examination>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newExam: Examination = {
       id: `exam-${Date.now()}`,
       name: data.name || "Semester Examination",
@@ -258,7 +252,6 @@ class ExaminationsService {
   async getAssessments(
     filters?: AssessmentFilters | number,
   ): Promise<ApiResponse<Assessment[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     // Support legacy number semester parameter
     if (typeof filters === "number") {
       return {
@@ -299,7 +292,6 @@ class ExaminationsService {
   }
 
   async getAssessmentById(id: string): Promise<ApiResponse<Assessment>> {
-    await new Promise((r) => setTimeout(r, 30));
     const found = this.assessments.find((a) => a.id === id);
     if (!found) {
       throw new Error(`Assessment '${id}' not found`);
@@ -310,8 +302,6 @@ class ExaminationsService {
   async createAssessment(
     data: Partial<Assessment>,
   ): Promise<ApiResponse<Assessment>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const components: AssessmentComponent[] = data.components || [
       {
         id: `comp-${Date.now()}-1`,
@@ -381,7 +371,6 @@ class ExaminationsService {
     id: string,
     updates: Partial<Assessment>,
   ): Promise<ApiResponse<Assessment>> {
-    await new Promise((r) => setTimeout(r, 60));
     const idx = this.assessments.findIndex((a) => a.id === id);
     if (idx === -1) {
       throw new Error(`Assessment '${id}' not found`);
@@ -392,7 +381,6 @@ class ExaminationsService {
   }
 
   async finalizeAssessment(id: string): Promise<ApiResponse<Assessment>> {
-    await new Promise((r) => setTimeout(r, 80));
     const asm = this.assessments.find((a) => a.id === id);
     if (!asm) {
       throw new Error(`Assessment '${id}' not found`);
@@ -426,7 +414,6 @@ class ExaminationsService {
   async getSchedules(
     filters?: ScheduleFilters,
   ): Promise<ApiResponse<ExamSchedule[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.schedules];
 
     if (filters?.examinationId && filters.examinationId !== "ALL") {
@@ -455,7 +442,6 @@ class ExaminationsService {
   }
 
   async getScheduleById(id: string): Promise<ApiResponse<ExamSchedule>> {
-    await new Promise((r) => setTimeout(r, 30));
     const found = this.schedules.find((s) => s.id === id);
     if (!found) {
       throw new Error(`Exam schedule '${id}' not found`);
@@ -476,8 +462,6 @@ class ExaminationsService {
     facultyId: string;
     excludeScheduleId?: string;
   }): Promise<ApiResponse<ExamConflictCheck>> {
-    await new Promise((r) => setTimeout(r, 40));
-
     const matches = this.schedules.filter(
       (s) =>
         s.date === candidate.date &&
@@ -542,8 +526,6 @@ class ExaminationsService {
   async createSchedule(
     data: Partial<ExamSchedule>,
   ): Promise<ApiResponse<ExamSchedule>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const newSch: ExamSchedule = {
       id: `sch-${Date.now()}`,
       examinationId: data.examinationId || "exam-2026-ese",
@@ -580,7 +562,6 @@ class ExaminationsService {
     id: string,
     updates: Partial<ExamSchedule>,
   ): Promise<ApiResponse<ExamSchedule>> {
-    await new Promise((r) => setTimeout(r, 60));
     const idx = this.schedules.findIndex((s) => s.id === id);
     if (idx === -1) {
       throw new Error(`Schedule '${id}' not found`);
@@ -597,7 +578,6 @@ class ExaminationsService {
   async getEligibility(
     filters?: EligibilityFilters,
   ): Promise<ApiResponse<ExamEligibility[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.eligibilityRecords];
 
     if (filters?.examinationId && filters.examinationId !== "ALL") {
@@ -631,7 +611,6 @@ class ExaminationsService {
     action: "APPROVE_EXCEPTION" | "REJECT_EXCEPTION" | "FLAG_FOR_REVIEW",
     overrideReason?: string,
   ): Promise<ApiResponse<ExamEligibility>> {
-    await new Promise((r) => setTimeout(r, 70));
     const record = this.eligibilityRecords.find((e) => e.id === id);
     if (!record) {
       throw new Error(`Eligibility record '${id}' not found`);
@@ -661,7 +640,6 @@ class ExaminationsService {
   // ==========================================
 
   async getMarks(assessmentId: string): Promise<ApiResponse<Mark[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     const items = this.marks.filter((m) => m.assessmentId === assessmentId);
     return { success: true, data: items };
   }
@@ -675,8 +653,6 @@ class ExaminationsService {
       remarks?: string;
     }[],
   ): Promise<ApiResponse<{ updatedCount: number }>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const asm = this.assessments.find((a) => a.id === assessmentId);
     if (asm?.isFinalized) {
       throw new Error(
@@ -731,7 +707,6 @@ class ExaminationsService {
     _courseOfferingId: string,
     assessmentId: string,
   ): Promise<ApiResponse<MarksRosterData>> {
-    await new Promise((r) => setTimeout(r, 60));
     const currentAsm =
       this.legacyAssessments.find((a) => a.id === assessmentId) ||
       this.legacyAssessments[0];
@@ -761,7 +736,6 @@ class ExaminationsService {
     assessmentId: string,
     marksData: Record<string, unknown>,
   ): Promise<ApiResponse<{ count: number }>> {
-    await new Promise((r) => setTimeout(r, 100));
     const asm = this.assessments.find((a) => a.id === assessmentId);
     if (asm) {
       asm.status = "COMPLETED";
@@ -779,7 +753,6 @@ class ExaminationsService {
   async getMarkCorrections(filters?: {
     status?: string;
   }): Promise<ApiResponse<MarkCorrection[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.corrections];
     if (filters?.status && filters.status !== "ALL") {
       items = items.filter((c) => c.status === filters.status);
@@ -794,8 +767,6 @@ class ExaminationsService {
     reason: string;
     requestedBy: string;
   }): Promise<ApiResponse<MarkCorrection>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const targetMark = this.marks.find((m) => m.id === data.markId);
     if (!targetMark) {
       throw new Error(`Mark record '${data.markId}' not found.`);
@@ -840,8 +811,6 @@ class ExaminationsService {
     action: "APPROVED" | "REJECTED",
     reviewerNotes: string,
   ): Promise<ApiResponse<MarkCorrection>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const corr = this.corrections.find((c) => c.id === correctionId);
     if (!corr) {
       throw new Error(`Correction '${correctionId}' not found.`);
@@ -888,8 +857,6 @@ class ExaminationsService {
   async getResults(
     filters?: ResultFilters | string,
   ): Promise<ApiResponse<Result[]>> {
-    await new Promise((r) => setTimeout(r, 40));
-
     // Support legacy string program parameter
     if (typeof filters === "string") {
       return {
@@ -931,7 +898,6 @@ class ExaminationsService {
   }
 
   async getResultById(id: string): Promise<ApiResponse<Result>> {
-    await new Promise((r) => setTimeout(r, 30));
     const found = this.results.find((r) => r.id === id);
     if (!found) {
       throw new Error(`Result '${id}' not found`);
@@ -940,7 +906,6 @@ class ExaminationsService {
   }
 
   async getStudentResults(studentId: string): Promise<ApiResponse<Result[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     // Filter to published results only for student view
     const items = this.results.filter(
       (r) => r.studentId === studentId && r.isPublished,
@@ -949,7 +914,6 @@ class ExaminationsService {
   }
 
   async finalizeResult(id: string): Promise<ApiResponse<Result>> {
-    await new Promise((r) => setTimeout(r, 60));
     const target = this.results.find((r) => r.id === id);
     if (!target) {
       throw new Error(`Result '${id}' not found`);
@@ -962,8 +926,6 @@ class ExaminationsService {
   async finalizeResults(
     examinationId: string,
   ): Promise<ApiResponse<{ finalizedCount: number }>> {
-    await new Promise((r) => setTimeout(r, 100));
-
     const pendingResults = this.results.filter(
       (r) => r.examinationId === examinationId && !r.isFinalized,
     );
@@ -990,7 +952,6 @@ class ExaminationsService {
   async getResultPublications(filters?: {
     status?: string;
   }): Promise<ApiResponse<ResultPublication[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.publications];
     if (filters?.status && filters.status !== "ALL") {
       items = items.filter((p) => p.status === filters.status);
@@ -1001,8 +962,6 @@ class ExaminationsService {
   async createPublication(
     data: Partial<ResultPublication>,
   ): Promise<ApiResponse<ResultPublication>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const newPub: ResultPublication = {
       id: `pub-${Date.now()}`,
       batchNumber: `PUB-2026-S${data.semester || 5}-${Date.now().toString().slice(-4)}`,
@@ -1029,7 +988,6 @@ class ExaminationsService {
   async publishResults(
     publicationId: string,
   ): Promise<ApiResponse<ResultPublication>> {
-    await new Promise((r) => setTimeout(r, 100));
     const pub = this.publications.find((p) => p.id === publicationId);
     if (!pub) {
       throw new Error(`Publication batch '${publicationId}' not found.`);
@@ -1054,7 +1012,6 @@ class ExaminationsService {
     publicationId: string,
     notes?: string,
   ): Promise<ApiResponse<ResultPublication>> {
-    await new Promise((r) => setTimeout(r, 80));
     const pub = this.publications.find((p) => p.id === publicationId);
     if (!pub) {
       throw new Error(`Publication batch '${publicationId}' not found.`);
@@ -1078,7 +1035,6 @@ class ExaminationsService {
   // ==========================================
 
   async getGradeScales(): Promise<ApiResponse<GradeScale[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: this.gradeScales };
   }
 
@@ -1094,8 +1050,6 @@ class ExaminationsService {
       rows: Record<string, string | number>[];
     }>
   > {
-    await new Promise((r) => setTimeout(r, 120));
-
     let title = "Examination Report";
     let rows: Record<string, string | number>[] = [];
 

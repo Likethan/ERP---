@@ -19,14 +19,18 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { InboundStudentProfile, InternationalPartner } from "@/types/international";
+import {
+  InboundStudentProfile,
+  InternationalPartner,
+} from "@/types/international";
 
 export default function InboundStudentsPage() {
   const [students, setStudents] = useState<InboundStudentProfile[]>([]);
   const [partners, setPartners] = useState<InternationalPartner[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedStudentForCheckin, setSelectedStudentForCheckin] = useState<InboundStudentProfile | null>(null);
+  const [selectedStudentForCheckin, setSelectedStudentForCheckin] =
+    useState<InboundStudentProfile | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
   // New Inbound Student Form
@@ -38,7 +42,9 @@ export default function InboundStudentsPage() {
     home_institution_student_id: "",
     host_department_id: "dept-cse",
     study_period_start: new Date().toISOString().split("T")[0],
-    study_period_end: new Date(Date.now() + 120 * 86400000).toISOString().split("T")[0],
+    study_period_end: new Date(Date.now() + 120 * 86400000)
+      .toISOString()
+      .split("T")[0],
     passport_number: "",
     visa_reference_number: "",
   });
@@ -75,7 +81,8 @@ export default function InboundStudentsPage() {
       const partner = partners.find((p) => p.id === newForm.partner_id);
       const res = await internationalService.createInboundStudent({
         ...newForm,
-        partner_name: partner?.partner_name || partner?.name || "Partner University",
+        partner_name:
+          partner?.partner_name || partner?.name || "Partner University",
       });
       setStudents([res, ...students]);
       setShowAddModal(false);
@@ -93,8 +100,13 @@ export default function InboundStudentsPage() {
     if (!selectedStudentForCheckin) return;
     setSubmittingCheckin(true);
     try {
-      await internationalService.checkinInboundStudent(selectedStudentForCheckin.id, checkinNotes);
-      alert("Orientation check-in completed! Status updated to Orientation Completed.");
+      await internationalService.checkinInboundStudent(
+        selectedStudentForCheckin.id,
+        checkinNotes,
+      );
+      alert(
+        "Orientation check-in completed! Status updated to Orientation Completed.",
+      );
       setSelectedStudentForCheckin(null);
       setCheckinNotes("");
       loadData();
@@ -107,7 +119,8 @@ export default function InboundStudentsPage() {
   }
 
   const filtered = students.filter((s) => {
-    const text = `${s.first_name} ${s.last_name} ${s.email} ${s.partner_name || ""}`.toLowerCase();
+    const text =
+      `${s.first_name} ${s.last_name} ${s.email} ${s.partner_name || ""}`.toLowerCase();
     return text.includes(search.toLowerCase());
   });
 
@@ -123,7 +136,8 @@ export default function InboundStudentsPage() {
               Inbound International Scholars & Exchange Students
             </h2>
             <p className="text-xs text-slate-400">
-              Arrival coordination, institutional onboarding, campus housing, and mandatory orientation check-in
+              Arrival coordination, institutional onboarding, campus housing,
+              and mandatory orientation check-in
             </p>
           </div>
           <button
@@ -151,7 +165,9 @@ export default function InboundStudentsPage() {
 
         {/* Inbound Students Cards */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading inbound student roster...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading inbound student roster...
+          </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
             No inbound international scholars found.
@@ -175,7 +191,9 @@ export default function InboundStudentsPage() {
                           : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
                       }`}
                     >
-                      {s.orientation_completed ? "Orientation Complete" : s.check_in_status}
+                      {s.orientation_completed
+                        ? "Orientation Complete"
+                        : s.check_in_status}
                     </span>
                   </div>
 
@@ -191,11 +209,15 @@ export default function InboundStudentsPage() {
                   <div className="mt-4 pt-3 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-300">
                     <p className="flex items-center justify-between">
                       <span className="text-slate-500">Host Department:</span>
-                      <span className="text-slate-200">{s.host_department_name || "Computer Science"}</span>
+                      <span className="text-slate-200">
+                        {s.host_department_name || "Computer Science"}
+                      </span>
                     </p>
                     <p className="flex items-center justify-between">
                       <span className="text-slate-500">Assigned Mentor:</span>
-                      <span className="text-slate-200">{s.assigned_mentor_name || "Faculty Coordinator"}</span>
+                      <span className="text-slate-200">
+                        {s.assigned_mentor_name || "Faculty Coordinator"}
+                      </span>
                     </p>
                     <p className="flex items-center justify-between">
                       <span className="text-slate-500">Exchange Period:</span>
@@ -207,7 +229,9 @@ export default function InboundStudentsPage() {
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-xs text-slate-400 truncate max-w-[150px]">{s.email}</span>
+                  <span className="text-xs text-slate-400 truncate max-w-[150px]">
+                    {s.email}
+                  </span>
                   {!s.orientation_completed ? (
                     <button
                       onClick={() => setSelectedStudentForCheckin(s)}
@@ -245,7 +269,8 @@ export default function InboundStudentsPage() {
               <p className="text-xs text-slate-400 mt-1">
                 Scholar:{" "}
                 <strong className="text-slate-200">
-                  {selectedStudentForCheckin.first_name} {selectedStudentForCheckin.last_name}
+                  {selectedStudentForCheckin.first_name}{" "}
+                  {selectedStudentForCheckin.last_name}
                 </strong>{" "}
                 from {selectedStudentForCheckin.partner_name}
               </p>
@@ -253,21 +278,40 @@ export default function InboundStudentsPage() {
               <form onSubmit={handleCheckin} className="mt-5 space-y-4">
                 <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-2 text-xs text-slate-300">
                   <div className="flex items-center gap-2">
-                    <input type="checkbox" defaultChecked disabled className="rounded text-cyan-500" />
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      disabled
+                      className="rounded text-cyan-500"
+                    />
                     <span>Passport & Visa validity verified</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <input type="checkbox" defaultChecked disabled className="rounded text-cyan-500" />
-                    <span>Campus ID Card & Security Access badge activated</span>
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      disabled
+                      className="rounded text-cyan-500"
+                    />
+                    <span>
+                      Campus ID Card & Security Access badge activated
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <input type="checkbox" defaultChecked disabled className="rounded text-cyan-500" />
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      disabled
+                      className="rounded text-cyan-500"
+                    />
                     <span>Host Department faculty mentor introduced</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Orientation Notes / Housing Reference</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Orientation Notes / Housing Reference
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="e.g. Assigned to International Hostel Wing B, Room 204. Lab safety induction completed."
@@ -290,7 +334,9 @@ export default function InboundStudentsPage() {
                     disabled={submittingCheckin}
                     className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-md shadow-purple-900/30 disabled:opacity-50"
                   >
-                    {submittingCheckin ? "Confirming..." : "Confirm Orientation Complete"}
+                    {submittingCheckin
+                      ? "Confirming..."
+                      : "Confirm Orientation Complete"}
                   </button>
                 </div>
               </form>
@@ -314,22 +360,30 @@ export default function InboundStudentsPage() {
                 Register Incoming Exchange Scholar
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Create an inbound foreign student record to enable campus access, course registration, and orientation
+                Create an inbound foreign student record to enable campus
+                access, course registration, and orientation
               </p>
 
               <form onSubmit={handleAddStudent} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Sending Partner Institution *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Sending Partner Institution *
+                  </label>
                   <select
                     required
                     value={newForm.partner_id}
-                    onChange={(e) => setNewForm({ ...newForm, partner_id: e.target.value })}
+                    onChange={(e) =>
+                      setNewForm({ ...newForm, partner_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
-                    <option value="">Select sending foreign university...</option>
+                    <option value="">
+                      Select sending foreign university...
+                    </option>
                     {partners.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.partner_name || p.name} ({p.country_name || p.country || p.country_code})
+                        {p.partner_name || p.name} (
+                        {p.country_name || p.country || p.country_code})
                       </option>
                     ))}
                   </select>
@@ -337,71 +391,104 @@ export default function InboundStudentsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">First Name *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      First Name *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. Lukas"
                       value={newForm.first_name}
-                      onChange={(e) => setNewForm({ ...newForm, first_name: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({ ...newForm, first_name: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Last Name *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Last Name *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. Mueller"
                       value={newForm.last_name}
-                      onChange={(e) => setNewForm({ ...newForm, last_name: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({ ...newForm, last_name: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Email Address *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Email Address *
+                    </label>
                     <input
                       required
                       type="email"
                       placeholder="lukas.mueller@tum.de"
                       value={newForm.email}
-                      onChange={(e) => setNewForm({ ...newForm, email: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({ ...newForm, email: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Home Institution Student ID *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Home Institution Student ID *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. TUM-039129"
                       value={newForm.home_institution_student_id}
-                      onChange={(e) => setNewForm({ ...newForm, home_institution_student_id: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({
+                          ...newForm,
+                          home_institution_student_id: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Study Period Start *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Study Period Start *
+                    </label>
                     <input
                       required
                       type="date"
                       value={newForm.study_period_start}
-                      onChange={(e) => setNewForm({ ...newForm, study_period_start: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({
+                          ...newForm,
+                          study_period_start: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Study Period End *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Study Period End *
+                    </label>
                     <input
                       required
                       type="date"
                       value={newForm.study_period_end}
-                      onChange={(e) => setNewForm({ ...newForm, study_period_end: e.target.value })}
+                      onChange={(e) =>
+                        setNewForm({
+                          ...newForm,
+                          study_period_end: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>

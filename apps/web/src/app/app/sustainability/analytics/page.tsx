@@ -68,7 +68,8 @@ const MOCK_BUILDING_STATS: BuildingEnergyStats[] = [
 ];
 
 export default function SustainabilityAnalyticsPage() {
-  const [overview, setOverview] = useState<SustainabilityDashboardOverview | null>(null);
+  const [overview, setOverview] =
+    useState<SustainabilityDashboardOverview | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -99,18 +100,22 @@ export default function SustainabilityAnalyticsPage() {
               Net-Zero Carbon Glidepath (2020 — 2040)
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Target trajectory: 5% annual emissions reduction through on-site renewables and circular heat recovery.
+              Target trajectory: 5% annual emissions reduction through on-site
+              renewables and circular heat recovery.
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold">
             <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-600" /> Baseline: 1,420 MT (2020)
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-600" />{" "}
+              Baseline: 1,420 MT (2020)
             </span>
             <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Current: 475 MT (2024)
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />{" "}
+              Current: 475 MT (2024)
             </span>
             <span className="flex items-center gap-1.5 text-cyan-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" /> Goal: 0 MT (2040)
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" /> Goal: 0
+              MT (2040)
             </span>
           </div>
         </div>
@@ -123,7 +128,9 @@ export default function SustainabilityAnalyticsPage() {
           </div>
           <div className="flex justify-between text-[11px] text-slate-400">
             <span>2020 Baseline</span>
-            <span className="text-emerald-400 font-bold">66.5% of Net-Zero Journey Completed</span>
+            <span className="text-emerald-400 font-bold">
+              66.5% of Net-Zero Journey Completed
+            </span>
             <span>2040 Net-Zero Goal</span>
           </div>
         </div>
@@ -137,7 +144,8 @@ export default function SustainabilityAnalyticsPage() {
             Campus Building Energy Intensity (EUI) Heatmap
           </h3>
           <span className="text-xs text-slate-400">
-            Average Campus EUI: {overview?.energy_intensity_kwh_sqm || "78.5"} kWh / m² / year
+            Average Campus EUI: {overview?.energy_intensity_kwh_sqm || "78.5"}{" "}
+            kWh / m² / year
           </span>
         </div>
 
@@ -155,30 +163,39 @@ export default function SustainabilityAnalyticsPage() {
           <tbody className="divide-y divide-slate-800/60">
             {MOCK_BUILDING_STATS.map((b) => (
               <tr key={b.name} className="hover:bg-slate-800/30 transition">
-                <td className="py-3.5 px-4 font-bold text-slate-100">{b.name}</td>
-                <td className="py-3.5 px-4 text-slate-300">{b.sqm.toLocaleString()} m²</td>
+                <td className="py-3.5 px-4 font-bold text-slate-100">
+                  {b.name}
+                </td>
+                <td className="py-3.5 px-4 text-slate-300">
+                  {b.sqm.toLocaleString()} m²
+                </td>
                 <td className="py-3.5 px-4 text-slate-300 font-mono">
                   {b.annualKwh.toLocaleString()} kWh
                 </td>
                 <td className="py-3.5 px-4 font-bold text-slate-100 font-mono">
-                  {b.intensityKwhSqm} <span className="text-[11px] font-normal text-slate-400">kWh/m²</span>
+                  {b.intensityKwhSqm}{" "}
+                  <span className="text-[11px] font-normal text-slate-400">
+                    kWh/m²
+                  </span>
                 </td>
-                <td className="py-3.5 px-4 text-emerald-400 font-semibold">{b.solarSharePct}%</td>
+                <td className="py-3.5 px-4 text-emerald-400 font-semibold">
+                  {b.solarSharePct}%
+                </td>
                 <td className="py-3.5 px-4">
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       b.status === "EFFICIENT"
                         ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
                         : b.status === "MODERATE"
-                        ? "bg-amber-950 text-amber-400 border border-amber-800"
-                        : "bg-red-950 text-red-400 border border-red-800"
+                          ? "bg-amber-950 text-amber-400 border border-amber-800"
+                          : "bg-red-950 text-red-400 border border-red-800"
                     }`}
                   >
                     {b.status === "EFFICIENT"
                       ? "IGBC PLATINUM"
                       : b.status === "MODERATE"
-                      ? "BEE 3-STAR"
-                      : "RETROFIT RECOMMENDED"}
+                        ? "BEE 3-STAR"
+                        : "RETROFIT RECOMMENDED"}
                   </span>
                 </td>
               </tr>
@@ -189,4 +206,3 @@ export default function SustainabilityAnalyticsPage() {
     </div>
   );
 }
-

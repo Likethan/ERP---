@@ -24,7 +24,8 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
 
   // Score Entry Modal
-  const [scoreModalFixture, setScoreModalFixture] = useState<MatchFixtureItem | null>(null);
+  const [scoreModalFixture, setScoreModalFixture] =
+    useState<MatchFixtureItem | null>(null);
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
   const [verificationNotes, setVerificationNotes] = useState("");
@@ -76,14 +77,14 @@ export default function ResultsPage() {
       scoreModalFixture.id,
       homeScore,
       awayScore,
-      verificationNotes || "Official score recorded by Chief Referee"
+      verificationNotes || "Official score recorded by Chief Referee",
     );
 
     if (res.success && res.data) {
       setActionSuccess(
         `Score recorded: ${scoreModalFixture.homeTeamName || "Home"} ${homeScore} - ${awayScore} ${
           scoreModalFixture.awayTeamName || "Away"
-        }. Standings recomputed.`
+        }. Standings recomputed.`,
       );
       setScoreModalFixture(null);
       if (selectedCompId) {
@@ -103,7 +104,8 @@ export default function ResultsPage() {
             Results, Score Verification & Standings
           </h1>
           <p className="text-sm text-slate-500">
-            Auditable score entry, referee verification trails, and real-time tournament league tables.
+            Auditable score entry, referee verification trails, and real-time
+            tournament league tables.
           </p>
         </div>
       </div>
@@ -114,7 +116,10 @@ export default function ResultsPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionSuccess}</span>
           </div>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -123,7 +128,9 @@ export default function ResultsPage() {
       {/* Competition Selector */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Tournament Table:</label>
+          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            Tournament Table:
+          </label>
           <select
             value={selectedCompId}
             onChange={(e) => {
@@ -134,7 +141,8 @@ export default function ResultsPage() {
           >
             {competitions.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.name} ({c.sport} - {c.tournamentFormat.replace("_", " ").toLowerCase()})
+                {c.name} ({c.sport} -{" "}
+                {c.tournamentFormat.replace("_", " ").toLowerCase()})
               </option>
             ))}
           </select>
@@ -151,9 +159,13 @@ export default function ResultsPage() {
         <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-amber-500" />
-            <h2 className="text-sm font-bold text-slate-900">Official Competition Standings</h2>
+            <h2 className="text-sm font-bold text-slate-900">
+              Official Competition Standings
+            </h2>
           </div>
-          <span className="text-xs font-medium text-slate-500">Live Seedings</span>
+          <span className="text-xs font-medium text-slate-500">
+            Live Seedings
+          </span>
         </div>
 
         <div className="overflow-x-auto">
@@ -169,7 +181,9 @@ export default function ResultsPage() {
                 <th className="py-2.5 px-2 text-center">GF</th>
                 <th className="py-2.5 px-2 text-center">GA</th>
                 <th className="py-2.5 px-2 text-center font-bold">GD</th>
-                <th className="py-2.5 px-3 text-center font-bold text-indigo-700">PTS</th>
+                <th className="py-2.5 px-3 text-center font-bold text-indigo-700">
+                  PTS
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -183,7 +197,14 @@ export default function ResultsPage() {
                 standings.map((team, idx) => {
                   const isTop = idx === 0;
                   return (
-                    <tr key={team.id} className={isTop ? "bg-amber-50/40 font-medium" : "hover:bg-slate-50/60"}>
+                    <tr
+                      key={team.id}
+                      className={
+                        isTop
+                          ? "bg-amber-50/40 font-medium"
+                          : "hover:bg-slate-50/60"
+                      }
+                    >
                       <td className="py-2.5 px-3 text-center font-bold text-slate-900">
                         {isTop ? (
                           <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-400 text-slate-900 text-xs">
@@ -197,13 +218,25 @@ export default function ResultsPage() {
                         {team.teamName || team.participantName || "Team"}
                       </td>
                       <td className="py-2.5 px-2 text-center">{team.played}</td>
-                      <td className="py-2.5 px-2 text-center text-emerald-700 font-semibold">{team.won}</td>
-                      <td className="py-2.5 px-2 text-center text-slate-500">{team.drawn}</td>
-                      <td className="py-2.5 px-2 text-center text-red-600">{team.lost}</td>
-                      <td className="py-2.5 px-2 text-center">{team.pointsFor}</td>
-                      <td className="py-2.5 px-2 text-center">{team.pointsAgainst}</td>
+                      <td className="py-2.5 px-2 text-center text-emerald-700 font-semibold">
+                        {team.won}
+                      </td>
+                      <td className="py-2.5 px-2 text-center text-slate-500">
+                        {team.drawn}
+                      </td>
+                      <td className="py-2.5 px-2 text-center text-red-600">
+                        {team.lost}
+                      </td>
+                      <td className="py-2.5 px-2 text-center">
+                        {team.pointsFor}
+                      </td>
+                      <td className="py-2.5 px-2 text-center">
+                        {team.pointsAgainst}
+                      </td>
                       <td className="py-2.5 px-2 text-center font-bold">
-                        {team.pointDifference > 0 ? `+${team.pointDifference}` : team.pointDifference}
+                        {team.pointDifference > 0
+                          ? `+${team.pointDifference}`
+                          : team.pointDifference}
                       </td>
                       <td className="py-2.5 px-3 text-center font-extrabold text-indigo-700 text-sm">
                         {team.points}
@@ -234,10 +267,14 @@ export default function ResultsPage() {
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase">Match #{f.matchNumber}</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">
+                      Match #{f.matchNumber}
+                    </span>
                     <span
                       className={`text-[10px] px-2 py-0.2 rounded font-semibold uppercase ${
-                        isCompleted ? "bg-emerald-100 text-emerald-800" : "bg-blue-100 text-blue-800"
+                        isCompleted
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-blue-100 text-blue-800"
                       }`}
                     >
                       {f.status}
@@ -277,9 +314,12 @@ export default function ResultsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Official Match Score Verification</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                Official Match Score Verification
+              </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Match #{scoreModalFixture.matchNumber} • {scoreModalFixture.facilityName || "Venue"}
+                Match #{scoreModalFixture.matchNumber} •{" "}
+                {scoreModalFixture.facilityName || "Venue"}
               </p>
             </div>
 

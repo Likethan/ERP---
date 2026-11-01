@@ -24,16 +24,23 @@ import {
 } from "@/types/engagement";
 
 export default function EngagementApplicationsPage() {
-  const [applications, setApplications] = useState<ParticipationApplication[]>([]);
+  const [applications, setApplications] = useState<ParticipationApplication[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [selectedApp, setSelectedApp] = useState<ParticipationApplication | null>(null);
+  const [selectedApp, setSelectedApp] =
+    useState<ParticipationApplication | null>(null);
 
   // Review Dialog State
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [reviewApp, setReviewApp] = useState<ParticipationApplication | null>(null);
-  const [reviewStatus, setReviewStatus] = useState<"APPROVED" | "WAITLISTED" | "REJECTED">("APPROVED");
+  const [reviewApp, setReviewApp] = useState<ParticipationApplication | null>(
+    null,
+  );
+  const [reviewStatus, setReviewStatus] = useState<
+    "APPROVED" | "WAITLISTED" | "REJECTED"
+  >("APPROVED");
   const [reviewerNotes, setReviewerNotes] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -62,7 +69,8 @@ export default function EngagementApplicationsPage() {
       const review: ApplicationReviewInput = {
         status: reviewStatus,
         reviewer_notes: reviewerNotes,
-        rejection_reason: reviewStatus === "REJECTED" ? rejectionReason : undefined,
+        rejection_reason:
+          reviewStatus === "REJECTED" ? rejectionReason : undefined,
       };
 
       await EngagementService.reviewApplication(reviewApp.id, review);
@@ -78,9 +86,12 @@ export default function EngagementApplicationsPage() {
 
   const filteredApps = applications.filter((app) => {
     const matchesSearch =
-      (app.student_name && app.student_name.toLowerCase().includes(search.toLowerCase())) ||
-      (app.student_roll_number && app.student_roll_number.toLowerCase().includes(search.toLowerCase())) ||
-      (app.statement_of_interest && app.statement_of_interest.toLowerCase().includes(search.toLowerCase()));
+      (app.student_name &&
+        app.student_name.toLowerCase().includes(search.toLowerCase())) ||
+      (app.student_roll_number &&
+        app.student_roll_number.toLowerCase().includes(search.toLowerCase())) ||
+      (app.statement_of_interest &&
+        app.statement_of_interest.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === "ALL" || app.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -94,7 +105,10 @@ export default function EngagementApplicationsPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -108,7 +122,8 @@ export default function EngagementApplicationsPage() {
               Participation Applications & Waitlist
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Review volunteer candidacies, manage safety clearances, and supervise automated waitlists
+              Review volunteer candidacies, manage safety clearances, and
+              supervise automated waitlists
             </p>
           </div>
         </div>
@@ -163,7 +178,9 @@ export default function EngagementApplicationsPage() {
                       <div className="flex items-center gap-2">
                         <GraduationCap className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <span>{app.student_name || "Student Participant"}</span>
+                          <span>
+                            {app.student_name || "Student Participant"}
+                          </span>
                           <span className="block text-[10px] text-muted-foreground font-mono">
                             {app.student_roll_number || "Verified"}
                           </span>
@@ -187,7 +204,9 @@ export default function EngagementApplicationsPage() {
                           <ShieldCheck className="h-3.5 w-3.5" /> Cleared
                         </span>
                       ) : (
-                        <span className="text-amber-500 font-medium">Pending Sign-off</span>
+                        <span className="text-amber-500 font-medium">
+                          Pending Sign-off
+                        </span>
                       )}
                     </td>
 
@@ -198,19 +217,21 @@ export default function EngagementApplicationsPage() {
                             app.status === "APPROVED"
                               ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                               : app.status === "WAITLISTED"
-                              ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                              : app.status === "REJECTED"
-                              ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                              : "bg-blue-500/10 text-blue-500 border border-blue-500/20"
+                                ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                                : app.status === "REJECTED"
+                                  ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                                  : "bg-blue-500/10 text-blue-500 border border-blue-500/20"
                           }`}
                         >
                           {app.status}
                         </span>
-                        {app.status === "WAITLISTED" && app.waitlist_position && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground font-mono flex items-center gap-0.5">
-                            <ListOrdered className="h-3 w-3" /> #{app.waitlist_position}
-                          </span>
-                        )}
+                        {app.status === "WAITLISTED" &&
+                          app.waitlist_position && (
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground font-mono flex items-center gap-0.5">
+                              <ListOrdered className="h-3 w-3" /> #
+                              {app.waitlist_position}
+                            </span>
+                          )}
                       </div>
                     </td>
 
@@ -245,41 +266,63 @@ export default function EngagementApplicationsPage() {
             <div className="bg-card border border-border rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto text-xs">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
-                  <span className="text-[10px] text-muted-foreground block">Application Dossier</span>
+                  <span className="text-[10px] text-muted-foreground block">
+                    Application Dossier
+                  </span>
                   <h2 className="text-base font-bold text-foreground">
                     {selectedApp.student_name || "Applicant Record"}
                   </h2>
                 </div>
-                <button onClick={() => setSelectedApp(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedApp(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-2">
-                  <h4 className="font-semibold text-foreground">Student Statement of Interest</h4>
+                  <h4 className="font-semibold text-foreground">
+                    Student Statement of Interest
+                  </h4>
                   <p className="text-muted-foreground italic">
-                    &ldquo;{selectedApp.statement_of_interest || "No statement provided."}&rdquo;
+                    &ldquo;
+                    {selectedApp.statement_of_interest ||
+                      "No statement provided."}
+                    &rdquo;
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-2.5 rounded-lg bg-background border border-border">
-                    <span className="text-[10px] text-muted-foreground block">Safety Clearance</span>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Safety Clearance
+                    </span>
                     <span className="font-semibold text-emerald-500">
-                      {selectedApp.has_safety_clearance ? "Verified & Cleared" : "Pending Waiver"}
+                      {selectedApp.has_safety_clearance
+                        ? "Verified & Cleared"
+                        : "Pending Waiver"}
                     </span>
                   </div>
                   <div className="p-2.5 rounded-lg bg-background border border-border">
-                    <span className="text-[10px] text-muted-foreground block">Current Status</span>
-                    <span className="font-semibold text-foreground">{selectedApp.status}</span>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Current Status
+                    </span>
+                    <span className="font-semibold text-foreground">
+                      {selectedApp.status}
+                    </span>
                   </div>
                 </div>
 
                 {selectedApp.reviewer_notes && (
                   <div className="p-3 rounded-lg bg-muted/20 border border-border">
-                    <span className="font-semibold text-foreground block mb-0.5">Coordinator Review Notes:</span>
-                    <p className="text-muted-foreground">{selectedApp.reviewer_notes}</p>
+                    <span className="font-semibold text-foreground block mb-0.5">
+                      Coordinator Review Notes:
+                    </span>
+                    <p className="text-muted-foreground">
+                      {selectedApp.reviewer_notes}
+                    </p>
                   </div>
                 )}
               </div>
@@ -305,14 +348,19 @@ export default function EngagementApplicationsPage() {
                   <UserCheck className="h-5 w-5 text-emerald-500" />
                   Review Application
                 </h2>
-                <button onClick={() => setIsReviewOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsReviewOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleReviewSubmit} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Decision *</label>
+                  <label className="font-semibold text-foreground">
+                    Decision *
+                  </label>
                   <select
                     value={reviewStatus}
                     onChange={(e) => setReviewStatus(e.target.value as any)}
@@ -326,7 +374,9 @@ export default function EngagementApplicationsPage() {
 
                 {reviewStatus === "REJECTED" && (
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Rejection Reason *</label>
+                    <label className="font-semibold text-foreground">
+                      Rejection Reason *
+                    </label>
                     <input
                       type="text"
                       required
@@ -339,7 +389,9 @@ export default function EngagementApplicationsPage() {
                 )}
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Coordinator Notes</label>
+                  <label className="font-semibold text-foreground">
+                    Coordinator Notes
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Document feedback or shift allocation notes for the student..."
@@ -372,4 +424,3 @@ export default function EngagementApplicationsPage() {
     </div>
   );
 }
-

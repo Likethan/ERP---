@@ -26,16 +26,57 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { name: "Executive Hub", href: "/app/sustainability", icon: Leaf },
-  { name: "Targets & Baselines", href: "/app/sustainability/targets", icon: Target },
-  { name: "Energy & Grid", href: "/app/sustainability/energy", icon: Zap, badge: "Live" },
-  { name: "Water & Conservation", href: "/app/sustainability/water", icon: Droplets },
-  { name: "Waste & Circularity", href: "/app/sustainability/waste", icon: Trash2 },
-  { name: "Carbon Intelligence", href: "/app/sustainability/carbon", icon: Activity },
-  { name: "Green Initiatives", href: "/app/sustainability/initiatives", icon: Sprout },
-  { name: "Statutory Compliance", href: "/app/sustainability/compliance", icon: ShieldCheck },
-  { name: "IoT Smart Meters", href: "/app/sustainability/iot-meters", icon: Cpu },
-  { name: "Invoice Imports", href: "/app/sustainability/imports", icon: FileSpreadsheet },
-  { name: "Decarb Analytics", href: "/app/sustainability/analytics", icon: BarChart3 },
+  {
+    name: "Targets & Baselines",
+    href: "/app/sustainability/targets",
+    icon: Target,
+  },
+  {
+    name: "Energy & Grid",
+    href: "/app/sustainability/energy",
+    icon: Zap,
+    badge: "Live",
+  },
+  {
+    name: "Water & Conservation",
+    href: "/app/sustainability/water",
+    icon: Droplets,
+  },
+  {
+    name: "Waste & Circularity",
+    href: "/app/sustainability/waste",
+    icon: Trash2,
+  },
+  {
+    name: "Carbon Intelligence",
+    href: "/app/sustainability/carbon",
+    icon: Activity,
+  },
+  {
+    name: "Green Initiatives",
+    href: "/app/sustainability/initiatives",
+    icon: Sprout,
+  },
+  {
+    name: "Statutory Compliance",
+    href: "/app/sustainability/compliance",
+    icon: ShieldCheck,
+  },
+  {
+    name: "IoT Smart Meters",
+    href: "/app/sustainability/iot-meters",
+    icon: Cpu,
+  },
+  {
+    name: "Invoice Imports",
+    href: "/app/sustainability/imports",
+    icon: FileSpreadsheet,
+  },
+  {
+    name: "Decarb Analytics",
+    href: "/app/sustainability/analytics",
+    icon: BarChart3,
+  },
 ];
 
 export function SustainabilityNav({
@@ -122,4 +163,3 @@ export function SustainabilityNav({
     </div>
   );
 }
-

@@ -4,7 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { studentAffairsService } from "@/services/student-affairs.service";
 import { StudentAffairsCalculator } from "@/services/student-affairs-calculator";
-import { GrievanceCaseModel, SACaseStatus, SACasePriority } from "@/types/student-affairs";
+import {
+  GrievanceCaseModel,
+  SACaseStatus,
+  SACasePriority,
+} from "@/types/student-affairs";
 import { StudentAffairsNav } from "@/components/student-affairs/student-affairs-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -23,7 +27,9 @@ import {
 
 export default function CaseIntakeQueuePage() {
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [filter, setFilter] = useState<"PENDING" | "UNASSIGNED" | "CRITICAL" | "ALL">("PENDING");
+  const [filter, setFilter] = useState<
+    "PENDING" | "UNASSIGNED" | "CRITICAL" | "ALL"
+  >("PENDING");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,7 +73,8 @@ export default function CaseIntakeQueuePage() {
             Case Intake, Triage & Prioritization Queue
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Review incoming submissions, validate procedural jurisdiction, adjust priority, and route to authorized officers.
+            Review incoming submissions, validate procedural jurisdiction,
+            adjust priority, and route to authorized officers.
           </p>
         </div>
       </div>
@@ -84,7 +91,8 @@ export default function CaseIntakeQueuePage() {
               : "text-slate-400 hover:text-slate-200"
           }`}
         >
-          Pending Intake ({cases.filter((c) => c.status === "SUBMITTED").length})
+          Pending Intake ({cases.filter((c) => c.status === "SUBMITTED").length}
+          )
         </button>
         <button
           onClick={() => setFilter("UNASSIGNED")}
@@ -94,7 +102,8 @@ export default function CaseIntakeQueuePage() {
               : "text-slate-400 hover:text-slate-200"
           }`}
         >
-          Unassigned Officers ({cases.filter((c) => !c.assigned_officer_id).length})
+          Unassigned Officers (
+          {cases.filter((c) => !c.assigned_officer_id).length})
         </button>
         <button
           onClick={() => setFilter("CRITICAL")}
@@ -104,7 +113,13 @@ export default function CaseIntakeQueuePage() {
               : "text-slate-400 hover:text-slate-200"
           }`}
         >
-          Critical / Urgent ({cases.filter((c) => c.priority === "CRITICAL_URGENT" || c.is_escalated).length})
+          Critical / Urgent (
+          {
+            cases.filter(
+              (c) => c.priority === "CRITICAL_URGENT" || c.is_escalated,
+            ).length
+          }
+          )
         </button>
         <button
           onClick={() => setFilter("ALL")}
@@ -129,16 +144,26 @@ export default function CaseIntakeQueuePage() {
                 <th className="py-3 px-4 font-medium">SLA Triage Countdown</th>
                 <th className="py-3 px-4 font-medium">Priority</th>
                 <th className="py-3 px-4 font-medium">Assigned Officer</th>
-                <th className="py-3 px-4 font-medium text-right">Triage Action</th>
+                <th className="py-3 px-4 font-medium text-right">
+                  Triage Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {filtered.map((c) => {
-                const priorityBadge = StudentAffairsCalculator.getPriorityBadge(c.priority);
-                const sla = StudentAffairsCalculator.calculateSlaStatus(c.target_response_date, c.status);
+                const priorityBadge = StudentAffairsCalculator.getPriorityBadge(
+                  c.priority,
+                );
+                const sla = StudentAffairsCalculator.calculateSlaStatus(
+                  c.target_response_date,
+                  c.status,
+                );
 
                 return (
-                  <tr key={c.id} className="hover:bg-slate-800/30 transition-colors">
+                  <tr
+                    key={c.id}
+                    className="hover:bg-slate-800/30 transition-colors"
+                  >
                     <td className="py-3 px-4">
                       <div className="font-mono font-semibold text-indigo-400">
                         {c.case_number}
@@ -156,12 +181,18 @@ export default function CaseIntakeQueuePage() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className={`text-[11px] font-mono font-medium ${sla.statusLabel === "BREACHED" ? "text-rose-400 font-bold" : "text-emerald-400"}`}>
-                        {sla.statusLabel === "RESOLVED" ? "Acknowledged" : `${sla.hoursRemaining}h remaining`}
+                      <span
+                        className={`text-[11px] font-mono font-medium ${sla.statusLabel === "BREACHED" ? "text-rose-400 font-bold" : "text-emerald-400"}`}
+                      >
+                        {sla.statusLabel === "RESOLVED"
+                          ? "Acknowledged"
+                          : `${sla.hoursRemaining}h remaining`}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] border ${priorityBadge.className}`}>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] border ${priorityBadge.className}`}
+                      >
                         {priorityBadge.label}
                       </span>
                     </td>
@@ -169,12 +200,19 @@ export default function CaseIntakeQueuePage() {
                       {c.assigned_officer_id ? (
                         <span className="text-emerald-400">Assigned</span>
                       ) : (
-                        <span className="text-amber-400 italic">Unassigned</span>
+                        <span className="text-amber-400 italic">
+                          Unassigned
+                        </span>
                       )}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <Link href={`/app/student-affairs/assignments?caseId=${c.id}`}>
-                        <Button size="sm" className="h-7 text-xs bg-indigo-600 hover:bg-indigo-500 text-white gap-1 px-3">
+                      <Link
+                        href={`/app/student-affairs/assignments?caseId=${c.id}`}
+                      >
+                        <Button
+                          size="sm"
+                          className="h-7 text-xs bg-indigo-600 hover:bg-indigo-500 text-white gap-1 px-3"
+                        >
                           Assign & Triage
                           <ArrowRight className="h-3 w-3" />
                         </Button>

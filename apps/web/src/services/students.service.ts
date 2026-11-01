@@ -43,8 +43,6 @@ class StudentsService {
   async list(
     params?: StudentFilterParams,
   ): Promise<PaginatedResponse<StudentComprehensiveDetail>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     let filtered = [...this.students];
 
     if (params?.search) {
@@ -126,7 +124,6 @@ class StudentsService {
   async getById(
     id: string,
   ): Promise<ApiResponse<StudentComprehensiveDetail | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const student = this.students.find(
       (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );
@@ -168,7 +165,6 @@ class StudentsService {
   async create(
     data: Partial<StudentComprehensiveDetail>,
   ): Promise<ApiResponse<StudentComprehensiveDetail>> {
-    await new Promise((r) => setTimeout(r, 100));
     const newStudent: StudentComprehensiveDetail = {
       id: `stu-${Date.now()}`,
       rollNumber: data.rollNumber || `24CSE0${this.students.length + 101}`,
@@ -285,7 +281,6 @@ class StudentsService {
     id: string,
     data: Partial<StudentComprehensiveDetail>,
   ): Promise<ApiResponse<StudentComprehensiveDetail>> {
-    await new Promise((r) => setTimeout(r, 80));
     const idx = this.students.findIndex(
       (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );
@@ -306,7 +301,6 @@ class StudentsService {
   async getGuardians(
     studentId: string,
   ): Promise<ApiResponse<GuardianRecord[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.guardiansPool[studentId] || [],
@@ -317,7 +311,6 @@ class StudentsService {
     studentId: string,
     data: Partial<GuardianRecord>,
   ): Promise<ApiResponse<GuardianRecord>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newGrd: GuardianRecord = {
       id: `grd-${Date.now()}`,
       name: data.name || "Guardian Name",
@@ -344,7 +337,6 @@ class StudentsService {
     guardianId: string,
     data: Partial<GuardianRecord>,
   ): Promise<ApiResponse<GuardianRecord>> {
-    await new Promise((r) => setTimeout(r, 60));
     const list = this.guardiansPool[studentId] || [];
     const idx = list.findIndex((g) => g.id === guardianId);
     if (idx === -1) throw new Error("Guardian record not found");
@@ -356,7 +348,6 @@ class StudentsService {
     studentId: string,
     guardianId: string,
   ): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     if (this.guardiansPool[studentId]) {
       this.guardiansPool[studentId] = this.guardiansPool[studentId].filter(
         (g) => g.id !== guardianId,
@@ -372,7 +363,6 @@ class StudentsService {
   async getDocuments(
     studentId: string,
   ): Promise<ApiResponse<PersonDocument[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.documentsPool[studentId] || [],
@@ -383,7 +373,6 @@ class StudentsService {
     studentId: string,
     data: Partial<PersonDocument>,
   ): Promise<ApiResponse<PersonDocument>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newDoc: PersonDocument = {
       id: `doc-${Date.now()}`,
       name: data.name || "Uploaded Certificate",
@@ -407,7 +396,6 @@ class StudentsService {
     documentId: string,
     verifierName = "Verification Officer",
   ): Promise<ApiResponse<PersonDocument>> {
-    await new Promise((r) => setTimeout(r, 60));
     const list = this.documentsPool[studentId] || [];
     const doc = list.find((d) => d.id === documentId);
     if (!doc) throw new Error("Document not found");
@@ -422,7 +410,6 @@ class StudentsService {
     documentId: string,
     reason: string,
   ): Promise<ApiResponse<PersonDocument>> {
-    await new Promise((r) => setTimeout(r, 60));
     const list = this.documentsPool[studentId] || [];
     const doc = list.find((d) => d.id === documentId);
     if (!doc) throw new Error("Document not found");
@@ -435,7 +422,6 @@ class StudentsService {
     studentId: string,
     documentId: string,
   ): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     if (this.documentsPool[studentId]) {
       this.documentsPool[studentId] = this.documentsPool[studentId].filter(
         (d) => d.id !== documentId,
@@ -451,7 +437,6 @@ class StudentsService {
   async getMilestones(
     studentId: string,
   ): Promise<ApiResponse<AcademicMilestone[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.milestonesPool[studentId] || [],
@@ -462,7 +447,6 @@ class StudentsService {
     studentId: string,
     data: Partial<AcademicMilestone>,
   ): Promise<ApiResponse<AcademicMilestone>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newMls: AcademicMilestone = {
       id: `mls-${Date.now()}`,
       title: data.title || "Academic Achievement",

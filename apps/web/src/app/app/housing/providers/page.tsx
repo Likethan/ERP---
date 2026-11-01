@@ -69,7 +69,9 @@ export default function ProvidersDirectoryPage() {
     try {
       const payload: ProviderCreateInput = {
         ...formData,
-        slug: formData.slug || formData.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        slug:
+          formData.slug ||
+          formData.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       };
       await HousingService.createProvider(payload);
       setIsModalOpen(false);
@@ -167,7 +169,8 @@ export default function ProvidersDirectoryPage() {
               Accommodation Providers & Landlord Directory
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Accredited private landlords, university trusts, and corporate accommodation operators with vetted institutional MoUs.
+              Accredited private landlords, university trusts, and corporate
+              accommodation operators with vetted institutional MoUs.
             </p>
           </div>
 
@@ -202,7 +205,9 @@ export default function ProvidersDirectoryPage() {
               <option value="ALL">All Provider Types</option>
               <option value="HOUSING_COMPANY">Housing Company</option>
               <option value="PRIVATE_LANDLORD">Private Landlord</option>
-              <option value="STUDENT_RESIDENCE_TRUST">Student Residence Trust</option>
+              <option value="STUDENT_RESIDENCE_TRUST">
+                Student Residence Trust
+              </option>
               <option value="UNIVERSITY_AFFILIATE">University Affiliate</option>
               <option value="HOMESTAY_HOST">Homestay Host</option>
             </select>
@@ -225,10 +230,14 @@ export default function ProvidersDirectoryPage() {
 
         {/* Providers list */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading providers and verification profiles...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading providers and verification profiles...
+          </div>
         ) : filteredProviders.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No accommodation providers found matching your filter criteria.</p>
+            <p className="text-slate-400">
+              No accommodation providers found matching your filter criteria.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -254,7 +263,9 @@ export default function ProvidersDirectoryPage() {
                   <div className="flex items-center justify-between text-xs text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60">
                     <div className="flex items-center gap-1 text-amber-400 font-semibold">
                       <Star className="w-4 h-4 fill-amber-400" />
-                      <span>{prov.rating ? prov.rating.toFixed(1) : "N/A"} / 5.0</span>
+                      <span>
+                        {prov.rating ? prov.rating.toFixed(1) : "N/A"} / 5.0
+                      </span>
                     </div>
                     {prov.mou_reference && (
                       <div className="flex items-center gap-1 text-slate-300">
@@ -266,7 +277,9 @@ export default function ProvidersDirectoryPage() {
 
                   {/* Contact details */}
                   <div className="space-y-1.5 text-xs text-slate-300">
-                    <p className="font-medium text-slate-200">Contact: {prov.contact_name}</p>
+                    <p className="font-medium text-slate-200">
+                      Contact: {prov.contact_name}
+                    </p>
                     <div className="flex items-center gap-2 text-slate-400">
                       <Mail className="w-3.5 h-3.5" />
                       <span className="truncate">{prov.contact_email}</span>
@@ -338,7 +351,9 @@ export default function ProvidersDirectoryPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h2 className="text-lg font-bold text-white">Add Accommodation Provider / Landlord</h2>
+                <h2 className="text-lg font-bold text-white">
+                  Add Accommodation Provider / Landlord
+                </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="text-slate-400 hover:text-white"
@@ -381,8 +396,12 @@ export default function ProvidersDirectoryPage() {
                     >
                       <option value="HOUSING_COMPANY">Housing Company</option>
                       <option value="PRIVATE_LANDLORD">Private Landlord</option>
-                      <option value="STUDENT_RESIDENCE_TRUST">Student Residence Trust</option>
-                      <option value="UNIVERSITY_AFFILIATE">University Affiliate</option>
+                      <option value="STUDENT_RESIDENCE_TRUST">
+                        Student Residence Trust
+                      </option>
+                      <option value="UNIVERSITY_AFFILIATE">
+                        University Affiliate
+                      </option>
                       <option value="HOMESTAY_HOST">Homestay Host</option>
                     </select>
                   </div>
@@ -425,7 +444,10 @@ export default function ProvidersDirectoryPage() {
                       type="text"
                       value={formData.mou_reference || ""}
                       onChange={(e) =>
-                        setFormData({ ...formData, mou_reference: e.target.value })
+                        setFormData({
+                          ...formData,
+                          mou_reference: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 font-mono"
                       placeholder="MOU-VSB-2026-H04"
@@ -442,7 +464,10 @@ export default function ProvidersDirectoryPage() {
                       type="date"
                       value={formData.mou_valid_from}
                       onChange={(e) =>
-                        setFormData({ ...formData, mou_valid_from: e.target.value })
+                        setFormData({
+                          ...formData,
+                          mou_valid_from: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -455,7 +480,10 @@ export default function ProvidersDirectoryPage() {
                       type="date"
                       value={formData.mou_valid_to}
                       onChange={(e) =>
-                        setFormData({ ...formData, mou_valid_to: e.target.value })
+                        setFormData({
+                          ...formData,
+                          mou_valid_to: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
@@ -476,7 +504,10 @@ export default function ProvidersDirectoryPage() {
                         type="text"
                         value={formData.contact_name}
                         onChange={(e) =>
-                          setFormData({ ...formData, contact_name: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contact_name: e.target.value,
+                          })
                         }
                         className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                       />
@@ -490,7 +521,10 @@ export default function ProvidersDirectoryPage() {
                         type="email"
                         value={formData.contact_email}
                         onChange={(e) =>
-                          setFormData({ ...formData, contact_email: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contact_email: e.target.value,
+                          })
                         }
                         className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                       />
@@ -507,7 +541,10 @@ export default function ProvidersDirectoryPage() {
                         type="tel"
                         value={formData.contact_phone}
                         onChange={(e) =>
-                          setFormData({ ...formData, contact_phone: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contact_phone: e.target.value,
+                          })
                         }
                         className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                       />

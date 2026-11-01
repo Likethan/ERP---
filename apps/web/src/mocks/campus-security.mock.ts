@@ -213,7 +213,8 @@ export const MOCK_VISITOR_REQUESTS: VisitorRequest[] = [
     visitor_category: "VIP",
     host_name: "Prof. S. Swaminathan",
     host_department: "Environmental Sciences",
-    visit_purpose: "Keynote Address: Climate Resilient Higher Education Campuses",
+    visit_purpose:
+      "Keynote Address: Climate Resilient Higher Education Campuses",
     destination_description: "Auditorium Hall A",
     expected_arrival_at: "2026-10-30T10:00:00Z",
     expected_departure_at: "2026-10-30T16:00:00Z",
@@ -286,7 +287,8 @@ export const MOCK_VISITOR_PASSES: VisitorPass[] = [
     visitor_category: "PARENT",
     host_name: "Ananya Iyer (Student CS-2026-042)",
     destination: "Garnet Residence Hall",
-    signed_token: "VT-tenant-default:VP-2026-0081:1793289600:a1b2c3d4e5f6g7h8:7f9a8b1c2d3e4f5a6b7c8d9e",
+    signed_token:
+      "VT-tenant-default:VP-2026-0081:1793289600:a1b2c3d4e5f6g7h8:7f9a8b1c2d3e4f5a6b7c8d9e",
     valid_from: "2026-10-29T14:00:00Z",
     valid_until: "2026-10-29T18:00:00Z",
     status: "CHECKED_IN",
@@ -305,7 +307,8 @@ export const MOCK_VISITOR_PASSES: VisitorPass[] = [
     visitor_category: "VIP",
     host_name: "Prof. S. Swaminathan",
     destination: "Auditorium Hall A",
-    signed_token: "VT-tenant-default:VP-2026-0080:1793376000:c9d8e7f6a5b4c3d2:9a8b7c6d5e4f3a2b1c0d9e8f",
+    signed_token:
+      "VT-tenant-default:VP-2026-0080:1793376000:c9d8e7f6a5b4c3d2:9a8b7c6d5e4f3a2b1c0d9e8f",
     valid_from: "2026-10-30T10:00:00Z",
     valid_until: "2026-10-30T16:00:00Z",
     status: "ISSUED",
@@ -322,7 +325,8 @@ export const MOCK_VISITOR_PASSES: VisitorPass[] = [
     visitor_category: "INTERVIEW_CANDIDATE",
     host_name: "Placement Office",
     destination: "Placement Interview Chambers",
-    signed_token: "VT-tenant-default:VP-2026-0078:1793100000:f1e2d3c4b5a69788:1a2b3c4d5e6f7a8b9c0d1e2f",
+    signed_token:
+      "VT-tenant-default:VP-2026-0078:1793100000:f1e2d3c4b5a69788:1a2b3c4d5e6f7a8b9c0d1e2f",
     valid_from: "2026-10-28T09:00:00Z",
     valid_until: "2026-10-28T17:00:00Z",
     status: "CHECKED_OUT",
@@ -391,7 +395,8 @@ export const MOCK_ACCESS_GRANTS: AccessGrant[] = [
     valid_from: "2026-01-05T00:00:00Z",
     valid_until: "2026-12-31T23:59:59Z",
     is_temporary: false,
-    grant_reason: "Quarterly preventative maintenance of UPS and server rack power distribution units",
+    grant_reason:
+      "Quarterly preventative maintenance of UPS and server rack power distribution units",
     status: "ACTIVE",
     created_at: "2026-01-05T11:00:00Z",
     updated_at: "2026-01-05T11:00:00Z",
@@ -407,7 +412,8 @@ export const MOCK_ACCESS_GRANTS: AccessGrant[] = [
     valid_from: "2026-02-01T00:00:00Z",
     valid_until: "2026-07-31T23:59:59Z",
     is_temporary: true,
-    grant_reason: "Sponsored research trial access for synthetic biology incubation",
+    grant_reason:
+      "Sponsored research trial access for synthetic biology incubation",
     status: "ACTIVE",
     created_at: "2026-02-01T09:00:00Z",
     updated_at: "2026-02-01T09:00:00Z",
@@ -427,10 +433,12 @@ export const MOCK_INCIDENTS: CampusSecurityIncident[] = [
     reported_by_name: "Turnstile Monitoring Post",
     reported_location: "Turnstile Gate 3 East",
     checkpoint_id: "chkpt-003",
-    description: "Individual without student badge attempted to pass turnstile immediately behind verified student.",
+    description:
+      "Individual without student badge attempted to pass turnstile immediately behind verified student.",
     assigned_team: "Gate Operations Squad",
     is_escalated: false,
-    resolution_summary: "Individual intercepted by guard on duty; verified as external delivery person; directed to Main Gate visitor registration desk.",
+    resolution_summary:
+      "Individual intercepted by guard on duty; verified as external delivery person; directed to Main Gate visitor registration desk.",
     resolved_at: "2026-10-28T09:10:00Z",
     created_at: "2026-10-28T08:45:00Z",
     updated_at: "2026-10-28T09:10:00Z",
@@ -447,7 +455,8 @@ export const MOCK_INCIDENTS: CampusSecurityIncident[] = [
     reported_by_name: "Building Management System (BMS)",
     reported_location: "Franklin Science Complex Stairwell 2",
     zone_id: "zone-004",
-    description: "Fire escape door contact switch open for > 5 minutes without badge swipe.",
+    description:
+      "Fire escape door contact switch open for > 5 minutes without badge swipe.",
     assigned_team: "Patrol Alpha",
     is_escalated: false,
     created_at: "2026-10-29T16:20:00Z",
@@ -464,15 +473,21 @@ export const MOCK_EMERGENCY_EVENTS: EmergencyEvent[] = [
     event_type: "SEVERE_WEATHER",
     severity: "WARNING",
     status: "ALL_CLEAR",
-    affected_campus_areas: "Basement Parking B1, East Perimeter Low-Lying Storm Water Drain",
+    affected_campus_areas:
+      "Basement Parking B1, East Perimeter Low-Lying Storm Water Drain",
     affected_zone_ids: ["zone-001"],
     coordinator_name: "Chief Security Officer & Disaster Management Lead",
-    emergency_broadcast_message: "Heavy rain advisory: Avoid lower basement parking ramp; vehicles relocated to North Elevated Quad.",
+    emergency_broadcast_message:
+      "Heavy rain advisory: Avoid lower basement parking ramp; vehicles relocated to North Elevated Quad.",
     initiated_at: "2026-10-15T15:00:00Z",
     all_clear_at: "2026-10-15T21:30:00Z",
     closed_at: "2026-10-16T10:00:00Z",
-    after_action_report: "Stormwater submersible pumps engaged promptly. No structural damage or vehicle flooding reported.",
-    external_services_contacted: ["CIVIL_DISASTER_MANAGEMENT", "CAMPUS_FACILITIES"],
+    after_action_report:
+      "Stormwater submersible pumps engaged promptly. No structural damage or vehicle flooding reported.",
+    external_services_contacted: [
+      "CIVIL_DISASTER_MANAGEMENT",
+      "CAMPUS_FACILITIES",
+    ],
     tasks: [
       {
         id: "task-001",
@@ -520,9 +535,11 @@ export const MOCK_PATROL_RECORDS: PatrolCheckpointRecord[] = [
     scanned_at: "2026-10-29T02:04:15Z",
     status: "COMPLETED",
     verification_token: "NFC-CHK-01-VERIFIED",
-    observations: "Perimeter floodlights fully operational; gate locked; no abnormalities.",
+    observations:
+      "Perimeter floodlights fully operational; gate locked; no abnormalities.",
     supervisor_reviewed: true,
-    supervisor_review_notes: "Reviewed and confirmed on CCTV log by Shift Commander.",
+    supervisor_review_notes:
+      "Reviewed and confirmed on CCTV log by Shift Commander.",
     created_at: "2026-10-29T02:04:15Z",
     updated_at: "2026-10-29T06:00:00Z",
   },

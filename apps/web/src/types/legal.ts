@@ -34,10 +34,7 @@ export type ContractStatus =
   | "ARCHIVED";
 
 export type ConfidentialityLevel =
-  | "PUBLIC"
-  | "INTERNAL"
-  | "CONFIDENTIAL"
-  | "RESTRICTED_LEGAL";
+  "PUBLIC" | "INTERNAL" | "CONFIDENTIAL" | "RESTRICTED_LEGAL";
 
 export type ObligationType =
   | "DELIVERABLE"

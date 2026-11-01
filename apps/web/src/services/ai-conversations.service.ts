@@ -21,7 +21,6 @@ class AiConversationsService {
     isArchived?: boolean;
     search?: string;
   }): Promise<ApiResponse<AIConversation[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.conversations];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -58,7 +57,6 @@ class AiConversationsService {
   async getConversation(
     id: string,
   ): Promise<ApiResponse<AIConversation | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const conv = this.conversations.find((c) => c.id === id) || null;
     return { success: Boolean(conv), data: conv };
   }
@@ -68,7 +66,6 @@ class AiConversationsService {
     domain?: IntelligenceDomain;
     firstMessage?: string;
   }): Promise<ApiResponse<AIConversation>> {
-    await new Promise((r) => setTimeout(r, 60));
     const id = `conv-${Date.now().toString(36)}`;
     const newConv: AIConversation = {
       id,
@@ -107,7 +104,6 @@ class AiConversationsService {
     id: string,
     newTitle: string,
   ): Promise<ApiResponse<AIConversation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
 
@@ -119,7 +115,6 @@ class AiConversationsService {
   async togglePinConversation(
     id: string,
   ): Promise<ApiResponse<AIConversation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
 
@@ -131,7 +126,6 @@ class AiConversationsService {
   async toggleSaveConversation(
     id: string,
   ): Promise<ApiResponse<AIConversation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
 
@@ -143,7 +137,6 @@ class AiConversationsService {
   async archiveConversation(
     id: string,
   ): Promise<ApiResponse<AIConversation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const conv = this.conversations.find((c) => c.id === id);
     if (!conv) return { success: false, data: null };
 
@@ -153,7 +146,6 @@ class AiConversationsService {
   }
 
   async deleteConversation(id: string): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     const idx = this.conversations.findIndex((c) => c.id === id);
     if (idx === -1) return { success: false, data: false };
 
@@ -163,7 +155,6 @@ class AiConversationsService {
   }
 
   async getMessages(conversationId: string): Promise<ApiResponse<AIMessage[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     const list = this.messages[conversationId] || [];
     return { success: true, data: [...list] };
   }

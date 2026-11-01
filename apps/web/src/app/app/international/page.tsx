@@ -33,7 +33,9 @@ import {
 } from "@/types/international";
 
 export default function InternationalDashboardPage() {
-  const [metrics, setMetrics] = useState<InternationalDashboardMetrics | null>(null);
+  const [metrics, setMetrics] = useState<InternationalDashboardMetrics | null>(
+    null,
+  );
   const [partners, setPartners] = useState<InternationalPartner[]>([]);
   const [agreements, setAgreements] = useState<InstitutionalAgreement[]>([]);
   const [programs, setPrograms] = useState<MobilityProgram[]>([]);
@@ -64,7 +66,9 @@ export default function InternationalDashboardPage() {
     loadData();
   }, []);
 
-  const expiringAgreements = agreements.filter((a) => a.is_expiring_soon || a.status === "EXPIRING");
+  const expiringAgreements = agreements.filter(
+    (a) => a.is_expiring_soon || a.status === "EXPIRING",
+  );
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -80,11 +84,15 @@ export default function InternationalDashboardPage() {
               </span>
               <div>
                 <h4 className="text-sm font-semibold text-amber-200">
-                  {expiringAgreements.length} Institutional Agreement(s) Approaching Expiration
+                  {expiringAgreements.length} Institutional Agreement(s)
+                  Approaching Expiration
                 </h4>
                 <p className="text-xs text-amber-300/80 mt-0.5">
                   Renewal notice windows active for:{" "}
-                  {expiringAgreements.map((a) => a.agreement_title || a.title).join(", ")}. Please initiate extension amendments or renewal reviews.
+                  {expiringAgreements
+                    .map((a) => a.agreement_title || a.title)
+                    .join(", ")}
+                  . Please initiate extension amendments or renewal reviews.
                 </p>
               </div>
             </div>
@@ -101,16 +109,22 @@ export default function InternationalDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md relative overflow-hidden group hover:border-cyan-500/40 transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Partners</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Active Partners
+              </span>
               <span className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
                 <Building2 className="h-4 w-4" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-white tracking-tight">
-                {loading ? "..." : metrics?.total_active_partners || partners.length}
+                {loading
+                  ? "..."
+                  : metrics?.total_active_partners || partners.length}
               </span>
-              <span className="text-xs text-cyan-400 font-medium">Global Network</span>
+              <span className="text-xs text-cyan-400 font-medium">
+                Global Network
+              </span>
             </div>
             <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
               <span>{agreements.length} Total MoUs & Agreements</span>
@@ -119,7 +133,9 @@ export default function InternationalDashboardPage() {
 
           <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md relative overflow-hidden group hover:border-emerald-500/40 transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Outbound Scholars</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Outbound Scholars
+              </span>
               <span className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
                 <MapPin className="h-4 w-4" />
               </span>
@@ -128,7 +144,9 @@ export default function InternationalDashboardPage() {
               <span className="text-2xl font-bold text-white tracking-tight">
                 {loading ? "..." : metrics?.active_outbound_students || 19}
               </span>
-              <span className="text-xs text-emerald-400 font-medium">Enrolled Abroad</span>
+              <span className="text-xs text-emerald-400 font-medium">
+                Enrolled Abroad
+              </span>
             </div>
             <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
               <span>Across 6 partner countries</span>
@@ -137,7 +155,9 @@ export default function InternationalDashboardPage() {
 
           <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md relative overflow-hidden group hover:border-purple-500/40 transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Inbound Exchange</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Inbound Exchange
+              </span>
               <span className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
                 <DoorOpen className="h-4 w-4" />
               </span>
@@ -146,7 +166,9 @@ export default function InternationalDashboardPage() {
               <span className="text-2xl font-bold text-white tracking-tight">
                 {loading ? "..." : metrics?.active_inbound_students || 7}
               </span>
-              <span className="text-xs text-purple-400 font-medium">On-Campus</span>
+              <span className="text-xs text-purple-400 font-medium">
+                On-Campus
+              </span>
             </div>
             <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
               <span>100% Orientation Completed</span>
@@ -155,16 +177,25 @@ export default function InternationalDashboardPage() {
 
           <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md relative overflow-hidden group hover:border-amber-500/40 transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Travel Grants Disbursed</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Travel Grants Disbursed
+              </span>
               <span className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
                 <Award className="h-4 w-4" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-white tracking-tight">
-                ${loading ? "..." : (metrics?.total_scholarship_disbursed || 45000).toLocaleString()}
+                $
+                {loading
+                  ? "..."
+                  : (
+                      metrics?.total_scholarship_disbursed || 45000
+                    ).toLocaleString()}
               </span>
-              <span className="text-xs text-amber-400 font-medium">Mobility Aid</span>
+              <span className="text-xs text-amber-400 font-medium">
+                Mobility Aid
+              </span>
             </div>
             <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
               <span>Linked to Finance Ledger</span>
@@ -183,7 +214,8 @@ export default function InternationalDashboardPage() {
                   Published Exchange Programs & Opportunities
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Semester exchanges, research fellowships, and global classrooms currently accepting applications
+                  Semester exchanges, research fellowships, and global
+                  classrooms currently accepting applications
                 </p>
               </div>
               <Link
@@ -216,12 +248,16 @@ export default function InternationalDashboardPage() {
                     </h4>
                     <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                       <Globe className="h-3 w-3 text-cyan-400" />
-                      {prog.partner_name || prog.partnerName} ({prog.partner_country || prog.partnerCountry})
+                      {prog.partner_name || prog.partnerName} (
+                      {prog.partner_country || prog.partnerCountry})
                     </p>
 
                     <div className="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap gap-2 text-[11px] text-slate-300">
                       <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                        Min CGPA: {prog.min_cgpa_requirement || prog.minCgpaRequirement || "7.0"}
+                        Min CGPA:{" "}
+                        {prog.min_cgpa_requirement ||
+                          prog.minCgpaRequirement ||
+                          "7.0"}
                       </span>
                       <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                         Term: {prog.term_type || prog.termType}
@@ -232,7 +268,8 @@ export default function InternationalDashboardPage() {
                   <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
                     <span className="text-[11px] text-amber-400/90 flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      Deadline: {prog.application_deadline || prog.applicationDeadline}
+                      Deadline:{" "}
+                      {prog.application_deadline || prog.applicationDeadline}
                     </span>
                     <Link
                       href={`/app/international/programs/${prog.id}`}
@@ -260,7 +297,9 @@ export default function InternationalDashboardPage() {
 
             <div className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
               {applications.length === 0 ? (
-                <p className="text-xs text-slate-500 py-4 text-center">No pending applications</p>
+                <p className="text-xs text-slate-500 py-4 text-center">
+                  No pending applications
+                </p>
               ) : (
                 applications.slice(0, 4).map((app) => (
                   <div
@@ -269,7 +308,9 @@ export default function InternationalDashboardPage() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-white">
-                        {app.student_name || app.studentName || "Student Applicant"}
+                        {app.student_name ||
+                          app.studentName ||
+                          "Student Applicant"}
                       </span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
                         {app.status}
@@ -279,7 +320,11 @@ export default function InternationalDashboardPage() {
                       {app.program_title || app.programTitle}
                     </p>
                     <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>Ref: {app.application_reference_number || app.applicationReferenceNumber}</span>
+                      <span>
+                        Ref:{" "}
+                        {app.application_reference_number ||
+                          app.applicationReferenceNumber}
+                      </span>
                       <Link
                         href={`/app/international/applications/review`}
                         className="text-cyan-400 hover:underline"
@@ -302,7 +347,9 @@ export default function InternationalDashboardPage() {
 
             {/* Quick Links Section */}
             <div className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-2">
-              <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Quick Actions</span>
+              <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Quick Actions
+              </span>
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <Link
                   href="/app/international/partners"

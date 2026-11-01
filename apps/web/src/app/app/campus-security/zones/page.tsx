@@ -25,7 +25,10 @@ export default function SecurityZonesPage() {
   const [levelFilter, setLevelFilter] = useState<string>("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Form state
   const [form, setForm] = useState({
@@ -102,14 +105,20 @@ export default function SecurityZonesPage() {
     const matchesSearch =
       z.name.toLowerCase().includes(search.toLowerCase()) ||
       z.code.toLowerCase().includes(search.toLowerCase()) ||
-      (z.building_name && z.building_name.toLowerCase().includes(search.toLowerCase()));
+      (z.building_name &&
+        z.building_name.toLowerCase().includes(search.toLowerCase()));
 
-    const matchesFilter = levelFilter === "ALL" || z.clearance_level === levelFilter;
+    const matchesFilter =
+      levelFilter === "ALL" || z.clearance_level === levelFilter;
     return matchesSearch && matchesFilter;
   });
 
-  const highSecurityCount = zones.filter((z) => z.clearance_level === "HIGH_SECURITY").length;
-  const restrictedCount = zones.filter((z) => z.clearance_level === "RESTRICTED").length;
+  const highSecurityCount = zones.filter(
+    (z) => z.clearance_level === "HIGH_SECURITY",
+  ).length;
+  const restrictedCount = zones.filter(
+    (z) => z.clearance_level === "RESTRICTED",
+  ).length;
   const escortRequiredCount = zones.filter((z) => z.requires_escort).length;
 
   const getClearanceBadge = (level: ClearanceLevel) => {
@@ -162,7 +171,8 @@ export default function SecurityZonesPage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Configure physical clearance tiers, access rules, escort mandates, and evacuation assembly hubs across institutional facilities.
+            Configure physical clearance tiers, access rules, escort mandates,
+            and evacuation assembly hubs across institutional facilities.
           </p>
         </div>
 
@@ -201,38 +211,62 @@ export default function SecurityZonesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Zones</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Total Zones
+            </span>
             <Building className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{zones.length}</div>
-          <div className="text-xs text-slate-500 mt-1">Institutional sectors mapped</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {zones.length}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Institutional sectors mapped
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">High Security</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              High Security
+            </span>
             <ShieldAlert className="w-5 h-5 text-red-500" />
           </div>
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">{highSecurityCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Data centers & server vaults</div>
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">
+            {highSecurityCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Data centers & server vaults
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Restricted Areas</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Restricted Areas
+            </span>
             <AlertTriangle className="w-5 h-5 text-amber-500" />
           </div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">{restrictedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Research labs & chemical storage</div>
+          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">
+            {restrictedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Research labs & chemical storage
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Escort Required</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Escort Required
+            </span>
             <Users className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">{escortRequiredCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Visitors require authorized escort</div>
+          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
+            {escortRequiredCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Visitors require authorized escort
+          </div>
         </div>
       </div>
 
@@ -251,21 +285,26 @@ export default function SecurityZonesPage() {
 
         <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
           <Filter className="w-4 h-4 text-slate-400 mr-1 shrink-0" />
-          {["ALL", "HIGH_SECURITY", "RESTRICTED", "FACULTY_STAFF_ONLY", "CAMPUS_GENERAL", "PUBLIC"].map(
-            (lvl) => (
-              <button
-                key={lvl}
-                onClick={() => setLevelFilter(lvl)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                  levelFilter === lvl
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
-              >
-                {lvl.replace(/_/g, " ")}
-              </button>
-            )
-          )}
+          {[
+            "ALL",
+            "HIGH_SECURITY",
+            "RESTRICTED",
+            "FACULTY_STAFF_ONLY",
+            "CAMPUS_GENERAL",
+            "PUBLIC",
+          ].map((lvl) => (
+            <button
+              key={lvl}
+              onClick={() => setLevelFilter(lvl)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                levelFilter === lvl
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
+              }`}
+            >
+              {lvl.replace(/_/g, " ")}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -287,29 +326,46 @@ export default function SecurityZonesPage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     Loading security clearance zones...
                   </td>
                 </tr>
               ) : filteredZones.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     No security zones matching the current criteria.
                   </td>
                 </tr>
               ) : (
                 filteredZones.map((zone) => (
-                  <tr key={zone.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                  <tr
+                    key={zone.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors"
+                  >
                     <td className="px-6 py-4">
-                      <div className="font-semibold text-slate-900 dark:text-white">{zone.name}</div>
+                      <div className="font-semibold text-slate-900 dark:text-white">
+                        {zone.name}
+                      </div>
                       <div className="font-mono text-xs text-indigo-600 dark:text-indigo-400 mt-0.5">
                         {zone.code}
                       </div>
                     </td>
-                    <td className="px-6 py-4">{getClearanceBadge(zone.clearance_level)}</td>
                     <td className="px-6 py-4">
-                      <div className="text-slate-900 dark:text-slate-200">{zone.building_name || "Campus Main"}</div>
-                      <div className="text-xs text-slate-500">Floor {zone.floor_number ?? 1}</div>
+                      {getClearanceBadge(zone.clearance_level)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-slate-900 dark:text-slate-200">
+                        {zone.building_name || "Campus Main"}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        Floor {zone.floor_number ?? 1}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       {zone.requires_escort ? (
@@ -318,17 +374,25 @@ export default function SecurityZonesPage() {
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Self-Access
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />{" "}
+                          Self-Access
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="font-mono text-xs">{zone.max_occupancy ? `${zone.max_occupancy} persons` : "Uncapped"}</span>
+                      <span className="font-mono text-xs">
+                        {zone.max_occupancy
+                          ? `${zone.max_occupancy} persons`
+                          : "Uncapped"}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400">
                         <Compass className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                        <span>{zone.emergency_assembly_point || "Assembly Point A (Campus Quad)"}</span>
+                        <span>
+                          {zone.emergency_assembly_point ||
+                            "Assembly Point A (Campus Quad)"}
+                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -378,7 +442,9 @@ export default function SecurityZonesPage() {
                     required
                     placeholder="e.g. ZONE-LAB-B"
                     value={form.code}
-                    onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
+                    onChange={(e) =>
+                      setForm({ ...form, code: e.target.value.toUpperCase() })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -403,12 +469,19 @@ export default function SecurityZonesPage() {
                 </label>
                 <select
                   value={form.clearance_level}
-                  onChange={(e) => setForm({ ...form, clearance_level: e.target.value as ClearanceLevel })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      clearance_level: e.target.value as ClearanceLevel,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 >
                   <option value="PUBLIC">PUBLIC</option>
                   <option value="CAMPUS_GENERAL">CAMPUS GENERAL</option>
-                  <option value="FACULTY_STAFF_ONLY">FACULTY & STAFF ONLY</option>
+                  <option value="FACULTY_STAFF_ONLY">
+                    FACULTY & STAFF ONLY
+                  </option>
                   <option value="RESTRICTED">RESTRICTED</option>
                   <option value="HIGH_SECURITY">HIGH SECURITY</option>
                 </select>
@@ -423,7 +496,9 @@ export default function SecurityZonesPage() {
                     type="text"
                     placeholder="e.g. Tech Block A"
                     value={form.building_name}
-                    onChange={(e) => setForm({ ...form, building_name: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, building_name: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -434,7 +509,9 @@ export default function SecurityZonesPage() {
                   <input
                     type="number"
                     value={form.floor_number}
-                    onChange={(e) => setForm({ ...form, floor_number: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setForm({ ...form, floor_number: Number(e.target.value) })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -448,7 +525,12 @@ export default function SecurityZonesPage() {
                   <input
                     type="number"
                     value={form.max_occupancy}
-                    onChange={(e) => setForm({ ...form, max_occupancy: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        max_occupancy: Number(e.target.value),
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -460,7 +542,12 @@ export default function SecurityZonesPage() {
                     type="text"
                     placeholder="e.g. Quad Evac Area 2"
                     value={form.emergency_assembly_point}
-                    onChange={(e) => setForm({ ...form, emergency_assembly_point: e.target.value })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        emergency_assembly_point: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -471,10 +558,15 @@ export default function SecurityZonesPage() {
                   type="checkbox"
                   id="requires_escort"
                   checked={form.requires_escort}
-                  onChange={(e) => setForm({ ...form, requires_escort: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, requires_escort: e.target.checked })
+                  }
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
                 />
-                <label htmlFor="requires_escort" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label
+                  htmlFor="requires_escort"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                >
                   Mandatory Security Escort for Non-Cleared Personnel
                 </label>
               </div>
@@ -502,4 +594,3 @@ export default function SecurityZonesPage() {
     </div>
   );
 }
-

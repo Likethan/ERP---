@@ -15,10 +15,16 @@ import {
 } from "lucide-react";
 import { SustainabilityNav } from "../../../../components/sustainability/sustainability-nav";
 import { sustainabilityService } from "../../../../services/sustainability.service";
-import { InitiativeCategory, InitiativeStatus, SustainabilityInitiative } from "../../../../types/sustainability";
+import {
+  InitiativeCategory,
+  InitiativeStatus,
+  SustainabilityInitiative,
+} from "../../../../types/sustainability";
 
 export default function SustainabilityInitiativesPage() {
-  const [initiatives, setInitiatives] = useState<SustainabilityInitiative[]>([]);
+  const [initiatives, setInitiatives] = useState<SustainabilityInitiative[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -115,7 +121,8 @@ export default function SustainabilityInitiativesPage() {
                   </span>
                   <span
                     className={`px-2 py-0.5 text-[10px] font-bold rounded ${
-                      init.status === "OPERATIONAL" || init.status === "COMPLETED"
+                      init.status === "OPERATIONAL" ||
+                      init.status === "COMPLETED"
                         ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
                         : "bg-blue-950 text-blue-300 border border-blue-800"
                     }`}
@@ -123,8 +130,12 @@ export default function SustainabilityInitiativesPage() {
                     {init.status.replace("_", " ")}
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-100 mt-2">{init.title}</h3>
-                <p className="text-xs text-slate-400 mt-1 line-clamp-3">{init.description}</p>
+                <h3 className="text-sm font-bold text-slate-100 mt-2">
+                  {init.title}
+                </h3>
+                <p className="text-xs text-slate-400 mt-1 line-clamp-3">
+                  {init.description}
+                </p>
               </div>
 
               <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
@@ -148,7 +159,9 @@ export default function SustainabilityInitiativesPage() {
                     <span>Budget Spent</span>
                     <span>
                       {init.budget_allocated > 0
-                        ? Math.round((init.budget_spent / init.budget_allocated) * 100)
+                        ? Math.round(
+                            (init.budget_spent / init.budget_allocated) * 100,
+                          )
                         : 0}
                       %
                     </span>
@@ -161,7 +174,10 @@ export default function SustainabilityInitiativesPage() {
                           init.budget_allocated > 0
                             ? Math.min(
                                 100,
-                                Math.round((init.budget_spent / init.budget_allocated) * 100)
+                                Math.round(
+                                  (init.budget_spent / init.budget_allocated) *
+                                    100,
+                                ),
                               )
                             : 0
                         }%`,
@@ -189,12 +205,15 @@ export default function SustainabilityInitiativesPage() {
               Propose New Green Initiative / Project
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Submit proposal for institutional capital allocation and carbon offset verification.
+              Submit proposal for institutional capital allocation and carbon
+              offset verification.
             </p>
 
             <form onSubmit={handleCreate} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Project Title</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Project Title
+                </label>
                 <input
                   type="text"
                   required
@@ -206,7 +225,9 @@ export default function SustainabilityInitiativesPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Scope & Objectives</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Scope & Objectives
+                </label>
                 <textarea
                   rows={2}
                   required
@@ -219,25 +240,39 @@ export default function SustainabilityInitiativesPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Category</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Category
+                  </label>
                   <select
                     value={category}
-                    onChange={(e) => setCategory(e.target.value as InitiativeCategory)}
+                    onChange={(e) =>
+                      setCategory(e.target.value as InitiativeCategory)
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
                     <option value="SOLAR_ROOFTOP">Solar PV Generation</option>
                     <option value="LED_RETROFIT">LED Energy Efficiency</option>
-                    <option value="RAINWATER_HARVESTING">Rainwater Harvesting</option>
+                    <option value="RAINWATER_HARVESTING">
+                      Rainwater Harvesting
+                    </option>
                     <option value="BIOGAS_PLANT">Biogas Plant</option>
-                    <option value="EV_SHUTTLE">Electric Mobility Shuttle</option>
-                    <option value="TREE_PLANTATION">Campus Afforestation</option>
+                    <option value="EV_SHUTTLE">
+                      Electric Mobility Shuttle
+                    </option>
+                    <option value="TREE_PLANTATION">
+                      Campus Afforestation
+                    </option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Lifecycle Status</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Lifecycle Status
+                  </label>
                   <select
                     value={status}
-                    onChange={(e) => setStatus(e.target.value as InitiativeStatus)}
+                    onChange={(e) =>
+                      setStatus(e.target.value as InitiativeStatus)
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
                     <option value="PROPOSED">Proposed</option>
@@ -250,7 +285,9 @@ export default function SustainabilityInitiativesPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Budget Allocated (₹)</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Budget Allocated (₹)
+                  </label>
                   <input
                     type="number"
                     value={budgetAllocated}
@@ -259,7 +296,9 @@ export default function SustainabilityInitiativesPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Est. Annual CO₂ Saved (MT)</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Est. Annual CO₂ Saved (MT)
+                  </label>
                   <input
                     type="number"
                     value={co2Savings}
@@ -270,7 +309,9 @@ export default function SustainabilityInitiativesPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Lead Department</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Lead Department
+                </label>
                 <input
                   type="text"
                   value={department}
@@ -301,4 +342,3 @@ export default function SustainabilityInitiativesPage() {
     </div>
   );
 }
-

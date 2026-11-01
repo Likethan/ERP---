@@ -34,8 +34,6 @@ class FacultyService {
   async list(
     params?: FacultyFilterParams | string,
   ): Promise<PaginatedResponse<FacultyDetailView>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     let items = [...this.faculty];
 
     if (typeof params === "string") {
@@ -108,7 +106,6 @@ class FacultyService {
   }
 
   async getById(id: string): Promise<ApiResponse<FacultyDetailView | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const member = this.faculty.find(
       (f) => f.id === id || f.employeeCode === id,
     );
@@ -165,7 +162,6 @@ class FacultyService {
   async create(
     data: Partial<FacultyDetailView>,
   ): Promise<ApiResponse<FacultyDetailView>> {
-    await new Promise((r) => setTimeout(r, 100));
     const newFac: FacultyDetailView = {
       id: `fac-${Date.now()}`,
       employeeCode: data.employeeCode || `FAC-CSE-0${this.faculty.length + 10}`,
@@ -200,7 +196,6 @@ class FacultyService {
     id: string,
     data: Partial<FacultyDetailView>,
   ): Promise<ApiResponse<FacultyDetailView>> {
-    await new Promise((r) => setTimeout(r, 80));
     const idx = this.faculty.findIndex(
       (f) => f.id === id || f.employeeCode === id,
     );
@@ -216,7 +211,6 @@ class FacultyService {
   async getWorkload(
     facultyId: string,
   ): Promise<ApiResponse<FacultyWorkloadSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
     const fac = await this.getById(facultyId);
     return {
       success: true,
@@ -240,7 +234,6 @@ class FacultyService {
     facultyId: string,
     lab: Partial<LabDesignationItem>,
   ): Promise<ApiResponse<LabDesignationItem>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newLab: LabDesignationItem = {
       id: `lab-des-${Date.now()}`,
       labName: lab.labName || "Computer Systems Lab",
@@ -274,7 +267,6 @@ class FacultyService {
     facultyId: string,
     labId: string,
   ): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     if (this.workloadsPool[facultyId]) {
       const target = this.workloadsPool[facultyId].labDesignations.find(
         (l) => l.id === labId,
@@ -297,7 +289,6 @@ class FacultyService {
   async getPublications(
     facultyId: string,
   ): Promise<ApiResponse<FacultyPublication[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: this.publicationsPool[facultyId] || [],
@@ -308,7 +299,6 @@ class FacultyService {
     facultyId: string,
     pub: Partial<FacultyPublication>,
   ): Promise<ApiResponse<FacultyPublication>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newPub: FacultyPublication = {
       id: `pub-${Date.now()}`,
       title: pub.title || "Research Publication",
@@ -338,7 +328,6 @@ class FacultyService {
     pubId: string,
     pub: Partial<FacultyPublication>,
   ): Promise<ApiResponse<FacultyPublication>> {
-    await new Promise((r) => setTimeout(r, 60));
     const list = this.publicationsPool[facultyId] || [];
     const idx = list.findIndex((p) => p.id === pubId);
     if (idx === -1) throw new Error("Publication not found");
@@ -350,7 +339,6 @@ class FacultyService {
     facultyId: string,
     pubId: string,
   ): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     if (this.publicationsPool[facultyId]) {
       this.publicationsPool[facultyId] = this.publicationsPool[
         facultyId

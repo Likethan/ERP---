@@ -24,10 +24,16 @@ import {
 } from "@/types/housing";
 
 export default function HousingDashboardPage() {
-  const [analytics, setAnalytics] = useState<HousingAnalyticsSummary | null>(null);
+  const [analytics, setAnalytics] = useState<HousingAnalyticsSummary | null>(
+    null,
+  );
   const [properties, setProperties] = useState<AccommodationProperty[]>([]);
-  const [recentRequests, setRecentRequests] = useState<StudentHousingRequest[]>([]);
-  const [openMaintenance, setOpenMaintenance] = useState<HousingMaintenanceRequest[]>([]);
+  const [recentRequests, setRecentRequests] = useState<StudentHousingRequest[]>(
+    [],
+  );
+  const [openMaintenance, setOpenMaintenance] = useState<
+    HousingMaintenanceRequest[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,7 +48,9 @@ export default function HousingDashboardPage() {
         setAnalytics(aData);
         setProperties(pData);
         setRecentRequests(rData.slice(0, 5));
-        setOpenMaintenance(mData.filter((m) => m.status !== "COMPLETED").slice(0, 5));
+        setOpenMaintenance(
+          mData.filter((m) => m.status !== "COMPLETED").slice(0, 5),
+        );
       } catch (err) {
         console.error("Failed to load housing dashboard data", err);
       } finally {
@@ -80,7 +88,8 @@ export default function HousingDashboardPage() {
               </span>
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              {analytics?.occupied_beds ?? 533} of {analytics?.total_capacity_beds ?? 580} beds occupied
+              {analytics?.occupied_beds ?? 533} of{" "}
+              {analytics?.total_capacity_beds ?? 580} beds occupied
             </p>
           </div>
 
@@ -136,11 +145,16 @@ export default function HousingDashboardPage() {
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-emerald-600">100%</span>
-              <span className="text-xs text-emerald-700 font-medium">All Passed</span>
+              <span className="text-3xl font-extrabold text-emerald-600">
+                100%
+              </span>
+              <span className="text-xs text-emerald-700 font-medium">
+                All Passed
+              </span>
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              {analytics?.open_maintenance_requests ?? 6} open maintenance tickets
+              {analytics?.open_maintenance_requests ?? 6} open maintenance
+              tickets
             </p>
           </div>
         </div>
@@ -152,9 +166,13 @@ export default function HousingDashboardPage() {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-700 text-indigo-100">
                 Student Housing Portal
               </span>
-              <h3 className="text-lg font-bold mt-2">Submit Accommodation Request</h3>
+              <h3 className="text-lg font-bold mt-2">
+                Submit Accommodation Request
+              </h3>
               <p className="text-xs text-indigo-200 mt-1 leading-relaxed">
-                Students can browse approved campus and vetted off-campus properties, select room types, declare dietary needs, and request accessibility accommodations.
+                Students can browse approved campus and vetted off-campus
+                properties, select room types, declare dietary needs, and
+                request accessibility accommodations.
               </p>
             </div>
             <div className="mt-5 flex gap-2">
@@ -172,9 +190,13 @@ export default function HousingDashboardPage() {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-700 text-slate-100">
                 Warden & Housing Admin
               </span>
-              <h3 className="text-lg font-bold mt-2">Bed Allocation & Room Transfers</h3>
+              <h3 className="text-lg font-bold mt-2">
+                Bed Allocation & Room Transfers
+              </h3>
               <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Safely allocate vacant beds with anti-double-booking locks, issue formal room offers, or execute room transfers in atomic database transactions.
+                Safely allocate vacant beds with anti-double-booking locks,
+                issue formal room offers, or execute room transfers in atomic
+                database transactions.
               </p>
             </div>
             <div className="mt-5 flex gap-2">
@@ -198,9 +220,13 @@ export default function HousingDashboardPage() {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-800 text-emerald-100">
                 Compliance & Quality
               </span>
-              <h3 className="text-lg font-bold mt-2">Safety Audits & Municipal NOC</h3>
+              <h3 className="text-lg font-bold mt-2">
+                Safety Audits & Municipal NOC
+              </h3>
               <p className="text-xs text-emerald-200 mt-1 leading-relaxed">
-                Log fire safety, electrical, and structural inspections. Critical safety failures automatically suspend property discoverability until recertified.
+                Log fire safety, electrical, and structural inspections.
+                Critical safety failures automatically suspend property
+                discoverability until recertified.
               </p>
             </div>
             <div className="mt-5 flex gap-2">
@@ -226,9 +252,12 @@ export default function HousingDashboardPage() {
           <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="p-5 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-bold text-gray-900">Accommodation Properties Status</h2>
+                <h2 className="text-base font-bold text-gray-900">
+                  Accommodation Properties Status
+                </h2>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Real-time bed capacity and occupancy across registered residence halls
+                  Real-time bed capacity and occupancy across registered
+                  residence halls
                 </p>
               </div>
               <Link
@@ -242,10 +271,15 @@ export default function HousingDashboardPage() {
               {properties.map((prop) => {
                 const occupancyRate =
                   prop.total_bed_capacity > 0
-                    ? Math.round((prop.occupied_beds / prop.total_bed_capacity) * 100)
+                    ? Math.round(
+                        (prop.occupied_beds / prop.total_bed_capacity) * 100,
+                      )
                     : 0;
                 return (
-                  <div key={prop.id} className="p-4 hover:bg-gray-50 transition flex items-center justify-between gap-4">
+                  <div
+                    key={prop.id}
+                    className="p-4 hover:bg-gray-50 transition flex items-center justify-between gap-4"
+                  >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-sm text-gray-900 truncate">
@@ -259,17 +293,18 @@ export default function HousingDashboardPage() {
                             prop.lifecycle_status === "PUBLISHED"
                               ? "bg-emerald-100 text-emerald-800"
                               : prop.lifecycle_status === "APPROVED"
-                              ? "bg-blue-100 text-blue-800"
-                              : prop.lifecycle_status === "SUSPENDED"
-                              ? "bg-rose-100 text-rose-800"
-                              : "bg-gray-100 text-gray-700"
+                                ? "bg-blue-100 text-blue-800"
+                                : prop.lifecycle_status === "SUSPENDED"
+                                  ? "bg-rose-100 text-rose-800"
+                                  : "bg-gray-100 text-gray-700"
                           }`}
                         >
                           {prop.lifecycle_status}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mt-1 truncate">
-                        {prop.address} • {prop.distance_to_campus_km} km from campus
+                        {prop.address} • {prop.distance_to_campus_km} km from
+                        campus
                       </p>
                       <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
                         <span>
@@ -286,16 +321,22 @@ export default function HousingDashboardPage() {
                       </div>
                     </div>
                     <div className="text-right shrink-0 w-32">
-                      <div className="text-sm font-bold text-gray-900">{occupancyRate}%</div>
+                      <div className="text-sm font-bold text-gray-900">
+                        {occupancyRate}%
+                      </div>
                       <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden mt-1">
                         <div
                           className={`h-full rounded-full ${
-                            occupancyRate > 90 ? "bg-amber-500" : "bg-emerald-500"
+                            occupancyRate > 90
+                              ? "bg-amber-500"
+                              : "bg-emerald-500"
                           }`}
                           style={{ width: `${occupancyRate}%` }}
                         />
                       </div>
-                      <span className="text-[11px] text-gray-400 mt-0.5 block">Occupancy</span>
+                      <span className="text-[11px] text-gray-400 mt-0.5 block">
+                        Occupancy
+                      </span>
                     </div>
                   </div>
                 );
@@ -307,7 +348,9 @@ export default function HousingDashboardPage() {
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
               <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                <h3 className="text-sm font-bold text-gray-900">Active Maintenance Tickets</h3>
+                <h3 className="text-sm font-bold text-gray-900">
+                  Active Maintenance Tickets
+                </h3>
                 <Link
                   href="/app/housing/maintenance"
                   className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
@@ -317,15 +360,23 @@ export default function HousingDashboardPage() {
               </div>
               <div className="mt-3 space-y-3">
                 {openMaintenance.length === 0 ? (
-                  <p className="text-xs text-gray-500 py-4 text-center">No open maintenance tickets.</p>
+                  <p className="text-xs text-gray-500 py-4 text-center">
+                    No open maintenance tickets.
+                  </p>
                 ) : (
                   openMaintenance.map((ticket) => (
-                    <div key={ticket.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-xs">
+                    <div
+                      key={ticket.id}
+                      className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-xs"
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-gray-900 truncate">{ticket.title}</span>
+                        <span className="font-semibold text-gray-900 truncate">
+                          {ticket.title}
+                        </span>
                         <span
                           className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                            ticket.priority === "HIGH" || ticket.priority === "EMERGENCY"
+                            ticket.priority === "HIGH" ||
+                            ticket.priority === "EMERGENCY"
                               ? "bg-rose-100 text-rose-800"
                               : "bg-blue-100 text-blue-800"
                           }`}
@@ -333,10 +384,16 @@ export default function HousingDashboardPage() {
                           {ticket.priority}
                         </span>
                       </div>
-                      <p className="text-gray-500 mt-1 line-clamp-1">{ticket.description}</p>
+                      <p className="text-gray-500 mt-1 line-clamp-1">
+                        {ticket.description}
+                      </p>
                       <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400">
-                        <span>{ticket.property_name || "Campus Residence"}</span>
-                        <span className="font-medium text-indigo-600">{ticket.status}</span>
+                        <span>
+                          {ticket.property_name || "Campus Residence"}
+                        </span>
+                        <span className="font-medium text-indigo-600">
+                          {ticket.status}
+                        </span>
                       </div>
                     </div>
                   ))
@@ -346,7 +403,9 @@ export default function HousingDashboardPage() {
 
             {/* Compliance Quick Glance */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <h3 className="text-sm font-bold text-gray-900 mb-3">Institutional Compliance Status</h3>
+              <h3 className="text-sm font-bold text-gray-900 mb-3">
+                Institutional Compliance Status
+              </h3>
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-900">
                   <div className="flex items-center gap-2">
@@ -377,4 +436,3 @@ export default function HousingDashboardPage() {
     </div>
   );
 }
-

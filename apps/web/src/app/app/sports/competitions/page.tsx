@@ -76,7 +76,7 @@ export default function CompetitionsPage() {
   const handleGenerateFixtures = async (compId: string, compName: string) => {
     if (
       !confirm(
-        `Generate official match fixtures for "${compName}"? This will compute tournament pairings and prevent conflicting venue bookings.`
+        `Generate official match fixtures for "${compName}"? This will compute tournament pairings and prevent conflicting venue bookings.`,
       )
     ) {
       return;
@@ -84,15 +84,21 @@ export default function CompetitionsPage() {
 
     const res = await sportsService.generateFixtures(compId);
     if (res.success && res.data) {
-      setActionMessage(`Generated ${res.data.length} match fixtures for "${compName}".`);
+      setActionMessage(
+        `Generated ${res.data.length} match fixtures for "${compName}".`,
+      );
       loadCompetitions();
       router.push(`/app/sports/fixtures?competition=${compId}`);
     }
   };
 
   const filtered = competitions.filter((c) => {
-    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSport = sportFilter === "all" || c.sport.toLowerCase() === sportFilter.toLowerCase();
+    const matchesSearch = c.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesSport =
+      sportFilter === "all" ||
+      c.sport.toLowerCase() === sportFilter.toLowerCase();
     return matchesSearch && matchesSport;
   });
 
@@ -107,7 +113,8 @@ export default function CompetitionsPage() {
             Tournaments & Competitions Engine
           </h1>
           <p className="text-sm text-slate-500">
-            Internal collegiate leagues, inter-university championships, and automated fixture generators.
+            Internal collegiate leagues, inter-university championships, and
+            automated fixture generators.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -134,7 +141,10 @@ export default function CompetitionsPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionMessage}</span>
           </div>
-          <button onClick={() => setActionMessage(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionMessage(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -174,7 +184,9 @@ export default function CompetitionsPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
           <Trophy className="w-8 h-8 text-slate-300 mx-auto" />
-          <p className="mt-2 text-sm font-medium text-slate-700">No competitions found</p>
+          <p className="mt-2 text-sm font-medium text-slate-700">
+            No competitions found
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -194,21 +206,24 @@ export default function CompetitionsPage() {
                         comp.status === "IN_PROGRESS"
                           ? "bg-amber-100 text-amber-800"
                           : comp.status === "REGISTRATION_OPEN"
-                          ? "bg-blue-100 text-blue-800"
-                          : comp.status === "COMPLETED"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-slate-100 text-slate-700"
+                            ? "bg-blue-100 text-blue-800"
+                            : comp.status === "COMPLETED"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-slate-100 text-slate-700"
                       }`}
                     >
                       {comp.status.replace("_", " ").toLowerCase()}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-slate-900 mt-2 text-base">{comp.name}</h3>
+                  <h3 className="font-bold text-slate-900 mt-2 text-base">
+                    {comp.name}
+                  </h3>
 
                   <div className="mt-3 inline-block">
                     <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 capitalize">
-                      Format: {comp.tournamentFormat.replace("_", " ").toLowerCase()}
+                      Format:{" "}
+                      {comp.tournamentFormat.replace("_", " ").toLowerCase()}
                     </span>
                   </div>
 
@@ -226,12 +241,13 @@ export default function CompetitionsPage() {
                     <div className="flex items-center gap-2">
                       <Users className="w-3.5 h-3.5 text-slate-400" />
                       <span>
-                        Capacity: {comp.registeredCount || 4} / {comp.maxParticipants} Registered Squads
+                        Capacity: {comp.registeredCount || 4} /{" "}
+                        {comp.maxParticipants} Registered Squads
                       </span>
                     </div>
                     <div className="text-[11px] text-slate-500 pt-1">
-                      Scoring Rules: Win = {comp.pointsForWin} pts | Draw = {comp.pointsForDraw} pts | Loss ={" "}
-                      {comp.pointsForLoss} pts
+                      Scoring Rules: Win = {comp.pointsForWin} pts | Draw ={" "}
+                      {comp.pointsForDraw} pts | Loss = {comp.pointsForLoss} pts
                     </div>
                   </div>
                 </div>
@@ -271,26 +287,36 @@ export default function CompetitionsPage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">Create Campus Tournament</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Create Campus Tournament
+            </h2>
             <form onSubmit={handleCreate} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Tournament Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Tournament Name
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Inter-Departmental Spring Championship"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Sport Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Sport Category
+                  </label>
                   <select
                     value={formData.sport}
-                    onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sport: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="Football">Football</option>
@@ -301,7 +327,9 @@ export default function CompetitionsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Tournament Format</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Tournament Format
+                  </label>
                   <select
                     value={formData.tournamentFormat}
                     onChange={(e) =>
@@ -313,72 +341,112 @@ export default function CompetitionsPage() {
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="ROUND_ROBIN">Round Robin League</option>
-                    <option value="KNOCKOUT">Single Elimination Knockout</option>
-                    <option value="LEAGUE_PLUS_PLAYOFFS">League + Playoffs</option>
+                    <option value="KNOCKOUT">
+                      Single Elimination Knockout
+                    </option>
+                    <option value="LEAGUE_PLUS_PLAYOFFS">
+                      League + Playoffs
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Start Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Start Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={formData.startDate}
-                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startDate: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">End Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    End Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={formData.endDate}
-                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, endDate: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Max Teams</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Max Teams
+                </label>
                 <input
                   type="number"
                   min={2}
                   max={32}
                   value={formData.maxParticipants}
-                  onChange={(e) => setFormData({ ...formData, maxParticipants: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      maxParticipants: Number(e.target.value),
+                    })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Win Points</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                    Win Points
+                  </label>
                   <input
                     type="number"
                     value={formData.pointsForWin}
-                    onChange={(e) => setFormData({ ...formData, pointsForWin: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pointsForWin: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-xs border border-slate-300 rounded px-2.5 py-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Draw Points</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                    Draw Points
+                  </label>
                   <input
                     type="number"
                     value={formData.pointsForDraw}
-                    onChange={(e) => setFormData({ ...formData, pointsForDraw: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pointsForDraw: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-xs border border-slate-300 rounded px-2.5 py-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Loss Points</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                    Loss Points
+                  </label>
                   <input
                     type="number"
                     value={formData.pointsForLoss}
-                    onChange={(e) => setFormData({ ...formData, pointsForLoss: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pointsForLoss: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-xs border border-slate-300 rounded px-2.5 py-1"
                   />
                 </div>

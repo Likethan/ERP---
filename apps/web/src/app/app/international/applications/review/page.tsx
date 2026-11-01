@@ -29,10 +29,14 @@ export default function ApplicationReviewWorkspacePage() {
   const [loading, setLoading] = useState(true);
   const [filterStage, setFilterStage] = useState<string>("ALL");
   const [search, setSearch] = useState("");
-  const [selectedApp, setSelectedApp] = useState<MobilityApplication | null>(null);
+  const [selectedApp, setSelectedApp] = useState<MobilityApplication | null>(
+    null,
+  );
 
   // Review Decision State
-  const [reviewAction, setReviewAction] = useState<"APPROVE" | "REJECT" | "RETURN" | "ESCALATE">("APPROVE");
+  const [reviewAction, setReviewAction] = useState<
+    "APPROVE" | "REJECT" | "RETURN" | "ESCALATE"
+  >("APPROVE");
   const [comments, setComments] = useState("");
   const [reasons, setReasons] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -61,7 +65,12 @@ export default function ApplicationReviewWorkspacePage() {
     if (!selectedApp) return;
     setSubmitting(true);
     try {
-      await internationalService.reviewApplication(selectedApp.id, reviewAction, comments, reasons);
+      await internationalService.reviewApplication(
+        selectedApp.id,
+        reviewAction,
+        comments,
+        reasons,
+      );
       alert(`Decision recorded successfully: ${reviewAction}`);
       setSelectedApp(null);
       setComments("");
@@ -76,7 +85,8 @@ export default function ApplicationReviewWorkspacePage() {
   }
 
   const filtered = applications.filter((app) => {
-    const text = `${app.student_name || ""} ${app.program_title || ""} ${app.application_reference_number || ""}`.toLowerCase();
+    const text =
+      `${app.student_name || ""} ${app.program_title || ""} ${app.application_reference_number || ""}`.toLowerCase();
     return text.includes(search.toLowerCase());
   });
 
@@ -92,7 +102,8 @@ export default function ApplicationReviewWorkspacePage() {
               Application Review & Endorsement Workspace
             </h2>
             <p className="text-xs text-slate-400">
-              Department Coordinators, HODs, and International Office multi-stage approval queue
+              Department Coordinators, HODs, and International Office
+              multi-stage approval queue
             </p>
           </div>
         </div>
@@ -114,7 +125,9 @@ export default function ApplicationReviewWorkspacePage() {
             <button
               onClick={() => setFilterStage("ALL")}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                filterStage === "ALL" ? "bg-cyan-600 text-white" : "bg-slate-950 text-slate-400 hover:text-slate-200"
+                filterStage === "ALL"
+                  ? "bg-cyan-600 text-white"
+                  : "bg-slate-950 text-slate-400 hover:text-slate-200"
               }`}
             >
               All Stages
@@ -122,7 +135,9 @@ export default function ApplicationReviewWorkspacePage() {
             <button
               onClick={() => setFilterStage("DEPT")}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                filterStage === "DEPT" ? "bg-cyan-600 text-white" : "bg-slate-950 text-slate-400 hover:text-slate-200"
+                filterStage === "DEPT"
+                  ? "bg-cyan-600 text-white"
+                  : "bg-slate-950 text-slate-400 hover:text-slate-200"
               }`}
             >
               Dept Queue
@@ -130,7 +145,9 @@ export default function ApplicationReviewWorkspacePage() {
             <button
               onClick={() => setFilterStage("INTL")}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                filterStage === "INTL" ? "bg-cyan-600 text-white" : "bg-slate-950 text-slate-400 hover:text-slate-200"
+                filterStage === "INTL"
+                  ? "bg-cyan-600 text-white"
+                  : "bg-slate-950 text-slate-400 hover:text-slate-200"
               }`}
             >
               Intl Office Queue
@@ -140,7 +157,9 @@ export default function ApplicationReviewWorkspacePage() {
 
         {/* Applications List */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading review queue...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading review queue...
+          </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
             No mobility applications awaiting review in this stage.
@@ -155,7 +174,8 @@ export default function ApplicationReviewWorkspacePage() {
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700">
-                      {app.application_reference_number || app.applicationReferenceNumber}
+                      {app.application_reference_number ||
+                        app.applicationReferenceNumber}
                     </span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 uppercase">
                       {app.status}
@@ -178,12 +198,24 @@ export default function ApplicationReviewWorkspacePage() {
                     <Compass className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
                     <span>{app.program_title || app.programTitle}</span>
                     <span className="text-slate-500">·</span>
-                    <span className="text-slate-400">{app.partner_name || app.partnerName}</span>
+                    <span className="text-slate-400">
+                      {app.partner_name || app.partnerName}
+                    </span>
                   </p>
 
                   <div className="flex items-center gap-4 text-xs text-slate-400 pt-1">
-                    <span>CGPA: <strong className="text-slate-200">{app.student_cgpa_at_application || "8.8"}</strong></span>
-                    <span>Credits: <strong className="text-slate-200">{app.credits_completed_at_application || "56"}</strong></span>
+                    <span>
+                      CGPA:{" "}
+                      <strong className="text-slate-200">
+                        {app.student_cgpa_at_application || "8.8"}
+                      </strong>
+                    </span>
+                    <span>
+                      Credits:{" "}
+                      <strong className="text-slate-200">
+                        {app.credits_completed_at_application || "56"}
+                      </strong>
+                    </span>
                   </div>
                 </div>
 
@@ -230,34 +262,44 @@ export default function ApplicationReviewWorkspacePage() {
                 Record Formal Application Review Decision
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Candidate: <span className="font-semibold text-slate-200">{selectedApp.student_name || "Student"}</span> · Ref:{" "}
-                <span className="font-mono text-cyan-400">{selectedApp.application_reference_number}</span>
+                Candidate:{" "}
+                <span className="font-semibold text-slate-200">
+                  {selectedApp.student_name || "Student"}
+                </span>{" "}
+                · Ref:{" "}
+                <span className="font-mono text-cyan-400">
+                  {selectedApp.application_reference_number}
+                </span>
               </p>
 
               <form onSubmit={handleSubmitReview} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Decision Action *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Decision Action *
+                  </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {(["APPROVE", "REJECT", "RETURN", "ESCALATE"] as const).map((act) => (
-                      <button
-                        type="button"
-                        key={act}
-                        onClick={() => setReviewAction(act)}
-                        className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-all ${
-                          reviewAction === act
-                            ? act === "APPROVE"
-                              ? "bg-emerald-600 border-emerald-500 text-white"
-                              : act === "REJECT"
-                              ? "bg-rose-600 border-rose-500 text-white"
-                              : act === "RETURN"
-                              ? "bg-amber-600 border-amber-500 text-white"
-                              : "bg-purple-600 border-purple-500 text-white"
-                            : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
-                        }`}
-                      >
-                        {act}
-                      </button>
-                    ))}
+                    {(["APPROVE", "REJECT", "RETURN", "ESCALATE"] as const).map(
+                      (act) => (
+                        <button
+                          type="button"
+                          key={act}
+                          onClick={() => setReviewAction(act)}
+                          className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-all ${
+                            reviewAction === act
+                              ? act === "APPROVE"
+                                ? "bg-emerald-600 border-emerald-500 text-white"
+                                : act === "REJECT"
+                                  ? "bg-rose-600 border-rose-500 text-white"
+                                  : act === "RETURN"
+                                    ? "bg-amber-600 border-amber-500 text-white"
+                                    : "bg-purple-600 border-purple-500 text-white"
+                              : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          {act}
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
 

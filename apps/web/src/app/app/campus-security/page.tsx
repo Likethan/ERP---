@@ -28,9 +28,13 @@ import {
 } from "@/types/campus-security";
 
 export default function CampusSecurityDashboardPage() {
-  const [overview, setOverview] = useState<SecurityOperationsOverview | null>(null);
+  const [overview, setOverview] = useState<SecurityOperationsOverview | null>(
+    null,
+  );
   const [recentPasses, setRecentPasses] = useState<VisitorPass[]>([]);
-  const [recentIncidents, setRecentIncidents] = useState<CampusSecurityIncident[]>([]);
+  const [recentIncidents, setRecentIncidents] = useState<
+    CampusSecurityIncident[]
+  >([]);
   const [emergencies, setEmergencies] = useState<EmergencyEvent[]>([]);
   const [checkpoints, setCheckpoints] = useState<SecurityCheckpoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,22 +86,29 @@ export default function CampusSecurityDashboardPage() {
               <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                 DEFCON 5 — NORMAL CAMPUS OPERATIONS
               </span>
-              <span className="text-xs text-muted-foreground">• Server-Signed Access Security</span>
+              <span className="text-xs text-muted-foreground">
+                • Server-Signed Access Security
+              </span>
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight mt-1">
               Campus Security Command & Gate Intelligence
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Real-time gate telemetry, visitor credentials, physical access authorization, and emergency response.
+              Real-time gate telemetry, visitor credentials, physical access
+              authorization, and emergency response.
             </p>
           </div>
 
           <div className="flex items-center space-x-4 bg-muted/40 p-4 rounded-xl border border-border/80">
             <div className="text-right">
-              <div className="text-xs font-medium text-muted-foreground">Composite Readiness Score</div>
+              <div className="text-xs font-medium text-muted-foreground">
+                Composite Readiness Score
+              </div>
               <div className="text-3xl font-black text-primary">
                 {overview?.security_readiness_score.toFixed(1)}
-                <span className="text-sm font-normal text-muted-foreground">/100</span>
+                <span className="text-sm font-normal text-muted-foreground">
+                  /100
+                </span>
               </div>
             </div>
             <div className="h-12 w-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -198,7 +209,9 @@ export default function CampusSecurityDashboardPage() {
             </div>
             <div>
               <div className="font-semibold text-sm">Gate Check-in Desk</div>
-              <div className="text-xs text-muted-foreground">Verify QR pass & issue badges</div>
+              <div className="text-xs text-muted-foreground">
+                Verify QR pass & issue badges
+              </div>
             </div>
           </Link>
 
@@ -211,7 +224,9 @@ export default function CampusSecurityDashboardPage() {
             </div>
             <div>
               <div className="font-semibold text-sm">Pre-Register Guest</div>
-              <div className="text-xs text-muted-foreground">Host invitation & approvals</div>
+              <div className="text-xs text-muted-foreground">
+                Host invitation & approvals
+              </div>
             </div>
           </Link>
 
@@ -223,8 +238,12 @@ export default function CampusSecurityDashboardPage() {
               <AlertTriangle className="h-6 w-6" />
             </div>
             <div>
-              <div className="font-semibold text-sm">Report Security Concern</div>
-              <div className="text-xs text-muted-foreground">Perimeter breach or safety hazard</div>
+              <div className="font-semibold text-sm">
+                Report Security Concern
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Perimeter breach or safety hazard
+              </div>
             </div>
           </Link>
 
@@ -237,7 +256,9 @@ export default function CampusSecurityDashboardPage() {
             </div>
             <div>
               <div className="font-semibold text-sm">Emergency Workspace</div>
-              <div className="text-xs text-muted-foreground">Evacuation & incident response</div>
+              <div className="text-xs text-muted-foreground">
+                Evacuation & incident response
+              </div>
             </div>
           </Link>
         </div>
@@ -251,11 +272,18 @@ export default function CampusSecurityDashboardPage() {
                 ACTIVE CAMPUS EMERGENCY IN PROGRESS
               </div>
               <div className="text-sm font-medium mt-1">
-                {emergencies.find((e) => e.status === "ACTIVE")?.title} — Affected:{" "}
-                {emergencies.find((e) => e.status === "ACTIVE")?.affected_campus_areas}
+                {emergencies.find((e) => e.status === "ACTIVE")?.title} —
+                Affected:{" "}
+                {
+                  emergencies.find((e) => e.status === "ACTIVE")
+                    ?.affected_campus_areas
+                }
               </div>
               <div className="text-xs text-muted-foreground mt-1">
-                {emergencies.find((e) => e.status === "ACTIVE")?.emergency_broadcast_message}
+                {
+                  emergencies.find((e) => e.status === "ACTIVE")
+                    ?.emergency_broadcast_message
+                }
               </div>
             </div>
             <Link
@@ -274,9 +302,12 @@ export default function CampusSecurityDashboardPage() {
             <div className="bg-card border border-border rounded-2xl p-6 shadow-xs">
               <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div>
-                  <h2 className="text-lg font-bold">Active Visitor Gate Sessions</h2>
+                  <h2 className="text-lg font-bold">
+                    Active Visitor Gate Sessions
+                  </h2>
                   <p className="text-xs text-muted-foreground">
-                    Currently verified guests and visitors inside physical campus perimeter
+                    Currently verified guests and visitors inside physical
+                    campus perimeter
                   </p>
                 </div>
                 <Link
@@ -294,10 +325,15 @@ export default function CampusSecurityDashboardPage() {
                   </div>
                 ) : (
                   recentPasses.map((pass) => (
-                    <div key={pass.id} className="py-3.5 flex items-center justify-between">
+                    <div
+                      key={pass.id}
+                      className="py-3.5 flex items-center justify-between"
+                    >
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className="font-semibold text-sm">{pass.visitor_name}</span>
+                          <span className="font-semibold text-sm">
+                            {pass.visitor_name}
+                          </span>
                           <span className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-muted text-muted-foreground">
                             {pass.pass_number}
                           </span>
@@ -306,8 +342,14 @@ export default function CampusSecurityDashboardPage() {
                           </span>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Host: <span className="text-foreground">{pass.host_name}</span> • Dest:{" "}
-                          <span className="text-foreground">{pass.destination}</span>
+                          Host:{" "}
+                          <span className="text-foreground">
+                            {pass.host_name}
+                          </span>{" "}
+                          • Dest:{" "}
+                          <span className="text-foreground">
+                            {pass.destination}
+                          </span>
                         </div>
                       </div>
 
@@ -317,14 +359,18 @@ export default function CampusSecurityDashboardPage() {
                             pass.status === "CHECKED_IN"
                               ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                               : pass.status === "OVERDUE"
-                              ? "bg-rose-500/10 text-rose-500 border border-rose-500/20"
-                              : "bg-muted text-muted-foreground"
+                                ? "bg-rose-500/10 text-rose-500 border border-rose-500/20"
+                                : "bg-muted text-muted-foreground"
                           }`}
                         >
                           {pass.status}
                         </span>
                         <div className="text-[11px] text-muted-foreground mt-1">
-                          Valid until {new Date(pass.valid_until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          Valid until{" "}
+                          {new Date(pass.valid_until).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </div>
                       </div>
                     </div>
@@ -337,9 +383,12 @@ export default function CampusSecurityDashboardPage() {
             <div className="bg-card border border-border rounded-2xl p-6 shadow-xs">
               <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div>
-                  <h2 className="text-lg font-bold">Physical Security Zones & Clearances</h2>
+                  <h2 className="text-lg font-bold">
+                    Physical Security Zones & Clearances
+                  </h2>
                   <p className="text-xs text-muted-foreground">
-                    Campus perimeter, labs, server rooms, and restricted research facilities
+                    Campus perimeter, labs, server rooms, and restricted
+                    research facilities
                   </p>
                 </div>
                 <Link
@@ -353,7 +402,9 @@ export default function CampusSecurityDashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div className="p-4 rounded-xl border border-border bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-primary">ZONE-SERVER-DC</span>
+                    <span className="text-xs font-mono font-bold text-primary">
+                      ZONE-SERVER-DC
+                    </span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
                       HIGH_SECURITY
                     </span>
@@ -368,7 +419,9 @@ export default function CampusSecurityDashboardPage() {
 
                 <div className="p-4 rounded-xl border border-border bg-muted/20">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-primary">ZONE-RESEARCH-BIOCHEM</span>
+                    <span className="text-xs font-mono font-bold text-primary">
+                      ZONE-RESEARCH-BIOCHEM
+                    </span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                       RESTRICTED
                     </span>
@@ -418,8 +471,8 @@ export default function CampusSecurityDashboardPage() {
                             inc.severity === "CRITICAL"
                               ? "bg-rose-500/20 text-rose-400"
                               : inc.severity === "HIGH"
-                              ? "bg-amber-500/20 text-amber-400"
-                              : "bg-blue-500/20 text-blue-400"
+                                ? "bg-amber-500/20 text-amber-400"
+                                : "bg-blue-500/20 text-blue-400"
                           }`}
                         >
                           {inc.severity}
@@ -427,11 +480,16 @@ export default function CampusSecurityDashboardPage() {
                       </div>
                       <div className="font-semibold text-sm">{inc.title}</div>
                       <div className="text-xs text-muted-foreground">
-                        Location: <span className="text-foreground">{inc.reported_location}</span>
+                        Location:{" "}
+                        <span className="text-foreground">
+                          {inc.reported_location}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between pt-1 text-[11px] text-muted-foreground">
                         <span>Team: {inc.assigned_team || "Unassigned"}</span>
-                        <span className="font-medium text-foreground">{inc.status}</span>
+                        <span className="font-medium text-foreground">
+                          {inc.status}
+                        </span>
                       </div>
                     </div>
                   ))
@@ -474,4 +532,3 @@ export default function CampusSecurityDashboardPage() {
     </div>
   );
 }
-

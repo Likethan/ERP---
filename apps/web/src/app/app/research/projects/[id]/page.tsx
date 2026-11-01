@@ -36,12 +36,23 @@ export default function ProjectDetailWorkspacePage({
   const resolvedParams = use(params);
   const projectId = resolvedParams.id;
 
-  const [details, setDetails] = useState<ResearchProjectDetailResponse | null>(null);
+  const [details, setDetails] = useState<ResearchProjectDetailResponse | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "overview" | "team" | "milestones" | "budget" | "ethics" | "outputs" | "risks"
+    | "overview"
+    | "team"
+    | "milestones"
+    | "budget"
+    | "ethics"
+    | "outputs"
+    | "risks"
   >("overview");
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Status transition state
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
@@ -65,7 +76,9 @@ export default function ProjectDetailWorkspacePage({
   const [milestoneForm, setMilestoneForm] = useState({
     title: "",
     description: "",
-    planned_date: new Date(Date.now() + 60 * 86400000).toISOString().split("T")[0],
+    planned_date: new Date(Date.now() + 60 * 86400000)
+      .toISOString()
+      .split("T")[0],
     acceptance_criteria: "",
     is_mandatory_for_closure: true,
   });
@@ -76,7 +89,10 @@ export default function ProjectDetailWorkspacePage({
       const data = await ResearchService.getProjectDetails(projectId);
       setDetails(data);
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to load project details." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to load project details.",
+      });
     } finally {
       setLoading(false);
     }
@@ -96,22 +112,35 @@ export default function ProjectDetailWorkspacePage({
       targetStatus,
       details.milestones,
       details.ethics_approvals,
-      details.project.requires_ethics_approval
+      details.project.requires_ethics_approval,
     );
 
     if (!validation.allowed) {
-      setFeedback({ type: "error", message: validation.reason || "Transition blocked by policy rules." });
+      setFeedback({
+        type: "error",
+        message: validation.reason || "Transition blocked by policy rules.",
+      });
       return;
     }
 
     try {
-      await ResearchService.transitionProjectStatus(projectId, targetStatus, transitionReason);
-      setFeedback({ type: "success", message: `Project transitioned to ${targetStatus} successfully.` });
+      await ResearchService.transitionProjectStatus(
+        projectId,
+        targetStatus,
+        transitionReason,
+      );
+      setFeedback({
+        type: "success",
+        message: `Project transitioned to ${targetStatus} successfully.`,
+      });
       setIsTransitionModalOpen(false);
       setTransitionReason("");
       loadDetails();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to execute transition." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to execute transition.",
+      });
     }
   };
 
@@ -119,11 +148,17 @@ export default function ProjectDetailWorkspacePage({
     e.preventDefault();
     try {
       await ResearchService.addTeamMember(projectId, memberForm as any);
-      setFeedback({ type: "success", message: "Team member attached to project roster." });
+      setFeedback({
+        type: "success",
+        message: "Team member attached to project roster.",
+      });
       setIsAddMemberModalOpen(false);
       loadDetails();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to add team member." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to add team member.",
+      });
     }
   };
 
@@ -135,23 +170,38 @@ export default function ProjectDetailWorkspacePage({
         project_id: projectId,
         ...milestoneForm,
       } as any);
-      setFeedback({ type: "success", message: "Milestone registered on project roadmap." });
+      setFeedback({
+        type: "success",
+        message: "Milestone registered on project roadmap.",
+      });
       setIsAddMilestoneModalOpen(false);
       loadDetails();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to create milestone." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to create milestone.",
+      });
     }
   };
 
-  const handleVerifyMilestone = async (milestoneId: string, decision: string) => {
+  const handleVerifyMilestone = async (
+    milestoneId: string,
+    decision: string,
+  ) => {
     const notes = prompt("Enter independent verification notes:");
     if (!notes) return;
     try {
       await ResearchService.verifyMilestone(milestoneId, decision, notes);
-      setFeedback({ type: "success", message: `Milestone verified as ${decision}.` });
+      setFeedback({
+        type: "success",
+        message: `Milestone verified as ${decision}.`,
+      });
       loadDetails();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to verify milestone." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to verify milestone.",
+      });
     }
   };
 
@@ -173,7 +223,10 @@ export default function ProjectDetailWorkspacePage({
         <div className="flex-1 flex flex-col items-center justify-center p-12 space-y-4">
           <AlertTriangle className="h-10 w-10 text-rose-400" />
           <h2 className="text-xl font-bold">Research Project Not Found</h2>
-          <Link href="/app/research/projects" className="text-emerald-400 underline text-sm">
+          <Link
+            href="/app/research/projects"
+            className="text-emerald-400 underline text-sm"
+          >
             ← Return to Portfolio
           </Link>
         </div>
@@ -181,15 +234,24 @@ export default function ProjectDetailWorkspacePage({
     );
   }
 
-  const { project, health, team_members, milestones, ethics_approvals, budget_plans, grant_awards, outputs, risks } =
-    details;
+  const {
+    project,
+    health,
+    team_members,
+    milestones,
+    ethics_approvals,
+    budget_plans,
+    grant_awards,
+    outputs,
+    risks,
+  } = details;
 
   const healthColor =
     health.health_status === "HEALTHY"
       ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10"
       : health.health_status === "NEEDS_ATTENTION"
-      ? "text-amber-400 border-amber-500/30 bg-amber-500/10"
-      : "text-rose-400 border-rose-500/30 bg-rose-500/10";
+        ? "text-amber-400 border-amber-500/30 bg-amber-500/10"
+        : "text-rose-400 border-rose-500/30 bg-rose-500/10";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -207,7 +269,9 @@ export default function ProjectDetailWorkspacePage({
               Back to Portfolio
             </Link>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-bold tracking-tight text-white">{project.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-white">
+                {project.title}
+              </h1>
               <span className="font-mono text-xs px-2.5 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold">
                 {project.project_code}
               </span>
@@ -216,8 +280,13 @@ export default function ProjectDetailWorkspacePage({
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Domain: <span className="text-slate-300">{project.research_domain}</span> | Category:{" "}
-              <span className="text-slate-300">{project.research_category}</span> | Timeline:{" "}
+              Domain:{" "}
+              <span className="text-slate-300">{project.research_domain}</span>{" "}
+              | Category:{" "}
+              <span className="text-slate-300">
+                {project.research_category}
+              </span>{" "}
+              | Timeline:{" "}
               <span className="text-slate-300 font-mono">
                 {project.start_date} → {project.planned_end_date}
               </span>
@@ -250,17 +319,24 @@ export default function ProjectDetailWorkspacePage({
             }`}
           >
             <span>{feedback.message}</span>
-            <button onClick={() => setFeedback(null)} className="text-xs underline ml-4">
+            <button
+              onClick={() => setFeedback(null)}
+              className="text-xs underline ml-4"
+            >
               Dismiss
             </button>
           </div>
         )}
 
         {/* Explainable Project Health Diagnosis Card */}
-        <div className={`p-5 rounded-2xl border backdrop-blur-sm ${healthColor} space-y-3`}>
+        <div
+          className={`p-5 rounded-2xl border backdrop-blur-sm ${healthColor} space-y-3`}
+        >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-3xl font-black font-mono tracking-tight">{health.health_score}</span>
+              <span className="text-3xl font-black font-mono tracking-tight">
+                {health.health_score}
+              </span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-white">
@@ -271,16 +347,32 @@ export default function ProjectDetailWorkspacePage({
                   </span>
                 </div>
                 <p className="text-xs text-slate-300 mt-0.5">
-                  Overdue milestones: <strong className="font-mono">{health.overdue_milestones_count}</strong> | Blocked:{" "}
-                  <strong className="font-mono">{health.blocked_milestones_count}</strong> | Ethics Compliant:{" "}
-                  <strong className="font-mono">{health.ethics_compliant ? "YES" : "NO (" + health.ethics_status + ")"}</strong> | High Risks:{" "}
-                  <strong className="font-mono">{health.high_critical_risks_count}</strong>
+                  Overdue milestones:{" "}
+                  <strong className="font-mono">
+                    {health.overdue_milestones_count}
+                  </strong>{" "}
+                  | Blocked:{" "}
+                  <strong className="font-mono">
+                    {health.blocked_milestones_count}
+                  </strong>{" "}
+                  | Ethics Compliant:{" "}
+                  <strong className="font-mono">
+                    {health.ethics_compliant
+                      ? "YES"
+                      : "NO (" + health.ethics_status + ")"}
+                  </strong>{" "}
+                  | High Risks:{" "}
+                  <strong className="font-mono">
+                    {health.high_critical_risks_count}
+                  </strong>
                 </p>
               </div>
             </div>
 
             <div className="text-right">
-              <span className="text-xs text-slate-300">Authoritative Budget Burn Rate:</span>
+              <span className="text-xs text-slate-300">
+                Authoritative Budget Burn Rate:
+              </span>
               <div className="text-lg font-bold font-mono text-white">
                 {health.financial_burn_rate_percent}%
               </div>
@@ -305,13 +397,41 @@ export default function ProjectDetailWorkspacePage({
         {/* Workspace Tab Navigation */}
         <div className="flex items-center gap-2 border-b border-slate-800 overflow-x-auto no-scrollbar pb-1">
           {[
-            { id: "overview", label: "Overview", icon: <Calendar className="h-4 w-4" /> },
-            { id: "team", label: `Team & Workload (${team_members.length})`, icon: <Users className="h-4 w-4" /> },
-            { id: "milestones", label: `Milestones & Deliverables (${milestones.length})`, icon: <FileCheck2 className="h-4 w-4" /> },
-            { id: "budget", label: "Budget & Reconciled Finances", icon: <DollarSign className="h-4 w-4" /> },
-            { id: "ethics", label: `Ethics & Compliance (${ethics_approvals.length})`, icon: <ShieldCheck className="h-4 w-4" /> },
-            { id: "outputs", label: `Outputs & IP (${outputs.length})`, icon: <Lightbulb className="h-4 w-4" /> },
-            { id: "risks", label: `Risk Register (${risks.length})`, icon: <AlertTriangle className="h-4 w-4" /> },
+            {
+              id: "overview",
+              label: "Overview",
+              icon: <Calendar className="h-4 w-4" />,
+            },
+            {
+              id: "team",
+              label: `Team & Workload (${team_members.length})`,
+              icon: <Users className="h-4 w-4" />,
+            },
+            {
+              id: "milestones",
+              label: `Milestones & Deliverables (${milestones.length})`,
+              icon: <FileCheck2 className="h-4 w-4" />,
+            },
+            {
+              id: "budget",
+              label: "Budget & Reconciled Finances",
+              icon: <DollarSign className="h-4 w-4" />,
+            },
+            {
+              id: "ethics",
+              label: `Ethics & Compliance (${ethics_approvals.length})`,
+              icon: <ShieldCheck className="h-4 w-4" />,
+            },
+            {
+              id: "outputs",
+              label: `Outputs & IP (${outputs.length})`,
+              icon: <Lightbulb className="h-4 w-4" />,
+            },
+            {
+              id: "risks",
+              label: `Risk Register (${risks.length})`,
+              icon: <AlertTriangle className="h-4 w-4" />,
+            },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -333,28 +453,50 @@ export default function ProjectDetailWorkspacePage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-6">
               <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-                <h3 className="text-base font-bold text-white">Abstract & Technical Scope</h3>
-                <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">{project.abstract}</p>
+                <h3 className="text-base font-bold text-white">
+                  Abstract & Technical Scope
+                </h3>
+                <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+                  {project.abstract}
+                </p>
               </div>
 
               <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-                <h3 className="text-base font-bold text-white">Project Deliverables & Summary</h3>
+                <h3 className="text-base font-bold text-white">
+                  Project Deliverables & Summary
+                </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <span className="text-xl font-bold font-mono text-emerald-400">{milestones.length}</span>
-                    <p className="text-[11px] text-slate-400 mt-1">Milestones</p>
+                    <span className="text-xl font-bold font-mono text-emerald-400">
+                      {milestones.length}
+                    </span>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Milestones
+                    </p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <span className="text-xl font-bold font-mono text-blue-400">{team_members.length}</span>
-                    <p className="text-[11px] text-slate-400 mt-1">Investigators</p>
+                    <span className="text-xl font-bold font-mono text-blue-400">
+                      {team_members.length}
+                    </span>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Investigators
+                    </p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <span className="text-xl font-bold font-mono text-purple-400">{outputs.length}</span>
-                    <p className="text-[11px] text-slate-400 mt-1">Publications</p>
+                    <span className="text-xl font-bold font-mono text-purple-400">
+                      {outputs.length}
+                    </span>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Publications
+                    </p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <span className="text-xl font-bold font-mono text-amber-400">{risks.length}</span>
-                    <p className="text-[11px] text-slate-400 mt-1">Logged Risks</p>
+                    <span className="text-xl font-bold font-mono text-amber-400">
+                      {risks.length}
+                    </span>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Logged Risks
+                    </p>
                   </div>
                 </div>
               </div>
@@ -362,27 +504,42 @@ export default function ProjectDetailWorkspacePage({
 
             <div className="space-y-6">
               <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Institutional Metadata</h3>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  Institutional Metadata
+                </h3>
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between border-b border-slate-800/60 pb-2">
                     <span className="text-slate-400">Total Budget:</span>
                     <span className="font-mono font-semibold text-emerald-400">
-                      {project.currency} {Number(project.total_budget_allocated).toLocaleString()}
+                      {project.currency}{" "}
+                      {Number(project.total_budget_allocated).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between border-b border-slate-800/60 pb-2">
                     <span className="text-slate-400">Ethics Approval:</span>
-                    <span className={project.requires_ethics_approval ? "text-amber-400 font-semibold" : "text-slate-400"}>
-                      {project.requires_ethics_approval ? "Mandatory" : "Not Required"}
+                    <span
+                      className={
+                        project.requires_ethics_approval
+                          ? "text-amber-400 font-semibold"
+                          : "text-slate-400"
+                      }
+                    >
+                      {project.requires_ethics_approval
+                        ? "Mandatory"
+                        : "Not Required"}
                     </span>
                   </div>
                   <div className="flex justify-between border-b border-slate-800/60 pb-2">
                     <span className="text-slate-400">International:</span>
-                    <span className="text-slate-300 font-medium">{project.is_international ? "Yes" : "Domestic"}</span>
+                    <span className="text-slate-300 font-medium">
+                      {project.is_international ? "Yes" : "Domestic"}
+                    </span>
                   </div>
                   <div className="flex justify-between border-b border-slate-800/60 pb-2">
                     <span className="text-slate-400">Created At:</span>
-                    <span className="text-slate-300 font-mono text-[11px]">{project.created_at?.split("T")[0]}</span>
+                    <span className="text-slate-300 font-mono text-[11px]">
+                      {project.created_at?.split("T")[0]}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -393,7 +550,9 @@ export default function ProjectDetailWorkspacePage({
         {activeTab === "team" && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-bold text-white">Assigned Research Investigators & Team Roster</h3>
+              <h3 className="text-base font-bold text-white">
+                Assigned Research Investigators & Team Roster
+              </h3>
               <button
                 onClick={() => setIsAddMemberModalOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white"
@@ -420,13 +579,23 @@ export default function ProjectDetailWorkspacePage({
                     <tr key={tm.id} className="hover:bg-slate-800/30">
                       <td className="p-4">
                         <div className="font-semibold text-white">
-                          {tm.user_name || tm.external_collaborator_name || "Campus Scholar"}
+                          {tm.user_name ||
+                            tm.external_collaborator_name ||
+                            "Campus Scholar"}
                         </div>
-                        <div className="text-[11px] text-slate-500">{tm.user_email || "Authorized Member"}</div>
+                        <div className="text-[11px] text-slate-500">
+                          {tm.user_email || "Authorized Member"}
+                        </div>
                       </td>
-                      <td className="p-4 font-medium text-emerald-400">{tm.role}</td>
-                      <td className="p-4 text-slate-400">{tm.external_institution || "Host Institution"}</td>
-                      <td className="p-4 font-mono font-semibold">{tm.workload_percentage || 20}%</td>
+                      <td className="p-4 font-medium text-emerald-400">
+                        {tm.role}
+                      </td>
+                      <td className="p-4 text-slate-400">
+                        {tm.external_institution || "Host Institution"}
+                      </td>
+                      <td className="p-4 font-mono font-semibold">
+                        {tm.workload_percentage || 20}%
+                      </td>
                       <td className="p-4">
                         <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                           {tm.access_scope}
@@ -446,7 +615,9 @@ export default function ProjectDetailWorkspacePage({
         {activeTab === "milestones" && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-bold text-white">Execution Milestones & Verified Deliverables</h3>
+              <h3 className="text-base font-bold text-white">
+                Execution Milestones & Verified Deliverables
+              </h3>
               <button
                 onClick={() => setIsAddMilestoneModalOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white"
@@ -467,14 +638,16 @@ export default function ProjectDetailWorkspacePage({
                       <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                         {ms.milestone_code}
                       </span>
-                      <h4 className="text-sm font-semibold text-white">{ms.title}</h4>
+                      <h4 className="text-sm font-semibold text-white">
+                        {ms.title}
+                      </h4>
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full border ${
                           ms.status === "ACCEPTED"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : ms.status === "BLOCKED"
-                            ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                            : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                              ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              : "bg-amber-500/10 text-amber-400 border-amber-500/20"
                         }`}
                       >
                         {ms.status}
@@ -482,10 +655,22 @@ export default function ProjectDetailWorkspacePage({
                     </div>
                     <p className="text-xs text-slate-400">{ms.description}</p>
                     <div className="text-[11px] text-slate-500 space-x-3">
-                      <span>Planned Due: <strong className="font-mono text-slate-300">{ms.planned_completion_date}</strong></span>
-                      <span>Acceptance Criteria: <strong className="text-slate-300">{ms.acceptance_criteria}</strong></span>
+                      <span>
+                        Planned Due:{" "}
+                        <strong className="font-mono text-slate-300">
+                          {ms.planned_completion_date}
+                        </strong>
+                      </span>
+                      <span>
+                        Acceptance Criteria:{" "}
+                        <strong className="text-slate-300">
+                          {ms.acceptance_criteria}
+                        </strong>
+                      </span>
                       {ms.is_mandatory_for_closure && (
-                        <span className="text-amber-400 font-semibold">• Mandatory for Project Closure</span>
+                        <span className="text-amber-400 font-semibold">
+                          • Mandatory for Project Closure
+                        </span>
                       )}
                     </div>
                   </div>
@@ -511,45 +696,66 @@ export default function ProjectDetailWorkspacePage({
             <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-emerald-400" />
-                Authoritative Project Financial Reconciliation (Finance Source of Truth)
+                Authoritative Project Financial Reconciliation (Finance Source
+                of Truth)
               </h3>
               <p className="text-xs text-slate-400">
-                Expenditure numbers are synchronized directly with institutional general ledger disbursements. Research screens do not create a parallel accounting ledger.
+                Expenditure numbers are synchronized directly with institutional
+                general ledger disbursements. Research screens do not create a
+                parallel accounting ledger.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-xs text-slate-500 uppercase">Approved Budget</span>
+                  <span className="text-xs text-slate-500 uppercase">
+                    Approved Budget
+                  </span>
                   <div className="text-xl font-bold font-mono text-white mt-1">
-                    {project.currency} {Number(project.total_budget_allocated).toLocaleString()}
+                    {project.currency}{" "}
+                    {Number(project.total_budget_allocated).toLocaleString()}
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-xs text-slate-500 uppercase">Committed</span>
+                  <span className="text-xs text-slate-500 uppercase">
+                    Committed
+                  </span>
                   <div className="text-xl font-bold font-mono text-blue-400 mt-1">
                     {project.currency}{" "}
                     {grant_awards
-                      .reduce((s, a) => s + Number(a.committed_expenditure || 0), 0)
+                      .reduce(
+                        (s, a) => s + Number(a.committed_expenditure || 0),
+                        0,
+                      )
                       .toLocaleString()}
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-xs text-slate-500 uppercase">Disbursed / Actual</span>
+                  <span className="text-xs text-slate-500 uppercase">
+                    Disbursed / Actual
+                  </span>
                   <div className="text-xl font-bold font-mono text-purple-400 mt-1">
                     {project.currency}{" "}
                     {grant_awards
-                      .reduce((s, a) => s + Number(a.actual_expenditure || 0), 0)
+                      .reduce(
+                        (s, a) => s + Number(a.actual_expenditure || 0),
+                        0,
+                      )
                       .toLocaleString()}
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-xs text-slate-500 uppercase">Remaining Balance</span>
+                  <span className="text-xs text-slate-500 uppercase">
+                    Remaining Balance
+                  </span>
                   <div className="text-xl font-bold font-mono text-emerald-400 mt-1">
                     {project.currency}{" "}
                     {Math.max(
                       0,
                       Number(project.total_budget_allocated) -
-                        grant_awards.reduce((s, a) => s + Number(a.actual_expenditure || 0), 0)
+                        grant_awards.reduce(
+                          (s, a) => s + Number(a.actual_expenditure || 0),
+                          0,
+                        ),
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -560,12 +766,19 @@ export default function ProjectDetailWorkspacePage({
 
         {activeTab === "ethics" && (
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-white">Institutional Review Board (IRB / IACUC / IBC) Protocols</h3>
+            <h3 className="text-base font-bold text-white">
+              Institutional Review Board (IRB / IACUC / IBC) Protocols
+            </h3>
             {ethics_approvals.length === 0 ? (
-              <p className="text-xs text-slate-500">No ethics protocols currently recorded for this project.</p>
+              <p className="text-xs text-slate-500">
+                No ethics protocols currently recorded for this project.
+              </p>
             ) : (
               ethics_approvals.map((eth) => (
-                <div key={eth.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <div
+                  key={eth.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold">
                       {eth.approval_code}
@@ -574,9 +787,16 @@ export default function ProjectDetailWorkspacePage({
                       {eth.status}
                     </span>
                   </div>
-                  <h4 className="text-sm font-semibold text-white">{eth.review_committee_name}</h4>
-                  <p className="text-xs text-slate-400">Policy Reference: {eth.governing_policy_reference}</p>
-                  <p className="text-xs text-slate-400">Validity: {eth.submission_date} → Expiry: {eth.expiry_date || "Indefinite"}</p>
+                  <h4 className="text-sm font-semibold text-white">
+                    {eth.review_committee_name}
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    Policy Reference: {eth.governing_policy_reference}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    Validity: {eth.submission_date} → Expiry:{" "}
+                    {eth.expiry_date || "Indefinite"}
+                  </p>
                 </div>
               ))
             )}
@@ -585,15 +805,29 @@ export default function ProjectDetailWorkspacePage({
 
         {activeTab === "outputs" && (
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-white">Academic Outputs, Publications & Patents</h3>
+            <h3 className="text-base font-bold text-white">
+              Academic Outputs, Publications & Patents
+            </h3>
             {outputs.length === 0 ? (
-              <p className="text-xs text-slate-500">No academic publications attached to this project.</p>
+              <p className="text-xs text-slate-500">
+                No academic publications attached to this project.
+              </p>
             ) : (
               outputs.map((out) => (
-                <div key={out.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-                  <h4 className="text-sm font-semibold text-white">{out.title}</h4>
-                  <p className="text-xs text-slate-400">Authors: {out.authors_string}</p>
-                  <p className="text-xs text-slate-400">Venue: {out.publication_or_venue_name} | DOI: {out.doi || "Pending"}</p>
+                <div
+                  key={out.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2"
+                >
+                  <h4 className="text-sm font-semibold text-white">
+                    {out.title}
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    Authors: {out.authors_string}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    Venue: {out.publication_or_venue_name} | DOI:{" "}
+                    {out.doi || "Pending"}
+                  </p>
                 </div>
               ))
             )}
@@ -602,18 +836,33 @@ export default function ProjectDetailWorkspacePage({
 
         {activeTab === "risks" && (
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-white">Project Risk & Dependency Register</h3>
+            <h3 className="text-base font-bold text-white">
+              Project Risk & Dependency Register
+            </h3>
             {risks.length === 0 ? (
-              <p className="text-xs text-slate-500">No active risks registered on this project.</p>
+              <p className="text-xs text-slate-500">
+                No active risks registered on this project.
+              </p>
             ) : (
               risks.map((r) => (
-                <div key={r.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <div
+                  key={r.id}
+                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-slate-400">{r.risk_code}</span>
-                    <span className="text-xs font-bold text-rose-400">{r.calculated_risk_level}</span>
+                    <span className="font-mono text-xs text-slate-400">
+                      {r.risk_code}
+                    </span>
+                    <span className="text-xs font-bold text-rose-400">
+                      {r.calculated_risk_level}
+                    </span>
                   </div>
-                  <h4 className="text-sm font-semibold text-white">{r.title}</h4>
-                  <p className="text-xs text-slate-400">Mitigation: {r.mitigation_plan}</p>
+                  <h4 className="text-sm font-semibold text-white">
+                    {r.title}
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    Mitigation: {r.mitigation_plan}
+                  </p>
                 </div>
               ))
             )}
@@ -625,10 +874,14 @@ export default function ProjectDetailWorkspacePage({
       {isTransitionModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Change Project Lifecycle Status</h3>
+            <h3 className="text-lg font-bold text-white">
+              Change Project Lifecycle Status
+            </h3>
             <form onSubmit={handleTransition} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Target Status</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Target Status
+                </label>
                 <select
                   value={targetStatus}
                   onChange={(e) => setTargetStatus(e.target.value)}
@@ -646,7 +899,9 @@ export default function ProjectDetailWorkspacePage({
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Reason / Justification</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Reason / Justification
+                </label>
                 <textarea
                   rows={3}
                   value={transitionReason}
@@ -681,28 +936,41 @@ export default function ProjectDetailWorkspacePage({
       {isAddMemberModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Add Team Member to Project</h3>
+            <h3 className="text-lg font-bold text-white">
+              Add Team Member to Project
+            </h3>
             <form onSubmit={handleAddMember} className="space-y-3 text-xs">
               <div>
                 <label className="block text-slate-400 mb-1">Role</label>
                 <select
                   value={memberForm.role}
-                  onChange={(e) => setMemberForm({ ...memberForm, role: e.target.value })}
+                  onChange={(e) =>
+                    setMemberForm({ ...memberForm, role: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 >
                   <option value="CO_INVESTIGATOR">Co-Investigator</option>
                   <option value="POSTDOC_RESEARCHER">Postdoc Researcher</option>
                   <option value="RESEARCH_SCHOLAR">Research Scholar</option>
                   <option value="STUDENT_RESEARCHER">Student Researcher</option>
-                  <option value="INDUSTRY_COLLABORATOR">Industry Collaborator</option>
+                  <option value="INDUSTRY_COLLABORATOR">
+                    Industry Collaborator
+                  </option>
                 </select>
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">External Collaborator Name (if applicable)</label>
+                <label className="block text-slate-400 mb-1">
+                  External Collaborator Name (if applicable)
+                </label>
                 <input
                   type="text"
                   value={memberForm.external_collaborator_name}
-                  onChange={(e) => setMemberForm({ ...memberForm, external_collaborator_name: e.target.value })}
+                  onChange={(e) =>
+                    setMemberForm({
+                      ...memberForm,
+                      external_collaborator_name: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
@@ -711,16 +979,28 @@ export default function ProjectDetailWorkspacePage({
                 <input
                   type="text"
                   value={memberForm.external_institution}
-                  onChange={(e) => setMemberForm({ ...memberForm, external_institution: e.target.value })}
+                  onChange={(e) =>
+                    setMemberForm({
+                      ...memberForm,
+                      external_institution: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Workload Allocation %</label>
+                <label className="block text-slate-400 mb-1">
+                  Workload Allocation %
+                </label>
                 <input
                   type="number"
                   value={memberForm.workload_percentage}
-                  onChange={(e) => setMemberForm({ ...memberForm, workload_percentage: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setMemberForm({
+                      ...memberForm,
+                      workload_percentage: Number(e.target.value),
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
@@ -748,14 +1028,23 @@ export default function ProjectDetailWorkspacePage({
       {isAddMilestoneModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Add Project Milestone</h3>
+            <h3 className="text-lg font-bold text-white">
+              Add Project Milestone
+            </h3>
             <form onSubmit={handleAddMilestone} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Milestone Title</label>
+                <label className="block text-slate-400 mb-1">
+                  Milestone Title
+                </label>
                 <input
                   type="text"
                   value={milestoneForm.title}
-                  onChange={(e) => setMilestoneForm({ ...milestoneForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setMilestoneForm({
+                      ...milestoneForm,
+                      title: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
@@ -765,26 +1054,45 @@ export default function ProjectDetailWorkspacePage({
                 <textarea
                   rows={2}
                   value={milestoneForm.description}
-                  onChange={(e) => setMilestoneForm({ ...milestoneForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setMilestoneForm({
+                      ...milestoneForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Planned Completion Date</label>
+                <label className="block text-slate-400 mb-1">
+                  Planned Completion Date
+                </label>
                 <input
                   type="date"
                   value={milestoneForm.planned_date}
-                  onChange={(e) => setMilestoneForm({ ...milestoneForm, planned_date: e.target.value })}
+                  onChange={(e) =>
+                    setMilestoneForm({
+                      ...milestoneForm,
+                      planned_date: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Acceptance Criteria</label>
+                <label className="block text-slate-400 mb-1">
+                  Acceptance Criteria
+                </label>
                 <input
                   type="text"
                   value={milestoneForm.acceptance_criteria}
-                  onChange={(e) => setMilestoneForm({ ...milestoneForm, acceptance_criteria: e.target.value })}
+                  onChange={(e) =>
+                    setMilestoneForm({
+                      ...milestoneForm,
+                      acceptance_criteria: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
@@ -795,7 +1103,10 @@ export default function ProjectDetailWorkspacePage({
                   id="closure_mand"
                   checked={milestoneForm.is_mandatory_for_closure}
                   onChange={(e) =>
-                    setMilestoneForm({ ...milestoneForm, is_mandatory_for_closure: e.target.checked })
+                    setMilestoneForm({
+                      ...milestoneForm,
+                      is_mandatory_for_closure: e.target.checked,
+                    })
                   }
                   className="rounded bg-slate-950 border-slate-800 text-emerald-600"
                 />

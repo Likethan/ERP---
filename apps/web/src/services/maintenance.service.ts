@@ -29,7 +29,6 @@ class MaintenanceService {
     status?: MaintenanceStatus | string;
     search?: string;
   }): Promise<ApiResponse<MaintenanceRequest[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.requests];
 
     if (filters?.sourceType && filters.sourceType !== "ALL") {
@@ -63,7 +62,6 @@ class MaintenanceService {
   async getMaintenanceRequestById(
     id: string,
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const req =
       this.requests.find((m) => m.id === id || m.workOrderNumber === id) ||
       null;
@@ -96,8 +94,6 @@ class MaintenanceService {
     description: string;
     estimatedCostInr?: number;
   }): Promise<ApiResponse<MaintenanceRequest>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     const slaCalc = calculateMaintenanceSLAStatus(
       new Date().toISOString(),
       payload.priority,
@@ -142,7 +138,6 @@ class MaintenanceService {
     },
     assignedBy: string = "Estate Supervisor",
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((m) => m.id === id);
     if (!req) return { success: false, data: null };
 
@@ -196,7 +191,6 @@ class MaintenanceService {
     notes?: string,
     actualCostInr?: number,
   ): Promise<ApiResponse<MaintenanceRequest | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((m) => m.id === id);
     if (!req) return { success: false, data: null };
 

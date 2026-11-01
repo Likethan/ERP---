@@ -4,7 +4,7 @@ import type {
   PaginatedResponse,
 } from "@campusos/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export class ApiClientError extends Error {
   constructor(
@@ -20,6 +20,20 @@ export class ApiClientError extends Error {
 }
 
 const inFlightRequests = new Map<string, Promise<unknown>>();
+
+function getSignalWithTimeout(
+  customSignal?: AbortSignal | null,
+  timeoutMs = 3500,
+): AbortSignal | undefined {
+  if (customSignal) return customSignal;
+  if (
+    typeof AbortSignal !== "undefined" &&
+    typeof AbortSignal.timeout === "function"
+  ) {
+    return AbortSignal.timeout(timeoutMs);
+  }
+  return undefined;
+}
 
 /**
  * Type-safe HTTP client for CampusOS Backend API with in-flight GET request deduplication.
@@ -47,6 +61,7 @@ export async function apiFetch<T>(
 
     const response = await fetch(url, {
       ...options,
+      signal: getSignalWithTimeout(options.signal),
       headers,
       credentials: "include",
     });
@@ -110,6 +125,7 @@ export async function apiFetchPaginated<T>(
 
     const response = await fetch(url, {
       ...options,
+      signal: getSignalWithTimeout(options.signal),
       headers,
       credentials: "include",
     });

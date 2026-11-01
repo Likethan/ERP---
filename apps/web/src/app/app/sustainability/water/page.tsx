@@ -25,7 +25,9 @@ export default function SustainabilityWaterPage() {
   const [location, setLocation] = useState("");
   const [incidentType, setIncidentType] = useState("LEAK_PIPE");
   const [estimatedLoss, setEstimatedLoss] = useState(2500);
-  const [severity, setSeverity] = useState<"LOW" | "MEDIUM" | "HIGH" | "CRITICAL">("MEDIUM");
+  const [severity, setSeverity] = useState<
+    "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
+  >("MEDIUM");
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
@@ -73,54 +75,82 @@ export default function SustainabilityWaterPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Municipal Supply</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Municipal Supply
+            </span>
             <span className="p-2 rounded-lg bg-blue-950 text-blue-400 border border-blue-800">
               <Droplets className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-slate-100">
-            45,000 <span className="text-xs font-normal text-slate-400">kL / month</span>
+            45,000{" "}
+            <span className="text-xs font-normal text-slate-400">
+              kL / month
+            </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Metrowater Bulk Intake Pipeline</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Metrowater Bulk Intake Pipeline
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Borewell Recharge</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Borewell Recharge
+            </span>
             <span className="p-2 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800">
               <Waves className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-cyan-400">
-            22,500 <span className="text-xs font-normal text-slate-400">kL / month</span>
+            22,500{" "}
+            <span className="text-xs font-normal text-slate-400">
+              kL / month
+            </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Permitted under CGWA NOC #8821</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Permitted under CGWA NOC #8821
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">STP Recycled Water</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              STP Recycled Water
+            </span>
             <span className="p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800">
               <Droplets className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-emerald-400">
-            43,500 <span className="text-xs font-normal text-slate-400">kL (64.5%)</span>
+            43,500{" "}
+            <span className="text-xs font-normal text-slate-400">
+              kL (64.5%)
+            </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Tertiary treated for cooling towers & turf</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Tertiary treated for cooling towers & turf
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Rainwater Harvested</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Rainwater Harvested
+            </span>
             <span className="p-2 rounded-lg bg-indigo-950 text-indigo-400 border border-indigo-800">
               <CloudRain className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-indigo-400">
-            18,200 <span className="text-xs font-normal text-slate-400">kL Storage</span>
+            18,200{" "}
+            <span className="text-xs font-normal text-slate-400">
+              kL Storage
+            </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">12 interconnected recharge percolation pits</p>
+          <p className="text-xs text-slate-400 mt-1">
+            12 interconnected recharge percolation pits
+          </p>
         </div>
       </div>
 
@@ -170,9 +200,13 @@ export default function SustainabilityWaterPage() {
                     {inc.incident_code}
                   </td>
                   <td className="py-3.5 px-4">
-                    <div className="font-semibold text-slate-100">{inc.location}</div>
+                    <div className="font-semibold text-slate-100">
+                      {inc.location}
+                    </div>
                     {inc.remediation_notes && (
-                      <div className="text-[11px] text-slate-400 mt-0.5">{inc.remediation_notes}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">
+                        {inc.remediation_notes}
+                      </div>
                     )}
                   </td>
                   <td className="py-3.5 px-4">
@@ -234,7 +268,9 @@ export default function SustainabilityWaterPage() {
 
             <form onSubmit={handleReport} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Location</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Location
+                </label>
                 <input
                   type="text"
                   required
@@ -246,7 +282,9 @@ export default function SustainabilityWaterPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Incident Type</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Incident Type
+                </label>
                 <select
                   value={incidentType}
                   onChange={(e) => setIncidentType(e.target.value)}
@@ -254,14 +292,18 @@ export default function SustainabilityWaterPage() {
                 >
                   <option value="LEAK_PIPE">Pipe Burst / Joint Leak</option>
                   <option value="OVERFLOW_TANK">Overhead Tank Overflow</option>
-                  <option value="BOREWELL_FAULT">Borewell Submersible Pump Fault</option>
+                  <option value="BOREWELL_FAULT">
+                    Borewell Submersible Pump Fault
+                  </option>
                   <option value="VALVE_FAILURE">Pressure Valve Failure</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Estimated Loss (Litres)</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Estimated Loss (Litres)
+                  </label>
                   <input
                     type="number"
                     value={estimatedLoss}
@@ -270,7 +312,9 @@ export default function SustainabilityWaterPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Severity</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Severity
+                  </label>
                   <select
                     value={severity}
                     onChange={(e) => setSeverity(e.target.value as any)}
@@ -285,7 +329,9 @@ export default function SustainabilityWaterPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Remediation / Inspection Notes</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Remediation / Inspection Notes
+                </label>
                 <textarea
                   rows={2}
                   placeholder="Details of damage or immediate valve shut-off..."
@@ -317,4 +363,3 @@ export default function SustainabilityWaterPage() {
     </div>
   );
 }
-

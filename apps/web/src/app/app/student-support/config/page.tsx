@@ -42,10 +42,24 @@ export default function StudentSupportConfigPage() {
     try {
       const data = await StudentSupportService.getPolicyConfig();
       setConfig(data);
-      setMaxMentees(data.max_mentees_per_mentor ?? data.maxMenteesPerMentor ?? 20);
-      setMaxAdvanceDays(data.advance_booking_window_days ?? data.appointmentAdvanceBookingDays ?? 30);
-      setMinCancelHours(data.cancellation_lead_hours ?? data.appointmentCancellationLeadHours ?? 4);
-      setRequireConsent(data.require_referral_consent ?? data.requireStudentConsentForReferral ?? true);
+      setMaxMentees(
+        data.max_mentees_per_mentor ?? data.maxMenteesPerMentor ?? 20,
+      );
+      setMaxAdvanceDays(
+        data.advance_booking_window_days ??
+          data.appointmentAdvanceBookingDays ??
+          30,
+      );
+      setMinCancelHours(
+        data.cancellation_lead_hours ??
+          data.appointmentCancellationLeadHours ??
+          4,
+      );
+      setRequireConsent(
+        data.require_referral_consent ??
+          data.requireStudentConsentForReferral ??
+          true,
+      );
       setSuppressionThreshold(data.privacy_suppression_threshold ?? 5);
     } catch (err) {
       console.error("Failed to load policy config:", err);
@@ -66,7 +80,9 @@ export default function StudentSupportConfigPage() {
         privacy_suppression_threshold: Number(suppressionThreshold),
       });
       setConfig(updated);
-      setNotification("Institutional student support configuration saved successfully.");
+      setNotification(
+        "Institutional student support configuration saved successfully.",
+      );
     } catch (err) {
       console.error("Failed to save config:", err);
       alert("Error updating configuration.");
@@ -92,7 +108,8 @@ export default function StudentSupportConfigPage() {
               Student Support Policies & Capacity Configuration
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Configure faculty mentoring workload caps, appointment booking rules, privacy thresholds, and RBAC policies.
+              Configure faculty mentoring workload caps, appointment booking
+              rules, privacy thresholds, and RBAC policies.
             </p>
           </div>
         </div>
@@ -106,7 +123,10 @@ export default function StudentSupportConfigPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -118,13 +138,19 @@ export default function StudentSupportConfigPage() {
           <Card className="border-slate-800 bg-slate-900/60 p-6 space-y-5">
             <form onSubmit={handleSaveConfig} className="space-y-5 text-xs">
               <div>
-                <h2 className="text-sm font-semibold text-white mb-1">Mentoring Workload Rules</h2>
-                <p className="text-slate-400">Institutional ceilings to prevent faculty overburdening</p>
+                <h2 className="text-sm font-semibold text-white mb-1">
+                  Mentoring Workload Rules
+                </h2>
+                <p className="text-slate-400">
+                  Institutional ceilings to prevent faculty overburdening
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Maximum Mentees per Faculty Mentor</label>
+                  <label className="text-slate-400 font-medium">
+                    Maximum Mentees per Faculty Mentor
+                  </label>
                   <Input
                     type="number"
                     min={1}
@@ -134,12 +160,15 @@ export default function StudentSupportConfigPage() {
                     className="bg-slate-950 border-slate-800 text-xs"
                   />
                   <p className="text-[11px] text-slate-500">
-                    System prevents manual or automated allocation beyond this cap.
+                    System prevents manual or automated allocation beyond this
+                    cap.
                   </p>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Default IDP Review Cadence</label>
+                  <label className="text-slate-400 font-medium">
+                    Default IDP Review Cadence
+                  </label>
                   <select
                     disabled
                     className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-slate-400"
@@ -153,13 +182,19 @@ export default function StudentSupportConfigPage() {
               </div>
 
               <div className="pt-2 border-t border-slate-800">
-                <h2 className="text-sm font-semibold text-white mb-1">Counselling Booking & Lead Times</h2>
-                <p className="text-slate-400">Rules governing student appointment scheduling</p>
+                <h2 className="text-sm font-semibold text-white mb-1">
+                  Counselling Booking & Lead Times
+                </h2>
+                <p className="text-slate-400">
+                  Rules governing student appointment scheduling
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Advance Booking Window (Days)</label>
+                  <label className="text-slate-400 font-medium">
+                    Advance Booking Window (Days)
+                  </label>
                   <Input
                     type="number"
                     min={1}
@@ -169,12 +204,15 @@ export default function StudentSupportConfigPage() {
                     className="bg-slate-950 border-slate-800 text-xs"
                   />
                   <p className="text-[11px] text-slate-500">
-                    Maximum days in advance a student can reserve a counselling slot.
+                    Maximum days in advance a student can reserve a counselling
+                    slot.
                   </p>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Minimum Cancellation Lead Time (Hours)</label>
+                  <label className="text-slate-400 font-medium">
+                    Minimum Cancellation Lead Time (Hours)
+                  </label>
                   <Input
                     type="number"
                     min={0}
@@ -184,14 +222,19 @@ export default function StudentSupportConfigPage() {
                     className="bg-slate-950 border-slate-800 text-xs"
                   />
                   <p className="text-[11px] text-slate-500">
-                    Notice required to cancel or reschedule without marking late-drop.
+                    Notice required to cancel or reschedule without marking
+                    late-drop.
                   </p>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-slate-800">
-                <h2 className="text-sm font-semibold text-white mb-1">Consent & Differential Privacy</h2>
-                <p className="text-slate-400">Privacy boundaries and data protection enforcement</p>
+                <h2 className="text-sm font-semibold text-white mb-1">
+                  Consent & Differential Privacy
+                </h2>
+                <p className="text-slate-400">
+                  Privacy boundaries and data protection enforcement
+                </p>
               </div>
 
               <div className="space-y-3">
@@ -203,22 +246,28 @@ export default function StudentSupportConfigPage() {
                     className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0"
                   />
                   <span className="text-slate-200">
-                    Enforce explicit student consent verification before dispatching inter-service referrals
+                    Enforce explicit student consent verification before
+                    dispatching inter-service referrals
                   </span>
                 </label>
 
                 <div className="space-y-1 max-w-xs">
-                  <label className="text-slate-400 font-medium">Small-Group Suppression Threshold</label>
+                  <label className="text-slate-400 font-medium">
+                    Small-Group Suppression Threshold
+                  </label>
                   <Input
                     type="number"
                     min={3}
                     max={20}
                     value={suppressionThreshold}
-                    onChange={(e) => setSuppressionThreshold(Number(e.target.value))}
+                    onChange={(e) =>
+                      setSuppressionThreshold(Number(e.target.value))
+                    }
                     className="bg-slate-950 border-slate-800 text-xs"
                   />
                   <p className="text-[11px] text-slate-500">
-                    Cohorts below this count are suppressed from institutional telemetry.
+                    Cohorts below this count are suppressed from institutional
+                    telemetry.
                   </p>
                 </div>
               </div>
@@ -248,21 +297,26 @@ export default function StudentSupportConfigPage() {
               <div className="p-2.5 rounded bg-slate-950 border border-slate-800">
                 <div className="font-semibold text-white">Student</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  View assigned mentor, request meetings, view & update own IDP goals, book counselling, submit session reflections.
+                  View assigned mentor, request meetings, view & update own IDP
+                  goals, book counselling, submit session reflections.
                 </div>
               </div>
 
               <div className="p-2.5 rounded bg-slate-950 border border-slate-800">
                 <div className="font-semibold text-white">Faculty Mentor</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  View mentee directory, schedule mentoring sessions, review IDP progress, record action items, initiate referrals.
+                  View mentee directory, schedule mentoring sessions, review IDP
+                  progress, record action items, initiate referrals.
                 </div>
               </div>
 
               <div className="p-2.5 rounded bg-slate-950 border border-slate-800">
-                <div className="font-semibold text-white">HOD / Department Chair</div>
+                <div className="font-semibold text-white">
+                  HOD / Department Chair
+                </div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
-                  Oversee department mentor allocations, reassign mentors, view aggregate cohort completion rates.
+                  Oversee department mentor allocations, reassign mentors, view
+                  aggregate cohort completion rates.
                 </div>
               </div>
 
@@ -272,7 +326,12 @@ export default function StudentSupportConfigPage() {
                   Licensed Clinical Counsellor
                 </div>
                 <div className="text-[11px] text-slate-300 mt-0.5">
-                  Exclusive access to <code className="text-amber-400 font-mono">COUNSELLING_CONFIDENTIAL_READ/WRITE</code>. Confidential clinical notes are strictly walled off from mentors, HODs, and administrators.
+                  Exclusive access to{" "}
+                  <code className="text-amber-400 font-mono">
+                    COUNSELLING_CONFIDENTIAL_READ/WRITE
+                  </code>
+                  . Confidential clinical notes are strictly walled off from
+                  mentors, HODs, and administrators.
                 </div>
               </div>
             </div>

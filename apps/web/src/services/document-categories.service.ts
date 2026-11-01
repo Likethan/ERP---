@@ -9,14 +9,12 @@ class DocumentCategoriesService {
   private categories: DocumentCategory[] = [...MOCK_DOCUMENT_CATEGORIES];
 
   async listCategories(): Promise<ApiResponse<DocumentCategory[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: [...this.categories] };
   }
 
   async getCategoryById(
     id: string,
   ): Promise<ApiResponse<DocumentCategory | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const cat = this.categories.find((c) => c.id === id) || null;
     return { success: true, data: cat };
   }
@@ -24,7 +22,6 @@ class DocumentCategoriesService {
   async getCategoryByCode(
     code: DocumentCategoryCode,
   ): Promise<ApiResponse<DocumentCategory | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const cat = this.categories.find((c) => c.code === code) || null;
     return { success: true, data: cat };
   }
@@ -32,7 +29,6 @@ class DocumentCategoriesService {
   async createCategory(
     data: Partial<DocumentCategory>,
   ): Promise<ApiResponse<DocumentCategory>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newCategory: DocumentCategory = {
       id: `cat-${Date.now()}`,
       name: data.name || "New Category",
@@ -69,7 +65,6 @@ class DocumentCategoriesService {
     id: string,
     data: Partial<DocumentCategory>,
   ): Promise<ApiResponse<DocumentCategory>> {
-    await new Promise((r) => setTimeout(r, 50));
     const cat = this.categories.find((c) => c.id === id);
     if (!cat) {
       throw new Error(`Category with ID ${id} not found`);

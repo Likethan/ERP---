@@ -56,28 +56,67 @@ console.log("CAMPUSOS STEP 62: LEGAL OPERATIONS FRONTEND TEST SUITE");
 console.log("=======================================================\n");
 
 // 1. Contract Lifecycle Transitions
-runTest("Lifecycle: DRAFT can transition to INTERNAL_REVIEW, ON_HOLD, WITHDRAWN", () => {
-  assert(canTransitionContract("DRAFT", "INTERNAL_REVIEW"), "DRAFT must transition to INTERNAL_REVIEW");
-  assert(canTransitionContract("DRAFT", "ON_HOLD"), "DRAFT can be placed ON_HOLD");
-  assert(canTransitionContract("DRAFT", "WITHDRAWN"), "DRAFT can be WITHDRAWN");
-  assert(!canTransitionContract("DRAFT", "EXECUTED"), "DRAFT cannot directly transition to EXECUTED");
-  assert(!canTransitionContract("DRAFT", "ACTIVE"), "DRAFT cannot directly transition to ACTIVE");
-});
+runTest(
+  "Lifecycle: DRAFT can transition to INTERNAL_REVIEW, ON_HOLD, WITHDRAWN",
+  () => {
+    assert(
+      canTransitionContract("DRAFT", "INTERNAL_REVIEW"),
+      "DRAFT must transition to INTERNAL_REVIEW",
+    );
+    assert(
+      canTransitionContract("DRAFT", "ON_HOLD"),
+      "DRAFT can be placed ON_HOLD",
+    );
+    assert(
+      canTransitionContract("DRAFT", "WITHDRAWN"),
+      "DRAFT can be WITHDRAWN",
+    );
+    assert(
+      !canTransitionContract("DRAFT", "EXECUTED"),
+      "DRAFT cannot directly transition to EXECUTED",
+    );
+    assert(
+      !canTransitionContract("DRAFT", "ACTIVE"),
+      "DRAFT cannot directly transition to ACTIVE",
+    );
+  },
+);
 
 runTest("Lifecycle: Legal and Authorized approval transitions", () => {
-  assert(canTransitionContract("INTERNAL_REVIEW", "DEPARTMENT_APPROVAL"), "INTERNAL_REVIEW -> DEPARTMENT_APPROVAL");
-  assert(canTransitionContract("DEPARTMENT_APPROVAL", "LEGAL_REVIEW"), "DEPARTMENT_APPROVAL -> LEGAL_REVIEW");
-  assert(canTransitionContract("LEGAL_REVIEW", "AUTHORIZED_APPROVAL"), "LEGAL_REVIEW -> AUTHORIZED_APPROVAL");
-  assert(canTransitionContract("AUTHORIZED_APPROVAL", "READY_FOR_EXECUTION"), "AUTHORIZED_APPROVAL -> READY_FOR_EXECUTION");
-  assert(canTransitionContract("READY_FOR_EXECUTION", "EXECUTED"), "READY_FOR_EXECUTION -> EXECUTED");
+  assert(
+    canTransitionContract("INTERNAL_REVIEW", "DEPARTMENT_APPROVAL"),
+    "INTERNAL_REVIEW -> DEPARTMENT_APPROVAL",
+  );
+  assert(
+    canTransitionContract("DEPARTMENT_APPROVAL", "LEGAL_REVIEW"),
+    "DEPARTMENT_APPROVAL -> LEGAL_REVIEW",
+  );
+  assert(
+    canTransitionContract("LEGAL_REVIEW", "AUTHORIZED_APPROVAL"),
+    "LEGAL_REVIEW -> AUTHORIZED_APPROVAL",
+  );
+  assert(
+    canTransitionContract("AUTHORIZED_APPROVAL", "READY_FOR_EXECUTION"),
+    "AUTHORIZED_APPROVAL -> READY_FOR_EXECUTION",
+  );
+  assert(
+    canTransitionContract("READY_FOR_EXECUTION", "EXECUTED"),
+    "READY_FOR_EXECUTION -> EXECUTED",
+  );
   assert(canTransitionContract("EXECUTED", "ACTIVE"), "EXECUTED -> ACTIVE");
 });
 
 runTest("Lifecycle: Terminal and Reversal transitions", () => {
   assert(canTransitionContract("ACTIVE", "EXPIRING"), "ACTIVE -> EXPIRING");
   assert(canTransitionContract("ACTIVE", "TERMINATED"), "ACTIVE -> TERMINATED");
-  assert(canTransitionContract("LEGAL_REVIEW", "REJECTED"), "LEGAL_REVIEW can reject");
-  assert(!canTransitionContract("ARCHIVED", "DRAFT"), "ARCHIVED cannot revert to DRAFT");
+  assert(
+    canTransitionContract("LEGAL_REVIEW", "REJECTED"),
+    "LEGAL_REVIEW can reject",
+  );
+  assert(
+    !canTransitionContract("ARCHIVED", "DRAFT"),
+    "ARCHIVED cannot revert to DRAFT",
+  );
 });
 
 // 2. 5x5 Enterprise Risk Matrix Scoring
@@ -138,21 +177,30 @@ runTest("Obligations: Overdue evaluation logic", () => {
     created_at: "2020-01-01",
     updated_at: "2020-01-01",
   };
-  assert(isObligationOverdue(pastObl), "Past pending obligation must be overdue");
+  assert(
+    isObligationOverdue(pastObl),
+    "Past pending obligation must be overdue",
+  );
 
   const completedObl: ContractObligation = {
     ...pastObl,
     id: "obl-comp",
     status: "COMPLETED",
   };
-  assert(!isObligationOverdue(completedObl), "Completed past obligation must not be overdue");
+  assert(
+    !isObligationOverdue(completedObl),
+    "Completed past obligation must not be overdue",
+  );
 
   const futureObl: ContractObligation = {
     ...pastObl,
     id: "obl-fut",
     due_date: "2099-12-31",
   };
-  assert(!isObligationOverdue(futureObl), "Future obligation must not be overdue");
+  assert(
+    !isObligationOverdue(futureObl),
+    "Future obligation must not be overdue",
+  );
 });
 
 runTest("Obligations: Aggregate health summary calculation", () => {
@@ -245,20 +293,28 @@ runTest("Obligations: Aggregate health summary calculation", () => {
 
 // 4. Formatting and Presentation
 runTest("Presentation: Currency formatting", () => {
-  assertEquals(formatCurrency(480000, "USD"), "$480,000", "480000 USD formatted");
-  assertEquals(formatCurrency(undefined), "—", "Undefined currency formatted as —");
+  assertEquals(
+    formatCurrency(480000, "USD"),
+    "$480,000",
+    "480000 USD formatted",
+  );
+  assertEquals(
+    formatCurrency(undefined),
+    "—",
+    "Undefined currency formatted as —",
+  );
 });
 
 runTest("Presentation: Execution method labeling", () => {
   assertEquals(
     getExecutionMethodLabel("EXTERNAL_DIGITAL_SUITE_CONFIRMED"),
     "DocuSign / Adobe Sign Audit Certificate",
-    "External digital suite label"
+    "External digital suite label",
   );
   assertEquals(
     getExecutionMethodLabel("WET_SIGNATURE_CONFIRMED"),
     "Physical Wet Signature (Countersigned Scan)",
-    "Wet signature label"
+    "Wet signature label",
   );
 });
 

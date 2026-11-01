@@ -31,18 +31,25 @@ function EvidenceReviewContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
   const [evidenceList, setEvidenceList] = useState<CaseEvidenceModel[]>([]);
 
   // Upload modal states
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadDesc, setUploadDesc] = useState("");
-  const [uploadType, setUploadType] = useState<SAEvidenceType>(SAEvidenceType.DOCUMENT);
-  const [uploadAccess, setUploadAccess] = useState<SAEvidenceAccessLevel>(SAEvidenceAccessLevel.PANEL_AND_OFFICERS);
+  const [uploadType, setUploadType] = useState<SAEvidenceType>(
+    SAEvidenceType.DOCUMENT,
+  );
+  const [uploadAccess, setUploadAccess] = useState<SAEvidenceAccessLevel>(
+    SAEvidenceAccessLevel.PANEL_AND_OFFICERS,
+  );
   const [uploadUrl, setUploadUrl] = useState("");
 
   // Redaction modal states
-  const [redactionTarget, setRedactionTarget] = useState<CaseEvidenceModel | null>(null);
+  const [redactionTarget, setRedactionTarget] =
+    useState<CaseEvidenceModel | null>(null);
   const [redactionSummary, setRedactionSummary] = useState("");
   const [redactedUrl, setRedactedUrl] = useState("");
 
@@ -83,7 +90,9 @@ function EvidenceReviewContent() {
         fileSizeBytes: 1048576,
         confidentialityLevel: uploadAccess,
       });
-      setNotification("Evidence file linked securely with assigned access tier.");
+      setNotification(
+        "Evidence file linked securely with assigned access tier.",
+      );
       setUploadTitle("");
       setUploadDesc("");
       setUploadUrl("");
@@ -105,9 +114,12 @@ function EvidenceReviewContent() {
       await studentAffairsService.redactEvidence({
         evidenceId: redactionTarget.id,
         redactionSummary,
-        redactedFileUrl: redactedUrl || `/secure/evidence/redacted_${redactionTarget.id}.pdf`,
+        redactedFileUrl:
+          redactedUrl || `/secure/evidence/redacted_${redactionTarget.id}.pdf`,
       });
-      setNotification(`Redacted copy created for panel disclosure, preserving original record ID ${redactionTarget.id}.`);
+      setNotification(
+        `Redacted copy created for panel disclosure, preserving original record ID ${redactionTarget.id}.`,
+      );
       setRedactionTarget(null);
       setRedactionSummary("");
       setRedactedUrl("");
@@ -136,7 +148,8 @@ function EvidenceReviewContent() {
           Evidence Locker, Redaction & Document Review
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Cryptographically isolated attachment storage, multi-tier witness access controls, and auditable redaction workflows.
+          Cryptographically isolated attachment storage, multi-tier witness
+          access controls, and auditable redaction workflows.
         </p>
       </div>
 
@@ -148,7 +161,10 @@ function EvidenceReviewContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setNotification("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -166,7 +182,8 @@ function EvidenceReviewContent() {
         >
           {cases.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.case_number} - {c.title} ({c.evidence_items?.length || 0} evidence files)
+              {c.case_number} - {c.title} ({c.evidence_items?.length || 0}{" "}
+              evidence files)
             </option>
           ))}
         </select>
@@ -193,7 +210,9 @@ function EvidenceReviewContent() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-indigo-400" />
-                      <span className="font-semibold text-white text-xs">{ev.title}</span>
+                      <span className="font-semibold text-white text-xs">
+                        {ev.title}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge className="bg-indigo-500/10 text-indigo-300 border-indigo-500/20 text-[10px]">
@@ -207,7 +226,9 @@ function EvidenceReviewContent() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-400">{ev.description || "No supplemental description provided."}</p>
+                  <p className="text-xs text-slate-400">
+                    {ev.description || "No supplemental description provided."}
+                  </p>
 
                   {ev.redaction_summary && (
                     <div className="p-2.5 rounded bg-amber-950/20 border border-amber-500/20 text-[11px] text-amber-300">
@@ -228,7 +249,11 @@ function EvidenceReviewContent() {
                           Create Redacted Copy
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" className="h-6 text-[11px] text-indigo-400 gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 text-[11px] text-indigo-400 gap-1"
+                      >
                         <Download className="h-3 w-3" />
                         Download
                       </Button>
@@ -249,7 +274,9 @@ function EvidenceReviewContent() {
             </h2>
             <form onSubmit={handleUpload} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1">Evidence Title *</label>
+                <label className="block text-slate-300 mb-1">
+                  Evidence Title *
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. CCTV Gate 3 Entry Log / Written Statement"
@@ -261,36 +288,66 @@ function EvidenceReviewContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Evidence Type</label>
+                <label className="block text-slate-300 mb-1">
+                  Evidence Type
+                </label>
                 <select
                   value={uploadType}
-                  onChange={(e) => setUploadType(e.target.value as SAEvidenceType)}
+                  onChange={(e) =>
+                    setUploadType(e.target.value as SAEvidenceType)
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
                 >
-                  <option value={SAEvidenceType.DOCUMENT}>DOCUMENT (PDF/Doc)</option>
-                  <option value={SAEvidenceType.IMAGE}>IMAGE (Photo/Sensor capture)</option>
-                  <option value={SAEvidenceType.TESTIMONY}>TESTIMONY (Witness interview statement)</option>
-                  <option value={SAEvidenceType.SECURITY_LOG}>SECURITY LOG (Access control logs)</option>
-                  <option value={SAEvidenceType.COMMUNICATION_LOG}>COMMUNICATION LOG (Email/Chat transcripts)</option>
+                  <option value={SAEvidenceType.DOCUMENT}>
+                    DOCUMENT (PDF/Doc)
+                  </option>
+                  <option value={SAEvidenceType.IMAGE}>
+                    IMAGE (Photo/Sensor capture)
+                  </option>
+                  <option value={SAEvidenceType.TESTIMONY}>
+                    TESTIMONY (Witness interview statement)
+                  </option>
+                  <option value={SAEvidenceType.SECURITY_LOG}>
+                    SECURITY LOG (Access control logs)
+                  </option>
+                  <option value={SAEvidenceType.COMMUNICATION_LOG}>
+                    COMMUNICATION LOG (Email/Chat transcripts)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Confidentiality Tier</label>
+                <label className="block text-slate-300 mb-1">
+                  Confidentiality Tier
+                </label>
                 <select
                   value={uploadAccess}
-                  onChange={(e) => setUploadAccess(e.target.value as SAEvidenceAccessLevel)}
+                  onChange={(e) =>
+                    setUploadAccess(e.target.value as SAEvidenceAccessLevel)
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
                 >
-                  <option value={SAEvidenceAccessLevel.PANEL_AND_OFFICERS}>PANEL & OFFICERS (Hearing committee)</option>
-                  <option value={SAEvidenceAccessLevel.PARTICIPANTS_ONLY}>PARTICIPANTS ONLY (Both parties)</option>
-                  <option value={SAEvidenceAccessLevel.RESTRICTED_INVESTIGATOR_ONLY}>RESTRICTED (Lead Investigator only)</option>
-                  <option value={SAEvidenceAccessLevel.PUBLIC_DISCLOSED}>PUBLIC DISCLOSED (Open summary)</option>
+                  <option value={SAEvidenceAccessLevel.PANEL_AND_OFFICERS}>
+                    PANEL & OFFICERS (Hearing committee)
+                  </option>
+                  <option value={SAEvidenceAccessLevel.PARTICIPANTS_ONLY}>
+                    PARTICIPANTS ONLY (Both parties)
+                  </option>
+                  <option
+                    value={SAEvidenceAccessLevel.RESTRICTED_INVESTIGATOR_ONLY}
+                  >
+                    RESTRICTED (Lead Investigator only)
+                  </option>
+                  <option value={SAEvidenceAccessLevel.PUBLIC_DISCLOSED}>
+                    PUBLIC DISCLOSED (Open summary)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Description / Notes</label>
+                <label className="block text-slate-300 mb-1">
+                  Description / Notes
+                </label>
                 <textarea
                   rows={2}
                   placeholder="Provenance, source, collection date..."
@@ -321,14 +378,18 @@ function EvidenceReviewContent() {
               Generate Redacted Evidence Copy
             </h3>
             <p className="text-slate-400 text-[11px]">
-              Original Evidence: <strong className="text-white">{redactionTarget.title}</strong>
+              Original Evidence:{" "}
+              <strong className="text-white">{redactionTarget.title}</strong>
               <br />
-              The original file remains unmodified in the secure audit vault. A sanitized derivative will be linked for panel review.
+              The original file remains unmodified in the secure audit vault. A
+              sanitized derivative will be linked for panel review.
             </p>
 
             <form onSubmit={handleRedact} className="space-y-3">
               <div>
-                <label className="block text-slate-300 mb-1">Redaction Summary & Purpose *</label>
+                <label className="block text-slate-300 mb-1">
+                  Redaction Summary & Purpose *
+                </label>
                 <textarea
                   rows={3}
                   placeholder="e.g. Redacted witness mobile numbers, residential room numbers, and identifying familial information to prevent retaliation..."
@@ -340,10 +401,19 @@ function EvidenceReviewContent() {
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="ghost" size="sm" onClick={() => setRedactionTarget(null)}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setRedactionTarget(null)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="bg-amber-600 hover:bg-amber-500 text-white"
+                >
                   Publish Redacted Copy
                 </Button>
               </div>
@@ -357,9 +427,14 @@ function EvidenceReviewContent() {
 
 export default function EvidenceReviewPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading evidence...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading evidence...
+        </div>
+      }
+    >
       <EvidenceReviewContent />
     </Suspense>
   );
 }
-

@@ -11,10 +11,7 @@ export type ProviderType =
   | "HOMESTAY_HOST";
 
 export type ProviderVerificationStatus =
-  | "PENDING"
-  | "VERIFIED"
-  | "SUSPENDED"
-  | "TERMINATED";
+  "PENDING" | "VERIFIED" | "SUSPENDED" | "TERMINATED";
 
 export type PropertyType =
   | "CAMPUS_HOSTEL"
@@ -68,11 +65,7 @@ export type HousingRequestStatus =
   | "CANCELLED";
 
 export type HousingOfferStatus =
-  | "OFFERED"
-  | "ACCEPTED"
-  | "DECLINED"
-  | "EXPIRED"
-  | "REVOKED";
+  "OFFERED" | "ACCEPTED" | "DECLINED" | "EXPIRED" | "REVOKED";
 
 export type HousingAssignmentStatus =
   | "ASSIGNED"
@@ -85,11 +78,7 @@ export type HousingAssignmentStatus =
   | "CANCELLED";
 
 export type AgreementStatus =
-  | "DRAFT"
-  | "PENDING_SIGNATURE"
-  | "ACTIVE"
-  | "EXPIRED"
-  | "TERMINATED";
+  "DRAFT" | "PENDING_SIGNATURE" | "ACTIVE" | "EXPIRED" | "TERMINATED";
 
 export type InspectionType =
   | "SAFETY_FIRE"
@@ -99,10 +88,7 @@ export type InspectionType =
   | "ANNUAL_COMPLIANCE";
 
 export type InspectionOutcome =
-  | "PASSED"
-  | "CONDITIONAL_PASS"
-  | "FAILED_CRITICAL"
-  | "REQUIRES_REINSPECTION";
+  "PASSED" | "CONDITIONAL_PASS" | "FAILED_CRITICAL" | "REQUIRES_REINSPECTION";
 
 export type MaintenanceCategory =
   | "PLUMBING"
@@ -445,7 +431,11 @@ export interface HousingAnalyticsSummary {
   open_maintenance_requests: number;
   average_maintenance_resolution_days: number;
   properties_by_type: Record<string, number>;
-  monthly_occupancy_trend: Array<{ month: string; rate?: number; occupancy_rate?: number }>;
+  monthly_occupancy_trend: Array<{
+    month: string;
+    rate?: number;
+    occupancy_rate?: number;
+  }>;
 }
 
 // ============================================================================
@@ -637,4 +627,3 @@ export interface HousingMaintenanceUpdateInput {
   tenant_feedback?: string;
   cost_charged_to?: string;
 }
-

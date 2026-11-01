@@ -17,7 +17,6 @@ class CertificateRequestsService {
     certificateType?: string;
     search?: string;
   }): Promise<ApiResponse<CertificateRequest[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.requests];
 
     if (filters) {
@@ -50,7 +49,6 @@ class CertificateRequestsService {
   async getRequestById(
     id: string,
   ): Promise<ApiResponse<CertificateRequest | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const req =
       this.requests.find((r) => r.id === id || r.requestId === id) || null;
     return { success: true, data: req };
@@ -59,7 +57,6 @@ class CertificateRequestsService {
   async createRequest(
     data: Partial<CertificateRequest>,
   ): Promise<ApiResponse<CertificateRequest>> {
-    await new Promise((r) => setTimeout(r, 80));
     const nextSeq = this.requests.length + 86;
     const newReq: CertificateRequest = {
       id: `req-cert-${Date.now()}`,
@@ -119,7 +116,6 @@ class CertificateRequestsService {
     reviewerName: string,
     notes?: string,
   ): Promise<ApiResponse<CertificateRequest>> {
-    await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((r) => r.id === id || r.requestId === id);
     if (!req) {
       throw new Error(`Certificate Request with ID ${id} not found`);
@@ -152,7 +148,6 @@ class CertificateRequestsService {
       throw new Error("A specific rejection reason is mandatory.");
     }
 
-    await new Promise((r) => setTimeout(r, 50));
     const req = this.requests.find((r) => r.id === id || r.requestId === id);
     if (!req) {
       throw new Error(`Certificate Request with ID ${id} not found`);
@@ -180,7 +175,6 @@ class CertificateRequestsService {
     id: string,
     reason?: string,
   ): Promise<ApiResponse<CertificateRequest>> {
-    await new Promise((r) => setTimeout(r, 40));
     const req = this.requests.find((r) => r.id === id || r.requestId === id);
     if (!req) {
       throw new Error(`Certificate Request with ID ${id} not found`);
@@ -212,7 +206,6 @@ class CertificateRequestsService {
     requestId: string,
     issuingAuthority: string,
   ): Promise<ApiResponse<IssuedCertificate>> {
-    await new Promise((r) => setTimeout(r, 70));
     const req = this.requests.find(
       (r) => r.id === requestId || r.requestId === requestId,
     );

@@ -113,7 +113,8 @@ export default function GoalsAndActionItemsPage() {
       setTargetDate("");
       setSuccessMetrics("");
       // reload goals
-      const updatedGoals = await StudentSupportService.getGoalsForPlan(selectedPlanId);
+      const updatedGoals =
+        await StudentSupportService.getGoalsForPlan(selectedPlanId);
       setGoals(updatedGoals);
     } catch (err) {
       console.error("Failed to add goal:", err);
@@ -125,13 +126,15 @@ export default function GoalsAndActionItemsPage() {
 
   async function handleUpdateGoalProgress(goalId: string, newPct: number) {
     try {
-      const newStatus = newPct >= 100 ? "COMPLETED" : newPct > 0 ? "IN_PROGRESS" : "PENDING";
+      const newStatus =
+        newPct >= 100 ? "COMPLETED" : newPct > 0 ? "IN_PROGRESS" : "PENDING";
       await StudentSupportService.updateGoal(goalId, {
         progress_pct: newPct,
         status: newStatus,
       });
       // reload goals
-      const updatedGoals = await StudentSupportService.getGoalsForPlan(selectedPlanId);
+      const updatedGoals =
+        await StudentSupportService.getGoalsForPlan(selectedPlanId);
       setGoals(updatedGoals);
     } catch (err) {
       console.error("Failed to update goal progress:", err);
@@ -140,10 +143,12 @@ export default function GoalsAndActionItemsPage() {
   }
 
   const filteredGoals = goals.filter((g) => {
-    const matchesCategory = categoryFilter === "ALL" || g.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "ALL" || g.category === categoryFilter;
     const matchesSearch =
       g.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (g.success_metric && g.success_metric.toLowerCase().includes(searchQuery.toLowerCase()));
+      (g.success_metric &&
+        g.success_metric.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
@@ -154,7 +159,10 @@ export default function GoalsAndActionItemsPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Goals & Action Items", href: "/app/student-support/goals" },
+            {
+              label: "Goals & Action Items",
+              href: "/app/student-support/goals",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -164,7 +172,8 @@ export default function GoalsAndActionItemsPage() {
               Development Goals & Action Items
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Track progress against measurable milestones, self-reflections, and task completion metrics.
+              Track progress against measurable milestones, self-reflections,
+              and task completion metrics.
             </p>
           </div>
           <Button
@@ -186,7 +195,10 @@ export default function GoalsAndActionItemsPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -196,7 +208,9 @@ export default function GoalsAndActionItemsPage() {
       <Card className="border-slate-800 bg-slate-900/60 p-4">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="space-y-1 md:w-1/3">
-            <label className="text-[11px] text-slate-400 font-medium">Select Development Plan</label>
+            <label className="text-[11px] text-slate-400 font-medium">
+              Select Development Plan
+            </label>
             <select
               value={selectedPlanId}
               onChange={(e) => handleSelectPlan(e.target.value)}
@@ -238,10 +252,13 @@ export default function GoalsAndActionItemsPage() {
 
       {/* Goals List */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading development goals...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading development goals...
+        </div>
       ) : filteredGoals.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
-          No goals established under this category yet. Click "Add Goal" to set milestones.
+          No goals established under this category yet. Click "Add Goal" to set
+          milestones.
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -253,7 +270,9 @@ export default function GoalsAndActionItemsPage() {
               <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-sm">{goal.title}</span>
+                    <span className="font-semibold text-white text-sm">
+                      {goal.title}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
@@ -273,14 +292,18 @@ export default function GoalsAndActionItemsPage() {
                 <div className="text-right text-xs text-slate-400">
                   <span>Target Date:</span>
                   <div className="font-medium text-slate-200">
-                    {new Date(goal.target_completion_date || goal.targetDate || "").toLocaleDateString()}
+                    {new Date(
+                      goal.target_completion_date || goal.targetDate || "",
+                    ).toLocaleDateString()}
                   </div>
                 </div>
               </div>
 
               {goal.success_metric && (
                 <div className="text-xs space-y-1">
-                  <span className="text-slate-400 font-medium">Measurable Metric:</span>
+                  <span className="text-slate-400 font-medium">
+                    Measurable Metric:
+                  </span>
                   <p className="text-slate-200 bg-slate-950 p-2.5 rounded border border-slate-800">
                     {goal.success_metric}
                   </p>
@@ -290,8 +313,12 @@ export default function GoalsAndActionItemsPage() {
               {/* Progress Slider */}
               <div className="space-y-2 pt-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-400 font-medium">Goal Progress</span>
-                  <span className="text-indigo-400 font-bold">{goal.progress_pct}%</span>
+                  <span className="text-slate-400 font-medium">
+                    Goal Progress
+                  </span>
+                  <span className="text-indigo-400 font-bold">
+                    {goal.progress_pct}%
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="h-2 flex-1 rounded-full bg-slate-800 overflow-hidden">
@@ -322,7 +349,9 @@ export default function GoalsAndActionItemsPage() {
               {/* Action Items List */}
               {goal.action_items && goal.action_items.length > 0 && (
                 <div className="space-y-2 pt-2 border-t border-slate-800/80">
-                  <span className="text-xs text-slate-400 font-medium">Action Items:</span>
+                  <span className="text-xs text-slate-400 font-medium">
+                    Action Items:
+                  </span>
                   <div className="space-y-1.5">
                     {goal.action_items.map((act) => (
                       <div
@@ -335,11 +364,20 @@ export default function GoalsAndActionItemsPage() {
                           ) : (
                             <Square className="h-3.5 w-3.5 text-slate-500" />
                           )}
-                          <span className={act.status === "COMPLETED" ? "line-through text-slate-500" : "text-slate-200"}>
+                          <span
+                            className={
+                              act.status === "COMPLETED"
+                                ? "line-through text-slate-500"
+                                : "text-slate-200"
+                            }
+                          >
                             {act.title}
                           </span>
                         </div>
-                        <Badge variant="outline" className="text-[9px] border-slate-700 text-slate-400">
+                        <Badge
+                          variant="outline"
+                          className="text-[9px] border-slate-700 text-slate-400"
+                        >
                           {act.assigned_to_role}
                         </Badge>
                       </div>
@@ -390,7 +428,9 @@ export default function GoalsAndActionItemsPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Target Date *</label>
+                <label className="text-slate-400 font-medium">
+                  Target Date *
+                </label>
                 <Input
                   required
                   type="date"
@@ -402,7 +442,9 @@ export default function GoalsAndActionItemsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Measurable Success Metric</label>
+              <label className="text-slate-400 font-medium">
+                Measurable Success Metric
+              </label>
               <Textarea
                 placeholder="How will progress be validated? (e.g. score >= 85% on mock placement exam)"
                 value={successMetrics}

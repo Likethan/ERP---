@@ -8,7 +8,13 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,7 +35,9 @@ export default function FacilityCalendarPage() {
   const { addToast } = useToast();
   const [facilities, setFacilities] = useState<SportsFacilityItem[]>([]);
   const [selectedFacilityId, setSelectedFacilityId] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    new Date().toISOString().split("T")[0],
+  );
   const [bookings, setBookings] = useState<FacilityBookingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isBookOpen, setIsBookOpen] = useState(false);
@@ -64,7 +72,10 @@ export default function FacilityCalendarPage() {
 
   async function loadBookings() {
     setLoading(true);
-    const res = await sportsService.listBookings(selectedFacilityId, selectedDate);
+    const res = await sportsService.listBookings(
+      selectedFacilityId,
+      selectedDate,
+    );
     if (res.success && res.data) {
       setBookings(res.data);
     }
@@ -106,11 +117,11 @@ export default function FacilityCalendarPage() {
       });
       loadBookings();
     } else {
-      setConflictWarning(res.error as string || "Booking conflict detected.");
+      setConflictWarning((res.error as string) || "Booking conflict detected.");
       addToast({
         type: "error",
         title: "Reservation Conflict",
-        message: res.error as string || "Reservation failed.",
+        message: (res.error as string) || "Reservation failed.",
       });
     }
   }
@@ -146,7 +157,8 @@ export default function FacilityCalendarPage() {
             Facility Availability Calendar & Conflict Engine
           </h1>
           <p className="text-xs sm:text-sm text-slate-400">
-            Real-time court reservations, schedule conflict detection, and maintenance block synchronization.
+            Real-time court reservations, schedule conflict detection, and
+            maintenance block synchronization.
           </p>
         </div>
 
@@ -169,7 +181,9 @@ export default function FacilityCalendarPage() {
       {/* Date & Facility Selector Controls */}
       <div className="flex flex-col sm:flex-row items-center gap-3 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
         <div className="w-full sm:w-80">
-          <Label className="text-xs text-slate-400 mb-1 block">Selected Facility / Court</Label>
+          <Label className="text-xs text-slate-400 mb-1 block">
+            Selected Facility / Court
+          </Label>
           <Select
             value={selectedFacilityId}
             onChange={(e) => setSelectedFacilityId(e.target.value)}
@@ -182,7 +196,9 @@ export default function FacilityCalendarPage() {
         </div>
 
         <div className="w-full sm:w-56">
-          <Label className="text-xs text-slate-400 mb-1 block">Reservation Date</Label>
+          <Label className="text-xs text-slate-400 mb-1 block">
+            Reservation Date
+          </Label>
           <Input
             type="date"
             value={selectedDate}
@@ -192,7 +208,13 @@ export default function FacilityCalendarPage() {
         </div>
 
         <div className="sm:ml-auto flex items-center gap-2 pt-4 sm:pt-0">
-          <Badge variant={selectedFacility?.status === "MAINTENANCE_CLOSED" ? "warning" : "success"}>
+          <Badge
+            variant={
+              selectedFacility?.status === "MAINTENANCE_CLOSED"
+                ? "warning"
+                : "success"
+            }
+          >
             {selectedFacility?.status || "AVAILABLE"}
           </Badge>
           <span className="text-xs text-slate-400 font-mono">
@@ -210,7 +232,10 @@ export default function FacilityCalendarPage() {
               Venue Closed for Maintenance: {selectedFacility.name}
             </span>
             <p>
-              This facility is currently marked <span className="font-mono">MAINTENANCE_CLOSED</span>. The system prevents all new training and tournament bookings for this space until certified reopened by the facility administrator.
+              This facility is currently marked{" "}
+              <span className="font-mono">MAINTENANCE_CLOSED</span>. The system
+              prevents all new training and tournament bookings for this space
+              until certified reopened by the facility administrator.
             </p>
             <p className="text-slate-400 font-mono">
               Reason: {selectedFacility.maintenanceNotes || "Scheduled repairs"}
@@ -225,11 +250,13 @@ export default function FacilityCalendarPage() {
           <div className="flex items-center gap-2">
             <DoorOpen className="h-4 w-4 text-indigo-400" />
             <h2 className="text-sm font-semibold text-white">
-              Schedule Timeline for {selectedFacility?.name} &bull; {selectedDate}
+              Schedule Timeline for {selectedFacility?.name} &bull;{" "}
+              {selectedDate}
             </h2>
           </div>
           <span className="text-xs text-slate-400">
-            {bookings.filter((b) => b.status !== "CANCELLED").length} active slot(s) reserved
+            {bookings.filter((b) => b.status !== "CANCELLED").length} active
+            slot(s) reserved
           </span>
         </div>
 
@@ -251,8 +278,11 @@ export default function FacilityCalendarPage() {
                   const endH = parseInt(b.endTime.split(":")[0], 10);
                   const endM = parseInt(b.endTime.split(":")[1], 10) || 0;
 
-                  const startPos = Math.max(0, ((startH - 6) * 60 + startM) / (16 * 60)) * 100;
-                  const duration = (((endH - startH) * 60 + (endM - startM)) / (16 * 60)) * 100;
+                  const startPos =
+                    Math.max(0, ((startH - 6) * 60 + startM) / (16 * 60)) * 100;
+                  const duration =
+                    (((endH - startH) * 60 + (endM - startM)) / (16 * 60)) *
+                    100;
 
                   return (
                     <div
@@ -285,8 +315,14 @@ export default function FacilityCalendarPage() {
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-white">{booking.title}</span>
-                  <Badge variant={booking.status === "CONFIRMED" ? "success" : "default"}>
+                  <span className="text-xs font-bold text-white">
+                    {booking.title}
+                  </span>
+                  <Badge
+                    variant={
+                      booking.status === "CONFIRMED" ? "success" : "default"
+                    }
+                  >
                     {booking.status}
                   </Badge>
                   <span className="rounded bg-slate-800 px-1.5 py-0.2 text-[10px] font-mono text-slate-300">
@@ -295,14 +331,20 @@ export default function FacilityCalendarPage() {
                 </div>
                 <div className="text-xs text-slate-400 flex items-center gap-3">
                   <span className="flex items-center gap-1 font-mono text-indigo-300">
-                    <Clock className="h-3 w-3" /> {booking.startTime} - {booking.endTime}
+                    <Clock className="h-3 w-3" /> {booking.startTime} -{" "}
+                    {booking.endTime}
                   </span>
                   {booking.participantCount && (
                     <span className="flex items-center gap-1 text-slate-400">
-                      <Users className="h-3 w-3" /> {booking.participantCount} pax
+                      <Users className="h-3 w-3" /> {booking.participantCount}{" "}
+                      pax
                     </span>
                   )}
-                  {booking.notes && <span className="text-slate-400 italic">"{booking.notes}"</span>}
+                  {booking.notes && (
+                    <span className="text-slate-400 italic">
+                      "{booking.notes}"
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -323,7 +365,10 @@ export default function FacilityCalendarPage() {
           {bookings.length === 0 && !loading && (
             <div className="h-32 flex flex-col items-center justify-center text-slate-500 text-xs gap-1.5 border border-dashed border-slate-800 rounded-lg">
               <CheckCircle2 className="h-6 w-6 text-emerald-500/60" />
-              <span>Court is completely free on this date. No active bookings scheduled.</span>
+              <span>
+                Court is completely free on this date. No active bookings
+                scheduled.
+              </span>
             </div>
           )}
         </div>
@@ -344,19 +389,25 @@ export default function FacilityCalendarPage() {
               <div className="p-3 rounded-lg border border-rose-500/40 bg-rose-950/30 text-rose-200 text-xs flex items-start gap-2">
                 <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-semibold text-rose-300">Conflict Detected:</span>{" "}
+                  <span className="font-semibold text-rose-300">
+                    Conflict Detected:
+                  </span>{" "}
                   {conflictWarning}
                 </div>
               </div>
             )}
 
             <div>
-              <Label htmlFor="bookTitle" className="text-xs">Event / Session Title *</Label>
+              <Label htmlFor="bookTitle" className="text-xs">
+                Event / Session Title *
+              </Label>
               <Input
                 id="bookTitle"
                 placeholder="e.g. Varsity Squad Evening Practice"
                 value={bookingForm.title}
-                onChange={(e) => setBookingForm({ ...bookingForm, title: e.target.value })}
+                onChange={(e) =>
+                  setBookingForm({ ...bookingForm, title: e.target.value })
+                }
                 className="text-xs mt-1"
                 required
               />
@@ -364,11 +415,15 @@ export default function FacilityCalendarPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="purpose" className="text-xs">Reservation Purpose</Label>
+                <Label htmlFor="purpose" className="text-xs">
+                  Reservation Purpose
+                </Label>
                 <Select
                   id="purpose"
                   value={bookingForm.purpose}
-                  onChange={(e) => setBookingForm({ ...bookingForm, purpose: e.target.value })}
+                  onChange={(e) =>
+                    setBookingForm({ ...bookingForm, purpose: e.target.value })
+                  }
                   options={[
                     { value: "TRAINING", label: "Team Training / Drills" },
                     { value: "MATCH", label: "Tournament Match" },
@@ -381,12 +436,19 @@ export default function FacilityCalendarPage() {
               </div>
 
               <div>
-                <Label htmlFor="pax" className="text-xs">Estimated Attendees</Label>
+                <Label htmlFor="pax" className="text-xs">
+                  Estimated Attendees
+                </Label>
                 <Input
                   id="pax"
                   type="number"
                   value={bookingForm.participantCount}
-                  onChange={(e) => setBookingForm({ ...bookingForm, participantCount: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setBookingForm({
+                      ...bookingForm,
+                      participantCount: Number(e.target.value),
+                    })
+                  }
                   className="text-xs mt-1 font-mono"
                 />
               </div>
@@ -394,23 +456,34 @@ export default function FacilityCalendarPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="startTime" className="text-xs">Start Time (HH:MM) *</Label>
+                <Label htmlFor="startTime" className="text-xs">
+                  Start Time (HH:MM) *
+                </Label>
                 <Input
                   id="startTime"
                   type="time"
                   value={bookingForm.startTime}
-                  onChange={(e) => setBookingForm({ ...bookingForm, startTime: e.target.value })}
+                  onChange={(e) =>
+                    setBookingForm({
+                      ...bookingForm,
+                      startTime: e.target.value,
+                    })
+                  }
                   className="text-xs mt-1 font-mono"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="endTime" className="text-xs">End Time (HH:MM) *</Label>
+                <Label htmlFor="endTime" className="text-xs">
+                  End Time (HH:MM) *
+                </Label>
                 <Input
                   id="endTime"
                   type="time"
                   value={bookingForm.endTime}
-                  onChange={(e) => setBookingForm({ ...bookingForm, endTime: e.target.value })}
+                  onChange={(e) =>
+                    setBookingForm({ ...bookingForm, endTime: e.target.value })
+                  }
                   className="text-xs mt-1 font-mono"
                   required
                 />
@@ -418,22 +491,35 @@ export default function FacilityCalendarPage() {
             </div>
 
             <div>
-              <Label htmlFor="bookNotes" className="text-xs">Operational Notes / Special Equipment</Label>
+              <Label htmlFor="bookNotes" className="text-xs">
+                Operational Notes / Special Equipment
+              </Label>
               <Textarea
                 id="bookNotes"
                 placeholder="e.g. Requires timing pads, shot clocks, and floor sweeping..."
                 value={bookingForm.notes}
-                onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
+                onChange={(e) =>
+                  setBookingForm({ ...bookingForm, notes: e.target.value })
+                }
                 className="text-xs mt-1"
                 rows={2}
               />
             </div>
 
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsBookOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsBookOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" size="sm" className="bg-indigo-600 hover:bg-indigo-500">
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-indigo-600 hover:bg-indigo-500"
+              >
                 Confirm Reservation
               </Button>
             </DialogFooter>

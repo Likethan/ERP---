@@ -12,7 +12,6 @@ class AiToolsService {
     status?: string;
     search?: string;
   }): Promise<ApiResponse<AITool[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.tools];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -34,7 +33,6 @@ class AiToolsService {
   }
 
   async getAITool(name: string): Promise<ApiResponse<AITool | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const tool = this.tools.find((t) => t.name === name) || null;
     return { success: Boolean(tool), data: tool };
   }

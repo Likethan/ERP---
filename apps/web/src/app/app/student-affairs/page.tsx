@@ -30,7 +30,9 @@ import {
 } from "lucide-react";
 
 export default function StudentAffairsDashboardPage() {
-  const [metrics, setMetrics] = useState<StudentAffairsDashboardMetrics | null>(null);
+  const [metrics, setMetrics] = useState<StudentAffairsDashboardMetrics | null>(
+    null,
+  );
   const [recentCases, setRecentCases] = useState<GrievanceCaseModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,7 +64,10 @@ export default function StudentAffairsDashboardPage() {
       <Breadcrumbs
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
-          { label: "Student Affairs & Grievances", href: "/app/student-affairs" },
+          {
+            label: "Student Affairs & Grievances",
+            href: "/app/student-affairs",
+          },
         ]}
       />
 
@@ -78,7 +83,8 @@ export default function StudentAffairsDashboardPage() {
             </Badge>
           </div>
           <p className="text-sm text-slate-400 mt-1">
-            Confidential student grievance redressal, formal disciplinary proceedings, hearing panels & appellate review.
+            Confidential student grievance redressal, formal disciplinary
+            proceedings, hearing panels & appellate review.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -89,7 +95,10 @@ export default function StudentAffairsDashboardPage() {
             </Button>
           </Link>
           <Link href="/app/student-affairs/intake">
-            <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 gap-2 text-xs">
+            <Button
+              variant="outline"
+              className="border-slate-700 text-slate-300 hover:bg-slate-800 gap-2 text-xs"
+            >
               <Inbox className="h-4 w-4 text-indigo-400" />
               Intake Queue
             </Button>
@@ -135,7 +144,10 @@ export default function StudentAffairsDashboardPage() {
           title="Urgent Escalations"
           value={metrics?.urgent_escalations ?? 0}
           icon={<AlertTriangle className="h-4 w-4 text-rose-400" />}
-          change={{ value: "Safeguarding", trend: metrics?.urgent_escalations ? "down" : "up" }}
+          change={{
+            value: "Safeguarding",
+            trend: metrics?.urgent_escalations ? "down" : "up",
+          }}
         />
         <StatCard
           title="SLA Compliance"
@@ -157,12 +169,16 @@ export default function StudentAffairsDashboardPage() {
                 1 Case Under Urgent Safeguarding Escalation
               </p>
               <p className="text-xs text-rose-300/70">
-                Protected report flagged for priority review by Dean & Internal Complaints Committee.
+                Protected report flagged for priority review by Dean & Internal
+                Complaints Committee.
               </p>
             </div>
           </div>
           <Link href="/app/student-affairs/escalations">
-            <Button size="sm" className="bg-rose-600 hover:bg-rose-500 text-white text-xs">
+            <Button
+              size="sm"
+              className="bg-rose-600 hover:bg-rose-500 text-white text-xs"
+            >
               View Escalation Queue
             </Button>
           </Link>
@@ -207,13 +223,19 @@ export default function StudentAffairsDashboardPage() {
                   {filteredCases.map((c) => {
                     const sla = StudentAffairsCalculator.calculateSlaStatus(
                       c.target_response_date,
-                      c.status
+                      c.status,
                     );
-                    const statusBadge = StudentAffairsCalculator.getStatusBadge(c.status);
-                    const priorityBadge = StudentAffairsCalculator.getPriorityBadge(c.priority);
+                    const statusBadge = StudentAffairsCalculator.getStatusBadge(
+                      c.status,
+                    );
+                    const priorityBadge =
+                      StudentAffairsCalculator.getPriorityBadge(c.priority);
 
                     return (
-                      <tr key={c.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={c.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4">
                           <div className="font-semibold text-indigo-300">
                             {c.case_number}
@@ -232,10 +254,14 @@ export default function StudentAffairsDashboardPage() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex flex-col gap-1 items-start">
-                            <span className={`px-2 py-0.5 rounded text-[10px] border ${statusBadge.className}`}>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] border ${statusBadge.className}`}
+                            >
                               {statusBadge.label}
                             </span>
-                            <span className={`text-[10px] font-mono ${sla.statusLabel === "BREACHED" ? "text-red-400" : "text-slate-400"}`}>
+                            <span
+                              className={`text-[10px] font-mono ${sla.statusLabel === "BREACHED" ? "text-red-400" : "text-slate-400"}`}
+                            >
                               {sla.statusLabel === "RESOLVED"
                                 ? "Completed"
                                 : `${sla.hoursRemaining}h remaining`}
@@ -243,18 +269,27 @@ export default function StudentAffairsDashboardPage() {
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className={`px-2 py-0.5 rounded text-[10px] border ${priorityBadge.className}`}>
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] border ${priorityBadge.className}`}
+                          >
                             {priorityBadge.label}
                           </span>
                         </td>
                         <td className="py-3 px-4">
-                          <Badge variant="outline" className="border-slate-700 text-slate-300 text-[10px]">
+                          <Badge
+                            variant="outline"
+                            className="border-slate-700 text-slate-300 text-[10px]"
+                          >
                             {c.confidentiality_level}
                           </Badge>
                         </td>
                         <td className="py-3 px-4 text-right">
                           <Link href={`/app/student-affairs/cases/${c.id}`}>
-                            <Button size="sm" variant="ghost" className="h-7 px-2 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 text-xs">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 text-xs"
+                            >
                               Details
                               <ChevronRight className="h-3 w-3 ml-1" />
                             </Button>
@@ -279,21 +314,30 @@ export default function StudentAffairsDashboardPage() {
           <Card className="p-4 border-slate-800 bg-slate-900/40 space-y-3">
             <div className="text-xs text-slate-300 space-y-2">
               <div className="p-2.5 rounded-lg bg-indigo-950/30 border border-indigo-500/20">
-                <p className="font-semibold text-indigo-300">Presumption of Good Faith</p>
+                <p className="font-semibold text-indigo-300">
+                  Presumption of Good Faith
+                </p>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Grievance submissions and misconduct allegations are not treated as proven facts until verified through formal inquiry.
+                  Grievance submissions and misconduct allegations are not
+                  treated as proven facts until verified through formal inquiry.
                 </p>
               </div>
               <div className="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/20">
-                <p className="font-semibold text-emerald-300">Separation of Duties</p>
+                <p className="font-semibold text-emerald-300">
+                  Separation of Duties
+                </p>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Original sanctioning authorities are barred from reviewing appellate filings under UGC statutory fairness standards.
+                  Original sanctioning authorities are barred from reviewing
+                  appellate filings under UGC statutory fairness standards.
                 </p>
               </div>
               <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-500/20">
-                <p className="font-semibold text-amber-300">Protected Identity</p>
+                <p className="font-semibold text-amber-300">
+                  Protected Identity
+                </p>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Confidential submitter identities and witness statements require authorized redaction before hearing panel disclosure.
+                  Confidential submitter identities and witness statements
+                  require authorized redaction before hearing panel disclosure.
                 </p>
               </div>
             </div>
@@ -307,17 +351,27 @@ export default function StudentAffairsDashboardPage() {
             <div className="space-y-3">
               <div className="p-3 rounded-lg border border-slate-800 bg-slate-950/60 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-slate-200">Hearing: DIS-2026-0019</span>
-                  <Badge className="bg-pink-500/10 text-pink-400 border-pink-500/20 text-[9px]">Panel</Badge>
+                  <span className="font-semibold text-slate-200">
+                    Hearing: DIS-2026-0019
+                  </span>
+                  <Badge className="bg-pink-500/10 text-pink-400 border-pink-500/20 text-[9px]">
+                    Panel
+                  </Badge>
                 </div>
-                <p className="text-slate-400 text-[11px] mt-1">Mid-Term 1 Academic Integrity Review</p>
+                <p className="text-slate-400 text-[11px] mt-1">
+                  Mid-Term 1 Academic Integrity Review
+                </p>
                 <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-500">
                   <Clock className="h-3 w-3" />
                   <span>Oct 26, 2:30 PM • Admin Conf Room B</span>
                 </div>
               </div>
               <Link href="/app/student-affairs/meetings">
-                <Button variant="outline" size="sm" className="w-full text-xs border-slate-800 text-slate-300 hover:bg-slate-800 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-slate-800 text-slate-300 hover:bg-slate-800 mt-2"
+                >
                   View Full Hearing Calendar
                 </Button>
               </Link>

@@ -15,7 +15,11 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { InstitutionalAgreement, InboundStudentProfile, MobilityProgram } from "@/types/international";
+import {
+  InstitutionalAgreement,
+  InboundStudentProfile,
+  MobilityProgram,
+} from "@/types/international";
 
 interface CalendarEvent {
   id: string;
@@ -94,7 +98,9 @@ export default function MobilityCalendarPage() {
         });
 
         // Sort ascending by date
-        evts.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        evts.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        );
         setEvents(evts);
       } catch (err) {
         console.error("Failed to load mobility calendar", err);
@@ -116,13 +122,16 @@ export default function MobilityCalendarPage() {
             Global Mobility & Treaty Operational Calendar
           </h2>
           <p className="text-xs text-slate-400">
-            Chronological milestones for student applications, overseas semester dates, inbound arrivals, and MoU renewal notice windows
+            Chronological milestones for student applications, overseas semester
+            dates, inbound arrivals, and MoU renewal notice windows
           </p>
         </div>
 
         {/* Timeline View */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading chronological milestones...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading chronological milestones...
+          </div>
         ) : events.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
             No scheduled mobility milestones found.
@@ -137,7 +146,9 @@ export default function MobilityCalendarPage() {
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-center shrink-0 w-16">
                     <span className="text-[10px] text-slate-500 font-bold uppercase block">
-                      {new Date(evt.date).toLocaleString("default", { month: "short" })}
+                      {new Date(evt.date).toLocaleString("default", {
+                        month: "short",
+                      })}
                     </span>
                     <span className="text-xl font-extrabold text-white block mt-0.5">
                       {new Date(evt.date).getDate() || 1}
@@ -154,17 +165,19 @@ export default function MobilityCalendarPage() {
                           evt.category === "DEADLINE"
                             ? "bg-amber-500/10 text-amber-300 border border-amber-500/30"
                             : evt.category === "MOU_EXPIRY"
-                            ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                            : evt.category === "ARRIVAL"
-                            ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
-                            : "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
+                              ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                              : evt.category === "ARRIVAL"
+                                ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
+                                : "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
                         }`}
                       >
                         {evt.badge}
                       </span>
                     </div>
 
-                    <h4 className="text-sm font-bold text-white">{evt.title}</h4>
+                    <h4 className="text-sm font-bold text-white">
+                      {evt.title}
+                    </h4>
                     <p className="text-xs text-slate-400">{evt.description}</p>
                   </div>
                 </div>

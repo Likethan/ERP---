@@ -33,7 +33,9 @@ function ApplicationsContent() {
   const [applications, setApplications] = useState<MobilityApplication[]>([]);
   const [programs, setPrograms] = useState<MobilityProgram[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showApplyModal, setShowApplyModal] = useState(Boolean(preselectedProgramId));
+  const [showApplyModal, setShowApplyModal] = useState(
+    Boolean(preselectedProgramId),
+  );
 
   // Form State
   const [form, setForm] = useState({
@@ -42,7 +44,8 @@ function ApplicationsContent() {
     emergency_contact_name: "",
     emergency_contact_phone: "",
     emergency_contact_relationship: "Parent",
-    proposed_courses_str: "CS501: Advanced Algorithms (4 Credits)\nCS520: Distributed Cloud Systems (4 Credits)",
+    proposed_courses_str:
+      "CS501: Advanced Algorithms (4 Credits)\nCS520: Distributed Cloud Systems (4 Credits)",
     submit_now: true,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +77,11 @@ function ApplicationsContent() {
       const courses = form.proposed_courses_str
         .split("\n")
         .filter((l) => l.trim())
-        .map((l) => ({ code: l.split(":")[0]?.trim() || "CRS", title: l.trim(), credits: 4 }));
+        .map((l) => ({
+          code: l.split(":")[0]?.trim() || "CRS",
+          title: l.trim(),
+          credits: 4,
+        }));
 
       const prog = programs.find((p) => p.id === form.program_id);
 
@@ -86,13 +93,17 @@ function ApplicationsContent() {
         emergency_contact_relationship: form.emergency_contact_relationship,
         proposed_courses: courses,
         program_title: prog?.program_title || prog?.title || "Exchange Program",
-        partner_name: prog?.partner_name || prog?.partnerName || "Partner University",
-        partner_country: prog?.partner_country || prog?.partnerCountry || "International",
+        partner_name:
+          prog?.partner_name || prog?.partnerName || "Partner University",
+        partner_country:
+          prog?.partner_country || prog?.partnerCountry || "International",
       });
 
       setApplications([res, ...applications]);
       setShowApplyModal(false);
-      alert("Application submitted successfully! It is now pending departmental review.");
+      alert(
+        "Application submitted successfully! It is now pending departmental review.",
+      );
     } catch (err) {
       console.error(err);
       alert("Failed to submit application");
@@ -113,7 +124,8 @@ function ApplicationsContent() {
               Student Mobility Applications
             </h2>
             <p className="text-xs text-slate-400">
-              Track multi-stage application progression from Department Review to Partner Nomination
+              Track multi-stage application progression from Department Review
+              to Partner Nomination
             </p>
           </div>
           <button
@@ -127,10 +139,13 @@ function ApplicationsContent() {
 
         {/* Applications List */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading student applications...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading student applications...
+          </div>
         ) : applications.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
-            No mobility applications found. Click &quot;New Mobility Application&quot; to apply.
+            No mobility applications found. Click &quot;New Mobility
+            Application&quot; to apply.
           </div>
         ) : (
           <div className="space-y-4">
@@ -143,17 +158,20 @@ function ApplicationsContent() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700">
-                        {app.application_reference_number || app.applicationReferenceNumber}
+                        {app.application_reference_number ||
+                          app.applicationReferenceNumber}
                       </span>
                       <span
                         className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${
-                          app.status === "APPROVED" || app.status === "PARTNER_ACCEPTED" || app.status === "ACTIVE_MOBILITY"
+                          app.status === "APPROVED" ||
+                          app.status === "PARTNER_ACCEPTED" ||
+                          app.status === "ACTIVE_MOBILITY"
                             ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
                             : app.status === "ELIGIBILITY_REVIEW"
-                            ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                            : app.status === "PARTNER_NOMINATED"
-                            ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
-                            : "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30"
+                              ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                              : app.status === "PARTNER_NOMINATED"
+                                ? "bg-purple-500/10 text-purple-300 border border-purple-500/30"
+                                : "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30"
                         }`}
                       >
                         {app.status}
@@ -161,20 +179,28 @@ function ApplicationsContent() {
                     </div>
 
                     <h3 className="text-base font-bold text-white mt-1.5">
-                      {app.program_title || app.programTitle || "Mobility Program"}
+                      {app.program_title ||
+                        app.programTitle ||
+                        "Mobility Program"}
                     </h3>
 
                     <p className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
                       <Globe className="h-3.5 w-3.5 text-cyan-400" />
                       <span>{app.partner_name || app.partnerName}</span>
-                      {app.partner_country && <span>({app.partner_country})</span>}
+                      {app.partner_country && (
+                        <span>({app.partner_country})</span>
+                      )}
                     </p>
                   </div>
 
                   <div className="text-right sm:self-start">
-                    <span className="text-[11px] text-slate-500 block">Submitted At</span>
+                    <span className="text-[11px] text-slate-500 block">
+                      Submitted At
+                    </span>
                     <span className="text-xs text-slate-300 font-mono">
-                      {app.submitted_at ? new Date(app.submitted_at).toLocaleDateString() : "Draft"}
+                      {app.submitted_at
+                        ? new Date(app.submitted_at).toLocaleDateString()
+                        : "Draft"}
                     </span>
                   </div>
                 </div>
@@ -184,7 +210,9 @@ function ApplicationsContent() {
                   <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300">
                     <AlertTriangle className="h-4 w-4 text-rose-400 mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-semibold block">Automatic Eligibility Flag Raised:</span>
+                      <span className="font-semibold block">
+                        Automatic Eligibility Flag Raised:
+                      </span>
                       <p className="mt-0.5 text-rose-300/80">
                         {app.eligibility_check_details?.cgpa_error ||
                           "Student CGPA or credit prerequisites were not satisfied. Application held for Dean Committee waiver."}
@@ -203,9 +231,15 @@ function ApplicationsContent() {
                       className={`p-2 rounded border ${
                         app.status === "DEPARTMENT_REVIEW"
                           ? "bg-cyan-950 border-cyan-500/50 text-cyan-300 font-bold"
-                          : ["INTERNATIONAL_OFFICE_REVIEW", "APPROVED", "PARTNER_NOMINATED", "PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(app.status)
-                          ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
-                          : "bg-slate-950 border-slate-800 text-slate-500"
+                          : [
+                                "INTERNATIONAL_OFFICE_REVIEW",
+                                "APPROVED",
+                                "PARTNER_NOMINATED",
+                                "PARTNER_ACCEPTED",
+                                "ACTIVE_MOBILITY",
+                              ].includes(app.status)
+                            ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
+                            : "bg-slate-950 border-slate-800 text-slate-500"
                       }`}
                     >
                       2. Dept Review
@@ -214,9 +248,14 @@ function ApplicationsContent() {
                       className={`p-2 rounded border ${
                         app.status === "INTERNATIONAL_OFFICE_REVIEW"
                           ? "bg-cyan-950 border-cyan-500/50 text-cyan-300 font-bold"
-                          : ["APPROVED", "PARTNER_NOMINATED", "PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(app.status)
-                          ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
-                          : "bg-slate-950 border-slate-800 text-slate-500"
+                          : [
+                                "APPROVED",
+                                "PARTNER_NOMINATED",
+                                "PARTNER_ACCEPTED",
+                                "ACTIVE_MOBILITY",
+                              ].includes(app.status)
+                            ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
+                            : "bg-slate-950 border-slate-800 text-slate-500"
                       }`}
                     >
                       3. Intl Office
@@ -225,16 +264,20 @@ function ApplicationsContent() {
                       className={`p-2 rounded border ${
                         app.status === "PARTNER_NOMINATED"
                           ? "bg-purple-950 border-purple-500/50 text-purple-300 font-bold"
-                          : ["PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(app.status)
-                          ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
-                          : "bg-slate-950 border-slate-800 text-slate-500"
+                          : ["PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(
+                                app.status,
+                              )
+                            ? "bg-slate-950 border-emerald-500/30 text-emerald-300"
+                            : "bg-slate-950 border-slate-800 text-slate-500"
                       }`}
                     >
                       4. Partner Nomination
                     </div>
                     <div
                       className={`p-2 rounded border ${
-                        ["PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(app.status)
+                        ["PARTNER_ACCEPTED", "ACTIVE_MOBILITY"].includes(
+                          app.status,
+                        )
                           ? "bg-emerald-950 border-emerald-500 text-emerald-300 font-bold"
                           : "bg-slate-950 border-slate-800 text-slate-500"
                       }`}
@@ -247,23 +290,36 @@ function ApplicationsContent() {
                 {/* SOP and Proposed Courses Preview */}
                 <div className="pt-2 border-t border-slate-800/80 flex flex-col md:flex-row gap-4 text-xs">
                   <div className="flex-1">
-                    <span className="text-slate-500 block mb-1">Statement of Purpose:</span>
+                    <span className="text-slate-500 block mb-1">
+                      Statement of Purpose:
+                    </span>
                     <p className="text-slate-300 line-clamp-2 italic bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                      &quot;{app.statement_of_purpose || app.statementOfPurpose}&quot;
+                      &quot;{app.statement_of_purpose || app.statementOfPurpose}
+                      &quot;
                     </p>
                   </div>
                   <div className="w-full md:w-72">
-                    <span className="text-slate-500 block mb-1">Proposed Course Load:</span>
+                    <span className="text-slate-500 block mb-1">
+                      Proposed Course Load:
+                    </span>
                     <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 space-y-1">
-                      {app.proposed_courses && app.proposed_courses.length > 0 ? (
+                      {app.proposed_courses &&
+                      app.proposed_courses.length > 0 ? (
                         app.proposed_courses.map((c, i) => (
-                          <div key={i} className="flex justify-between text-slate-300 text-[11px]">
+                          <div
+                            key={i}
+                            className="flex justify-between text-slate-300 text-[11px]"
+                          >
                             <span>{c.code || c.title}</span>
-                            <span className="text-slate-500">{c.credits} Cr</span>
+                            <span className="text-slate-500">
+                              {c.credits} Cr
+                            </span>
                           </div>
                         ))
                       ) : (
-                        <span className="text-slate-500 text-[11px]">Standard curriculum</span>
+                        <span className="text-slate-500 text-[11px]">
+                          Standard curriculum
+                        </span>
                       )}
                     </div>
                   </div>
@@ -289,22 +345,31 @@ function ApplicationsContent() {
                 Submit Mobility Program Application
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Your CGPA and credit records will be automatically evaluated against host university prerequisites
+                Your CGPA and credit records will be automatically evaluated
+                against host university prerequisites
               </p>
 
               <form onSubmit={handleApply} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Target Exchange Program *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Target Exchange Program *
+                  </label>
                   <select
                     required
                     value={form.program_id}
-                    onChange={(e) => setForm({ ...form, program_id: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, program_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
-                    <option value="">Select published mobility program...</option>
+                    <option value="">
+                      Select published mobility program...
+                    </option>
                     {programs.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.program_title || p.title} — {p.partner_name || p.partnerName} ({p.term_type || p.termType})
+                        {p.program_title || p.title} —{" "}
+                        {p.partner_name || p.partnerName} (
+                        {p.term_type || p.termType})
                       </option>
                     ))}
                   </select>
@@ -319,7 +384,9 @@ function ApplicationsContent() {
                     rows={4}
                     placeholder="Describe your academic rationale, research interests, and career objectives for studying at this host university..."
                     value={form.statement_of_purpose}
-                    onChange={(e) => setForm({ ...form, statement_of_purpose: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, statement_of_purpose: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
@@ -332,41 +399,64 @@ function ApplicationsContent() {
                     rows={3}
                     placeholder="e.g. IN2106: Advanced Computer Architecture (6 Credits)&#10;IN2041: Cloud Information Systems (5 Credits)"
                     value={form.proposed_courses_str}
-                    onChange={(e) => setForm({ ...form, proposed_courses_str: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, proposed_courses_str: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 font-mono text-[11px]"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Emergency Contact Name *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Emergency Contact Name *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. Ramesh Kumar"
                       value={form.emergency_contact_name}
-                      onChange={(e) => setForm({ ...form, emergency_contact_name: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          emergency_contact_name: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Emergency Phone *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Emergency Phone *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="+91 9876543210"
                       value={form.emergency_contact_phone}
-                      onChange={(e) => setForm({ ...form, emergency_contact_phone: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          emergency_contact_phone: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Relationship</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Relationship
+                    </label>
                     <select
                       value={form.emergency_contact_relationship}
-                      onChange={(e) => setForm({ ...form, emergency_contact_relationship: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          emergency_contact_relationship: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="Parent">Parent / Guardian</option>
@@ -404,9 +494,14 @@ function ApplicationsContent() {
 
 export default function ApplicationsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading applications...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading applications...
+        </div>
+      }
+    >
       <ApplicationsContent />
     </Suspense>
   );
 }
-

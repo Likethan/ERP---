@@ -43,7 +43,8 @@ export const MOCK_SA_OFFICES: StudentAffairsOfficeModel[] = [
     tenant_id: "ten-001",
     code: "SA-CENTRAL",
     name: "Dean of Student Affairs Office",
-    description: "Central institutional authority for student welfare, conduct, and grievance redressal.",
+    description:
+      "Central institutional authority for student welfare, conduct, and grievance redressal.",
     campus_id: "camp-001",
     lead_staff_id: "usr-dean-001",
     contact_email: "studentaffairs@campusos.edu",
@@ -58,7 +59,8 @@ export const MOCK_SA_OFFICES: StudentAffairsOfficeModel[] = [
     tenant_id: "ten-001",
     code: "GRIEV-OMBUDS",
     name: "Office of the Institutional Ombudsperson",
-    description: "Independent confidential resolution and mediation office for academic and administrative appeals.",
+    description:
+      "Independent confidential resolution and mediation office for academic and administrative appeals.",
     campus_id: "camp-001",
     lead_staff_id: "usr-ombuds-001",
     contact_email: "ombudsperson@campusos.edu",
@@ -73,7 +75,8 @@ export const MOCK_SA_OFFICES: StudentAffairsOfficeModel[] = [
     tenant_id: "ten-001",
     code: "ICC-SAFEGUARD",
     name: "Internal Complaints & Safeguarding Committee",
-    description: "Statutory committee managing sensitive harassment, anti-ragging, and urgent safeguarding incidents.",
+    description:
+      "Statutory committee managing sensitive harassment, anti-ragging, and urgent safeguarding incidents.",
     campus_id: "camp-001",
     lead_staff_id: "usr-icc-001",
     contact_email: "safeguarding@campusos.edu",
@@ -91,7 +94,8 @@ export const MOCK_CATEGORIES: GrievanceCategoryModel[] = [
     tenant_id: "ten-001",
     code: "ACADEMIC_EVAL",
     name: "Academic Evaluation & Grading Transparency",
-    description: "Grievances concerning exam marking discrepancy, rubric disputes, or evaluation delays.",
+    description:
+      "Grievances concerning exam marking discrepancy, rubric disputes, or evaluation delays.",
     case_type: SACaseType.GRIEVANCE,
     default_priority: SACasePriority.MEDIUM,
     sla_response_hours: 48,
@@ -108,7 +112,8 @@ export const MOCK_CATEGORIES: GrievanceCategoryModel[] = [
     tenant_id: "ten-001",
     code: "CAMPUS_FACILITY",
     name: "Hostel, Dining & Infrastructure Facilities",
-    description: "Physical facilities, hostel sanitation, air conditioning, and laboratory equipment concerns.",
+    description:
+      "Physical facilities, hostel sanitation, air conditioning, and laboratory equipment concerns.",
     case_type: SACaseType.GRIEVANCE,
     default_priority: SACasePriority.MEDIUM,
     sla_response_hours: 24,
@@ -125,7 +130,8 @@ export const MOCK_CATEGORIES: GrievanceCategoryModel[] = [
     tenant_id: "ten-001",
     code: "STUDENT_CONDUCT",
     name: "Disciplinary Code & Academic Integrity",
-    description: "Proceedings related to academic dishonesty, code of conduct breaches, and campus violations.",
+    description:
+      "Proceedings related to academic dishonesty, code of conduct breaches, and campus violations.",
     case_type: SACaseType.DISCIPLINARY,
     default_priority: SACasePriority.HIGH,
     sla_response_hours: 24,
@@ -142,7 +148,8 @@ export const MOCK_CATEGORIES: GrievanceCategoryModel[] = [
     tenant_id: "ten-001",
     code: "SAFEGUARD_HARASS",
     name: "Safeguarding, Anti-Ragging & Harassment",
-    description: "Statutory safeguarding, protection against retaliation, and equal opportunity investigations.",
+    description:
+      "Statutory safeguarding, protection against retaliation, and equal opportunity investigations.",
     case_type: SACaseType.GRIEVANCE,
     default_priority: SACasePriority.CRITICAL_URGENT,
     sla_response_hours: 12,
@@ -159,7 +166,8 @@ export const MOCK_CATEGORIES: GrievanceCategoryModel[] = [
     tenant_id: "ten-001",
     code: "PEER_DISPUTE",
     name: "Voluntary Peer Mediation & Conciliation",
-    description: "Facilitated mediation for roommate disputes, club leadership disagreements, and group conflicts.",
+    description:
+      "Facilitated mediation for roommate disputes, club leadership disagreements, and group conflicts.",
     case_type: SACaseType.MEDIATION,
     default_priority: SACasePriority.LOW,
     sla_response_hours: 48,
@@ -182,8 +190,10 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
     category_id: "cat-002",
     category: MOCK_CATEGORIES[1],
     title: "Continuous Air Conditioner Failure in Block D Thermodynamics Lab",
-    description: "Laboratory room 304 temperature consistently crosses 37C during afternoon sessions, affecting sensitive measurement instrumentation and student comfort.",
-    requested_resolution: "Urgent HVAC technician servicing and provisional relocation of afternoon lab batches.",
+    description:
+      "Laboratory room 304 temperature consistently crosses 37C during afternoon sessions, affecting sensitive measurement instrumentation and student comfort.",
+    requested_resolution:
+      "Urgent HVAC technician servicing and provisional relocation of afternoon lab batches.",
     status: SACaseStatus.INVESTIGATION,
     priority: SACasePriority.MEDIUM,
     confidentiality_level: SAConfidentialityLevel.STANDARD,
@@ -247,7 +257,8 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
         id: "act-001",
         tenant_id: "ten-001",
         case_id: "case-001",
-        description: "Facilities engineering team dispatch for compressor replacement",
+        description:
+          "Facilities engineering team dispatch for compressor replacement",
         action_type: SAActionType.FACILITY_REPAIR,
         assigned_owner_id: "usr-fac-001",
         due_date: "2026-10-27",
@@ -264,8 +275,10 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
     case_type: SACaseType.DISCIPLINARY,
     category_id: "cat-003",
     category: MOCK_CATEGORIES[2],
-    title: "Allegation of Unauthorized Material Possession in Mid-Term Examination",
-    description: "Invigilator report alleging candidate was found with unauthorized formula sheets during Mid-Term 1 examination in Digital Electronics.",
+    title:
+      "Allegation of Unauthorized Material Possession in Mid-Term Examination",
+    description:
+      "Invigilator report alleging candidate was found with unauthorized formula sheets during Mid-Term 1 examination in Digital Electronics.",
     requested_resolution: null,
     status: SACaseStatus.HEARING,
     priority: SACasePriority.HIGH,
@@ -288,12 +301,15 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
       tenant_id: "ten-001",
       case_id: "case-002",
       respondent_student_id: "usr-std-009",
-      allegation_summary: "Unauthorized possession of handwritten formula sheets inside the examination hall during Paper EC302.",
-      policy_provisions_violated: "Academic Integrity Charter Section 4.2 (Unauthorized Aids)",
+      allegation_summary:
+        "Unauthorized possession of handwritten formula sheets inside the examination hall during Paper EC302.",
+      policy_provisions_violated:
+        "Academic Integrity Charter Section 4.2 (Unauthorized Aids)",
       investigator_id: "usr-inv-002",
       procedural_stage: SADisciplinaryStage.HEARING_SCHEDULED,
       notice_served_at: "2026-10-22T09:30:00Z",
-      student_response: "Candidate asserts the sheet was inadvertently left inside the transparent pencil case from earlier library study session.",
+      student_response:
+        "Candidate asserts the sheet was inadvertently left inside the transparent pencil case from earlier library study session.",
       student_responded_at: "2026-10-23T14:15:00Z",
       finding_status: SAFindingStatus.PENDING,
       is_communicated: true,
@@ -325,8 +341,10 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
     category_id: "cat-004",
     category: MOCK_CATEGORIES[3],
     title: "Confidential Report Concerning Hostile Hostel Curfew Enforcement",
-    description: "Urgent grievance concerning verbal intimidation and arbitrary hostel lockouts during late-night project lab returns.",
-    requested_resolution: "Institutional review of security guard protocols and protection against retaliation.",
+    description:
+      "Urgent grievance concerning verbal intimidation and arbitrary hostel lockouts during late-night project lab returns.",
+    requested_resolution:
+      "Institutional review of security guard protocols and protection against retaliation.",
     status: SACaseStatus.UNDER_REVIEW,
     priority: SACasePriority.CRITICAL_URGENT,
     confidentiality_level: SAConfidentialityLevel.RESTRICTED,
@@ -340,7 +358,8 @@ export const MOCK_CASES: GrievanceCaseModel[] = [
     target_response_date: "2026-10-25T06:00:00Z",
     target_resolution_date: "2026-11-01T18:00:00Z",
     is_escalated: true,
-    escalation_reason: "Report indicates pattern of verbal intimidation and safety risk outside campus gate.",
+    escalation_reason:
+      "Report indicates pattern of verbal intimidation and safety risk outside campus gate.",
     reopen_count: 0,
     created_at: "2026-10-24T18:00:00Z",
     updated_at: "2026-10-24T19:30:00Z",
@@ -351,7 +370,8 @@ export const MOCK_POLICIES: StudentAffairsPolicyConfigModel[] = [
   {
     id: "pol-001",
     tenant_id: "ten-001",
-    policy_name: "Institutional Code of Student Rights, Responsibilities & Conduct",
+    policy_name:
+      "Institutional Code of Student Rights, Responsibilities & Conduct",
     policy_code: "POL-CONDUCT-2026-09",
     current_version: "v4.2 (Approved Syndicate 2026)",
     effective_date: "2026-01-01",

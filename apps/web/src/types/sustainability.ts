@@ -14,11 +14,7 @@ export type TargetCategory =
   | "NET_ZERO_GHG";
 
 export type TargetStatus =
-  | "ON_TRACK"
-  | "AT_RISK"
-  | "ACHIEVED"
-  | "DELAYED"
-  | "UNDER_REVIEW";
+  "ON_TRACK" | "AT_RISK" | "ACHIEVED" | "DELAYED" | "UNDER_REVIEW";
 
 export type EmissionScope = "SCOPE_1" | "SCOPE_2" | "SCOPE_3";
 
@@ -44,17 +40,10 @@ export type ResourceType =
   | "NATURAL_GAS";
 
 export type MeasurementSource =
-  | "IOT_SENSOR"
-  | "UTILITY_BILL"
-  | "MANUAL_METER"
-  | "SUB_METER"
-  | "ESTIMATED";
+  "IOT_SENSOR" | "UTILITY_BILL" | "MANUAL_METER" | "SUB_METER" | "ESTIMATED";
 
 export type VerificationStatus =
-  | "PENDING_REVIEW"
-  | "VERIFIED"
-  | "FLAGGED"
-  | "REJECTED";
+  "PENDING_REVIEW" | "VERIFIED" | "FLAGGED" | "REJECTED";
 
 export type WasteCategory =
   | "GENERAL"
@@ -109,21 +98,12 @@ export type ComplianceStatus =
   | "OVERDUE";
 
 export type CorrectiveActionStatus =
-  | "OPEN"
-  | "IN_PROGRESS"
-  | "RESOLVED"
-  | "VERIFIED";
+  "OPEN" | "IN_PROGRESS" | "RESOLVED" | "VERIFIED";
 
-export type IngestionStatus =
-  | "PROCESSED"
-  | "DUPLICATE_SKIPPED"
-  | "REJECTED";
+export type IngestionStatus = "PROCESSED" | "DUPLICATE_SKIPPED" | "REJECTED";
 
 export type ImportBatchStatus =
-  | "PENDING"
-  | "PROCESSING"
-  | "COMPLETED"
-  | "FAILED";
+  "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 
 // =============================================================================
 // DOMAIN ENTITIES
@@ -224,7 +204,8 @@ export interface WaterIncidentRecord {
   location: string;
   estimated_loss_litres: number;
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-  status: "DETECTED" | "INVESTIGATING" | "WORK_ORDER_CREATED" | "REPAIRED" | "CLOSED";
+  status:
+    "DETECTED" | "INVESTIGATING" | "WORK_ORDER_CREATED" | "REPAIRED" | "CLOSED";
   linked_work_order_id?: string | null;
   remediation_notes?: string | null;
   resolved_at?: string | null;
@@ -461,7 +442,8 @@ export interface WaterIncidentCreateInput {
   location: string;
   estimated_loss_litres: number;
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-  status?: "DETECTED" | "INVESTIGATING" | "WORK_ORDER_CREATED" | "REPAIRED" | "CLOSED";
+  status?:
+    "DETECTED" | "INVESTIGATING" | "WORK_ORDER_CREATED" | "REPAIRED" | "CLOSED";
   remediation_notes?: string;
 }
 
@@ -548,4 +530,3 @@ export interface TelemetryIngestInput {
   unit: string;
   raw_payload?: Record<string, unknown>;
 }
-

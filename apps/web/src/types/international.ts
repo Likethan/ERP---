@@ -90,7 +90,8 @@ export type FacultyMobilityStatus =
   | "COMPLETED"
   | "REJECTED";
 
-export type CreditEquivalencyStatus = "PROPOSED" | "EVALUATED" | "ACTIVE" | "DEPRECATED";
+export type CreditEquivalencyStatus =
+  "PROPOSED" | "EVALUATED" | "ACTIVE" | "DEPRECATED";
 
 export type CreditTransferStatus =
   | "SUBMITTED"
@@ -112,7 +113,8 @@ export type MobilityDocumentType =
   | "FINANCIAL_GUARANTEE"
   | "LEARNING_AGREEMENT";
 
-export type DocumentVerificationStatus = "PENDING" | "VERIFIED" | "REJECTED" | "EXPIRED";
+export type DocumentVerificationStatus =
+  "PENDING" | "VERIFIED" | "REJECTED" | "EXPIRED";
 
 export type FundingStatus = "REQUESTED" | "APPROVED" | "DISBURSED" | "REJECTED";
 

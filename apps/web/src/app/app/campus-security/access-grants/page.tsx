@@ -35,11 +35,16 @@ export default function AccessGrantsPage() {
   const [revocationReason, setRevocationReason] = useState("");
   const [revoking, setRevoking] = useState(false);
 
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const now = new Date();
   const defaultValidFrom = now.toISOString().slice(0, 16);
-  const defaultValidUntil = new Date(now.getTime() + 7 * 24 * 3600 * 1000).toISOString().slice(0, 16);
+  const defaultValidUntil = new Date(now.getTime() + 7 * 24 * 3600 * 1000)
+    .toISOString()
+    .slice(0, 16);
 
   // Form state
   const [form, setForm] = useState({
@@ -125,7 +130,10 @@ export default function AccessGrantsPage() {
 
     try {
       setRevoking(true);
-      await CampusSecurityService.revokeAccessGrant(revokingGrant.id, revocationReason);
+      await CampusSecurityService.revokeAccessGrant(
+        revokingGrant.id,
+        revocationReason,
+      );
       setNotification({
         type: "success",
         message: `Grant ${revokingGrant.grant_number} successfully revoked.`,
@@ -156,8 +164,12 @@ export default function AccessGrantsPage() {
   });
 
   const activeGrantsCount = grants.filter((g) => g.status === "ACTIVE").length;
-  const tempGrantsCount = grants.filter((g) => g.is_temporary && g.status === "ACTIVE").length;
-  const revokedGrantsCount = grants.filter((g) => g.status === "REVOKED").length;
+  const tempGrantsCount = grants.filter(
+    (g) => g.is_temporary && g.status === "ACTIVE",
+  ).length;
+  const revokedGrantsCount = grants.filter(
+    (g) => g.status === "REVOKED",
+  ).length;
 
   const getZoneName = (zoneId: string) => {
     const zone = zones.find((z) => z.id === zoneId);
@@ -178,7 +190,8 @@ export default function AccessGrantsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Issue, audit, and revoke time-bounded zone authorizations for students, staff, research fellows, and technical contractors.
+            Issue, audit, and revoke time-bounded zone authorizations for
+            students, staff, research fellows, and technical contractors.
           </p>
         </div>
 
@@ -217,38 +230,62 @@ export default function AccessGrantsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Grants Issued</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Total Grants Issued
+            </span>
             <FileCheck className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{grants.length}</div>
-          <div className="text-xs text-slate-500 mt-1">Historical authorization log</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {grants.length}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Historical authorization log
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Grants</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Active Grants
+            </span>
             <ShieldCheck className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">{activeGrantsCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Currently valid permissions</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+            {activeGrantsCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Currently valid permissions
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Temporary Passes</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Temporary Passes
+            </span>
             <Clock className="w-5 h-5 text-amber-500" />
           </div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">{tempGrantsCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Subject to automatic expiry</div>
+          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">
+            {tempGrantsCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Subject to automatic expiry
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Revoked Grants</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Revoked Grants
+            </span>
             <Ban className="w-5 h-5 text-red-500" />
           </div>
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">{revokedGrantsCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Terminated for security policy</div>
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">
+            {revokedGrantsCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Terminated for security policy
+          </div>
         </div>
       </div>
 
@@ -314,25 +351,36 @@ export default function AccessGrantsPage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     Loading access grants...
                   </td>
                 </tr>
               ) : filteredGrants.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-slate-400"
+                  >
                     No access grants matching criteria.
                   </td>
                 </tr>
               ) : (
                 filteredGrants.map((grant) => (
-                  <tr key={grant.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                  <tr
+                    key={grant.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors"
+                  >
                     <td className="px-6 py-4">
                       <div className="font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                         {grant.grant_number}
                       </div>
                       <div className="text-[11px] text-slate-400">
-                        {grant.is_temporary ? "Temporary Pass" : "Permanent Clearance"}
+                        {grant.is_temporary
+                          ? "Temporary Pass"
+                          : "Permanent Clearance"}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -352,11 +400,17 @@ export default function AccessGrantsPage() {
                     <td className="px-6 py-4">
                       <div className="text-xs text-slate-700 dark:text-slate-300 flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-slate-400" />
-                        {new Date(grant.valid_from).toLocaleDateString()} – {new Date(grant.valid_until).toLocaleDateString()}
+                        {new Date(grant.valid_from).toLocaleDateString()} –{" "}
+                        {new Date(grant.valid_until).toLocaleDateString()}
                       </div>
                     </td>
-                    <td className="px-6 py-4 max-w-xs truncate" title={grant.grant_reason}>
-                      <span className="text-xs text-slate-600 dark:text-slate-400">{grant.grant_reason}</span>
+                    <td
+                      className="px-6 py-4 max-w-xs truncate"
+                      title={grant.grant_reason}
+                    >
+                      <span className="text-xs text-slate-600 dark:text-slate-400">
+                        {grant.grant_reason}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       {grant.status === "ACTIVE" && (
@@ -427,7 +481,9 @@ export default function AccessGrantsPage() {
                   </label>
                   <select
                     value={form.grantee_type}
-                    onChange={(e) => setForm({ ...form, grantee_type: e.target.value as any })}
+                    onChange={(e) =>
+                      setForm({ ...form, grantee_type: e.target.value as any })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
                     <option value="STAFF">Faculty / Staff</option>
@@ -445,7 +501,9 @@ export default function AccessGrantsPage() {
                     required
                     placeholder="e.g. Dr. Jane Doe"
                     value={form.grantee_name}
-                    onChange={(e) => setForm({ ...form, grantee_name: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, grantee_name: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -457,7 +515,9 @@ export default function AccessGrantsPage() {
                 </label>
                 <select
                   value={form.zone_id}
-                  onChange={(e) => setForm({ ...form, zone_id: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, zone_id: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 >
                   {zones.map((zone) => (
@@ -476,7 +536,9 @@ export default function AccessGrantsPage() {
                   <input
                     type="datetime-local"
                     value={form.valid_from}
-                    onChange={(e) => setForm({ ...form, valid_from: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, valid_from: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -487,7 +549,9 @@ export default function AccessGrantsPage() {
                   <input
                     type="datetime-local"
                     value={form.valid_until}
-                    onChange={(e) => setForm({ ...form, valid_until: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, valid_until: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -502,7 +566,9 @@ export default function AccessGrantsPage() {
                   required
                   placeholder="Detail operational necessity, project assignment, or authorized supervisor approval..."
                   value={form.grant_reason}
-                  onChange={(e) => setForm({ ...form, grant_reason: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, grant_reason: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -512,11 +578,17 @@ export default function AccessGrantsPage() {
                   type="checkbox"
                   id="is_temporary"
                   checked={form.is_temporary}
-                  onChange={(e) => setForm({ ...form, is_temporary: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, is_temporary: e.target.checked })
+                  }
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
                 />
-                <label htmlFor="is_temporary" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Temporary Time-Bounded Grant (Revokes automatically upon expiration)
+                <label
+                  htmlFor="is_temporary"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                >
+                  Temporary Time-Bounded Grant (Revokes automatically upon
+                  expiration)
                 </label>
               </div>
 
@@ -560,8 +632,15 @@ export default function AccessGrantsPage() {
 
             <form onSubmit={handleRevokeGrant} className="p-6 space-y-4">
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                You are revoking access grant <strong className="font-mono text-slate-900 dark:text-white">{revokingGrant.grant_number}</strong> for{" "}
-                <strong className="text-slate-900 dark:text-white">{revokingGrant.grantee_name}</strong>. This action takes effect immediately.
+                You are revoking access grant{" "}
+                <strong className="font-mono text-slate-900 dark:text-white">
+                  {revokingGrant.grant_number}
+                </strong>{" "}
+                for{" "}
+                <strong className="text-slate-900 dark:text-white">
+                  {revokingGrant.grantee_name}
+                </strong>
+                . This action takes effect immediately.
               </p>
 
               <div>
@@ -601,4 +680,3 @@ export default function AccessGrantsPage() {
     </div>
   );
 }
-

@@ -23,7 +23,8 @@ export interface SalaryComponent {
   name: string;
   description?: string;
   component_type: "EARNING" | "DEDUCTION" | "EMPLOYER_CONTRIBUTION";
-  calculation_method: "FLAT_AMOUNT" | "PERCENTAGE_OF_BASIC" | "PERCENTAGE_OF_GROSS" | "FORMULA";
+  calculation_method:
+    "FLAT_AMOUNT" | "PERCENTAGE_OF_BASIC" | "PERCENTAGE_OF_GROSS" | "FORMULA";
   default_value: number;
   is_statutory: boolean;
   taxability: "TAXABLE" | "EXEMPT" | "PARTIALLY_EXEMPT";
@@ -174,7 +175,16 @@ export interface PayrollRun {
   period_id: string;
   calendar_id: string;
   run_number: string;
-  status: "DRAFT" | "CALCULATING" | "CALCULATED" | "VALIDATION_FAILED" | "PENDING_APPROVAL" | "APPROVED" | "POSTED" | "PAID" | "CANCELLED";
+  status:
+    | "DRAFT"
+    | "CALCULATING"
+    | "CALCULATED"
+    | "VALIDATION_FAILED"
+    | "PENDING_APPROVAL"
+    | "APPROVED"
+    | "POSTED"
+    | "PAID"
+    | "CANCELLED";
   is_locked: boolean;
   department_id?: string;
   campus_id?: string;
@@ -238,7 +248,13 @@ export interface PayrollPaymentBatch {
   payroll_run_id: string;
   batch_number: string;
   payment_method: string;
-  status: "PREPARED" | "APPROVED" | "EXPORTED" | "PARTIALLY_RECONCILED" | "RECONCILED" | "FAILED";
+  status:
+    | "PREPARED"
+    | "APPROVED"
+    | "EXPORTED"
+    | "PARTIALLY_RECONCILED"
+    | "RECONCILED"
+    | "FAILED";
   total_amount: number;
   total_records: number;
   disbursed_at?: string;

@@ -23,7 +23,6 @@ class HostelLeavesService {
     approvalStatus?: LeaveStatus | string;
     search?: string;
   }): Promise<ApiResponse<HostelLeave[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.leaves];
 
     if (filters?.hostelId && filters.hostelId !== "ALL") {
@@ -53,7 +52,6 @@ class HostelLeavesService {
   async getHostelLeaveById(
     id: string,
   ): Promise<ApiResponse<HostelLeave | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const leave = this.leaves.find((l) => l.id === id) || null;
     return { success: true, data: leave };
   }
@@ -75,8 +73,6 @@ class HostelLeavesService {
       phone: string;
     };
   }): Promise<ApiResponse<HostelLeave>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     const newLeave: HostelLeave = {
       id: `leave-${Date.now().toString(36)}`,
       ...payload,
@@ -96,7 +92,6 @@ class HostelLeavesService {
     approvedBy: string,
     remarks?: string,
   ): Promise<ApiResponse<HostelLeave | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) return { success: false, data: null };
 
@@ -114,7 +109,6 @@ class HostelLeavesService {
     rejectedBy: string,
     reason: string,
   ): Promise<ApiResponse<HostelLeave | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) return { success: false, data: null };
 
@@ -127,7 +121,6 @@ class HostelLeavesService {
   }
 
   async markLeaveReturn(id: string): Promise<ApiResponse<HostelLeave | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) return { success: false, data: null };
 

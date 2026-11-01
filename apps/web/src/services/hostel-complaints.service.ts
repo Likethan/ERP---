@@ -30,7 +30,6 @@ class HostelComplaintsService {
     priority?: ComplaintPriority | string;
     search?: string;
   }): Promise<ApiResponse<HostelComplaint[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.complaints];
 
     if (filters?.hostelId && filters.hostelId !== "ALL") {
@@ -67,7 +66,6 @@ class HostelComplaintsService {
   async getHostelComplaintById(
     id: string,
   ): Promise<ApiResponse<HostelComplaint | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const comp =
       this.complaints.find((c) => c.id === id || c.ticketNumber === id) || null;
     return { success: true, data: comp };
@@ -85,8 +83,6 @@ class HostelComplaintsService {
     title: string;
     description: string;
   }): Promise<ApiResponse<HostelComplaint>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     const targetSlaHours =
       payload.priority === ComplaintPriority.CRITICAL
         ? 4
@@ -126,7 +122,6 @@ class HostelComplaintsService {
     actorName: string,
     notes?: string,
   ): Promise<ApiResponse<HostelComplaint | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const comp = this.complaints.find((c) => c.id === id);
     if (!comp) return { success: false, data: null };
 
@@ -158,7 +153,6 @@ class HostelComplaintsService {
     staffName: string,
     assignedBy: string,
   ): Promise<ApiResponse<HostelComplaint | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const comp = this.complaints.find((c) => c.id === id);
     if (!comp) return { success: false, data: null };
 

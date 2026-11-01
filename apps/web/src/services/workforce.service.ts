@@ -92,18 +92,24 @@ class EnterpriseWorkforceService {
   // 1. Employee Master & Employment Lifecycle
   // =========================================================================
 
-  async listEmployees(params?: WorkforceEmployeeFilterParams): Promise<{ items: WorkforceEmployeeItem[]; total: number }> {
+  async listEmployees(
+    params?: WorkforceEmployeeFilterParams,
+  ): Promise<{ items: WorkforceEmployeeItem[]; total: number }> {
     const q = new URLSearchParams();
     if (params?.search) q.set("search", params.search);
     if (params?.department_id) q.set("department_id", params.department_id);
     if (params?.campus_id) q.set("campus_id", params.campus_id);
-    if (params?.employment_type) q.set("employment_type", params.employment_type);
-    if (params?.employment_status) q.set("employment_status", params.employment_status);
+    if (params?.employment_type)
+      q.set("employment_type", params.employment_type);
+    if (params?.employment_status)
+      q.set("employment_status", params.employment_status);
     if (params?.page) q.set("page", params.page.toString());
     if (params?.page_size) q.set("page_size", params.page_size.toString());
 
     const qs = q.toString() ? `?${q.toString()}` : "";
-    const res = await apiFetch<WorkforceEmployeeItem[]>(`/api/v1/workforce/employees${qs}`);
+    const res = await apiFetch<WorkforceEmployeeItem[]>(
+      `/api/v1/workforce/employees${qs}`,
+    );
     const items = res.data || [];
     return {
       items,
@@ -112,41 +118,59 @@ class EnterpriseWorkforceService {
   }
 
   async getEmployee(employeeId: string): Promise<WorkforceEmployeeItem | null> {
-    const res = await apiFetch<WorkforceEmployeeItem>(`/api/v1/workforce/employees/${employeeId}`);
+    const res = await apiFetch<WorkforceEmployeeItem>(
+      `/api/v1/workforce/employees/${employeeId}`,
+    );
     return res.data || null;
   }
 
-  async createEmployee(payload: WorkforceEmployeeCreatePayload): Promise<WorkforceEmployeeItem> {
-    const res = await apiFetch<WorkforceEmployeeItem>("/api/v1/workforce/employees", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+  async createEmployee(
+    payload: WorkforceEmployeeCreatePayload,
+  ): Promise<WorkforceEmployeeItem> {
+    const res = await apiFetch<WorkforceEmployeeItem>(
+      "/api/v1/workforce/employees",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
-  async updateEmployee(employeeId: string, payload: WorkforceEmployeeUpdatePayload): Promise<WorkforceEmployeeItem> {
-    const res = await apiFetch<WorkforceEmployeeItem>(`/api/v1/workforce/employees/${employeeId}`, {
-      method: "PATCH",
-      body: JSON.stringify(payload),
-    });
+  async updateEmployee(
+    employeeId: string,
+    payload: WorkforceEmployeeUpdatePayload,
+  ): Promise<WorkforceEmployeeItem> {
+    const res = await apiFetch<WorkforceEmployeeItem>(
+      `/api/v1/workforce/employees/${employeeId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
   async transitionStatus(
     employeeId: string,
     newStatus: EmploymentStatus,
-    reason: string
+    reason: string,
   ): Promise<WorkforceEmployeeItem> {
-    const res = await apiFetch<WorkforceEmployeeItem>(`/api/v1/workforce/employees/${employeeId}/transition-status`, {
-      method: "POST",
-      body: JSON.stringify({ new_status: newStatus, reason }),
-    });
+    const res = await apiFetch<WorkforceEmployeeItem>(
+      `/api/v1/workforce/employees/${employeeId}/transition-status`,
+      {
+        method: "POST",
+        body: JSON.stringify({ new_status: newStatus, reason }),
+      },
+    );
     return res.data;
   }
 
-  async getEmploymentHistory(employeeId: string): Promise<WorkforceEmploymentHistoryItem[]> {
+  async getEmploymentHistory(
+    employeeId: string,
+  ): Promise<WorkforceEmploymentHistoryItem[]> {
     const res = await apiFetch<WorkforceEmploymentHistoryItem[]>(
-      `/api/v1/workforce/employees/${employeeId}/employment-history`
+      `/api/v1/workforce/employees/${employeeId}/employment-history`,
     );
     return res.data || [];
   }
@@ -166,18 +190,27 @@ class EnterpriseWorkforceService {
     if (params?.status) q.set("status", params.status);
 
     const qs = q.toString() ? `?${q.toString()}` : "";
-    const res = await apiFetch<WorkforceLifecycleCaseItem[]>(`/api/v1/workforce/lifecycle/cases${qs}`);
+    const res = await apiFetch<WorkforceLifecycleCaseItem[]>(
+      `/api/v1/workforce/lifecycle/cases${qs}`,
+    );
     return res.data || [];
   }
 
   async updateLifecycleTask(
     taskId: string,
-    payload: { status: LifecycleTaskStatus; completion_evidence?: string; blocker_reason?: string }
+    payload: {
+      status: LifecycleTaskStatus;
+      completion_evidence?: string;
+      blocker_reason?: string;
+    },
   ): Promise<WorkforceLifecycleTaskItem> {
-    const res = await apiFetch<WorkforceLifecycleTaskItem>(`/api/v1/workforce/lifecycle/tasks/${taskId}`, {
-      method: "PATCH",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<WorkforceLifecycleTaskItem>(
+      `/api/v1/workforce/lifecycle/tasks/${taskId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
@@ -188,10 +221,13 @@ class EnterpriseWorkforceService {
     notice_period_days?: number;
     notes?: string;
   }): Promise<WorkforceLifecycleCaseItem> {
-    const res = await apiFetch<WorkforceLifecycleCaseItem>("/api/v1/workforce/offboarding/initiate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await apiFetch<WorkforceLifecycleCaseItem>(
+      "/api/v1/workforce/offboarding/initiate",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
@@ -200,22 +236,31 @@ class EnterpriseWorkforceService {
   // =========================================================================
 
   async listLeaveTypes(): Promise<WorkforceLeaveTypeItem[]> {
-    const res = await apiFetch<WorkforceLeaveTypeItem[]>("/api/v1/workforce/leave/types");
+    const res = await apiFetch<WorkforceLeaveTypeItem[]>(
+      "/api/v1/workforce/leave/types",
+    );
     return res.data || [];
   }
 
   async listLeavePolicies(): Promise<WorkforceLeavePolicyItem[]> {
-    const res = await apiFetch<WorkforceLeavePolicyItem[]>("/api/v1/workforce/leave/policies");
+    const res = await apiFetch<WorkforceLeavePolicyItem[]>(
+      "/api/v1/workforce/leave/policies",
+    );
     return res.data || [];
   }
 
-  async listLeaveBalances(params?: { employee_id?: string; year?: number }): Promise<WorkforceLeaveBalanceItem[]> {
+  async listLeaveBalances(params?: {
+    employee_id?: string;
+    year?: number;
+  }): Promise<WorkforceLeaveBalanceItem[]> {
     const q = new URLSearchParams();
     if (params?.employee_id) q.set("employee_id", params.employee_id);
     if (params?.year) q.set("year", params.year.toString());
 
     const qs = q.toString() ? `?${q.toString()}` : "";
-    const res = await apiFetch<WorkforceLeaveBalanceItem[]>(`/api/v1/workforce/leave/balances${qs}`);
+    const res = await apiFetch<WorkforceLeaveBalanceItem[]>(
+      `/api/v1/workforce/leave/balances${qs}`,
+    );
     return res.data || [];
   }
 
@@ -230,38 +275,62 @@ class EnterpriseWorkforceService {
     if (params?.status) q.set("status", params.status);
 
     const qs = q.toString() ? `?${q.toString()}` : "";
-    const res = await apiFetch<WorkforceLeaveRequestItem[]>(`/api/v1/workforce/leave/requests${qs}`);
+    const res = await apiFetch<WorkforceLeaveRequestItem[]>(
+      `/api/v1/workforce/leave/requests${qs}`,
+    );
     return res.data || [];
   }
 
-  async submitLeaveRequest(payload: WorkforceLeaveRequestSubmitPayload): Promise<WorkforceLeaveRequestItem> {
-    const res = await apiFetch<WorkforceLeaveRequestItem>("/api/v1/workforce/leave/requests", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+  async submitLeaveRequest(
+    payload: WorkforceLeaveRequestSubmitPayload,
+  ): Promise<WorkforceLeaveRequestItem> {
+    const res = await apiFetch<WorkforceLeaveRequestItem>(
+      "/api/v1/workforce/leave/requests",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
-  async approveLeaveRequest(requestId: string, notes?: string): Promise<WorkforceLeaveRequestItem> {
-    const res = await apiFetch<WorkforceLeaveRequestItem>(`/api/v1/workforce/leave/requests/${requestId}/approve`, {
-      method: "POST",
-      body: JSON.stringify({ notes }),
-    });
+  async approveLeaveRequest(
+    requestId: string,
+    notes?: string,
+  ): Promise<WorkforceLeaveRequestItem> {
+    const res = await apiFetch<WorkforceLeaveRequestItem>(
+      `/api/v1/workforce/leave/requests/${requestId}/approve`,
+      {
+        method: "POST",
+        body: JSON.stringify({ notes }),
+      },
+    );
     return res.data;
   }
 
-  async rejectLeaveRequest(requestId: string, rejectionReason: string): Promise<WorkforceLeaveRequestItem> {
-    const res = await apiFetch<WorkforceLeaveRequestItem>(`/api/v1/workforce/leave/requests/${requestId}/reject`, {
-      method: "POST",
-      body: JSON.stringify({ rejection_reason: rejectionReason }),
-    });
+  async rejectLeaveRequest(
+    requestId: string,
+    rejectionReason: string,
+  ): Promise<WorkforceLeaveRequestItem> {
+    const res = await apiFetch<WorkforceLeaveRequestItem>(
+      `/api/v1/workforce/leave/requests/${requestId}/reject`,
+      {
+        method: "POST",
+        body: JSON.stringify({ rejection_reason: rejectionReason }),
+      },
+    );
     return res.data;
   }
 
-  async cancelLeaveRequest(requestId: string): Promise<WorkforceLeaveRequestItem> {
-    const res = await apiFetch<WorkforceLeaveRequestItem>(`/api/v1/workforce/leave/requests/${requestId}/cancel`, {
-      method: "POST",
-    });
+  async cancelLeaveRequest(
+    requestId: string,
+  ): Promise<WorkforceLeaveRequestItem> {
+    const res = await apiFetch<WorkforceLeaveRequestItem>(
+      `/api/v1/workforce/leave/requests/${requestId}/cancel`,
+      {
+        method: "POST",
+      },
+    );
     return res.data;
   }
 
@@ -272,10 +341,10 @@ class EnterpriseWorkforceService {
   async checkAvailability(
     employeeId: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<WorkforceAvailabilityResponse> {
     const res = await apiFetch<WorkforceAvailabilityResponse>(
-      `/api/v1/workforce/availability/check?employee_id=${employeeId}&start_date=${startDate}&end_date=${endDate}`
+      `/api/v1/workforce/availability/check?employee_id=${employeeId}&start_date=${startDate}&end_date=${endDate}`,
     );
     return res.data;
   }
@@ -291,10 +360,13 @@ class EnterpriseWorkforceService {
   }): Promise<WorkforceWorkloadSummary> {
     const q = new URLSearchParams();
     q.set("employee_id", params.employee_id);
-    if (params.academic_year_id) q.set("academic_year_id", params.academic_year_id);
+    if (params.academic_year_id)
+      q.set("academic_year_id", params.academic_year_id);
     if (params.semester_id) q.set("semester_id", params.semester_id);
 
-    const res = await apiFetch<WorkforceWorkloadSummary>(`/api/v1/workforce/workload/summary?${q.toString()}`);
+    const res = await apiFetch<WorkforceWorkloadSummary>(
+      `/api/v1/workforce/workload/summary?${q.toString()}`,
+    );
     return res.data;
   }
 
@@ -313,23 +385,36 @@ class EnterpriseWorkforceService {
     if (params?.category) q.set("category", params.category);
 
     const qs = q.toString() ? `?${q.toString()}` : "";
-    const res = await apiFetch<WorkforceHRCaseItem[]>(`/api/v1/workforce/hr-cases${qs}`);
+    const res = await apiFetch<WorkforceHRCaseItem[]>(
+      `/api/v1/workforce/hr-cases${qs}`,
+    );
     return res.data || [];
   }
 
-  async createHRCase(payload: WorkforceHRCaseCreatePayload): Promise<WorkforceHRCaseItem> {
-    const res = await apiFetch<WorkforceHRCaseItem>("/api/v1/workforce/hr-cases", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+  async createHRCase(
+    payload: WorkforceHRCaseCreatePayload,
+  ): Promise<WorkforceHRCaseItem> {
+    const res = await apiFetch<WorkforceHRCaseItem>(
+      "/api/v1/workforce/hr-cases",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return res.data;
   }
 
-  async resolveHRCase(caseId: string, resolution: string): Promise<WorkforceHRCaseItem> {
-    const res = await apiFetch<WorkforceHRCaseItem>(`/api/v1/workforce/hr-cases/${caseId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status: "RESOLVED", resolution }),
-    });
+  async resolveHRCase(
+    caseId: string,
+    resolution: string,
+  ): Promise<WorkforceHRCaseItem> {
+    const res = await apiFetch<WorkforceHRCaseItem>(
+      `/api/v1/workforce/hr-cases/${caseId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "RESOLVED", resolution }),
+      },
+    );
     return res.data;
   }
 
@@ -338,7 +423,9 @@ class EnterpriseWorkforceService {
   // =========================================================================
 
   async getReportOverview(): Promise<WorkforceReportOverview> {
-    const res = await apiFetch<WorkforceReportOverview>("/api/v1/workforce/reports/overview");
+    const res = await apiFetch<WorkforceReportOverview>(
+      "/api/v1/workforce/reports/overview",
+    );
     return res.data;
   }
 }

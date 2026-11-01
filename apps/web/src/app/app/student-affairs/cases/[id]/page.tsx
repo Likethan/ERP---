@@ -58,7 +58,9 @@ export default function CaseDetailsPage() {
       reason: conflictReason,
     });
     setConflictModalOpen(false);
-    alert("Conflict of interest declared. Case has been flagged for reassignment.");
+    alert(
+      "Conflict of interest declared. Case has been flagged for reassignment.",
+    );
     // Reload
     const updated = await studentAffairsService.getCaseById(caseItem.id);
     setCaseItem(updated);
@@ -81,10 +83,12 @@ export default function CaseDetailsPage() {
   }
 
   const statusBadge = StudentAffairsCalculator.getStatusBadge(caseItem.status);
-  const priorityBadge = StudentAffairsCalculator.getPriorityBadge(caseItem.priority);
+  const priorityBadge = StudentAffairsCalculator.getPriorityBadge(
+    caseItem.priority,
+  );
   const sla = StudentAffairsCalculator.calculateSlaStatus(
     caseItem.target_response_date,
-    caseItem.status
+    caseItem.status,
   );
 
   return (
@@ -93,7 +97,10 @@ export default function CaseDetailsPage() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: caseItem.case_number, href: `/app/student-affairs/cases/${caseItem.id}` },
+          {
+            label: caseItem.case_number,
+            href: `/app/student-affairs/cases/${caseItem.id}`,
+          },
         ]}
       />
 
@@ -104,27 +111,41 @@ export default function CaseDetailsPage() {
             <span className="font-mono text-xl font-bold text-indigo-400">
               {caseItem.case_number}
             </span>
-            <span className={`px-2 py-0.5 rounded text-xs border ${statusBadge.className}`}>
+            <span
+              className={`px-2 py-0.5 rounded text-xs border ${statusBadge.className}`}
+            >
               {statusBadge.label}
             </span>
-            <span className={`px-2 py-0.5 rounded text-xs border ${priorityBadge.className}`}>
+            <span
+              className={`px-2 py-0.5 rounded text-xs border ${priorityBadge.className}`}
+            >
               {priorityBadge.label}
             </span>
-            <Badge variant="outline" className="border-slate-700 text-slate-300 text-xs">
+            <Badge
+              variant="outline"
+              className="border-slate-700 text-slate-300 text-xs"
+            >
               {caseItem.confidentiality_level}
             </Badge>
           </div>
-          <h1 className="text-xl font-bold text-white mt-2">{caseItem.title}</h1>
+          <h1 className="text-xl font-bold text-white mt-2">
+            {caseItem.title}
+          </h1>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href={`/app/student-affairs/cases/${caseItem.id}/confidential`}>
-            <Button variant="outline" className="border-amber-500/30 text-amber-300 hover:bg-amber-950/20 text-xs gap-1.5">
+            <Button
+              variant="outline"
+              className="border-amber-500/30 text-amber-300 hover:bg-amber-950/20 text-xs gap-1.5"
+            >
               <Lock className="h-3.5 w-3.5 text-amber-400" />
               Confidential View
             </Button>
           </Link>
-          <Link href={`/app/student-affairs/communications?caseId=${caseItem.id}`}>
+          <Link
+            href={`/app/student-affairs/communications?caseId=${caseItem.id}`}
+          >
             <Button className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-1.5">
               <MessageSquare className="h-3.5 w-3.5" />
               Case Thread
@@ -139,22 +160,31 @@ export default function CaseDetailsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 rounded-xl border border-slate-800 bg-slate-900/60 text-xs">
         <div>
           <span className="text-slate-400">Institutional Category:</span>
-          <p className="font-semibold text-slate-200 mt-0.5">{caseItem.category?.name || "General"}</p>
+          <p className="font-semibold text-slate-200 mt-0.5">
+            {caseItem.category?.name || "General"}
+          </p>
         </div>
         <div>
           <span className="text-slate-400">Submitter Persona:</span>
-          <p className="font-semibold text-slate-200 mt-0.5">{caseItem.submitter_name_redacted}</p>
+          <p className="font-semibold text-slate-200 mt-0.5">
+            {caseItem.submitter_name_redacted}
+          </p>
         </div>
         <div>
           <span className="text-slate-400">SLA Response Window:</span>
-          <p className={`font-semibold mt-0.5 ${sla.statusLabel === "BREACHED" ? "text-red-400" : "text-emerald-400"}`}>
-            {sla.statusLabel === "RESOLVED" ? "Completed on Time" : `${sla.hoursRemaining} hours remaining`}
+          <p
+            className={`font-semibold mt-0.5 ${sla.statusLabel === "BREACHED" ? "text-red-400" : "text-emerald-400"}`}
+          >
+            {sla.statusLabel === "RESOLVED"
+              ? "Completed on Time"
+              : `${sla.hoursRemaining} hours remaining`}
           </p>
         </div>
         <div>
           <span className="text-slate-400">Procedural Stage:</span>
           <p className="font-semibold text-indigo-300 mt-0.5">
-            {caseItem.disciplinary_proceeding?.procedural_stage || caseItem.status}
+            {caseItem.disciplinary_proceeding?.procedural_stage ||
+              caseItem.status}
           </p>
         </div>
       </div>
@@ -173,8 +203,12 @@ export default function CaseDetailsPage() {
 
             {caseItem.requested_resolution && (
               <div className="mt-4 p-3.5 rounded-lg bg-indigo-950/20 border border-indigo-500/20 text-xs">
-                <span className="font-semibold text-indigo-300">Requested Remediation: </span>
-                <span className="text-slate-300">{caseItem.requested_resolution}</span>
+                <span className="font-semibold text-indigo-300">
+                  Requested Remediation:{" "}
+                </span>
+                <span className="text-slate-300">
+                  {caseItem.requested_resolution}
+                </span>
               </div>
             )}
           </Card>
@@ -183,7 +217,8 @@ export default function CaseDetailsPage() {
           <Card className="p-6 border-slate-800 bg-slate-900/40 space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
               <Paperclip className="h-4 w-4 text-blue-400" />
-              Attached Records & Evidence ({caseItem.evidence_items?.length || 0})
+              Attached Records & Evidence (
+              {caseItem.evidence_items?.length || 0})
             </h2>
 
             {caseItem.evidence_items && caseItem.evidence_items.length > 0 ? (
@@ -194,46 +229,60 @@ export default function CaseDetailsPage() {
                     className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950/50 text-xs"
                   >
                     <div className="space-y-0.5">
-                      <span className="font-medium text-slate-200">{ev.title}</span>
+                      <span className="font-medium text-slate-200">
+                        {ev.title}
+                      </span>
                       <p className="text-[10px] text-slate-500">
-                        {ev.evidence_type} • Access Level: {ev.confidentiality_level} {ev.is_redacted && "• Redacted Copy"}
+                        {ev.evidence_type} • Access Level:{" "}
+                        {ev.confidentiality_level}{" "}
+                        {ev.is_redacted && "• Redacted Copy"}
                       </p>
                     </div>
-                    <Badge variant="outline" className="border-slate-700 text-indigo-400 text-[10px]">
+                    <Badge
+                      variant="outline"
+                      className="border-slate-700 text-indigo-400 text-[10px]"
+                    >
                       Secure Storage
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500 italic">No supporting documents attached to this submission.</p>
+              <p className="text-xs text-slate-500 italic">
+                No supporting documents attached to this submission.
+              </p>
             )}
           </Card>
 
           {/* Corrective Actions */}
-          {caseItem.resolution_actions && caseItem.resolution_actions.length > 0 && (
-            <Card className="p-6 border-slate-800 bg-slate-900/40 space-y-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Resolution & Corrective Actions
-              </h2>
-              <div className="space-y-2">
-                {caseItem.resolution_actions.map((act) => (
-                  <div
-                    key={act.id}
-                    className="p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs flex items-center justify-between"
-                  >
-                    <div>
-                      <span className="font-medium text-slate-200">{act.description}</span>
-                      <p className="text-[10px] text-slate-500">Due: {act.due_date || "Pending"}</p>
+          {caseItem.resolution_actions &&
+            caseItem.resolution_actions.length > 0 && (
+              <Card className="p-6 border-slate-800 bg-slate-900/40 space-y-3">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Resolution & Corrective Actions
+                </h2>
+                <div className="space-y-2">
+                  {caseItem.resolution_actions.map((act) => (
+                    <div
+                      key={act.id}
+                      className="p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs flex items-center justify-between"
+                    >
+                      <div>
+                        <span className="font-medium text-slate-200">
+                          {act.description}
+                        </span>
+                        <p className="text-[10px] text-slate-500">
+                          Due: {act.due_date || "Pending"}
+                        </p>
+                      </div>
+                      <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+                        {act.status}
+                      </Badge>
                     </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
-                      {act.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+                  ))}
+                </div>
+              </Card>
+            )}
         </div>
 
         {/* Right 1 Col: Procedural Actions & Conflict Officer Panel */}
@@ -243,26 +292,54 @@ export default function CaseDetailsPage() {
               Procedural Actions
             </h3>
             <div className="space-y-2">
-              <Link href={`/app/student-affairs/assignments?caseId=${caseItem.id}`} className="block">
-                <Button variant="outline" size="sm" className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2">
+              <Link
+                href={`/app/student-affairs/assignments?caseId=${caseItem.id}`}
+                className="block"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2"
+                >
                   <User className="h-3.5 w-3.5 text-indigo-400" />
                   Assign / Reassign Officer
                 </Button>
               </Link>
-              <Link href={`/app/student-affairs/meetings?caseId=${caseItem.id}`} className="block">
-                <Button variant="outline" size="sm" className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2">
+              <Link
+                href={`/app/student-affairs/meetings?caseId=${caseItem.id}`}
+                className="block"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2"
+                >
                   <Calendar className="h-3.5 w-3.5 text-blue-400" />
                   Schedule Hearing / Inquiry
                 </Button>
               </Link>
-              <Link href={`/app/student-affairs/disciplinary?caseId=${caseItem.id}`} className="block">
-                <Button variant="outline" size="sm" className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2">
+              <Link
+                href={`/app/student-affairs/disciplinary?caseId=${caseItem.id}`}
+                className="block"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2"
+                >
                   <Scale className="h-3.5 w-3.5 text-purple-400" />
                   Disciplinary Proceedings
                 </Button>
               </Link>
-              <Link href={`/app/student-affairs/appeals?caseId=${caseItem.id}`} className="block">
-                <Button variant="outline" size="sm" className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2">
+              <Link
+                href={`/app/student-affairs/appeals?caseId=${caseItem.id}`}
+                className="block"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2"
+                >
                   <Scale className="h-3.5 w-3.5 text-cyan-400" />
                   Appellate Review
                 </Button>
@@ -286,7 +363,9 @@ export default function CaseDetailsPage() {
               Auditable Integrity
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Every status change, assignment adjustment, and evidence access event is recorded in the immutable audit log under tenant isolation.
+              Every status change, assignment adjustment, and evidence access
+              event is recorded in the immutable audit log under tenant
+              isolation.
             </p>
           </Card>
         </div>
@@ -301,7 +380,8 @@ export default function CaseDetailsPage() {
               Declare Conflict of Interest
             </h3>
             <p className="text-slate-400 text-[11px]">
-              Institutional fairness requires officers with personal or academic connections to either party to recuse themselves.
+              Institutional fairness requires officers with personal or academic
+              connections to either party to recuse themselves.
             </p>
             <textarea
               rows={3}
@@ -311,7 +391,11 @@ export default function CaseDetailsPage() {
               className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
             />
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setConflictModalOpen(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConflictModalOpen(false)}
+              >
                 Cancel
               </Button>
               <Button

@@ -31,7 +31,8 @@ export default function StudentHousingRequestsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  const [selectedRequestToReview, setSelectedRequestToReview] = useState<StudentHousingRequest | null>(null);
+  const [selectedRequestToReview, setSelectedRequestToReview] =
+    useState<StudentHousingRequest | null>(null);
   const [reviewData, setReviewData] = useState<HousingRequestReviewInput>({
     status: "UNDER_REVIEW",
     review_notes: "",
@@ -86,7 +87,10 @@ export default function StudentHousingRequestsPage() {
     if (!selectedRequestToReview) return;
     setActionLoading(true);
     try {
-      await HousingService.reviewRequest(selectedRequestToReview.id, reviewData);
+      await HousingService.reviewRequest(
+        selectedRequestToReview.id,
+        reviewData,
+      );
       setSelectedRequestToReview(null);
       loadData();
     } catch (err) {
@@ -171,7 +175,8 @@ export default function StudentHousingRequestsPage() {
               Student Housing Requests & Waitlist Queue
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Merit, distance, and special-need weighted student accommodation applications, waitlist rankings, and warden verification.
+              Merit, distance, and special-need weighted student accommodation
+              applications, waitlist rankings, and warden verification.
             </p>
           </div>
 
@@ -216,10 +221,14 @@ export default function StudentHousingRequestsPage() {
 
         {/* Requests Table */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading student housing applications...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading student housing applications...
+          </div>
         ) : filteredRequests.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No student housing requests found matching criteria.</p>
+            <p className="text-slate-400">
+              No student housing requests found matching criteria.
+            </p>
           </div>
         ) : (
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
@@ -237,13 +246,17 @@ export default function StudentHousingRequestsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {filteredRequests.map((req) => (
-                    <tr key={req.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr
+                      key={req.id}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
                       <td className="px-5 py-4">
                         <div className="font-semibold text-white">
                           {req.student_name || "Enrolled Scholar"}
                         </div>
                         <div className="text-xs font-mono text-indigo-400">
-                          {req.student_roll_number || req.student_id.slice(0, 8)}
+                          {req.student_roll_number ||
+                            req.student_id.slice(0, 8)}
                         </div>
                         {req.accessibility_required && (
                           <span className="inline-block mt-1 text-[11px] font-semibold text-purple-400">
@@ -252,17 +265,24 @@ export default function StudentHousingRequestsPage() {
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        <span className="font-medium text-slate-200">{req.academic_term}</span>
+                        <span className="font-medium text-slate-200">
+                          {req.academic_term}
+                        </span>
                         <div className="text-xs text-slate-500">
-                          Applied: {new Date(req.created_at).toLocaleDateString()}
+                          Applied:{" "}
+                          {new Date(req.created_at).toLocaleDateString()}
                         </div>
                       </td>
                       <td className="px-5 py-4">
                         <div className="text-xs text-slate-300">
-                          Type: <strong className="text-white">{req.preferred_unit_type.replace(/_/g, " ")}</strong>
+                          Type:{" "}
+                          <strong className="text-white">
+                            {req.preferred_unit_type.replace(/_/g, " ")}
+                          </strong>
                         </div>
                         <div className="text-xs text-slate-400 mt-0.5">
-                          Budget: ₹{(req.budget_max || 0).toLocaleString("en-IN")}/mo
+                          Budget: ₹
+                          {(req.budget_max || 0).toLocaleString("en-IN")}/mo
                         </div>
                         {req.dietary_preference && (
                           <div className="text-[11px] text-slate-500">
@@ -277,8 +297,8 @@ export default function StudentHousingRequestsPage() {
                               req.priority_score >= 80
                                 ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
                                 : req.priority_score >= 60
-                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                                : "bg-slate-800 text-slate-300"
+                                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                                  : "bg-slate-800 text-slate-300"
                             }`}
                           >
                             Score: {req.priority_score}
@@ -290,7 +310,9 @@ export default function StudentHousingRequestsPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-5 py-4">{getStatusBadge(req.status)}</td>
+                      <td className="px-5 py-4">
+                        {getStatusBadge(req.status)}
+                      </td>
                       <td className="px-5 py-4 text-right">
                         <button
                           onClick={() => {
@@ -336,13 +358,27 @@ export default function StudentHousingRequestsPage() {
 
               <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800/80 space-y-1 text-xs">
                 <div>
-                  Student: <strong className="text-white">{selectedRequestToReview.student_name}</strong> ({selectedRequestToReview.student_roll_number})
+                  Student:{" "}
+                  <strong className="text-white">
+                    {selectedRequestToReview.student_name}
+                  </strong>{" "}
+                  ({selectedRequestToReview.student_roll_number})
                 </div>
                 <div>
-                  Term: <span className="text-slate-300">{selectedRequestToReview.academic_term}</span>
+                  Term:{" "}
+                  <span className="text-slate-300">
+                    {selectedRequestToReview.academic_term}
+                  </span>
                 </div>
                 <div>
-                  Preferences: <span className="text-slate-300">{selectedRequestToReview.preferred_unit_type.replace(/_/g, " ")} | Max ₹{selectedRequestToReview.budget_max}/mo</span>
+                  Preferences:{" "}
+                  <span className="text-slate-300">
+                    {selectedRequestToReview.preferred_unit_type.replace(
+                      /_/g,
+                      " ",
+                    )}{" "}
+                    | Max ₹{selectedRequestToReview.budget_max}/mo
+                  </span>
                 </div>
                 {selectedRequestToReview.special_requests && (
                   <div className="text-amber-300">
@@ -367,7 +403,9 @@ export default function StudentHousingRequestsPage() {
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="UNDER_REVIEW">Under Review</option>
-                    <option value="WAITLISTED">Approve & Place on Waitlist</option>
+                    <option value="WAITLISTED">
+                      Approve & Place on Waitlist
+                    </option>
                     <option value="REJECTED">Reject Application</option>
                   </select>
                 </div>
@@ -435,7 +473,9 @@ export default function StudentHousingRequestsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
             <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h2 className="text-lg font-bold text-white">Submit Student Housing Request</h2>
+                <h2 className="text-lg font-bold text-white">
+                  Submit Student Housing Request
+                </h2>
                 <button
                   onClick={() => setIsSubmitModalOpen(false)}
                   className="text-slate-400 hover:text-white"
@@ -444,7 +484,10 @@ export default function StudentHousingRequestsPage() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmitRequest} className="space-y-4 text-sm">
+              <form
+                onSubmit={handleSubmitRequest}
+                className="space-y-4 text-sm"
+              >
                 <div>
                   <label className="block text-xs font-medium text-slate-300 mb-1">
                     Academic Term *
@@ -454,7 +497,10 @@ export default function StudentHousingRequestsPage() {
                     type="text"
                     value={newRequest.academic_term}
                     onChange={(e) =>
-                      setNewRequest({ ...newRequest, academic_term: e.target.value })
+                      setNewRequest({
+                        ...newRequest,
+                        academic_term: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     placeholder="e.g. 2026-27 Odd Semester"

@@ -55,11 +55,15 @@ export default function RiskRegisterPage() {
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
-  const [selectedRisk, setSelectedRisk] = useState<InstitutionalRisk | null>(null);
+  const [selectedRisk, setSelectedRisk] = useState<InstitutionalRisk | null>(
+    null,
+  );
 
   // Create form
   const [newTitle, setNewTitle] = useState("");
-  const [newCategory, setNewCategory] = useState<RiskCategory>("INFORMATION_SECURITY_PRIVACY");
+  const [newCategory, setNewCategory] = useState<RiskCategory>(
+    "INFORMATION_SECURITY_PRIVACY",
+  );
   const [newDescription, setNewDescription] = useState("");
   const [newExistingControls, setNewExistingControls] = useState("");
   const [newMitigationPlan, setNewMitigationPlan] = useState("");
@@ -70,7 +74,9 @@ export default function RiskRegisterPage() {
   const [newTargetDate, setNewTargetDate] = useState("");
 
   // Accept form
-  const [acceptedBy, setAcceptedBy] = useState("President & Board Audit Committee");
+  const [acceptedBy, setAcceptedBy] = useState(
+    "President & Board Audit Committee",
+  );
   const [acceptRationale, setAcceptRationale] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,8 +161,14 @@ export default function RiskRegisterPage() {
   }
 
   // Pre-calculated matrix preview for create modal
-  const inherentCalc = calculateRiskMatrix(newInherentLikelihood, newInherentImpact);
-  const residualCalc = calculateRiskMatrix(newResidualLikelihood, newResidualImpact);
+  const inherentCalc = calculateRiskMatrix(
+    newInherentLikelihood,
+    newInherentImpact,
+  );
+  const residualCalc = calculateRiskMatrix(
+    newResidualLikelihood,
+    newResidualImpact,
+  );
 
   const filteredRisks = risks.filter((r) => {
     const identifier = r.risk_identifier || r.risk_code || "";
@@ -180,10 +192,12 @@ export default function RiskRegisterPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <ShieldAlert className="h-6 w-6 text-indigo-600" /> Enterprise Institutional Risk Register
+              <ShieldAlert className="h-6 w-6 text-indigo-600" /> Enterprise
+              Institutional Risk Register
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Quantitative 5×5 enterprise risk scoring, inherent vs residual risk mitigation, and executive residual risk acceptance.
+              Quantitative 5×5 enterprise risk scoring, inherent vs residual
+              risk mitigation, and executive residual risk acceptance.
             </p>
           </div>
           <button
@@ -199,24 +213,30 @@ export default function RiskRegisterPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Scale className="h-5 w-5 text-indigo-600" /> Explainable 5×5 Enterprise Risk Matrix
+                <Scale className="h-5 w-5 text-indigo-600" /> Explainable 5×5
+                Enterprise Risk Matrix
               </h2>
               <p className="text-xs text-slate-500">
-                Formula: Likelihood (1-5) × Impact (1-5) = Score (1-25). Hover cells to see risk concentration.
+                Formula: Likelihood (1-5) × Impact (1-5) = Score (1-25). Hover
+                cells to see risk concentration.
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs font-semibold">
               <span className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Low (1-4)
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Low
+                (1-4)
               </span>
               <span className="flex items-center gap-1.5 text-yellow-600">
-                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" /> Medium (5-9)
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />{" "}
+                Medium (5-9)
               </span>
               <span className="flex items-center gap-1.5 text-amber-600">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> High (10-15)
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> High
+                (10-15)
               </span>
               <span className="flex items-center gap-1.5 text-rose-600">
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-500" /> Critical (16-25)
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />{" "}
+                Critical (16-25)
               </span>
             </div>
           </div>
@@ -228,11 +248,21 @@ export default function RiskRegisterPage() {
               <div className="text-[11px] font-bold text-slate-400 flex items-center justify-center">
                 Likelihood ↓ / Impact →
               </div>
-              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">1 - Negligible</div>
-              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">2 - Minor</div>
-              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">3 - Moderate</div>
-              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">4 - Major</div>
-              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">5 - Catastrophic</div>
+              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">
+                1 - Negligible
+              </div>
+              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">
+                2 - Minor
+              </div>
+              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">
+                3 - Moderate
+              </div>
+              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">
+                4 - Major
+              </div>
+              <div className="font-semibold text-slate-600 dark:text-slate-400 py-1">
+                5 - Catastrophic
+              </div>
 
               {/* Rows: Likelihood from 5 down to 1 */}
               {[5, 4, 3, 2, 1].map((likelihood) => (
@@ -243,16 +273,22 @@ export default function RiskRegisterPage() {
                   {[1, 2, 3, 4, 5].map((impact) => {
                     const score = likelihood * impact;
                     const count = risks.filter(
-                      (r) => r.residual_likelihood === likelihood && r.residual_impact === impact
+                      (r) =>
+                        r.residual_likelihood === likelihood &&
+                        r.residual_impact === impact,
                     ).length;
 
-                    let bgClass = "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+                    let bgClass =
+                      "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
                     if (score >= 16) {
-                      bgClass = "bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 border-rose-300 dark:border-rose-800";
+                      bgClass =
+                        "bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 border-rose-300 dark:border-rose-800";
                     } else if (score >= 10) {
-                      bgClass = "bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800";
+                      bgClass =
+                        "bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800";
                     } else if (score >= 5) {
-                      bgClass = "bg-yellow-50 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800";
+                      bgClass =
+                        "bg-yellow-50 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800";
                     }
 
                     return (
@@ -260,14 +296,18 @@ export default function RiskRegisterPage() {
                         key={`${likelihood}-${impact}`}
                         className={`p-3 rounded-xl border flex flex-col items-center justify-center transition-transform hover:scale-105 shadow-xs ${bgClass}`}
                       >
-                        <span className="font-mono text-[10px] opacity-70">Score: {score}</span>
+                        <span className="font-mono text-[10px] opacity-70">
+                          Score: {score}
+                        </span>
                         <div className="text-sm font-bold mt-0.5">
                           {count > 0 ? (
                             <span className="px-2 py-0.5 rounded-full bg-slate-900/10 dark:bg-white/20">
                               {count} {count === 1 ? "Risk" : "Risks"}
                             </span>
                           ) : (
-                            <span className="text-slate-400 dark:text-slate-600 font-normal">—</span>
+                            <span className="text-slate-400 dark:text-slate-600 font-normal">
+                              —
+                            </span>
                           )}
                         </div>
                       </div>
@@ -300,13 +340,27 @@ export default function RiskRegisterPage() {
                 className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
               >
                 <option value="ALL">All Risk Domains</option>
-                <option value="LEGAL_COMPLIANCE">Legal & Statutory Compliance</option>
-                <option value="CONTRACTUAL">Contractual Breach & Counterparty</option>
-                <option value="FINANCIAL">Financial Solvency & Liquidity</option>
-                <option value="OPERATIONAL">Operational Disruption & Infrastructure</option>
-                <option value="REPUTATIONAL">Reputational & Public Trust</option>
-                <option value="INFORMATION_SECURITY">Cybersecurity & Data Privacy</option>
-                <option value="RESEARCH_INTEGRITY">Research Integrity & IP</option>
+                <option value="LEGAL_COMPLIANCE">
+                  Legal & Statutory Compliance
+                </option>
+                <option value="CONTRACTUAL">
+                  Contractual Breach & Counterparty
+                </option>
+                <option value="FINANCIAL">
+                  Financial Solvency & Liquidity
+                </option>
+                <option value="OPERATIONAL">
+                  Operational Disruption & Infrastructure
+                </option>
+                <option value="REPUTATIONAL">
+                  Reputational & Public Trust
+                </option>
+                <option value="INFORMATION_SECURITY">
+                  Cybersecurity & Data Privacy
+                </option>
+                <option value="RESEARCH_INTEGRITY">
+                  Research Integrity & IP
+                </option>
                 <option value="CAMPUS_SAFETY">Campus Safety & Emergency</option>
               </select>
 
@@ -357,8 +411,12 @@ export default function RiskRegisterPage() {
           ) : filteredRisks.length === 0 ? (
             <div className="p-12 text-center text-slate-400 space-y-2">
               <ShieldCheck className="h-8 w-8 mx-auto text-slate-300" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Risks Recorded</p>
-              <p className="text-xs text-slate-500">No risk items match your query.</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                No Risks Recorded
+              </p>
+              <p className="text-xs text-slate-500">
+                No risk items match your query.
+              </p>
             </div>
           ) : (
             <table className="w-full text-left text-sm">
@@ -374,16 +432,23 @@ export default function RiskRegisterPage() {
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {filteredRisks.map((risk) => (
-                  <tr key={risk.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                  <tr
+                    key={risk.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                           {risk.risk_identifier}
                         </span>
-                        <strong className="text-slate-900 dark:text-white">{risk.title}</strong>
+                        <strong className="text-slate-900 dark:text-white">
+                          {risk.title}
+                        </strong>
                       </div>
                       {risk.description && (
-                        <p className="text-xs text-slate-500 line-clamp-1 mt-1">{risk.description}</p>
+                        <p className="text-xs text-slate-500 line-clamp-1 mt-1">
+                          {risk.description}
+                        </p>
                       )}
                     </td>
                     <td className="px-6 py-4 text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -392,10 +457,12 @@ export default function RiskRegisterPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-xs">
                         <div className="text-center">
-                          <span className="text-[10px] text-slate-400 block">Inherent</span>
+                          <span className="text-[10px] text-slate-400 block">
+                            Inherent
+                          </span>
                           <span
                             className={`px-2 py-0.5 rounded font-mono font-bold ${getRiskLevelBadge(
-                              risk.inherent_level || risk.risk_level
+                              risk.inherent_level || risk.risk_level,
                             )}`}
                           >
                             {risk.inherent_score}
@@ -403,10 +470,12 @@ export default function RiskRegisterPage() {
                         </div>
                         <TrendingDown className="h-4 w-4 text-emerald-500" />
                         <div className="text-center">
-                          <span className="text-[10px] text-slate-400 block">Residual</span>
+                          <span className="text-[10px] text-slate-400 block">
+                            Residual
+                          </span>
                           <span
                             className={`px-2 py-0.5 rounded font-mono font-bold ${getRiskLevelBadge(
-                              risk.residual_level || risk.risk_level
+                              risk.residual_level || risk.risk_level,
                             )}`}
                           >
                             {risk.residual_score}
@@ -416,7 +485,9 @@ export default function RiskRegisterPage() {
                     </td>
                     <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400 max-w-xs">
                       {risk.mitigation_plan || (
-                        <span className="italic text-slate-400">No active mitigation registered</span>
+                        <span className="italic text-slate-400">
+                          No active mitigation registered
+                        </span>
                       )}
                     </td>
                     <td className="px-6 py-4">
@@ -426,17 +497,18 @@ export default function RiskRegisterPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {(risk.status as string) !== "RESIDUAL_ACCEPTED" &&
-                        (risk.status as string) !== "RESIDUAL_RISK_ACCEPTED" && (
-                        <button
-                          onClick={() => {
-                            setSelectedRisk(risk);
-                            setIsAcceptOpen(true);
-                          }}
-                          className="px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-medium hover:bg-amber-100 transition-colors"
-                        >
-                          Accept Residual Risk
-                        </button>
-                      )}
+                        (risk.status as string) !==
+                          "RESIDUAL_RISK_ACCEPTED" && (
+                          <button
+                            onClick={() => {
+                              setSelectedRisk(risk);
+                              setIsAcceptOpen(true);
+                            }}
+                            className="px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-medium hover:bg-amber-100 transition-colors"
+                          >
+                            Accept Residual Risk
+                          </button>
+                        )}
                     </td>
                   </tr>
                 ))}
@@ -452,7 +524,8 @@ export default function RiskRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldAlert className="h-5 w-5 text-indigo-600" /> New Institutional Risk Assessment
+                <ShieldAlert className="h-5 w-5 text-indigo-600" /> New
+                Institutional Risk Assessment
               </h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -483,10 +556,14 @@ export default function RiskRegisterPage() {
                 </label>
                 <select
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value as RiskCategory)}
+                  onChange={(e) =>
+                    setNewCategory(e.target.value as RiskCategory)
+                  }
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
-                  <option value="INFORMATION_SECURITY">INFORMATION_SECURITY</option>
+                  <option value="INFORMATION_SECURITY">
+                    INFORMATION_SECURITY
+                  </option>
                   <option value="LEGAL_COMPLIANCE">LEGAL_COMPLIANCE</option>
                   <option value="CONTRACTUAL">CONTRACTUAL</option>
                   <option value="FINANCIAL">FINANCIAL</option>
@@ -517,30 +594,40 @@ export default function RiskRegisterPage() {
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     Inherent Risk (Pre-Controls)
                   </span>
-                  <span className={`text-xs px-2 py-0.5 rounded font-mono font-bold ${inherentCalc.badgeClass}`}>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded font-mono font-bold ${inherentCalc.badgeClass}`}
+                  >
                     Score: {inherentCalc.score} ({inherentCalc.level})
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <label className="block text-slate-500 mb-1">Likelihood (1-5): {newInherentLikelihood}</label>
+                    <label className="block text-slate-500 mb-1">
+                      Likelihood (1-5): {newInherentLikelihood}
+                    </label>
                     <input
                       type="range"
                       min={1}
                       max={5}
                       value={newInherentLikelihood}
-                      onChange={(e) => setNewInherentLikelihood(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        setNewInherentLikelihood(parseInt(e.target.value))
+                      }
                       className="w-full accent-indigo-600"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-500 mb-1">Impact (1-5): {newInherentImpact}</label>
+                    <label className="block text-slate-500 mb-1">
+                      Impact (1-5): {newInherentImpact}
+                    </label>
                     <input
                       type="range"
                       min={1}
                       max={5}
                       value={newInherentImpact}
-                      onChange={(e) => setNewInherentImpact(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        setNewInherentImpact(parseInt(e.target.value))
+                      }
                       className="w-full accent-indigo-600"
                     />
                   </div>
@@ -553,30 +640,40 @@ export default function RiskRegisterPage() {
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     Residual Risk (Post-Mitigation)
                   </span>
-                  <span className={`text-xs px-2 py-0.5 rounded font-mono font-bold ${residualCalc.badgeClass}`}>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded font-mono font-bold ${residualCalc.badgeClass}`}
+                  >
                     Score: {residualCalc.score} ({residualCalc.level})
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <label className="block text-slate-500 mb-1">Residual Likelihood: {newResidualLikelihood}</label>
+                    <label className="block text-slate-500 mb-1">
+                      Residual Likelihood: {newResidualLikelihood}
+                    </label>
                     <input
                       type="range"
                       min={1}
                       max={5}
                       value={newResidualLikelihood}
-                      onChange={(e) => setNewResidualLikelihood(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        setNewResidualLikelihood(parseInt(e.target.value))
+                      }
                       className="w-full accent-indigo-600"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-500 mb-1">Residual Impact: {newResidualImpact}</label>
+                    <label className="block text-slate-500 mb-1">
+                      Residual Impact: {newResidualImpact}
+                    </label>
                     <input
                       type="range"
                       min={1}
                       max={5}
                       value={newResidualImpact}
-                      onChange={(e) => setNewResidualImpact(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        setNewResidualImpact(parseInt(e.target.value))
+                      }
                       className="w-full accent-indigo-600"
                     />
                   </div>
@@ -629,7 +726,8 @@ export default function RiskRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-amber-600" /> Executive Residual Risk Acceptance
+                <ShieldCheck className="h-5 w-5 text-amber-600" /> Executive
+                Residual Risk Acceptance
               </h3>
               <button
                 onClick={() => setIsAcceptOpen(false)}
@@ -642,7 +740,10 @@ export default function RiskRegisterPage() {
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span>
-                <strong>Institutional Governance Rule:</strong> Accepting residual risk indicates that further mitigation costs exceed risk tolerance. This creates a permanent Board Audit Committee audit entry.
+                <strong>Institutional Governance Rule:</strong> Accepting
+                residual risk indicates that further mitigation costs exceed
+                risk tolerance. This creates a permanent Board Audit Committee
+                audit entry.
               </span>
             </div>
 

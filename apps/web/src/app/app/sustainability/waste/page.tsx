@@ -14,7 +14,11 @@ import {
 } from "lucide-react";
 import { SustainabilityNav } from "../../../../components/sustainability/sustainability-nav";
 import { sustainabilityService } from "../../../../services/sustainability.service";
-import { WasteCategory, WasteDisposalMethod, WasteRecord } from "../../../../types/sustainability";
+import {
+  WasteCategory,
+  WasteDisposalMethod,
+  WasteRecord,
+} from "../../../../types/sustainability";
 
 export default function SustainabilityWastePage() {
   const [wasteRecords, setWasteRecords] = useState<WasteRecord[]>([]);
@@ -27,7 +31,8 @@ export default function SustainabilityWastePage() {
   const [isHazardous, setIsHazardous] = useState(false);
   const [quantity, setQuantity] = useState(500);
   const [unit, setUnit] = useState("kg");
-  const [disposalMethod, setDisposalMethod] = useState<WasteDisposalMethod>("COMPOSTING");
+  const [disposalMethod, setDisposalMethod] =
+    useState<WasteDisposalMethod>("COMPOSTING");
   const [partner, setPartner] = useState("Campus Agro Vermicompost Unit");
   const [manifestNo, setManifestNo] = useState("");
   const [certRef, setCertRef] = useState("");
@@ -82,46 +87,62 @@ export default function SustainabilityWastePage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Diversion Rate</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Diversion Rate
+            </span>
             <span className="p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800">
               <Recycle className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-emerald-400">71.8%</div>
-          <p className="text-xs text-slate-400 mt-1">Diverted away from municipal landfills</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Diverted away from municipal landfills
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Organic Composted</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Organic Composted
+            </span>
             <span className="p-2 rounded-lg bg-green-950 text-green-400 border border-green-800">
               <Leaf className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-slate-100">4,250 kg</div>
-          <p className="text-xs text-slate-400 mt-1">Mess food waste into rich vermicompost</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Mess food waste into rich vermicompost
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">E-Waste Recycled</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              E-Waste Recycled
+            </span>
             <span className="p-2 rounded-lg bg-blue-950 text-blue-400 border border-blue-800">
               <Truck className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-blue-400">680 kg</div>
-          <p className="text-xs text-slate-400 mt-1">CPCB certified EPR recycling partner</p>
+          <p className="text-xs text-slate-400 mt-1">
+            CPCB certified EPR recycling partner
+          </p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-400 uppercase">Hazardous TSDF</span>
+            <span className="text-xs font-semibold text-slate-400 uppercase">
+              Hazardous TSDF
+            </span>
             <span className="p-2 rounded-lg bg-red-950 text-red-400 border border-red-800">
               <AlertOctagon className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 text-2xl font-bold text-red-400">240 kg</div>
-          <p className="text-xs text-slate-400 mt-1">SPCB Form 10 certified disposal</p>
+          <p className="text-xs text-slate-400 mt-1">
+            SPCB Form 10 certified disposal
+          </p>
         </div>
       </div>
 
@@ -133,7 +154,8 @@ export default function SustainabilityWastePage() {
             Verified Waste Disposal & Manifest Ledger
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Chain-of-custody tracking with verified vendor recycling certificates.
+            Chain-of-custody tracking with verified vendor recycling
+            certificates.
           </p>
         </div>
         <button
@@ -195,7 +217,9 @@ export default function SustainabilityWastePage() {
                       {w.manifest_number || "—"}
                     </div>
                     {w.certificate_ref && (
-                      <div className="text-[10px] text-emerald-400 font-medium">{w.certificate_ref}</div>
+                      <div className="text-[10px] text-emerald-400 font-medium">
+                        {w.certificate_ref}
+                      </div>
                     )}
                   </td>
                   <td className="py-3.5 px-4 text-slate-400 text-[11px]">
@@ -217,19 +241,25 @@ export default function SustainabilityWastePage() {
               Log Waste Generation & Disposal Manifest
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Verify legal chain-of-custody for non-hazardous circularity and hazardous TSDF disposal.
+              Verify legal chain-of-custody for non-hazardous circularity and
+              hazardous TSDF disposal.
             </p>
 
             <form onSubmit={handleLog} className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Waste Classification</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Waste Classification
+                  </label>
                   <select
                     value={category}
                     onChange={(e) => {
                       const val = e.target.value as WasteCategory;
                       setCategory(val);
-                      if (val === "HAZARDOUS_CHEMICAL" || val === "BIO_MEDICAL") {
+                      if (
+                        val === "HAZARDOUS_CHEMICAL" ||
+                        val === "BIO_MEDICAL"
+                      ) {
                         setIsHazardous(true);
                         setDisposalMethod("AUTHORIZED_HAZARDOUS_TSDF");
                       } else {
@@ -238,33 +268,59 @@ export default function SustainabilityWastePage() {
                     }}
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
-                    <option value="ORGANIC_COMPOST">Organic Compostable (Mess)</option>
-                    <option value="RECYCLABLE_PLASTIC">Recyclable Plastic</option>
-                    <option value="RECYCLABLE_PAPER">Recyclable Paper / Cardboard</option>
-                    <option value="E_WASTE">E-Waste (Computers, Batteries)</option>
-                    <option value="HAZARDOUS_CHEMICAL">Hazardous Chemical (Labs)</option>
+                    <option value="ORGANIC_COMPOST">
+                      Organic Compostable (Mess)
+                    </option>
+                    <option value="RECYCLABLE_PLASTIC">
+                      Recyclable Plastic
+                    </option>
+                    <option value="RECYCLABLE_PAPER">
+                      Recyclable Paper / Cardboard
+                    </option>
+                    <option value="E_WASTE">
+                      E-Waste (Computers, Batteries)
+                    </option>
+                    <option value="HAZARDOUS_CHEMICAL">
+                      Hazardous Chemical (Labs)
+                    </option>
                     <option value="GENERAL">General Municipal Waste</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Disposal Method</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Disposal Method
+                  </label>
                   <select
                     value={disposalMethod}
-                    onChange={(e) => setDisposalMethod(e.target.value as WasteDisposalMethod)}
+                    onChange={(e) =>
+                      setDisposalMethod(e.target.value as WasteDisposalMethod)
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
-                    <option value="COMPOSTING">On-Campus Vermicomposting</option>
-                    <option value="RECYCLING_VENDOR">Authorized Recycler Vendor</option>
-                    <option value="AUTHORIZED_EWASTE_FACILITY">CPCB E-Waste Facility</option>
-                    <option value="AUTHORIZED_HAZARDOUS_TSDF">Authorized TSDF Incineration</option>
-                    <option value="MUNICIPAL_LANDFILL">Municipal Landfill</option>
+                    <option value="COMPOSTING">
+                      On-Campus Vermicomposting
+                    </option>
+                    <option value="RECYCLING_VENDOR">
+                      Authorized Recycler Vendor
+                    </option>
+                    <option value="AUTHORIZED_EWASTE_FACILITY">
+                      CPCB E-Waste Facility
+                    </option>
+                    <option value="AUTHORIZED_HAZARDOUS_TSDF">
+                      Authorized TSDF Incineration
+                    </option>
+                    <option value="MUNICIPAL_LANDFILL">
+                      Municipal Landfill
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Quantity</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Quantity
+                  </label>
                   <input
                     type="number"
                     value={quantity}
@@ -273,7 +329,9 @@ export default function SustainabilityWastePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Unit</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Unit
+                  </label>
                   <input
                     type="text"
                     value={unit}
@@ -284,7 +342,9 @@ export default function SustainabilityWastePage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Partner / Vendor Name</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Partner / Vendor Name
+                </label>
                 <input
                   type="text"
                   required
@@ -296,7 +356,9 @@ export default function SustainabilityWastePage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Manifest Number</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Manifest Number
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. TNWML-MAN-8821"
@@ -306,7 +368,9 @@ export default function SustainabilityWastePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Disposal Certificate Ref</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Disposal Certificate Ref
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. CERT-TSDF-2024"
@@ -339,4 +403,3 @@ export default function SustainabilityWastePage() {
     </div>
   );
 }
-

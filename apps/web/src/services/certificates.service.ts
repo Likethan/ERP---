@@ -15,7 +15,6 @@ class CertificatesService {
     status?: string;
     search?: string;
   }): Promise<ApiResponse<IssuedCertificate[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.certificates];
 
     if (filters) {
@@ -48,7 +47,6 @@ class CertificatesService {
   async getIssuedCertificateById(
     id: string,
   ): Promise<ApiResponse<IssuedCertificate | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const cert =
       this.certificates.find(
         (c) => c.id === id || c.certificateNumber === id,
@@ -59,7 +57,6 @@ class CertificatesService {
   async verifyCertificate(
     certCode: string,
   ): Promise<ApiResponse<IssuedCertificate | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const clean = certCode.trim().toLowerCase();
     const cert =
       this.certificates.find(
@@ -74,7 +71,6 @@ class CertificatesService {
   async createIssuedCertificate(
     data: Partial<IssuedCertificate>,
   ): Promise<ApiResponse<IssuedCertificate>> {
-    await new Promise((r) => setTimeout(r, 60));
     const nextSeq = this.certificates.length + 42;
     const certNumber = `CAMPUSOS/CERT/2026/00${nextSeq}`;
     const newCert: IssuedCertificate = {
@@ -106,7 +102,6 @@ class CertificatesService {
     id: string,
     reason: string,
   ): Promise<ApiResponse<IssuedCertificate>> {
-    await new Promise((r) => setTimeout(r, 50));
     const cert = this.certificates.find(
       (c) => c.id === id || c.certificateNumber === id,
     );

@@ -58,11 +58,13 @@ export default function TransportIncidentsPage() {
   const [severity, setSeverity] = useState("MEDIUM");
   const [locationDescription, setLocationDescription] = useState("");
   const [description, setDescription] = useState("");
-  const [emergencyServicesContacted, setEmergencyServicesContacted] = useState(false);
+  const [emergencyServicesContacted, setEmergencyServicesContacted] =
+    useState(false);
 
   // Resolve Dialog State
   const [resolveDialogOpen, setResolveDialogOpen] = useState(false);
-  const [resolvingIncident, setResolvingIncident] = useState<TransportIncidentItem | null>(null);
+  const [resolvingIncident, setResolvingIncident] =
+    useState<TransportIncidentItem | null>(null);
   const [resolutionNotes, setResolutionNotes] = useState("");
   const [actionTaken, setActionTaken] = useState("");
   const [resolving, setResolving] = useState(false);
@@ -147,7 +149,7 @@ export default function TransportIncidentsPage() {
       const res = await transportService.resolveIncident(
         resolvingIncident.id,
         resolutionNotes,
-        actionTaken || undefined
+        actionTaken || undefined,
       );
       if (res.success) {
         setResolveDialogOpen(false);
@@ -158,11 +160,15 @@ export default function TransportIncidentsPage() {
     }
   };
 
-  const criticalCount = incidents.filter((i) => i.severity === "CRITICAL").length;
-  const activeCount = incidents.filter(
-    (i) => i.status === "REPORTED" || i.status === "UNDER_INVESTIGATION"
+  const criticalCount = incidents.filter(
+    (i) => i.severity === "CRITICAL",
   ).length;
-  const resolvedCount = incidents.filter((i) => i.status === "RESOLVED" || i.status === "CLOSED").length;
+  const activeCount = incidents.filter(
+    (i) => i.status === "REPORTED" || i.status === "UNDER_INVESTIGATION",
+  ).length;
+  const resolvedCount = incidents.filter(
+    (i) => i.status === "RESOLVED" || i.status === "CLOSED",
+  ).length;
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -192,7 +198,9 @@ export default function TransportIncidentsPage() {
             Transport Incidents & Emergency Logging
           </h1>
           <p className="text-slate-400 text-sm mt-1 max-w-3xl">
-            Controlled logging for transit breakdowns, safety occurrences, service disruptions, and emergency response. All entries are tenant-isolated and audit-preserved.
+            Controlled logging for transit breakdowns, safety occurrences,
+            service disruptions, and emergency response. All entries are
+            tenant-isolated and audit-preserved.
           </p>
         </div>
 
@@ -204,7 +212,9 @@ export default function TransportIncidentsPage() {
             disabled={refreshing || loading}
             className="border-slate-800 text-slate-300 hover:text-white gap-2"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           <Button
@@ -221,9 +231,15 @@ export default function TransportIncidentsPage() {
       {/* KPI Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <div className="text-xs text-slate-400 font-medium">Total Logged Events</div>
-          <div className="text-2xl font-bold text-white mt-1">{incidents.length}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Historical and active entries</div>
+          <div className="text-xs text-slate-400 font-medium">
+            Total Logged Events
+          </div>
+          <div className="text-2xl font-bold text-white mt-1">
+            {incidents.length}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Historical and active entries
+          </div>
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/60 border border-amber-500/30 bg-amber-500/5">
@@ -231,8 +247,12 @@ export default function TransportIncidentsPage() {
             <Clock className="w-3.5 h-3.5" />
             Active / Investigating
           </div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{activeCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Pending response or repair</div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">
+            {activeCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Pending response or repair
+          </div>
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/60 border border-rose-500/30 bg-rose-500/5">
@@ -240,8 +260,12 @@ export default function TransportIncidentsPage() {
             <Flame className="w-3.5 h-3.5" />
             Critical Severity
           </div>
-          <div className="text-2xl font-bold text-rose-400 mt-1">{criticalCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Immediate escalation required</div>
+          <div className="text-2xl font-bold text-rose-400 mt-1">
+            {criticalCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Immediate escalation required
+          </div>
         </div>
 
         <div className="p-4 rounded-xl bg-slate-900/60 border border-emerald-500/30 bg-emerald-500/5">
@@ -249,8 +273,12 @@ export default function TransportIncidentsPage() {
             <CheckCircle2 className="w-3.5 h-3.5" />
             Resolved & Closed
           </div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">{resolvedCount}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">Signed off with post-review</div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">
+            {resolvedCount}
+          </div>
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            Signed off with post-review
+          </div>
         </div>
       </div>
 
@@ -303,9 +331,12 @@ export default function TransportIncidentsPage() {
       ) : incidents.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-slate-900/40 border border-slate-800 space-y-3">
           <ShieldCheck className="w-10 h-10 text-emerald-500 mx-auto" />
-          <h3 className="text-base font-semibold text-white">No Incidents Reported</h3>
+          <h3 className="text-base font-semibold text-white">
+            No Incidents Reported
+          </h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
-            All transit corridors and fleet vehicles are operating safely under current filter parameters.
+            All transit corridors and fleet vehicles are operating safely under
+            current filter parameters.
           </p>
         </div>
       ) : (
@@ -313,7 +344,8 @@ export default function TransportIncidentsPage() {
           {incidents.map((item) => {
             const isCritical = item.severity === "CRITICAL";
             const isHigh = item.severity === "HIGH";
-            const isResolved = item.status === "RESOLVED" || item.status === "CLOSED";
+            const isResolved =
+              item.status === "RESOLVED" || item.status === "CLOSED";
 
             const vMatch = vehicles.find((v) => v.id === item.vehicleId);
             const rMatch = routes.find((r) => r.id === item.routeId);
@@ -337,8 +369,8 @@ export default function TransportIncidentsPage() {
                         isCritical
                           ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
                           : isHigh
-                          ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                          : "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                            ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                            : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                       }
                     >
                       {item.severity}
@@ -375,17 +407,32 @@ export default function TransportIncidentsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
                   <div className="flex items-center gap-2 text-slate-300">
                     <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                    <span>Location: <strong className="text-white">{item.locationDescription}</strong></span>
+                    <span>
+                      Location:{" "}
+                      <strong className="text-white">
+                        {item.locationDescription}
+                      </strong>
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-2 text-slate-300">
                     <Bus className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>Vehicle: <strong className="text-white">{vMatch?.registrationNumber || item.vehicleId || "N/A"}</strong></span>
+                    <span>
+                      Vehicle:{" "}
+                      <strong className="text-white">
+                        {vMatch?.registrationNumber || item.vehicleId || "N/A"}
+                      </strong>
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-2 text-slate-300">
                     <Compass className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                    <span>Route: <strong className="text-white">{rMatch?.name || item.routeId || "Transit Fleet"}</strong></span>
+                    <span>
+                      Route:{" "}
+                      <strong className="text-white">
+                        {rMatch?.name || item.routeId || "Transit Fleet"}
+                      </strong>
+                    </span>
                   </div>
                 </div>
 
@@ -403,15 +450,23 @@ export default function TransportIncidentsPage() {
                     </div>
                     <p className="text-slate-300">{item.resolutionNotes}</p>
                     {item.actionTaken && (
-                      <p className="text-[11px] text-slate-400">Action: {item.actionTaken}</p>
+                      <p className="text-[11px] text-slate-400">
+                        Action: {item.actionTaken}
+                      </p>
                     )}
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                  <span>Reported at: {new Date(item.incidentTime).toLocaleString("en-IN")}</span>
+                  <span>
+                    Reported at:{" "}
+                    {new Date(item.incidentTime).toLocaleString("en-IN")}
+                  </span>
                   {item.resolvedAt && (
-                    <span>Resolved at: {new Date(item.resolvedAt).toLocaleString("en-IN")}</span>
+                    <span>
+                      Resolved at:{" "}
+                      {new Date(item.resolvedAt).toLocaleString("en-IN")}
+                    </span>
                   )}
                 </div>
               </div>
@@ -429,14 +484,17 @@ export default function TransportIncidentsPage() {
               Log Safety Incident or Breakdown
             </DialogTitle>
             <DialogDescription className="text-slate-400 text-xs">
-              Record a service disruption, mechanical breakdown, or passenger safety occurrence.
+              Record a service disruption, mechanical breakdown, or passenger
+              safety occurrence.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2 text-xs">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs text-slate-300">Incident Category</Label>
+                <Label className="text-xs text-slate-300">
+                  Incident Category
+                </Label>
                 <select
                   value={incidentType}
                   onChange={(e) => setIncidentType(e.target.value)}
@@ -445,9 +503,15 @@ export default function TransportIncidentsPage() {
                   <option value="BREAKDOWN">Mechanical Breakdown</option>
                   <option value="ACCIDENT_MINOR">Minor Traffic Impact</option>
                   <option value="ACCIDENT_MAJOR">Major Collision</option>
-                  <option value="MEDICAL_EMERGENCY">Student Medical Event</option>
-                  <option value="ROUTE_DISRUPTION">Road Closure / Blockade</option>
-                  <option value="PASSENGER_MISCONDUCT">Safety Rule Violation</option>
+                  <option value="MEDICAL_EMERGENCY">
+                    Student Medical Event
+                  </option>
+                  <option value="ROUTE_DISRUPTION">
+                    Road Closure / Blockade
+                  </option>
+                  <option value="PASSENGER_MISCONDUCT">
+                    Safety Rule Violation
+                  </option>
                 </select>
               </div>
 
@@ -460,15 +524,21 @@ export default function TransportIncidentsPage() {
                 >
                   <option value="LOW">Low (Minor Delay)</option>
                   <option value="MEDIUM">Medium (Replacement Needed)</option>
-                  <option value="HIGH">High (Immediate Dispatch Intervention)</option>
-                  <option value="CRITICAL">Critical (Emergency Services Active)</option>
+                  <option value="HIGH">
+                    High (Immediate Dispatch Intervention)
+                  </option>
+                  <option value="CRITICAL">
+                    Critical (Emergency Services Active)
+                  </option>
                 </select>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs text-slate-300">Involved Vehicle</Label>
+                <Label className="text-xs text-slate-300">
+                  Involved Vehicle
+                </Label>
                 <select
                   value={selectedVehicleId}
                   onChange={(e) => setSelectedVehicleId(e.target.value)}
@@ -501,7 +571,9 @@ export default function TransportIncidentsPage() {
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs text-slate-300">Location Description</Label>
+              <Label className="text-xs text-slate-300">
+                Location Description
+              </Label>
               <Input
                 value={locationDescription}
                 onChange={(e) => setLocationDescription(e.target.value)}
@@ -511,7 +583,9 @@ export default function TransportIncidentsPage() {
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs text-slate-300">Incident Details & Symptoms</Label>
+              <Label className="text-xs text-slate-300">
+                Incident Details & Symptoms
+              </Label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -534,7 +608,9 @@ export default function TransportIncidentsPage() {
               <input
                 type="checkbox"
                 checked={emergencyServicesContacted}
-                onChange={(e) => setEmergencyServicesContacted(e.target.checked)}
+                onChange={(e) =>
+                  setEmergencyServicesContacted(e.target.checked)
+                }
                 className="w-4 h-4 rounded border-slate-800 text-rose-600 focus:ring-0 bg-slate-900"
               />
             </div>
@@ -552,7 +628,9 @@ export default function TransportIncidentsPage() {
             <Button
               size="sm"
               onClick={handleSubmitReport}
-              disabled={submitting || !description.trim() || !locationDescription.trim()}
+              disabled={
+                submitting || !description.trim() || !locationDescription.trim()
+              }
               className="bg-rose-600 hover:bg-rose-500 text-white gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -572,7 +650,10 @@ export default function TransportIncidentsPage() {
             </DialogTitle>
             <DialogDescription className="text-slate-400 text-xs">
               Record closure notes and actions taken for event{" "}
-              <strong className="text-white">{resolvingIncident?.incidentNumber}</strong>.
+              <strong className="text-white">
+                {resolvingIncident?.incidentNumber}
+              </strong>
+              .
             </DialogDescription>
           </DialogHeader>
 
@@ -588,7 +669,9 @@ export default function TransportIncidentsPage() {
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs text-slate-300">Resolution & Sign-off Notes</Label>
+              <Label className="text-xs text-slate-300">
+                Resolution & Sign-off Notes
+              </Label>
               <textarea
                 value={resolutionNotes}
                 onChange={(e) => setResolutionNotes(e.target.value)}

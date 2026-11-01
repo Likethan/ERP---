@@ -29,14 +29,19 @@ import {
 } from "@/types/international";
 
 export default function CreditTransferPage() {
-  const [equivalencies, setEquivalencies] = useState<CourseEquivalencyMapping[]>([]);
+  const [equivalencies, setEquivalencies] = useState<
+    CourseEquivalencyMapping[]
+  >([]);
   const [transfers, setTransfers] = useState<CreditTransferRequest[]>([]);
   const [partners, setPartners] = useState<InternationalPartner[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"TRANSFERS" | "MAPPINGS">("TRANSFERS");
+  const [activeTab, setActiveTab] = useState<"TRANSFERS" | "MAPPINGS">(
+    "TRANSFERS",
+  );
 
   // Approval Modal State
-  const [selectedTransferForApproval, setSelectedTransferForApproval] = useState<CreditTransferRequest | null>(null);
+  const [selectedTransferForApproval, setSelectedTransferForApproval] =
+    useState<CreditTransferRequest | null>(null);
   const [decision, setDecision] = useState<"APPROVED" | "REJECTED">("APPROVED");
   const [committeeNotes, setCommitteeNotes] = useState("");
   const [councilRef, setCouncilRef] = useState("AC-2026-RES-");
@@ -88,9 +93,11 @@ export default function CreditTransferPage() {
         selectedTransferForApproval.id,
         decision,
         committeeNotes,
-        councilRef
+        councilRef,
       );
-      alert(`Credit transfer request has been ${decision.toLowerCase()} by Academic Council.`);
+      alert(
+        `Credit transfer request has been ${decision.toLowerCase()} by Academic Council.`,
+      );
       setSelectedTransferForApproval(null);
       setCommitteeNotes("");
       loadData();
@@ -134,7 +141,8 @@ export default function CreditTransferPage() {
               Academic Credit Transfer & Course Equivalency Governance
             </h2>
             <p className="text-xs text-slate-400">
-              Strictly non-automated, committee-governed academic credit recognition with formal Academic Council resolutions
+              Strictly non-automated, committee-governed academic credit
+              recognition with formal Academic Council resolutions
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -192,32 +200,51 @@ export default function CreditTransferPage() {
                 <tbody className="divide-y divide-slate-800/80">
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-slate-500"
+                      >
                         Loading credit transfer dossiers...
                       </td>
                     </tr>
                   ) : transfers.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-slate-500"
+                      >
                         No credit transfer dossiers pending committee review.
                       </td>
                     </tr>
                   ) : (
                     transfers.map((ct) => (
-                      <tr key={ct.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr
+                        key={ct.id}
+                        className="hover:bg-slate-800/40 transition-colors"
+                      >
                         <td className="py-3.5 px-4">
-                          <div className="font-semibold text-white">{ct.student_name || "Scholar"}</div>
-                          <div className="text-[11px] text-slate-500 font-mono mt-0.5">App: {ct.application_id}</div>
+                          <div className="font-semibold text-white">
+                            {ct.student_name || "Scholar"}
+                          </div>
+                          <div className="text-[11px] text-slate-500 font-mono mt-0.5">
+                            App: {ct.application_id}
+                          </div>
                         </td>
 
-                        <td className="py-3.5 px-4 font-medium text-slate-200">{ct.host_institution_name}</td>
-
-                        <td className="py-3.5 px-4">
-                          <span className="font-mono font-semibold text-slate-200">{ct.host_credits_earned} ECTS/Credits</span>
+                        <td className="py-3.5 px-4 font-medium text-slate-200">
+                          {ct.host_institution_name}
                         </td>
 
                         <td className="py-3.5 px-4">
-                          <span className="font-mono font-bold text-cyan-400">{ct.target_campus_credits} Credits</span>
+                          <span className="font-mono font-semibold text-slate-200">
+                            {ct.host_credits_earned} ECTS/Credits
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <span className="font-mono font-bold text-cyan-400">
+                            {ct.target_campus_credits} Credits
+                          </span>
                         </td>
 
                         <td className="py-3.5 px-4">
@@ -262,37 +289,55 @@ export default function CreditTransferPage() {
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
                       {eq.status}
                     </span>
-                    <span className="text-xs text-slate-400">{eq.department_id}</span>
+                    <span className="text-xs text-slate-400">
+                      {eq.department_id}
+                    </span>
                   </div>
 
                   <div className="mt-3 space-y-2">
                     <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                      <span className="text-[10px] text-slate-500 block uppercase font-bold">Host University Course</span>
+                      <span className="text-[10px] text-slate-500 block uppercase font-bold">
+                        Host University Course
+                      </span>
                       <div className="text-xs font-bold text-slate-200 mt-0.5">
                         {eq.host_course_code}: {eq.host_course_title}
                       </div>
-                      <span className="text-[11px] text-cyan-400 font-mono mt-0.5 block">{eq.host_credits} Host Credits</span>
+                      <span className="text-[11px] text-cyan-400 font-mono mt-0.5 block">
+                        {eq.host_credits} Host Credits
+                      </span>
                     </div>
 
-                    <div className="text-center text-slate-500 text-xs font-bold">↕ Maps to Equivalent</div>
+                    <div className="text-center text-slate-500 text-xs font-bold">
+                      ↕ Maps to Equivalent
+                    </div>
 
                     <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                      <span className="text-[10px] text-slate-500 block uppercase font-bold">Target Campus Course</span>
+                      <span className="text-[10px] text-slate-500 block uppercase font-bold">
+                        Target Campus Course
+                      </span>
                       <div className="text-xs font-bold text-slate-200 mt-0.5">
                         {eq.target_course_code}: {eq.target_course_title}
                       </div>
-                      <span className="text-[11px] text-emerald-400 font-mono mt-0.5 block">{eq.target_credits} Internal Credits</span>
+                      <span className="text-[11px] text-emerald-400 font-mono mt-0.5 block">
+                        {eq.target_credits} Internal Credits
+                      </span>
                     </div>
                   </div>
 
                   {eq.evaluation_notes && (
-                    <p className="mt-3 text-[11px] text-slate-400 italic">&quot;{eq.evaluation_notes}&quot;</p>
+                    <p className="mt-3 text-[11px] text-slate-400 italic">
+                      &quot;{eq.evaluation_notes}&quot;
+                    </p>
                   )}
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
-                  <span>Evaluator: {eq.evaluator_name || "Faculty Member"}</span>
-                  <span className="text-emerald-400 font-medium">UGC Verified</span>
+                  <span>
+                    Evaluator: {eq.evaluator_name || "Faculty Member"}
+                  </span>
+                  <span className="text-emerald-400 font-medium">
+                    UGC Verified
+                  </span>
                 </div>
               </div>
             ))}
@@ -315,28 +360,38 @@ export default function CreditTransferPage() {
                 Academic Council Credit Recognition Review
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Candidate: <strong className="text-slate-200">{selectedTransferForApproval.student_name}</strong> ·{" "}
-                {selectedTransferForApproval.host_institution_name}
+                Candidate:{" "}
+                <strong className="text-slate-200">
+                  {selectedTransferForApproval.student_name}
+                </strong>{" "}
+                · {selectedTransferForApproval.host_institution_name}
               </p>
 
               <form onSubmit={handleApproveTransfer} className="mt-5 space-y-4">
                 <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-slate-500 block">Host Credits Earned</span>
+                    <span className="text-slate-500 block">
+                      Host Credits Earned
+                    </span>
                     <span className="font-bold text-slate-200 text-sm mt-0.5 block">
                       {selectedTransferForApproval.host_credits_earned} ECTS
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-slate-500 block">Target Credits to Recognize</span>
+                    <span className="text-slate-500 block">
+                      Target Credits to Recognize
+                    </span>
                     <span className="font-bold text-cyan-400 text-sm mt-0.5 block">
-                      {selectedTransferForApproval.target_campus_credits} Credits
+                      {selectedTransferForApproval.target_campus_credits}{" "}
+                      Credits
                     </span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Committee Decision *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Committee Decision *
+                  </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -378,7 +433,9 @@ export default function CreditTransferPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Committee Review Notes & Grade Parity Justification *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Committee Review Notes & Grade Parity Justification *
+                  </label>
                   <textarea
                     required
                     rows={3}
@@ -402,7 +459,9 @@ export default function CreditTransferPage() {
                     disabled={submittingApproval}
                     className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-md shadow-purple-900/30 disabled:opacity-50"
                   >
-                    {submittingApproval ? "Recording..." : "Commit Council Approval"}
+                    {submittingApproval
+                      ? "Recording..."
+                      : "Commit Council Approval"}
                   </button>
                 </div>
               </form>
@@ -426,16 +485,24 @@ export default function CreditTransferPage() {
                 Propose New Course Equivalency Mapping
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Map an external foreign university course syllabus to an internal curriculum subject code
+                Map an external foreign university course syllabus to an
+                internal curriculum subject code
               </p>
 
-              <form onSubmit={handleCreateEquivalency} className="mt-5 space-y-4">
+              <form
+                onSubmit={handleCreateEquivalency}
+                className="mt-5 space-y-4"
+              >
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Foreign Partner Institution *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Foreign Partner Institution *
+                  </label>
                   <select
                     required
                     value={eqForm.partner_id}
-                    onChange={(e) => setEqForm({ ...eqForm, partner_id: e.target.value })}
+                    onChange={(e) =>
+                      setEqForm({ ...eqForm, partner_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
                     <option value="">Select partner university...</option>
@@ -449,83 +516,129 @@ export default function CreditTransferPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Host Course Code *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Host Course Code *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. IN2106"
                       value={eqForm.host_course_code}
-                      onChange={(e) => setEqForm({ ...eqForm, host_course_code: e.target.value })}
+                      onChange={(e) =>
+                        setEqForm({
+                          ...eqForm,
+                          host_course_code: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Host Credits *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Host Credits *
+                    </label>
                     <input
                       required
                       type="number"
                       value={eqForm.host_credits}
-                      onChange={(e) => setEqForm({ ...eqForm, host_credits: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setEqForm({
+                          ...eqForm,
+                          host_credits: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Host Course Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Host Course Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. Advanced Computer Architecture"
                     value={eqForm.host_course_title}
-                    onChange={(e) => setEqForm({ ...eqForm, host_course_title: e.target.value })}
+                    onChange={(e) =>
+                      setEqForm({
+                        ...eqForm,
+                        host_course_title: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Campus Subject Code *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Campus Subject Code *
+                    </label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. CS401"
                       value={eqForm.target_course_code}
-                      onChange={(e) => setEqForm({ ...eqForm, target_course_code: e.target.value })}
+                      onChange={(e) =>
+                        setEqForm({
+                          ...eqForm,
+                          target_course_code: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Campus Recognized Credits *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Campus Recognized Credits *
+                    </label>
                     <input
                       required
                       type="number"
                       value={eqForm.target_credits}
-                      onChange={(e) => setEqForm({ ...eqForm, target_credits: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setEqForm({
+                          ...eqForm,
+                          target_credits: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Campus Subject Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Campus Subject Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. Advanced Computer Architecture"
                     value={eqForm.target_course_title}
-                    onChange={(e) => setEqForm({ ...eqForm, target_course_title: e.target.value })}
+                    onChange={(e) =>
+                      setEqForm({
+                        ...eqForm,
+                        target_course_title: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Syllabus Evaluation Notes</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Syllabus Evaluation Notes
+                  </label>
                   <textarea
                     rows={2}
                     placeholder="Document topics overlapping and practical lab components alignment..."
                     value={eqForm.evaluation_notes}
-                    onChange={(e) => setEqForm({ ...eqForm, evaluation_notes: e.target.value })}
+                    onChange={(e) =>
+                      setEqForm({ ...eqForm, evaluation_notes: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>

@@ -52,17 +52,31 @@ export default function WorkforceManagementPage() {
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<
-    "overview" | "directory" | "lifecycle" | "leaves" | "availability" | "workload" | "cases" | "reports"
+    | "overview"
+    | "directory"
+    | "lifecycle"
+    | "leaves"
+    | "availability"
+    | "workload"
+    | "cases"
+    | "reports"
   >("overview");
 
   // Core State
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState<WorkforceEmployeeItem[]>([]);
-  const [lifecycleCases, setLifecycleCases] = useState<WorkforceLifecycleCaseItem[]>([]);
-  const [leaveBalances, setLeaveBalances] = useState<WorkforceLeaveBalanceItem[]>([]);
-  const [leaveRequests, setLeaveRequests] = useState<WorkforceLeaveRequestItem[]>([]);
+  const [lifecycleCases, setLifecycleCases] = useState<
+    WorkforceLifecycleCaseItem[]
+  >([]);
+  const [leaveBalances, setLeaveBalances] = useState<
+    WorkforceLeaveBalanceItem[]
+  >([]);
+  const [leaveRequests, setLeaveRequests] = useState<
+    WorkforceLeaveRequestItem[]
+  >([]);
   const [hrCases, setHRCases] = useState<WorkforceHRCaseItem[]>([]);
-  const [reportOverview, setReportOverview] = useState<WorkforceReportOverview | null>(null);
+  const [reportOverview, setReportOverview] =
+    useState<WorkforceReportOverview | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,43 +92,61 @@ export default function WorkforceManagementPage() {
   const [availabilityCheckOpen, setAvailabilityCheckOpen] = useState(false);
 
   // Selected Records for Modals
-  const [selectedEmployee, setSelectedEmployee] = useState<WorkforceEmployeeItem | null>(null);
-  const [selectedHistory, setSelectedHistory] = useState<WorkforceEmploymentHistoryItem[]>([]);
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<WorkforceEmployeeItem | null>(null);
+  const [selectedHistory, setSelectedHistory] = useState<
+    WorkforceEmploymentHistoryItem[]
+  >([]);
 
   // Form States
   const [newDesignation, setNewDesignation] = useState("");
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newEmpType, setNewEmpType] = useState<EmploymentType>("PERMANENT");
   const [newEmpStatus, setNewEmpStatus] = useState<EmploymentStatus>("ACTIVE");
-  const [newJoiningDate, setNewJoiningDate] = useState(new Date().toISOString().split("T")[0]);
+  const [newJoiningDate, setNewJoiningDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
 
   // Transition Form State
-  const [targetStatus, setTargetStatus] = useState<EmploymentStatus>("ON_LEAVE");
+  const [targetStatus, setTargetStatus] =
+    useState<EmploymentStatus>("ON_LEAVE");
   const [transitionReason, setTransitionReason] = useState("");
 
   // Leave Form State
   const [leaveEmpId, setLeaveEmpId] = useState("");
   const [leaveTypeId, setLeaveTypeId] = useState("");
-  const [leaveStartDate, setLeaveStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [leaveEndDate, setLeaveEndDate] = useState(new Date().toISOString().split("T")[0]);
+  const [leaveStartDate, setLeaveStartDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [leaveEndDate, setLeaveEndDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [leaveReason, setLeaveReason] = useState("");
   const [leaveIsHalfDay, setLeaveIsHalfDay] = useState(false);
 
   // HR Case Form State
-  const [hrCaseCategory, setHrCaseCategory] = useState<"PROFILE_UPDATE" | "EMPLOYMENT_LETTER" | "GENERAL_INQUIRY">("PROFILE_UPDATE");
+  const [hrCaseCategory, setHrCaseCategory] = useState<
+    "PROFILE_UPDATE" | "EMPLOYMENT_LETTER" | "GENERAL_INQUIRY"
+  >("PROFILE_UPDATE");
   const [hrCaseSubject, setHrCaseSubject] = useState("");
   const [hrCaseDescription, setHrCaseDescription] = useState("");
 
   // Availability State
   const [availEmpId, setAvailEmpId] = useState("");
-  const [availStartDate, setAvailStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [availEndDate, setAvailEndDate] = useState(new Date().toISOString().split("T")[0]);
-  const [availResult, setAvailResult] = useState<WorkforceAvailabilityResponse | null>(null);
+  const [availStartDate, setAvailStartDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [availEndDate, setAvailEndDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [availResult, setAvailResult] =
+    useState<WorkforceAvailabilityResponse | null>(null);
   const [checkingAvail, setCheckingAvail] = useState(false);
 
   // Workload Summary
   const [workloadEmpId, setWorkloadEmpId] = useState("");
-  const [workloadSummary, setWorkloadSummary] = useState<WorkforceWorkloadSummary | null>(null);
+  const [workloadSummary, setWorkloadSummary] =
+    useState<WorkforceWorkloadSummary | null>(null);
   const [loadingWorkload, setLoadingWorkload] = useState(false);
 
   // ---------------------------------------------------------------------------
@@ -123,19 +155,23 @@ export default function WorkforceManagementPage() {
   const loadWorkforceData = useCallback(async () => {
     setLoading(true);
     try {
-      const [empRes, casesRes, balancesRes, requestsRes, hrRes, reportRes] = await Promise.allSettled([
-        workforceService.listEmployees(),
-        workforceService.listLifecycleCases(),
-        workforceService.listLeaveBalances(),
-        workforceService.listLeaveRequests(),
-        workforceService.listHRCases(),
-        workforceService.getReportOverview(),
-      ]);
+      const [empRes, casesRes, balancesRes, requestsRes, hrRes, reportRes] =
+        await Promise.allSettled([
+          workforceService.listEmployees(),
+          workforceService.listLifecycleCases(),
+          workforceService.listLeaveBalances(),
+          workforceService.listLeaveRequests(),
+          workforceService.listHRCases(),
+          workforceService.getReportOverview(),
+        ]);
 
       if (empRes.status === "fulfilled") setEmployees(empRes.value.items || []);
-      if (casesRes.status === "fulfilled") setLifecycleCases(casesRes.value || []);
-      if (balancesRes.status === "fulfilled") setLeaveBalances(balancesRes.value || []);
-      if (requestsRes.status === "fulfilled") setLeaveRequests(requestsRes.value || []);
+      if (casesRes.status === "fulfilled")
+        setLifecycleCases(casesRes.value || []);
+      if (balancesRes.status === "fulfilled")
+        setLeaveBalances(balancesRes.value || []);
+      if (requestsRes.status === "fulfilled")
+        setLeaveRequests(requestsRes.value || []);
       if (hrRes.status === "fulfilled") setHRCases(hrRes.value || []);
       if (reportRes.status === "fulfilled") setReportOverview(reportRes.value);
     } catch {
@@ -188,8 +224,10 @@ export default function WorkforceManagementPage() {
         emp.official_email.toLowerCase().includes(q) ||
         emp.designation.toLowerCase().includes(q);
 
-      const matchesDept = filterDept === "ALL" || emp.department_name === filterDept;
-      const matchesStatus = filterStatus === "ALL" || emp.employment_status === filterStatus;
+      const matchesDept =
+        filterDept === "ALL" || emp.department_name === filterDept;
+      const matchesStatus =
+        filterStatus === "ALL" || emp.employment_status === filterStatus;
 
       return matchesSearch && matchesDept && matchesStatus;
     });
@@ -214,7 +252,11 @@ export default function WorkforceManagementPage() {
       setSelectedHistory(history);
       setHistoryModalOpen(true);
     } catch {
-      showToast({ type: "error", title: "Error", message: "Failed to retrieve employment history." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to retrieve employment history.",
+      });
     }
   };
 
@@ -230,7 +272,11 @@ export default function WorkforceManagementPage() {
     if (!selectedEmployee) return;
 
     try {
-      await workforceService.transitionStatus(selectedEmployee.id, targetStatus, transitionReason);
+      await workforceService.transitionStatus(
+        selectedEmployee.id,
+        targetStatus,
+        transitionReason,
+      );
       showToast({
         type: "success",
         title: "Status Transitioned",
@@ -242,7 +288,8 @@ export default function WorkforceManagementPage() {
       showToast({
         type: "error",
         title: "Transition Failed",
-        message: (err as Error).message || "Invalid lifecycle state transition.",
+        message:
+          (err as Error).message || "Invalid lifecycle state transition.",
       });
     }
   };
@@ -256,10 +303,18 @@ export default function WorkforceManagementPage() {
         status: "COMPLETED",
         completion_evidence: "Verified by workforce administrator",
       });
-      showToast({ type: "success", title: "Task Completed", message: "Lifecycle checklist item updated." });
+      showToast({
+        type: "success",
+        title: "Task Completed",
+        message: "Lifecycle checklist item updated.",
+      });
       loadWorkforceData();
     } catch {
-      showToast({ type: "error", title: "Error", message: "Failed to update lifecycle task." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to update lifecycle task.",
+      });
     }
   };
 
@@ -268,14 +323,23 @@ export default function WorkforceManagementPage() {
   // ---------------------------------------------------------------------------
   const handleApproveLeave = async (requestId: string) => {
     try {
-      await workforceService.approveLeaveRequest(requestId, "Approved by workforce authority");
-      showToast({ type: "success", title: "Leave Approved", message: "Authoritative balance deducted." });
+      await workforceService.approveLeaveRequest(
+        requestId,
+        "Approved by workforce authority",
+      );
+      showToast({
+        type: "success",
+        title: "Leave Approved",
+        message: "Authoritative balance deducted.",
+      });
       loadWorkforceData();
     } catch (err: unknown) {
       showToast({
         type: "error",
         title: "Approval Failed",
-        message: (err as Error).message || "Separation of duties or policy restriction prevented approval.",
+        message:
+          (err as Error).message ||
+          "Separation of duties or policy restriction prevented approval.",
       });
     }
   };
@@ -286,20 +350,36 @@ export default function WorkforceManagementPage() {
 
     try {
       await workforceService.rejectLeaveRequest(requestId, reason);
-      showToast({ type: "success", title: "Leave Rejected", message: "Reserved balance restored." });
+      showToast({
+        type: "success",
+        title: "Leave Rejected",
+        message: "Reserved balance restored.",
+      });
       loadWorkforceData();
     } catch (err: unknown) {
-      showToast({ type: "error", title: "Rejection Failed", message: (err as Error).message || "Failed to reject leave." });
+      showToast({
+        type: "error",
+        title: "Rejection Failed",
+        message: (err as Error).message || "Failed to reject leave.",
+      });
     }
   };
 
   const handleCancelLeave = async (requestId: string) => {
     try {
       await workforceService.cancelLeaveRequest(requestId);
-      showToast({ type: "success", title: "Leave Cancelled", message: "Request cancelled and balance returned." });
+      showToast({
+        type: "success",
+        title: "Leave Cancelled",
+        message: "Request cancelled and balance returned.",
+      });
       loadWorkforceData();
     } catch (err: unknown) {
-      showToast({ type: "error", title: "Cancellation Failed", message: (err as Error).message || "Failed to cancel leave." });
+      showToast({
+        type: "error",
+        title: "Cancellation Failed",
+        message: (err as Error).message || "Failed to cancel leave.",
+      });
     }
   };
 
@@ -309,7 +389,11 @@ export default function WorkforceManagementPage() {
   const handleSubmitLeave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!leaveEmpId || !leaveTypeId) {
-      showToast({ type: "error", title: "Validation Error", message: "Please select employee and leave type." });
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Please select employee and leave type.",
+      });
       return;
     }
 
@@ -351,13 +435,19 @@ export default function WorkforceManagementPage() {
 
     setCheckingAvail(true);
     try {
-      const result = await workforceService.checkAvailability(availEmpId, availStartDate, availEndDate);
+      const result = await workforceService.checkAvailability(
+        availEmpId,
+        availStartDate,
+        availEndDate,
+      );
       setAvailResult(result);
     } catch (err: unknown) {
       showToast({
         type: "error",
         title: "Availability Error",
-        message: (err as Error).message || "Failed to compute availability collision status.",
+        message:
+          (err as Error).message ||
+          "Failed to compute availability collision status.",
       });
     } finally {
       setCheckingAvail(false);
@@ -376,13 +466,21 @@ export default function WorkforceManagementPage() {
         subject: hrCaseSubject,
         description: hrCaseDescription,
       });
-      showToast({ type: "success", title: "HR Case Created", message: "Ticket assigned to HR service desk." });
+      showToast({
+        type: "success",
+        title: "HR Case Created",
+        message: "Ticket assigned to HR service desk.",
+      });
       setHrCaseOpen(false);
       setHrCaseSubject("");
       setHrCaseDescription("");
       loadWorkforceData();
     } catch (err: unknown) {
-      showToast({ type: "error", title: "Case Error", message: (err as Error).message || "Failed to create HR case." });
+      showToast({
+        type: "error",
+        title: "Case Error",
+        message: (err as Error).message || "Failed to create HR case.",
+      });
     }
   };
 
@@ -392,10 +490,18 @@ export default function WorkforceManagementPage() {
 
     try {
       await workforceService.resolveHRCase(caseId, resolution);
-      showToast({ type: "success", title: "Case Resolved", message: "HR case marked as resolved." });
+      showToast({
+        type: "success",
+        title: "Case Resolved",
+        message: "HR case marked as resolved.",
+      });
       loadWorkforceData();
     } catch {
-      showToast({ type: "error", title: "Error", message: "Failed to resolve HR case." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to resolve HR case.",
+      });
     }
   };
 
@@ -407,25 +513,48 @@ export default function WorkforceManagementPage() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/40 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Workforce & HR Administration</h1>
-            <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 text-xs font-medium">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Workforce & HR Administration
+            </h1>
+            <Badge
+              variant="outline"
+              className="border-primary/30 text-primary bg-primary/5 text-xs font-medium"
+            >
               Step 51
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Enterprise staff lifecycle, leave ledger, onboarding/offboarding gatekeeping & academic availability.
+            Enterprise staff lifecycle, leave ledger, onboarding/offboarding
+            gatekeeping & academic availability.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={loadWorkforceData} disabled={loading} className="gap-1.5">
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadWorkforceData}
+            disabled={loading}
+            className="gap-1.5"
+          >
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
-          <Button size="sm" onClick={() => setLeaveRequestOpen(true)} className="gap-1.5 bg-primary">
+          <Button
+            size="sm"
+            onClick={() => setLeaveRequestOpen(true)}
+            className="gap-1.5 bg-primary"
+          >
             <Calendar className="h-3.5 w-3.5" />
             Request Leave
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => setHrCaseOpen(true)} className="gap-1.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setHrCaseOpen(true)}
+            className="gap-1.5"
+          >
             <FileText className="h-3.5 w-3.5" />
             New HR Case
           </Button>
@@ -438,31 +567,50 @@ export default function WorkforceManagementPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
         <StatCard
           title="Active Headcount"
-          value={reportOverview?.headcount.total_active_employees ?? employees.filter((e) => e.employment_status === "ACTIVE").length}
+          value={
+            reportOverview?.headcount.total_active_employees ??
+            employees.filter((e) => e.employment_status === "ACTIVE").length
+          }
           icon={<Users className="h-4 w-4 text-emerald-500" />}
           description="Authoritative staff profiles"
         />
         <StatCard
           title="Onboarding Cases"
-          value={reportOverview?.headcount.total_onboarding ?? lifecycleCases.filter((c) => c.case_type === "ONBOARDING" && c.status !== "COMPLETED").length}
+          value={
+            reportOverview?.headcount.total_onboarding ??
+            lifecycleCases.filter(
+              (c) => c.case_type === "ONBOARDING" && c.status !== "COMPLETED",
+            ).length
+          }
           icon={<UserCheck className="h-4 w-4 text-amber-500" />}
           description="Pending clearance gates"
         />
         <StatCard
           title="Staff on Leave"
-          value={reportOverview?.headcount.total_on_leave ?? employees.filter((e) => e.employment_status === "ON_LEAVE").length}
+          value={
+            reportOverview?.headcount.total_on_leave ??
+            employees.filter((e) => e.employment_status === "ON_LEAVE").length
+          }
           icon={<Clock className="h-4 w-4 text-blue-500" />}
           description="Active approved absences"
         />
         <StatCard
           title="Pending Approvals"
-          value={reportOverview?.leave_metrics.currently_pending_requests ?? leaveRequests.filter((r) => r.status === "SUBMITTED").length}
+          value={
+            reportOverview?.leave_metrics.currently_pending_requests ??
+            leaveRequests.filter((r) => r.status === "SUBMITTED").length
+          }
           icon={<CalendarClock className="h-4 w-4 text-violet-500" />}
           description="Awaiting manager sign-off"
         />
         <StatCard
           title="Open HR Cases"
-          value={reportOverview?.hr_case_metrics.total_open_cases ?? hrCases.filter((c) => c.status === "OPEN" || c.status === "IN_PROGRESS").length}
+          value={
+            reportOverview?.hr_case_metrics.total_open_cases ??
+            hrCases.filter(
+              (c) => c.status === "OPEN" || c.status === "IN_PROGRESS",
+            ).length
+          }
           icon={<ShieldCheck className="h-4 w-4 text-rose-500" />}
           description="Service inquiries & updates"
         />
@@ -475,9 +623,17 @@ export default function WorkforceManagementPage() {
         {[
           { id: "overview", label: "Overview", icon: LayoutDashboardIcon },
           { id: "directory", label: "Employee Roster", icon: Users },
-          { id: "lifecycle", label: "Onboarding & Offboarding", icon: UserCheck },
+          {
+            id: "lifecycle",
+            label: "Onboarding & Offboarding",
+            icon: UserCheck,
+          },
           { id: "leaves", label: "Leave Engine & Approvals", icon: Calendar },
-          { id: "availability", label: "Availability & Conflicts", icon: AlertTriangle },
+          {
+            id: "availability",
+            label: "Availability & Conflicts",
+            icon: AlertTriangle,
+          },
           { id: "workload", label: "Workload Planning", icon: Layers },
           { id: "cases", label: "HR Service Desk", icon: FileText },
           { id: "reports", label: "Workforce Analytics", icon: TrendingUp },
@@ -511,24 +667,36 @@ export default function WorkforceManagementPage() {
             <div className="p-5 rounded-xl border border-border bg-card/40 backdrop-blur-sm space-y-4">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                <h3 className="font-semibold text-sm">One Campus. One Source of Truth</h3>
+                <h3 className="font-semibold text-sm">
+                  One Campus. One Source of Truth
+                </h3>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Workforce Management records are strictly tenant-isolated and linked directly to authoritative People records.
-                Self-approvals are prohibited by separation-of-duties controls, and academic timetable collisions are proactively flagged.
+                Workforce Management records are strictly tenant-isolated and
+                linked directly to authoritative People records. Self-approvals
+                are prohibited by separation-of-duties controls, and academic
+                timetable collisions are proactively flagged.
               </p>
               <div className="pt-2 border-t border-border/40 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Tenant Model</span>
-                  <span className="font-medium text-emerald-500">Multi-Tenant Isolated</span>
+                  <span className="font-medium text-emerald-500">
+                    Multi-Tenant Isolated
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Ledger Design</span>
-                  <span className="font-medium text-primary">Immutable Transactions</span>
+                  <span className="font-medium text-primary">
+                    Immutable Transactions
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Timetable Collision Detection</span>
-                  <span className="font-medium text-violet-500">Active Published Versions</span>
+                  <span className="text-muted-foreground">
+                    Timetable Collision Detection
+                  </span>
+                  <span className="font-medium text-violet-500">
+                    Active Published Versions
+                  </span>
                 </div>
               </div>
             </div>
@@ -541,23 +709,38 @@ export default function WorkforceManagementPage() {
                   Upcoming Probation Milestones
                 </h3>
                 <span className="text-xs text-muted-foreground">
-                  {reportOverview?.upcoming_probation_milestones.length ?? 0} Pending
+                  {reportOverview?.upcoming_probation_milestones.length ?? 0}{" "}
+                  Pending
                 </span>
               </div>
               <div className="space-y-2">
-                {reportOverview?.upcoming_probation_milestones.slice(0, 3).map((m, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 text-xs">
-                    <div>
-                      <p className="font-medium">{m.employee_name}</p>
-                      <p className="text-[11px] text-muted-foreground">{m.department_name || "General"} · {m.employee_number}</p>
+                {reportOverview?.upcoming_probation_milestones
+                  .slice(0, 3)
+                  .map((m, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 text-xs"
+                    >
+                      <div>
+                        <p className="font-medium">{m.employee_name}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {m.department_name || "General"} · {m.employee_number}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-amber-500 border-amber-500/20 text-[10px]"
+                      >
+                        {m.days_remaining}d left
+                      </Badge>
                     </div>
-                    <Badge variant="outline" className="text-amber-500 border-amber-500/20 text-[10px]">
-                      {m.days_remaining}d left
-                    </Badge>
-                  </div>
-                ))}
-                {(!reportOverview || reportOverview.upcoming_probation_milestones.length === 0) && (
-                  <p className="text-xs text-muted-foreground italic py-4 text-center">No upcoming probation reviews.</p>
+                  ))}
+                {(!reportOverview ||
+                  reportOverview.upcoming_probation_milestones.length ===
+                    0) && (
+                  <p className="text-xs text-muted-foreground italic py-4 text-center">
+                    No upcoming probation reviews.
+                  </p>
                 )}
               </div>
             </div>
@@ -570,23 +753,39 @@ export default function WorkforceManagementPage() {
                   Contract Renewals & Expirations
                 </h3>
                 <span className="text-xs text-muted-foreground">
-                  {reportOverview?.upcoming_contract_expirations.length ?? 0} Approaching
+                  {reportOverview?.upcoming_contract_expirations.length ?? 0}{" "}
+                  Approaching
                 </span>
               </div>
               <div className="space-y-2">
-                {reportOverview?.upcoming_contract_expirations.slice(0, 3).map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 text-xs">
-                    <div>
-                      <p className="font-medium">{c.employee_name}</p>
-                      <p className="text-[11px] text-muted-foreground">{c.department_name || "Faculty"} · {c.contract_end_date}</p>
+                {reportOverview?.upcoming_contract_expirations
+                  .slice(0, 3)
+                  .map((c, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 text-xs"
+                    >
+                      <div>
+                        <p className="font-medium">{c.employee_name}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {c.department_name || "Faculty"} ·{" "}
+                          {c.contract_end_date}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-blue-500 border-blue-500/20 text-[10px]"
+                      >
+                        {c.days_remaining}d remaining
+                      </Badge>
                     </div>
-                    <Badge variant="outline" className="text-blue-500 border-blue-500/20 text-[10px]">
-                      {c.days_remaining}d remaining
-                    </Badge>
-                  </div>
-                ))}
-                {(!reportOverview || reportOverview.upcoming_contract_expirations.length === 0) && (
-                  <p className="text-xs text-muted-foreground italic py-4 text-center">No contracts due for expiration.</p>
+                  ))}
+                {(!reportOverview ||
+                  reportOverview.upcoming_contract_expirations.length ===
+                    0) && (
+                  <p className="text-xs text-muted-foreground italic py-4 text-center">
+                    No contracts due for expiration.
+                  </p>
                 )}
               </div>
             </div>
@@ -596,10 +795,19 @@ export default function WorkforceManagementPage() {
           <div className="rounded-xl border border-border bg-card/40 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-sm">Action Required: Leave Approval Inbox</h3>
-                <p className="text-xs text-muted-foreground">Requests awaiting authorized supervisor or HR verification.</p>
+                <h3 className="font-semibold text-sm">
+                  Action Required: Leave Approval Inbox
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Requests awaiting authorized supervisor or HR verification.
+                </p>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => setActiveTab("leaves")} className="text-xs gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setActiveTab("leaves")}
+                className="text-xs gap-1"
+              >
                 View All <ArrowRight className="h-3 w-3" />
               </Button>
             </div>
@@ -617,49 +825,65 @@ export default function WorkforceManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {leaveRequests.filter((r) => r.status === "SUBMITTED").slice(0, 5).map((req) => (
-                    <tr key={req.id} className="hover:bg-muted/20">
-                      <td className="py-2.5 px-3 font-medium">
-                        {req.employee_name}
-                        <span className="block text-[11px] text-muted-foreground">{req.employee_number}</span>
-                      </td>
-                      <td className="py-2.5 px-3">{req.leave_type_name}</td>
-                      <td className="py-2.5 px-3">
-                        {req.start_date} {req.start_date !== req.end_date ? `to ${req.end_date}` : ""}
-                      </td>
-                      <td className="py-2.5 px-3">{req.total_days} day(s)</td>
-                      <td className="py-2.5 px-3">
-                        {req.has_timetable_conflicts ? (
-                          <Badge variant="outline" className="border-amber-500/30 text-amber-500 bg-amber-500/10 text-[10px] gap-1">
-                            <AlertTriangle className="h-2.5 w-2.5" /> Collision Detected
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground">None</span>
-                        )}
-                      </td>
-                      <td className="py-2.5 px-3 text-right space-x-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleApproveLeave(req.id)}
-                          className="h-7 text-[11px] border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10"
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleRejectLeave(req.id)}
-                          className="h-7 text-[11px] border-rose-500/40 text-rose-500 hover:bg-rose-500/10"
-                        >
-                          Reject
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                  {leaveRequests.filter((r) => r.status === "SUBMITTED").length === 0 && (
+                  {leaveRequests
+                    .filter((r) => r.status === "SUBMITTED")
+                    .slice(0, 5)
+                    .map((req) => (
+                      <tr key={req.id} className="hover:bg-muted/20">
+                        <td className="py-2.5 px-3 font-medium">
+                          {req.employee_name}
+                          <span className="block text-[11px] text-muted-foreground">
+                            {req.employee_number}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3">{req.leave_type_name}</td>
+                        <td className="py-2.5 px-3">
+                          {req.start_date}{" "}
+                          {req.start_date !== req.end_date
+                            ? `to ${req.end_date}`
+                            : ""}
+                        </td>
+                        <td className="py-2.5 px-3">{req.total_days} day(s)</td>
+                        <td className="py-2.5 px-3">
+                          {req.has_timetable_conflicts ? (
+                            <Badge
+                              variant="outline"
+                              className="border-amber-500/30 text-amber-500 bg-amber-500/10 text-[10px] gap-1"
+                            >
+                              <AlertTriangle className="h-2.5 w-2.5" />{" "}
+                              Collision Detected
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground">None</span>
+                          )}
+                        </td>
+                        <td className="py-2.5 px-3 text-right space-x-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleApproveLeave(req.id)}
+                            className="h-7 text-[11px] border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10"
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRejectLeave(req.id)}
+                            className="h-7 text-[11px] border-rose-500/40 text-rose-500 hover:bg-rose-500/10"
+                          >
+                            Reject
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  {leaveRequests.filter((r) => r.status === "SUBMITTED")
+                    .length === 0 && (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-muted-foreground">
+                      <td
+                        colSpan={6}
+                        className="py-8 text-center text-muted-foreground"
+                      >
                         No pending leave requests requiring approval.
                       </td>
                     </tr>
@@ -735,15 +959,21 @@ export default function WorkforceManagementPage() {
                   <tr key={emp.id} className="hover:bg-muted/20">
                     <td className="py-2.5 px-3 font-medium">
                       {emp.first_name} {emp.last_name}
-                      <span className="block text-[11px] text-muted-foreground">{emp.employee_number}</span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {emp.employee_number}
+                      </span>
                     </td>
                     <td className="py-2.5 px-3">
                       {emp.designation}
-                      <span className="block text-[11px] text-muted-foreground">{emp.job_title}</span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {emp.job_title}
+                      </span>
                     </td>
                     <td className="py-2.5 px-3">
                       {emp.department_name || "—"}
-                      <span className="block text-[11px] text-muted-foreground">{emp.campus_name || "Main Campus"}</span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {emp.campus_name || "Main Campus"}
+                      </span>
                     </td>
                     <td className="py-2.5 px-3">
                       <Badge variant="outline" className="text-[10px]">
@@ -756,16 +986,18 @@ export default function WorkforceManagementPage() {
                           emp.employment_status === "ACTIVE"
                             ? "bg-emerald-500/10 text-emerald-500"
                             : emp.employment_status === "ONBOARDING"
-                            ? "bg-amber-500/10 text-amber-500"
-                            : emp.employment_status === "ON_LEAVE"
-                            ? "bg-blue-500/10 text-blue-500"
-                            : "bg-rose-500/10 text-rose-500"
+                              ? "bg-amber-500/10 text-amber-500"
+                              : emp.employment_status === "ON_LEAVE"
+                                ? "bg-blue-500/10 text-blue-500"
+                                : "bg-rose-500/10 text-rose-500"
                         }`}
                       >
                         {emp.employment_status}
                       </span>
                     </td>
-                    <td className="py-2.5 px-3 text-muted-foreground">{emp.joining_date}</td>
+                    <td className="py-2.5 px-3 text-muted-foreground">
+                      {emp.joining_date}
+                    </td>
                     <td className="py-2.5 px-3 text-right space-x-1">
                       <Button
                         size="sm"
@@ -788,7 +1020,10 @@ export default function WorkforceManagementPage() {
                 ))}
                 {filteredEmployees.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={7}
+                      className="py-8 text-center text-muted-foreground"
+                    >
                       No matching employee records found.
                     </td>
                   </tr>
@@ -806,16 +1041,22 @@ export default function WorkforceManagementPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-sm">Staff Lifecycle Cases & Gatekeeping</h3>
+              <h3 className="font-semibold text-sm">
+                Staff Lifecycle Cases & Gatekeeping
+              </h3>
               <p className="text-xs text-muted-foreground">
-                Mandatory checklist clearance for appointments and auditable asset/access revocations for exits.
+                Mandatory checklist clearance for appointments and auditable
+                asset/access revocations for exits.
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {lifecycleCases.map((c) => (
-              <div key={c.id} className="p-4 rounded-xl border border-border bg-card/40 space-y-3">
+              <div
+                key={c.id}
+                className="p-4 rounded-xl border border-border bg-card/40 space-y-3"
+              >
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
@@ -829,10 +1070,13 @@ export default function WorkforceManagementPage() {
                       >
                         {c.case_type}
                       </Badge>
-                      <span className="font-medium text-xs text-foreground">{c.employee_name}</span>
+                      <span className="font-medium text-xs text-foreground">
+                        {c.employee_name}
+                      </span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-1">
-                      Initiated: {c.initiated_date} · Tasks: {c.completed_tasks}/{c.total_tasks}
+                      Initiated: {c.initiated_date} · Tasks: {c.completed_tasks}
+                      /{c.total_tasks}
                     </p>
                   </div>
                   <Badge variant="secondary" className="text-[10px]">
@@ -844,13 +1088,17 @@ export default function WorkforceManagementPage() {
                 <div className="w-full bg-muted/60 rounded-full h-1.5 overflow-hidden">
                   <div
                     className="bg-primary h-1.5 rounded-full transition-all"
-                    style={{ width: `${(c.completed_tasks / Math.max(1, c.total_tasks)) * 100}%` }}
+                    style={{
+                      width: `${(c.completed_tasks / Math.max(1, c.total_tasks)) * 100}%`,
+                    }}
                   />
                 </div>
 
                 {/* Task Checklist */}
                 <div className="space-y-2 pt-2 border-t border-border/40">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase">Clearance Checklist</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase">
+                    Clearance Checklist
+                  </p>
                   {c.tasks.map((task) => (
                     <div
                       key={task.id}
@@ -863,11 +1111,14 @@ export default function WorkforceManagementPage() {
                           <Clock className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                         )}
                         <div>
-                          <p className={`font-medium ${task.status === "COMPLETED" ? "line-through text-muted-foreground" : ""}`}>
+                          <p
+                            className={`font-medium ${task.status === "COMPLETED" ? "line-through text-muted-foreground" : ""}`}
+                          >
                             {task.title}
                           </p>
                           <span className="text-[10px] text-muted-foreground">
-                            {task.category} · Role: {task.assigned_role} {task.is_mandatory && "· Mandatory"}
+                            {task.category} · Role: {task.assigned_role}{" "}
+                            {task.is_mandatory && "· Mandatory"}
                           </span>
                         </div>
                       </div>
@@ -902,19 +1153,27 @@ export default function WorkforceManagementPage() {
         <div className="space-y-6">
           {/* Leave Balances Ledger Summary */}
           <div>
-            <h3 className="font-semibold text-sm mb-3">Leave Balance Ledgers</h3>
+            <h3 className="font-semibold text-sm mb-3">
+              Leave Balance Ledgers
+            </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {leaveBalances.slice(0, 4).map((b) => (
-                <div key={b.id} className="p-3.5 rounded-xl border border-border bg-card/40 space-y-1">
+                <div
+                  key={b.id}
+                  className="p-3.5 rounded-xl border border-border bg-card/40 space-y-1"
+                >
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>{b.leave_type_name}</span>
                     <Badge variant="outline" className="text-[10px]">
                       {b.balance_year}
                     </Badge>
                   </div>
-                  <p className="text-xl font-bold text-foreground">{b.available_days} d</p>
+                  <p className="text-xl font-bold text-foreground">
+                    {b.available_days} d
+                  </p>
                   <p className="text-[11px] text-muted-foreground">
-                    Accrued: {b.accrued_days} · Used: {b.used_days} · Pending: {b.pending_days}
+                    Accrued: {b.accrued_days} · Used: {b.used_days} · Pending:{" "}
+                    {b.pending_days}
                   </p>
                 </div>
               ))}
@@ -930,10 +1189,18 @@ export default function WorkforceManagementPage() {
           <div className="rounded-xl border border-border overflow-hidden bg-card/40">
             <div className="p-4 border-b border-border flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-sm">Authoritative Leave Transactions</h3>
-                <p className="text-xs text-muted-foreground">Immutable audit records for all submitted leave requests.</p>
+                <h3 className="font-semibold text-sm">
+                  Authoritative Leave Transactions
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Immutable audit records for all submitted leave requests.
+                </p>
               </div>
-              <Button size="sm" onClick={() => setLeaveRequestOpen(true)} className="gap-1 text-xs">
+              <Button
+                size="sm"
+                onClick={() => setLeaveRequestOpen(true)}
+                className="gap-1 text-xs"
+              >
                 <Plus className="h-3 w-3" /> Submit Leave
               </Button>
             </div>
@@ -954,27 +1221,36 @@ export default function WorkforceManagementPage() {
               <tbody className="divide-y divide-border/40">
                 {leaveRequests.map((req) => (
                   <tr key={req.id} className="hover:bg-muted/20">
-                    <td className="py-2.5 px-3 font-mono font-medium">{req.request_number}</td>
+                    <td className="py-2.5 px-3 font-mono font-medium">
+                      {req.request_number}
+                    </td>
                     <td className="py-2.5 px-3">
                       {req.employee_name}
-                      <span className="block text-[11px] text-muted-foreground">{req.department_name || "General"}</span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {req.department_name || "General"}
+                      </span>
                     </td>
                     <td className="py-2.5 px-3">{req.leave_type_name}</td>
                     <td className="py-2.5 px-3">
-                      {req.start_date} {req.start_date !== req.end_date ? `to ${req.end_date}` : ""}
+                      {req.start_date}{" "}
+                      {req.start_date !== req.end_date
+                        ? `to ${req.end_date}`
+                        : ""}
                     </td>
                     <td className="py-2.5 px-3">{req.total_days}</td>
-                    <td className="py-2.5 px-3 max-w-xs truncate text-muted-foreground">{req.reason}</td>
+                    <td className="py-2.5 px-3 max-w-xs truncate text-muted-foreground">
+                      {req.reason}
+                    </td>
                     <td className="py-2.5 px-3">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                           req.status === "APPROVED"
                             ? "bg-emerald-500/10 text-emerald-500"
                             : req.status === "SUBMITTED"
-                            ? "bg-amber-500/10 text-amber-500"
-                            : req.status === "REJECTED"
-                            ? "bg-rose-500/10 text-rose-500"
-                            : "bg-muted text-muted-foreground"
+                              ? "bg-amber-500/10 text-amber-500"
+                              : req.status === "REJECTED"
+                                ? "bg-rose-500/10 text-rose-500"
+                                : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {req.status}
@@ -1016,7 +1292,10 @@ export default function WorkforceManagementPage() {
                 ))}
                 {leaveRequests.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="py-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={8}
+                      className="py-8 text-center text-muted-foreground"
+                    >
                       No leave requests recorded.
                     </td>
                   </tr>
@@ -1034,15 +1313,23 @@ export default function WorkforceManagementPage() {
         <div className="space-y-6">
           <div className="p-5 rounded-xl border border-border bg-card/40 space-y-4">
             <div>
-              <h3 className="font-semibold text-sm">Workforce Availability & Academic Collision Engine</h3>
+              <h3 className="font-semibold text-sm">
+                Workforce Availability & Academic Collision Engine
+              </h3>
               <p className="text-xs text-muted-foreground">
-                Evaluates leave requests against published academic timetable sessions to prevent unstaffed classrooms.
+                Evaluates leave requests against published academic timetable
+                sessions to prevent unstaffed classrooms.
               </p>
             </div>
 
-            <form onSubmit={handleCheckAvailability} className="flex flex-wrap items-end gap-3 pt-2">
+            <form
+              onSubmit={handleCheckAvailability}
+              className="flex flex-wrap items-end gap-3 pt-2"
+            >
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-muted-foreground">Select Faculty / Staff</label>
+                <label className="text-[11px] font-medium text-muted-foreground">
+                  Select Faculty / Staff
+                </label>
                 <select
                   value={availEmpId}
                   onChange={(e) => setAvailEmpId(e.target.value)}
@@ -1057,7 +1344,9 @@ export default function WorkforceManagementPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-muted-foreground">Start Date</label>
+                <label className="text-[11px] font-medium text-muted-foreground">
+                  Start Date
+                </label>
                 <Input
                   type="date"
                   value={availStartDate}
@@ -1067,7 +1356,9 @@ export default function WorkforceManagementPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-medium text-muted-foreground">End Date</label>
+                <label className="text-[11px] font-medium text-muted-foreground">
+                  End Date
+                </label>
                 <Input
                   type="date"
                   value={availEndDate}
@@ -1076,7 +1367,12 @@ export default function WorkforceManagementPage() {
                 />
               </div>
 
-              <Button type="submit" size="sm" disabled={checkingAvail} className="h-8 gap-1.5 text-xs">
+              <Button
+                type="submit"
+                size="sm"
+                disabled={checkingAvail}
+                className="h-8 gap-1.5 text-xs"
+              >
                 <Search className="h-3.5 w-3.5" />
                 {checkingAvail ? "Evaluating..." : "Check Conflicts"}
               </Button>
@@ -1085,7 +1381,9 @@ export default function WorkforceManagementPage() {
             {availResult && (
               <div className="mt-4 pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold">Evaluation Status:</span>
+                  <span className="text-xs font-semibold">
+                    Evaluation Status:
+                  </span>
                   <Badge
                     variant="outline"
                     className={
@@ -1102,13 +1400,22 @@ export default function WorkforceManagementPage() {
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-rose-500 flex items-center gap-1.5">
                       <AlertTriangle className="h-3.5 w-3.5" />
-                      Detected {availResult.timetable_session_conflicts.length} Academic Schedule Conflict(s):
+                      Detected {
+                        availResult.timetable_session_conflicts.length
+                      }{" "}
+                      Academic Schedule Conflict(s):
                     </p>
                     <div className="space-y-1.5">
                       {availResult.timetable_session_conflicts.map((c, idx) => (
-                        <div key={idx} className="p-2.5 rounded-lg bg-rose-500/5 border border-rose-500/20 text-xs flex justify-between">
+                        <div
+                          key={idx}
+                          className="p-2.5 rounded-lg bg-rose-500/5 border border-rose-500/20 text-xs flex justify-between"
+                        >
                           <div>
-                            <span className="font-semibold text-rose-400">Date: {c.conflict_date}</span> · Course: {c.course_code}
+                            <span className="font-semibold text-rose-400">
+                              Date: {c.conflict_date}
+                            </span>{" "}
+                            · Course: {c.course_code}
                           </div>
                           <span className="text-muted-foreground">
                             {c.start_time} - {c.end_time}
@@ -1119,7 +1426,8 @@ export default function WorkforceManagementPage() {
                   </div>
                 ) : (
                   <p className="text-xs text-emerald-500 flex items-center gap-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5" /> No scheduling collisions found with published timetable sessions.
+                    <CheckCircle2 className="h-3.5 w-3.5" /> No scheduling
+                    collisions found with published timetable sessions.
                   </p>
                 )}
               </div>
@@ -1135,11 +1443,18 @@ export default function WorkforceManagementPage() {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h3 className="font-semibold text-sm">Faculty & Staff Workload Allocation</h3>
-              <p className="text-xs text-muted-foreground">Aggregates scheduled teaching hours, expectations & adjustment credits.</p>
+              <h3 className="font-semibold text-sm">
+                Faculty & Staff Workload Allocation
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Aggregates scheduled teaching hours, expectations & adjustment
+                credits.
+              </p>
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-muted-foreground">Select Faculty:</label>
+              <label className="text-xs text-muted-foreground">
+                Select Faculty:
+              </label>
               <select
                 value={workloadEmpId}
                 onChange={(e) => setWorkloadEmpId(e.target.value)}
@@ -1154,46 +1469,72 @@ export default function WorkforceManagementPage() {
             </div>
           </div>
 
-          {loadingWorkload && <p className="text-xs text-muted-foreground py-6 text-center">Calculating workload hours...</p>}
+          {loadingWorkload && (
+            <p className="text-xs text-muted-foreground py-6 text-center">
+              Calculating workload hours...
+            </p>
+          )}
 
           {workloadSummary && !loadingWorkload && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="p-4 rounded-xl border border-border bg-card/40 space-y-1">
                 <p className="text-xs text-muted-foreground">Expected Target</p>
-                <p className="text-xl font-bold">{workloadSummary.expected_hours} hrs/wk</p>
-                <p className="text-[11px] text-muted-foreground">Department standard</p>
+                <p className="text-xl font-bold">
+                  {workloadSummary.expected_hours} hrs/wk
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Department standard
+                </p>
               </div>
 
               <div className="p-4 rounded-xl border border-border bg-card/40 space-y-1">
-                <p className="text-xs text-muted-foreground">Scheduled Teaching</p>
-                <p className="text-xl font-bold text-primary">{workloadSummary.scheduled_teaching_hours} hrs/wk</p>
-                <p className="text-[11px] text-muted-foreground">{workloadSummary.sessions_count} Timetable sessions</p>
+                <p className="text-xs text-muted-foreground">
+                  Scheduled Teaching
+                </p>
+                <p className="text-xl font-bold text-primary">
+                  {workloadSummary.scheduled_teaching_hours} hrs/wk
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  {workloadSummary.sessions_count} Timetable sessions
+                </p>
               </div>
 
               <div className="p-4 rounded-xl border border-border bg-card/40 space-y-1">
-                <p className="text-xs text-muted-foreground">Duty Adjustments</p>
-                <p className="text-xl font-bold text-violet-500">{workloadSummary.adjusted_hours} hrs/wk</p>
-                <p className="text-[11px] text-muted-foreground">Research/Admin credits</p>
+                <p className="text-xs text-muted-foreground">
+                  Duty Adjustments
+                </p>
+                <p className="text-xl font-bold text-violet-500">
+                  {workloadSummary.adjusted_hours} hrs/wk
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Research/Admin credits
+                </p>
               </div>
 
               <div className="p-4 rounded-xl border border-border bg-card/40 space-y-1">
-                <p className="text-xs text-muted-foreground">Allocation Balance</p>
+                <p className="text-xs text-muted-foreground">
+                  Allocation Balance
+                </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-xl font-bold">{workloadSummary.total_actual_hours} hrs</p>
+                  <p className="text-xl font-bold">
+                    {workloadSummary.total_actual_hours} hrs
+                  </p>
                   <Badge
                     variant="outline"
                     className={
                       workloadSummary.load_status === "BALANCED"
                         ? "border-emerald-500/30 text-emerald-500 bg-emerald-500/10 text-[10px]"
                         : workloadSummary.load_status === "OVERLOAD"
-                        ? "border-rose-500/30 text-rose-500 bg-rose-500/10 text-[10px]"
-                        : "border-amber-500/30 text-amber-500 bg-amber-500/10 text-[10px]"
+                          ? "border-rose-500/30 text-rose-500 bg-rose-500/10 text-[10px]"
+                          : "border-amber-500/30 text-amber-500 bg-amber-500/10 text-[10px]"
                     }
                   >
                     {workloadSummary.load_status}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-muted-foreground">Variance: {workloadSummary.variance_hours} hrs</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Variance: {workloadSummary.variance_hours} hrs
+                </p>
               </div>
             </div>
           )}
@@ -1207,10 +1548,18 @@ export default function WorkforceManagementPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-sm">Employee Self-Service & HR Cases</h3>
-              <p className="text-xs text-muted-foreground">Profile update proposals, employment letters & service tickets.</p>
+              <h3 className="font-semibold text-sm">
+                Employee Self-Service & HR Cases
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Profile update proposals, employment letters & service tickets.
+              </p>
             </div>
-            <Button size="sm" onClick={() => setHrCaseOpen(true)} className="gap-1.5 text-xs">
+            <Button
+              size="sm"
+              onClick={() => setHrCaseOpen(true)}
+              className="gap-1.5 text-xs"
+            >
               <Plus className="h-3 w-3" /> New Request
             </Button>
           </div>
@@ -1231,22 +1580,28 @@ export default function WorkforceManagementPage() {
               <tbody className="divide-y divide-border/40">
                 {hrCases.map((c) => (
                   <tr key={c.id} className="hover:bg-muted/20">
-                    <td className="py-2.5 px-3 font-mono font-medium">{c.case_number}</td>
-                    <td className="py-2.5 px-3 font-medium">{c.employee_name}</td>
+                    <td className="py-2.5 px-3 font-mono font-medium">
+                      {c.case_number}
+                    </td>
+                    <td className="py-2.5 px-3 font-medium">
+                      {c.employee_name}
+                    </td>
                     <td className="py-2.5 px-3">
                       <Badge variant="outline" className="text-[10px]">
                         {c.category}
                       </Badge>
                     </td>
-                    <td className="py-2.5 px-3 font-medium max-w-xs truncate">{c.subject}</td>
+                    <td className="py-2.5 px-3 font-medium max-w-xs truncate">
+                      {c.subject}
+                    </td>
                     <td className="py-2.5 px-3">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                           c.status === "RESOLVED"
                             ? "bg-emerald-500/10 text-emerald-500"
                             : c.status === "OPEN"
-                            ? "bg-amber-500/10 text-amber-500"
-                            : "bg-muted text-muted-foreground"
+                              ? "bg-amber-500/10 text-amber-500"
+                              : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {c.status}
@@ -1271,7 +1626,10 @@ export default function WorkforceManagementPage() {
                 ))}
                 {hrCases.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={7}
+                      className="py-8 text-center text-muted-foreground"
+                    >
                       No HR service tickets recorded.
                     </td>
                   </tr>
@@ -1293,22 +1651,34 @@ export default function WorkforceManagementPage() {
               <h3 className="font-semibold text-sm">Headcount by Department</h3>
               <div className="space-y-2">
                 {reportOverview &&
-                  Object.entries(reportOverview.department_distribution).map(([dept, count]) => (
-                    <div key={dept} className="flex items-center justify-between text-xs p-2 rounded bg-muted/20">
-                      <span>{dept}</span>
-                      <span className="font-bold">{count} staff</span>
-                    </div>
-                  ))}
+                  Object.entries(reportOverview.department_distribution).map(
+                    ([dept, count]) => (
+                      <div
+                        key={dept}
+                        className="flex items-center justify-between text-xs p-2 rounded bg-muted/20"
+                      >
+                        <span>{dept}</span>
+                        <span className="font-bold">{count} staff</span>
+                      </div>
+                    ),
+                  )}
               </div>
             </div>
 
             {/* Employment Composition */}
             <div className="p-5 rounded-xl border border-border bg-card/40 space-y-3">
-              <h3 className="font-semibold text-sm">Employment Type Composition</h3>
+              <h3 className="font-semibold text-sm">
+                Employment Type Composition
+              </h3>
               <div className="space-y-2">
                 {reportOverview &&
-                  Object.entries(reportOverview.headcount.by_employment_type).map(([type, count]) => (
-                    <div key={type} className="flex items-center justify-between text-xs p-2 rounded bg-muted/20">
+                  Object.entries(
+                    reportOverview.headcount.by_employment_type,
+                  ).map(([type, count]) => (
+                    <div
+                      key={type}
+                      className="flex items-center justify-between text-xs p-2 rounded bg-muted/20"
+                    >
                       <span>{type}</span>
                       <span className="font-bold">{count}</span>
                     </div>
@@ -1322,22 +1692,38 @@ export default function WorkforceManagementPage() {
       {/* -------------------------------------------------------------------- */}
       {/* MODAL 1: STATUS TRANSITION */}
       {/* -------------------------------------------------------------------- */}
-      <Dialog open={transitionStatusOpen} onOpenChange={setTransitionStatusOpen}>
+      <Dialog
+        open={transitionStatusOpen}
+        onOpenChange={setTransitionStatusOpen}
+      >
         <div className="space-y-4 p-1">
-          <h3 className="font-semibold text-base">Transition Employment Status</h3>
+          <h3 className="font-semibold text-base">
+            Transition Employment Status
+          </h3>
           {selectedEmployee && (
             <p className="text-xs text-muted-foreground">
-              Transitioning <span className="font-medium text-foreground">{selectedEmployee.first_name} {selectedEmployee.last_name}</span> ({selectedEmployee.employee_number}) from{" "}
-              <Badge variant="outline" className="text-[10px]">{selectedEmployee.employment_status}</Badge>.
+              Transitioning{" "}
+              <span className="font-medium text-foreground">
+                {selectedEmployee.first_name} {selectedEmployee.last_name}
+              </span>{" "}
+              ({selectedEmployee.employee_number}) from{" "}
+              <Badge variant="outline" className="text-[10px]">
+                {selectedEmployee.employment_status}
+              </Badge>
+              .
             </p>
           )}
 
           <form onSubmit={handleExecuteTransition} className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs font-medium">New Employment Status</label>
+              <label className="text-xs font-medium">
+                New Employment Status
+              </label>
               <select
                 value={targetStatus}
-                onChange={(e) => setTargetStatus(e.target.value as EmploymentStatus)}
+                onChange={(e) =>
+                  setTargetStatus(e.target.value as EmploymentStatus)
+                }
                 className="w-full h-9 text-xs bg-background border border-border rounded-md px-3 text-foreground"
               >
                 <option value="ACTIVE">ACTIVE</option>
@@ -1350,7 +1736,9 @@ export default function WorkforceManagementPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium">Justification / Reason (Mandatory)</label>
+              <label className="text-xs font-medium">
+                Justification / Reason (Mandatory)
+              </label>
               <Input
                 placeholder="Reason for state transition..."
                 value={transitionReason}
@@ -1361,7 +1749,12 @@ export default function WorkforceManagementPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-3">
-              <Button type="button" variant="outline" size="sm" onClick={() => setTransitionStatusOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTransitionStatusOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit" size="sm">
@@ -1380,36 +1773,51 @@ export default function WorkforceManagementPage() {
           <h3 className="font-semibold text-base">Employment Audit Trail</h3>
           {selectedEmployee && (
             <p className="text-xs text-muted-foreground">
-              Traceable record of designation, department, and lifecycle transitions for {selectedEmployee.first_name} {selectedEmployee.last_name}.
+              Traceable record of designation, department, and lifecycle
+              transitions for {selectedEmployee.first_name}{" "}
+              {selectedEmployee.last_name}.
             </p>
           )}
 
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {selectedHistory.map((h) => (
-              <div key={h.id} className="p-3 rounded-lg border border-border/50 bg-muted/20 text-xs space-y-1">
+              <div
+                key={h.id}
+                className="p-3 rounded-lg border border-border/50 bg-muted/20 text-xs space-y-1"
+              >
                 <div className="flex items-center justify-between">
                   <Badge variant="outline" className="text-[10px]">
                     {h.change_type}
                   </Badge>
-                  <span className="text-[11px] text-muted-foreground">{h.effective_date}</span>
+                  <span className="text-[11px] text-muted-foreground">
+                    {h.effective_date}
+                  </span>
                 </div>
                 <p className="font-medium text-foreground">
                   {h.previous_designation && h.new_designation
                     ? `${h.previous_designation} → ${h.new_designation}`
                     : h.previous_status && h.new_status
-                    ? `${h.previous_status} → ${h.new_status}`
-                    : "Record modified"}
+                      ? `${h.previous_status} → ${h.new_status}`
+                      : "Record modified"}
                 </p>
-                {h.notes && <p className="text-muted-foreground text-[11px]">{h.notes}</p>}
+                {h.notes && (
+                  <p className="text-muted-foreground text-[11px]">{h.notes}</p>
+                )}
               </div>
             ))}
             {selectedHistory.length === 0 && (
-              <p className="text-xs text-muted-foreground italic py-4 text-center">No history events recorded.</p>
+              <p className="text-xs text-muted-foreground italic py-4 text-center">
+                No history events recorded.
+              </p>
             )}
           </div>
 
           <div className="flex justify-end">
-            <Button size="sm" variant="outline" onClick={() => setHistoryModalOpen(false)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setHistoryModalOpen(false)}
+            >
               Close
             </Button>
           </div>
@@ -1423,7 +1831,8 @@ export default function WorkforceManagementPage() {
         <div className="space-y-4 p-1">
           <h3 className="font-semibold text-base">Submit Leave Request</h3>
           <p className="text-xs text-muted-foreground">
-            Subject to available balance verification and academic timetable collision checking.
+            Subject to available balance verification and academic timetable
+            collision checking.
           </p>
 
           <form onSubmit={handleSubmitLeave} className="space-y-3">
@@ -1490,7 +1899,10 @@ export default function WorkforceManagementPage() {
                 onChange={(e) => setLeaveIsHalfDay(e.target.checked)}
                 className="rounded border-border text-primary"
               />
-              <label htmlFor="halfDayToggle" className="text-xs text-foreground cursor-pointer">
+              <label
+                htmlFor="halfDayToggle"
+                className="text-xs text-foreground cursor-pointer"
+              >
                 Half-Day Request (0.5 day)
               </label>
             </div>
@@ -1507,7 +1919,12 @@ export default function WorkforceManagementPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-3">
-              <Button type="button" variant="outline" size="sm" onClick={() => setLeaveRequestOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setLeaveRequestOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit" size="sm">
@@ -1524,7 +1941,10 @@ export default function WorkforceManagementPage() {
       <Dialog open={hrCaseOpen} onOpenChange={setHrCaseOpen}>
         <div className="space-y-4 p-1">
           <h3 className="font-semibold text-base">New HR Service Desk Case</h3>
-          <p className="text-xs text-muted-foreground">Submit a profile update proposal, letter request, or general inquiry.</p>
+          <p className="text-xs text-muted-foreground">
+            Submit a profile update proposal, letter request, or general
+            inquiry.
+          </p>
 
           <form onSubmit={handleCreateHRCase} className="space-y-3">
             <div className="space-y-1">
@@ -1535,7 +1955,9 @@ export default function WorkforceManagementPage() {
                 className="w-full h-9 text-xs bg-background border border-border rounded-md px-3 text-foreground"
               >
                 <option value="PROFILE_UPDATE">Profile Update Proposal</option>
-                <option value="EMPLOYMENT_LETTER">Employment Verification Letter</option>
+                <option value="EMPLOYMENT_LETTER">
+                  Employment Verification Letter
+                </option>
                 <option value="GENERAL_INQUIRY">General HR Inquiry</option>
               </select>
             </div>
@@ -1564,7 +1986,12 @@ export default function WorkforceManagementPage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-3">
-              <Button type="button" variant="outline" size="sm" onClick={() => setHrCaseOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setHrCaseOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit" size="sm">

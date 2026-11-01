@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { StudentSupportService } from "@/services/student-support.service";
-import { StudentDevelopmentPlanItem, MenteeItem } from "@/types/student-support";
+import {
+  StudentDevelopmentPlanItem,
+  MenteeItem,
+} from "@/types/student-support";
 import { StudentSupportNav } from "@/components/student-support/student-support-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +42,9 @@ export default function StudentDevelopmentPlansPage() {
   // Form State
   const [title, setTitle] = useState("");
   const [selectedStudentId, setSelectedStudentId] = useState("");
-  const [reviewFrequency, setReviewFrequency] = useState<"MONTHLY" | "QUARTERLY" | "SEMESTER">("SEMESTER");
+  const [reviewFrequency, setReviewFrequency] = useState<
+    "MONTHLY" | "QUARTERLY" | "SEMESTER"
+  >("SEMESTER");
   const [strengths, setStrengths] = useState("");
   const [growthAreas, setGrowthAreas] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -59,7 +64,9 @@ export default function StudentDevelopmentPlansPage() {
       setPlans(allPlans);
       setMentees(allMentees);
       if (allMentees.length > 0) {
-        setSelectedStudentId(allMentees[0].student_id || allMentees[0].studentId || "");
+        setSelectedStudentId(
+          allMentees[0].student_id || allMentees[0].studentId || "",
+        );
       }
     } catch (err) {
       console.error("Failed to load development plans:", err);
@@ -103,7 +110,10 @@ export default function StudentDevelopmentPlansPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Development Plans", href: "/app/student-support/development-plans" },
+            {
+              label: "Development Plans",
+              href: "/app/student-support/development-plans",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -113,7 +123,9 @@ export default function StudentDevelopmentPlansPage() {
               Individual Student Development Plans (IDP)
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Collaborative goal-setting framework connecting students and mentors across academic, technical, leadership, and personal domains.
+              Collaborative goal-setting framework connecting students and
+              mentors across academic, technical, leadership, and personal
+              domains.
             </p>
           </div>
           <Button
@@ -134,7 +146,10 @@ export default function StudentDevelopmentPlansPage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -142,10 +157,13 @@ export default function StudentDevelopmentPlansPage() {
 
       {/* Plans Grid */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading student development plans...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading student development plans...
+        </div>
       ) : plans.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
-          No individual development plans found. Click "Create Development Plan" to initialize an IDP.
+          No individual development plans found. Click "Create Development Plan"
+          to initialize an IDP.
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -157,8 +175,12 @@ export default function StudentDevelopmentPlansPage() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold text-white text-base">{plan.title}</h3>
-                    <div className="text-xs text-slate-400">Student Ref: {plan.student_id}</div>
+                    <h3 className="font-semibold text-white text-base">
+                      {plan.title}
+                    </h3>
+                    <div className="text-xs text-slate-400">
+                      Student Ref: {plan.student_id}
+                    </div>
                   </div>
                   <Badge
                     variant="outline"
@@ -175,8 +197,12 @@ export default function StudentDevelopmentPlansPage() {
                 {/* Overall Progress Meter */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-400 font-medium">Overall Progress</span>
-                    <span className="text-indigo-400 font-bold">{plan.overall_progress_pct}%</span>
+                    <span className="text-slate-400 font-medium">
+                      Overall Progress
+                    </span>
+                    <span className="text-indigo-400 font-bold">
+                      {plan.overall_progress_pct}%
+                    </span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
                     <div
@@ -189,13 +215,17 @@ export default function StudentDevelopmentPlansPage() {
                 <div className="text-xs text-slate-300 space-y-1.5 pt-1">
                   {plan.strengths_summary && (
                     <div className="p-2 rounded bg-slate-950 border border-slate-800">
-                      <span className="text-slate-400 font-medium">Strengths: </span>
+                      <span className="text-slate-400 font-medium">
+                        Strengths:{" "}
+                      </span>
                       {plan.strengths_summary}
                     </div>
                   )}
                   {plan.growth_areas_summary && (
                     <div className="p-2 rounded bg-slate-950 border border-slate-800">
-                      <span className="text-slate-400 font-medium">Growth Focus: </span>
+                      <span className="text-slate-400 font-medium">
+                        Growth Focus:{" "}
+                      </span>
                       {plan.growth_areas_summary}
                     </div>
                   )}
@@ -204,19 +234,26 @@ export default function StudentDevelopmentPlansPage() {
                 <div className="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-800/60">
                   <div className="flex justify-between">
                     <span>Review Cadence:</span>
-                    <strong className="text-slate-200">{plan.review_frequency}</strong>
+                    <strong className="text-slate-200">
+                      {plan.review_frequency}
+                    </strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Next Review Date:</span>
                     <strong className="text-slate-200">
-                      {plan.next_review_date ? new Date(plan.next_review_date).toLocaleDateString() : "Pending"}
+                      {plan.next_review_date
+                        ? new Date(plan.next_review_date).toLocaleDateString()
+                        : "Pending"}
                     </strong>
                   </div>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-slate-800/80">
-                <Link href={`/app/student-support/goals?plan_id=${plan.id}`} className="block">
+                <Link
+                  href={`/app/student-support/goals?plan_id=${plan.id}`}
+                  className="block"
+                >
                   <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-xs text-white">
                     <Target className="mr-1.5 h-3.5 w-3.5" />
                     Manage Goals & Milestones
@@ -259,8 +296,13 @@ export default function StudentDevelopmentPlansPage() {
                   className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white"
                 >
                   {mentees.map((m) => (
-                    <option key={m.student_id || m.studentId} value={m.student_id || m.studentId}>
-                      {m.student_name || m.studentName} ({m.student_reg_no || m.rollNumber}) - {m.program_name || m.programName}
+                    <option
+                      key={m.student_id || m.studentId}
+                      value={m.student_id || m.studentId}
+                    >
+                      {m.student_name || m.studentName} (
+                      {m.student_reg_no || m.rollNumber}) -{" "}
+                      {m.program_name || m.programName}
                     </option>
                   ))}
                 </select>
@@ -276,7 +318,9 @@ export default function StudentDevelopmentPlansPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Review Frequency *</label>
+              <label className="text-slate-400 font-medium">
+                Review Frequency *
+              </label>
               <select
                 value={reviewFrequency}
                 onChange={(e) => setReviewFrequency(e.target.value as any)}
@@ -289,7 +333,9 @@ export default function StudentDevelopmentPlansPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Identified Strengths</label>
+              <label className="text-slate-400 font-medium">
+                Identified Strengths
+              </label>
               <Textarea
                 placeholder="Key technical, analytical, or interpersonal strengths..."
                 value={strengths}
@@ -300,7 +346,9 @@ export default function StudentDevelopmentPlansPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Target Growth Areas</label>
+              <label className="text-slate-400 font-medium">
+                Target Growth Areas
+              </label>
               <Textarea
                 placeholder="Specific areas to develop (e.g. communication, algorithms, public speaking)..."
                 value={growthAreas}

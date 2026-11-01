@@ -30,12 +30,16 @@ function ResolutionsContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
   const [actionsList, setActionsList] = useState<ResolutionActionModel[]>([]);
 
   // Action form
   const [desc, setDesc] = useState("");
-  const [actionType, setActionType] = useState<SAActionType>(SAActionType.FACILITY_REPAIR);
+  const [actionType, setActionType] = useState<SAActionType>(
+    SAActionType.FACILITY_REPAIR,
+  );
   const [dueDate, setDueDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState("");
@@ -88,7 +92,10 @@ function ResolutionsContent() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Resolutions & Actions", href: "/app/student-affairs/resolutions" },
+          {
+            label: "Resolutions & Actions",
+            href: "/app/student-affairs/resolutions",
+          },
         ]}
       />
 
@@ -98,7 +105,8 @@ function ResolutionsContent() {
           Grievance Resolutions & Corrective Action Tracking
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Monitor assigned institutional remediations, facility engineering repairs, academic adjustments, and closure approvals.
+          Monitor assigned institutional remediations, facility engineering
+          repairs, academic adjustments, and closure approvals.
         </p>
       </div>
 
@@ -110,7 +118,10 @@ function ResolutionsContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setNotification("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -130,20 +141,37 @@ function ResolutionsContent() {
           ) : (
             <div className="space-y-3">
               {actionsList.map((act) => (
-                <Card key={act.id} className="p-4 border-slate-800 bg-slate-900/40 space-y-2">
+                <Card
+                  key={act.id}
+                  className="p-4 border-slate-800 bg-slate-900/40 space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white text-xs">{act.description}</span>
-                    <Badge className={act.status === "COMPLETED" ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"}>
+                    <span className="font-semibold text-white text-xs">
+                      {act.description}
+                    </span>
+                    <Badge
+                      className={
+                        act.status === "COMPLETED"
+                          ? "bg-emerald-500/10 text-emerald-400"
+                          : "bg-amber-500/10 text-amber-400"
+                      }
+                    >
                       {act.status}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
-                    <span>Remediation Type: <strong className="text-slate-300">{act.action_type}</strong></span>
+                    <span>
+                      Remediation Type:{" "}
+                      <strong className="text-slate-300">
+                        {act.action_type}
+                      </strong>
+                    </span>
                     <span>Target Due Date: {act.due_date || "Open"}</span>
                   </div>
                   {act.completion_notes && (
                     <div className="p-2 rounded bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-emerald-300">
-                      <strong>Completion Certification: </strong> {act.completion_notes}
+                      <strong>Completion Certification: </strong>{" "}
+                      {act.completion_notes}
                     </div>
                   )}
                 </Card>
@@ -161,7 +189,9 @@ function ResolutionsContent() {
             </h2>
             <form onSubmit={handleAddAction} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1">Target Case Ref *</label>
+                <label className="block text-slate-300 mb-1">
+                  Target Case Ref *
+                </label>
                 <select
                   value={selectedCaseId}
                   onChange={(e) => setSelectedCaseId(e.target.value)}
@@ -176,7 +206,9 @@ function ResolutionsContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Action Description *</label>
+                <label className="block text-slate-300 mb-1">
+                  Action Description *
+                </label>
                 <textarea
                   rows={3}
                   placeholder="e.g. Replace HEPA air filtration system and re-certify lab airflow velocity..."
@@ -188,23 +220,41 @@ function ResolutionsContent() {
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Remediation Category</label>
+                <label className="block text-slate-300 mb-1">
+                  Remediation Category
+                </label>
                 <select
                   value={actionType}
-                  onChange={(e) => setActionType(e.target.value as SAActionType)}
+                  onChange={(e) =>
+                    setActionType(e.target.value as SAActionType)
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
                 >
-                  <option value={SAActionType.FACILITY_REPAIR}>FACILITY REPAIR (Infrastructure / equipment)</option>
-                  <option value={SAActionType.GRADE_RECHECK}>GRADE RECHECK (Academic exam verification)</option>
-                  <option value={SAActionType.POLICY_REVISION}>POLICY REVISION (Institutional rule amendment)</option>
-                  <option value={SAActionType.MEDIATED_AGREEMENT}>MEDIATED AGREEMENT (Peer conciliation pact)</option>
-                  <option value={SAActionType.APOLOGY}>FORMAL APOLOGY (Written conciliation)</option>
-                  <option value={SAActionType.RESTITUTION}>RESTITUTION (Compensation)</option>
+                  <option value={SAActionType.FACILITY_REPAIR}>
+                    FACILITY REPAIR (Infrastructure / equipment)
+                  </option>
+                  <option value={SAActionType.GRADE_RECHECK}>
+                    GRADE RECHECK (Academic exam verification)
+                  </option>
+                  <option value={SAActionType.POLICY_REVISION}>
+                    POLICY REVISION (Institutional rule amendment)
+                  </option>
+                  <option value={SAActionType.MEDIATED_AGREEMENT}>
+                    MEDIATED AGREEMENT (Peer conciliation pact)
+                  </option>
+                  <option value={SAActionType.APOLOGY}>
+                    FORMAL APOLOGY (Written conciliation)
+                  </option>
+                  <option value={SAActionType.RESTITUTION}>
+                    RESTITUTION (Compensation)
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Completion Deadline</label>
+                <label className="block text-slate-300 mb-1">
+                  Completion Deadline
+                </label>
                 <input
                   type="date"
                   value={dueDate}
@@ -230,9 +280,14 @@ function ResolutionsContent() {
 
 export default function ResolutionsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading resolutions...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading resolutions...
+        </div>
+      }
+    >
       <ResolutionsContent />
     </Suspense>
   );
 }
-

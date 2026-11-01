@@ -34,8 +34,10 @@ COPY apps/web ./apps/web
 # Set production environment flags for build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV BUILD_STANDALONE=true
 
 # Build the Next.js application with standalone output
+RUN npm run build --workspace=packages/types
 RUN npm run build --workspace=apps/web
 
 # ------------------------------------------------------------------------------

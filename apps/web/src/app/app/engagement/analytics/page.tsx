@@ -37,7 +37,9 @@ const SDG_TITLES: Record<number, string> = {
 };
 
 export default function EngagementAnalyticsPage() {
-  const [analytics, setAnalytics] = useState<EngagementAnalyticsSummary | null>(null);
+  const [analytics, setAnalytics] = useState<EngagementAnalyticsSummary | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,12 +69,15 @@ export default function EngagementAnalyticsPage() {
               Civic Impact & SDG Analytics
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Live quantitative civic engagement indicators, UN SDG contributions, and community return-on-effort
+              Live quantitative civic engagement indicators, UN SDG
+              contributions, and community return-on-effort
             </p>
           </div>
 
           <button
-            onClick={() => alert("Civic Impact Report generated and downloaded as CSV.")}
+            onClick={() =>
+              alert("Civic Impact Report generated and downloaded as CSV.")
+            }
             className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg border border-border text-foreground hover:bg-accent text-xs font-semibold"
           >
             <Download className="h-4 w-4" />
@@ -83,35 +88,53 @@ export default function EngagementAnalyticsPage() {
         {/* Top KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-1">
-            <span className="text-xs text-muted-foreground uppercase font-semibold">Total Verified Hours</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">
+              Total Verified Hours
+            </span>
             <div className="text-2xl font-bold text-foreground">
-              {analytics?.total_verified_hours ? Number(analytics.total_verified_hours).toLocaleString() : "3,840.5"}
+              {analytics?.total_verified_hours
+                ? Number(analytics.total_verified_hours).toLocaleString()
+                : "3,840.5"}
             </div>
-            <p className="text-[11px] text-emerald-500 font-medium">Audited & Faculty Verified</p>
+            <p className="text-[11px] text-emerald-500 font-medium">
+              Audited & Faculty Verified
+            </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-1">
-            <span className="text-xs text-muted-foreground uppercase font-semibold">Student Volunteers</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">
+              Student Volunteers
+            </span>
             <div className="text-2xl font-bold text-foreground">
               {analytics?.total_volunteers ?? 486}
             </div>
-            <p className="text-[11px] text-muted-foreground">Active in civic programs</p>
+            <p className="text-[11px] text-muted-foreground">
+              Active in civic programs
+            </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-1">
-            <span className="text-xs text-muted-foreground uppercase font-semibold">Community Partners</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">
+              Community Partners
+            </span>
             <div className="text-2xl font-bold text-foreground">
               {analytics?.total_partners ?? 18}
             </div>
-            <p className="text-[11px] text-muted-foreground">Active bilateral MoUs</p>
+            <p className="text-[11px] text-muted-foreground">
+              Active bilateral MoUs
+            </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-1">
-            <span className="text-xs text-muted-foreground uppercase font-semibold">Pending Audits</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">
+              Pending Audits
+            </span>
             <div className="text-2xl font-bold text-amber-500">
               {analytics?.hours_pending_verification ?? 145} hrs
             </div>
-            <p className="text-[11px] text-muted-foreground">Awaiting supervisor sign-off</p>
+            <p className="text-[11px] text-muted-foreground">
+              Awaiting supervisor sign-off
+            </p>
           </div>
         </div>
 
@@ -140,7 +163,9 @@ export default function EngagementAnalyticsPage() {
                         <span className="font-medium text-foreground">
                           Goal {num}: {title}
                         </span>
-                        <span className="font-bold text-foreground">{hours} Hours</span>
+                        <span className="font-bold text-foreground">
+                          {hours} Hours
+                        </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
                         <div
@@ -171,8 +196,12 @@ export default function EngagementAnalyticsPage() {
                 return (
                   <div key={m.month} className="space-y-1 text-xs">
                     <div className="flex justify-between">
-                      <span className="font-medium text-foreground">{m.month}</span>
-                      <span className="font-bold text-foreground">{m.hours} hrs</span>
+                      <span className="font-medium text-foreground">
+                        {m.month}
+                      </span>
+                      <span className="font-bold text-foreground">
+                        {m.hours} hrs
+                      </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                       <div
@@ -195,19 +224,27 @@ export default function EngagementAnalyticsPage() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
             {analytics &&
-              Object.entries(analytics.programs_by_category).map(([cat, count]) => (
-                <div key={cat} className="p-4 rounded-xl bg-muted/30 border border-border text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground font-medium block">
-                    {cat.replace(/_/g, " ")}
-                  </span>
-                  <span className="text-2xl font-bold text-foreground">{count}</span>
-                  <span className="text-[10px] text-muted-foreground block">Active Programs</span>
-                </div>
-              ))}
+              Object.entries(analytics.programs_by_category).map(
+                ([cat, count]) => (
+                  <div
+                    key={cat}
+                    className="p-4 rounded-xl bg-muted/30 border border-border text-center space-y-1"
+                  >
+                    <span className="text-[11px] text-muted-foreground font-medium block">
+                      {cat.replace(/_/g, " ")}
+                    </span>
+                    <span className="text-2xl font-bold text-foreground">
+                      {count}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Active Programs
+                    </span>
+                  </div>
+                ),
+              )}
           </div>
         </div>
       </main>
     </div>
   );
 }
-

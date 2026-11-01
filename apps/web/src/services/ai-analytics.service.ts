@@ -9,8 +9,6 @@ class AiAnalyticsService {
   async runAnalyticsQuery(
     query: AnalyticsQuery,
   ): Promise<ApiResponse<AnalyticsResult>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     switch (query.domain) {
       case IntelligenceDomain.ATTENDANCE:
         return {

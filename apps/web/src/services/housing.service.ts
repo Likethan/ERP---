@@ -48,15 +48,14 @@ import {
   MOCK_UNITS,
 } from "../mocks/housing.mock";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/housing`
-    : "http://localhost:8000/api/v1/housing";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/housing`
+  : "http://localhost:8000/api/v1/housing";
 
 async function fetchWithFallback<T>(
   url: string,
   options?: RequestInit,
-  fallback?: T
+  fallback?: T,
 ): Promise<T> {
   try {
     const res = await fetch(`${API_BASE}${url}`, {
@@ -116,7 +115,7 @@ export const HousingService = {
     return fetchWithFallback<HousingAnalyticsSummary>(
       "/analytics",
       { method: "GET" },
-      analyticsState
+      analyticsState,
     );
   },
 
@@ -129,7 +128,9 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProvider[]>(
       `/providers${query}`,
       { method: "GET" },
-      status ? providersState.filter((p) => p.verification_status === status) : providersState
+      status
+        ? providersState.filter((p) => p.verification_status === status)
+        : providersState,
     );
   },
 
@@ -138,11 +139,13 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProvider>(
       `/providers/${id}`,
       { method: "GET" },
-      fallback || providersState[0]
+      fallback || providersState[0],
     );
   },
 
-  async createProvider(data: ProviderCreateInput): Promise<AccommodationProvider> {
+  async createProvider(
+    data: ProviderCreateInput,
+  ): Promise<AccommodationProvider> {
     const fallback: AccommodationProvider = {
       id: `prov-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -173,7 +176,7 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProvider>(
       "/providers",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -181,14 +184,16 @@ export const HousingService = {
   // 3. ACCOMMODATION PROPERTIES
   // =========================================================================
 
-  async listProperties(publishedOnly = false): Promise<AccommodationProperty[]> {
+  async listProperties(
+    publishedOnly = false,
+  ): Promise<AccommodationProperty[]> {
     const query = publishedOnly ? "?published_only=true" : "";
     return fetchWithFallback<AccommodationProperty[]>(
       `/properties${query}`,
       { method: "GET" },
       publishedOnly
         ? propertiesState.filter((p) => p.lifecycle_status === "PUBLISHED")
-        : propertiesState
+        : propertiesState,
     );
   },
 
@@ -197,11 +202,13 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProperty>(
       `/properties/${id}`,
       { method: "GET" },
-      fallback || propertiesState[0]
+      fallback || propertiesState[0],
     );
   },
 
-  async createProperty(data: PropertyCreateInput): Promise<AccommodationProperty> {
+  async createProperty(
+    data: PropertyCreateInput,
+  ): Promise<AccommodationProperty> {
     const fallback: AccommodationProperty = {
       id: `prop-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -242,13 +249,13 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProperty>(
       "/properties",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async transitionProperty(
     id: string,
-    transition: PropertyTransitionInput
+    transition: PropertyTransitionInput,
   ): Promise<AccommodationProperty> {
     const prop = propertiesState.find((p) => p.id === id);
     if (prop) {
@@ -261,7 +268,7 @@ export const HousingService = {
     return fetchWithFallback<AccommodationProperty>(
       `/properties/${id}/transition`,
       { method: "POST", body: JSON.stringify(transition) },
-      prop || propertiesState[0]
+      prop || propertiesState[0],
     );
   },
 
@@ -273,7 +280,7 @@ export const HousingService = {
     return fetchWithFallback<AccommodationUnit[]>(
       `/units?property_id=${propertyId}`,
       { method: "GET" },
-      unitsState.filter((u) => u.property_id === propertyId)
+      unitsState.filter((u) => u.property_id === propertyId),
     );
   },
 
@@ -301,7 +308,7 @@ export const HousingService = {
     return fetchWithFallback<AccommodationUnit>(
       "/units",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -320,7 +327,7 @@ export const HousingService = {
     return fetchWithFallback<AccommodationBed>(
       `/beds/${bedId}/block?reason=${encodeURIComponent(reason)}`,
       { method: "POST" },
-      fallback
+      fallback,
     );
   },
 
@@ -333,11 +340,13 @@ export const HousingService = {
     return fetchWithFallback<StudentHousingRequest[]>(
       `/requests${query}`,
       { method: "GET" },
-      status ? requestsState.filter((r) => r.status === status) : requestsState
+      status ? requestsState.filter((r) => r.status === status) : requestsState,
     );
   },
 
-  async submitRequest(data: HousingRequestCreateInput): Promise<StudentHousingRequest> {
+  async submitRequest(
+    data: HousingRequestCreateInput,
+  ): Promise<StudentHousingRequest> {
     const fallback: StudentHousingRequest = {
       id: `req-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -367,21 +376,22 @@ export const HousingService = {
     return fetchWithFallback<StudentHousingRequest>(
       "/requests",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async reviewRequest(
     id: string,
-    review: HousingRequestReviewInput
+    review: HousingRequestReviewInput,
   ): Promise<StudentHousingRequest> {
     const req = requestsState.find((r) => r.id === id);
     if (req) {
       req.status = review.status;
       req.review_notes = review.review_notes;
       req.rejection_reason = review.rejection_reason;
-      if (review.priority_score !== undefined) req.priority_score = review.priority_score;
-      if (review.status === 'WAITLISTED' && !req.waitlist_position) {
+      if (review.priority_score !== undefined)
+        req.priority_score = review.priority_score;
+      if (review.status === "WAITLISTED" && !req.waitlist_position) {
         req.waitlist_position = 1;
       }
       req.updated_at = new Date().toISOString();
@@ -389,7 +399,7 @@ export const HousingService = {
     return fetchWithFallback<StudentHousingRequest>(
       `/requests/${id}/review`,
       { method: "POST", body: JSON.stringify(review) },
-      req || requestsState[0]
+      req || requestsState[0],
     );
   },
 
@@ -406,20 +416,22 @@ export const HousingService = {
       offered_deposit: data.offered_deposit,
       occupancy_start_date: data.occupancy_start_date,
       occupancy_end_date: data.occupancy_end_date,
-      offer_valid_until: new Date(Date.now() + (data.offer_valid_days || 7) * 86400000).toISOString(),
+      offer_valid_until: new Date(
+        Date.now() + (data.offer_valid_days || 7) * 86400000,
+      ).toISOString(),
       status: "OFFERED",
       created_at: new Date().toISOString(),
     };
     return fetchWithFallback<HousingOffer>(
       "/offers",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async respondToOffer(
     offerId: string,
-    response: HousingOfferRespondInput
+    response: HousingOfferRespondInput,
   ): Promise<HousingOffer> {
     const fallback: HousingOffer = {
       id: offerId,
@@ -443,7 +455,7 @@ export const HousingService = {
     return fetchWithFallback<HousingOffer>(
       `/offers/${offerId}/respond`,
       { method: "POST", body: JSON.stringify(response) },
-      fallback
+      fallback,
     );
   },
 
@@ -455,11 +467,13 @@ export const HousingService = {
     return fetchWithFallback<HousingAssignment[]>(
       "/assignments",
       { method: "GET" },
-      assignmentsState
+      assignmentsState,
     );
   },
 
-  async allocateStudent(data: HousingAssignmentCreateInput): Promise<HousingAssignment> {
+  async allocateStudent(
+    data: HousingAssignmentCreateInput,
+  ): Promise<HousingAssignment> {
     const fallback: HousingAssignment = {
       id: `asgn-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -480,13 +494,13 @@ export const HousingService = {
     return fetchWithFallback<HousingAssignment>(
       "/assignments",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async transferAssignment(
     assignmentId: string,
-    transfer: HousingTransferInput
+    transfer: HousingTransferInput,
   ): Promise<HousingAssignment> {
     const asgn = assignmentsState.find((a) => a.id === assignmentId);
     if (asgn) {
@@ -500,7 +514,7 @@ export const HousingService = {
     return fetchWithFallback<HousingAssignment>(
       `/assignments/${assignmentId}/transfer`,
       { method: "POST", body: JSON.stringify(transfer) },
-      asgn || assignmentsState[0]
+      asgn || assignmentsState[0],
     );
   },
 
@@ -512,11 +526,13 @@ export const HousingService = {
     return fetchWithFallback<HousingAgreementReference[]>(
       "/agreements",
       { method: "GET" },
-      agreementsState
+      agreementsState,
     );
   },
 
-  async createAgreement(data: HousingAgreementCreateInput): Promise<HousingAgreementReference> {
+  async createAgreement(
+    data: HousingAgreementCreateInput,
+  ): Promise<HousingAgreementReference> {
     const fallback: HousingAgreementReference = {
       id: `agmt-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -542,7 +558,7 @@ export const HousingService = {
     return fetchWithFallback<HousingAgreementReference>(
       "/agreements",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -554,11 +570,13 @@ export const HousingService = {
     return fetchWithFallback<HousingCheckInOutRecord[]>(
       "/check-in-out",
       { method: "GET" },
-      checkinsState
+      checkinsState,
     );
   },
 
-  async recordCheckInOut(data: HousingCheckInOutInput): Promise<HousingCheckInOutRecord> {
+  async recordCheckInOut(
+    data: HousingCheckInOutInput,
+  ): Promise<HousingCheckInOutRecord> {
     const fallback: HousingCheckInOutRecord = {
       id: `check-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -583,7 +601,7 @@ export const HousingService = {
     return fetchWithFallback<HousingCheckInOutRecord>(
       "/check-in-out",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -591,16 +609,24 @@ export const HousingService = {
   // 9. INSPECTIONS & COMPLIANCE
   // =========================================================================
 
-  async listInspections(propertyId?: string): Promise<HousingPropertyInspection[]> {
-    const query = propertyId ? `?property_id=${encodeURIComponent(propertyId)}` : "";
+  async listInspections(
+    propertyId?: string,
+  ): Promise<HousingPropertyInspection[]> {
+    const query = propertyId
+      ? `?property_id=${encodeURIComponent(propertyId)}`
+      : "";
     return fetchWithFallback<HousingPropertyInspection[]>(
       `/inspections${query}`,
       { method: "GET" },
-      propertyId ? inspectionsState.filter((i) => i.property_id === propertyId) : inspectionsState
+      propertyId
+        ? inspectionsState.filter((i) => i.property_id === propertyId)
+        : inspectionsState,
     );
   },
 
-  async recordInspection(data: HousingInspectionCreateInput): Promise<HousingPropertyInspection> {
+  async recordInspection(
+    data: HousingInspectionCreateInput,
+  ): Promise<HousingPropertyInspection> {
     const isFailed =
       data.overall_outcome === "FAILED_CRITICAL" || data.critical_issues_found;
     const fallback: HousingPropertyInspection = {
@@ -614,7 +640,9 @@ export const HousingService = {
       inspection_type: data.inspection_type || "SAFETY_FIRE",
       overall_outcome: data.overall_outcome || "PASSED",
       safety_score: data.safety_score ?? (isFailed ? 45.0 : 96.0),
-      checklist_results: data.checklist_results || { fire_safety: isFailed ? "FAILED" : "PASSED" },
+      checklist_results: data.checklist_results || {
+        fire_safety: isFailed ? "FAILED" : "PASSED",
+      },
       critical_issues_found: Boolean(isFailed),
       availability_suspended: Boolean(isFailed),
       corrective_actions_required: data.corrective_actions_required,
@@ -636,7 +664,7 @@ export const HousingService = {
     return fetchWithFallback<HousingPropertyInspection>(
       "/inspections",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
@@ -644,16 +672,24 @@ export const HousingService = {
   // 10. MAINTENANCE & SERVICE REQUESTS
   // =========================================================================
 
-  async listMaintenance(propertyId?: string): Promise<HousingMaintenanceRequest[]> {
-    const query = propertyId ? `?property_id=${encodeURIComponent(propertyId)}` : "";
+  async listMaintenance(
+    propertyId?: string,
+  ): Promise<HousingMaintenanceRequest[]> {
+    const query = propertyId
+      ? `?property_id=${encodeURIComponent(propertyId)}`
+      : "";
     return fetchWithFallback<HousingMaintenanceRequest[]>(
       `/maintenance${query}`,
       { method: "GET" },
-      propertyId ? maintenanceState.filter((m) => m.property_id === propertyId) : maintenanceState
+      propertyId
+        ? maintenanceState.filter((m) => m.property_id === propertyId)
+        : maintenanceState,
     );
   },
 
-  async submitMaintenance(data: HousingMaintenanceCreateInput): Promise<HousingMaintenanceRequest> {
+  async submitMaintenance(
+    data: HousingMaintenanceCreateInput,
+  ): Promise<HousingMaintenanceRequest> {
     const fallback: HousingMaintenanceRequest = {
       id: `maint-${Date.now()}`,
       tenant_id: "tenant-default",
@@ -675,23 +711,29 @@ export const HousingService = {
     return fetchWithFallback<HousingMaintenanceRequest>(
       "/maintenance",
       { method: "POST", body: JSON.stringify(data) },
-      fallback
+      fallback,
     );
   },
 
   async updateMaintenance(
     id: string,
-    update: HousingMaintenanceUpdateInput
+    update: HousingMaintenanceUpdateInput,
   ): Promise<HousingMaintenanceRequest> {
     const ticket = maintenanceState.find((m) => m.id === id);
     if (ticket) {
       ticket.status = update.status;
-      if (update.assigned_technician_name) ticket.assigned_technician_name = update.assigned_technician_name;
-      if (update.assigned_vendor_name) ticket.assigned_vendor_name = update.assigned_vendor_name;
-      if (update.scheduled_visit_date) ticket.scheduled_visit_date = update.scheduled_visit_date;
-      if (update.completion_notes) ticket.completion_notes = update.completion_notes;
-      if (update.tenant_satisfaction_rating) ticket.tenant_satisfaction_rating = update.tenant_satisfaction_rating;
-      if (update.tenant_feedback) ticket.tenant_feedback = update.tenant_feedback;
+      if (update.assigned_technician_name)
+        ticket.assigned_technician_name = update.assigned_technician_name;
+      if (update.assigned_vendor_name)
+        ticket.assigned_vendor_name = update.assigned_vendor_name;
+      if (update.scheduled_visit_date)
+        ticket.scheduled_visit_date = update.scheduled_visit_date;
+      if (update.completion_notes)
+        ticket.completion_notes = update.completion_notes;
+      if (update.tenant_satisfaction_rating)
+        ticket.tenant_satisfaction_rating = update.tenant_satisfaction_rating;
+      if (update.tenant_feedback)
+        ticket.tenant_feedback = update.tenant_feedback;
       if (update.status === "COMPLETED" && !ticket.completed_at) {
         ticket.completed_at = new Date().toISOString();
       }
@@ -700,11 +742,15 @@ export const HousingService = {
     return fetchWithFallback<HousingMaintenanceRequest>(
       `/maintenance/${id}`,
       { method: "PUT", body: JSON.stringify(update) },
-      ticket || maintenanceState[0]
+      ticket || maintenanceState[0],
     );
   },
 
-  async verifyProvider(id: string, isVerified: boolean, notes?: string): Promise<AccommodationProvider> {
+  async verifyProvider(
+    id: string,
+    isVerified: boolean,
+    notes?: string,
+  ): Promise<AccommodationProvider> {
     const prov = providersState.find((p) => p.id === id);
     if (prov) {
       prov.verification_status = isVerified ? "VERIFIED" : "SUSPENDED";
@@ -715,7 +761,11 @@ export const HousingService = {
     return providersState[0];
   },
 
-  async toggleBedBlock(bedId: string, isBlocked: boolean, reason?: string): Promise<AccommodationBed> {
+  async toggleBedBlock(
+    bedId: string,
+    isBlocked: boolean,
+    reason?: string,
+  ): Promise<AccommodationBed> {
     for (const unit of unitsState) {
       const bed = unit.beds?.find((b) => b.id === bedId);
       if (bed) {
@@ -739,14 +789,22 @@ export const HousingService = {
   },
 
   async listOffers(requestId?: string): Promise<HousingOffer[]> {
-    return requestId ? offersState.filter((o) => o.request_id === requestId) : offersState;
+    return requestId
+      ? offersState.filter((o) => o.request_id === requestId)
+      : offersState;
   },
 
-  async transferRoom(assignmentId: string, data: HousingTransferInput): Promise<HousingAssignment> {
+  async transferRoom(
+    assignmentId: string,
+    data: HousingTransferInput,
+  ): Promise<HousingAssignment> {
     return this.transferAssignment(assignmentId, data);
   },
 
-  async respondOffer(offerId: string, data: HousingOfferRespondInput): Promise<HousingOffer> {
+  async respondOffer(
+    offerId: string,
+    data: HousingOfferRespondInput,
+  ): Promise<HousingOffer> {
     return this.respondToOffer(offerId, data);
   },
 };

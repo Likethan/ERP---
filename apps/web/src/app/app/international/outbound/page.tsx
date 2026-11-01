@@ -24,7 +24,8 @@ export default function OutboundTrackingPage() {
   const [applications, setApplications] = useState<MobilityApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedAppForPreDeparture, setSelectedAppForPreDeparture] = useState<MobilityApplication | null>(null);
+  const [selectedAppForPreDeparture, setSelectedAppForPreDeparture] =
+    useState<MobilityApplication | null>(null);
 
   // Pre-departure form
   const [visaRef, setVisaRef] = useState("");
@@ -63,9 +64,11 @@ export default function OutboundTrackingPage() {
         selectedAppForPreDeparture.id,
         checklist,
         visaRef,
-        insuranceNumber
+        insuranceNumber,
       );
-      alert("Pre-departure checklist committed! Status transitioned to Active Mobility.");
+      alert(
+        "Pre-departure checklist committed! Status transitioned to Active Mobility.",
+      );
       setSelectedAppForPreDeparture(null);
       loadData();
     } catch (err) {
@@ -77,7 +80,8 @@ export default function OutboundTrackingPage() {
   }
 
   const filtered = applications.filter((a) => {
-    const text = `${a.student_name || ""} ${a.program_title || ""} ${a.partner_name || ""}`.toLowerCase();
+    const text =
+      `${a.student_name || ""} ${a.program_title || ""} ${a.partner_name || ""}`.toLowerCase();
     return text.includes(search.toLowerCase());
   });
 
@@ -93,7 +97,8 @@ export default function OutboundTrackingPage() {
               Outbound Student Mobility & Pre-Departure Tracking
             </h2>
             <p className="text-xs text-slate-400">
-              Manage international visas, health coverage, pre-departure clearances, and overseas student safety
+              Manage international visas, health coverage, pre-departure
+              clearances, and overseas student safety
             </p>
           </div>
         </div>
@@ -141,19 +146,27 @@ export default function OutboundTrackingPage() {
                   </tr>
                 ) : (
                   filtered.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={app.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-white">
-                          {app.student_name || app.studentName || "Student Scholar"}
+                          {app.student_name ||
+                            app.studentName ||
+                            "Student Scholar"}
                         </div>
                         <div className="text-[11px] text-slate-500 font-mono mt-0.5">
-                          {app.student_roll_number || app.application_reference_number}
+                          {app.student_roll_number ||
+                            app.application_reference_number}
                         </div>
                       </td>
 
                       <td className="py-3.5 px-4 font-medium text-slate-200">
                         <div>{app.partner_name || app.partnerName}</div>
-                        <div className="text-[11px] text-cyan-400">{app.partner_country || "International"}</div>
+                        <div className="text-[11px] text-cyan-400">
+                          {app.partner_country || "International"}
+                        </div>
                       </td>
 
                       <td className="py-3.5 px-4 text-slate-300">
@@ -189,8 +202,14 @@ export default function OutboundTrackingPage() {
                         <button
                           onClick={() => {
                             setSelectedAppForPreDeparture(app);
-                            setVisaRef(app.pre_departure_checklist?.visa_reference_number || "");
-                            setInsuranceNumber(app.pre_departure_checklist?.insurance_policy_number || "");
+                            setVisaRef(
+                              app.pre_departure_checklist
+                                ?.visa_reference_number || "",
+                            );
+                            setInsuranceNumber(
+                              app.pre_departure_checklist
+                                ?.insurance_policy_number || "",
+                            );
                           }}
                           className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-medium transition-colors"
                         >
@@ -221,10 +240,14 @@ export default function OutboundTrackingPage() {
                 Pre-Departure Checklist & Travel Clearance
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Verify mandatory travel documents, health insurance, and emergency contacts before departure
+                Verify mandatory travel documents, health insurance, and
+                emergency contacts before departure
               </p>
 
-              <form onSubmit={handlePreDepartureSubmit} className="mt-5 space-y-4">
+              <form
+                onSubmit={handlePreDepartureSubmit}
+                className="mt-5 space-y-4"
+              >
                 <div>
                   <label className="text-xs font-medium text-slate-300 block mb-1">
                     Student Visa Reference Number *
@@ -258,7 +281,12 @@ export default function OutboundTrackingPage() {
                     <input
                       type="checkbox"
                       checked={checklist.medical_clearance}
-                      onChange={(e) => setChecklist({ ...checklist, medical_clearance: e.target.checked })}
+                      onChange={(e) =>
+                        setChecklist({
+                          ...checklist,
+                          medical_clearance: e.target.checked,
+                        })
+                      }
                       className="rounded text-emerald-500"
                     />
                     <span>Medical and vaccination clearance verified</span>
@@ -268,7 +296,12 @@ export default function OutboundTrackingPage() {
                     <input
                       type="checkbox"
                       checked={checklist.housing_secured}
-                      onChange={(e) => setChecklist({ ...checklist, housing_secured: e.target.checked })}
+                      onChange={(e) =>
+                        setChecklist({
+                          ...checklist,
+                          housing_secured: e.target.checked,
+                        })
+                      }
                       className="rounded text-emerald-500"
                     />
                     <span>Overseas accommodation / campus dorm confirmed</span>
@@ -278,7 +311,12 @@ export default function OutboundTrackingPage() {
                     <input
                       type="checkbox"
                       checked={checklist.learning_agreement_signed}
-                      onChange={(e) => setChecklist({ ...checklist, learning_agreement_signed: e.target.checked })}
+                      onChange={(e) =>
+                        setChecklist({
+                          ...checklist,
+                          learning_agreement_signed: e.target.checked,
+                        })
+                      }
                       className="rounded text-emerald-500"
                     />
                     <span>Learning Agreement approved by Academic Council</span>
@@ -288,10 +326,17 @@ export default function OutboundTrackingPage() {
                     <input
                       type="checkbox"
                       checked={checklist.emergency_briefing_attended}
-                      onChange={(e) => setChecklist({ ...checklist, emergency_briefing_attended: e.target.checked })}
+                      onChange={(e) =>
+                        setChecklist({
+                          ...checklist,
+                          emergency_briefing_attended: e.target.checked,
+                        })
+                      }
                       className="rounded text-emerald-500"
                     />
-                    <span>Pre-departure international orientation attended</span>
+                    <span>
+                      Pre-departure international orientation attended
+                    </span>
                   </label>
                 </div>
 

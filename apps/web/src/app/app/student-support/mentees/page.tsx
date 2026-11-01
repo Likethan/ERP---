@@ -76,7 +76,8 @@ export default function MenteeDirectoryPage() {
               Faculty Mentee Directory
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Track student progress, schedule mentoring touchpoints, and review individual growth milestones.
+              Track student progress, schedule mentoring touchpoints, and review
+              individual growth milestones.
             </p>
           </div>
           <div className="flex gap-2">
@@ -102,13 +103,28 @@ export default function MenteeDirectoryPage() {
         />
         <StatCard
           title="Active Development Plans"
-          value={loading ? "..." : mentees.filter((m) => m.has_active_development_plan).length.toString()}
+          value={
+            loading
+              ? "..."
+              : mentees
+                  .filter((m) => m.has_active_development_plan)
+                  .length.toString()
+          }
           icon={<Sparkles className="h-5 w-5 text-purple-400" />}
           description="With published IDP goals"
         />
         <StatCard
           title="Pending Tasks"
-          value={loading ? "..." : mentees.reduce((acc, m) => acc + (m.pending_action_items_count ?? 0), 0).toString()}
+          value={
+            loading
+              ? "..."
+              : mentees
+                  .reduce(
+                    (acc, m) => acc + (m.pending_action_items_count ?? 0),
+                    0,
+                  )
+                  .toString()
+          }
           icon={<Clock className="h-5 w-5 text-orange-400" />}
           description="Open mentee action items"
         />
@@ -147,7 +163,9 @@ export default function MenteeDirectoryPage() {
 
       {/* Mentees Grid / List */}
       {loading ? (
-        <div className="py-12 text-center text-sm text-slate-500">Loading assigned mentees...</div>
+        <div className="py-12 text-center text-sm text-slate-500">
+          Loading assigned mentees...
+        </div>
       ) : filteredMentees.length === 0 ? (
         <Card className="border-slate-800 bg-slate-900/60 p-8 text-center text-slate-400">
           No assigned mentees found matching your search.
@@ -161,17 +179,25 @@ export default function MenteeDirectoryPage() {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-semibold text-white text-sm">{mentee.student_name || mentee.studentName}</h3>
-                  <div className="text-xs text-slate-400">{mentee.student_reg_no || mentee.rollNumber}</div>
+                  <h3 className="font-semibold text-white text-sm">
+                    {mentee.student_name || mentee.studentName}
+                  </h3>
+                  <div className="text-xs text-slate-400">
+                    {mentee.student_reg_no || mentee.rollNumber}
+                  </div>
                   <div className="text-[11px] text-indigo-400 mt-0.5">
-                    {mentee.program_name || mentee.programName} • {mentee.current_year_semester || mentee.academicYear}
+                    {mentee.program_name || mentee.programName} •{" "}
+                    {mentee.current_year_semester || mentee.academicYear}
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-xs font-semibold text-emerald-400">
                     CGPA: {mentee.cgpa?.toFixed(2) ?? "N/A"}
                   </div>
-                  <Badge variant="outline" className="mt-1 border-slate-700 text-slate-400 text-[10px]">
+                  <Badge
+                    variant="outline"
+                    className="mt-1 border-slate-700 text-slate-400 text-[10px]"
+                  >
                     {mentee.academic_status ?? "Good Standing"}
                   </Badge>
                 </div>
@@ -188,7 +214,9 @@ export default function MenteeDirectoryPage() {
                 <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
                   <div
                     className="h-full bg-indigo-500 rounded-full"
-                    style={{ width: `${mentee.development_progress_pct ?? 0}%` }}
+                    style={{
+                      width: `${mentee.development_progress_pct ?? 0}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -199,7 +227,9 @@ export default function MenteeDirectoryPage() {
                   <span>Last Session:</span>
                   <span className="text-slate-200">
                     {mentee.last_mentoring_date
-                      ? new Date(mentee.last_mentoring_date).toLocaleDateString()
+                      ? new Date(
+                          mentee.last_mentoring_date,
+                        ).toLocaleDateString()
                       : "No prior sessions"}
                   </span>
                 </div>
@@ -219,14 +249,27 @@ export default function MenteeDirectoryPage() {
 
               {/* Action Buttons */}
               <div className="pt-2 flex items-center justify-between gap-2">
-                <Link href={`/app/student-support/development-plans?student_id=${mentee.student_id || mentee.studentId}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full text-xs border-slate-700 hover:bg-slate-800">
+                <Link
+                  href={`/app/student-support/development-plans?student_id=${mentee.student_id || mentee.studentId}`}
+                  className="flex-1"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs border-slate-700 hover:bg-slate-800"
+                  >
                     <Sparkles className="mr-1.5 h-3.5 w-3.5 text-purple-400" />
                     IDP Goals
                   </Button>
                 </Link>
-                <Link href={`/app/student-support/sessions?student_id=${mentee.student_id || mentee.studentId}`} className="flex-1">
-                  <Button size="sm" className="w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Link
+                  href={`/app/student-support/sessions?student_id=${mentee.student_id || mentee.studentId}`}
+                  className="flex-1"
+                >
+                  <Button
+                    size="sm"
+                    className="w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+                  >
                     <Calendar className="mr-1.5 h-3.5 w-3.5" />
                     Session
                   </Button>

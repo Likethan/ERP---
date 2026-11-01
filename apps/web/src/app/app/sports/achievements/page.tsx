@@ -31,7 +31,8 @@ export default function AchievementsPage() {
     level: "ZONE",
     awardDate: "2026-10-18",
     certificateNumber: "CERT-SZ-2026-091",
-    citation: "Demonstrated exceptional backline leadership and conceded zero open-play goals.",
+    citation:
+      "Demonstrated exceptional backline leadership and conceded zero open-play goals.",
   });
 
   useEffect(() => {
@@ -66,7 +67,9 @@ export default function AchievementsPage() {
     });
 
     if (res.success && res.data) {
-      setToastMessage(`Achievement for ${res.data.participantName} archived into university hall of fame.`);
+      setToastMessage(
+        `Achievement for ${res.data.participantName} archived into university hall of fame.`,
+      );
       setIsModalOpen(false);
       loadAchievements();
     }
@@ -74,10 +77,16 @@ export default function AchievementsPage() {
 
   const filtered = achievements.filter((a) => {
     const matchesSearch =
-      (a.participantName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (a.participantName || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (a.competitionName || "").toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = awardFilter === "all" || (a.medal && a.medal.toLowerCase() === awardFilter.toLowerCase());
+      (a.competitionName || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+    const matchesType =
+      awardFilter === "all" ||
+      (a.medal && a.medal.toLowerCase() === awardFilter.toLowerCase());
     return matchesSearch && matchesType;
   });
 
@@ -92,7 +101,8 @@ export default function AchievementsPage() {
             Athletic Honors & Hall of Fame
           </h1>
           <p className="text-sm text-slate-500">
-            Recognized university records, championship medals, and verified state/national citations.
+            Recognized university records, championship medals, and verified
+            state/national citations.
           </p>
         </div>
         <button
@@ -110,7 +120,10 @@ export default function AchievementsPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{toastMessage}</span>
           </div>
-          <button onClick={() => setToastMessage(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -159,9 +172,16 @@ export default function AchievementsPage() {
             <Star className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">State / University Honors</p>
+            <p className="text-xs text-slate-500 font-medium">
+              State / University Honors
+            </p>
             <p className="text-xl font-bold text-slate-900">
-              {achievements.filter((a) => a.level === "STATE" || a.level === "NATIONAL").length} Citations
+              {
+                achievements.filter(
+                  (a) => a.level === "STATE" || a.level === "NATIONAL",
+                ).length
+              }{" "}
+              Citations
             </p>
           </div>
         </div>
@@ -209,19 +229,25 @@ export default function AchievementsPage() {
                       item.medal === "GOLD"
                         ? "bg-amber-100 text-amber-900 border border-amber-300"
                         : item.medal === "SILVER"
-                        ? "bg-slate-200 text-slate-800"
-                        : "bg-orange-100 text-orange-900"
+                          ? "bg-slate-200 text-slate-800"
+                          : "bg-orange-100 text-orange-900"
                     }`}
                   >
                     {item.medal || item.level}
                   </span>
                 </div>
 
-                <h3 className="font-bold text-slate-900 mt-3 text-base">{item.title}</h3>
-                <p className="text-xs text-indigo-600 font-semibold mt-0.5">{item.participantName}</p>
+                <h3 className="font-bold text-slate-900 mt-3 text-base">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-indigo-600 font-semibold mt-0.5">
+                  {item.participantName}
+                </p>
 
                 <div className="mt-3 text-xs text-slate-600 space-y-1.5">
-                  <p className="text-slate-500 font-medium">{item.competitionName}</p>
+                  <p className="text-slate-500 font-medium">
+                    {item.competitionName}
+                  </p>
                   {item.citation && (
                     <blockquote className="italic border-l-2 border-indigo-400 pl-2 text-slate-600 text-[11px] my-2">
                       &quot;{item.citation}&quot;
@@ -249,26 +275,39 @@ export default function AchievementsPage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">Record Athletic Honor / Laurels</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Record Athletic Honor / Laurels
+            </h2>
             <form onSubmit={handleCreate} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Athlete Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Athlete Name
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Rohan Sharma"
                   value={formData.participantName}
-                  onChange={(e) => setFormData({ ...formData, participantName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      participantName: e.target.value,
+                    })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Medal</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Medal
+                  </label>
                   <select
                     value={formData.medal}
-                    onChange={(e) => setFormData({ ...formData, medal: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, medal: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="GOLD">Gold Medal</option>
@@ -277,10 +316,14 @@ export default function AchievementsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Sport Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Sport Category
+                  </label>
                   <select
                     value={formData.sport}
-                    onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sport: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="Football">Football</option>
@@ -293,56 +336,82 @@ export default function AchievementsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Award Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Award Title
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Competition / Meet</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Competition / Meet
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.competitionName}
-                  onChange={(e) => setFormData({ ...formData, competitionName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      competitionName: e.target.value,
+                    })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Award Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Award Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={formData.awardDate}
-                    onChange={(e) => setFormData({ ...formData, awardDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, awardDate: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Certificate Number</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Certificate Number
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.certificateNumber}
-                    onChange={(e) => setFormData({ ...formData, certificateNumber: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        certificateNumber: e.target.value,
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Citation / Remarks</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Citation / Remarks
+                </label>
                 <textarea
                   rows={2}
                   value={formData.citation}
-                  onChange={(e) => setFormData({ ...formData, citation: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, citation: e.target.value })
+                  }
                   className="w-full text-xs border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>

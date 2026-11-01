@@ -19,7 +19,9 @@ export default function SustainabilityImportsPage() {
   const [batches, setBatches] = useState<SustainabilityImportBatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string>("TANGEDCO_HighTension_PowerInvoice_June2024.csv");
+  const [selectedFile, setSelectedFile] = useState<string>(
+    "TANGEDCO_HighTension_PowerInvoice_June2024.csv",
+  );
 
   useEffect(() => {
     async function load() {
@@ -72,7 +74,8 @@ export default function SustainabilityImportsPage() {
           Bulk Upload Utility Invoices & Sub-Meter Logs
         </h2>
         <p className="text-xs text-slate-400 mb-4">
-          Supported file formats: CSV, TSV with automated columns for period start, period end, reading value, and tariff code.
+          Supported file formats: CSV, TSV with automated columns for period
+          start, period end, reading value, and tariff code.
         </p>
 
         <div className="border-2 border-dashed border-slate-800 hover:border-emerald-600/60 rounded-xl p-8 text-center bg-slate-950/40 transition">
@@ -109,7 +112,9 @@ export default function SustainabilityImportsPage() {
             <FileText className="w-4 h-4 text-emerald-400" />
             Batch Reconciliation History
           </h3>
-          <span className="text-xs text-slate-400">Total batches: {batches.length}</span>
+          <span className="text-xs text-slate-400">
+            Total batches: {batches.length}
+          </span>
         </div>
 
         {loading ? (
@@ -151,7 +156,9 @@ export default function SustainabilityImportsPage() {
                     {b.error_count === 0 ? (
                       <span className="text-slate-400">0</span>
                     ) : (
-                      <span className="text-red-400 font-bold">{b.error_count}</span>
+                      <span className="text-red-400 font-bold">
+                        {b.error_count}
+                      </span>
                     )}
                   </td>
                   <td className="py-3.5 px-4">
@@ -178,4 +185,3 @@ export default function SustainabilityImportsPage() {
     </div>
   );
 }
-

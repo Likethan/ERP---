@@ -28,16 +28,56 @@ interface NavTab {
 }
 
 const NAV_TABS: NavTab[] = [
-  { label: "Dashboard", href: "/app/research", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { label: "Projects", href: "/app/research/projects", icon: <FolderKanban className="h-4 w-4" /> },
-  { label: "Opportunities", href: "/app/research/opportunities", icon: <Sparkles className="h-4 w-4" /> },
-  { label: "Proposals", href: "/app/research/proposals", icon: <FileEdit className="h-4 w-4" /> },
-  { label: "Agreements & Awards", href: "/app/research/agreements", icon: <Award className="h-4 w-4" /> },
-  { label: "Budgets & Ledger", href: "/app/research/budgets", icon: <DollarSign className="h-4 w-4" /> },
-  { label: "Milestones", href: "/app/research/milestones", icon: <FileCheck2 className="h-4 w-4" /> },
-  { label: "Ethics & Compliance", href: "/app/research/ethics", icon: <ShieldCheck className="h-4 w-4" /> },
-  { label: "Outputs & IP", href: "/app/research/outputs", icon: <Lightbulb className="h-4 w-4" /> },
-  { label: "Analytics", href: "/app/research/analytics", icon: <BarChart3 className="h-4 w-4" /> },
+  {
+    label: "Dashboard",
+    href: "/app/research",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+  },
+  {
+    label: "Projects",
+    href: "/app/research/projects",
+    icon: <FolderKanban className="h-4 w-4" />,
+  },
+  {
+    label: "Opportunities",
+    href: "/app/research/opportunities",
+    icon: <Sparkles className="h-4 w-4" />,
+  },
+  {
+    label: "Proposals",
+    href: "/app/research/proposals",
+    icon: <FileEdit className="h-4 w-4" />,
+  },
+  {
+    label: "Agreements & Awards",
+    href: "/app/research/agreements",
+    icon: <Award className="h-4 w-4" />,
+  },
+  {
+    label: "Budgets & Ledger",
+    href: "/app/research/budgets",
+    icon: <DollarSign className="h-4 w-4" />,
+  },
+  {
+    label: "Milestones",
+    href: "/app/research/milestones",
+    icon: <FileCheck2 className="h-4 w-4" />,
+  },
+  {
+    label: "Ethics & Compliance",
+    href: "/app/research/ethics",
+    icon: <ShieldCheck className="h-4 w-4" />,
+  },
+  {
+    label: "Outputs & IP",
+    href: "/app/research/outputs",
+    icon: <Lightbulb className="h-4 w-4" />,
+  },
+  {
+    label: "Analytics",
+    href: "/app/research/analytics",
+    icon: <BarChart3 className="h-4 w-4" />,
+  },
 ];
 
 export function ResearchNav() {
@@ -96,7 +136,7 @@ export function ResearchNav() {
                 "flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-t-lg transition-all border-b-2 whitespace-nowrap",
                 isActive
                   ? "border-emerald-500 text-emerald-400 bg-emerald-500/10"
-                  : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                  : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40",
               )}
             >
               {tab.icon}

@@ -19,11 +19,24 @@ import {
   RiskLevel,
 } from "@/types/legal";
 
-export const VALID_CONTRACT_TRANSITIONS: Record<ContractStatus, ContractStatus[]> = {
+export const VALID_CONTRACT_TRANSITIONS: Record<
+  ContractStatus,
+  ContractStatus[]
+> = {
   DRAFT: ["INTERNAL_REVIEW", "WITHDRAWN", "ON_HOLD"],
   INTERNAL_REVIEW: ["DEPARTMENT_APPROVAL", "REJECTED", "DRAFT", "ON_HOLD"],
-  DEPARTMENT_APPROVAL: ["LEGAL_REVIEW", "REJECTED", "INTERNAL_REVIEW", "ON_HOLD"],
-  LEGAL_REVIEW: ["AUTHORIZED_APPROVAL", "REJECTED", "DEPARTMENT_APPROVAL", "ON_HOLD"],
+  DEPARTMENT_APPROVAL: [
+    "LEGAL_REVIEW",
+    "REJECTED",
+    "INTERNAL_REVIEW",
+    "ON_HOLD",
+  ],
+  LEGAL_REVIEW: [
+    "AUTHORIZED_APPROVAL",
+    "REJECTED",
+    "DEPARTMENT_APPROVAL",
+    "ON_HOLD",
+  ],
   AUTHORIZED_APPROVAL: ["READY_FOR_EXECUTION", "REJECTED", "ON_HOLD"],
   READY_FOR_EXECUTION: ["EXECUTED", "ON_HOLD", "REJECTED"],
   EXECUTED: ["ACTIVE"],
@@ -48,7 +61,7 @@ export const VALID_CONTRACT_TRANSITIONS: Record<ContractStatus, ContractStatus[]
 
 export function canTransitionContract(
   current: ContractStatus,
-  target: ContractStatus
+  target: ContractStatus,
 ): boolean {
   if (current === target) return false;
   const allowed = VALID_CONTRACT_TRANSITIONS[current] || [];
@@ -72,7 +85,7 @@ export interface RiskScoreCalculation {
 
 export function calculateRiskMatrix(
   likelihood: number,
-  impact: number
+  impact: number,
 ): RiskScoreCalculation {
   const safeL = Math.max(1, Math.min(5, Math.round(likelihood)));
   const safeI = Math.max(1, Math.min(5, Math.round(impact)));
@@ -120,7 +133,7 @@ export function calculateRiskMatrix(
 
 export function isObligationOverdue(
   dueDateOrObl: string | ContractObligation,
-  status?: ObligationStatus
+  status?: ObligationStatus,
 ): boolean {
   if (typeof dueDateOrObl === "object" && dueDateOrObl !== null) {
     const obl = dueDateOrObl as ContractObligation;
@@ -144,7 +157,7 @@ export interface ObligationHealthMetrics {
 }
 
 export function calculateObligationHealth(
-  obligations: ContractObligation[]
+  obligations: ContractObligation[],
 ): ObligationHealthMetrics {
   const total = obligations.length;
   if (total === 0) {
@@ -209,21 +222,42 @@ export function getContractStatusBadge(status: ContractStatus): ContractBadge {
     case "DRAFT":
       return makeBadge("Draft", "bg-slate-100 text-slate-700 border-slate-200");
     case "INTERNAL_REVIEW":
-      return makeBadge("Internal Review", "bg-blue-50 text-blue-700 border-blue-200");
+      return makeBadge(
+        "Internal Review",
+        "bg-blue-50 text-blue-700 border-blue-200",
+      );
     case "DEPARTMENT_APPROVAL":
-      return makeBadge("Dept Approval", "bg-indigo-50 text-indigo-700 border-indigo-200");
+      return makeBadge(
+        "Dept Approval",
+        "bg-indigo-50 text-indigo-700 border-indigo-200",
+      );
     case "LEGAL_REVIEW":
-      return makeBadge("Legal Review", "bg-purple-50 text-purple-700 border-purple-200");
+      return makeBadge(
+        "Legal Review",
+        "bg-purple-50 text-purple-700 border-purple-200",
+      );
     case "AUTHORIZED_APPROVAL":
-      return makeBadge("Executive Signoff", "bg-violet-50 text-violet-700 border-violet-200");
+      return makeBadge(
+        "Executive Signoff",
+        "bg-violet-50 text-violet-700 border-violet-200",
+      );
     case "READY_FOR_EXECUTION":
-      return makeBadge("Ready for Execution", "bg-amber-50 text-amber-700 border-amber-200");
+      return makeBadge(
+        "Ready for Execution",
+        "bg-amber-50 text-amber-700 border-amber-200",
+      );
     case "EXECUTED":
       return makeBadge("Executed", "bg-teal-50 text-teal-700 border-teal-200");
     case "ACTIVE":
-      return makeBadge("Active", "bg-emerald-50 text-emerald-700 border-emerald-200");
+      return makeBadge(
+        "Active",
+        "bg-emerald-50 text-emerald-700 border-emerald-200",
+      );
     case "EXPIRING":
-      return makeBadge("Expiring Soon", "bg-rose-50 text-rose-700 border-rose-200 animate-pulse");
+      return makeBadge(
+        "Expiring Soon",
+        "bg-rose-50 text-rose-700 border-rose-200 animate-pulse",
+      );
     case "RENEWED":
       return makeBadge("Renewed", "bg-cyan-50 text-cyan-700 border-cyan-200");
     case "TERMINATED":
@@ -233,17 +267,29 @@ export function getContractStatusBadge(status: ContractStatus): ContractBadge {
     case "REJECTED":
       return makeBadge("Rejected", "bg-red-50 text-red-700 border-red-200");
     case "WITHDRAWN":
-      return makeBadge("Withdrawn", "bg-zinc-100 text-zinc-700 border-zinc-200");
+      return makeBadge(
+        "Withdrawn",
+        "bg-zinc-100 text-zinc-700 border-zinc-200",
+      );
     case "ON_HOLD":
-      return makeBadge("On Hold", "bg-yellow-50 text-yellow-700 border-yellow-200");
+      return makeBadge(
+        "On Hold",
+        "bg-yellow-50 text-yellow-700 border-yellow-200",
+      );
     case "ARCHIVED":
-      return makeBadge("Archived", "bg-stone-100 text-stone-600 border-stone-200");
+      return makeBadge(
+        "Archived",
+        "bg-stone-100 text-stone-600 border-stone-200",
+      );
     default:
       return makeBadge(status, "bg-slate-100 text-slate-700 border-slate-200");
   }
 }
 
-export function formatCurrency(amount?: number | null, currency = "USD"): string {
+export function formatCurrency(
+  amount?: number | null,
+  currency = "USD",
+): string {
   if (amount === undefined || amount === null) return "—";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -278,7 +324,9 @@ export function getExecutionMethodLabel(method?: string | null): string {
     case "HYBRID_CONFIRMED":
       return "Hybrid Counterpart Execution";
     default:
-      return method ? method.replace(/_/g, " ") : "External Signature Verification";
+      return method
+        ? method.replace(/_/g, " ")
+        : "External Signature Verification";
   }
 }
 

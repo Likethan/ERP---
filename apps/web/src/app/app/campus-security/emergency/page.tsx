@@ -35,7 +35,8 @@ export default function EmergencyResponsePage() {
   const [isInitiateModalOpen, setIsInitiateModalOpen] = useState(false);
   const [initiating, setInitiating] = useState(false);
 
-  const [completingTask, setCompletingTask] = useState<EmergencyResponseTask | null>(null);
+  const [completingTask, setCompletingTask] =
+    useState<EmergencyResponseTask | null>(null);
   const [taskNotes, setTaskNotes] = useState("");
   const [taskSubmitting, setTaskSubmitting] = useState(false);
 
@@ -43,7 +44,10 @@ export default function EmergencyResponsePage() {
   const [aarReport, setAarReport] = useState("");
   const [aarSubmitting, setAarSubmitting] = useState(false);
 
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Form for new event
   const [eventForm, setEventForm] = useState({
@@ -52,7 +56,8 @@ export default function EmergencyResponsePage() {
     severity: "EMERGENCY" as EmergencySeverity,
     affected_campus_areas: "Block B & Engineering Concourse",
     coordinator_name: "Chief Safety Officer",
-    emergency_broadcast_message: "Code Amber: Evacuate Block B immediately to Assembly Point 2.",
+    emergency_broadcast_message:
+      "Code Amber: Evacuate Block B immediately to Assembly Point 2.",
   });
 
   const loadData = async () => {
@@ -62,7 +67,9 @@ export default function EmergencyResponsePage() {
       setEvents(data);
       if (data.length > 0 && !selectedEventId) {
         // Default select first active or first event
-        const active = data.find((e) => e.status === "ACTIVE" || e.status === "CONTAINED");
+        const active = data.find(
+          (e) => e.status === "ACTIVE" || e.status === "CONTAINED",
+        );
         setSelectedEventId(active ? active.id : data[0].id);
       }
     } catch (err) {
@@ -114,7 +121,10 @@ export default function EmergencyResponsePage() {
 
     try {
       setTaskSubmitting(true);
-      await CampusSecurityService.completeEmergencyTask(completingTask.id, taskNotes);
+      await CampusSecurityService.completeEmergencyTask(
+        completingTask.id,
+        taskNotes,
+      );
       setNotification({
         type: "success",
         message: `Task "${completingTask.task_title}" marked as COMPLETED.`,
@@ -138,10 +148,14 @@ export default function EmergencyResponsePage() {
 
     try {
       setAarSubmitting(true);
-      await CampusSecurityService.submitAfterActionReport(selectedEventId, aarReport);
+      await CampusSecurityService.submitAfterActionReport(
+        selectedEventId,
+        aarReport,
+      );
       setNotification({
         type: "success",
-        message: "After-Action Report (AAR) successfully archived into institutional audit records.",
+        message:
+          "After-Action Report (AAR) successfully archived into institutional audit records.",
       });
       setIsAarModalOpen(false);
       setAarReport("");
@@ -161,7 +175,8 @@ export default function EmergencyResponsePage() {
       await CampusSecurityService.closeEmergencyEvent(eventId);
       setNotification({
         type: "success",
-        message: "Emergency event safely closed. Normal campus operations restored.",
+        message:
+          "Emergency event safely closed. Normal campus operations restored.",
       });
       await loadData();
     } catch {
@@ -172,8 +187,11 @@ export default function EmergencyResponsePage() {
     }
   };
 
-  const selectedEvent = events.find((e) => e.id === selectedEventId) || events[0];
-  const activeEvents = events.filter((e) => e.status === "ACTIVE" || e.status === "CONTAINED");
+  const selectedEvent =
+    events.find((e) => e.id === selectedEventId) || events[0];
+  const activeEvents = events.filter(
+    (e) => e.status === "ACTIVE" || e.status === "CONTAINED",
+  );
 
   const getSeverityBadge = (severity: EmergencySeverity) => {
     switch (severity) {
@@ -244,7 +262,8 @@ export default function EmergencyResponsePage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Institutional broadcast alerts, evacuation coordination, first-responder checklist tracking, and after-action reporting.
+            Institutional broadcast alerts, evacuation coordination,
+            first-responder checklist tracking, and after-action reporting.
           </p>
         </div>
 
@@ -285,25 +304,33 @@ export default function EmergencyResponsePage() {
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 font-bold text-lg">
               <Siren className="w-6 h-6 animate-pulse" />
-              <span>ACTIVE CRISIS IN PROGRESS — EMERGENCY PROTOCOLS ENGAGED</span>
+              <span>
+                ACTIVE CRISIS IN PROGRESS — EMERGENCY PROTOCOLS ENGAGED
+              </span>
             </div>
             <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-sm">
-              {activeEvents.length} Active Event{activeEvents.length > 1 ? "s" : ""}
+              {activeEvents.length} Active Event
+              {activeEvents.length > 1 ? "s" : ""}
             </span>
           </div>
 
           <div className="bg-white/10 rounded-lg p-3 text-sm backdrop-blur-sm">
             <div className="font-semibold text-white/90">
-              Primary Threat: {activeEvents[0].title} ({activeEvents[0].event_type})
+              Primary Threat: {activeEvents[0].title} (
+              {activeEvents[0].event_type})
             </div>
             <div className="text-white/80 text-xs mt-1">
-              Affected Areas: <strong>{activeEvents[0].affected_campus_areas}</strong> | Incident Coordinator:{" "}
+              Affected Areas:{" "}
+              <strong>{activeEvents[0].affected_campus_areas}</strong> |
+              Incident Coordinator:{" "}
               <strong>{activeEvents[0].coordinator_name}</strong>
             </div>
             {activeEvents[0].emergency_broadcast_message && (
               <div className="mt-2 text-xs bg-black/20 p-2 rounded text-white font-mono flex items-center gap-2">
                 <Radio className="w-4 h-4 shrink-0 text-red-300 animate-pulse" />
-                <span>Broadcast: "{activeEvents[0].emergency_broadcast_message}"</span>
+                <span>
+                  Broadcast: "{activeEvents[0].emergency_broadcast_message}"
+                </span>
               </div>
             )}
           </div>
@@ -346,7 +373,9 @@ export default function EmergencyResponsePage() {
                     </span>
                     {getStatusBadge(ev.status)}
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mt-1 text-sm">{ev.title}</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white mt-1 text-sm">
+                    {ev.title}
+                  </h3>
                   <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
                     <span>{ev.event_type.replace(/_/g, " ")}</span>
                     <span>•</span>
@@ -371,11 +400,14 @@ export default function EmergencyResponsePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">{selectedEvent.title}</h2>
+                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                        {selectedEvent.title}
+                      </h2>
                       {getStatusBadge(selectedEvent.status)}
                     </div>
                     <div className="font-mono text-xs text-slate-500 mt-0.5">
-                      Code: {selectedEvent.event_code} | Initiated: {new Date(selectedEvent.initiated_at).toLocaleString()}
+                      Code: {selectedEvent.event_code} | Initiated:{" "}
+                      {new Date(selectedEvent.initiated_at).toLocaleString()}
                     </div>
                   </div>
 
@@ -399,13 +431,17 @@ export default function EmergencyResponsePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg">
                   <div>
-                    <span className="text-slate-500 uppercase font-semibold">Affected Campus Areas:</span>
+                    <span className="text-slate-500 uppercase font-semibold">
+                      Affected Campus Areas:
+                    </span>
                     <div className="font-medium text-slate-900 dark:text-slate-200 mt-0.5">
                       {selectedEvent.affected_campus_areas}
                     </div>
                   </div>
                   <div>
-                    <span className="text-slate-500 uppercase font-semibold">Incident Commander:</span>
+                    <span className="text-slate-500 uppercase font-semibold">
+                      Incident Commander:
+                    </span>
                     <div className="font-medium text-slate-900 dark:text-slate-200 mt-0.5">
                       {selectedEvent.coordinator_name}
                     </div>
@@ -447,15 +483,18 @@ export default function EmergencyResponsePage() {
                     </h3>
                   </div>
                   <span className="text-xs text-slate-500">
-                    {selectedEvent.tasks?.filter((t) => t.status === "COMPLETED").length || 0} of{" "}
-                    {selectedEvent.tasks?.length || 0} Tasks Completed
+                    {selectedEvent.tasks?.filter(
+                      (t) => t.status === "COMPLETED",
+                    ).length || 0}{" "}
+                    of {selectedEvent.tasks?.length || 0} Tasks Completed
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   {!selectedEvent.tasks || selectedEvent.tasks.length === 0 ? (
                     <div className="text-center py-6 text-slate-400 text-xs">
-                      No response checklist tasks generated for this emergency event.
+                      No response checklist tasks generated for this emergency
+                      event.
                     </div>
                   ) : (
                     selectedEvent.tasks.map((task) => (
@@ -491,9 +530,17 @@ export default function EmergencyResponsePage() {
                             </div>
 
                             <div className="text-xs text-slate-500 flex items-center gap-2">
-                              <span>Role: {task.assigned_to_role || "Incident Command"}</span>
+                              <span>
+                                Role:{" "}
+                                {task.assigned_to_role || "Incident Command"}
+                              </span>
                               {task.completed_at && (
-                                <span>• Completed: {new Date(task.completed_at).toLocaleTimeString()}</span>
+                                <span>
+                                  • Completed:{" "}
+                                  {new Date(
+                                    task.completed_at,
+                                  ).toLocaleTimeString()}
+                                </span>
                               )}
                             </div>
 
@@ -554,7 +601,9 @@ export default function EmergencyResponsePage() {
                   required
                   placeholder="e.g. Chemical Fume Alert in Chemistry Complex"
                   value={eventForm.title}
-                  onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setEventForm({ ...eventForm, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -566,15 +615,28 @@ export default function EmergencyResponsePage() {
                   </label>
                   <select
                     value={eventForm.event_type}
-                    onChange={(e) => setEventForm({ ...eventForm, event_type: e.target.value as any })}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        event_type: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
                     <option value="FIRE_ALARM">Fire Alarm / Smoke</option>
-                    <option value="SEVERE_WEATHER">Severe Weather / Storm</option>
+                    <option value="SEVERE_WEATHER">
+                      Severe Weather / Storm
+                    </option>
                     <option value="MEDICAL_EMERGENCY">Medical Emergency</option>
-                    <option value="ACTIVE_THREAT">Active Security Threat</option>
-                    <option value="INFRASTRUCTURE_FAILURE">Power / Infrastructure Failure</option>
-                    <option value="HAZMAT_LEAK">Hazardous Materials Leak</option>
+                    <option value="ACTIVE_THREAT">
+                      Active Security Threat
+                    </option>
+                    <option value="INFRASTRUCTURE_FAILURE">
+                      Power / Infrastructure Failure
+                    </option>
+                    <option value="HAZMAT_LEAK">
+                      Hazardous Materials Leak
+                    </option>
                     <option value="NATURAL_DISASTER">Earthquake / Flood</option>
                   </select>
                 </div>
@@ -584,7 +646,12 @@ export default function EmergencyResponsePage() {
                   </label>
                   <select
                     value={eventForm.severity}
-                    onChange={(e) => setEventForm({ ...eventForm, severity: e.target.value as any })}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        severity: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
                     <option value="ADVISORY">ADVISORY</option>
@@ -605,7 +672,12 @@ export default function EmergencyResponsePage() {
                     required
                     placeholder="e.g. North Quad, Library Wing"
                     value={eventForm.affected_campus_areas}
-                    onChange={(e) => setEventForm({ ...eventForm, affected_campus_areas: e.target.value })}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        affected_campus_areas: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -617,7 +689,12 @@ export default function EmergencyResponsePage() {
                     type="text"
                     required
                     value={eventForm.coordinator_name}
-                    onChange={(e) => setEventForm({ ...eventForm, coordinator_name: e.target.value })}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        coordinator_name: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -632,7 +709,12 @@ export default function EmergencyResponsePage() {
                   required
                   placeholder="Immediate instruction sent to digital signage, PA loudspeakers, and mobile notifications..."
                   value={eventForm.emergency_broadcast_message}
-                  onChange={(e) => setEventForm({ ...eventForm, emergency_broadcast_message: e.target.value })}
+                  onChange={(e) =>
+                    setEventForm({
+                      ...eventForm,
+                      emergency_broadcast_message: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white font-mono"
                 />
               </div>
@@ -650,7 +732,9 @@ export default function EmergencyResponsePage() {
                   disabled={initiating}
                   className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold disabled:opacity-50"
                 >
-                  {initiating ? "Activating..." : "Broadcast & Activate Protocol"}
+                  {initiating
+                    ? "Activating..."
+                    : "Broadcast & Activate Protocol"}
                 </button>
               </div>
             </form>
@@ -733,7 +817,9 @@ export default function EmergencyResponsePage() {
 
             <form onSubmit={handleSubmitAar} className="p-6 space-y-4">
               <p className="text-xs text-slate-500">
-                The After-Action Report is permanently archived for institutional accreditation, regulatory compliance, and security drill assessment.
+                The After-Action Report is permanently archived for
+                institutional accreditation, regulatory compliance, and security
+                drill assessment.
               </p>
 
               <div>
@@ -773,4 +859,3 @@ export default function EmergencyResponsePage() {
     </div>
   );
 }
-

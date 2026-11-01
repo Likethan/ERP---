@@ -30,27 +30,22 @@ import { calculateCampusHealth } from "./intelligence-calculator";
 class IntelligenceService {
   // Legacy compatibility methods
   async getMetrics(): Promise<ApiResponse<CampusMetricCard[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: MOCK_CAMPUS_METRICS };
   }
 
   async getAlerts(): Promise<ApiResponse<OperationalAlertItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: MOCK_OPERATIONAL_ALERTS };
   }
 
   async getDepartmentKpis(): Promise<ApiResponse<DepartmentKpiItem[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     return { success: true, data: MOCK_DEPARTMENT_KPIS };
   }
 
   async getCohortData(): Promise<ApiResponse<CohortDistributionItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: MOCK_COHORT_DATA };
   }
 
   async getRiskRadar(): Promise<ApiResponse<RiskRadarSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: MOCK_RISK_RADAR };
   }
 
@@ -162,7 +157,6 @@ class IntelligenceService {
   }
 
   async getCampusHealthMetrics(): Promise<ApiResponse<CampusHealthMetric[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...MOCK_CAMPUS_HEALTH_METRICS] };
   }
 
@@ -173,7 +167,6 @@ class IntelligenceService {
       criticalAlertCount: number;
     }>
   > {
-    await new Promise((r) => setTimeout(r, 30));
     const result = calculateCampusHealth(MOCK_CAMPUS_HEALTH_METRICS);
     return { success: true, data: result };
   }
@@ -181,7 +174,6 @@ class IntelligenceService {
   async getDepartmentHealth(
     deptId?: string,
   ): Promise<ApiResponse<DepartmentHealthSummary[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let list = [...MOCK_DEPARTMENT_HEALTH];
     if (deptId) {
       list = list.filter((d) => d.departmentId === deptId);
@@ -192,7 +184,6 @@ class IntelligenceService {
   async getStudentIntelligenceProfile(
     studentId: string,
   ): Promise<ApiResponse<StudentIntelligenceProfile | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const profile = MOCK_STUDENT_INTELLIGENCE[studentId] || null;
     return { success: Boolean(profile), data: profile };
   }

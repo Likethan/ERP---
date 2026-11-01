@@ -179,7 +179,7 @@ export function DialogDescription({
     <p
       className={cn(
         "text-xs text-slate-500 dark:text-slate-400 leading-relaxed",
-        className
+        className,
       )}
     >
       {children}

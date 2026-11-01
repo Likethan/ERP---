@@ -158,7 +158,7 @@ class AiAssistantService {
 
   async sendQuery(payload: AIQuery): Promise<ApiResponse<AIResponse>> {
     const startTime = Date.now();
-    await new Promise((r) => setTimeout(r, 450)); // Fast deterministic simulated thinking time
+    // Fast deterministic simulated thinking time
 
     const q = payload.query.toLowerCase().trim();
     const role = payload.context?.role || "SUPER_ADMIN";

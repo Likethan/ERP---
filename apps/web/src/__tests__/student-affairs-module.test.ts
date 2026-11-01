@@ -50,7 +50,11 @@ export async function runStudentAffairsModuleTests(): Promise<{
 }> {
   const results: { testName: string; passed: boolean; message?: string }[] = [];
 
-  function assert(condition: unknown, testName: string, failureDetails?: string) {
+  function assert(
+    condition: unknown,
+    testName: string,
+    failureDetails?: string,
+  ) {
     if (Boolean(condition)) {
       results.push({ testName, passed: true });
     } else {
@@ -68,29 +72,51 @@ export async function runStudentAffairsModuleTests(): Promise<{
     // =========================================================================
     const metrics = await studentAffairsService.getDashboardMetrics();
     assert(metrics.total_cases >= 3, "1. Total cases metric initialized (>=3)");
-    assert(metrics.sla_compliance_rate >= 90, "1. SLA compliance rate computed (>=90%)");
-    assert(metrics.resolved_this_month >= 20, "1. Monthly resolution volume computed");
+    assert(
+      metrics.sla_compliance_rate >= 90,
+      "1. SLA compliance rate computed (>=90%)",
+    );
+    assert(
+      metrics.resolved_this_month >= 20,
+      "1. Monthly resolution volume computed",
+    );
 
     // =========================================================================
     // 2. Grievance Submission with Sequential Case Identifier
     // =========================================================================
     const categories = await studentAffairsService.getCategories();
-    assert(categories.length >= 4, "2. Institutional grievance categories catalog loaded (>=4)");
+    assert(
+      categories.length >= 4,
+      "2. Institutional grievance categories catalog loaded (>=4)",
+    );
 
     const subCase = await studentAffairsService.submitCase({
       categoryId: categories[1].id,
       title: "Faulty Projector in Lecture Hall 102",
-      description: "Projector bulb flickers and shuts down during morning engineering lectures.",
+      description:
+        "Projector bulb flickers and shuts down during morning engineering lectures.",
       requestedResolution: "Replace bulb or projector unit.",
       campusId: "camp-001",
       isAnonymous: false,
       submitterType: SASubmitterType.STUDENT,
       confidentialityLevel: SAConfidentialityLevel.STANDARD,
     });
-    assert(subCase.case_number.startsWith("GRV-"), "2. Case reference formatted with GRV- prefix");
-    assert(subCase.status === SACaseStatus.SUBMITTED, "2. Initial state is SUBMITTED");
-    assert(subCase.submitter_name_redacted === "Student Submitter", "2. Submitter name recorded");
-    assert(subCase.target_response_date !== null, "2. Target response deadline computed");
+    assert(
+      subCase.case_number.startsWith("GRV-"),
+      "2. Case reference formatted with GRV- prefix",
+    );
+    assert(
+      subCase.status === SACaseStatus.SUBMITTED,
+      "2. Initial state is SUBMITTED",
+    );
+    assert(
+      subCase.submitter_name_redacted === "Student Submitter",
+      "2. Submitter name recorded",
+    );
+    assert(
+      subCase.target_response_date !== null,
+      "2. Target response deadline computed",
+    );
 
     // =========================================================================
     // 3. Anonymous Submissions & Privacy Protection
@@ -98,7 +124,8 @@ export async function runStudentAffairsModuleTests(): Promise<{
     const anonCase = await studentAffairsService.submitCase({
       categoryId: categories[3].id,
       title: "Hostel Entry Gate Verbal Intimidation",
-      description: "Report of unauthorized verbal harassment near north perimeter wall.",
+      description:
+        "Report of unauthorized verbal harassment near north perimeter wall.",
       requestedResolution: "Security patrol inspection.",
       campusId: "camp-001",
       isAnonymous: true,
@@ -106,10 +133,13 @@ export async function runStudentAffairsModuleTests(): Promise<{
       confidentialityLevel: SAConfidentialityLevel.RESTRICTED,
     });
     assert(anonCase.is_anonymous === true, "3. Anonymous flag recorded true");
-    assert(anonCase.submitter_user_id === null, "3. Submitter user ID withheld from record");
+    assert(
+      anonCase.submitter_user_id === null,
+      "3. Submitter user ID withheld from record",
+    );
     assert(
       anonCase.submitter_name_redacted.includes("Anonymous"),
-      "3. Display persona sanitized to Anonymous Submitter"
+      "3. Display persona sanitized to Anonymous Submitter",
     );
 
     // =========================================================================
@@ -122,22 +152,34 @@ export async function runStudentAffairsModuleTests(): Promise<{
       priority: SACasePriority.HIGH,
       targetResponseHours: 24,
     });
-    assert(assigned.assigned_officer_id === "usr-off-001", "4. Officer usr-off-001 assigned");
-    assert(assigned.priority === SACasePriority.HIGH, "4. Case priority elevated to HIGH");
-    assert(assigned.status === SACaseStatus.ACKNOWLEDGED, "4. Status advanced to ACKNOWLEDGED");
+    assert(
+      assigned.assigned_officer_id === "usr-off-001",
+      "4. Officer usr-off-001 assigned",
+    );
+    assert(
+      assigned.priority === SACasePriority.HIGH,
+      "4. Case priority elevated to HIGH",
+    );
+    assert(
+      assigned.status === SACaseStatus.ACKNOWLEDGED,
+      "4. Status advanced to ACKNOWLEDGED",
+    );
 
     // =========================================================================
     // 5. Conflict of Interest Declaration & Recusal
     // =========================================================================
     await studentAffairsService.declareConflict({
       caseId: assigned.id,
-      reason: "Officer Vikram Sethi has departmental affiliation with the facility vendor.",
+      reason:
+        "Officer Vikram Sethi has departmental affiliation with the facility vendor.",
       requestedReassignmentToOfficerId: "usr-off-002",
     });
-    const reloadedConflictCase = await studentAffairsService.getCaseById(assigned.id);
+    const reloadedConflictCase = await studentAffairsService.getCaseById(
+      assigned.id,
+    );
     assert(
       reloadedConflictCase?.assigned_officer_id === "usr-off-002",
-      "5. Case reassigned to independent officer usr-off-002 upon conflict declaration"
+      "5. Case reassigned to independent officer usr-off-002 upon conflict declaration",
     );
 
     // =========================================================================
@@ -146,7 +188,8 @@ export async function runStudentAffairsModuleTests(): Promise<{
     const discCase = await studentAffairsService.submitCase({
       categoryId: categories[2].id, // Academic Integrity / Disciplinary
       title: "Allegation of Formula Notes in Paper CE401",
-      description: "Invigilator report alleging notes on desk during fluid mechanics exam.",
+      description:
+        "Invigilator report alleging notes on desk during fluid mechanics exam.",
       requestedResolution: "",
       isAnonymous: false,
       submitterType: SASubmitterType.FACULTY,
@@ -162,46 +205,64 @@ export async function runStudentAffairsModuleTests(): Promise<{
     });
     assert(
       proc.finding_status === SAFindingStatus.PENDING,
-      "6. Fair-process rule: Misconduct is NOT automatically assumed proven (finding_status=PENDING)"
+      "6. Fair-process rule: Misconduct is NOT automatically assumed proven (finding_status=PENDING)",
     );
     assert(
       proc.procedural_stage === SADisciplinaryStage.INTAKE_ASSESSMENT,
-      "6. Proceeding stage initialized to INTAKE_ASSESSMENT"
+      "6. Proceeding stage initialized to INTAKE_ASSESSMENT",
     );
 
     // =========================================================================
     // 7. Committee Findings & Procedural Stage Progression
     // =========================================================================
-    const updatedFindings = await studentAffairsService.recordFindings(discCase.id, {
-      findingsSummary: "Committee verified formula sheet was present on student desk during session.",
-      findingStatus: SAFindingStatus.SUBSTANTIATED,
-      proceduralStage: SADisciplinaryStage.FINDINGS_RECORDED,
-    });
-    assert(
-      updatedFindings.finding_status === SAFindingStatus.SUBSTANTIATED,
-      "7. Formal committee findings recorded as SUBSTANTIATED"
+    const updatedFindings = await studentAffairsService.recordFindings(
+      discCase.id,
+      {
+        findingsSummary:
+          "Committee verified formula sheet was present on student desk during session.",
+        findingStatus: SAFindingStatus.SUBSTANTIATED,
+        proceduralStage: SADisciplinaryStage.FINDINGS_RECORDED,
+      },
     );
     assert(
-      updatedFindings.procedural_stage === SADisciplinaryStage.FINDINGS_RECORDED,
-      "7. Procedural milestone advanced to FINDINGS_RECORDED"
+      updatedFindings.finding_status === SAFindingStatus.SUBSTANTIATED,
+      "7. Formal committee findings recorded as SUBSTANTIATED",
+    );
+    assert(
+      updatedFindings.procedural_stage ===
+        SADisciplinaryStage.FINDINGS_RECORDED,
+      "7. Procedural milestone advanced to FINDINGS_RECORDED",
     );
 
     // =========================================================================
     // 8. Sanction Authorization & Appeal Window
     // =========================================================================
-    const sanctioned = await studentAffairsService.approveSanction(discCase.id, {
-      sanctionType: SASanctionType.DISCIPLINARY_PROBATION,
-      sanctionDetails: "Disciplinary probation for 1 semester with zero grade on Paper CE401.",
-      decisionMakerId: "usr-dean-001", // Dr. Vikram Sethi (Original Decision Maker)
-      appealDeadlineDays: 14,
-    });
+    const sanctioned = await studentAffairsService.approveSanction(
+      discCase.id,
+      {
+        sanctionType: SASanctionType.DISCIPLINARY_PROBATION,
+        sanctionDetails:
+          "Disciplinary probation for 1 semester with zero grade on Paper CE401.",
+        decisionMakerId: "usr-dean-001", // Dr. Vikram Sethi (Original Decision Maker)
+        appealDeadlineDays: 14,
+      },
+    );
     assert(
       sanctioned.sanction_type === SASanctionType.DISCIPLINARY_PROBATION,
-      "8. Sanction approved as DISCIPLINARY_PROBATION"
+      "8. Sanction approved as DISCIPLINARY_PROBATION",
     );
-    assert(sanctioned.decision_maker_id === "usr-dean-001", "8. Decision maker recorded as Dean");
-    assert(sanctioned.appeal_deadline !== undefined, "8. Statutory 14-day appeal window activated");
-    assert(sanctioned.is_communicated === true, "8. Decision marked as officially communicated");
+    assert(
+      sanctioned.decision_maker_id === "usr-dean-001",
+      "8. Decision maker recorded as Dean",
+    );
+    assert(
+      sanctioned.appeal_deadline !== undefined,
+      "8. Statutory 14-day appeal window activated",
+    );
+    assert(
+      sanctioned.is_communicated === true,
+      "8. Decision marked as officially communicated",
+    );
 
     // =========================================================================
     // 9. Evidence Locker, Confidentiality Tiers & Redaction
@@ -210,29 +271,44 @@ export async function runStudentAffairsModuleTests(): Promise<{
       caseId: discCase.id,
       evidenceType: SAEvidenceType.TESTIMONY,
       title: "Confidential Witness Statement - Invigilator Assistant",
-      description: "Detailed witness narrative with mobile numbers and dorm room identifiers.",
+      description:
+        "Detailed witness narrative with mobile numbers and dorm room identifiers.",
       fileUrl: "/secure/storage/testimony_orig.pdf",
       fileSizeBytes: 2048576,
       confidentialityLevel: SAEvidenceAccessLevel.RESTRICTED_INVESTIGATOR_ONLY,
     });
-    assert(evOrig.id !== undefined, "9. Original evidence sealed in secure storage");
-    assert(evOrig.is_redacted === false, "9. Original evidence marked unredacted");
     assert(
-      evOrig.confidentiality_level === SAEvidenceAccessLevel.RESTRICTED_INVESTIGATOR_ONLY,
-      "9. Restricted access tier applied"
+      evOrig.id !== undefined,
+      "9. Original evidence sealed in secure storage",
+    );
+    assert(
+      evOrig.is_redacted === false,
+      "9. Original evidence marked unredacted",
+    );
+    assert(
+      evOrig.confidentiality_level ===
+        SAEvidenceAccessLevel.RESTRICTED_INVESTIGATOR_ONLY,
+      "9. Restricted access tier applied",
     );
 
     const evRedacted = await studentAffairsService.redactEvidence({
       evidenceId: evOrig.id,
-      redactionSummary: "Sanitized witness phone numbers and room coordinates to protect safety.",
+      redactionSummary:
+        "Sanitized witness phone numbers and room coordinates to protect safety.",
       redactedFileUrl: "/secure/storage/testimony_redacted.pdf",
     });
-    assert(evRedacted.is_redacted === true, "9. Redacted evidence derivative marked is_redacted=true");
+    assert(
+      evRedacted.is_redacted === true,
+      "9. Redacted evidence derivative marked is_redacted=true",
+    );
     assert(
       evRedacted.original_evidence_id === evOrig.id,
-      "9. Redacted evidence retains pointer to original immutable evidence ID"
+      "9. Redacted evidence retains pointer to original immutable evidence ID",
     );
-    assert(evRedacted.title.includes("[REDACTED]"), "9. Redacted evidence title prefixed with [REDACTED]");
+    assert(
+      evRedacted.title.includes("[REDACTED]"),
+      "9. Redacted evidence title prefixed with [REDACTED]",
+    );
 
     // =========================================================================
     // 10. Hearing & Mediation Scheduling
@@ -247,7 +323,10 @@ export async function runStudentAffairsModuleTests(): Promise<{
       facilitatorId: "usr-dean-001",
     });
     assert(meeting.id !== undefined, "10. Hearing panel meeting scheduled");
-    assert(meeting.status === SAMeetingStatus.SCHEDULED, "10. Meeting status is SCHEDULED");
+    assert(
+      meeting.status === SAMeetingStatus.SCHEDULED,
+      "10. Meeting status is SCHEDULED",
+    );
 
     // =========================================================================
     // 11. Resolution Corrective Actions
@@ -259,7 +338,10 @@ export async function runStudentAffairsModuleTests(): Promise<{
       dueDate: "2026-10-31",
     });
     assert(action.id !== undefined, "11. Resolution action created");
-    assert(action.status === SAActionStatus.PENDING, "11. Action status is PENDING");
+    assert(
+      action.status === SAActionStatus.PENDING,
+      "11. Action status is PENDING",
+    );
 
     // =========================================================================
     // 12. Strict Separation of Duties on Appeals
@@ -267,9 +349,13 @@ export async function runStudentAffairsModuleTests(): Promise<{
     const appeal = await studentAffairsService.fileAppeal({
       caseId: discCase.id,
       appealGrounds: SAAppealGrounds.NEW_EVIDENCE,
-      groundsStatement: "Medical clearance demonstrates student was on prescribed migraine treatment.",
+      groundsStatement:
+        "Medical clearance demonstrates student was on prescribed migraine treatment.",
     });
-    assert(appeal.review_status === SAAppealStatus.FILED, "12. Appeal status is FILED");
+    assert(
+      appeal.review_status === SAAppealStatus.FILED,
+      "12. Appeal status is FILED",
+    );
 
     // Separation of Duties Test: The original decision maker (usr-dean-001) MUST NOT review this appeal!
     let sodBlocked = false;
@@ -287,7 +373,7 @@ export async function runStudentAffairsModuleTests(): Promise<{
     }
     assert(
       sodBlocked === true,
-      "12. UGC Separation of Duties rule: Original decision-maker is strictly BLOCKED from reviewing appeal"
+      "12. UGC Separation of Duties rule: Original decision-maker is strictly BLOCKED from reviewing appeal",
     );
 
     // =========================================================================
@@ -297,11 +383,12 @@ export async function runStudentAffairsModuleTests(): Promise<{
       appealId: appeal.id,
       assignedReviewerId: "usr-ombuds-001", // Valid independent reviewer (Ombudsperson)
       reviewStatus: SAAppealStatus.OVERTURNED,
-      outcomeSummary: "Appellate Council reviewed medical prescription and overturned disciplinary probation.",
+      outcomeSummary:
+        "Appellate Council reviewed medical prescription and overturned disciplinary probation.",
     });
     assert(
       appealReview.review_status === SAAppealStatus.OVERTURNED,
-      "13. Independent Ombudsperson overturns sanction upon reviewing new evidence"
+      "13. Independent Ombudsperson overturns sanction upon reviewing new evidence",
     );
 
     // =========================================================================
@@ -310,47 +397,71 @@ export async function runStudentAffairsModuleTests(): Promise<{
     const esc = await studentAffairsService.triggerEscalation({
       caseId: anonCase.id,
       escalationLevel: SAEscalationLevel.LEVEL_2_DIRECTOR,
-      triggerReason: "Repeated perimeter security breach requires immediate executive dispatch.",
+      triggerReason:
+        "Repeated perimeter security breach requires immediate executive dispatch.",
       safeguardingLeadId: "usr-icc-001",
     });
     assert(esc.id !== undefined, "14. Urgent escalation record registered");
-    assert(esc.escalation_level === SAEscalationLevel.LEVEL_2_DIRECTOR, "14. Escalation tier set to LEVEL_2_DIRECTOR");
+    assert(
+      esc.escalation_level === SAEscalationLevel.LEVEL_2_DIRECTOR,
+      "14. Escalation tier set to LEVEL_2_DIRECTOR",
+    );
 
     // =========================================================================
     // 15. Confidential Case Communications
     // =========================================================================
     const msg = await studentAffairsService.sendConfidentialMessage({
       caseId: subCase.id,
-      messageBody: "Engineering technician has inspected the lab cooling coils.",
+      messageBody:
+        "Engineering technician has inspected the lab cooling coils.",
       isInternalOnly: false,
     });
-    assert(msg.id !== undefined, "15. Confidential message transmitted in case thread");
+    assert(
+      msg.id !== undefined,
+      "15. Confidential message transmitted in case thread",
+    );
 
     // =========================================================================
     // 16. Pure Calculators & Safeguards
     // =========================================================================
     const futureDate = new Date(Date.now() + 48 * 3600 * 1000).toISOString();
-    const slaOnTrack = StudentAffairsCalculator.calculateSlaStatus(futureDate, SACaseStatus.SUBMITTED);
-    assert(slaOnTrack.statusLabel === "ON_TRACK", "16. SLA status for +48h is ON_TRACK");
+    const slaOnTrack = StudentAffairsCalculator.calculateSlaStatus(
+      futureDate,
+      SACaseStatus.SUBMITTED,
+    );
+    assert(
+      slaOnTrack.statusLabel === "ON_TRACK",
+      "16. SLA status for +48h is ON_TRACK",
+    );
 
     const pastDate = new Date(Date.now() - 5 * 3600 * 1000).toISOString();
-    const slaBreached = StudentAffairsCalculator.calculateSlaStatus(pastDate, SACaseStatus.SUBMITTED);
-    assert(slaBreached.statusLabel === "BREACHED", "16. SLA status for overdue case is BREACHED");
+    const slaBreached = StudentAffairsCalculator.calculateSlaStatus(
+      pastDate,
+      SACaseStatus.SUBMITTED,
+    );
+    assert(
+      slaBreached.statusLabel === "BREACHED",
+      "16. SLA status for overdue case is BREACHED",
+    );
 
     const futureAppeal = new Date(Date.now() + 7 * 86400 * 1000).toISOString();
     assert(
       StudentAffairsCalculator.isAppealWindowActive(futureAppeal) === true,
-      "16. Appeal window active for future deadline"
+      "16. Appeal window active for future deadline",
     );
 
     const pastAppeal = new Date(Date.now() - 1000).toISOString();
     assert(
       StudentAffairsCalculator.isAppealWindowActive(pastAppeal) === false,
-      "16. Appeal window expired for past deadline"
+      "16. Appeal window expired for past deadline",
     );
 
-    const milestonesCalc = StudentAffairsCalculator.evaluateProceduralMilestones(proc);
-    assert(milestonesCalc.milestones.length === 7, "16. Evaluates all 7 procedural stages");
+    const milestonesCalc =
+      StudentAffairsCalculator.evaluateProceduralMilestones(proc);
+    assert(
+      milestonesCalc.milestones.length === 7,
+      "16. Evaluates all 7 procedural stages",
+    );
   } catch (error: any) {
     results.push({
       testName: "Unhandled Exception in Student Affairs Test Suite",
@@ -366,7 +477,11 @@ export async function runStudentAffairsModuleTests(): Promise<{
 }
 
 // Direct node/tsx execution harness
-if (require.main === module || (typeof process !== "undefined" && process.argv[1]?.includes("student-affairs-module.test"))) {
+if (
+  require.main === module ||
+  (typeof process !== "undefined" &&
+    process.argv[1]?.includes("student-affairs-module.test"))
+) {
   runStudentAffairsModuleTests().then(({ passed, failed, results }) => {
     console.log(`\n==================================================`);
     console.log(`CampusOS Student Affairs Module Verification Test Results`);

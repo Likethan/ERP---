@@ -49,7 +49,8 @@ export default function ObligationsRegisterPage() {
   const [overdueOnly, setOverdueOnly] = useState<boolean>(false);
 
   // Modals
-  const [selectedObligation, setSelectedObligation] = useState<ContractObligation | null>(null);
+  const [selectedObligation, setSelectedObligation] =
+    useState<ContractObligation | null>(null);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [isWaiveOpen, setIsWaiveOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -60,11 +61,14 @@ export default function ObligationsRegisterPage() {
 
   // Waive Form
   const [waiverRationale, setWaiverRationale] = useState("");
-  const [authorizedApprover, setAuthorizedApprover] = useState("University General Counsel / VP");
+  const [authorizedApprover, setAuthorizedApprover] = useState(
+    "University General Counsel / VP",
+  );
 
   // Create Form
   const [newTitle, setNewTitle] = useState("");
-  const [newCategory, setNewCategory] = useState<ObligationCategory>("DELIVERABLE");
+  const [newCategory, setNewCategory] =
+    useState<ObligationCategory>("DELIVERABLE");
   const [newDueDate, setNewDueDate] = useState("");
   const [newEvidence, setNewEvidence] = useState("");
   const [newContractId, setNewContractId] = useState("c01-campus-wifi");
@@ -163,7 +167,8 @@ export default function ObligationsRegisterPage() {
 
   const filteredObligations = obligations.filter((obl) => {
     const categoryVal = obl.category || obl.obligation_type || "";
-    if (selectedCategory !== "ALL" && categoryVal !== selectedCategory) return false;
+    if (selectedCategory !== "ALL" && categoryVal !== selectedCategory)
+      return false;
     if (
       searchTerm &&
       !obl.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -186,7 +191,8 @@ export default function ObligationsRegisterPage() {
               Contract Obligations & Commitments Register
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Auditable tracking of institutional contract deliverables, reporting deadlines, insurance certificates, and service SLAs.
+              Auditable tracking of institutional contract deliverables,
+              reporting deadlines, insurance certificates, and service SLAs.
             </p>
           </div>
           <button
@@ -200,11 +206,17 @@ export default function ObligationsRegisterPage() {
         {/* Telemetry KPI Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <span className="text-xs text-slate-500 block">Total Obligations</span>
-            <div className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{health.total}</div>
+            <span className="text-xs text-slate-500 block">
+              Total Obligations
+            </span>
+            <div className="text-2xl font-bold mt-1 text-slate-900 dark:text-white">
+              {health.total}
+            </div>
           </div>
           <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <span className="text-xs text-slate-500 block">Pending / In Progress</span>
+            <span className="text-xs text-slate-500 block">
+              Pending / In Progress
+            </span>
             <div className="text-2xl font-bold mt-1 text-indigo-600 dark:text-indigo-400">
               {health.pending + health.in_progress}
             </div>
@@ -213,15 +225,25 @@ export default function ObligationsRegisterPage() {
             <span className="text-xs text-rose-600 font-semibold block flex items-center gap-1">
               <AlertTriangle className="h-3.5 w-3.5" /> Overdue Obligations
             </span>
-            <div className="text-2xl font-bold mt-1 text-rose-600">{health.overdue}</div>
+            <div className="text-2xl font-bold mt-1 text-rose-600">
+              {health.overdue}
+            </div>
           </div>
           <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <span className="text-xs text-slate-500 block">Satisfied / Completed</span>
-            <div className="text-2xl font-bold mt-1 text-emerald-600">{health.completed}</div>
+            <span className="text-xs text-slate-500 block">
+              Satisfied / Completed
+            </span>
+            <div className="text-2xl font-bold mt-1 text-emerald-600">
+              {health.completed}
+            </div>
           </div>
           <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <span className="text-xs text-slate-500 block">Authorized Waivers</span>
-            <div className="text-2xl font-bold mt-1 text-slate-600 dark:text-slate-400">{health.waived}</div>
+            <span className="text-xs text-slate-500 block">
+              Authorized Waivers
+            </span>
+            <div className="text-2xl font-bold mt-1 text-slate-600 dark:text-slate-400">
+              {health.waived}
+            </div>
           </div>
         </div>
 
@@ -249,8 +271,12 @@ export default function ObligationsRegisterPage() {
                 <option value="DELIVERABLE">Deliverables</option>
                 <option value="REPORTING">Reporting Milestones</option>
                 <option value="PAYMENT_MILESTONE">Payment Milestones</option>
-                <option value="SERVICE_COMMITMENT">Service Commitments / SLAs</option>
-                <option value="INSURANCE_REQUIREMENT">Insurance Policies & COIs</option>
+                <option value="SERVICE_COMMITMENT">
+                  Service Commitments / SLAs
+                </option>
+                <option value="INSURANCE_REQUIREMENT">
+                  Insurance Policies & COIs
+                </option>
                 <option value="RENEWAL_NOTICE">Renewal Notice Windows</option>
                 <option value="AUDIT_RIGHT">Audit & Inspection Rights</option>
               </select>
@@ -297,13 +323,19 @@ export default function ObligationsRegisterPage() {
           {loading ? (
             <div className="p-12 text-center text-slate-400">
               <RefreshCw className="h-6 w-6 animate-spin mx-auto mb-2 text-indigo-600" />
-              <p className="text-xs">Loading contractual obligations register...</p>
+              <p className="text-xs">
+                Loading contractual obligations register...
+              </p>
             </div>
           ) : filteredObligations.length === 0 ? (
             <div className="p-12 text-center text-slate-400 space-y-2">
               <CheckCircle2 className="h-8 w-8 mx-auto text-slate-300" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Obligations Found</p>
-              <p className="text-xs text-slate-500">No obligations match your active filter criteria.</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                No Obligations Found
+              </p>
+              <p className="text-xs text-slate-500">
+                No obligations match your active filter criteria.
+              </p>
             </div>
           ) : (
             <table className="w-full text-left text-sm">
@@ -321,9 +353,14 @@ export default function ObligationsRegisterPage() {
                 {filteredObligations.map((obl) => {
                   const overdue = isObligationOverdue(obl);
                   return (
-                    <tr key={obl.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                    <tr
+                      key={obl.id}
+                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
+                    >
                       <td className="px-6 py-4">
-                        <strong className="block text-slate-900 dark:text-white">{obl.title}</strong>
+                        <strong className="block text-slate-900 dark:text-white">
+                          {obl.title}
+                        </strong>
                         {obl.required_evidence && (
                           <span className="text-xs text-slate-400 mt-0.5 block">
                             Evidence: {obl.required_evidence}
@@ -345,8 +382,16 @@ export default function ObligationsRegisterPage() {
                       </td>
                       <td className="px-6 py-4 text-xs font-mono">
                         <div className="flex items-center gap-1.5">
-                          {overdue && <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />}
-                          <span className={overdue ? "text-rose-600 font-bold" : "text-slate-600 dark:text-slate-300"}>
+                          {overdue && (
+                            <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
+                          )}
+                          <span
+                            className={
+                              overdue
+                                ? "text-rose-600 font-bold"
+                                : "text-slate-600 dark:text-slate-300"
+                            }
+                          >
                             {formatLegalDate(obl.due_date)}
                           </span>
                         </div>
@@ -354,7 +399,7 @@ export default function ObligationsRegisterPage() {
                       <td className="px-6 py-4">
                         <span
                           className={`text-xs px-2.5 py-1 rounded-full font-medium ${getObligationStatusBadge(
-                            obl.status
+                            obl.status,
                           )}`}
                         >
                           {obl.status}
@@ -363,35 +408,37 @@ export default function ObligationsRegisterPage() {
                       <td className="px-6 py-4 text-xs">
                         {obl.escalation_level > 0 ? (
                           <span className="text-rose-600 font-bold flex items-center gap-1">
-                            <AlertTriangle className="h-3.5 w-3.5" /> Level {obl.escalation_level}
+                            <AlertTriangle className="h-3.5 w-3.5" /> Level{" "}
+                            {obl.escalation_level}
                           </span>
                         ) : (
                           <span className="text-slate-400">Normal</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right space-x-2">
-                        {obl.status !== "COMPLETED" && obl.status !== "WAIVED" && (
-                          <>
-                            <button
-                              onClick={() => {
-                                setSelectedObligation(obl);
-                                setIsCompleteOpen(true);
-                              }}
-                              className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-medium hover:bg-emerald-100"
-                            >
-                              Complete
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSelectedObligation(obl);
-                                setIsWaiveOpen(true);
-                              }}
-                              className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-medium hover:bg-amber-100"
-                            >
-                              Waive
-                            </button>
-                          </>
-                        )}
+                        {obl.status !== "COMPLETED" &&
+                          obl.status !== "WAIVED" && (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setSelectedObligation(obl);
+                                  setIsCompleteOpen(true);
+                                }}
+                                className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-medium hover:bg-emerald-100"
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSelectedObligation(obl);
+                                  setIsWaiveOpen(true);
+                                }}
+                                className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-medium hover:bg-amber-100"
+                              >
+                                Waive
+                              </button>
+                            </>
+                          )}
                         <Link
                           href={`/app/legal/contracts/${obl.contract_id}`}
                           className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 inline-flex items-center gap-1"
@@ -414,7 +461,8 @@ export default function ObligationsRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-emerald-600" /> Complete Contract Obligation
+                <FileCheck className="h-5 w-5 text-emerald-600" /> Complete
+                Contract Obligation
               </h3>
               <button
                 onClick={() => setIsCompleteOpen(false)}
@@ -425,7 +473,8 @@ export default function ObligationsRegisterPage() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Record verified completion and evidence for <strong>{selectedObligation.title}</strong>.
+              Record verified completion and evidence for{" "}
+              <strong>{selectedObligation.title}</strong>.
             </p>
 
             <form onSubmit={handleCompleteSubmit} className="space-y-4 text-sm">
@@ -490,7 +539,8 @@ export default function ObligationsRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-amber-600" /> Formal Obligation Waiver
+                <ShieldCheck className="h-5 w-5 text-amber-600" /> Formal
+                Obligation Waiver
               </h3>
               <button
                 onClick={() => setIsWaiveOpen(false)}
@@ -503,7 +553,9 @@ export default function ObligationsRegisterPage() {
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span>
-                <strong>Institutional Policy:</strong> Waiving a contractual commitment requires documented executive or legal rationale. This action creates an immutable audit entry.
+                <strong>Institutional Policy:</strong> Waiving a contractual
+                commitment requires documented executive or legal rationale.
+                This action creates an immutable audit entry.
               </span>
             </div>
 
@@ -568,7 +620,8 @@ export default function ObligationsRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Plus className="h-5 w-5 text-indigo-600" /> Register Contract Obligation
+                <Plus className="h-5 w-5 text-indigo-600" /> Register Contract
+                Obligation
               </h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -600,14 +653,20 @@ export default function ObligationsRegisterPage() {
                   </label>
                   <select
                     value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as ObligationCategory)}
+                    onChange={(e) =>
+                      setNewCategory(e.target.value as ObligationCategory)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="DELIVERABLE">DELIVERABLE</option>
                     <option value="REPORTING">REPORTING</option>
                     <option value="PAYMENT_MILESTONE">PAYMENT_MILESTONE</option>
-                    <option value="SERVICE_COMMITMENT">SERVICE_COMMITMENT</option>
-                    <option value="INSURANCE_REQUIREMENT">INSURANCE_REQUIREMENT</option>
+                    <option value="SERVICE_COMMITMENT">
+                      SERVICE_COMMITMENT
+                    </option>
+                    <option value="INSURANCE_REQUIREMENT">
+                      INSURANCE_REQUIREMENT
+                    </option>
                     <option value="RENEWAL_NOTICE">RENEWAL_NOTICE</option>
                     <option value="AUDIT_RIGHT">AUDIT_RIGHT</option>
                   </select>

@@ -21,7 +21,6 @@ class TransportRoutesService {
     status?: RouteStatus | string;
     search?: string;
   }): Promise<ApiResponse<TransportRoute[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.routes];
 
     if (filters?.campusId && filters.campusId !== "ALL") {
@@ -47,7 +46,6 @@ class TransportRoutesService {
   }
 
   async getRouteById(id: string): Promise<ApiResponse<TransportRoute | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const route =
       this.routes.find((r) => r.id === id || r.routeCode === id) || null;
     return { success: true, data: route };
@@ -56,7 +54,6 @@ class TransportRoutesService {
   async createRoute(
     payload: Partial<TransportRoute>,
   ): Promise<ApiResponse<TransportRoute>> {
-    await new Promise((r) => setTimeout(r, 50));
     const capacity = payload.capacity || 52;
     const allocated = payload.allocatedStudents || 0;
     const utilization = calculateRouteUtilization(allocated, capacity);

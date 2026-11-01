@@ -19,7 +19,9 @@ import { VisitorProfile, VisitorRequest } from "@/types/campus-security";
 export default function VisitorDirectoryPage() {
   const [requests, setRequests] = useState<VisitorRequest[]>([]);
   const [visitors, setVisitors] = useState<VisitorProfile[]>([]);
-  const [activeTab, setActiveTab] = useState<"REQUESTS" | "DIRECTORY">("REQUESTS");
+  const [activeTab, setActiveTab] = useState<"REQUESTS" | "DIRECTORY">(
+    "REQUESTS",
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [loading, setLoading] = useState(true);
@@ -91,7 +93,10 @@ export default function VisitorDirectoryPage() {
     setDepartureDate("");
   }
 
-  async function handleReview(requestId: string, decision: "APPROVED" | "REJECTED") {
+  async function handleReview(
+    requestId: string,
+    decision: "APPROVED" | "REJECTED",
+  ) {
     try {
       await CampusSecurityService.reviewRequest(requestId, decision);
       loadData();
@@ -109,10 +114,11 @@ export default function VisitorDirectoryPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const filteredVisitors = visitors.filter((v) =>
-    v.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    v.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    v.phone.includes(searchTerm)
+  const filteredVisitors = visitors.filter(
+    (v) =>
+      v.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.phone.includes(searchTerm),
   );
 
   return (
@@ -122,9 +128,12 @@ export default function VisitorDirectoryPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-black tracking-tight">Visitor Management & Pre-Registration</h1>
+            <h1 className="text-2xl font-black tracking-tight">
+              Visitor Management & Pre-Registration
+            </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Guest lifecycle, host approvals, ID verification, and gate entry authorizations.
+              Guest lifecycle, host approvals, ID verification, and gate entry
+              authorizations.
             </p>
           </div>
           <button
@@ -205,15 +214,23 @@ export default function VisitorDirectoryPage() {
                 <tbody className="divide-y divide-border/60">
                   {filteredRequests.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-5 py-8 text-center text-muted-foreground">
+                      <td
+                        colSpan={6}
+                        className="px-5 py-8 text-center text-muted-foreground"
+                      >
                         No visitor requests found.
                       </td>
                     </tr>
                   ) : (
                     filteredRequests.map((req) => (
-                      <tr key={req.id} className="hover:bg-muted/20 transition-colors">
+                      <tr
+                        key={req.id}
+                        className="hover:bg-muted/20 transition-colors"
+                      >
                         <td className="px-5 py-4">
-                          <div className="font-bold text-sm text-foreground">{req.visitor_name}</div>
+                          <div className="font-bold text-sm text-foreground">
+                            {req.visitor_name}
+                          </div>
                           <div className="text-xs text-muted-foreground font-mono">
                             {req.request_number} • {req.visitor_phone}
                           </div>
@@ -224,13 +241,26 @@ export default function VisitorDirectoryPage() {
                           </span>
                         </td>
                         <td className="px-5 py-4">
-                          <div className="font-medium text-xs text-foreground">{req.host_name}</div>
-                          <div className="text-[11px] text-muted-foreground">{req.destination_description}</div>
+                          <div className="font-medium text-xs text-foreground">
+                            {req.host_name}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground">
+                            {req.destination_description}
+                          </div>
                         </td>
                         <td className="px-5 py-4 text-xs">
-                          <div>{new Date(req.expected_arrival_at).toLocaleDateString()}</div>
+                          <div>
+                            {new Date(
+                              req.expected_arrival_at,
+                            ).toLocaleDateString()}
+                          </div>
                           <div className="text-muted-foreground text-[11px]">
-                            {new Date(req.expected_arrival_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            {new Date(
+                              req.expected_arrival_at,
+                            ).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </div>
                         </td>
                         <td className="px-5 py-4">
@@ -239,8 +269,8 @@ export default function VisitorDirectoryPage() {
                               req.status === "APPROVED"
                                 ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                                 : req.status === "PENDING"
-                                ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                                : "bg-rose-500/10 text-rose-500 border border-rose-500/20"
+                                  ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                                  : "bg-rose-500/10 text-rose-500 border border-rose-500/20"
                             }`}
                           >
                             {req.status}
@@ -263,7 +293,9 @@ export default function VisitorDirectoryPage() {
                               </button>
                             </div>
                           ) : (
-                            <span className="text-xs text-muted-foreground">Decided</span>
+                            <span className="text-xs text-muted-foreground">
+                              Decided
+                            </span>
                           )}
                         </td>
                       </tr>
@@ -276,7 +308,10 @@ export default function VisitorDirectoryPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {filteredVisitors.map((vis) => (
-              <div key={vis.id} className="p-5 bg-card border border-border rounded-xl space-y-2 shadow-xs">
+              <div
+                key={vis.id}
+                className="p-5 bg-card border border-border rounded-xl space-y-2 shadow-xs"
+              >
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-sm">{vis.full_name}</div>
                   {vis.is_vip && (
@@ -285,12 +320,29 @@ export default function VisitorDirectoryPage() {
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-muted-foreground">{vis.organization || "Independent Visitor"}</div>
+                <div className="text-xs text-muted-foreground">
+                  {vis.organization || "Independent Visitor"}
+                </div>
                 <div className="text-xs pt-1 border-t border-border/60 text-muted-foreground space-y-0.5">
-                  <div>Email: <span className="text-foreground">{vis.email}</span></div>
-                  <div>Phone: <span className="text-foreground">{vis.phone}</span></div>
-                  <div>ID Type: <span className="text-foreground">{vis.id_document_type} ({vis.id_document_number_masked || "Verified"})</span></div>
-                  <div>Total Visits: <span className="text-foreground font-semibold">{vis.total_visits}</span></div>
+                  <div>
+                    Email: <span className="text-foreground">{vis.email}</span>
+                  </div>
+                  <div>
+                    Phone: <span className="text-foreground">{vis.phone}</span>
+                  </div>
+                  <div>
+                    ID Type:{" "}
+                    <span className="text-foreground">
+                      {vis.id_document_type} (
+                      {vis.id_document_number_masked || "Verified"})
+                    </span>
+                  </div>
+                  <div>
+                    Total Visits:{" "}
+                    <span className="text-foreground font-semibold">
+                      {vis.total_visits}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -304,7 +356,10 @@ export default function VisitorDirectoryPage() {
           <div className="bg-card border border-border rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-lg">Pre-Register Campus Visitor</h3>
-              <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
                 ✕
               </button>
             </div>
@@ -312,7 +367,9 @@ export default function VisitorDirectoryPage() {
             <form onSubmit={handleCreateRequest} className="space-y-4 text-sm">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Visitor Full Name</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Visitor Full Name
+                  </label>
                   <input
                     type="text"
                     required
@@ -322,7 +379,9 @@ export default function VisitorDirectoryPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Category</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Category
+                  </label>
                   <select
                     value={visitorCategory}
                     onChange={(e) => setVisitorCategory(e.target.value)}
@@ -340,7 +399,9 @@ export default function VisitorDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Email</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Email
+                  </label>
                   <input
                     type="email"
                     required
@@ -350,7 +411,9 @@ export default function VisitorDirectoryPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Phone</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Phone
+                  </label>
                   <input
                     type="tel"
                     required
@@ -362,7 +425,9 @@ export default function VisitorDirectoryPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-muted-foreground">Host Name (Faculty/Staff/Student)</label>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Host Name (Faculty/Staff/Student)
+                </label>
                 <input
                   type="text"
                   required
@@ -373,7 +438,9 @@ export default function VisitorDirectoryPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-muted-foreground">Visit Purpose</label>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Visit Purpose
+                </label>
                 <input
                   type="text"
                   required
@@ -384,7 +451,9 @@ export default function VisitorDirectoryPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-muted-foreground">Destination / Building</label>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Destination / Building
+                </label>
                 <input
                   type="text"
                   required
@@ -396,7 +465,9 @@ export default function VisitorDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Expected Arrival</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Expected Arrival
+                  </label>
                   <input
                     type="datetime-local"
                     value={arrivalDate}
@@ -405,7 +476,9 @@ export default function VisitorDirectoryPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Expected Departure</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Expected Departure
+                  </label>
                   <input
                     type="datetime-local"
                     value={departureDate}
@@ -437,4 +510,3 @@ export default function VisitorDirectoryPage() {
     </div>
   );
 }
-

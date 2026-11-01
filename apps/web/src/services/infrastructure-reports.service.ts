@@ -17,7 +17,6 @@ class InfrastructureReportsService {
     startDate?: string;
     endDate?: string;
   }): Promise<ApiResponse<InfrastructureReportData>> {
-    await new Promise((r) => setTimeout(r, 60));
     // Return structured reports data
     return {
       success: true,

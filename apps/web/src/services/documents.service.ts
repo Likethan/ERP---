@@ -16,7 +16,6 @@ class DocumentsService {
   async listDocuments(
     filters?: DocumentFilterState,
   ): Promise<ApiResponse<DocumentItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.documents];
 
     if (filters) {
@@ -61,7 +60,6 @@ class DocumentsService {
   }
 
   async getDocumentById(id: string): Promise<ApiResponse<DocumentItem | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const doc = this.documents.find((d) => d.id === id) || null;
     return { success: true, data: doc };
   }
@@ -69,7 +67,6 @@ class DocumentsService {
   async getDocumentsByOwner(
     ownerId: string,
   ): Promise<ApiResponse<DocumentItem[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     const items = this.documents.filter((d) => d.ownerId === ownerId);
     return { success: true, data: items };
   }
@@ -77,7 +74,6 @@ class DocumentsService {
   async uploadDocument(
     data: Partial<DocumentItem>,
   ): Promise<ApiResponse<DocumentItem>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newDoc: DocumentItem = {
       id: `doc-${Date.now()}`,
       name: data.name || "Uploaded Document",
@@ -120,7 +116,6 @@ class DocumentsService {
     id: string,
     metadata: Partial<DocumentItem>,
   ): Promise<ApiResponse<DocumentItem>> {
-    await new Promise((r) => setTimeout(r, 50));
     const doc = this.documents.find((d) => d.id === id);
     if (!doc) {
       throw new Error(`Document with ID ${id} not found`);
@@ -140,7 +135,6 @@ class DocumentsService {
   }
 
   async submitForVerification(id: string): Promise<ApiResponse<DocumentItem>> {
-    await new Promise((r) => setTimeout(r, 50));
     const doc = this.documents.find((d) => d.id === id);
     if (!doc) {
       throw new Error(`Document with ID ${id} not found`);
@@ -163,7 +157,6 @@ class DocumentsService {
     studentIdOrDocId: string,
     documentId?: string,
   ): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 50));
     if (documentId) {
       const { studentsService } = await import("./students.service");
       return studentsService.deleteDocument(studentIdOrDocId, documentId);

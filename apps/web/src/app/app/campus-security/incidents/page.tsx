@@ -37,16 +37,21 @@ export default function SecurityIncidentsPage() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
 
-  const [escalatingIncident, setEscalatingIncident] = useState<CampusSecurityIncident | null>(null);
+  const [escalatingIncident, setEscalatingIncident] =
+    useState<CampusSecurityIncident | null>(null);
   const [escalationReason, setEscalationReason] = useState("");
   const [escalating, setEscalating] = useState(false);
 
-  const [resolvingIncident, setResolvingIncident] = useState<CampusSecurityIncident | null>(null);
+  const [resolvingIncident, setResolvingIncident] =
+    useState<CampusSecurityIncident | null>(null);
   const [resolutionSummary, setResolutionSummary] = useState("");
   const [correctiveNotes, setCorrectiveNotes] = useState("");
   const [resolving, setResolving] = useState(false);
 
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Report form
   const [reportForm, setReportForm] = useState({
@@ -76,7 +81,12 @@ export default function SecurityIncidentsPage() {
 
   const handleReportIncident = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reportForm.title || !reportForm.reported_location || !reportForm.description) return;
+    if (
+      !reportForm.title ||
+      !reportForm.reported_location ||
+      !reportForm.description
+    )
+      return;
 
     try {
       setReporting(true);
@@ -119,7 +129,10 @@ export default function SecurityIncidentsPage() {
 
     try {
       setEscalating(true);
-      await CampusSecurityService.escalateIncident(escalatingIncident.id, escalationReason);
+      await CampusSecurityService.escalateIncident(
+        escalatingIncident.id,
+        escalationReason,
+      );
       setNotification({
         type: "success",
         message: `Incident ${escalatingIncident.incident_number} escalated to command level.`,
@@ -146,7 +159,7 @@ export default function SecurityIncidentsPage() {
       await CampusSecurityService.resolveIncident(
         resolvingIncident.id,
         resolutionSummary,
-        correctiveNotes
+        correctiveNotes,
       );
       setNotification({
         type: "success",
@@ -173,17 +186,27 @@ export default function SecurityIncidentsPage() {
       inc.reported_location.toLowerCase().includes(search.toLowerCase()) ||
       inc.description.toLowerCase().includes(search.toLowerCase());
 
-    const matchesCategory = categoryFilter === "ALL" || inc.category === categoryFilter;
-    const matchesSeverity = severityFilter === "ALL" || inc.severity === severityFilter;
+    const matchesCategory =
+      categoryFilter === "ALL" || inc.category === categoryFilter;
+    const matchesSeverity =
+      severityFilter === "ALL" || inc.severity === severityFilter;
     const matchesStatus = statusFilter === "ALL" || inc.status === statusFilter;
 
     return matchesSearch && matchesCategory && matchesSeverity && matchesStatus;
   });
 
-  const openCount = incidents.filter((i) => i.status !== "RESOLVED" && i.status !== "CLOSED").length;
-  const criticalCount = incidents.filter((i) => i.severity === "CRITICAL" && i.status !== "CLOSED").length;
-  const escalatedCount = incidents.filter((i) => i.is_escalated && i.status !== "RESOLVED").length;
-  const resolvedCount = incidents.filter((i) => i.status === "RESOLVED" || i.status === "CLOSED").length;
+  const openCount = incidents.filter(
+    (i) => i.status !== "RESOLVED" && i.status !== "CLOSED",
+  ).length;
+  const criticalCount = incidents.filter(
+    (i) => i.severity === "CRITICAL" && i.status !== "CLOSED",
+  ).length;
+  const escalatedCount = incidents.filter(
+    (i) => i.is_escalated && i.status !== "RESOLVED",
+  ).length;
+  const resolvedCount = incidents.filter(
+    (i) => i.status === "RESOLVED" || i.status === "CLOSED",
+  ).length;
 
   const getSeverityBadge = (severity: IncidentSeverity) => {
     switch (severity) {
@@ -261,7 +284,8 @@ export default function SecurityIncidentsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Dispatch response patrols, log unauthorized access breaches, escalate priority alerts, and document corrective actions.
+            Dispatch response patrols, log unauthorized access breaches,
+            escalate priority alerts, and document corrective actions.
           </p>
         </div>
 
@@ -300,38 +324,62 @@ export default function SecurityIncidentsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Open Incidents</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Open Incidents
+            </span>
             <AlertTriangle className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{openCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Active response underway</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {openCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Active response underway
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Critical Severity</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Critical Severity
+            </span>
             <Flame className="w-5 h-5 text-red-500" />
           </div>
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">{criticalCount}</div>
-          <div className="text-xs text-slate-500 mt-1">High-risk safety priority</div>
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">
+            {criticalCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            High-risk safety priority
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Escalated</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Escalated
+            </span>
             <ArrowUpRight className="w-5 h-5 text-purple-500" />
           </div>
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">{escalatedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Command supervision active</div>
+          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">
+            {escalatedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Command supervision active
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Resolved</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Resolved
+            </span>
             <CheckCircle className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">{resolvedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Corrective actions filed</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+            {resolvedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Corrective actions filed
+          </div>
         </div>
       </div>
 
@@ -428,27 +476,40 @@ export default function SecurityIncidentsPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{inc.title}</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{inc.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {inc.title}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                  {inc.description}
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                   <MapPin className="w-4 h-4 text-indigo-500 shrink-0" />
                   <span>
-                    Location: <strong className="text-slate-900 dark:text-white">{inc.reported_location}</strong>
+                    Location:{" "}
+                    <strong className="text-slate-900 dark:text-white">
+                      {inc.reported_location}
+                    </strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                   <Users className="w-4 h-4 text-emerald-500 shrink-0" />
                   <span>
-                    Assigned: <strong className="text-slate-900 dark:text-white">{inc.assigned_team || "Unassigned"}</strong>
+                    Assigned:{" "}
+                    <strong className="text-slate-900 dark:text-white">
+                      {inc.assigned_team || "Unassigned"}
+                    </strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                   <FileText className="w-4 h-4 text-amber-500 shrink-0" />
                   <span>
-                    Reported By: <strong className="text-slate-900 dark:text-white">{inc.reported_by_name || "Patrol Officer"}</strong>
+                    Reported By:{" "}
+                    <strong className="text-slate-900 dark:text-white">
+                      {inc.reported_by_name || "Patrol Officer"}
+                    </strong>
                   </span>
                 </div>
               </div>
@@ -485,14 +546,16 @@ export default function SecurityIncidentsPage() {
 
               {/* Actions toolbar */}
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                {!inc.is_escalated && inc.status !== "RESOLVED" && inc.status !== "CLOSED" && (
-                  <button
-                    onClick={() => setEscalatingIncident(inc)}
-                    className="px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 rounded-lg border border-purple-200 dark:border-purple-800 transition-colors"
-                  >
-                    Escalate Incident
-                  </button>
-                )}
+                {!inc.is_escalated &&
+                  inc.status !== "RESOLVED" &&
+                  inc.status !== "CLOSED" && (
+                    <button
+                      onClick={() => setEscalatingIncident(inc)}
+                      className="px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 rounded-lg border border-purple-200 dark:border-purple-800 transition-colors"
+                    >
+                      Escalate Incident
+                    </button>
+                  )}
 
                 {inc.status !== "RESOLVED" && inc.status !== "CLOSED" && (
                   <button
@@ -535,7 +598,9 @@ export default function SecurityIncidentsPage() {
                   required
                   placeholder="e.g. Unauthorized badge clone detected at Server Room A"
                   value={reportForm.title}
-                  onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setReportForm({ ...reportForm, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -547,16 +612,33 @@ export default function SecurityIncidentsPage() {
                   </label>
                   <select
                     value={reportForm.category}
-                    onChange={(e) => setReportForm({ ...reportForm, category: e.target.value as any })}
+                    onChange={(e) =>
+                      setReportForm({
+                        ...reportForm,
+                        category: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
-                    <option value="UNAUTHORIZED_ACCESS">Unauthorized Access</option>
-                    <option value="PROPERTY_LOSS_DAMAGE">Property Loss / Damage</option>
+                    <option value="UNAUTHORIZED_ACCESS">
+                      Unauthorized Access
+                    </option>
+                    <option value="PROPERTY_LOSS_DAMAGE">
+                      Property Loss / Damage
+                    </option>
                     <option value="SAFETY_HAZARD">Safety Hazard</option>
-                    <option value="SUSPICIOUS_ACTIVITY">Suspicious Activity</option>
-                    <option value="VEHICLE_GATE_INCIDENT">Vehicle / Gate Breach</option>
-                    <option value="POLICY_VIOLATION">Campus Policy Violation</option>
-                    <option value="EMERGENCY_ASSISTANCE">Emergency Assistance</option>
+                    <option value="SUSPICIOUS_ACTIVITY">
+                      Suspicious Activity
+                    </option>
+                    <option value="VEHICLE_GATE_INCIDENT">
+                      Vehicle / Gate Breach
+                    </option>
+                    <option value="POLICY_VIOLATION">
+                      Campus Policy Violation
+                    </option>
+                    <option value="EMERGENCY_ASSISTANCE">
+                      Emergency Assistance
+                    </option>
                   </select>
                 </div>
                 <div>
@@ -565,7 +647,12 @@ export default function SecurityIncidentsPage() {
                   </label>
                   <select
                     value={reportForm.severity}
-                    onChange={(e) => setReportForm({ ...reportForm, severity: e.target.value as any })}
+                    onChange={(e) =>
+                      setReportForm({
+                        ...reportForm,
+                        severity: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
                     <option value="LOW">LOW</option>
@@ -586,7 +673,12 @@ export default function SecurityIncidentsPage() {
                     required
                     placeholder="e.g. Building C, 3rd Floor"
                     value={reportForm.reported_location}
-                    onChange={(e) => setReportForm({ ...reportForm, reported_location: e.target.value })}
+                    onChange={(e) =>
+                      setReportForm({
+                        ...reportForm,
+                        reported_location: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -596,13 +688,26 @@ export default function SecurityIncidentsPage() {
                   </label>
                   <select
                     value={reportForm.assigned_team}
-                    onChange={(e) => setReportForm({ ...reportForm, assigned_team: e.target.value })}
+                    onChange={(e) =>
+                      setReportForm({
+                        ...reportForm,
+                        assigned_team: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   >
-                    <option value="CAMPUS_PATROL_ALPHA">Campus Patrol Alpha</option>
-                    <option value="CAMPUS_PATROL_BRAVO">Campus Patrol Bravo</option>
-                    <option value="RAPID_RESPONSE_TEAM">Rapid Response Team</option>
-                    <option value="FACILITY_SECURITY_LEAD">Facility Security Lead</option>
+                    <option value="CAMPUS_PATROL_ALPHA">
+                      Campus Patrol Alpha
+                    </option>
+                    <option value="CAMPUS_PATROL_BRAVO">
+                      Campus Patrol Bravo
+                    </option>
+                    <option value="RAPID_RESPONSE_TEAM">
+                      Rapid Response Team
+                    </option>
+                    <option value="FACILITY_SECURITY_LEAD">
+                      Facility Security Lead
+                    </option>
                   </select>
                 </div>
               </div>
@@ -616,7 +721,12 @@ export default function SecurityIncidentsPage() {
                   required
                   placeholder="Detail observed activity, involved individuals, immediate mitigation steps taken..."
                   value={reportForm.description}
-                  onChange={(e) => setReportForm({ ...reportForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setReportForm({
+                      ...reportForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -661,7 +771,8 @@ export default function SecurityIncidentsPage() {
 
             <form onSubmit={handleEscalateIncident} className="p-6 space-y-4">
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Escalating this incident triggers high-priority alerts to the Dean of Operations and Security Director.
+                Escalating this incident triggers high-priority alerts to the
+                Dean of Operations and Security Director.
               </p>
 
               <div>
@@ -767,4 +878,3 @@ export default function SecurityIncidentsPage() {
     </div>
   );
 }
-

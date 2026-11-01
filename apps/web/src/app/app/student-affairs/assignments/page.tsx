@@ -3,10 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { studentAffairsService } from "@/services/student-affairs.service";
-import {
-  GrievanceCaseModel,
-  SACasePriority,
-} from "@/types/student-affairs";
+import { GrievanceCaseModel, SACasePriority } from "@/types/student-affairs";
 import { StudentAffairsNav } from "@/components/student-affairs/student-affairs-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -23,10 +20,30 @@ import {
 } from "lucide-react";
 
 const MOCK_OFFICERS = [
-  { id: "usr-off-001", name: "Dr. Vikram Sethi", office: "Dean of Student Affairs", caseload: 4 },
-  { id: "usr-off-002", name: "Prof. Ananya Nair", office: "Academic Grievance Redressal", caseload: 2 },
-  { id: "usr-ombuds-001", name: "Dr. Meenakshi Sundaram", office: "Institutional Ombudsperson", caseload: 1 },
-  { id: "usr-icc-001", name: "Prof. Radhika Menon", office: "Safeguarding & Anti-Ragging", caseload: 3 },
+  {
+    id: "usr-off-001",
+    name: "Dr. Vikram Sethi",
+    office: "Dean of Student Affairs",
+    caseload: 4,
+  },
+  {
+    id: "usr-off-002",
+    name: "Prof. Ananya Nair",
+    office: "Academic Grievance Redressal",
+    caseload: 2,
+  },
+  {
+    id: "usr-ombuds-001",
+    name: "Dr. Meenakshi Sundaram",
+    office: "Institutional Ombudsperson",
+    caseload: 1,
+  },
+  {
+    id: "usr-icc-001",
+    name: "Prof. Radhika Menon",
+    office: "Safeguarding & Anti-Ragging",
+    caseload: 3,
+  },
 ];
 
 function CaseAssignmentWorkspaceContent() {
@@ -34,10 +51,16 @@ function CaseAssignmentWorkspaceContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
-  const [selectedOfficerId, setSelectedOfficerId] = useState<string>(MOCK_OFFICERS[0].id);
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
+  const [selectedOfficerId, setSelectedOfficerId] = useState<string>(
+    MOCK_OFFICERS[0].id,
+  );
   const [reassignmentReason, setReassignmentReason] = useState("");
-  const [priority, setPriority] = useState<SACasePriority>(SACasePriority.MEDIUM);
+  const [priority, setPriority] = useState<SACasePriority>(
+    SACasePriority.MEDIUM,
+  );
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -72,7 +95,9 @@ function CaseAssignmentWorkspaceContent() {
         priority,
         targetResponseHours: 48,
       });
-      setSuccessMessage("Case successfully assigned to designated case officer.");
+      setSuccessMessage(
+        "Case successfully assigned to designated case officer.",
+      );
       // Refresh
       const updated = await studentAffairsService.getCases();
       setCases(updated);
@@ -89,7 +114,10 @@ function CaseAssignmentWorkspaceContent() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Assignment Workspace", href: "/app/student-affairs/assignments" },
+          {
+            label: "Assignment Workspace",
+            href: "/app/student-affairs/assignments",
+          },
         ]}
       />
 
@@ -99,7 +127,8 @@ function CaseAssignmentWorkspaceContent() {
           Case Officer Assignment & Workload Governance
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Route cases to authorized officers, distribute institutional caseloads evenly, and record formal reassignment rationales.
+          Route cases to authorized officers, distribute institutional caseloads
+          evenly, and record formal reassignment rationales.
         </p>
       </div>
 
@@ -111,7 +140,10 @@ function CaseAssignmentWorkspaceContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{successMessage}</span>
           </div>
-          <button onClick={() => setSuccessMessage("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setSuccessMessage("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -150,17 +182,30 @@ function CaseAssignmentWorkspaceContent() {
               {activeCase && (
                 <div className="p-3 rounded-lg border border-slate-800 bg-slate-950/60 text-xs space-y-1.5">
                   <div className="flex justify-between text-slate-400">
-                    <span>Category: <strong className="text-slate-200">{activeCase.category?.name}</strong></span>
-                    <span>Confidentiality: <strong className="text-slate-200">{activeCase.confidentiality_level}</strong></span>
+                    <span>
+                      Category:{" "}
+                      <strong className="text-slate-200">
+                        {activeCase.category?.name}
+                      </strong>
+                    </span>
+                    <span>
+                      Confidentiality:{" "}
+                      <strong className="text-slate-200">
+                        {activeCase.confidentiality_level}
+                      </strong>
+                    </span>
                   </div>
-                  <p className="text-slate-300 line-clamp-2">{activeCase.description}</p>
+                  <p className="text-slate-300 line-clamp-2">
+                    {activeCase.description}
+                  </p>
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                    Designated Case Officer <span className="text-rose-400">*</span>
+                    Designated Case Officer{" "}
+                    <span className="text-rose-400">*</span>
                   </label>
                   <select
                     value={selectedOfficerId}
@@ -181,13 +226,17 @@ function CaseAssignmentWorkspaceContent() {
                   </label>
                   <select
                     value={priority}
-                    onChange={(e) => setPriority(e.target.value as SACasePriority)}
+                    onChange={(e) =>
+                      setPriority(e.target.value as SACasePriority)
+                    }
                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
                     <option value={SACasePriority.LOW}>LOW</option>
                     <option value={SACasePriority.MEDIUM}>MEDIUM</option>
                     <option value={SACasePriority.HIGH}>HIGH</option>
-                    <option value={SACasePriority.CRITICAL_URGENT}>CRITICAL URGENT</option>
+                    <option value={SACasePriority.CRITICAL_URGENT}>
+                      CRITICAL URGENT
+                    </option>
                   </select>
                 </div>
               </div>
@@ -212,7 +261,9 @@ function CaseAssignmentWorkspaceContent() {
                   className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs gap-2"
                 >
                   <UserCheck className="h-4 w-4" />
-                  {loading ? "Recording Assignment..." : "Confirm & Commit Assignment"}
+                  {loading
+                    ? "Recording Assignment..."
+                    : "Confirm & Commit Assignment"}
                 </Button>
               </div>
             </Card>
@@ -226,10 +277,16 @@ function CaseAssignmentWorkspaceContent() {
           </h2>
           <div className="space-y-3">
             {MOCK_OFFICERS.map((off) => (
-              <Card key={off.id} className="p-4 border-slate-800 bg-slate-900/40 text-xs space-y-1">
+              <Card
+                key={off.id}
+                className="p-4 border-slate-800 bg-slate-900/40 text-xs space-y-1"
+              >
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-white">{off.name}</span>
-                  <Badge variant="outline" className="text-[10px] border-slate-700 text-slate-300">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] border-slate-700 text-slate-300"
+                  >
                     {off.caseload} active cases
                   </Badge>
                 </div>
@@ -245,9 +302,14 @@ function CaseAssignmentWorkspaceContent() {
 
 export default function CaseAssignmentWorkspacePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading assignments...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading assignments...
+        </div>
+      }
+    >
       <CaseAssignmentWorkspaceContent />
     </Suspense>
   );
 }
-

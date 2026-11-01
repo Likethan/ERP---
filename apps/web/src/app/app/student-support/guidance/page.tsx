@@ -25,7 +25,11 @@ import {
 interface GuidanceEvent {
   id: string;
   date: string;
-  sourceModule: "ACADEMIC_ADVISING" | "CAREER_PLACEMENT" | "FACULTY_MENTORING" | "SKILL_WORKSHOP";
+  sourceModule:
+    | "ACADEMIC_ADVISING"
+    | "CAREER_PLACEMENT"
+    | "FACULTY_MENTORING"
+    | "SKILL_WORKSHOP";
   title: string;
   facilitator: string;
   summary: string;
@@ -40,8 +44,12 @@ const MOCK_GUIDANCE_TIMELINE: GuidanceEvent[] = [
     sourceModule: "FACULTY_MENTORING",
     title: "Semester 5 Mid-Term Academic & IDP Review",
     facilitator: "Dr. K. S. Venkatesh (Dept of CSE)",
-    summary: "Reviewed distributed systems project milestone, recommended elective options for semester 6, and validated student development progress.",
-    actionItems: ["Complete cloud simulator benchmark", "Submit IEEE conference preprint draft"],
+    summary:
+      "Reviewed distributed systems project milestone, recommended elective options for semester 6, and validated student development progress.",
+    actionItems: [
+      "Complete cloud simulator benchmark",
+      "Submit IEEE conference preprint draft",
+    ],
     status: "COMPLETED",
   },
   {
@@ -50,8 +58,12 @@ const MOCK_GUIDANCE_TIMELINE: GuidanceEvent[] = [
     sourceModule: "CAREER_PLACEMENT",
     title: "Campus Placement Technical Mock Interview",
     facilitator: "Prof. Ananya Roy (Placement Cell)",
-    summary: "Conducted 45-minute live coding simulation and system design assessment. Scored 88/100 on algorithmic logic.",
-    actionItems: ["Revise dynamic programming edge cases", "Optimize resume summary block"],
+    summary:
+      "Conducted 45-minute live coding simulation and system design assessment. Scored 88/100 on algorithmic logic.",
+    actionItems: [
+      "Revise dynamic programming edge cases",
+      "Optimize resume summary block",
+    ],
     status: "COMPLETED",
   },
   {
@@ -60,7 +72,8 @@ const MOCK_GUIDANCE_TIMELINE: GuidanceEvent[] = [
     sourceModule: "ACADEMIC_ADVISING",
     title: "Honors Degree & Minor Specialization Advising",
     facilitator: "Dean of Academics Office",
-    summary: "Formally approved enrollment in Honors in Artificial Intelligence & Robotics based on cumulative CGPA 8.75.",
+    summary:
+      "Formally approved enrollment in Honors in Artificial Intelligence & Robotics based on cumulative CGPA 8.75.",
     actionItems: ["Enroll in Advanced Robotics Elective 501"],
     status: "COMPLETED",
   },
@@ -70,18 +83,22 @@ const MOCK_GUIDANCE_TIMELINE: GuidanceEvent[] = [
     sourceModule: "SKILL_WORKSHOP",
     title: "Enterprise System Design & Microservices Masterclass",
     facilitator: "Industry Visiting Specialist",
-    summary: "Practical laboratory workshop on event-driven architectures, Kafka streams, and distributed transactional consistency.",
+    summary:
+      "Practical laboratory workshop on event-driven architectures, Kafka streams, and distributed transactional consistency.",
     status: "SCHEDULED",
   },
 ];
 
 export default function AcademicCareerGuidancePage() {
-  const [timelineEvents, setTimelineEvents] = useState<GuidanceEvent[]>(MOCK_GUIDANCE_TIMELINE);
+  const [timelineEvents, setTimelineEvents] = useState<GuidanceEvent[]>(
+    MOCK_GUIDANCE_TIMELINE,
+  );
   const [filterSource, setFilterSource] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredEvents = timelineEvents.filter((ev) => {
-    const matchesSource = filterSource === "ALL" || ev.sourceModule === filterSource;
+    const matchesSource =
+      filterSource === "ALL" || ev.sourceModule === filterSource;
     const matchesSearch =
       ev.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ev.facilitator.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -96,7 +113,10 @@ export default function AcademicCareerGuidancePage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Guidance Timeline", href: "/app/student-support/guidance" },
+            {
+              label: "Guidance Timeline",
+              href: "/app/student-support/guidance",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -106,7 +126,8 @@ export default function AcademicCareerGuidancePage() {
               Academic & Career Guidance Longitudinal Timeline
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Holistic, privacy-safe record of advising interventions, career readiness sessions, and faculty guidance.
+              Holistic, privacy-safe record of advising interventions, career
+              readiness sessions, and faculty guidance.
             </p>
           </div>
           <div className="flex gap-2">
@@ -159,40 +180,50 @@ export default function AcademicCareerGuidancePage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-sm">{event.title}</span>
+                    <span className="font-semibold text-white text-sm">
+                      {event.title}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
                         event.sourceModule === "FACULTY_MENTORING"
                           ? "border-indigo-500/30 text-indigo-400 bg-indigo-500/10 text-[10px]"
                           : event.sourceModule === "CAREER_PLACEMENT"
-                          ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-[10px]"
-                          : event.sourceModule === "ACADEMIC_ADVISING"
-                          ? "border-purple-500/30 text-purple-400 bg-purple-500/10 text-[10px]"
-                          : "border-cyan-500/30 text-cyan-400 bg-cyan-500/10 text-[10px]"
+                            ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-[10px]"
+                            : event.sourceModule === "ACADEMIC_ADVISING"
+                              ? "border-purple-500/30 text-purple-400 bg-purple-500/10 text-[10px]"
+                              : "border-cyan-500/30 text-cyan-400 bg-cyan-500/10 text-[10px]"
                       }
                     >
                       {event.sourceModule.replace("_", " ")}
                     </Badge>
                   </div>
                   <div className="text-xs text-slate-400">
-                    Facilitator: <span className="text-slate-200">{event.facilitator}</span>
+                    Facilitator:{" "}
+                    <span className="text-slate-200">{event.facilitator}</span>
                   </div>
                 </div>
 
                 <div className="text-xs text-slate-400">
                   <span className="font-medium text-slate-300">
                     {new Date(event.date).toLocaleDateString()} at{" "}
-                    {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(event.date).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed">{event.summary}</p>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {event.summary}
+              </p>
 
               {event.actionItems && event.actionItems.length > 0 && (
                 <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800 text-xs space-y-1">
-                  <span className="text-[11px] text-slate-400 font-medium">Assigned Guidance Actions:</span>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    Assigned Guidance Actions:
+                  </span>
                   <ul className="list-disc list-inside space-y-0.5 text-slate-200">
                     {event.actionItems.map((act, idx) => (
                       <li key={idx}>{act}</li>

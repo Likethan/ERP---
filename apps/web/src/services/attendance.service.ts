@@ -90,7 +90,6 @@ class AttendanceService {
   // ==========================================
 
   async getDashboardSummary(): Promise<ApiResponse<AttendanceSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
     // Dynamically calculate pending items
     const pendingLeaves = this.leaves.filter(
       (l) => l.status === "PENDING",
@@ -150,12 +149,10 @@ class AttendanceService {
   // ==========================================
 
   async getPolicies(): Promise<ApiResponse<AttendancePolicy[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...this.policies] };
   }
 
   async getPolicyById(id: string): Promise<ApiResponse<AttendancePolicy>> {
-    await new Promise((r) => setTimeout(r, 30));
     const policy = this.policies.find((p) => p.id === id);
     if (!policy) throw new Error("Policy not found");
     return { success: true, data: policy };
@@ -165,7 +162,6 @@ class AttendanceService {
     id: string,
     updates: Partial<AttendancePolicy>,
   ): Promise<ApiResponse<AttendancePolicy>> {
-    await new Promise((r) => setTimeout(r, 60));
     const idx = this.policies.findIndex((p) => p.id === id);
     if (idx === -1) throw new Error("Policy not found");
     this.policies[idx] = { ...this.policies[idx], ...updates };
@@ -175,7 +171,6 @@ class AttendanceService {
   async createPolicy(
     policyData: Omit<AttendancePolicy, "id">,
   ): Promise<ApiResponse<AttendancePolicy>> {
-    await new Promise((r) => setTimeout(r, 70));
     const newPolicy: AttendancePolicy = {
       ...policyData,
       id: `pol-${Date.now()}`,
@@ -191,7 +186,6 @@ class AttendanceService {
   async getSessions(
     filters?: SessionFilters,
   ): Promise<ApiResponse<AttendanceSession[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     let items = [...this.sessions];
 
     if (filters?.date && filters.date !== "ALL") {
@@ -244,7 +238,6 @@ class AttendanceService {
   async getSessionById(
     id: string,
   ): Promise<ApiResponse<AttendanceSession | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const session = this.sessions.find((s) => s.id === id) || null;
     return { success: true, data: session };
   }
@@ -252,7 +245,6 @@ class AttendanceService {
   async createSession(
     data: Partial<AttendanceSession>,
   ): Promise<ApiResponse<AttendanceSession>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newSession: AttendanceSession = {
       id: `att-sess-${Date.now()}`,
       courseOfferingId: data.courseOfferingId || "off-cs301-a",
@@ -286,7 +278,6 @@ class AttendanceService {
     id: string,
     updates: Partial<AttendanceSession>,
   ): Promise<ApiResponse<AttendanceSession>> {
-    await new Promise((r) => setTimeout(r, 60));
     const idx = this.sessions.findIndex((s) => s.id === id);
     if (idx === -1) throw new Error("Session not found");
     this.sessions[idx] = { ...this.sessions[idx], ...updates };
@@ -300,7 +291,6 @@ class AttendanceService {
   async getSessionRoster(
     sessionId: string,
   ): Promise<ApiResponse<AttendanceRecord[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     const existing = this.records.filter((r) => r.sessionId === sessionId);
     if (existing.length > 0) {
       return { success: true, data: existing };
@@ -336,7 +326,6 @@ class AttendanceService {
       remarks?: string;
     }[],
   ): Promise<ApiResponse<{ updatedCount: number }>> {
-    await new Promise((r) => setTimeout(r, 100));
     const session = this.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found");
 
@@ -412,7 +401,6 @@ class AttendanceService {
   async getRecords(
     filters?: RecordFilters,
   ): Promise<ApiResponse<AttendanceRecord[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.records];
 
     if (filters?.sessionId && filters.sessionId !== "ALL") {
@@ -457,7 +445,6 @@ class AttendanceService {
   async getStudentAttendanceSummary(
     studentId: string,
   ): Promise<ApiResponse<AttendanceStudentSummary>> {
-    await new Promise((r) => setTimeout(r, 50));
     const found = this.studentSummaries.find(
       (s) =>
         s.studentId === studentId ||
@@ -535,7 +522,6 @@ class AttendanceService {
   async listStudentSummaries(
     filters?: StudentAttendanceFilters,
   ): Promise<ApiResponse<AttendanceStudentSummary[]>> {
-    await new Promise((r) => setTimeout(r, 50));
     let items = [...this.studentSummaries];
 
     if (filters?.department && filters.department !== "ALL") {
@@ -577,7 +563,6 @@ class AttendanceService {
   async getCourseAttendanceSummary(
     courseOfferingId: string,
   ): Promise<ApiResponse<AttendanceCourseSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
     const found = this.courseSummaries.find(
       (c) =>
         c.courseOfferingId === courseOfferingId ||
@@ -612,7 +597,6 @@ class AttendanceService {
   async listCourseSummaries(
     filters?: CourseAttendanceFilters,
   ): Promise<ApiResponse<AttendanceCourseSummary[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.courseSummaries];
 
     if (filters?.riskLevel && (filters.riskLevel as string) !== "ALL") {
@@ -643,7 +627,6 @@ class AttendanceService {
   async getLowAttendanceAlerts(): Promise<
     ApiResponse<LowAttendanceAlertItem[]>
   > {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...MOCK_LOW_ATTENDANCE_ALERTS] };
   }
 
@@ -656,7 +639,6 @@ class AttendanceService {
     status?: string;
     department?: string;
   }): Promise<ApiResponse<AttendanceLeave[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.leaves];
 
     if (filters?.studentId && filters.studentId !== "ALL") {
@@ -679,7 +661,6 @@ class AttendanceService {
   }
 
   async getLeaveById(id: string): Promise<ApiResponse<AttendanceLeave>> {
-    await new Promise((r) => setTimeout(r, 30));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) throw new Error("Leave request not found");
     return { success: true, data: leave };
@@ -688,7 +669,6 @@ class AttendanceService {
   async submitLeave(
     data: Partial<AttendanceLeave>,
   ): Promise<ApiResponse<AttendanceLeave>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newLeave: AttendanceLeave = {
       id: `leave-${Date.now()}`,
       studentId: data.studentId || "stu-24cse0101",
@@ -717,7 +697,6 @@ class AttendanceService {
     reviewerNotes?: string,
     reviewerName: string = "Dr. K. S. Anand (HOD - CSE)",
   ): Promise<ApiResponse<AttendanceLeave>> {
-    await new Promise((r) => setTimeout(r, 70));
     const leave = this.leaves.find((l) => l.id === id);
     if (!leave) throw new Error("Leave request not found");
     leave.status = status;
@@ -738,7 +717,6 @@ class AttendanceService {
     studentId?: string;
     courseCode?: string;
   }): Promise<ApiResponse<AttendanceCorrection[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.corrections];
 
     if (filters?.status && (filters.status as string) !== "ALL") {
@@ -761,7 +739,6 @@ class AttendanceService {
   async submitCorrection(
     data: Partial<AttendanceCorrection>,
   ): Promise<ApiResponse<AttendanceCorrection>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newCorr: AttendanceCorrection = {
       id: `corr-${Date.now()}`,
       recordId: data.recordId || `rec-${Date.now()}`,
@@ -799,7 +776,6 @@ class AttendanceService {
     reviewerNotes?: string,
     reviewerName: string = "Dr. K. S. Anand (HOD - CSE)",
   ): Promise<ApiResponse<AttendanceCorrection>> {
-    await new Promise((r) => setTimeout(r, 80));
     const corr = this.corrections.find((c) => c.id === id);
     if (!corr) throw new Error("Correction request not found");
 
@@ -843,8 +819,6 @@ class AttendanceService {
       rows: Record<string, unknown>[];
     }>
   > {
-    await new Promise((r) => setTimeout(r, 70));
-
     if (filter.reportType === "LOW_ATTENDANCE") {
       const rows = MOCK_LOW_ATTENDANCE_ALERTS.map((a) => ({
         "Student Name": a.studentName,

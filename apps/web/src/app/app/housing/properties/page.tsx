@@ -81,10 +81,15 @@ export default function PropertiesDirectoryPage() {
     }
   };
 
-  const handleTransition = async (propertyId: string, targetStatus: PropertyLifecycleStatus) => {
+  const handleTransition = async (
+    propertyId: string,
+    targetStatus: PropertyLifecycleStatus,
+  ) => {
     setIsTransitioning(propertyId);
     try {
-      await HousingService.transitionProperty(propertyId, { target_status: targetStatus });
+      await HousingService.transitionProperty(propertyId, {
+        target_status: targetStatus,
+      });
       await loadData();
     } catch (err) {
       alert("Transition failed: " + (err as Error).message);
@@ -99,7 +104,8 @@ export default function PropertiesDirectoryPage() {
       p.code.toLowerCase().includes(search.toLowerCase()) ||
       p.address.toLowerCase().includes(search.toLowerCase());
     const matchesType = typeFilter === "ALL" || p.property_type === typeFilter;
-    const matchesStatus = statusFilter === "ALL" || p.lifecycle_status === statusFilter;
+    const matchesStatus =
+      statusFilter === "ALL" || p.lifecycle_status === statusFilter;
     return matchesSearch && matchesType && matchesStatus;
   });
 
@@ -165,7 +171,9 @@ export default function PropertiesDirectoryPage() {
           {filteredProperties.map((prop) => {
             const occupancyRate =
               prop.total_bed_capacity > 0
-                ? Math.round((prop.occupied_beds / prop.total_bed_capacity) * 100)
+                ? Math.round(
+                    (prop.occupied_beds / prop.total_bed_capacity) * 100,
+                  )
                 : 0;
 
             return (
@@ -188,17 +196,19 @@ export default function PropertiesDirectoryPage() {
                         prop.lifecycle_status === "PUBLISHED"
                           ? "bg-emerald-100 text-emerald-800"
                           : prop.lifecycle_status === "APPROVED"
-                          ? "bg-blue-100 text-blue-800"
-                          : prop.lifecycle_status === "SUSPENDED"
-                          ? "bg-rose-100 text-rose-800"
-                          : "bg-gray-100 text-gray-700"
+                            ? "bg-blue-100 text-blue-800"
+                            : prop.lifecycle_status === "SUSPENDED"
+                              ? "bg-rose-100 text-rose-800"
+                              : "bg-gray-100 text-gray-700"
                       }`}
                     >
                       {prop.lifecycle_status}
                     </span>
                   </div>
 
-                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">{prop.description}</p>
+                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                    {prop.description}
+                  </p>
 
                   <div className="flex items-center gap-1.5 mt-3 text-xs text-gray-600">
                     <MapPinIcon className="w-4 h-4 text-gray-400 shrink-0" />
@@ -208,16 +218,28 @@ export default function PropertiesDirectoryPage() {
                   {/* Bed stats */}
                   <div className="grid grid-cols-3 gap-2 mt-4 p-3 bg-gray-50 rounded-lg text-center border border-gray-100">
                     <div>
-                      <span className="text-[10px] font-medium text-gray-500 block">Total Beds</span>
-                      <span className="text-sm font-bold text-gray-900">{prop.total_bed_capacity}</span>
+                      <span className="text-[10px] font-medium text-gray-500 block">
+                        Total Beds
+                      </span>
+                      <span className="text-sm font-bold text-gray-900">
+                        {prop.total_bed_capacity}
+                      </span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-medium text-gray-500 block">Occupied</span>
-                      <span className="text-sm font-bold text-amber-700">{prop.occupied_beds}</span>
+                      <span className="text-[10px] font-medium text-gray-500 block">
+                        Occupied
+                      </span>
+                      <span className="text-sm font-bold text-amber-700">
+                        {prop.occupied_beds}
+                      </span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-medium text-gray-500 block">Available</span>
-                      <span className="text-sm font-bold text-emerald-700">{prop.available_beds}</span>
+                      <span className="text-[10px] font-medium text-gray-500 block">
+                        Available
+                      </span>
+                      <span className="text-sm font-bold text-emerald-700">
+                        {prop.available_beds}
+                      </span>
                     </div>
                   </div>
 
@@ -225,7 +247,8 @@ export default function PropertiesDirectoryPage() {
                   <div className="flex items-center justify-between text-xs mt-4 pt-3 border-t border-gray-100">
                     <span className="text-gray-500">Rent Range:</span>
                     <span className="font-bold text-gray-900">
-                      ₹{prop.monthly_rent_min.toLocaleString()} - ₹{prop.monthly_rent_max.toLocaleString()} / mo
+                      ₹{prop.monthly_rent_min.toLocaleString()} - ₹
+                      {prop.monthly_rent_max.toLocaleString()} / mo
                     </span>
                   </div>
                 </div>
@@ -238,7 +261,9 @@ export default function PropertiesDirectoryPage() {
                   <div className="flex items-center gap-1.5">
                     {prop.lifecycle_status === "DRAFT" && (
                       <button
-                        onClick={() => handleTransition(prop.id, "PENDING_REVIEW")}
+                        onClick={() =>
+                          handleTransition(prop.id, "PENDING_REVIEW")
+                        }
                         className="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[11px] font-medium"
                       >
                         Submit Review
@@ -289,15 +314,22 @@ export default function PropertiesDirectoryPage() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-bold text-gray-900 text-base">Register Accommodation Property</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+              <h3 className="font-bold text-gray-900 text-base">
+                Register Accommodation Property
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleCreate} className="p-5 space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Property Code *</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Property Code *
+                  </label>
                   <input
                     type="text"
                     required
@@ -314,13 +346,17 @@ export default function PropertiesDirectoryPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Property Name *</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Property Name *
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Sapphire Court"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     className="w-full p-2 border rounded-lg"
                   />
                 </div>
@@ -328,25 +364,39 @@ export default function PropertiesDirectoryPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Property Type</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Property Type
+                  </label>
                   <select
                     value={formData.property_type}
                     onChange={(e) =>
-                      setFormData({ ...formData, property_type: e.target.value as PropertyType })
+                      setFormData({
+                        ...formData,
+                        property_type: e.target.value as PropertyType,
+                      })
                     }
                     className="w-full p-2 border rounded-lg bg-white"
                   >
-                    <option value="CAMPUS_HOSTEL">Campus Hostel (On-Site)</option>
+                    <option value="CAMPUS_HOSTEL">
+                      Campus Hostel (On-Site)
+                    </option>
                     <option value="OFF_CAMPUS_HOSTEL">Off-Campus Hostel</option>
                     <option value="STUDENT_VILLAGE">Student Village</option>
                     <option value="PRIVATE_APARTMENT">Private Apartment</option>
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Provider / Landlord</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Provider / Landlord
+                  </label>
                   <select
                     value={formData.provider_id || ""}
-                    onChange={(e) => setFormData({ ...formData, provider_id: e.target.value || undefined })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        provider_id: e.target.value || undefined,
+                      })
+                    }
                     className="w-full p-2 border rounded-lg bg-white"
                   >
                     <option value="">Institution Managed</option>
@@ -360,48 +410,67 @@ export default function PropertiesDirectoryPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Address *</label>
+                <label className="font-semibold text-gray-700 block mb-1">
+                  Address *
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="Street address, sector or block"
                   value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Distance (km)</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Distance (km)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     value={formData.distance_to_campus_km}
                     onChange={(e) =>
-                      setFormData({ ...formData, distance_to_campus_km: parseFloat(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        distance_to_campus_km: parseFloat(e.target.value) || 0,
+                      })
                     }
                     className="w-full p-2 border rounded-lg"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Min Rent (₹/mo)</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Min Rent (₹/mo)
+                  </label>
                   <input
                     type="number"
                     value={formData.monthly_rent_min}
                     onChange={(e) =>
-                      setFormData({ ...formData, monthly_rent_min: parseInt(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        monthly_rent_min: parseInt(e.target.value) || 0,
+                      })
                     }
                     className="w-full p-2 border rounded-lg"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Max Rent (₹/mo)</label>
+                  <label className="font-semibold text-gray-700 block mb-1">
+                    Max Rent (₹/mo)
+                  </label>
                   <input
                     type="number"
                     value={formData.monthly_rent_max}
                     onChange={(e) =>
-                      setFormData({ ...formData, monthly_rent_max: parseInt(e.target.value) || 0 })
+                      setFormData({
+                        ...formData,
+                        monthly_rent_max: parseInt(e.target.value) || 0,
+                      })
                     }
                     className="w-full p-2 border rounded-lg"
                   />
@@ -409,12 +478,16 @@ export default function PropertiesDirectoryPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Description</label>
+                <label className="font-semibold text-gray-700 block mb-1">
+                  Description
+                </label>
                 <textarea
                   rows={3}
                   placeholder="Overview of amenities, student policies, quiet hours..."
                   value={formData.description || ""}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
@@ -441,4 +514,3 @@ export default function PropertiesDirectoryPage() {
     </div>
   );
 }
-

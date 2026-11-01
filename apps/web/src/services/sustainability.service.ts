@@ -52,15 +52,14 @@ import {
   MOCK_WATER_INCIDENTS,
 } from "../mocks/sustainability.mock";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/sustainability`
-    : "http://localhost:8000/api/v1/sustainability";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/sustainability`
+  : "http://localhost:8000/api/v1/sustainability";
 
 async function fetchWithFallback<T>(
   url: string,
   options?: RequestInit,
-  fallback?: T
+  fallback?: T,
 ): Promise<T> {
   try {
     const res = await fetch(url, {
@@ -87,11 +86,13 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityProfile[]>(
       `${API_BASE}/profiles`,
       { method: "GET" },
-      MOCK_PROFILES
+      MOCK_PROFILES,
     );
   },
 
-  async createProfile(input: ProfileCreateInput): Promise<SustainabilityProfile> {
+  async createProfile(
+    input: ProfileCreateInput,
+  ): Promise<SustainabilityProfile> {
     const fallback: SustainabilityProfile = {
       id: `sp-${Date.now()}`,
       tenant_id: "t0000000-0000-0000-0000-000000000001",
@@ -110,19 +111,28 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityProfile>(
       `${API_BASE}/profiles`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
   async getTargets(campusId?: string): Promise<SustainabilityTarget[]> {
-    const url = campusId ? `${API_BASE}/targets?campus_id=${campusId}` : `${API_BASE}/targets`;
-    return fetchWithFallback<SustainabilityTarget[]>(url, { method: "GET" }, MOCK_TARGETS);
+    const url = campusId
+      ? `${API_BASE}/targets?campus_id=${campusId}`
+      : `${API_BASE}/targets`;
+    return fetchWithFallback<SustainabilityTarget[]>(
+      url,
+      { method: "GET" },
+      MOCK_TARGETS,
+    );
   },
 
   async createTarget(input: TargetCreateInput): Promise<SustainabilityTarget> {
     const baseline = input.baseline_value;
     const current = input.current_value || baseline;
-    const achieved = baseline > 0 ? Number((((baseline - current) / baseline) * 100).toFixed(1)) : 0;
+    const achieved =
+      baseline > 0
+        ? Number((((baseline - current) / baseline) * 100).toFixed(1))
+        : 0;
 
     const fallback: SustainabilityTarget = {
       id: `st-${Date.now()}`,
@@ -149,7 +159,7 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityTarget>(
       `${API_BASE}/targets`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -158,29 +168,42 @@ export const sustainabilityService = {
     return fetchWithFallback<EmissionFactor[]>(
       `${API_BASE}/emission-factors`,
       { method: "GET" },
-      MOCK_EMISSION_FACTORS
+      MOCK_EMISSION_FACTORS,
     );
   },
 
   // 3. Resource Measurements
-  async getMeasurements(campusId?: string, isAnomaly?: boolean): Promise<ResourceMeasurement[]> {
+  async getMeasurements(
+    campusId?: string,
+    isAnomaly?: boolean,
+  ): Promise<ResourceMeasurement[]> {
     let url = `${API_BASE}/measurements`;
     const params = new URLSearchParams();
     if (campusId) params.append("campus_id", campusId);
     if (isAnomaly !== undefined) params.append("is_anomaly", String(isAnomaly));
     if (params.toString()) url += `?${params.toString()}`;
 
-    return fetchWithFallback<ResourceMeasurement[]>(url, { method: "GET" }, MOCK_MEASUREMENTS);
+    return fetchWithFallback<ResourceMeasurement[]>(
+      url,
+      { method: "GET" },
+      MOCK_MEASUREMENTS,
+    );
   },
 
-  async recordMeasurement(input: MeasurementCreateInput): Promise<ResourceMeasurement> {
+  async recordMeasurement(
+    input: MeasurementCreateInput,
+  ): Promise<ResourceMeasurement> {
     let isAnomaly = false;
     let anomalySeverity: "NORMAL" | "WARNING" | "CRITICAL" = "NORMAL";
     let variancePct = 0;
 
     if (input.baseline_expected_value && input.baseline_expected_value > 0) {
       variancePct = Number(
-        (((input.reading_value - input.baseline_expected_value) / input.baseline_expected_value) * 100).toFixed(1)
+        (
+          ((input.reading_value - input.baseline_expected_value) /
+            input.baseline_expected_value) *
+          100
+        ).toFixed(1),
       );
       if (variancePct > 50) {
         isAnomaly = true;
@@ -215,7 +238,7 @@ export const sustainabilityService = {
     return fetchWithFallback<ResourceMeasurement>(
       `${API_BASE}/measurements`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -224,11 +247,13 @@ export const sustainabilityService = {
     return fetchWithFallback<WaterIncidentRecord[]>(
       `${API_BASE}/water/incidents`,
       { method: "GET" },
-      MOCK_WATER_INCIDENTS
+      MOCK_WATER_INCIDENTS,
     );
   },
 
-  async reportWaterIncident(input: WaterIncidentCreateInput): Promise<WaterIncidentRecord> {
+  async reportWaterIncident(
+    input: WaterIncidentCreateInput,
+  ): Promise<WaterIncidentRecord> {
     const fallback: WaterIncidentRecord = {
       id: `wi-${Date.now()}`,
       tenant_id: "t0000000-0000-0000-0000-000000000001",
@@ -246,7 +271,7 @@ export const sustainabilityService = {
     return fetchWithFallback<WaterIncidentRecord>(
       `${API_BASE}/water/incidents`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -255,7 +280,7 @@ export const sustainabilityService = {
     return fetchWithFallback<WasteRecord[]>(
       `${API_BASE}/waste/records`,
       { method: "GET" },
-      MOCK_WASTE_RECORDS
+      MOCK_WASTE_RECORDS,
     );
   },
 
@@ -281,12 +306,14 @@ export const sustainabilityService = {
     return fetchWithFallback<WasteRecord>(
       `${API_BASE}/waste/records`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
   // 6. Carbon Emissions Engine
-  async calculateEmissions(input: CarbonCalculationInput): Promise<CarbonEmissionsCalculation> {
+  async calculateEmissions(
+    input: CarbonCalculationInput,
+  ): Promise<CarbonEmissionsCalculation> {
     const factorVal = input.scope === "SCOPE_2" ? 0.716 : 2.68;
     const kg = input.activity_quantity * factorVal;
     const mt = Number((kg / 1000).toFixed(4));
@@ -314,13 +341,20 @@ export const sustainabilityService = {
     return fetchWithFallback<CarbonEmissionsCalculation>(
       `${API_BASE}/carbon/calculate`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
-  async getCarbonSummary(campusId: string, reportingPeriod: string): Promise<CarbonEmissionsSummary> {
+  async getCarbonSummary(
+    campusId: string,
+    reportingPeriod: string,
+  ): Promise<CarbonEmissionsSummary> {
     const url = `${API_BASE}/carbon/summary?campus_id=${campusId}&reporting_period=${reportingPeriod}`;
-    return fetchWithFallback<CarbonEmissionsSummary>(url, { method: "GET" }, MOCK_CARBON_SUMMARY);
+    return fetchWithFallback<CarbonEmissionsSummary>(
+      url,
+      { method: "GET" },
+      MOCK_CARBON_SUMMARY,
+    );
   },
 
   // 7. Initiatives
@@ -328,11 +362,13 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityInitiative[]>(
       `${API_BASE}/initiatives`,
       { method: "GET" },
-      MOCK_INITIATIVES
+      MOCK_INITIATIVES,
     );
   },
 
-  async createInitiative(input: InitiativeCreateInput): Promise<SustainabilityInitiative> {
+  async createInitiative(
+    input: InitiativeCreateInput,
+  ): Promise<SustainabilityInitiative> {
     const fallback: SustainabilityInitiative = {
       id: `init-${Date.now()}`,
       tenant_id: "t0000000-0000-0000-0000-000000000001",
@@ -356,21 +392,23 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityInitiative>(
       `${API_BASE}/initiatives`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
   // 8. Compliance & Corrective Actions
-  async getComplianceRequirements(): Promise<EnvironmentalComplianceRequirement[]> {
+  async getComplianceRequirements(): Promise<
+    EnvironmentalComplianceRequirement[]
+  > {
     return fetchWithFallback<EnvironmentalComplianceRequirement[]>(
       `${API_BASE}/compliance/requirements`,
       { method: "GET" },
-      MOCK_COMPLIANCE_REQUIREMENTS
+      MOCK_COMPLIANCE_REQUIREMENTS,
     );
   },
 
   async createComplianceRequirement(
-    input: ComplianceRequirementCreateInput
+    input: ComplianceRequirementCreateInput,
   ): Promise<EnvironmentalComplianceRequirement> {
     const fallback: EnvironmentalComplianceRequirement = {
       id: `cr-${Date.now()}`,
@@ -390,7 +428,7 @@ export const sustainabilityService = {
     return fetchWithFallback<EnvironmentalComplianceRequirement>(
       `${API_BASE}/compliance/requirements`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -398,12 +436,12 @@ export const sustainabilityService = {
     return fetchWithFallback<EnvironmentalCorrectiveAction[]>(
       `${API_BASE}/compliance/actions`,
       { method: "GET" },
-      MOCK_CORRECTIVE_ACTIONS
+      MOCK_CORRECTIVE_ACTIONS,
     );
   },
 
   async createCorrectiveAction(
-    input: CorrectiveActionCreateInput
+    input: CorrectiveActionCreateInput,
   ): Promise<EnvironmentalCorrectiveAction> {
     const fallback: EnvironmentalCorrectiveAction = {
       id: `ca-${Date.now()}`,
@@ -422,7 +460,7 @@ export const sustainabilityService = {
     return fetchWithFallback<EnvironmentalCorrectiveAction>(
       `${API_BASE}/compliance/actions`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -431,7 +469,7 @@ export const sustainabilityService = {
     return fetchWithFallback<IoTMeterStream[]>(
       `${API_BASE}/iot/meters`,
       { method: "GET" },
-      MOCK_IOT_METERS
+      MOCK_IOT_METERS,
     );
   },
 
@@ -453,11 +491,13 @@ export const sustainabilityService = {
     return fetchWithFallback<IoTMeterStream>(
       `${API_BASE}/iot/meters`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
-  async ingestTelemetry(input: TelemetryIngestInput): Promise<IoTIngestionEvent> {
+  async ingestTelemetry(
+    input: TelemetryIngestInput,
+  ): Promise<IoTIngestionEvent> {
     const fallback: IoTIngestionEvent = {
       id: `ev-${Date.now()}`,
       tenant_id: "t0000000-0000-0000-0000-000000000001",
@@ -474,7 +514,7 @@ export const sustainabilityService = {
     return fetchWithFallback<IoTIngestionEvent>(
       `${API_BASE}/iot/telemetry`,
       { method: "POST", body: JSON.stringify(input) },
-      fallback
+      fallback,
     );
   },
 
@@ -483,15 +523,17 @@ export const sustainabilityService = {
     return fetchWithFallback<SustainabilityImportBatch[]>(
       `${API_BASE}/imports`,
       { method: "GET" },
-      MOCK_IMPORT_BATCHES
+      MOCK_IMPORT_BATCHES,
     );
   },
 
-  async getDashboardOverview(year = 2024): Promise<SustainabilityDashboardOverview> {
+  async getDashboardOverview(
+    year = 2024,
+  ): Promise<SustainabilityDashboardOverview> {
     return fetchWithFallback<SustainabilityDashboardOverview>(
       `${API_BASE}/overview?year=${year}`,
       { method: "GET" },
-      MOCK_DASHBOARD_OVERVIEW
+      MOCK_DASHBOARD_OVERVIEW,
     );
   },
 };

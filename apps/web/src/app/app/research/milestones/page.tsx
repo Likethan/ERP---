@@ -25,7 +25,12 @@ import { ResearchMilestone, ResearchProject } from "@/types/research";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,7 +46,8 @@ export default function ResearchMilestonesPage() {
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [selectedMilestone, setSelectedMilestone] = useState<ResearchMilestone | null>(null);
+  const [selectedMilestone, setSelectedMilestone] =
+    useState<ResearchMilestone | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -51,7 +57,9 @@ export default function ResearchMilestonesPage() {
     milestone_code: "",
     title: "",
     description: "",
-    planned_completion_date: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
+    planned_completion_date: new Date(Date.now() + 30 * 86400000)
+      .toISOString()
+      .split("T")[0],
     acceptance_criteria: "",
     is_mandatory_for_closure: true,
     deliverable_reference: "",
@@ -82,7 +90,9 @@ export default function ResearchMilestonesPage() {
   async function loadMilestones() {
     try {
       setLoading(true);
-      const res = await ResearchService.getMilestones(selectedProjectId || undefined);
+      const res = await ResearchService.getMilestones(
+        selectedProjectId || undefined,
+      );
       setMilestones(Array.isArray(res) ? res : []);
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to load milestones");
@@ -107,11 +117,15 @@ export default function ResearchMilestonesPage() {
       setErrorMsg(null);
       await ResearchService.createMilestone({
         project_id: selectedProjectId,
-        milestone_code: newMilestone.milestone_code || `MS-${Date.now().toString().slice(-6)}`,
+        milestone_code:
+          newMilestone.milestone_code ||
+          `MS-${Date.now().toString().slice(-6)}`,
         title: newMilestone.title,
         description: newMilestone.description,
         planned_completion_date: newMilestone.planned_completion_date,
-        acceptance_criteria: newMilestone.acceptance_criteria || "Independent verification required",
+        acceptance_criteria:
+          newMilestone.acceptance_criteria ||
+          "Independent verification required",
         is_mandatory_for_closure: newMilestone.is_mandatory_for_closure,
         deliverable_reference: newMilestone.deliverable_reference,
       });
@@ -135,9 +149,12 @@ export default function ResearchMilestonesPage() {
       await ResearchService.verifyMilestone(
         selectedMilestone.id,
         verifyData.decision,
-        verifyData.verification_notes || `Milestone reviewed and marked ${verifyData.decision}`
+        verifyData.verification_notes ||
+          `Milestone reviewed and marked ${verifyData.decision}`,
       );
-      setSuccessMsg(`Milestone verified with decision: ${verifyData.decision}.`);
+      setSuccessMsg(
+        `Milestone verified with decision: ${verifyData.decision}.`,
+      );
       setShowVerifyModal(false);
       await loadMilestones();
     } catch (err: any) {
@@ -149,15 +166,26 @@ export default function ResearchMilestonesPage() {
 
   const filtered = milestones.filter((m) => {
     const q = search.toLowerCase();
-    const matchSearch = (m.title || "").toLowerCase().includes(q) || (m.milestone_code || "").toLowerCase().includes(q);
+    const matchSearch =
+      (m.title || "").toLowerCase().includes(q) ||
+      (m.milestone_code || "").toLowerCase().includes(q);
     const matchStatus = statusFilter === "ALL" || m.status === statusFilter;
     return matchSearch && matchStatus;
   });
 
   const total = milestones.length;
-  const verified = milestones.filter((m) => m.status === "ACCEPTED" || m.status === "VERIFIED").length;
-  const pendingReview = milestones.filter((m) => m.status === "UNDER_REVIEW").length;
-  const mandatoryUnverified = milestones.filter((m) => m.is_mandatory_for_closure && m.status !== "ACCEPTED" && m.status !== "VERIFIED").length;
+  const verified = milestones.filter(
+    (m) => m.status === "ACCEPTED" || m.status === "VERIFIED",
+  ).length;
+  const pendingReview = milestones.filter(
+    (m) => m.status === "UNDER_REVIEW",
+  ).length;
+  const mandatoryUnverified = milestones.filter(
+    (m) =>
+      m.is_mandatory_for_closure &&
+      m.status !== "ACCEPTED" &&
+      m.status !== "VERIFIED",
+  ).length;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -171,7 +199,12 @@ export default function ResearchMilestonesPage() {
               <ShieldAlert className="h-4 w-4 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-200">✕</button>
+            <button
+              onClick={() => setErrorMsg(null)}
+              className="text-rose-400 hover:text-rose-200"
+            >
+              ✕
+            </button>
           </div>
         )}
         {successMsg && (
@@ -180,7 +213,12 @@ export default function ResearchMilestonesPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200">✕</button>
+            <button
+              onClick={() => setSuccessMsg(null)}
+              className="text-emerald-400 hover:text-emerald-200"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -192,7 +230,8 @@ export default function ResearchMilestonesPage() {
               Milestones, Deliverables & Acceptance Queue
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Project execution tracking, independent verification reviews, and closure blocking enforcement.
+              Project execution tracking, independent verification reviews, and
+              closure blocking enforcement.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -221,23 +260,39 @@ export default function ResearchMilestonesPage() {
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Milestones</span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Total Milestones
+            </span>
             <div className="text-2xl font-bold text-white mt-1">{total}</div>
             <p className="text-xs text-slate-500 mt-1">Tracked across scope</p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Verified / Accepted</span>
-            <div className="text-2xl font-bold text-emerald-400 mt-1">{verified}</div>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Verified / Accepted
+            </span>
+            <div className="text-2xl font-bold text-emerald-400 mt-1">
+              {verified}
+            </div>
             <p className="text-xs text-slate-500 mt-1">Approved by reviewers</p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Under Review</span>
-            <div className="text-2xl font-bold text-amber-400 mt-1">{pendingReview}</div>
-            <p className="text-xs text-slate-500 mt-1">Awaiting independent review</p>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Under Review
+            </span>
+            <div className="text-2xl font-bold text-amber-400 mt-1">
+              {pendingReview}
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Awaiting independent review
+            </p>
           </Card>
           <Card className="p-4 bg-slate-900/60 border-slate-800">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Closure Blockers</span>
-            <div className="text-2xl font-bold text-rose-400 mt-1">{mandatoryUnverified}</div>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              Closure Blockers
+            </span>
+            <div className="text-2xl font-bold text-rose-400 mt-1">
+              {mandatoryUnverified}
+            </div>
             <p className="text-xs text-slate-500 mt-1">Mandatory unverified</p>
           </Card>
         </div>
@@ -254,19 +309,21 @@ export default function ResearchMilestonesPage() {
             />
           </div>
           <div className="flex items-center gap-2">
-            {["ALL", "PLANNED", "UNDER_REVIEW", "ACCEPTED", "REJECTED"].map((st) => (
-              <button
-                key={st}
-                onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  statusFilter === st
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800"
-                }`}
-              >
-                {st}
-              </button>
-            ))}
+            {["ALL", "PLANNED", "UNDER_REVIEW", "ACCEPTED", "REJECTED"].map(
+              (st) => (
+                <button
+                  key={st}
+                  onClick={() => setStatusFilter(st)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    statusFilter === st
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800"
+                  }`}
+                >
+                  {st}
+                </button>
+              ),
+            )}
           </div>
         </div>
 
@@ -300,17 +357,27 @@ export default function ResearchMilestonesPage() {
                   </tr>
                 ) : (
                   filtered.map((m) => {
-                    const isAccepted = m.status === "ACCEPTED" || m.status === "VERIFIED";
+                    const isAccepted =
+                      m.status === "ACCEPTED" || m.status === "VERIFIED";
                     const isReview = m.status === "UNDER_REVIEW";
 
                     return (
-                      <tr key={m.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={m.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-white">{m.title}</div>
+                          <div className="font-semibold text-white">
+                            {m.title}
+                          </div>
                           <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                            <span className="font-mono text-emerald-400">{m.milestone_code}</span>
+                            <span className="font-mono text-emerald-400">
+                              {m.milestone_code}
+                            </span>
                             {m.deliverable_reference && (
-                              <span className="text-slate-500">• Ref: {m.deliverable_reference}</span>
+                              <span className="text-slate-500">
+                                • Ref: {m.deliverable_reference}
+                              </span>
                             )}
                           </div>
                         </td>
@@ -328,7 +395,9 @@ export default function ResearchMilestonesPage() {
                             <div className="w-20 bg-slate-800 rounded-full h-1.5 overflow-hidden">
                               <div
                                 className="bg-emerald-500 h-full"
-                                style={{ width: `${Math.min(100, m.completion_percentage || 0)}%` }}
+                                style={{
+                                  width: `${Math.min(100, m.completion_percentage || 0)}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -340,7 +409,9 @@ export default function ResearchMilestonesPage() {
                               Closure Blocker
                             </Badge>
                           ) : (
-                            <span className="text-xs text-slate-500">Optional</span>
+                            <span className="text-xs text-slate-500">
+                              Optional
+                            </span>
                           )}
                         </td>
                         <td className="py-3 px-4">
@@ -349,8 +420,8 @@ export default function ResearchMilestonesPage() {
                               isAccepted
                                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                                 : isReview
-                                ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                                : "bg-slate-800 text-slate-400 border-slate-700"
+                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                  : "bg-slate-800 text-slate-400 border-slate-700"
                             }
                           >
                             {m.status}
@@ -395,7 +466,9 @@ export default function ResearchMilestonesPage() {
 
             <form onSubmit={handleCreateMilestone} className="space-y-4 pt-2">
               <div>
-                <Label className="text-xs text-slate-400">Target Project *</Label>
+                <Label className="text-xs text-slate-400">
+                  Target Project *
+                </Label>
                 <select
                   required
                   className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
@@ -413,45 +486,70 @@ export default function ResearchMilestonesPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Milestone Code</Label>
+                  <Label className="text-xs text-slate-400">
+                    Milestone Code
+                  </Label>
                   <Input
                     placeholder="e.g. MS-DEL-01"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newMilestone.milestone_code}
-                    onChange={(e) => setNewMilestone({ ...newMilestone, milestone_code: e.target.value })}
+                    onChange={(e) =>
+                      setNewMilestone({
+                        ...newMilestone,
+                        milestone_code: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Planned Completion Date *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Planned Completion Date *
+                  </Label>
                   <Input
                     type="date"
                     required
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newMilestone.planned_completion_date}
-                    onChange={(e) => setNewMilestone({ ...newMilestone, planned_completion_date: e.target.value })}
+                    onChange={(e) =>
+                      setNewMilestone({
+                        ...newMilestone,
+                        planned_completion_date: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Milestone Title *</Label>
+                <Label className="text-xs text-slate-400">
+                  Milestone Title *
+                </Label>
                 <Input
                   required
                   placeholder="e.g. Prototype Benchtop Testing & Sensor Calibration"
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={newMilestone.title}
-                  onChange={(e) => setNewMilestone({ ...newMilestone, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewMilestone({ ...newMilestone, title: e.target.value })
+                  }
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Deliverable Reference & Acceptance Criteria</Label>
+                <Label className="text-xs text-slate-400">
+                  Deliverable Reference & Acceptance Criteria
+                </Label>
                 <Textarea
                   placeholder="Define verifiable acceptance metrics (e.g. Peer-reviewed report submitted, 95% sensor accuracy demonstrated)..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={newMilestone.acceptance_criteria}
-                  onChange={(e) => setNewMilestone({ ...newMilestone, acceptance_criteria: e.target.value })}
+                  onChange={(e) =>
+                    setNewMilestone({
+                      ...newMilestone,
+                      acceptance_criteria: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -460,19 +558,36 @@ export default function ResearchMilestonesPage() {
                   type="checkbox"
                   id="mandatoryCheck"
                   checked={newMilestone.is_mandatory_for_closure}
-                  onChange={(e) => setNewMilestone({ ...newMilestone, is_mandatory_for_closure: e.target.checked })}
+                  onChange={(e) =>
+                    setNewMilestone({
+                      ...newMilestone,
+                      is_mandatory_for_closure: e.target.checked,
+                    })
+                  }
                   className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500"
                 />
-                <Label htmlFor="mandatoryCheck" className="text-xs text-slate-300 font-medium cursor-pointer">
-                  Mandatory for Project Closure (Project cannot transition to CLOSED until verified)
+                <Label
+                  htmlFor="mandatoryCheck"
+                  className="text-xs text-slate-300 font-medium cursor-pointer"
+                >
+                  Mandatory for Project Closure (Project cannot transition to
+                  CLOSED until verified)
                 </Label>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Registering..." : "Save Milestone"}
                 </Button>
               </div>
@@ -492,41 +607,70 @@ export default function ResearchMilestonesPage() {
 
             <form onSubmit={handleVerifyMilestone} className="space-y-4 pt-2">
               <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800 text-xs">
-                <div className="font-semibold text-white">{selectedMilestone?.title}</div>
-                <div className="text-slate-400 mt-1">Code: {selectedMilestone?.milestone_code}</div>
+                <div className="font-semibold text-white">
+                  {selectedMilestone?.title}
+                </div>
+                <div className="text-slate-400 mt-1">
+                  Code: {selectedMilestone?.milestone_code}
+                </div>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Review Decision *</Label>
+                <Label className="text-xs text-slate-400">
+                  Review Decision *
+                </Label>
                 <select
                   required
                   className="w-full h-10 px-3 mt-1 rounded-md bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   value={verifyData.decision}
-                  onChange={(e) => setVerifyData({ ...verifyData, decision: e.target.value })}
+                  onChange={(e) =>
+                    setVerifyData({ ...verifyData, decision: e.target.value })
+                  }
                 >
-                  <option value="ACCEPTED">ACCEPTED — Deliverable Criteria Satisfied</option>
-                  <option value="REJECTED">REJECTED — Resubmission Required</option>
-                  <option value="UNDER_REVIEW">UNDER_REVIEW — Additional Evidence Requested</option>
+                  <option value="ACCEPTED">
+                    ACCEPTED — Deliverable Criteria Satisfied
+                  </option>
+                  <option value="REJECTED">
+                    REJECTED — Resubmission Required
+                  </option>
+                  <option value="UNDER_REVIEW">
+                    UNDER_REVIEW — Additional Evidence Requested
+                  </option>
                 </select>
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Reviewer Verification Notes *</Label>
+                <Label className="text-xs text-slate-400">
+                  Reviewer Verification Notes *
+                </Label>
                 <Textarea
                   required
                   placeholder="Record formal assessment of evidence, artifacts, and criteria satisfaction..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={verifyData.verification_notes}
-                  onChange={(e) => setVerifyData({ ...verifyData, verification_notes: e.target.value })}
+                  onChange={(e) =>
+                    setVerifyData({
+                      ...verifyData,
+                      verification_notes: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowVerifyModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowVerifyModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Submitting..." : "Commit Formal Decision"}
                 </Button>
               </div>

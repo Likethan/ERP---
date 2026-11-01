@@ -32,7 +32,7 @@ export class StudentAffairsCalculator {
    */
   static calculateSlaStatus(
     targetDateStr: string | null | undefined,
-    currentStatus: SACaseStatus | string
+    currentStatus: SACaseStatus | string,
   ): SlaStatusResult {
     if (
       currentStatus === SACaseStatus.RESOLVED ||
@@ -64,7 +64,8 @@ export class StudentAffairsCalculator {
         isOverdue: true,
         hoursRemaining: diffHours,
         statusLabel: "BREACHED",
-        badgeColor: "bg-red-500/10 text-red-500 border-red-500/20 animate-pulse",
+        badgeColor:
+          "bg-red-500/10 text-red-500 border-red-500/20 animate-pulse",
       };
     } else if (diffHours <= 24) {
       return {
@@ -86,7 +87,9 @@ export class StudentAffairsCalculator {
   /**
    * Checks whether an appeal is within the authorized appeal window
    */
-  static isAppealWindowActive(appealDeadlineStr: string | null | undefined): boolean {
+  static isAppealWindowActive(
+    appealDeadlineStr: string | null | undefined,
+  ): boolean {
     if (!appealDeadlineStr) return false;
     const deadline = new Date(appealDeadlineStr).getTime();
     return Date.now() <= deadline;
@@ -95,7 +98,9 @@ export class StudentAffairsCalculator {
   /**
    * Calculates remaining days for appeal filing
    */
-  static getAppealDaysRemaining(appealDeadlineStr: string | null | undefined): number {
+  static getAppealDaysRemaining(
+    appealDeadlineStr: string | null | undefined,
+  ): number {
     if (!appealDeadlineStr) return 0;
     const deadline = new Date(appealDeadlineStr).getTime();
     const now = Date.now();
@@ -108,7 +113,7 @@ export class StudentAffairsCalculator {
    */
   static validateSeparationOfDuties(
     originalDecisionMakerId: string | null | undefined,
-    proposedAppealReviewerId: string | null | undefined
+    proposedAppealReviewerId: string | null | undefined,
   ): { isValid: boolean; errorMessage?: string } {
     if (!originalDecisionMakerId || !proposedAppealReviewerId) {
       return { isValid: true };
@@ -127,19 +132,40 @@ export class StudentAffairsCalculator {
    * Evaluates procedural milestones for disciplinary proceeding
    */
   static evaluateProceduralMilestones(
-    proceeding: DisciplinaryProceedingModel | null | undefined
+    proceeding: DisciplinaryProceedingModel | null | undefined,
   ): {
     milestones: ProceduralMilestone[];
     completionPercentage: number;
   } {
     const stages: Array<{ stage: SADisciplinaryStage; label: string }> = [
-      { stage: SADisciplinaryStage.INTAKE_ASSESSMENT, label: "Intake & Policy Review" },
-      { stage: SADisciplinaryStage.NOTICE_ISSUED, label: "Formal Notice Served" },
-      { stage: SADisciplinaryStage.INVESTIGATION_ACTIVE, label: "Investigation & Inquiry" },
-      { stage: SADisciplinaryStage.HEARING_SCHEDULED, label: "Hearing / Committee Panel" },
-      { stage: SADisciplinaryStage.FINDINGS_RECORDED, label: "Formal Findings" },
-      { stage: SADisciplinaryStage.SANCTION_APPROVED, label: "Sanction / Decision" },
-      { stage: SADisciplinaryStage.CONCLUDED, label: "Concluded / Post-Appeal" },
+      {
+        stage: SADisciplinaryStage.INTAKE_ASSESSMENT,
+        label: "Intake & Policy Review",
+      },
+      {
+        stage: SADisciplinaryStage.NOTICE_ISSUED,
+        label: "Formal Notice Served",
+      },
+      {
+        stage: SADisciplinaryStage.INVESTIGATION_ACTIVE,
+        label: "Investigation & Inquiry",
+      },
+      {
+        stage: SADisciplinaryStage.HEARING_SCHEDULED,
+        label: "Hearing / Committee Panel",
+      },
+      {
+        stage: SADisciplinaryStage.FINDINGS_RECORDED,
+        label: "Formal Findings",
+      },
+      {
+        stage: SADisciplinaryStage.SANCTION_APPROVED,
+        label: "Sanction / Decision",
+      },
+      {
+        stage: SADisciplinaryStage.CONCLUDED,
+        label: "Concluded / Post-Appeal",
+      },
     ];
 
     if (!proceeding) {
@@ -168,8 +194,10 @@ export class StudentAffairsCalculator {
     const currentIdx = stageIndexMap[currentStage] ?? 0;
 
     const milestones: ProceduralMilestone[] = stages.map((s, idx) => {
-      const isComplete = idx < currentIdx || currentStage === SADisciplinaryStage.CONCLUDED;
-      const isCurrent = idx === currentIdx && currentStage !== SADisciplinaryStage.CONCLUDED;
+      const isComplete =
+        idx < currentIdx || currentStage === SADisciplinaryStage.CONCLUDED;
+      const isCurrent =
+        idx === currentIdx && currentStage !== SADisciplinaryStage.CONCLUDED;
       return {
         ...s,
         isComplete,
@@ -178,7 +206,9 @@ export class StudentAffairsCalculator {
     });
 
     const completedCount = milestones.filter((m) => m.isComplete).length;
-    const completionPercentage = Math.round((completedCount / stages.length) * 100);
+    const completionPercentage = Math.round(
+      (completedCount / stages.length) * 100,
+    );
 
     return { milestones, completionPercentage };
   }
@@ -201,7 +231,8 @@ export class StudentAffairsCalculator {
       case SACasePriority.CRITICAL_URGENT:
         return {
           label: "Critical Urgent",
-          className: "bg-red-500/10 text-red-500 border-red-500/20 font-semibold",
+          className:
+            "bg-red-500/10 text-red-500 border-red-500/20 font-semibold",
         };
       case SACasePriority.HIGH:
         return {
@@ -231,25 +262,55 @@ export class StudentAffairsCalculator {
   } {
     switch (status) {
       case SACaseStatus.SUBMITTED:
-        return { label: "Submitted", className: "bg-amber-500/10 text-amber-500 border-amber-500/20" };
+        return {
+          label: "Submitted",
+          className: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+        };
       case SACaseStatus.ACKNOWLEDGED:
-        return { label: "Acknowledged", className: "bg-blue-500/10 text-blue-500 border-blue-500/20" };
+        return {
+          label: "Acknowledged",
+          className: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+        };
       case SACaseStatus.UNDER_REVIEW:
-        return { label: "Under Review", className: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20" };
+        return {
+          label: "Under Review",
+          className: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20",
+        };
       case SACaseStatus.INVESTIGATION:
-        return { label: "Investigation", className: "bg-purple-500/10 text-purple-500 border-purple-500/20" };
+        return {
+          label: "Investigation",
+          className: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+        };
       case SACaseStatus.HEARING:
-        return { label: "Hearing Scheduled", className: "bg-pink-500/10 text-pink-500 border-pink-500/20" };
+        return {
+          label: "Hearing Scheduled",
+          className: "bg-pink-500/10 text-pink-500 border-pink-500/20",
+        };
       case SACaseStatus.AWAITING_INFO:
-        return { label: "Awaiting Info", className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" };
+        return {
+          label: "Awaiting Info",
+          className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+        };
       case SACaseStatus.RESOLVED:
-        return { label: "Resolved", className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
+        return {
+          label: "Resolved",
+          className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+        };
       case SACaseStatus.CLOSED:
-        return { label: "Closed", className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" };
+        return {
+          label: "Closed",
+          className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+        };
       case SACaseStatus.REOPENED:
-        return { label: "Reopened", className: "bg-rose-500/10 text-rose-500 border-rose-500/20" };
+        return {
+          label: "Reopened",
+          className: "bg-rose-500/10 text-rose-500 border-rose-500/20",
+        };
       default:
-        return { label: String(status), className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" };
+        return {
+          label: String(status),
+          className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+        };
     }
   }
 }

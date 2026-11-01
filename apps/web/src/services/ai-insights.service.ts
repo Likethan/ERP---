@@ -17,7 +17,6 @@ class AiInsightsService {
     search?: string;
     isSaved?: boolean;
   }): Promise<ApiResponse<Insight[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.insights];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -46,13 +45,11 @@ class AiInsightsService {
   }
 
   async getInsightById(id: string): Promise<ApiResponse<Insight | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const insight = this.insights.find((i) => i.id === id) || null;
     return { success: Boolean(insight), data: insight };
   }
 
   async toggleSaveInsight(id: string): Promise<ApiResponse<Insight | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const insight = this.insights.find((i) => i.id === id);
     if (!insight) return { success: false, data: null };
 
@@ -65,7 +62,6 @@ class AiInsightsService {
     status: InsightStatus,
     actor = "User",
   ): Promise<ApiResponse<Insight | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const insight = this.insights.find((i) => i.id === id);
     if (!insight) return { success: false, data: null };
 

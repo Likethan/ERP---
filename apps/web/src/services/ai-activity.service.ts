@@ -14,7 +14,6 @@ class AiActivityService {
     status?: string;
     search?: string;
   }): Promise<ApiResponse<AIActivity[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.activities];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -38,7 +37,6 @@ class AiActivityService {
   }
 
   async getActivityById(id: string): Promise<ApiResponse<AIActivity | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const act = this.activities.find((a) => a.id === id) || null;
     return { success: Boolean(act), data: act };
   }

@@ -14,14 +14,17 @@ import {
 } from "lucide-react";
 
 export default function EquipmentPage() {
-  const [assignments, setAssignments] = useState<SportsEquipmentAssignmentItem[]>([]);
+  const [assignments, setAssignments] = useState<
+    SportsEquipmentAssignmentItem[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
   // Modals
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
-  const [returnModalItem, setReturnModalItem] = useState<SportsEquipmentAssignmentItem | null>(null);
+  const [returnModalItem, setReturnModalItem] =
+    useState<SportsEquipmentAssignmentItem | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
   // Checkout form
@@ -65,7 +68,7 @@ export default function EquipmentPage() {
 
     if (res.success && res.data) {
       setActionSuccess(
-        `Checked out ${checkoutData.allocatedQuantity}x ${checkoutData.equipmentName} to ${checkoutData.responsibleUserName}.`
+        `Checked out ${checkoutData.allocatedQuantity}x ${checkoutData.equipmentName} to ${checkoutData.responsibleUserName}.`,
       );
       setIsCheckoutModalOpen(false);
       loadEquipment();
@@ -80,14 +83,14 @@ export default function EquipmentPage() {
       returnModalItem.id,
       returnCondition,
       returnNotes,
-      damageFee
+      damageFee,
     );
 
     if (res.success && res.data) {
       setActionSuccess(
         `Returned ${returnModalItem.equipmentName}. Condition logged: ${returnCondition}${
           damageFee > 0 ? ` (Damage Fee ₹${damageFee} flagged)` : ""
-        }.`
+        }.`,
       );
       setReturnModalItem(null);
       loadEquipment();
@@ -113,7 +116,8 @@ export default function EquipmentPage() {
             Sports Equipment & Gear Allocation
           </h1>
           <p className="text-sm text-slate-500">
-            Integrated equipment checkout, wear-and-tear audits, and inventory asset tracking.
+            Integrated equipment checkout, wear-and-tear audits, and inventory
+            asset tracking.
           </p>
         </div>
         <button
@@ -131,7 +135,10 @@ export default function EquipmentPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionSuccess}</span>
           </div>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -144,9 +151,12 @@ export default function EquipmentPage() {
             <Package className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Active Gear Loans</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Active Gear Loans
+            </p>
             <p className="text-xl font-bold text-slate-900">
-              {assignments.filter((a) => a.status === "ISSUED").length} Out on Field
+              {assignments.filter((a) => a.status === "ISSUED").length} Out on
+              Field
             </p>
           </div>
         </div>
@@ -155,9 +165,12 @@ export default function EquipmentPage() {
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Returned & Inspected</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Returned & Inspected
+            </p>
             <p className="text-xl font-bold text-slate-900">
-              {assignments.filter((a) => a.status === "RETURNED").length} Returned
+              {assignments.filter((a) => a.status === "RETURNED").length}{" "}
+              Returned
             </p>
           </div>
         </div>
@@ -166,9 +179,17 @@ export default function EquipmentPage() {
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Damaged / Overdue Items</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Damaged / Overdue Items
+            </p>
             <p className="text-xl font-bold text-slate-900">
-              {assignments.filter((a) => a.status === "OVERDUE" || a.returnCondition === "DAMAGED").length} Flagged
+              {
+                assignments.filter(
+                  (a) =>
+                    a.status === "OVERDUE" || a.returnCondition === "DAMAGED",
+                ).length
+              }{" "}
+              Flagged
             </p>
           </div>
         </div>
@@ -219,14 +240,24 @@ export default function EquipmentPage() {
                 const isActive = item.status === "ISSUED";
                 return (
                   <tr key={item.id} className="hover:bg-slate-50/60">
-                    <td className="py-3 px-4 font-semibold text-slate-900">{item.equipmentName}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-900">
+                      {item.equipmentName}
+                    </td>
                     <td className="py-3 px-4 font-mono text-[11px] text-slate-500">
                       {item.itemCode}
                     </td>
-                    <td className="py-3 px-4 text-slate-800">{item.responsibleUserName}</td>
-                    <td className="py-3 px-4 text-center font-bold">{item.allocatedQuantity}</td>
-                    <td className="py-3 px-4 text-slate-500">{item.checkoutDate}</td>
-                    <td className="py-3 px-4 text-slate-500 font-medium">{item.dueDate}</td>
+                    <td className="py-3 px-4 text-slate-800">
+                      {item.responsibleUserName}
+                    </td>
+                    <td className="py-3 px-4 text-center font-bold">
+                      {item.allocatedQuantity}
+                    </td>
+                    <td className="py-3 px-4 text-slate-500">
+                      {item.checkoutDate}
+                    </td>
+                    <td className="py-3 px-4 text-slate-500 font-medium">
+                      {item.dueDate}
+                    </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1.5">
                         <span
@@ -234,8 +265,8 @@ export default function EquipmentPage() {
                             isActive
                               ? "bg-blue-100 text-blue-800"
                               : item.status === "RETURNED"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-red-100 text-red-800"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-red-100 text-red-800"
                           }`}
                         >
                           {item.status}
@@ -262,7 +293,9 @@ export default function EquipmentPage() {
                           Process Return
                         </button>
                       ) : (
-                        <span className="text-slate-400 text-xs italic">Closed</span>
+                        <span className="text-slate-400 text-xs italic">
+                          Closed
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -277,72 +310,116 @@ export default function EquipmentPage() {
       {isCheckoutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">Checkout Sports Equipment</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Checkout Sports Equipment
+            </h2>
             <form onSubmit={handleCheckout} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Equipment Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Equipment Name
+                </label>
                 <input
                   type="text"
                   required
                   value={checkoutData.equipmentName}
-                  onChange={(e) => setCheckoutData({ ...checkoutData, equipmentName: e.target.value })}
+                  onChange={(e) =>
+                    setCheckoutData({
+                      ...checkoutData,
+                      equipmentName: e.target.value,
+                    })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Inventory Asset Code</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Inventory Asset Code
+                  </label>
                   <input
                     type="text"
                     required
                     value={checkoutData.itemCode}
-                    onChange={(e) => setCheckoutData({ ...checkoutData, itemCode: e.target.value })}
+                    onChange={(e) =>
+                      setCheckoutData({
+                        ...checkoutData,
+                        itemCode: e.target.value,
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Quantity</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Quantity
+                  </label>
                   <input
                     type="number"
                     min={1}
                     required
                     value={checkoutData.allocatedQuantity}
-                    onChange={(e) => setCheckoutData({ ...checkoutData, allocatedQuantity: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setCheckoutData({
+                        ...checkoutData,
+                        allocatedQuantity: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Custodian (Coach / Athlete)</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Custodian (Coach / Athlete)
+                </label>
                 <input
                   type="text"
                   required
                   value={checkoutData.responsibleUserName}
-                  onChange={(e) => setCheckoutData({ ...checkoutData, responsibleUserName: e.target.value })}
+                  onChange={(e) =>
+                    setCheckoutData({
+                      ...checkoutData,
+                      responsibleUserName: e.target.value,
+                    })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Checkout Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Checkout Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={checkoutData.checkoutDate}
-                    onChange={(e) => setCheckoutData({ ...checkoutData, checkoutDate: e.target.value })}
+                    onChange={(e) =>
+                      setCheckoutData({
+                        ...checkoutData,
+                        checkoutDate: e.target.value,
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Return Due Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Return Due Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={checkoutData.dueDate}
-                    onChange={(e) => setCheckoutData({ ...checkoutData, dueDate: e.target.value })}
+                    onChange={(e) =>
+                      setCheckoutData({
+                        ...checkoutData,
+                        dueDate: e.target.value,
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
@@ -373,28 +450,38 @@ export default function EquipmentPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Return & Inspect Equipment</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                Return & Inspect Equipment
+              </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                {returnModalItem.equipmentName} • Issued to {returnModalItem.responsibleUserName}
+                {returnModalItem.equipmentName} • Issued to{" "}
+                {returnModalItem.responsibleUserName}
               </p>
             </div>
 
             <form onSubmit={handleReturn} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Return Inspection Condition</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Return Inspection Condition
+                </label>
                 <select
                   value={returnCondition}
                   onChange={(e) => setReturnCondition(e.target.value)}
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                 >
-                  <option value="EXCELLENT">Excellent (Re-shelve immediately)</option>
+                  <option value="EXCELLENT">
+                    Excellent (Re-shelve immediately)
+                  </option>
                   <option value="GOOD">Good (Normal athletic wear)</option>
-                  <option value="DAMAGED">Damaged (Needs repair / replacement)</option>
+                  <option value="DAMAGED">
+                    Damaged (Needs repair / replacement)
+                  </option>
                   <option value="LOST">Lost / Unreturned</option>
                 </select>
               </div>
 
-              {(returnCondition === "DAMAGED" || returnCondition === "LOST") && (
+              {(returnCondition === "DAMAGED" ||
+                returnCondition === "LOST") && (
                 <div>
                   <label className="block text-xs font-semibold text-red-700 mb-1">
                     Damage / Replacement Surcharge (₹)
@@ -410,7 +497,9 @@ export default function EquipmentPage() {
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Inspection Notes</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Inspection Notes
+                </label>
                 <textarea
                   rows={2}
                   placeholder="Record condition details or return remarks..."

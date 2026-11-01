@@ -29,7 +29,10 @@ export default function CheckpointsPage() {
   // Create Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Form state
   const [form, setForm] = useState({
@@ -105,7 +108,8 @@ export default function CheckpointsPage() {
       c.code.toLowerCase().includes(search.toLowerCase()) ||
       c.location_description.toLowerCase().includes(search.toLowerCase());
 
-    const matchesType = typeFilter === "ALL" || c.checkpoint_type === typeFilter;
+    const matchesType =
+      typeFilter === "ALL" || c.checkpoint_type === typeFilter;
     const matchesManned =
       mannedFilter === "ALL" ||
       (mannedFilter === "MANNED" && c.is_manned) ||
@@ -116,7 +120,9 @@ export default function CheckpointsPage() {
 
   const mannedCount = checkpoints.filter((c) => c.is_manned).length;
   const unmannedCount = checkpoints.filter((c) => !c.is_manned).length;
-  const continuousCount = checkpoints.filter((c) => c.operating_hours.includes("24x7")).length;
+  const continuousCount = checkpoints.filter((c) =>
+    c.operating_hours.includes("24x7"),
+  ).length;
 
   const getTypeIcon = (type: CheckpointType) => {
     switch (type) {
@@ -147,7 +153,8 @@ export default function CheckpointsPage() {
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Configure physical ingress portals, turnstiles, automated vehicle barriers, and guard posts across campus perimeters.
+            Configure physical ingress portals, turnstiles, automated vehicle
+            barriers, and guard posts across campus perimeters.
           </p>
         </div>
 
@@ -186,38 +193,62 @@ export default function CheckpointsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Checkpoints</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Total Checkpoints
+            </span>
             <Building className="w-5 h-5 text-indigo-500" />
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{checkpoints.length}</div>
-          <div className="text-xs text-slate-500 mt-1">Authorized ingress portals</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+            {checkpoints.length}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Authorized ingress portals
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Manned Guard Posts</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Manned Guard Posts
+            </span>
             <Users className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">{mannedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Stationed security officers</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+            {mannedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Stationed security officers
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Automated Turnstiles</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Automated Turnstiles
+            </span>
             <Radio className="w-5 h-5 text-blue-500" />
           </div>
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">{unmannedCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Badge and token-actuated</div>
+          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">
+            {unmannedCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Badge and token-actuated
+          </div>
         </div>
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Continuous 24x7 Gates</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Continuous 24x7 Gates
+            </span>
             <Clock className="w-5 h-5 text-purple-500" />
           </div>
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">{continuousCount}</div>
-          <div className="text-xs text-slate-500 mt-1">Always-open access points</div>
+          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">
+            {continuousCount}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+            Always-open access points
+          </div>
         </div>
       </div>
 
@@ -300,8 +331,12 @@ export default function CheckpointsPage() {
               </div>
 
               <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-base">{chk.name}</h3>
-                <p className="text-xs text-slate-500 mt-1">{chk.location_description}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">
+                  {chk.name}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {chk.location_description}
+                </p>
               </div>
 
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
@@ -313,7 +348,9 @@ export default function CheckpointsPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Hours:</span>
-                  <span className="font-mono text-slate-800 dark:text-slate-200">{chk.operating_hours}</span>
+                  <span className="font-mono text-slate-800 dark:text-slate-200">
+                    {chk.operating_hours}
+                  </span>
                 </div>
                 {chk.guard_post_phone && (
                   <div className="flex items-center justify-between">
@@ -357,7 +394,9 @@ export default function CheckpointsPage() {
                     required
                     placeholder="e.g. GATE-WEST-01"
                     value={form.code}
-                    onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
+                    onChange={(e) =>
+                      setForm({ ...form, code: e.target.value.toUpperCase() })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -382,12 +421,18 @@ export default function CheckpointsPage() {
                 </label>
                 <select
                   value={form.checkpoint_type}
-                  onChange={(e) => setForm({ ...form, checkpoint_type: e.target.value as any })}
+                  onChange={(e) =>
+                    setForm({ ...form, checkpoint_type: e.target.value as any })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 >
                   <option value="MAIN_GATE">Main Perimeter Gate</option>
-                  <option value="VEHICLE_BARRIER">Automated Vehicle Boom Barrier</option>
-                  <option value="PEDESTRIAN_TURNSTILE">Pedestrian Turnstile Bank</option>
+                  <option value="VEHICLE_BARRIER">
+                    Automated Vehicle Boom Barrier
+                  </option>
+                  <option value="PEDESTRIAN_TURNSTILE">
+                    Pedestrian Turnstile Bank
+                  </option>
                   <option value="SERVICE_GATE">Logistics / Service Gate</option>
                   <option value="EMERGENCY_EXIT">Emergency Egress Exit</option>
                 </select>
@@ -402,7 +447,9 @@ export default function CheckpointsPage() {
                   required
                   placeholder="e.g. Western Perimeter, adjacent to Sports Complex"
                   value={form.location_description}
-                  onChange={(e) => setForm({ ...form, location_description: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, location_description: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                 />
               </div>
@@ -415,7 +462,9 @@ export default function CheckpointsPage() {
                   <input
                     type="text"
                     value={form.operating_hours}
-                    onChange={(e) => setForm({ ...form, operating_hours: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, operating_hours: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -426,7 +475,9 @@ export default function CheckpointsPage() {
                   <input
                     type="text"
                     value={form.guard_post_phone}
-                    onChange={(e) => setForm({ ...form, guard_post_phone: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, guard_post_phone: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                   />
                 </div>
@@ -437,10 +488,15 @@ export default function CheckpointsPage() {
                   type="checkbox"
                   id="is_manned"
                   checked={form.is_manned}
-                  onChange={(e) => setForm({ ...form, is_manned: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, is_manned: e.target.checked })
+                  }
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
                 />
-                <label htmlFor="is_manned" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label
+                  htmlFor="is_manned"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                >
                   Stationed Security Personnel (Manned Guard Post)
                 </label>
               </div>
@@ -468,4 +524,3 @@ export default function CheckpointsPage() {
     </div>
   );
 }
-

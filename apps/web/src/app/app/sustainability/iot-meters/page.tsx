@@ -14,7 +14,11 @@ import {
 } from "lucide-react";
 import { SustainabilityNav } from "../../../../components/sustainability/sustainability-nav";
 import { sustainabilityService } from "../../../../services/sustainability.service";
-import { IoTIngestionEvent, IoTMeterStream, ResourceType } from "../../../../types/sustainability";
+import {
+  IoTIngestionEvent,
+  IoTMeterStream,
+  ResourceType,
+} from "../../../../types/sustainability";
 
 export default function SustainabilityIoTMetersPage() {
   const [meters, setMeters] = useState<IoTMeterStream[]>([]);
@@ -99,7 +103,8 @@ export default function SustainabilityIoTMetersPage() {
             Registered IoT Energy & Water Gateway Nodes
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Streaming real-time campus microgrid and ultrasonic flow measurements.
+            Streaming real-time campus microgrid and ultrasonic flow
+            measurements.
           </p>
         </div>
         <button
@@ -141,23 +146,33 @@ export default function SustainabilityIoTMetersPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-100 mt-2">{meter.device_name}</h3>
-                  <p className="text-xs text-slate-400 mt-1">{meter.building_name}</p>
+                  <h3 className="text-sm font-bold text-slate-100 mt-2">
+                    {meter.device_name}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    {meter.building_name}
+                  </p>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs">
                   <div className="flex items-center justify-between text-slate-400">
                     <span>Protocol / Bus:</span>
-                    <span className="font-mono text-slate-200">{meter.protocol}</span>
+                    <span className="font-mono text-slate-200">
+                      {meter.protocol}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-slate-400">
                     <span>Latest Telemetry Reading:</span>
                     <span className="font-bold text-emerald-400 font-mono">
-                      {meter.last_reading_value ? `${meter.last_reading_value} kWh` : "Live Feed Active"}
+                      {meter.last_reading_value
+                        ? `${meter.last_reading_value} kWh`
+                        : "Live Feed Active"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <span>Sampling Interval: {meter.sampling_interval_secs}s</span>
+                    <span>
+                      Sampling Interval: {meter.sampling_interval_secs}s
+                    </span>
                     <button
                       onClick={() => handleSimulateTelemetry(meter)}
                       disabled={simulating}
@@ -178,13 +193,15 @@ export default function SustainabilityIoTMetersPage() {
               Cryptographic Ingestion Stream & De-duplication Log
             </h3>
             <p className="text-xs text-slate-400 mb-4">
-              Events are authenticated and evaluated with SHA-256 seed hashing to eliminate duplicate wireless bursts.
+              Events are authenticated and evaluated with SHA-256 seed hashing
+              to eliminate duplicate wireless bursts.
             </p>
 
             <div className="space-y-2 font-mono text-xs">
               {events.length === 0 ? (
                 <div className="p-4 bg-slate-950/60 rounded-lg text-slate-500 text-center italic">
-                  Click &apos;Pulse Test&apos; on any device above to simulate authenticated live telemetry events.
+                  Click &apos;Pulse Test&apos; on any device above to simulate
+                  authenticated live telemetry events.
                 </div>
               ) : (
                 events.map((ev) => (
@@ -195,14 +212,18 @@ export default function SustainabilityIoTMetersPage() {
                     <div className="flex items-center gap-3">
                       <span className="w-2 h-2 rounded-full bg-emerald-400" />
                       <span className="text-cyan-400">{ev.device_id}</span>
-                      <span className="text-slate-400">metric: {ev.metric_name}</span>
+                      <span className="text-slate-400">
+                        metric: {ev.metric_name}
+                      </span>
                       <span className="font-bold text-emerald-400">
                         {ev.metric_value} {ev.unit}
                       </span>
                     </div>
                     <div className="flex items-center gap-4 text-[11px] text-slate-500">
                       <span>Status: {ev.ingestion_status}</span>
-                      <span className="text-slate-600 truncate max-w-xs">{ev.dedup_hash}</span>
+                      <span className="text-slate-600 truncate max-w-xs">
+                        {ev.dedup_hash}
+                      </span>
                     </div>
                   </div>
                 ))
@@ -226,7 +247,9 @@ export default function SustainabilityIoTMetersPage() {
 
             <form onSubmit={handleRegister} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Device Hardware ID</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Device Hardware ID
+                </label>
                 <input
                   type="text"
                   required
@@ -238,7 +261,9 @@ export default function SustainabilityIoTMetersPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Device Friendly Name</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Device Friendly Name
+                </label>
                 <input
                   type="text"
                   required
@@ -250,7 +275,9 @@ export default function SustainabilityIoTMetersPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Building / Zone</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Building / Zone
+                </label>
                 <input
                   type="text"
                   value={building}
@@ -261,10 +288,14 @@ export default function SustainabilityIoTMetersPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Meter Type</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Meter Type
+                  </label>
                   <select
                     value={meterType}
-                    onChange={(e) => setMeterType(e.target.value as ResourceType)}
+                    onChange={(e) =>
+                      setMeterType(e.target.value as ResourceType)
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
                     <option value="ELECTRICITY_GRID">Electricity Grid</option>
@@ -273,7 +304,9 @@ export default function SustainabilityIoTMetersPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Protocol</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Protocol
+                  </label>
                   <select
                     value={protocol}
                     onChange={(e) => setProtocol(e.target.value)}
@@ -308,4 +341,3 @@ export default function SustainabilityIoTMetersPage() {
     </div>
   );
 }
-

@@ -75,7 +75,9 @@ export default function ContractDetailsPage({
 
   const [contract, setContract] = useState<InstitutionalContract | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "obligations" | "amendments" | "audit">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "obligations" | "amendments" | "audit"
+  >("overview");
 
   // Modals state
   const [isTransitionOpen, setIsTransitionOpen] = useState(false);
@@ -84,31 +86,47 @@ export default function ContractDetailsPage({
   const [isAmendmentOpen, setIsAmendmentOpen] = useState(false);
 
   // Transition form
-  const [nextStatus, setNextStatus] = useState<ContractStatus>("INTERNAL_REVIEW");
+  const [nextStatus, setNextStatus] =
+    useState<ContractStatus>("INTERNAL_REVIEW");
   const [transitionComments, setTransitionComments] = useState("");
-  const [transitionReviewer, setTransitionReviewer] = useState("Adv. Sarah Jenkins (Legal Counsel)");
+  const [transitionReviewer, setTransitionReviewer] = useState(
+    "Adv. Sarah Jenkins (Legal Counsel)",
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Execution form
-  const [executionMethod, setExecutionMethod] = useState<ExecutionMethod>("EXTERNAL_DIGITAL_SUITE_CONFIRMED");
-  const [signatoryName, setSignatoryName] = useState("Prof. Arthur Vance (VP Academic & Provost)");
-  const [signatoryTitle, setSignatoryTitle] = useState("Authorized Institutional Signatory");
+  const [executionMethod, setExecutionMethod] = useState<ExecutionMethod>(
+    "EXTERNAL_DIGITAL_SUITE_CONFIRMED",
+  );
+  const [signatoryName, setSignatoryName] = useState(
+    "Prof. Arthur Vance (VP Academic & Provost)",
+  );
+  const [signatoryTitle, setSignatoryTitle] = useState(
+    "Authorized Institutional Signatory",
+  );
   const [counterpartySignatory, setCounterpartySignatory] = useState("");
-  const [counterpartySignedDate, setCounterpartySignedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [counterpartySignedDate, setCounterpartySignedDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [certificateRef, setCertificateRef] = useState("DOCUSIGN-ENV-90214-X");
-  const [executionNotes, setExecutionNotes] = useState("Wet/digital signatures verified against counterparty power of attorney.");
+  const [executionNotes, setExecutionNotes] = useState(
+    "Wet/digital signatures verified against counterparty power of attorney.",
+  );
 
   // Obligation form
   const [oblTitle, setOblTitle] = useState("");
-  const [oblCategory, setOblCategory] = useState<ObligationCategory>("DELIVERABLE");
+  const [oblCategory, setOblCategory] =
+    useState<ObligationCategory>("DELIVERABLE");
   const [oblDueDate, setOblDueDate] = useState("");
   const [oblRequiredEvidence, setOblRequiredEvidence] = useState("");
 
   // Amendment form
   const [amendNumber, setAmendNumber] = useState(1);
   const [amendSummary, setAmendSummary] = useState("");
-  const [amendEffectiveDate, setAmendEffectiveDate] = useState(new Date().toISOString().split("T")[0]);
+  const [amendEffectiveDate, setAmendEffectiveDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [amendValueDelta, setAmendValueDelta] = useState<number>(0);
 
   useEffect(() => {
@@ -163,7 +181,8 @@ export default function ContractDetailsPage({
         execution_method: executionMethod,
         signatory_name: signatoryName,
         signatory_title: signatoryTitle,
-        counterparty_signatory: counterpartySignatory || contract.counterparty_name,
+        counterparty_signatory:
+          counterpartySignatory || contract.counterparty_name,
         counterparty_signed_date: counterpartySignedDate,
         certificate_reference: certificateRef,
         notes: executionNotes,
@@ -234,7 +253,9 @@ export default function ContractDetailsPage({
         <LegalNav />
         <div className="max-w-7xl mx-auto px-6 py-20 text-center">
           <RefreshCw className="h-8 w-8 animate-spin mx-auto text-indigo-600 mb-4" />
-          <p className="text-sm text-slate-500">Loading institutional contract workspace...</p>
+          <p className="text-sm text-slate-500">
+            Loading institutional contract workspace...
+          </p>
         </div>
       </div>
     );
@@ -246,8 +267,13 @@ export default function ContractDetailsPage({
         <LegalNav />
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
           <XCircle className="h-12 w-12 text-rose-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Contract Record Not Found</h2>
-          <p className="text-sm text-slate-500 mt-2">The contract could not be retrieved or you lack permission clearance.</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Contract Record Not Found
+          </h2>
+          <p className="text-sm text-slate-500 mt-2">
+            The contract could not be retrieved or you lack permission
+            clearance.
+          </p>
           <Link
             href="/app/legal/contracts"
             className="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700"
@@ -280,14 +306,14 @@ export default function ContractDetailsPage({
             </span>
             <span
               className={`text-xs px-2.5 py-1 rounded-full font-medium ${getConfidentialityBadge(
-                contract.confidentiality_level
+                contract.confidentiality_level,
               )}`}
             >
               {contract.confidentiality_level}
             </span>
             <span
               className={`text-xs px-2.5 py-1 rounded-full font-medium ${getContractStatusBadge(
-                contract.status
+                contract.status,
               )}`}
             >
               {contract.status.replace(/_/g, " ")}
@@ -304,9 +330,15 @@ export default function ContractDetailsPage({
                   <FileText className="h-6 w-6" />
                 </span>
                 <div>
-                  <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{contract.title}</h1>
+                  <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+                    {contract.title}
+                  </h1>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Counterparty: <strong className="text-slate-700 dark:text-slate-200">{contract.counterparty_name}</strong> • Category: {contract.category.replace(/_/g, " ")}
+                    Counterparty:{" "}
+                    <strong className="text-slate-700 dark:text-slate-200">
+                      {contract.counterparty_name}
+                    </strong>{" "}
+                    • Category: {contract.category.replace(/_/g, " ")}
                   </p>
                 </div>
               </div>
@@ -326,7 +358,8 @@ export default function ContractDetailsPage({
                 <Send className="h-4 w-4" /> Advance Lifecycle
               </button>
 
-              {(contract.status === "READY_FOR_EXECUTION" || contract.status === "AUTHORIZED_APPROVAL") && (
+              {(contract.status === "READY_FOR_EXECUTION" ||
+                contract.status === "AUTHORIZED_APPROVAL") && (
                 <button
                   onClick={() => setIsExecuteOpen(true)}
                   className="px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-medium text-sm hover:bg-emerald-700 transition-colors shadow-sm flex items-center gap-2"
@@ -368,11 +401,13 @@ export default function ContractDetailsPage({
                       isCurrent
                         ? "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-400 dark:border-indigo-600 text-indigo-700 dark:text-indigo-300 shadow-sm"
                         : isPassed
-                        ? "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
-                        : "bg-transparent border-dashed border-slate-200 dark:border-slate-800 text-slate-400 opacity-60"
+                          ? "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                          : "bg-transparent border-dashed border-slate-200 dark:border-slate-800 text-slate-400 opacity-60"
                     }`}
                   >
-                    <div className="text-[10px] font-bold tracking-tight">STEP {idx + 1}</div>
+                    <div className="text-[10px] font-bold tracking-tight">
+                      STEP {idx + 1}
+                    </div>
                     <div className="text-xs font-semibold truncate mt-0.5">
                       {step.replace(/_/g, " ")}
                     </div>
@@ -442,43 +477,64 @@ export default function ContractDetailsPage({
             <div className="lg:col-span-2 space-y-6">
               <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Scale className="h-5 w-5 text-indigo-600" /> Contract Term & Financial Parameters
+                  <Scale className="h-5 w-5 text-indigo-600" /> Contract Term &
+                  Financial Parameters
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Total Financial Value</span>
+                    <span className="text-xs text-slate-500 block">
+                      Total Financial Value
+                    </span>
                     <strong className="text-lg font-bold text-slate-900 dark:text-white">
-                      {formatCurrency(contract.financial_value, contract.currency)}
+                      {formatCurrency(
+                        contract.financial_value,
+                        contract.currency,
+                      )}
                     </strong>
                   </div>
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Governing Law & Jurisdiction</span>
+                    <span className="text-xs text-slate-500 block">
+                      Governing Law & Jurisdiction
+                    </span>
                     <strong className="text-sm font-semibold text-slate-900 dark:text-white">
-                      {contract.governing_law || "Not Specified (Default Institutional Jurisdiction)"}
+                      {contract.governing_law ||
+                        "Not Specified (Default Institutional Jurisdiction)"}
                     </strong>
                   </div>
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Effective Date</span>
+                    <span className="text-xs text-slate-500 block">
+                      Effective Date
+                    </span>
                     <strong className="text-sm font-semibold text-slate-900 dark:text-white">
                       {formatLegalDate(contract.effective_date)}
                     </strong>
                   </div>
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Expiration Date</span>
+                    <span className="text-xs text-slate-500 block">
+                      Expiration Date
+                    </span>
                     <strong className="text-sm font-semibold text-slate-900 dark:text-white">
                       {formatLegalDate(contract.expiration_date)}
                     </strong>
                   </div>
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Auto-Renew Policy</span>
+                    <span className="text-xs text-slate-500 block">
+                      Auto-Renew Policy
+                    </span>
                     <strong className="text-sm font-semibold text-slate-900 dark:text-white">
-                      {contract.auto_renew ? `Yes (${contract.renewal_notice_days || 30} days notice)` : "Manual Expiration"}
+                      {contract.auto_renew
+                        ? `Yes (${contract.renewal_notice_days || 30} days notice)`
+                        : "Manual Expiration"}
                     </strong>
                   </div>
                   <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                    <span className="text-xs text-slate-500 block">Termination Notice Period</span>
+                    <span className="text-xs text-slate-500 block">
+                      Termination Notice Period
+                    </span>
                     <strong className="text-sm font-semibold text-slate-900 dark:text-white">
-                      {contract.termination_notice_days ? `${contract.termination_notice_days} Calendar Days` : "Standard Clause"}
+                      {contract.termination_notice_days
+                        ? `${contract.termination_notice_days} Calendar Days`
+                        : "Standard Clause"}
                     </strong>
                   </div>
                 </div>
@@ -492,8 +548,11 @@ export default function ContractDetailsPage({
                     Legally Executed Contract Record
                   </div>
                   <p className="text-xs text-emerald-900 dark:text-emerald-200">
-                    Execution confirmed via <strong>{getExecutionMethodLabel(contract.execution_method)}</strong> on{" "}
-                    <strong>{formatLegalDate(contract.executed_at)}</strong>.
+                    Execution confirmed via{" "}
+                    <strong>
+                      {getExecutionMethodLabel(contract.execution_method)}
+                    </strong>{" "}
+                    on <strong>{formatLegalDate(contract.executed_at)}</strong>.
                   </p>
                 </div>
               )}
@@ -503,17 +562,34 @@ export default function ContractDetailsPage({
             <div className="space-y-6">
               <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <User className="h-5 w-5 text-indigo-600" /> Counterparty Details
+                  <User className="h-5 w-5 text-indigo-600" /> Counterparty
+                  Details
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="text-xs text-slate-500 block">Organization Name</span>
-                    <strong className="text-slate-900 dark:text-white">{contract.counterparty_name}</strong>
+                    <span className="text-xs text-slate-500 block">
+                      Organization Name
+                    </span>
+                    <strong className="text-slate-900 dark:text-white">
+                      {contract.counterparty_name}
+                    </strong>
                   </div>
                   {contract.counterparty_contact_json && (
                     <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 text-xs space-y-1">
-                      <div>Contact: {contract.counterparty_contact_json.contact || "Primary Counsel / Representative"}</div>
-                      <div>Email: {contract.counterparty_contact_json.email || "contracts@" + contract.counterparty_name.toLowerCase().replace(/\s+/g, "") + ".com"}</div>
+                      <div>
+                        Contact:{" "}
+                        {contract.counterparty_contact_json.contact ||
+                          "Primary Counsel / Representative"}
+                      </div>
+                      <div>
+                        Email:{" "}
+                        {contract.counterparty_contact_json.email ||
+                          "contracts@" +
+                            contract.counterparty_name
+                              .toLowerCase()
+                              .replace(/\s+/g, "") +
+                            ".com"}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -521,17 +597,23 @@ export default function ContractDetailsPage({
 
               <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-indigo-600" /> Institutional Stewardship
+                  <Shield className="h-5 w-5 text-indigo-600" /> Institutional
+                  Stewardship
                 </h3>
                 <div className="text-xs text-slate-600 dark:text-slate-400 space-y-2">
                   <p>
-                    <strong>Responsible Department:</strong> {contract.department_id || "Institutional Office / IT / Academic Affairs"}
+                    <strong>Responsible Department:</strong>{" "}
+                    {contract.department_id ||
+                      "Institutional Office / IT / Academic Affairs"}
                   </p>
                   <p>
-                    <strong>Internal Owner ID:</strong> {contract.internal_owner_id}
+                    <strong>Internal Owner ID:</strong>{" "}
+                    {contract.internal_owner_id}
                   </p>
                   <p>
-                    <strong>Campus Scope:</strong> {contract.campus_id || "All Institutional Campuses (Multi-Campus Master Agreement)"}
+                    <strong>Campus Scope:</strong>{" "}
+                    {contract.campus_id ||
+                      "All Institutional Campuses (Multi-Campus Master Agreement)"}
                   </p>
                 </div>
               </div>
@@ -544,9 +626,12 @@ export default function ContractDetailsPage({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Contractual Obligations & Deliverables</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Contractual Obligations & Deliverables
+                </h3>
                 <p className="text-xs text-slate-500">
-                  Track recurring reporting milestones, SLA commitments, warranty proofs, and compliance requirements.
+                  Track recurring reporting milestones, SLA commitments,
+                  warranty proofs, and compliance requirements.
                 </p>
               </div>
               <button
@@ -572,11 +657,21 @@ export default function ContractDetailsPage({
                   </thead>
                   <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                     {contract.obligations.map((obl) => (
-                      <tr key={obl.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                      <tr
+                        key={obl.id}
+                        className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
+                      >
                         <td className="px-6 py-4">
-                          <strong className="block text-slate-900 dark:text-white">{obl.title}</strong>
-                          {(obl.required_evidence || obl.evidence_document_id) && (
-                            <span className="text-xs text-slate-400">Required: {obl.required_evidence || obl.evidence_document_id}</span>
+                          <strong className="block text-slate-900 dark:text-white">
+                            {obl.title}
+                          </strong>
+                          {(obl.required_evidence ||
+                            obl.evidence_document_id) && (
+                            <span className="text-xs text-slate-400">
+                              Required:{" "}
+                              {obl.required_evidence ||
+                                obl.evidence_document_id}
+                            </span>
                           )}
                         </td>
                         <td className="px-6 py-4 text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -588,7 +683,7 @@ export default function ContractDetailsPage({
                         <td className="px-6 py-4">
                           <span
                             className={`text-xs px-2.5 py-1 rounded-full font-medium ${getObligationStatusBadge(
-                              obl.status
+                              obl.status,
                             )}`}
                           >
                             {obl.status}
@@ -597,7 +692,8 @@ export default function ContractDetailsPage({
                         <td className="px-6 py-4 text-xs">
                           {obl.escalation_level > 0 ? (
                             <span className="text-rose-600 font-bold flex items-center gap-1">
-                              <AlertTriangle className="h-3.5 w-3.5" /> Level {obl.escalation_level}
+                              <AlertTriangle className="h-3.5 w-3.5" /> Level{" "}
+                              {obl.escalation_level}
                             </span>
                           ) : (
                             <span className="text-slate-400">Standard</span>
@@ -619,8 +715,13 @@ export default function ContractDetailsPage({
             ) : (
               <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
                 <CheckCircle2 className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Commitments Recorded</p>
-                <p className="text-xs text-slate-500 mt-1">Register deliverables, audit checkpoints, and renewal obligations.</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  No Commitments Recorded
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Register deliverables, audit checkpoints, and renewal
+                  obligations.
+                </p>
               </div>
             )}
           </div>
@@ -631,9 +732,12 @@ export default function ContractDetailsPage({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Contract Amendments & Addenda</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Contract Amendments & Addenda
+                </h3>
                 <p className="text-xs text-slate-500">
-                  Strict version-controlled record of formal amendments, scope expansions, and financial adjustments.
+                  Strict version-controlled record of formal amendments, scope
+                  expansions, and financial adjustments.
                 </p>
               </div>
               <button
@@ -660,13 +764,28 @@ export default function ContractDetailsPage({
                           Effective: {formatLegalDate(amend.effective_date)}
                         </span>
                       </div>
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white">{amend.summary || amend.title}</p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                        {amend.summary || amend.title}
+                      </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-slate-500 block">Financial Adjustment</span>
-                      <strong className={`text-sm font-mono ${(amend.financial_value_delta ?? amend.financial_value_adjustment ?? 0) >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-                        {(amend.financial_value_delta ?? amend.financial_value_adjustment ?? 0) >= 0 ? "+" : ""}
-                        {formatCurrency(amend.financial_value_delta ?? amend.financial_value_adjustment ?? 0, contract.currency)}
+                      <span className="text-xs text-slate-500 block">
+                        Financial Adjustment
+                      </span>
+                      <strong
+                        className={`text-sm font-mono ${(amend.financial_value_delta ?? amend.financial_value_adjustment ?? 0) >= 0 ? "text-emerald-600" : "text-rose-600"}`}
+                      >
+                        {(amend.financial_value_delta ??
+                          amend.financial_value_adjustment ??
+                          0) >= 0
+                          ? "+"
+                          : ""}
+                        {formatCurrency(
+                          amend.financial_value_delta ??
+                            amend.financial_value_adjustment ??
+                            0,
+                          contract.currency,
+                        )}
                       </strong>
                     </div>
                   </div>
@@ -675,8 +794,12 @@ export default function ContractDetailsPage({
             ) : (
               <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
                 <FileSpreadsheet className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Amendments Recorded</p>
-                <p className="text-xs text-slate-500 mt-1">Contract remains under its original baseline execution terms.</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  No Amendments Recorded
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Contract remains under its original baseline execution terms.
+                </p>
               </div>
             )}
           </div>
@@ -686,13 +809,17 @@ export default function ContractDetailsPage({
         {activeTab === "audit" && (
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Authorized Approval & Audit Chain</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                Authorized Approval & Audit Chain
+              </h3>
               <p className="text-xs text-slate-500">
-                Immutable institutional record of department, legal counsel, and executive decisions.
+                Immutable institutional record of department, legal counsel, and
+                executive decisions.
               </p>
             </div>
 
-            {contract.approval_chain_json && contract.approval_chain_json.length > 0 ? (
+            {contract.approval_chain_json &&
+            contract.approval_chain_json.length > 0 ? (
               <div className="relative pl-6 border-l-2 border-indigo-200 dark:border-indigo-900 space-y-6 my-4">
                 {contract.approval_chain_json.map((step: any, idx: number) => (
                   <div key={idx} className="relative group">
@@ -700,12 +827,16 @@ export default function ContractDetailsPage({
                     <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
                       <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
                         <span className="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-                          {step.step?.replace(/_/g, " ") || `Decision Step ${idx + 1}`}
+                          {step.step?.replace(/_/g, " ") ||
+                            `Decision Step ${idx + 1}`}
                         </span>
-                        <span>{formatLegalDate(step.decided_at || step.timestamp)}</span>
+                        <span>
+                          {formatLegalDate(step.decided_at || step.timestamp)}
+                        </span>
                       </div>
                       <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                        Reviewer: {step.reviewer_name || "Institutional Signatory"}
+                        Reviewer:{" "}
+                        {step.reviewer_name || "Institutional Signatory"}
                       </p>
                       {step.comments && (
                         <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
@@ -719,8 +850,12 @@ export default function ContractDetailsPage({
             ) : (
               <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
                 <History className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Review Decisions Recorded</p>
-                <p className="text-xs text-slate-500 mt-1">Lifecycle transition decisions will be recorded here.</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  No Review Decisions Recorded
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Lifecycle transition decisions will be recorded here.
+                </p>
               </div>
             )}
           </div>
@@ -733,7 +868,8 @@ export default function ContractDetailsPage({
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Send className="h-5 w-5 text-indigo-600" /> Advance Lifecycle Transition
+                <Send className="h-5 w-5 text-indigo-600" /> Advance Lifecycle
+                Transition
               </h3>
               <button
                 onClick={() => setIsTransitionOpen(false)}
@@ -743,25 +879,46 @@ export default function ContractDetailsPage({
               </button>
             </div>
 
-            <form onSubmit={handleTransitionSubmit} className="space-y-4 text-sm">
+            <form
+              onSubmit={handleTransitionSubmit}
+              className="space-y-4 text-sm"
+            >
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
                   Target Contract Status
                 </label>
                 <select
                   value={nextStatus}
-                  onChange={(e) => setNextStatus(e.target.value as ContractStatus)}
+                  onChange={(e) =>
+                    setNextStatus(e.target.value as ContractStatus)
+                  }
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
-                  <option value="INTERNAL_REVIEW">INTERNAL_REVIEW — Primary Department Review</option>
-                  <option value="DEPARTMENT_APPROVAL">DEPARTMENT_APPROVAL — Dean / Unit Head Sign-off</option>
-                  <option value="LEGAL_REVIEW">LEGAL_REVIEW — University Counsel Compliance Check</option>
-                  <option value="AUTHORIZED_APPROVAL">AUTHORIZED_APPROVAL — Provost / VP Executive Sign-off</option>
-                  <option value="READY_FOR_EXECUTION">READY_FOR_EXECUTION — Counterparty Signing Cleared</option>
+                  <option value="INTERNAL_REVIEW">
+                    INTERNAL_REVIEW — Primary Department Review
+                  </option>
+                  <option value="DEPARTMENT_APPROVAL">
+                    DEPARTMENT_APPROVAL — Dean / Unit Head Sign-off
+                  </option>
+                  <option value="LEGAL_REVIEW">
+                    LEGAL_REVIEW — University Counsel Compliance Check
+                  </option>
+                  <option value="AUTHORIZED_APPROVAL">
+                    AUTHORIZED_APPROVAL — Provost / VP Executive Sign-off
+                  </option>
+                  <option value="READY_FOR_EXECUTION">
+                    READY_FOR_EXECUTION — Counterparty Signing Cleared
+                  </option>
                   <option value="ACTIVE">ACTIVE — Executed and In Force</option>
-                  <option value="ON_HOLD">ON_HOLD — Pending External Dispute / Negotiation</option>
-                  <option value="REJECTED">REJECTED — Denied by Reviewer</option>
-                  <option value="TERMINATED">TERMINATED — Early Formal Termination</option>
+                  <option value="ON_HOLD">
+                    ON_HOLD — Pending External Dispute / Negotiation
+                  </option>
+                  <option value="REJECTED">
+                    REJECTED — Denied by Reviewer
+                  </option>
+                  <option value="TERMINATED">
+                    TERMINATED — Early Formal Termination
+                  </option>
                 </select>
               </div>
 
@@ -824,7 +981,8 @@ export default function ContractDetailsPage({
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-emerald-600" /> Record External Execution
+                <FileCheck className="h-5 w-5 text-emerald-600" /> Record
+                External Execution
               </h3>
               <button
                 onClick={() => setIsExecuteOpen(false)}
@@ -837,24 +995,40 @@ export default function ContractDetailsPage({
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span>
-                <strong>Compliance Policy:</strong> CampusOS records verified execution without claiming to be an authorized electronic signing authority. Ensure counterparty credentials match institutional records.
+                <strong>Compliance Policy:</strong> CampusOS records verified
+                execution without claiming to be an authorized electronic
+                signing authority. Ensure counterparty credentials match
+                institutional records.
               </span>
             </div>
 
-            <form onSubmit={handleExecutionSubmit} className="space-y-4 text-sm">
+            <form
+              onSubmit={handleExecutionSubmit}
+              className="space-y-4 text-sm"
+            >
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
                   Verified Execution Method
                 </label>
                 <select
                   value={executionMethod}
-                  onChange={(e) => setExecutionMethod(e.target.value as ExecutionMethod)}
+                  onChange={(e) =>
+                    setExecutionMethod(e.target.value as ExecutionMethod)
+                  }
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
-                  <option value="EXTERNAL_DIGITAL_SUITE_CONFIRMED">DocuSign / Adobe Sign Audit Certificate</option>
-                  <option value="WET_SIGNATURE_CONFIRMED">Physical Wet Signature (Countersigned Scan)</option>
-                  <option value="BOARD_RESOLUTION_CONFIRMED">Governing Board Seal & Resolution</option>
-                  <option value="HYBRID_CONFIRMED">Hybrid Counterpart Execution</option>
+                  <option value="EXTERNAL_DIGITAL_SUITE_CONFIRMED">
+                    DocuSign / Adobe Sign Audit Certificate
+                  </option>
+                  <option value="WET_SIGNATURE_CONFIRMED">
+                    Physical Wet Signature (Countersigned Scan)
+                  </option>
+                  <option value="BOARD_RESOLUTION_CONFIRMED">
+                    Governing Board Seal & Resolution
+                  </option>
+                  <option value="HYBRID_CONFIRMED">
+                    Hybrid Counterpart Execution
+                  </option>
                 </select>
               </div>
 
@@ -951,7 +1125,8 @@ export default function ContractDetailsPage({
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-indigo-600" /> Register Contract Obligation
+                <CheckCircle2 className="h-5 w-5 text-indigo-600" /> Register
+                Contract Obligation
               </h3>
               <button
                 onClick={() => setIsObligationOpen(false)}
@@ -961,7 +1136,10 @@ export default function ContractDetailsPage({
               </button>
             </div>
 
-            <form onSubmit={handleObligationSubmit} className="space-y-4 text-sm">
+            <form
+              onSubmit={handleObligationSubmit}
+              className="space-y-4 text-sm"
+            >
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
                   Obligation Title
@@ -983,14 +1161,20 @@ export default function ContractDetailsPage({
                   </label>
                   <select
                     value={oblCategory}
-                    onChange={(e) => setOblCategory(e.target.value as ObligationCategory)}
+                    onChange={(e) =>
+                      setOblCategory(e.target.value as ObligationCategory)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="DELIVERABLE">DELIVERABLE</option>
                     <option value="REPORTING">REPORTING</option>
                     <option value="PAYMENT_MILESTONE">PAYMENT_MILESTONE</option>
-                    <option value="SERVICE_COMMITMENT">SERVICE_COMMITMENT</option>
-                    <option value="INSURANCE_REQUIREMENT">INSURANCE_REQUIREMENT</option>
+                    <option value="SERVICE_COMMITMENT">
+                      SERVICE_COMMITMENT
+                    </option>
+                    <option value="INSURANCE_REQUIREMENT">
+                      INSURANCE_REQUIREMENT
+                    </option>
                     <option value="RENEWAL_NOTICE">RENEWAL_NOTICE</option>
                     <option value="AUDIT_RIGHT">AUDIT_RIGHT</option>
                   </select>
@@ -1049,7 +1233,8 @@ export default function ContractDetailsPage({
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileEdit className="h-5 w-5 text-indigo-600" /> Record Contract Amendment
+                <FileEdit className="h-5 w-5 text-indigo-600" /> Record Contract
+                Amendment
               </h3>
               <button
                 onClick={() => setIsAmendmentOpen(false)}
@@ -1059,7 +1244,10 @@ export default function ContractDetailsPage({
               </button>
             </div>
 
-            <form onSubmit={handleAmendmentSubmit} className="space-y-4 text-sm">
+            <form
+              onSubmit={handleAmendmentSubmit}
+              className="space-y-4 text-sm"
+            >
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
@@ -1068,7 +1256,9 @@ export default function ContractDetailsPage({
                   <input
                     type="number"
                     value={amendNumber}
-                    onChange={(e) => setAmendNumber(parseInt(e.target.value) || 1)}
+                    onChange={(e) =>
+                      setAmendNumber(parseInt(e.target.value) || 1)
+                    }
                     required
                     min={1}
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
@@ -1109,7 +1299,9 @@ export default function ContractDetailsPage({
                 <input
                   type="number"
                   value={amendValueDelta}
-                  onChange={(e) => setAmendValueDelta(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setAmendValueDelta(parseFloat(e.target.value) || 0)
+                  }
                   placeholder="0.00 (negative for reductions)"
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 />

@@ -25,7 +25,6 @@ class FacilitiesService {
     building?: string;
     search?: string;
   }): Promise<ApiResponse<Facility[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.facilities];
 
     if (filters?.campusId && filters.campusId !== "ALL") {
@@ -58,7 +57,6 @@ class FacilitiesService {
   }
 
   async getFacilityById(id: string): Promise<ApiResponse<Facility | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const facility =
       this.facilities.find((f) => f.id === id || f.code === id) || null;
     return { success: true, data: facility };
@@ -67,7 +65,6 @@ class FacilitiesService {
   async createFacility(
     payload: Partial<Facility>,
   ): Promise<ApiResponse<Facility>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newFacility: Facility = {
       id: `fac-${Date.now().toString(36)}`,
       name: payload.name || "New Campus Facility",
@@ -98,7 +95,6 @@ class FacilitiesService {
     id: string,
     updates: Partial<Facility>,
   ): Promise<ApiResponse<Facility | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const index = this.facilities.findIndex((f) => f.id === id);
     if (index === -1) return { success: false, data: null };
 

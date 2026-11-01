@@ -11,7 +11,6 @@ class AiAlertsService {
     status?: string;
     search?: string;
   }): Promise<ApiResponse<Alert[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.alerts];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -37,7 +36,6 @@ class AiAlertsService {
   }
 
   async getAlertById(id: string): Promise<ApiResponse<Alert | null>> {
-    await new Promise((r) => setTimeout(r, 30));
     const alert = this.alerts.find((a) => a.id === id) || null;
     return { success: Boolean(alert), data: alert };
   }
@@ -46,7 +44,6 @@ class AiAlertsService {
     id: string,
     actor: string,
   ): Promise<ApiResponse<Alert | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
     if (!alert) return { success: false, data: null };
 
@@ -70,7 +67,6 @@ class AiAlertsService {
     actor: string,
     notes = "Action completed",
   ): Promise<ApiResponse<Alert | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
     if (!alert) return { success: false, data: null };
 
@@ -93,7 +89,6 @@ class AiAlertsService {
     id: string,
     actor: string,
   ): Promise<ApiResponse<Alert | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const alert = this.alerts.find((a) => a.id === id);
     if (!alert) return { success: false, data: null };
 

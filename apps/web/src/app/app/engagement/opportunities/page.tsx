@@ -26,12 +26,15 @@ import {
 } from "@/types/engagement";
 
 export default function EngagementOpportunitiesPage() {
-  const [opportunities, setOpportunities] = useState<VolunteerOpportunity[]>([]);
+  const [opportunities, setOpportunities] = useState<VolunteerOpportunity[]>(
+    [],
+  );
   const [programs, setPrograms] = useState<EngagementProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [skillFilter, setSkillFilter] = useState("ALL");
-  const [selectedOpportunity, setSelectedOpportunity] = useState<VolunteerOpportunity | null>(null);
+  const [selectedOpportunity, setSelectedOpportunity] =
+    useState<VolunteerOpportunity | null>(null);
 
   // Apply Modal State
   const [isApplyOpen, setIsApplyOpen] = useState(false);
@@ -45,9 +48,11 @@ export default function EngagementOpportunitiesPage() {
   const [title, setTitle] = useState("");
   const [capacity, setCapacity] = useState(20);
   const [hours, setHours] = useState(10);
-  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [endDate, setEndDate] = useState(
-    new Date(Date.now() + 20 * 86400000).toISOString().split("T")[0]
+    new Date(Date.now() + 20 * 86400000).toISOString().split("T")[0],
   );
   const [location, setLocation] = useState("");
   const [desc, setDesc] = useState("");
@@ -129,12 +134,17 @@ export default function EngagementOpportunitiesPage() {
   const filteredOpps = opportunities.filter((o) => {
     const matchesSearch =
       o.title.toLowerCase().includes(search.toLowerCase()) ||
-      (o.description && o.description.toLowerCase().includes(search.toLowerCase())) ||
-      (o.service_category && o.service_category.toLowerCase().includes(search.toLowerCase()));
+      (o.description &&
+        o.description.toLowerCase().includes(search.toLowerCase())) ||
+      (o.service_category &&
+        o.service_category.toLowerCase().includes(search.toLowerCase()));
 
     const matchesSkill =
       skillFilter === "ALL" ||
-      (o.required_skills && o.required_skills.some((s) => s.toLowerCase().includes(skillFilter.toLowerCase())));
+      (o.required_skills &&
+        o.required_skills.some((s) =>
+          s.toLowerCase().includes(skillFilter.toLowerCase()),
+        ));
 
     return matchesSearch && matchesSkill;
   });
@@ -147,7 +157,10 @@ export default function EngagementOpportunitiesPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -161,7 +174,8 @@ export default function EngagementOpportunitiesPage() {
               Volunteering Opportunities
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Discover verified service roles, field tasks, and civic learning opportunities
+              Discover verified service roles, field tasks, and civic learning
+              opportunities
             </p>
           </div>
 
@@ -230,9 +244,12 @@ export default function EngagementOpportunitiesPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-foreground line-clamp-1">{opp.title}</h3>
+                    <h3 className="text-base font-bold text-foreground line-clamp-1">
+                      {opp.title}
+                    </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                      {opp.description || "Active community volunteering opportunity."}
+                      {opp.description ||
+                        "Active community volunteering opportunity."}
                     </p>
                   </div>
 
@@ -325,33 +342,43 @@ export default function EngagementOpportunitiesPage() {
                     {selectedOpportunity.title}
                   </h2>
                 </div>
-                <button onClick={() => setSelectedOpportunity(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedOpportunity(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
-                <p className="text-muted-foreground">{selectedOpportunity.description}</p>
+                <p className="text-muted-foreground">
+                  {selectedOpportunity.description}
+                </p>
 
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-2">
-                  <h4 className="font-semibold text-foreground">Operational Details</h4>
+                  <h4 className="font-semibold text-foreground">
+                    Operational Details
+                  </h4>
                   <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                     <div>
                       <span>Capacity:</span>
                       <p className="text-foreground font-medium">
-                        {selectedOpportunity.assigned_count} filled / {selectedOpportunity.capacity} total
+                        {selectedOpportunity.assigned_count} filled /{" "}
+                        {selectedOpportunity.capacity} total
                       </p>
                     </div>
                     <div>
                       <span>Service Hours:</span>
                       <p className="text-foreground font-medium">
-                        {selectedOpportunity.expected_hours_per_student} hrs credited upon verification
+                        {selectedOpportunity.expected_hours_per_student} hrs
+                        credited upon verification
                       </p>
                     </div>
                     <div>
                       <span>Field Location:</span>
                       <p className="text-foreground font-medium">
-                        {selectedOpportunity.location_details || "Designated Community Center"}
+                        {selectedOpportunity.location_details ||
+                          "Designated Community Center"}
                       </p>
                     </div>
                     <div>
@@ -365,15 +392,23 @@ export default function EngagementOpportunitiesPage() {
 
                 {selectedOpportunity.prerequisites && (
                   <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20 text-foreground">
-                    <span className="font-semibold text-blue-500 block mb-0.5">Prerequisites:</span>
-                    <p className="text-muted-foreground">{selectedOpportunity.prerequisites}</p>
+                    <span className="font-semibold text-blue-500 block mb-0.5">
+                      Prerequisites:
+                    </span>
+                    <p className="text-muted-foreground">
+                      {selectedOpportunity.prerequisites}
+                    </p>
                   </div>
                 )}
 
                 {selectedOpportunity.safety_guidelines && (
                   <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20 text-foreground">
-                    <span className="font-semibold text-amber-500 block mb-0.5">Safety Guidance:</span>
-                    <p className="text-muted-foreground">{selectedOpportunity.safety_guidelines}</p>
+                    <span className="font-semibold text-amber-500 block mb-0.5">
+                      Safety Guidance:
+                    </span>
+                    <p className="text-muted-foreground">
+                      {selectedOpportunity.safety_guidelines}
+                    </p>
                   </div>
                 )}
               </div>
@@ -396,10 +431,17 @@ export default function EngagementOpportunitiesPage() {
             <div className="bg-card border border-border rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto text-xs">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
-                  <span className="text-[10px] text-muted-foreground block">Apply for Civic Role</span>
-                  <h2 className="text-base font-bold text-foreground">{targetOpp.title}</h2>
+                  <span className="text-[10px] text-muted-foreground block">
+                    Apply for Civic Role
+                  </span>
+                  <h2 className="text-base font-bold text-foreground">
+                    {targetOpp.title}
+                  </h2>
                 </div>
-                <button onClick={() => setIsApplyOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsApplyOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -429,8 +471,13 @@ export default function EngagementOpportunitiesPage() {
                       className="mt-0.5 rounded border-border"
                       required
                     />
-                    <label htmlFor="consent-check" className="text-muted-foreground">
-                      I agree to abide by institutional civic codes of conduct, field safety guidelines, and complete all required orientation modules.
+                    <label
+                      htmlFor="consent-check"
+                      className="text-muted-foreground"
+                    >
+                      I agree to abide by institutional civic codes of conduct,
+                      field safety guidelines, and complete all required
+                      orientation modules.
                     </label>
                   </div>
                 </div>
@@ -465,14 +512,19 @@ export default function EngagementOpportunitiesPage() {
                   <PlusCircle className="h-5 w-5 text-emerald-500" />
                   Publish Volunteer Opportunity
                 </h2>
-                <button onClick={() => setIsCreateOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsCreateOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateOpportunity} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Linked Engagement Program *</label>
+                  <label className="font-semibold text-foreground">
+                    Linked Engagement Program *
+                  </label>
                   <select
                     value={progId}
                     onChange={(e) => setProgId(e.target.value)}
@@ -488,7 +540,9 @@ export default function EngagementOpportunitiesPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Opportunity Title *</label>
+                  <label className="font-semibold text-foreground">
+                    Opportunity Title *
+                  </label>
                   <input
                     type="text"
                     required
@@ -501,7 +555,9 @@ export default function EngagementOpportunitiesPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Total Capacity (Slots) *</label>
+                    <label className="font-semibold text-foreground">
+                      Total Capacity (Slots) *
+                    </label>
                     <input
                       type="number"
                       min={1}
@@ -512,7 +568,9 @@ export default function EngagementOpportunitiesPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Expected Hours per Volunteer *</label>
+                    <label className="font-semibold text-foreground">
+                      Expected Hours per Volunteer *
+                    </label>
                     <input
                       type="number"
                       min={1}
@@ -527,7 +585,9 @@ export default function EngagementOpportunitiesPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Start Date *</label>
+                    <label className="font-semibold text-foreground">
+                      Start Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -537,7 +597,9 @@ export default function EngagementOpportunitiesPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">End Date *</label>
+                    <label className="font-semibold text-foreground">
+                      End Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -549,7 +611,9 @@ export default function EngagementOpportunitiesPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Location / Field Coordinates</label>
+                  <label className="font-semibold text-foreground">
+                    Location / Field Coordinates
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Marina Beach Post 3 / Sulur Govt School"
@@ -560,7 +624,9 @@ export default function EngagementOpportunitiesPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Role Description & Responsibilities</label>
+                  <label className="font-semibold text-foreground">
+                    Role Description & Responsibilities
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Detail the tasks volunteers will undertake during their shifts..."
@@ -593,4 +659,3 @@ export default function EngagementOpportunitiesPage() {
     </div>
   );
 }
-

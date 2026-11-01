@@ -1,9 +1,9 @@
 {
   "release_certification": {
-    "commit_sha": "65b1794e27d3e401873c810ca68929035921a42e",
-    "timestamp": "2026-10-19T12:47:25.508211+00:00",
+    "commit_sha": "ce7267f5c1a3c2f1c81ec7327b877cb0fb2a5967",
+    "timestamp": "2026-11-01T05:33:49.235894+00:00",
     "environment": {
-      "os": "Windows-10-10.0.26200-SP0",
+      "os": "Windows-10-10.0.26300-SP0",
       "python": "3.11.9"
     },
     "release_decision": "WARNING",
@@ -21,7 +21,7 @@
         "passed": 11,
         "failed": 0,
         "skipped": 0,
-        "summary": "11 passed, 1 warning in 5.36s"
+        "summary": "11 passed, 1 warning in 8.07s"
       },
       {
         "suite": "tests/test_enterprise_database_migrations.py",
@@ -29,7 +29,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 5.33s"
+        "summary": "5 passed, 1 warning in 8.85s"
       },
       {
         "suite": "tests/test_enterprise_api_contracts.py",
@@ -37,7 +37,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 2 warnings in 11.44s"
+        "summary": "5 passed, 2 warnings in 17.10s"
       },
       {
         "suite": "tests/test_enterprise_failure_injection.py",
@@ -45,7 +45,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 5.09s"
+        "summary": "5 passed, 1 warning in 7.12s"
       },
       {
         "suite": "tests/test_enterprise_ai_safety_eval.py",
@@ -53,18 +53,18 @@
         "passed": 19,
         "failed": 0,
         "skipped": 0,
-        "summary": "19 passed, 1 warning in 4.70s"
+        "summary": "19 passed, 1 warning in 6.96s"
       }
     ],
     "accessibility": {
       "status": "PASS",
-      "compliance_rate": "80.6%",
-      "files_scanned": 171,
+      "compliance_rate": "79.71%",
+      "files_scanned": 305,
       "violations": 0
     },
     "e2e_browser": {
       "status": "BLOCKED",
-      "details": "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web."
+      "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev')."
     },
     "gates": [
       {
@@ -119,13 +119,13 @@
         "gate": "G-09",
         "name": "Frontend Accessibility (WCAG 2.1 AA)",
         "status": "PASS",
-        "details": "Compliance 80.6%, 0 violations"
+        "details": "Compliance 79.71%, 0 violations"
       },
       {
         "gate": "G-10",
         "name": "E2E Browser Automation",
         "status": "BLOCKED",
-        "details": "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web."
+        "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev')."
       },
       {
         "gate": "G-11",

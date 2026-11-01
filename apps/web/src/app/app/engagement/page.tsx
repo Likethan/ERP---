@@ -46,11 +46,15 @@ const SDG_NAMES: Record<number, string> = {
 };
 
 export default function EngagementDashboardPage() {
-  const [analytics, setAnalytics] = useState<EngagementAnalyticsSummary | null>(null);
+  const [analytics, setAnalytics] = useState<EngagementAnalyticsSummary | null>(
+    null,
+  );
   const [programs, setPrograms] = useState<EngagementProgram[]>([]);
   const [partners, setPartners] = useState<CommunityPartner[]>([]);
   const [recentHours, setRecentHours] = useState<ServiceHourEntry[]>([]);
-  const [activeRole, setActiveRole] = useState<"STUDENT" | "COORDINATOR" | "HOD" | "ADMIN">("COORDINATOR");
+  const [activeRole, setActiveRole] = useState<
+    "STUDENT" | "COORDINATOR" | "HOD" | "ADMIN"
+  >("COORDINATOR");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -95,13 +99,16 @@ export default function EngagementDashboardPage() {
               Student Engagement & Civic Impact Management
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Enterprise community service, partner collaborations, verified service hours, and verifiable credentials.
+              Enterprise community service, partner collaborations, verified
+              service hours, and verifiable credentials.
             </p>
           </div>
 
           {/* Role Experience Switcher */}
           <div className="flex items-center bg-muted/60 p-1 rounded-xl border border-border text-xs">
-            <span className="px-2 py-1 text-muted-foreground font-medium">Viewing as:</span>
+            <span className="px-2 py-1 text-muted-foreground font-medium">
+              Viewing as:
+            </span>
             {(["STUDENT", "COORDINATOR", "HOD", "ADMIN"] as const).map((r) => (
               <button
                 key={r}
@@ -122,7 +129,9 @@ export default function EngagementDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-xs font-medium uppercase tracking-wider">Active Programs</span>
+              <span className="text-xs font-medium uppercase tracking-wider">
+                Active Programs
+              </span>
               <HandHeart className="h-5 w-5 text-emerald-500" />
             </div>
             <div className="text-2xl font-bold text-foreground">
@@ -138,7 +147,9 @@ export default function EngagementDashboardPage() {
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-xs font-medium uppercase tracking-wider">Community Partners</span>
+              <span className="text-xs font-medium uppercase tracking-wider">
+                Community Partners
+              </span>
               <Users2 className="h-5 w-5 text-blue-500" />
             </div>
             <div className="text-2xl font-bold text-foreground">
@@ -151,11 +162,15 @@ export default function EngagementDashboardPage() {
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-xs font-medium uppercase tracking-wider">Verified Hours</span>
+              <span className="text-xs font-medium uppercase tracking-wider">
+                Verified Hours
+              </span>
               <Clock className="h-5 w-5 text-amber-500" />
             </div>
             <div className="text-2xl font-bold text-foreground">
-              {analytics?.total_verified_hours ? Number(analytics.total_verified_hours).toLocaleString() : "3,840.5"}
+              {analytics?.total_verified_hours
+                ? Number(analytics.total_verified_hours).toLocaleString()
+                : "3,840.5"}
             </div>
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <span className="text-amber-500 font-semibold">
@@ -167,7 +182,9 @@ export default function EngagementDashboardPage() {
 
           <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-xs font-medium uppercase tracking-wider">Certificates Issued</span>
+              <span className="text-xs font-medium uppercase tracking-wider">
+                Certificates Issued
+              </span>
               <Award className="h-5 w-5 text-purple-500" />
             </div>
             <div className="text-2xl font-bold text-foreground">
@@ -246,7 +263,10 @@ export default function EngagementDashboardPage() {
                 Object.entries(analytics.hours_by_sdg).map(([sdg, hours]) => {
                   const numSdg = Number(sdg);
                   const name = SDG_NAMES[numSdg] || `SDG ${numSdg}`;
-                  const percentage = Math.min(100, Math.round((hours / 1200) * 100));
+                  const percentage = Math.min(
+                    100,
+                    Math.round((hours / 1200) * 100),
+                  );
 
                   return (
                     <div key={sdg} className="space-y-1">
@@ -254,7 +274,9 @@ export default function EngagementDashboardPage() {
                         <span className="font-medium text-foreground">
                           Goal {numSdg}: {name}
                         </span>
-                        <span className="text-muted-foreground font-semibold">{hours} hrs</span>
+                        <span className="text-muted-foreground font-semibold">
+                          {hours} hrs
+                        </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                         <div
@@ -285,7 +307,10 @@ export default function EngagementDashboardPage() {
 
             <div className="divide-y divide-border">
               {partners.slice(0, 3).map((partner) => (
-                <div key={partner.id} className="py-3 first:pt-0 last:pb-0 space-y-1">
+                <div
+                  key={partner.id}
+                  className="py-3 first:pt-0 last:pb-0 space-y-1"
+                >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-foreground line-clamp-1">
                       {partner.name}
@@ -318,7 +343,8 @@ export default function EngagementDashboardPage() {
                 Featured Civic Engagement Programs
               </h2>
               <p className="text-xs text-muted-foreground">
-                Approved institutional programs actively registering or in progress
+                Approved institutional programs actively registering or in
+                progress
               </p>
             </div>
             <Link
@@ -357,12 +383,15 @@ export default function EngagementDashboardPage() {
                   <div className="flex items-center justify-between">
                     <span>Capacity:</span>
                     <span className="font-medium text-foreground">
-                      {prog.current_enrolled_count} / {prog.max_participants || "Open"}
+                      {prog.current_enrolled_count} /{" "}
+                      {prog.max_participants || "Open"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Target Hours:</span>
-                    <span className="font-medium text-foreground">{prog.target_service_hours} hrs</span>
+                    <span className="font-medium text-foreground">
+                      {prog.target_service_hours} hrs
+                    </span>
                   </div>
                 </div>
 
@@ -388,7 +417,8 @@ export default function EngagementDashboardPage() {
                 Recent Service-Hour Activity
               </h2>
               <p className="text-xs text-muted-foreground">
-                Participant check-in records, hour submissions, and supervisor verification audit
+                Participant check-in records, hour submissions, and supervisor
+                verification audit
               </p>
             </div>
             <Link
@@ -420,8 +450,12 @@ export default function EngagementDashboardPage() {
                         {hour.student_roll_number || "Verified"}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{hour.activity_date}</td>
-                    <td className="px-4 py-3 font-semibold text-foreground">{hour.duration_hours} hrs</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {hour.activity_date}
+                    </td>
+                    <td className="px-4 py-3 font-semibold text-foreground">
+                      {hour.duration_hours} hrs
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground max-w-xs truncate">
                       {hour.activity_description}
                     </td>
@@ -434,8 +468,8 @@ export default function EngagementDashboardPage() {
                           hour.status === "APPROVED"
                             ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                             : hour.status === "PENDING"
-                            ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                            : "bg-red-500/10 text-red-500 border border-red-500/20"
+                              ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                              : "bg-red-500/10 text-red-500 border border-red-500/20"
                         }`}
                       >
                         {hour.status}
@@ -451,4 +485,3 @@ export default function EngagementDashboardPage() {
     </div>
   );
 }
-

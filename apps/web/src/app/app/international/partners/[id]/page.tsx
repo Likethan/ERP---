@@ -21,9 +21,17 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { InstitutionalAgreement, InternationalPartner, MobilityProgram } from "@/types/international";
+import {
+  InstitutionalAgreement,
+  InternationalPartner,
+  MobilityProgram,
+} from "@/types/international";
 
-export default function PartnerDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function PartnerDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const partnerId = resolvedParams.id;
 
@@ -56,7 +64,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <InternationalNav />
-        <div className="p-12 text-center text-xs text-slate-500">Loading partner institution profile...</div>
+        <div className="p-12 text-center text-xs text-slate-500">
+          Loading partner institution profile...
+        </div>
       </div>
     );
   }
@@ -65,7 +75,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100">
         <InternationalNav />
-        <div className="p-12 text-center text-xs text-rose-400">Partner institution not found.</div>
+        <div className="p-12 text-center text-xs text-rose-400">
+          Partner institution not found.
+        </div>
       </div>
     );
   }
@@ -89,7 +101,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-semibold tracking-wider uppercase">
-                  {partner.category || partner.partnership_category || "UNIVERSITY"}
+                  {partner.category ||
+                    partner.partnership_category ||
+                    "UNIVERSITY"}
                 </span>
                 <span
                   className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
@@ -98,7 +112,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                       : "bg-slate-800 text-slate-400"
                   }`}
                 >
-                  {partner.is_active || partner.status === "ACTIVE" ? "Active Partnership" : "Inactive"}
+                  {partner.is_active || partner.status === "ACTIVE"
+                    ? "Active Partnership"
+                    : "Inactive"}
                 </span>
               </div>
 
@@ -110,7 +126,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                 <MapPin className="h-4 w-4 text-cyan-400 shrink-0" />
                 <span>
                   {partner.city ? `${partner.city}, ` : ""}
-                  {partner.country_name || partner.country || partner.country_code}
+                  {partner.country_name ||
+                    partner.country ||
+                    partner.country_code}
                 </span>
                 {partner.country_code && (
                   <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
@@ -144,7 +162,9 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
 
           <div className="mt-6 pt-5 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <span className="text-slate-500 block">Primary Contact Person</span>
+              <span className="text-slate-500 block">
+                Primary Contact Person
+              </span>
               <span className="font-semibold text-slate-200 mt-0.5 block">
                 {partner.primary_contact_name || "Not designated"}
               </span>
@@ -199,8 +219,8 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                           agr.is_expiring_soon || agr.status === "EXPIRING"
                             ? "bg-amber-500/10 text-amber-300 border border-amber-500/20"
                             : agr.status === "ACTIVE"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                            : "bg-slate-800 text-slate-400"
+                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                              : "bg-slate-800 text-slate-400"
                         }`}
                       >
                         {agr.is_expiring_soon ? "Expiring Soon" : agr.status}
@@ -211,14 +231,19 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                       {agr.agreement_title || agr.agreementTitle || agr.title}
                     </h4>
                     <p className="text-xs text-slate-400 mt-1">
-                      Ref: {agr.agreement_reference_number || agr.agreementReferenceNumber}
+                      Ref:{" "}
+                      {agr.agreement_reference_number ||
+                        agr.agreementReferenceNumber}
                     </p>
 
                     <div className="mt-3.5 pt-3 border-t border-slate-800/80 space-y-1 text-xs text-slate-300">
                       <p className="flex items-center justify-between">
-                        <span className="text-slate-500">Effective Duration:</span>
+                        <span className="text-slate-500">
+                          Effective Duration:
+                        </span>
                         <span>
-                          {agr.effective_start_date || agr.start_date} to {agr.effective_end_date || agr.expiry_date}
+                          {agr.effective_start_date || agr.start_date} to{" "}
+                          {agr.effective_end_date || agr.expiry_date}
                         </span>
                       </p>
                       {agr.coordinator_name && (
@@ -255,7 +280,8 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
               Active Mobility Programs ({programs.length})
             </h3>
             <p className="text-xs text-slate-400">
-              Exchange tracks and study abroad opportunities offered through this partnership
+              Exchange tracks and study abroad opportunities offered through
+              this partnership
             </p>
           </div>
 
@@ -277,10 +303,17 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                     <h4 className="text-sm font-bold text-white mt-2">
                       {prog.program_title || prog.title}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-1">Code: {prog.program_code || prog.programCode}</p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Code: {prog.program_code || prog.programCode}
+                    </p>
                     <div className="mt-3 text-xs text-slate-300 space-y-1">
                       <p>Seats: {prog.total_seats || prog.totalSeats}</p>
-                      <p>Min CGPA: {prog.min_cgpa_requirement || prog.minCgpaRequirement || "7.0"}</p>
+                      <p>
+                        Min CGPA:{" "}
+                        {prog.min_cgpa_requirement ||
+                          prog.minCgpaRequirement ||
+                          "7.0"}
+                      </p>
                     </div>
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-800">

@@ -26,8 +26,12 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     contact_email: "ananya.roy@greenearthtrust.org",
     contact_phone: "+91 98450 12345",
     authorized_rep_title: "Executive Director",
-    purpose_statement: "Restoration of urban ecosystems, coastal mangrove regeneration, and campus solid waste reduction initiatives.",
-    engagement_categories: ["ENVIRONMENTAL_SUSTAINABILITY", "COMMUNITY_DEVELOPMENT"],
+    purpose_statement:
+      "Restoration of urban ecosystems, coastal mangrove regeneration, and campus solid waste reduction initiatives.",
+    engagement_categories: [
+      "ENVIRONMENTAL_SUSTAINABILITY",
+      "COMMUNITY_DEVELOPMENT",
+    ],
     mou_reference: "MOU/2025/ENV-089",
     mou_valid_from: "2025-06-01",
     mou_valid_to: "2028-05-31",
@@ -35,7 +39,8 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     verified_hours_contributed: 1420,
     programs_hosted: 6,
     total_volunteers_engaged: 285,
-    impact_summary: "Planted 3,200 saplings, diverted 14 tons of marine plastic debris, and established 4 micro-composting hubs.",
+    impact_summary:
+      "Planted 3,200 saplings, diverted 14 tons of marine plastic debris, and established 4 micro-composting hubs.",
     city: "Chennai",
     state: "Tamil Nadu",
     created_at: "2025-06-01T09:00:00Z",
@@ -50,8 +55,13 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     contact_email: "srikanth@aksharaliteracy.org",
     contact_phone: "+91 94432 67890",
     authorized_rep_title: "Head of Community Programs",
-    purpose_statement: "Empowering primary school students across rural government schools through foundational literacy and STEM clubs.",
-    engagement_categories: ["EDUCATION_LITERACY", "DIGITAL_INCLUSION", "YOUTH_MENTORING"],
+    purpose_statement:
+      "Empowering primary school students across rural government schools through foundational literacy and STEM clubs.",
+    engagement_categories: [
+      "EDUCATION_LITERACY",
+      "DIGITAL_INCLUSION",
+      "YOUTH_MENTORING",
+    ],
     mou_reference: "MOU/2025/EDU-112",
     mou_valid_from: "2025-08-15",
     mou_valid_to: "2027-08-14",
@@ -59,7 +69,8 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     verified_hours_contributed: 980,
     programs_hosted: 4,
     total_volunteers_engaged: 140,
-    impact_summary: "Tutored 750 students across 12 rural schools with a 38% improvement in baseline mathematics and reading.",
+    impact_summary:
+      "Tutored 750 students across 12 rural schools with a 38% improvement in baseline mathematics and reading.",
     city: "Coimbatore",
     state: "Tamil Nadu",
     created_at: "2025-08-15T10:00:00Z",
@@ -74,7 +85,8 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     contact_email: "meenakshi@apexarogya.org",
     contact_phone: "+91 97890 23456",
     authorized_rep_title: "Medical Outreach Coordinator",
-    purpose_statement: "Providing preventive health screenings, anemia awareness, and elderly wellness checks in peri-urban villages.",
+    purpose_statement:
+      "Providing preventive health screenings, anemia awareness, and elderly wellness checks in peri-urban villages.",
     engagement_categories: ["HEALTH_WELLBEING", "ELDER_CARE"],
     mou_reference: "MOU/2026/HLTH-034",
     mou_valid_from: "2026-01-10",
@@ -83,7 +95,8 @@ export const MOCK_PARTNERS: CommunityPartner[] = [
     verified_hours_contributed: 640,
     programs_hosted: 3,
     total_volunteers_engaged: 95,
-    impact_summary: "Organized 8 rural health camps checking 2,400 village elders and distributed 600 basic nutrition kits.",
+    impact_summary:
+      "Organized 8 rural health camps checking 2,400 village elders and distributed 600 basic nutrition kits.",
     city: "Madurai",
     state: "Tamil Nadu",
     created_at: "2026-01-10T08:30:00Z",
@@ -97,7 +110,8 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     code: "CIVIC-CLEAN-26",
     name: "Coastal & Riverine Eco-Restoration Mission",
     slug: "coastal-riverine-cleanup",
-    description: "An intensive civic conservation project engaging student volunteers in river basin cleanup, plastic segregation, and water quality sampling.",
+    description:
+      "An intensive civic conservation project engaging student volunteers in river basin cleanup, plastic segregation, and water quality sampling.",
     category: "ENVIRONMENTAL_SUSTAINABILITY",
     objectives: [
       "Remove non-biodegradable debris from urban riverbanks",
@@ -115,10 +129,15 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     current_enrolled_count: 85,
     target_service_hours: 15,
     required_skills: ["Waste Segregation", "Field Safety", "Public Speaking"],
-    safety_requirements: ["Nitrile Gloves", "High-Visibility Vest", "Tetanus Vaccination"],
+    safety_requirements: [
+      "Nitrile Gloves",
+      "High-Visibility Vest",
+      "Tetanus Vaccination",
+    ],
     consent_required: true,
     un_sdg_goals: [11, 13, 14, 15],
-    expected_outcomes: "Collection and certified recycling of 2,500 kg of coastal solid waste.",
+    expected_outcomes:
+      "Collection and certified recycling of 2,500 kg of coastal solid waste.",
     created_at: "2026-09-15T09:00:00Z",
     updated_at: "2026-10-20T10:00:00Z",
     partner: MOCK_PARTNERS[0],
@@ -128,7 +147,8 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     code: "CIVIC-STEM-26",
     name: "Gramin Vidya Rural Digital & STEM Mentorship",
     slug: "gramin-vidya-stem",
-    description: "Equipping underprivileged rural school students with computer basics, scratch block programming, and hands-on science experiments.",
+    description:
+      "Equipping underprivileged rural school students with computer basics, scratch block programming, and hands-on science experiments.",
     category: "EDUCATION_LITERACY",
     objectives: [
       "Deliver 20 hours of interactive STEM modules to 6th-8th grade pupils",
@@ -145,11 +165,16 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     max_participants: 60,
     current_enrolled_count: 52,
     target_service_hours: 20,
-    required_skills: ["Python/Scratch", "Patience & Empathy", "Regional Language Fluency"],
+    required_skills: [
+      "Python/Scratch",
+      "Patience & Empathy",
+      "Regional Language Fluency",
+    ],
     safety_requirements: ["Background Verification", "Institutional ID Card"],
     consent_required: true,
     un_sdg_goals: [4, 5, 10],
-    expected_outcomes: "100% digital literacy assessment completion across 250 rural school children.",
+    expected_outcomes:
+      "100% digital literacy assessment completion across 250 rural school children.",
     created_at: "2026-08-20T10:30:00Z",
     updated_at: "2026-10-18T14:15:00Z",
     partner: MOCK_PARTNERS[1],
@@ -159,7 +184,8 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     code: "CIVIC-HEALTH-26",
     name: "Sanjeevani Elder Care & Tele-Health Outreach",
     slug: "sanjeevani-elder-care",
-    description: "Support geriatric wellness in old age homes through vital checks, emotional accompaniment, memory games, and digital health records setup.",
+    description:
+      "Support geriatric wellness in old age homes through vital checks, emotional accompaniment, memory games, and digital health records setup.",
     category: "HEALTH_WELLBEING",
     objectives: [
       "Assist visiting medical staff during bi-weekly geriatric camps",
@@ -180,7 +206,8 @@ export const MOCK_PROGRAMS: EngagementProgram[] = [
     safety_requirements: ["Mask Mandate in Wards", "Flu Vaccine Clearance"],
     consent_required: true,
     un_sdg_goals: [3, 10],
-    expected_outcomes: "Improve emotional wellness scores for 80 residents by 30%.",
+    expected_outcomes:
+      "Improve emotional wellness scores for 80 residents by 30%.",
     created_at: "2026-10-01T11:00:00Z",
     updated_at: "2026-10-22T09:30:00Z",
     partner: MOCK_PARTNERS[2],
@@ -192,7 +219,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     id: "opp-001",
     program_id: "prog-001",
     title: "Estuary Zone Waste Auditor & Marshall",
-    description: "Direct volunteers at cleanup sectors, record plastic item categories, and coordinate bag weighing with municipal recycling vans.",
+    description:
+      "Direct volunteers at cleanup sectors, record plastic item categories, and coordinate bag weighing with municipal recycling vans.",
     service_category: "Field Operations & Audit",
     required_skills: ["Waste Segregation", "Leadership"],
     capacity: 25,
@@ -206,7 +234,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     expected_hours_per_student: 8,
     status: "PUBLISHED",
     prerequisites: "Must attend 30-min online safety briefing.",
-    safety_guidelines: "Wear closed shoes and puncture-resistant gloves at all times.",
+    safety_guidelines:
+      "Wear closed shoes and puncture-resistant gloves at all times.",
     created_at: "2026-09-20T10:00:00Z",
     updated_at: "2026-10-20T11:00:00Z",
     program: MOCK_PROGRAMS[0],
@@ -215,7 +244,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     id: "opp-002",
     program_id: "prog-002",
     title: "Weekend Coding & Scratch Mentor",
-    description: "Deliver 2-hour interactive weekend coding modules to middle-school students using offline laptops.",
+    description:
+      "Deliver 2-hour interactive weekend coding modules to middle-school students using offline laptops.",
     service_category: "Teaching & Mentorship",
     required_skills: ["Python/Scratch", "Communication"],
     capacity: 20,
@@ -229,7 +259,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     expected_hours_per_student: 12,
     status: "PUBLISHED",
     prerequisites: "Prior programming coursework in CS/IT.",
-    safety_guidelines: "Institutional child protection code of conduct applies.",
+    safety_guidelines:
+      "Institutional child protection code of conduct applies.",
     created_at: "2026-08-25T11:00:00Z",
     updated_at: "2026-10-15T12:00:00Z",
     program: MOCK_PROGRAMS[1],
@@ -238,7 +269,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     id: "opp-003",
     program_id: "prog-003",
     title: "Senior Health & Tech Companion",
-    description: "Pair with 2 elder residents to help them configure smartphone video calls, medication reminders, and accompany them during evening recreational walks.",
+    description:
+      "Pair with 2 elder residents to help them configure smartphone video calls, medication reminders, and accompany them during evening recreational walks.",
     service_category: "Community Companionship",
     required_skills: ["Active Listening", "Patience"],
     capacity: 15,
@@ -252,7 +284,8 @@ export const MOCK_OPPORTUNITIES: VolunteerOpportunity[] = [
     expected_hours_per_student: 10,
     status: "PUBLISHED",
     prerequisites: "Empathy training completed.",
-    safety_guidelines: "Maintain gentle tone and follow sanitization protocols.",
+    safety_guidelines:
+      "Maintain gentle tone and follow sanitization protocols.",
     created_at: "2026-10-05T09:00:00Z",
     updated_at: "2026-10-22T10:00:00Z",
     program: MOCK_PROGRAMS[2],
@@ -265,7 +298,8 @@ export const MOCK_APPLICATIONS: ParticipationApplication[] = [
     opportunity_id: "opp-001",
     student_id: "stu-101",
     status: "APPROVED",
-    statement_of_interest: "I am passionate about marine conservation and actively volunteered in beach cleanups throughout high school.",
+    statement_of_interest:
+      "I am passionate about marine conservation and actively volunteered in beach cleanups throughout high school.",
     relevant_skills: ["Waste Segregation", "Field Safety"],
     has_safety_clearance: true,
     applied_at: "2026-10-02T14:20:00Z",
@@ -280,7 +314,8 @@ export const MOCK_APPLICATIONS: ParticipationApplication[] = [
     opportunity_id: "opp-001",
     student_id: "stu-102",
     status: "WAITLISTED",
-    statement_of_interest: "Eager to contribute to zero-waste community advocacy and lead peer volunteer groups.",
+    statement_of_interest:
+      "Eager to contribute to zero-waste community advocacy and lead peer volunteer groups.",
     relevant_skills: ["Leadership", "Public Speaking"],
     has_safety_clearance: true,
     waitlist_position: 1,
@@ -296,7 +331,8 @@ export const MOCK_APPLICATIONS: ParticipationApplication[] = [
     opportunity_id: "opp-002",
     student_id: "stu-103",
     status: "APPROVED",
-    statement_of_interest: "I want to teach young girls in rural areas that computer science is creative and fun.",
+    statement_of_interest:
+      "I want to teach young girls in rural areas that computer science is creative and fun.",
     relevant_skills: ["Python/Scratch", "Communication"],
     has_safety_clearance: true,
     applied_at: "2026-09-02T09:10:00Z",
@@ -382,14 +418,16 @@ export const MOCK_SERVICE_HOURS: ServiceHourEntry[] = [
     shift_id: "shift-001",
     activity_date: "2026-10-26",
     duration_hours: 4.0,
-    activity_description: "Participated in estuary cleanup, shoreline litter classification, and community briefing on coastal micro-plastics.",
+    activity_description:
+      "Participated in estuary cleanup, shoreline litter classification, and community briefing on coastal micro-plastics.",
     community_beneficiaries_served: 120,
     supervisor_name: "Dr. Ananya Roy",
     supervisor_email: "ananya.roy@greenearthtrust.org",
     status: "APPROVED",
     is_verified: true,
     verified_at: "2026-10-26T13:00:00Z",
-    supervisor_comments: "Excellent leadership during the audit phase. Verified and credited.",
+    supervisor_comments:
+      "Excellent leadership during the audit phase. Verified and credited.",
     student_name: "Kavya Ramesh",
     student_roll_number: "2023-CSE-042",
     created_at: "2026-10-26T12:00:00Z",
@@ -404,7 +442,8 @@ export const MOCK_SERVICE_HOURS: ServiceHourEntry[] = [
     shift_id: "shift-003",
     activity_date: "2026-10-20",
     duration_hours: 3.5,
-    activity_description: "Guided 14 middle-schoolers through creating an animated story on rainwater harvesting using Scratch visual blocks.",
+    activity_description:
+      "Guided 14 middle-schoolers through creating an animated story on rainwater harvesting using Scratch visual blocks.",
     community_beneficiaries_served: 14,
     supervisor_name: "Srikanth Venkat",
     supervisor_email: "srikanth@aksharaliteracy.org",
@@ -422,7 +461,8 @@ export const MOCK_SERVICE_HOURS: ServiceHourEntry[] = [
         service_hour_id: "hour-002",
         previous_hours: 3.0,
         new_hours: 3.5,
-        reason_for_change: "Added 30 minutes for classroom cleanup and hardware pack-down.",
+        reason_for_change:
+          "Added 30 minutes for classroom cleanup and hardware pack-down.",
         changed_by_user_id: "coord-01",
         changed_at: "2026-10-21T09:55:00Z",
         changed_by_name: "Prof. Murugan (Coordinator)",
@@ -435,7 +475,8 @@ export const MOCK_SERVICE_HOURS: ServiceHourEntry[] = [
     program_id: "prog-001",
     activity_date: "2026-10-27",
     duration_hours: 3.0,
-    activity_description: "Community door-to-door survey on segregation at source in coastal ward 14.",
+    activity_description:
+      "Community door-to-door survey on segregation at source in coastal ward 14.",
     community_beneficiaries_served: 45,
     status: "PENDING",
     is_verified: false,
@@ -453,17 +494,20 @@ export const MOCK_REFLECTIONS: ReflectionSubmission[] = [
     student_id: "stu-101",
     program_id: "prog-001",
     status: "REVIEWED",
-    reflection_text: "Working alongside local sanitation workers gave me an unprecedented appreciation for the unseen labor sustaining our cities. I realized engineering solutions must be designed with grass-root workers in mind, not just academic models.",
+    reflection_text:
+      "Working alongside local sanitation workers gave me an unprecedented appreciation for the unseen labor sustaining our cities. I realized engineering solutions must be designed with grass-root workers in mind, not just academic models.",
     learning_outcomes: [
       "Appreciation of municipal waste lifecycle",
       "Hands-on environmental risk assessment",
       "Empathetic communication with sanitation staff",
     ],
     skills_acquired: ["Field Ecology", "Team Leadership", "Data Logging"],
-    community_impact_summary: "Helped remove 1.2 metric tons of hazardous coastal waste and cataloged plastic packaging types for state pollution reports.",
+    community_impact_summary:
+      "Helped remove 1.2 metric tons of hazardous coastal waste and cataloged plastic packaging types for state pollution reports.",
     un_sdg_contributions: [11, 14, 15],
     evidence_document_ids: ["doc-01", "doc-02"],
-    reviewer_feedback: "Profound and articulate reflection. Demonstrates deep civic maturation and authentic social empathy.",
+    reviewer_feedback:
+      "Profound and articulate reflection. Demonstrates deep civic maturation and authentic social empathy.",
     rubric_score: 95,
     submitted_at: "2026-10-24T18:00:00Z",
     reviewed_at: "2026-10-25T11:00:00Z",
@@ -488,8 +532,10 @@ export const MOCK_CERTIFICATES: EngagementCertificate[] = [
     issued_by_title: "Dean of Student Affairs & Civic Engagement",
     issued_at: "2026-10-27T10:00:00Z",
     status: "ISSUED",
-    verification_hash: "a4f891b2c7e8412d09e13b942f74619a8264d852a32039ecb71a2578508e9a2f",
-    verification_url: "https://campusos.edu/verify/cert/a4f891b2c7e8412d09e13b942f74619a8264d852a32039ecb71a2578508e9a2f",
+    verification_hash:
+      "a4f891b2c7e8412d09e13b942f74619a8264d852a32039ecb71a2578508e9a2f",
+    verification_url:
+      "https://campusos.edu/verify/cert/a4f891b2c7e8412d09e13b942f74619a8264d852a32039ecb71a2578508e9a2f",
   },
 ];
 
@@ -523,4 +569,3 @@ export const MOCK_ANALYTICS: EngagementAnalyticsSummary = {
     { month: "Oct 2026", hours: 1180.5 },
   ],
 };
-

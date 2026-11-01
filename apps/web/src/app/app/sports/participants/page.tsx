@@ -8,7 +8,13 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,7 +41,8 @@ export default function SportsParticipantsPage() {
   const [clearanceFilter, setClearanceFilter] = useState("ALL");
   const [sportFilter, setSportFilter] = useState("ALL");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [selectedAthlete, setSelectedAthlete] = useState<SportsParticipantItem | null>(null);
+  const [selectedAthlete, setSelectedAthlete] =
+    useState<SportsParticipantItem | null>(null);
   const [isClearanceOpen, setIsClearanceOpen] = useState(false);
   const [newClearanceStatus, setNewClearanceStatus] = useState("CLEARED");
   const [restrictionNote, setRestrictionNote] = useState("");
@@ -56,7 +63,10 @@ export default function SportsParticipantsPage() {
 
   async function loadParticipants() {
     setLoading(true);
-    const res = await sportsService.listParticipants(sportFilter, clearanceFilter);
+    const res = await sportsService.listParticipants(
+      sportFilter,
+      clearanceFilter,
+    );
     if (res.success && res.data) {
       setParticipants(res.data);
     }
@@ -75,13 +85,19 @@ export default function SportsParticipantsPage() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     if (!regForm.userName || !regForm.participantCode) {
-      addToast({ type: "error", title: "Validation Error", message: "Name and Participant Code are required." });
+      addToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Name and Participant Code are required.",
+      });
       return;
     }
 
     const res = await sportsService.createParticipant({
       userName: regForm.userName,
-      userEmail: regForm.userEmail || `${regForm.userName.toLowerCase().replace(" ", ".")}@campusos.edu`,
+      userEmail:
+        regForm.userEmail ||
+        `${regForm.userName.toLowerCase().replace(" ", ".")}@campusos.edu`,
       participantCode: regForm.participantCode.toUpperCase(),
       primarySport: regForm.primarySport,
       department: regForm.department,
@@ -90,7 +106,11 @@ export default function SportsParticipantsPage() {
     });
 
     if (res.success) {
-      addToast({ type: "success", title: "Athlete Registered", message: `${regForm.userName} added to participant directory.` });
+      addToast({
+        type: "success",
+        title: "Athlete Registered",
+        message: `${regForm.userName} added to participant directory.`,
+      });
       setIsRegisterOpen(false);
       setRegForm({
         userName: "",
@@ -109,13 +129,16 @@ export default function SportsParticipantsPage() {
     if (!selectedAthlete) return;
 
     const restrictions = restrictionNote
-      ? { operationalRestriction: restrictionNote, updatedOn: new Date().toISOString() }
+      ? {
+          operationalRestriction: restrictionNote,
+          updatedOn: new Date().toISOString(),
+        }
       : undefined;
 
     const res = await sportsService.updateParticipantClearance(
       selectedAthlete.id,
       newClearanceStatus,
-      restrictions
+      restrictions,
     );
 
     if (res.success) {
@@ -147,7 +170,8 @@ export default function SportsParticipantsPage() {
             Student Athlete & Participant Directory
           </h1>
           <p className="text-xs sm:text-sm text-slate-400">
-            Participant profiles, athletic eligibility verification, privacy-preserving clearances, and consent records.
+            Participant profiles, athletic eligibility verification,
+            privacy-preserving clearances, and consent records.
           </p>
         </div>
 
@@ -212,17 +236,23 @@ export default function SportsParticipantsPage() {
                 <th className="p-3.5">Primary Sport</th>
                 <th className="p-3.5">Academic Department</th>
                 <th className="p-3.5">Clearance Status</th>
-                <th className="p-3.5">Operational Restrictions (Privacy Safe)</th>
+                <th className="p-3.5">
+                  Operational Restrictions (Privacy Safe)
+                </th>
                 <th className="p-3.5">Consent Record</th>
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {filtered.map((part) => {
-                let badgeVariant: "success" | "warning" | "destructive" | "default" = "default";
-                if (part.clearanceStatus === "CLEARED") badgeVariant = "success";
-                if (part.clearanceStatus === "RESTRICTED") badgeVariant = "warning";
-                if (part.clearanceStatus === "SUSPENDED") badgeVariant = "destructive";
+                let badgeVariant:
+                  "success" | "warning" | "destructive" | "default" = "default";
+                if (part.clearanceStatus === "CLEARED")
+                  badgeVariant = "success";
+                if (part.clearanceStatus === "RESTRICTED")
+                  badgeVariant = "warning";
+                if (part.clearanceStatus === "SUSPENDED")
+                  badgeVariant = "destructive";
 
                 const restrictionsText = part.operationalRestrictions
                   ? Object.entries(part.operationalRestrictions)
@@ -231,10 +261,17 @@ export default function SportsParticipantsPage() {
                   : "None";
 
                 return (
-                  <tr key={part.id} className="hover:bg-slate-800/30 transition-colors">
+                  <tr
+                    key={part.id}
+                    className="hover:bg-slate-800/30 transition-colors"
+                  >
                     <td className="p-3.5">
-                      <div className="font-semibold text-white">{part.userName}</div>
-                      <div className="font-mono text-[11px] text-indigo-400">{part.participantCode}</div>
+                      <div className="font-semibold text-white">
+                        {part.userName}
+                      </div>
+                      <div className="font-mono text-[11px] text-indigo-400">
+                        {part.participantCode}
+                      </div>
                     </td>
                     <td className="p-3.5 font-medium text-slate-200">
                       {part.primarySport}
@@ -243,7 +280,9 @@ export default function SportsParticipantsPage() {
                       {part.department || "General Athletics"}
                     </td>
                     <td className="p-3.5">
-                      <Badge variant={badgeVariant}>{part.clearanceStatus}</Badge>
+                      <Badge variant={badgeVariant}>
+                        {part.clearanceStatus}
+                      </Badge>
                       {part.clearanceExpiry && (
                         <div className="text-[10px] text-slate-500 font-mono mt-0.5">
                           Exp: {part.clearanceExpiry}
@@ -279,7 +318,8 @@ export default function SportsParticipantsPage() {
                           setSelectedAthlete(part);
                           setNewClearanceStatus(part.clearanceStatus);
                           setRestrictionNote(
-                            part.operationalRestrictions?.operationalRestriction || ""
+                            part.operationalRestrictions
+                              ?.operationalRestriction || "",
                           );
                           setIsClearanceOpen(true);
                         }}
@@ -308,20 +348,36 @@ export default function SportsParticipantsPage() {
 
           <div className="space-y-4 py-2">
             <p className="text-xs text-slate-400">
-              Only minimum necessary operational clearance and safety restrictions are exposed. Sensitive medical diagnoses remain strictly shielded in the clinical health record.
+              Only minimum necessary operational clearance and safety
+              restrictions are exposed. Sensitive medical diagnoses remain
+              strictly shielded in the clinical health record.
             </p>
 
             <div>
-              <Label htmlFor="clStatus" className="text-xs">Clearance Status *</Label>
+              <Label htmlFor="clStatus" className="text-xs">
+                Clearance Status *
+              </Label>
               <Select
                 id="clStatus"
                 value={newClearanceStatus}
                 onChange={(e) => setNewClearanceStatus(e.target.value)}
                 options={[
-                  { value: "CLEARED", label: "CLEARED - Full Contact & Competition" },
-                  { value: "RESTRICTED", label: "RESTRICTED - Modified Practice Only" },
-                  { value: "SUSPENDED", label: "SUSPENDED - No Athletic Activity" },
-                  { value: "PENDING", label: "PENDING - Medical Screening Required" },
+                  {
+                    value: "CLEARED",
+                    label: "CLEARED - Full Contact & Competition",
+                  },
+                  {
+                    value: "RESTRICTED",
+                    label: "RESTRICTED - Modified Practice Only",
+                  },
+                  {
+                    value: "SUSPENDED",
+                    label: "SUSPENDED - No Athletic Activity",
+                  },
+                  {
+                    value: "PENDING",
+                    label: "PENDING - Medical Screening Required",
+                  },
                 ]}
                 className="text-xs mt-1"
               />
@@ -329,7 +385,8 @@ export default function SportsParticipantsPage() {
 
             <div>
               <Label htmlFor="restrictions" className="text-xs">
-                Authorized Operational Restrictions (e.g. Max Minutes, Protective Gear)
+                Authorized Operational Restrictions (e.g. Max Minutes,
+                Protective Gear)
               </Label>
               <Textarea
                 id="restrictions"
@@ -343,10 +400,18 @@ export default function SportsParticipantsPage() {
           </div>
 
           <DialogFooter className="pt-2">
-            <Button variant="outline" size="sm" onClick={() => setIsClearanceOpen(false)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsClearanceOpen(false)}
+            >
               Cancel
             </Button>
-            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500" onClick={handleUpdateClearance}>
+            <Button
+              size="sm"
+              className="bg-indigo-600 hover:bg-indigo-500"
+              onClick={handleUpdateClearance}
+            >
               Save Clearance
             </Button>
           </DialogFooter>
@@ -366,22 +431,30 @@ export default function SportsParticipantsPage() {
           <form onSubmit={handleRegister} className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="partCode" className="text-xs">Athlete Code *</Label>
+                <Label htmlFor="partCode" className="text-xs">
+                  Athlete Code *
+                </Label>
                 <Input
                   id="partCode"
                   placeholder="e.g. ATH-2026-042"
                   value={regForm.participantCode}
-                  onChange={(e) => setRegForm({ ...regForm, participantCode: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, participantCode: e.target.value })
+                  }
                   className="font-mono uppercase text-xs mt-1"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="primarySport" className="text-xs">Primary Sport *</Label>
+                <Label htmlFor="primarySport" className="text-xs">
+                  Primary Sport *
+                </Label>
                 <Select
                   id="primarySport"
                   value={regForm.primarySport}
-                  onChange={(e) => setRegForm({ ...regForm, primarySport: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, primarySport: e.target.value })
+                  }
                   options={[
                     { value: "Basketball", label: "Basketball" },
                     { value: "Football", label: "Football" },
@@ -397,12 +470,16 @@ export default function SportsParticipantsPage() {
             </div>
 
             <div>
-              <Label htmlFor="fullName" className="text-xs">Student Full Name *</Label>
+              <Label htmlFor="fullName" className="text-xs">
+                Student Full Name *
+              </Label>
               <Input
                 id="fullName"
                 placeholder="e.g. Anirban Roy"
                 value={regForm.userName}
-                onChange={(e) => setRegForm({ ...regForm, userName: e.target.value })}
+                onChange={(e) =>
+                  setRegForm({ ...regForm, userName: e.target.value })
+                }
                 className="text-xs mt-1"
                 required
               />
@@ -410,22 +487,30 @@ export default function SportsParticipantsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="email" className="text-xs">Campus Email</Label>
+                <Label htmlFor="email" className="text-xs">
+                  Campus Email
+                </Label>
                 <Input
                   id="email"
                   placeholder="e.g. anirban@campusos.edu"
                   value={regForm.userEmail}
-                  onChange={(e) => setRegForm({ ...regForm, userEmail: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, userEmail: e.target.value })
+                  }
                   className="text-xs mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="dept" className="text-xs">Academic Department</Label>
+                <Label htmlFor="dept" className="text-xs">
+                  Academic Department
+                </Label>
                 <Input
                   id="dept"
                   placeholder="e.g. Mechanical Eng."
                   value={regForm.department}
-                  onChange={(e) => setRegForm({ ...regForm, department: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, department: e.target.value })
+                  }
                   className="text-xs mt-1"
                 />
               </div>
@@ -436,19 +521,31 @@ export default function SportsParticipantsPage() {
                 type="checkbox"
                 id="consent"
                 checked={regForm.consentRecorded}
-                onChange={(e) => setRegForm({ ...regForm, consentRecorded: e.target.checked })}
+                onChange={(e) =>
+                  setRegForm({ ...regForm, consentRecorded: e.target.checked })
+                }
                 className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
               />
               <Label htmlFor="consent" className="text-xs text-slate-300">
-                Participation Consent & Emergency Contact Document Signed on File
+                Participation Consent & Emergency Contact Document Signed on
+                File
               </Label>
             </div>
 
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsRegisterOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsRegisterOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" size="sm" className="bg-indigo-600 hover:bg-indigo-500">
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-indigo-600 hover:bg-indigo-500"
+              >
                 Confirm Registration
               </Button>
             </DialogFooter>

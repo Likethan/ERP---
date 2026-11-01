@@ -30,7 +30,6 @@ class HostelRoomsService {
     gender?: string;
     search?: string;
   }): Promise<ApiResponse<HostelRoom[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.rooms];
 
     if (filters?.hostelId && filters.hostelId !== "ALL") {
@@ -75,7 +74,6 @@ class HostelRoomsService {
   }
 
   async getRoomById(id: string): Promise<ApiResponse<HostelRoom | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const room =
       this.rooms.find((r) => r.id === id || r.roomNumber === id) || null;
     return { success: true, data: room };
@@ -91,7 +89,6 @@ class HostelRoomsService {
       studentRollNumber: string;
     },
   ): Promise<ApiResponse<HostelRoom | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const room = this.rooms.find((r) => r.id === roomId);
     if (!room || !room.beds) return { success: false, data: null };
 
@@ -139,7 +136,6 @@ class HostelRoomsService {
   async createRoom(
     payload: Partial<HostelRoom>,
   ): Promise<ApiResponse<HostelRoom>> {
-    await new Promise((r) => setTimeout(r, 50));
     const capacity = payload.capacity || 2;
     const beds: HostelBed[] = [];
     for (let i = 1; i <= capacity; i++) {

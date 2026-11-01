@@ -82,7 +82,7 @@ class OrganizationService {
   async listCampuses(): Promise<ApiResponse<Campus[]>> {
     try {
       const res = await apiFetch<Campus[]>("/api/v1/campuses");
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.campuses = res.data;
         return res;
       }
@@ -171,7 +171,7 @@ class OrganizationService {
       if (search) params.append("search", search);
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiFetch<Department[]>(`/api/v1/departments${qs}`);
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.departments = res.data;
         return res;
       }
@@ -276,7 +276,7 @@ class OrganizationService {
       if (search) params.append("search", search);
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiFetch<Program[]>(`/api/v1/programs${qs}`);
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.programs = res.data;
         return res;
       }
@@ -382,7 +382,7 @@ class OrganizationService {
       const res = await apiFetch<AcademicYear[]>(
         "/api/v1/academic-structure/academic-years",
       );
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.academicYears = res.data;
         return res;
       }
@@ -438,7 +438,7 @@ class OrganizationService {
       const res = await apiFetch<Semester[]>(
         "/api/v1/academic-structure/semesters",
       );
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.semesters = res.data;
         return res;
       }
@@ -496,7 +496,7 @@ class OrganizationService {
       const res = await apiFetch<Regulation[]>(
         "/api/v1/academic-structure/regulations",
       );
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.regulations = res.data;
         return res;
       }
@@ -548,7 +548,7 @@ class OrganizationService {
   async listBatches(): Promise<ApiResponse<Batch[]>> {
     try {
       const res = await apiFetch<Batch[]>("/api/v1/academic-structure/batches");
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.batches = res.data;
         return res;
       }
@@ -601,7 +601,7 @@ class OrganizationService {
       const res = await apiFetch<Section[]>(
         "/api/v1/academic-structure/sections",
       );
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         this.sections = res.data;
         return res;
       }

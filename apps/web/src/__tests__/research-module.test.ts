@@ -83,11 +83,20 @@ export function runResearchModuleTests() {
       mockProject as ResearchProject,
       milestones as ResearchMilestone[],
       [],
-      awards as ResearchGrantAward[]
+      awards as ResearchGrantAward[],
     );
-    assert(health.health_score >= 85, "Healthy project has high health score >= 85");
-    assert(health.health_status === "HEALTHY", "Healthy project classified as HEALTHY");
-    assert(health.diagnostic_reasons.length > 0, "Health diagnosis provides explainable reasons");
+    assert(
+      health.health_score >= 85,
+      "Healthy project has high health score >= 85",
+    );
+    assert(
+      health.health_status === "HEALTHY",
+      "Healthy project classified as HEALTHY",
+    );
+    assert(
+      health.diagnostic_reasons.length > 0,
+      "Health diagnosis provides explainable reasons",
+    );
   }
 
   {
@@ -121,14 +130,19 @@ export function runResearchModuleTests() {
       mockProject as ResearchProject,
       milestones as ResearchMilestone[],
       [],
-      awards as ResearchGrantAward[]
+      awards as ResearchGrantAward[],
     );
-    assert(health.financial_burn_rate_percent === 98, "Computes 98% burn rate accurately");
+    assert(
+      health.financial_burn_rate_percent === 98,
+      "Computes 98% burn rate accurately",
+    );
     assert(
       health.diagnostic_reasons.some(
-        (r) => r.toLowerCase().includes("budget") || r.toLowerCase().includes("utilization")
+        (r) =>
+          r.toLowerCase().includes("budget") ||
+          r.toLowerCase().includes("utilization"),
       ),
-      "Includes explainable budget limit diagnostic reason"
+      "Includes explainable budget limit diagnostic reason",
     );
   }
 
@@ -152,11 +166,19 @@ export function runResearchModuleTests() {
       },
     ];
 
-    const health = calculateProjectHealth(mockProject as ResearchProject, milestones as ResearchMilestone[]);
-    assert(health.overdue_milestones_count > 0, "Identifies overdue milestones");
+    const health = calculateProjectHealth(
+      mockProject as ResearchProject,
+      milestones as ResearchMilestone[],
+    );
     assert(
-      health.diagnostic_reasons.some((r) => r.includes("overdue") || r.includes("scheduled deadline")),
-      "Includes explainable overdue milestone diagnostic reason"
+      health.overdue_milestones_count > 0,
+      "Identifies overdue milestones",
+    );
+    assert(
+      health.diagnostic_reasons.some(
+        (r) => r.includes("overdue") || r.includes("scheduled deadline"),
+      ),
+      "Includes explainable overdue milestone diagnostic reason",
     );
   }
 
@@ -164,13 +186,28 @@ export function runResearchModuleTests() {
   // 2. STATE TRANSITIONS & CLOSURE BLOCKING
   // =========================================================================
   {
-    assert(validateProjectTransition("DRAFT", "PROPOSAL").allowed === true, "DRAFT -> PROPOSAL is allowed");
-    assert(validateProjectTransition("PROPOSAL", "UNDER_REVIEW").allowed === true, "PROPOSAL -> UNDER_REVIEW is allowed");
-    assert(validateProjectTransition("UNDER_REVIEW", "APPROVED").allowed === true, "UNDER_REVIEW -> APPROVED is allowed");
-    assert(validateProjectTransition("APPROVED", "ACTIVE").allowed === true, "APPROVED -> ACTIVE is allowed");
+    assert(
+      validateProjectTransition("DRAFT", "PROPOSAL").allowed === true,
+      "DRAFT -> PROPOSAL is allowed",
+    );
+    assert(
+      validateProjectTransition("PROPOSAL", "UNDER_REVIEW").allowed === true,
+      "PROPOSAL -> UNDER_REVIEW is allowed",
+    );
+    assert(
+      validateProjectTransition("UNDER_REVIEW", "APPROVED").allowed === true,
+      "UNDER_REVIEW -> APPROVED is allowed",
+    );
+    assert(
+      validateProjectTransition("APPROVED", "ACTIVE").allowed === true,
+      "APPROVED -> ACTIVE is allowed",
+    );
 
     const directClose = validateProjectTransition("DRAFT", "CLOSED");
-    assert(directClose.allowed === false, "Direct jump DRAFT -> CLOSED is blocked");
+    assert(
+      directClose.allowed === false,
+      "Direct jump DRAFT -> CLOSED is blocked",
+    );
 
     const pendingMilestones: Partial<ResearchMilestone>[] = [
       {
@@ -182,9 +219,19 @@ export function runResearchModuleTests() {
       },
     ];
 
-    const blockedClose = validateProjectTransition("ACTIVE", "CLOSED", pendingMilestones as ResearchMilestone[]);
-    assert(blockedClose.allowed === false, "Project closure blocked when mandatory milestone is unverified");
-    assert(Boolean(blockedClose.reason?.includes("mandatory")), "Explains mandatory milestone closure requirement");
+    const blockedClose = validateProjectTransition(
+      "ACTIVE",
+      "CLOSED",
+      pendingMilestones as ResearchMilestone[],
+    );
+    assert(
+      blockedClose.allowed === false,
+      "Project closure blocked when mandatory milestone is unverified",
+    );
+    assert(
+      Boolean(blockedClose.reason?.includes("mandatory")),
+      "Explains mandatory milestone closure requirement",
+    );
 
     const verifiedMilestones: Partial<ResearchMilestone>[] = [
       {
@@ -196,8 +243,15 @@ export function runResearchModuleTests() {
       },
     ];
 
-    const permittedClose = validateProjectTransition("COMPLETED", "CLOSED", verifiedMilestones as ResearchMilestone[]);
-    assert(permittedClose.allowed === true, "Project closure permitted when mandatory milestone is verified");
+    const permittedClose = validateProjectTransition(
+      "COMPLETED",
+      "CLOSED",
+      verifiedMilestones as ResearchMilestone[],
+    );
+    assert(
+      permittedClose.allowed === true,
+      "Project closure permitted when mandatory milestone is verified",
+    );
   }
 
   // =========================================================================
@@ -211,24 +265,41 @@ export function runResearchModuleTests() {
       internal_review_status: "DRAFT",
     };
 
-    const incompleteReadiness = validateProposalSubmissionReadiness(incompleteApp as ResearchGrantApplication);
-    assert(incompleteReadiness.ready === false, "Incomplete proposal marked not ready for submission");
-    assert(incompleteReadiness.blockers.length > 0, "Lists missing proposal readiness blockers");
+    const incompleteReadiness = validateProposalSubmissionReadiness(
+      incompleteApp as ResearchGrantApplication,
+    );
+    assert(
+      incompleteReadiness.ready === false,
+      "Incomplete proposal marked not ready for submission",
+    );
+    assert(
+      incompleteReadiness.blockers.length > 0,
+      "Lists missing proposal readiness blockers",
+    );
 
     const readyApp: Partial<ResearchGrantApplication> = {
       application_code: "APP-READY",
       title: "Autonomous Deep-Sea Sensor Swarms",
       principal_investigator_id: "user-pi",
-      research_proposal_summary: "Comprehensive proposal summary exceeding twenty characters in length",
+      research_proposal_summary:
+        "Comprehensive proposal summary exceeding twenty characters in length",
       objectives_json: ["Deploy sensors", "Calibrate acoustic telemetry"],
       methodology_summary: "Multi-agent reinforcement learning",
       proposed_budget: 250000,
       internal_review_status: "INSTITUTIONALLY_APPROVED",
     };
 
-    const readyReadiness = validateProposalSubmissionReadiness(readyApp as ResearchGrantApplication);
-    assert(readyReadiness.ready === true, "Complete & institutionally approved proposal marked ready");
-    assert(readyReadiness.blockers.length === 0, "No blockers remaining on approved proposal");
+    const readyReadiness = validateProposalSubmissionReadiness(
+      readyApp as ResearchGrantApplication,
+    );
+    assert(
+      readyReadiness.ready === true,
+      "Complete & institutionally approved proposal marked ready",
+    );
+    assert(
+      readyReadiness.blockers.length === 0,
+      "No blockers remaining on approved proposal",
+    );
   }
 
   // =========================================================================
@@ -236,34 +307,79 @@ export function runResearchModuleTests() {
   // =========================================================================
   {
     const projects: Partial<ResearchProject>[] = [
-      { id: "p1", project_code: "PRJ-01", title: "Project Alpha", status: "ACTIVE" },
-      { id: "p2", project_code: "PRJ-02", title: "Project Beta", status: "ACTIVE" },
+      {
+        id: "p1",
+        project_code: "PRJ-01",
+        title: "Project Alpha",
+        status: "ACTIVE",
+      },
+      {
+        id: "p2",
+        project_code: "PRJ-02",
+        title: "Project Beta",
+        status: "ACTIVE",
+      },
     ];
 
     const teamMemberships: Partial<ResearchTeamMember>[] = [
-      { id: "tm1", project_id: "p1", role: "CO_INVESTIGATOR", workload_percentage: 40 },
-      { id: "tm2", project_id: "p2", role: "RESEARCHER", workload_percentage: 35 },
+      {
+        id: "tm1",
+        project_id: "p1",
+        role: "CO_INVESTIGATOR",
+        workload_percentage: 40,
+      },
+      {
+        id: "tm2",
+        project_id: "p2",
+        role: "RESEARCHER",
+        workload_percentage: 35,
+      },
     ];
 
     const workload = calculateResearcherWorkload(
       teamMemberships as ResearchTeamMember[],
-      projects as ResearchProject[]
+      projects as ResearchProject[],
     );
-    assert(workload.totalWorkloadPercentage === 75, "Calculates 75% total workload accurately");
-    assert(workload.isOverallocated === false, "75% workload not flagged as overallocated");
-    assert(workload.totalActiveProjects === 2, "Counts 2 active projects accurately");
+    assert(
+      workload.totalWorkloadPercentage === 75,
+      "Calculates 75% total workload accurately",
+    );
+    assert(
+      workload.isOverallocated === false,
+      "75% workload not flagged as overallocated",
+    );
+    assert(
+      workload.totalActiveProjects === 2,
+      "Counts 2 active projects accurately",
+    );
 
     const overloadedMemberships: Partial<ResearchTeamMember>[] = [
-      { id: "tm1", project_id: "p1", role: "PRINCIPAL_INVESTIGATOR", workload_percentage: 60 },
-      { id: "tm2", project_id: "p2", role: "CO_INVESTIGATOR", workload_percentage: 55 },
+      {
+        id: "tm1",
+        project_id: "p1",
+        role: "PRINCIPAL_INVESTIGATOR",
+        workload_percentage: 60,
+      },
+      {
+        id: "tm2",
+        project_id: "p2",
+        role: "CO_INVESTIGATOR",
+        workload_percentage: 55,
+      },
     ];
 
     const overloadedWorkload = calculateResearcherWorkload(
       overloadedMemberships as ResearchTeamMember[],
-      projects as ResearchProject[]
+      projects as ResearchProject[],
     );
-    assert(overloadedWorkload.totalWorkloadPercentage === 115, "Calculates 115% total workload");
-    assert(overloadedWorkload.isOverallocated === true, "Flags overallocated researcher (>100%)");
+    assert(
+      overloadedWorkload.totalWorkloadPercentage === 115,
+      "Calculates 115% total workload",
+    );
+    assert(
+      overloadedWorkload.isOverallocated === true,
+      "Flags overallocated researcher (>100%)",
+    );
   }
 
   // =========================================================================
@@ -314,25 +430,79 @@ export function runResearchModuleTests() {
       return ROLE_PERMISSIONS[role]?.includes(permission) ?? false;
     }
 
-    assert(userHasPermission("STUDENT", "research.projects.read") === true, "Student can read projects");
-    assert(userHasPermission("STUDENT", "research.milestones.update") === true, "Student can update milestone progress");
-    assert(userHasPermission("STUDENT", "research.grants.approve_institutional") === false, "Student cannot approve grants");
-    assert(userHasPermission("STUDENT", "research.budgets.manage") === false, "Student cannot manage budgets");
+    assert(
+      userHasPermission("STUDENT", "research.projects.read") === true,
+      "Student can read projects",
+    );
+    assert(
+      userHasPermission("STUDENT", "research.milestones.update") === true,
+      "Student can update milestone progress",
+    );
+    assert(
+      userHasPermission("STUDENT", "research.grants.approve_institutional") ===
+        false,
+      "Student cannot approve grants",
+    );
+    assert(
+      userHasPermission("STUDENT", "research.budgets.manage") === false,
+      "Student cannot manage budgets",
+    );
 
-    assert(userHasPermission("FACULTY_PI", "research.grants.apply") === true, "Faculty/PI can draft proposals");
-    assert(userHasPermission("FACULTY_PI", "research.projects.manage") === true, "Faculty/PI can manage research projects");
-    assert(userHasPermission("FACULTY_PI", "research.grants.approve_institutional") === false, "Faculty/PI cannot grant institutional approval");
+    assert(
+      userHasPermission("FACULTY_PI", "research.grants.apply") === true,
+      "Faculty/PI can draft proposals",
+    );
+    assert(
+      userHasPermission("FACULTY_PI", "research.projects.manage") === true,
+      "Faculty/PI can manage research projects",
+    );
+    assert(
+      userHasPermission(
+        "FACULTY_PI",
+        "research.grants.approve_institutional",
+      ) === false,
+      "Faculty/PI cannot grant institutional approval",
+    );
 
-    assert(userHasPermission("RESEARCH_ADMINISTRATOR", "research.opportunities.manage") === true, "Research Admin can manage opportunities");
-    assert(userHasPermission("RESEARCH_ADMINISTRATOR", "research.awards.manage") === true, "Research Admin can manage awards & agreements");
-    assert(userHasPermission("RESEARCH_ADMINISTRATOR", "research.ethics.manage") === true, "Research Admin can manage compliance");
+    assert(
+      userHasPermission(
+        "RESEARCH_ADMINISTRATOR",
+        "research.opportunities.manage",
+      ) === true,
+      "Research Admin can manage opportunities",
+    );
+    assert(
+      userHasPermission("RESEARCH_ADMINISTRATOR", "research.awards.manage") ===
+        true,
+      "Research Admin can manage awards & agreements",
+    );
+    assert(
+      userHasPermission("RESEARCH_ADMINISTRATOR", "research.ethics.manage") ===
+        true,
+      "Research Admin can manage compliance",
+    );
 
-    assert(userHasPermission("FINANCE_STAFF", "research.budgets.manage") === true, "Finance Staff can manage budgets");
-    assert(userHasPermission("FINANCE_STAFF", "research.budgets.reconcile") === true, "Finance Staff can reconcile awards");
-    assert(userHasPermission("FINANCE_STAFF", "research.projects.manage") === false, "Finance Staff cannot manage scientific scope");
+    assert(
+      userHasPermission("FINANCE_STAFF", "research.budgets.manage") === true,
+      "Finance Staff can manage budgets",
+    );
+    assert(
+      userHasPermission("FINANCE_STAFF", "research.budgets.reconcile") === true,
+      "Finance Staff can reconcile awards",
+    );
+    assert(
+      userHasPermission("FINANCE_STAFF", "research.projects.manage") === false,
+      "Finance Staff cannot manage scientific scope",
+    );
 
-    assert(userHasPermission("VICE_PRINCIPAL", "research.budgets.approve") === true, "Vice Principal can approve institutional budgets");
-    assert(userHasPermission("VICE_PRINCIPAL", "research.analytics.read") === true, "Vice Principal can access institutional analytics");
+    assert(
+      userHasPermission("VICE_PRINCIPAL", "research.budgets.approve") === true,
+      "Vice Principal can approve institutional budgets",
+    );
+    assert(
+      userHasPermission("VICE_PRINCIPAL", "research.analytics.read") === true,
+      "Vice Principal can access institutional analytics",
+    );
   }
 
   // =========================================================================

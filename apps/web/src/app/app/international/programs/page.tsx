@@ -18,7 +18,12 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { InternationalPartner, MobilityProgram, MobilityProgramType, MobilityTermType } from "@/types/international";
+import {
+  InternationalPartner,
+  MobilityProgram,
+  MobilityProgramType,
+  MobilityTermType,
+} from "@/types/international";
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<MobilityProgram[]>([]);
@@ -39,9 +44,15 @@ export default function ProgramsPage() {
     min_cgpa_requirement: 7.5,
     min_credits_completed: 40,
     application_start_date: new Date().toISOString().split("T")[0],
-    application_deadline: new Date(Date.now() + 60 * 86400000).toISOString().split("T")[0],
-    expected_start_date: new Date(Date.now() + 180 * 86400000).toISOString().split("T")[0],
-    expected_end_date: new Date(Date.now() + 360 * 86400000).toISOString().split("T")[0],
+    application_deadline: new Date(Date.now() + 60 * 86400000)
+      .toISOString()
+      .split("T")[0],
+    expected_start_date: new Date(Date.now() + 180 * 86400000)
+      .toISOString()
+      .split("T")[0],
+    expected_end_date: new Date(Date.now() + 360 * 86400000)
+      .toISOString()
+      .split("T")[0],
     is_published: true,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +85,8 @@ export default function ProgramsPage() {
       const res = await internationalService.createProgram({
         ...form,
         partner_name: partner?.partner_name || partner?.name || "Partner",
-        partner_country: partner?.country_name || partner?.country || "International",
+        partner_country:
+          partner?.country_name || partner?.country || "International",
       });
       setPrograms([res, ...programs]);
       setShowCreateModal(false);
@@ -87,9 +99,11 @@ export default function ProgramsPage() {
   }
 
   const filtered = programs.filter((p) => {
-    const text = `${p.program_title || p.title} ${p.program_code || p.programCode} ${p.partner_name || ""}`.toLowerCase();
+    const text =
+      `${p.program_title || p.title} ${p.program_code || p.programCode} ${p.partner_name || ""}`.toLowerCase();
     const matchesSearch = text.includes(search.toLowerCase());
-    const matchesTerm = termFilter === "ALL" || (p.term_type || p.termType) === termFilter;
+    const matchesTerm =
+      termFilter === "ALL" || (p.term_type || p.termType) === termFilter;
     return matchesSearch && matchesTerm;
   });
 
@@ -105,7 +119,8 @@ export default function ProgramsPage() {
               Published Mobility Programs & Exchange Tracks
             </h2>
             <p className="text-xs text-slate-400">
-              Browse bilateral student exchange, summer research fellowships, and global articulation programs
+              Browse bilateral student exchange, summer research fellowships,
+              and global articulation programs
             </p>
           </div>
           <button
@@ -145,7 +160,9 @@ export default function ProgramsPage() {
 
         {/* Programs Grid */}
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">Loading exchange programs...</div>
+          <div className="p-12 text-center text-xs text-slate-500">
+            Loading exchange programs...
+          </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 bg-slate-900/40 rounded-xl border border-slate-800">
             No mobility programs found matching your search.
@@ -175,15 +192,20 @@ export default function ProgramsPage() {
                   <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
                     <Globe className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
                     <span>
-                      {prog.partner_name || prog.partnerName} ({prog.partner_country || prog.partnerCountry})
+                      {prog.partner_name || prog.partnerName} (
+                      {prog.partner_country || prog.partnerCountry})
                     </span>
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-slate-800/80 space-y-1 text-xs text-slate-300">
                     <p className="flex items-center justify-between">
-                      <span className="text-slate-500">Eligibility Min CGPA:</span>
+                      <span className="text-slate-500">
+                        Eligibility Min CGPA:
+                      </span>
                       <span className="font-semibold text-slate-200">
-                        {prog.min_cgpa_requirement || prog.minCgpaRequirement || "7.0"}
+                        {prog.min_cgpa_requirement ||
+                          prog.minCgpaRequirement ||
+                          "7.0"}
                       </span>
                     </p>
                     <p className="flex items-center justify-between">
@@ -227,131 +249,204 @@ export default function ProgramsPage() {
                 Publish Mobility Program
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Announce an exchange program cycle with automated eligibility CGPA and credit prerequisites
+                Announce an exchange program cycle with automated eligibility
+                CGPA and credit prerequisites
               </p>
 
               <form onSubmit={handleCreateProgram} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Host Partner Institution *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Host Partner Institution *
+                  </label>
                   <select
                     required
                     value={form.partner_id}
-                    onChange={(e) => setForm({ ...form, partner_id: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, partner_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
                     <option value="">Select partner university...</option>
                     {partners.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.partner_name || p.name} ({p.country_name || p.country || p.country_code})
+                        {p.partner_name || p.name} (
+                        {p.country_name || p.country || p.country_code})
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Program Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Program Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. TUM Informatics Fall Exchange 2026-27"
                     value={form.program_title}
-                    onChange={(e) => setForm({ ...form, program_title: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, program_title: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Program Type</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Program Type
+                    </label>
                     <select
                       value={form.program_type}
-                      onChange={(e) => setForm({ ...form, program_type: e.target.value as MobilityProgramType })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          program_type: e.target.value as MobilityProgramType,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
-                      <option value="SEMESTER_EXCHANGE">Semester Exchange</option>
-                      <option value="YEAR_LONG_EXCHANGE">Year-long Exchange</option>
-                      <option value="SUMMER_WINTER_SCHOOL">Summer/Winter School</option>
-                      <option value="RESEARCH_INTERNSHIP">Research Internship</option>
+                      <option value="SEMESTER_EXCHANGE">
+                        Semester Exchange
+                      </option>
+                      <option value="YEAR_LONG_EXCHANGE">
+                        Year-long Exchange
+                      </option>
+                      <option value="SUMMER_WINTER_SCHOOL">
+                        Summer/Winter School
+                      </option>
+                      <option value="RESEARCH_INTERNSHIP">
+                        Research Internship
+                      </option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Academic Term</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Academic Term
+                    </label>
                     <select
                       value={form.term_type}
-                      onChange={(e) => setForm({ ...form, term_type: e.target.value as MobilityTermType })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          term_type: e.target.value as MobilityTermType,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="FALL_SEMESTER">Fall Semester</option>
                       <option value="SPRING_SEMESTER">Spring Semester</option>
-                      <option value="FULL_ACADEMIC_YEAR">Full Academic Year</option>
+                      <option value="FULL_ACADEMIC_YEAR">
+                        Full Academic Year
+                      </option>
                       <option value="SUMMER_TERM">Summer Term</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Academic Year</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Academic Year
+                    </label>
                     <input
                       type="text"
                       value={form.academic_year}
-                      onChange={(e) => setForm({ ...form, academic_year: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, academic_year: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Total Available Seats</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Total Available Seats
+                    </label>
                     <input
                       type="number"
                       min={1}
                       value={form.total_seats}
-                      onChange={(e) => setForm({ ...form, total_seats: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          total_seats: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Minimum CGPA (0-10)</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Minimum CGPA (0-10)
+                    </label>
                     <input
                       type="number"
                       step="0.1"
                       min={0}
                       max={10}
                       value={form.min_cgpa_requirement}
-                      onChange={(e) => setForm({ ...form, min_cgpa_requirement: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          min_cgpa_requirement: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Min Credits Completed</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Min Credits Completed
+                    </label>
                     <input
                       type="number"
                       min={0}
                       value={form.min_credits_completed}
-                      onChange={(e) => setForm({ ...form, min_credits_completed: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          min_credits_completed: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Application Deadline *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Application Deadline *
+                    </label>
                     <input
                       required
                       type="date"
                       value={form.application_deadline}
-                      onChange={(e) => setForm({ ...form, application_deadline: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          application_deadline: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Expected Start Date *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Expected Start Date *
+                    </label>
                     <input
                       required
                       type="date"
                       value={form.expected_start_date}
-                      onChange={(e) => setForm({ ...form, expected_start_date: e.target.value })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          expected_start_date: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>

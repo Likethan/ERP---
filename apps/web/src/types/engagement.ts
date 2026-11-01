@@ -29,11 +29,7 @@ export type ProgramStatus =
 export type DeliveryMode = "ON_SITE" | "VIRTUAL" | "HYBRID";
 
 export type PartnerStatus =
-  | "ACTIVE"
-  | "INACTIVE"
-  | "UNDER_REVIEW"
-  | "SUSPENDED"
-  | "TERMINATED";
+  "ACTIVE" | "INACTIVE" | "UNDER_REVIEW" | "SUSPENDED" | "TERMINATED";
 
 export type OpportunityStatus =
   | "DRAFT"
@@ -55,27 +51,13 @@ export type ApplicationStatus =
   | "WITHDRAWN";
 
 export type ShiftStatus =
-  | "SCHEDULED"
-  | "OPEN"
-  | "FULL"
-  | "IN_PROGRESS"
-  | "COMPLETED"
-  | "CANCELLED";
+  "SCHEDULED" | "OPEN" | "FULL" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
 
 export type ShiftAssignmentStatus =
-  | "ASSIGNED"
-  | "CONFIRMED"
-  | "DECLINED"
-  | "ATTENDED"
-  | "NO_SHOW"
-  | "CANCELLED";
+  "ASSIGNED" | "CONFIRMED" | "DECLINED" | "ATTENDED" | "NO_SHOW" | "CANCELLED";
 
 export type AttendanceStatus =
-  | "REGISTERED"
-  | "CHECKED_IN"
-  | "COMPLETED"
-  | "ABSENT"
-  | "EXCUSED";
+  "REGISTERED" | "CHECKED_IN" | "COMPLETED" | "ABSENT" | "EXCUSED";
 
 export type AttendanceVerificationMethod =
   | "COORDINATOR_CONFIRMED"
@@ -85,16 +67,10 @@ export type AttendanceVerificationMethod =
   | "MANUAL_SYSTEM";
 
 export type ServiceHourStatus =
-  | "PENDING"
-  | "APPROVED"
-  | "REJECTED"
-  | "CORRECTION_REQUESTED";
+  "PENDING" | "APPROVED" | "REJECTED" | "CORRECTION_REQUESTED";
 
 export type ReflectionStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "REVIEWED"
-  | "REVISION_REQUESTED";
+  "DRAFT" | "SUBMITTED" | "REVIEWED" | "REVISION_REQUESTED";
 
 export type CertificateStatus = "ISSUED" | "REVOKED" | "EXPIRED";
 
@@ -490,4 +466,3 @@ export interface CertificateIssueInput {
   program_id: string;
   issued_by_title?: string;
 }
-

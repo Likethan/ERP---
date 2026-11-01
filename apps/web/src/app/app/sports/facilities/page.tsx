@@ -8,7 +8,13 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,7 +39,8 @@ export default function SportsFacilitiesPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedFacility, setSelectedFacility] = useState<SportsFacilityItem | null>(null);
+  const [selectedFacility, setSelectedFacility] =
+    useState<SportsFacilityItem | null>(null);
   const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
   const [maintenanceNotes, setMaintenanceNotes] = useState("");
 
@@ -70,7 +77,11 @@ export default function SportsFacilitiesPage() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!formData.name || !formData.code) {
-      addToast({ type: "error", title: "Validation Error", message: "Code and Name are required." });
+      addToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Code and Name are required.",
+      });
       return;
     }
 
@@ -85,7 +96,11 @@ export default function SportsFacilitiesPage() {
     });
 
     if (res.success) {
-      addToast({ type: "success", title: "Created", message: `Facility "${formData.name}" registered.` });
+      addToast({
+        type: "success",
+        title: "Created",
+        message: `Facility "${formData.name}" registered.`,
+      });
       setIsCreateOpen(false);
       setFormData({
         code: "",
@@ -107,7 +122,10 @@ export default function SportsFacilitiesPage() {
     const res = await sportsService.setFacilityMaintenance(
       selectedFacility.id,
       isClosing,
-      maintenanceNotes || (isClosing ? "Routine resurfacing and equipment check" : "Maintenance completed and approved")
+      maintenanceNotes ||
+        (isClosing
+          ? "Routine resurfacing and equipment check"
+          : "Maintenance completed and approved"),
     );
 
     if (res.success) {
@@ -139,7 +157,8 @@ export default function SportsFacilitiesPage() {
             Sports Facilities & Courts Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-400">
-            Indoor stadiums, outdoor pitches, courts, pools, gymnasiums, and maintenance state control.
+            Indoor stadiums, outdoor pitches, courts, pools, gymnasiums, and
+            maintenance state control.
           </p>
         </div>
 
@@ -205,11 +224,17 @@ export default function SportsFacilitiesPage() {
                   </Badge>
                 </div>
 
-                <h3 className="text-base font-bold text-white mb-1">{facility.name}</h3>
+                <h3 className="text-base font-bold text-white mb-1">
+                  {facility.name}
+                </h3>
                 <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
-                  <span className="capitalize">{facility.facilityType.toLowerCase().replace("_", " ")}</span>
+                  <span className="capitalize">
+                    {facility.facilityType.toLowerCase().replace("_", " ")}
+                  </span>
                   <span>&bull;</span>
-                  <span className="font-medium text-slate-300">{facility.surface} Surface</span>
+                  <span className="font-medium text-slate-300">
+                    {facility.surface} Surface
+                  </span>
                   <span>&bull;</span>
                   <span>{facility.isIndoor ? "Indoor" : "Outdoor"}</span>
                 </div>
@@ -227,16 +252,21 @@ export default function SportsFacilitiesPage() {
                 <div className="space-y-1.5 text-xs text-slate-300 border-t border-slate-800/80 pt-3">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400 flex items-center gap-1.5">
-                      <Users className="h-3.5 w-3.5 text-slate-500" /> Max Capacity:
+                      <Users className="h-3.5 w-3.5 text-slate-500" /> Max
+                      Capacity:
                     </span>
-                    <span className="font-semibold text-white">{facility.capacity} persons</span>
+                    <span className="font-semibold text-white">
+                      {facility.capacity} persons
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400 flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-slate-500" /> Operating Window:
+                      <Clock className="h-3.5 w-3.5 text-slate-500" /> Operating
+                      Window:
                     </span>
                     <span className="font-mono text-slate-300">
-                      {facility.operatingHours?.open || "06:00"} - {facility.operatingHours?.close || "20:00"}
+                      {facility.operatingHours?.open || "06:00"} -{" "}
+                      {facility.operatingHours?.close || "20:00"}
                     </span>
                   </div>
                 </div>
@@ -291,7 +321,9 @@ export default function SportsFacilitiesPage() {
 
             <div>
               <Label htmlFor="maintNotes" className="text-xs">
-                {selectedFacility?.status === "AVAILABLE" ? "Closure Reason / Work Order Ref *" : "Inspection & Clearance Notes *"}
+                {selectedFacility?.status === "AVAILABLE"
+                  ? "Closure Reason / Work Order Ref *"
+                  : "Inspection & Clearance Notes *"}
               </Label>
               <Textarea
                 id="maintNotes"
@@ -310,7 +342,11 @@ export default function SportsFacilitiesPage() {
           </div>
 
           <DialogFooter className="pt-2">
-            <Button variant="outline" size="sm" onClick={() => setIsMaintenanceOpen(false)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsMaintenanceOpen(false)}
+            >
               Cancel
             </Button>
             <Button
@@ -322,7 +358,9 @@ export default function SportsFacilitiesPage() {
               }
               onClick={handleToggleMaintenance}
             >
-              {selectedFacility?.status === "AVAILABLE" ? "Confirm Closure" : "Confirm Reopening"}
+              {selectedFacility?.status === "AVAILABLE"
+                ? "Confirm Closure"
+                : "Confirm Reopening"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -341,22 +379,30 @@ export default function SportsFacilitiesPage() {
           <form onSubmit={handleCreate} className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="facCode" className="text-xs">Facility Code *</Label>
+                <Label htmlFor="facCode" className="text-xs">
+                  Facility Code *
+                </Label>
                 <Input
                   id="facCode"
                   placeholder="e.g. FAC-VOLL-02"
                   value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, code: e.target.value })
+                  }
                   className="font-mono uppercase text-xs mt-1"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="facType" className="text-xs">Venue Type *</Label>
+                <Label htmlFor="facType" className="text-xs">
+                  Venue Type *
+                </Label>
                 <Select
                   id="facType"
                   value={formData.facilityType}
-                  onChange={(e) => setFormData({ ...formData, facilityType: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, facilityType: e.target.value })
+                  }
                   options={[
                     { value: "BASKETBALL_COURT", label: "Basketball Court" },
                     { value: "FOOTBALL_FIELD", label: "Football Field" },
@@ -373,12 +419,16 @@ export default function SportsFacilitiesPage() {
             </div>
 
             <div>
-              <Label htmlFor="facName" className="text-xs">Facility / Court Name *</Label>
+              <Label htmlFor="facName" className="text-xs">
+                Facility / Court Name *
+              </Label>
               <Input
                 id="facName"
                 placeholder="e.g. South Pavilion Badminton Court"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="text-xs mt-1"
                 required
               />
@@ -386,11 +436,15 @@ export default function SportsFacilitiesPage() {
 
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label htmlFor="surface" className="text-xs">Surface</Label>
+                <Label htmlFor="surface" className="text-xs">
+                  Surface
+                </Label>
                 <Select
                   id="surface"
                   value={formData.surface}
-                  onChange={(e) => setFormData({ ...formData, surface: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, surface: e.target.value })
+                  }
                   options={[
                     { value: "WOOD", label: "Wood / Maple" },
                     { value: "SYNTHETIC", label: "Synthetic" },
@@ -403,21 +457,35 @@ export default function SportsFacilitiesPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="capacity" className="text-xs">Max Capacity</Label>
+                <Label htmlFor="capacity" className="text-xs">
+                  Max Capacity
+                </Label>
                 <Input
                   id="capacity"
                   type="number"
                   value={formData.capacity}
-                  onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      capacity: Number(e.target.value),
+                    })
+                  }
                   className="text-xs mt-1 font-mono"
                 />
               </div>
               <div>
-                <Label htmlFor="isIndoor" className="text-xs">Setting</Label>
+                <Label htmlFor="isIndoor" className="text-xs">
+                  Setting
+                </Label>
                 <Select
                   id="isIndoor"
                   value={formData.isIndoor ? "indoor" : "outdoor"}
-                  onChange={(e) => setFormData({ ...formData, isIndoor: e.target.value === "indoor" })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      isIndoor: e.target.value === "indoor",
+                    })
+                  }
                   options={[
                     { value: "indoor", label: "Indoor Hall" },
                     { value: "outdoor", label: "Outdoor Pitch" },
@@ -428,22 +496,35 @@ export default function SportsFacilitiesPage() {
             </div>
 
             <div>
-              <Label htmlFor="notes" className="text-xs">Initial Condition & Safety Notes</Label>
+              <Label htmlFor="notes" className="text-xs">
+                Initial Condition & Safety Notes
+              </Label>
               <Textarea
                 id="notes"
                 placeholder="Surface inspection remarks, equipment anchors..."
                 value={formData.maintenanceNotes}
-                onChange={(e) => setFormData({ ...formData, maintenanceNotes: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, maintenanceNotes: e.target.value })
+                }
                 className="text-xs mt-1"
                 rows={2}
               />
             </div>
 
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsCreateOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCreateOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="submit" size="sm" className="bg-indigo-600 hover:bg-indigo-500">
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-indigo-600 hover:bg-indigo-500"
+              >
                 Register Venue
               </Button>
             </DialogFooter>

@@ -21,7 +21,9 @@ import {
 } from "lucide-react";
 
 export default function CaseReportsPage() {
-  const [metrics, setMetrics] = useState<StudentAffairsDashboardMetrics | null>(null);
+  const [metrics, setMetrics] = useState<StudentAffairsDashboardMetrics | null>(
+    null,
+  );
 
   useEffect(() => {
     async function load() {
@@ -37,7 +39,10 @@ export default function CaseReportsPage() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Case Analytics & Reports", href: "/app/student-affairs/reports" },
+          {
+            label: "Case Analytics & Reports",
+            href: "/app/student-affairs/reports",
+          },
         ]}
       />
 
@@ -48,11 +53,14 @@ export default function CaseReportsPage() {
             Institutional Case Analytics & Governance Reporting
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Aggregated institutional redressal metrics, regulatory compliance summaries, and procedural turnaround analytics.
+            Aggregated institutional redressal metrics, regulatory compliance
+            summaries, and procedural turnaround analytics.
           </p>
         </div>
         <Button
-          onClick={() => alert("Regulatory UGC Compliance Report exported successfully.")}
+          onClick={() =>
+            alert("Regulatory UGC Compliance Report exported successfully.")
+          }
           className="bg-indigo-600 hover:bg-indigo-500 text-white gap-2 text-xs"
         >
           <Download className="h-4 w-4" />
@@ -105,7 +113,10 @@ export default function CaseReportsPage() {
                 <span className="font-semibold text-white">42% (20 cases)</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-indigo-500 rounded-full" style={{ width: "42%" }} />
+                <div
+                  className="h-full bg-indigo-500 rounded-full"
+                  style={{ width: "42%" }}
+                />
               </div>
             </div>
 
@@ -115,7 +126,10 @@ export default function CaseReportsPage() {
                 <span className="font-semibold text-white">28% (13 cases)</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-blue-500 rounded-full" style={{ width: "28%" }} />
+                <div
+                  className="h-full bg-blue-500 rounded-full"
+                  style={{ width: "28%" }}
+                />
               </div>
             </div>
 
@@ -125,7 +139,10 @@ export default function CaseReportsPage() {
                 <span className="font-semibold text-white">18% (9 cases)</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-purple-500 rounded-full" style={{ width: "18%" }} />
+                <div
+                  className="h-full bg-purple-500 rounded-full"
+                  style={{ width: "18%" }}
+                />
               </div>
             </div>
 
@@ -135,7 +152,10 @@ export default function CaseReportsPage() {
                 <span className="font-semibold text-white">12% (6 cases)</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-rose-500 rounded-full" style={{ width: "12%" }} />
+                <div
+                  className="h-full bg-rose-500 rounded-full"
+                  style={{ width: "12%" }}
+                />
               </div>
             </div>
           </div>
@@ -151,36 +171,53 @@ export default function CaseReportsPage() {
             <div>
               <div className="flex justify-between text-slate-300 mb-1">
                 <span>Sanction Overturned (Full Relief)</span>
-                <span className="font-semibold text-emerald-400">50% (3 appeals)</span>
+                <span className="font-semibold text-emerald-400">
+                  50% (3 appeals)
+                </span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: "50%" }} />
+                <div
+                  className="h-full bg-emerald-500 rounded-full"
+                  style={{ width: "50%" }}
+                />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-slate-300 mb-1">
                 <span>Sanction Modified (Proportionality Adjustment)</span>
-                <span className="font-semibold text-amber-400">33% (2 appeals)</span>
+                <span className="font-semibold text-amber-400">
+                  33% (2 appeals)
+                </span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-amber-500 rounded-full" style={{ width: "33%" }} />
+                <div
+                  className="h-full bg-amber-500 rounded-full"
+                  style={{ width: "33%" }}
+                />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-slate-300 mb-1">
                 <span>Sanction Upheld (Affirmed on Facts)</span>
-                <span className="font-semibold text-slate-400">17% (1 appeal)</span>
+                <span className="font-semibold text-slate-400">
+                  17% (1 appeal)
+                </span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                <div className="h-full bg-slate-600 rounded-full" style={{ width: "17%" }} />
+                <div
+                  className="h-full bg-slate-600 rounded-full"
+                  style={{ width: "17%" }}
+                />
               </div>
             </div>
           </div>
 
           <div className="p-3 rounded-lg border border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 leading-relaxed">
-            All appellate decisions are logged with the Ombudsperson Registry. No confidential party names or witness transcripts are exposed in aggregate reporting dashboards.
+            All appellate decisions are logged with the Ombudsperson Registry.
+            No confidential party names or witness transcripts are exposed in
+            aggregate reporting dashboards.
           </div>
         </Card>
       </div>

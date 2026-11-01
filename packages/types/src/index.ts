@@ -6691,18 +6691,23 @@ export interface AccreditationDashboardSummaryModel {
 
 export type ResearchProjectCategory =
   | "FACULTY_LED"
+  | "DEPARTMENTAL"
   | "COLLABORATIVE_INSTITUTIONAL"
   | "STUDENT_PROJECT"
+  | "STUDENT_RESEARCH"
   | "FUNDED_RESEARCH"
   | "INDUSTRY_SPONSORED"
   | "GOVERNMENT_FUNDED"
+  | "COLLABORATIVE"
   | "INTERDISCIPLINARY"
   | "APPLIED_INNOVATION"
+  | "INTERNATIONAL_COLLABORATION"
   | "CONSULTANCY"
   | "INSTITUTIONAL_INITIATIVE";
 
 export type ResearchProjectStatus =
   | "DRAFT"
+  | "PROPOSAL"
   | "SUBMITTED"
   | "UNDER_REVIEW"
   | "APPROVED"
@@ -6711,13 +6716,20 @@ export type ResearchProjectStatus =
   | "ON_HOLD"
   | "AT_RISK"
   | "COMPLETED"
-  | "CLOSED";
+  | "CLOSED"
+  | "CANCELLED";
 
 export type ResearchTeamRole =
   | "PRINCIPAL_INVESTIGATOR"
   | "CO_INVESTIGATOR"
   | "FACULTY_RESEARCHER"
+  | "FACULTY_MENTOR"
+  | "POSTDOC_RESEARCHER"
+  | "RESEARCH_SCHOLAR"
   | "STUDENT_RESEARCHER"
+  | "INDUSTRY_COLLABORATOR"
+  | "EXTERNAL_CO_PI"
+  | "PROJECT_MANAGER"
   | "RESEARCH_ASSISTANT"
   | "POSTDOC_FELLOW"
   | "EXTERNAL_COLLABORATOR"
@@ -6726,12 +6738,15 @@ export type ResearchTeamRole =
   | "COMPLIANCE_REVIEWER";
 
 export type ResearchOpportunityStatus =
-  "DRAFT" | "OPEN" | "CLOSING_SOON" | "CLOSED" | "ARCHIVED";
+  "DRAFT" | "OPEN" | "CLOSING_SOON" | "CLOSED" | "ARCHIVED" | "CANCELLED";
 
 export type ResearchGrantInternalReviewStatus =
   | "DRAFT"
   | "SUBMITTED_FOR_REVIEW"
+  | "SUBMITTED_INTERNAL"
   | "DEPARTMENT_REVIEW"
+  | "DEPARTMENTAL_REVIEW"
+  | "BUDGET_REVIEW"
   | "FINANCE_REVIEW"
   | "ETHICS_REVIEW"
   | "INSTITUTIONALLY_APPROVED"
@@ -6744,14 +6759,18 @@ export type ResearchExternalSubmissionStatus =
   | "UNDER_EXTERNAL_REVIEW"
   | "AWARDED"
   | "REJECTED_EXTERNAL"
-  | "WITHDRAWN";
+  | "DECLINED"
+  | "WITHDRAWN"
+  | "REVISION_REQUESTED";
 
 export type ResearchMilestoneStatus =
   | "PLANNED"
   | "IN_PROGRESS"
   | "UNDER_REVIEW"
+  | "SUBMITTED_FOR_REVIEW"
   | "ACCEPTED"
   | "REJECTED"
+  | "REVISION_REQUESTED"
   | "BLOCKED"
   | "CANCELLED";
 
@@ -6763,13 +6782,23 @@ export type ResearchEthicsApprovalType =
   | "DATA_PROTECTION"
   | "INSTITUTIONAL_AUTHORIZATION"
   | "CONFLICT_OF_INTEREST"
-  | "EXTERNAL_AGREEMENT";
+  | "EXTERNAL_AGREEMENT"
+  | "HUMAN_SUBJECTS_IRB"
+  | "ANIMAL_CARE_IACUC"
+  | "BIO_SAFETY_IBC"
+  | "RADIATION_SAFETY"
+  | "DATA_PRIVACY_ETHICS"
+  | "GENERAL_INSTITUTIONAL";
 
 export type ResearchEthicsApprovalStatus =
   | "NOT_SUBMITTED"
+  | "NOT_REQUIRED"
+  | "PREPARATION"
+  | "SUBMITTED"
   | "UNDER_REVIEW"
   | "APPROVED"
   | "CONDITIONAL_APPROVAL"
+  | "CHANGES_REQUIRED"
   | "REJECTED"
   | "EXPIRED"
   | "SUSPENDED";
@@ -6819,6 +6848,7 @@ export interface ResearchProjectModel {
   research_domain: string;
   status: ResearchProjectStatus | string;
   principal_investigator_id: UUID;
+  pi_name?: string | null;
   department_id?: UUID | null;
   campus_id?: UUID | null;
   start_date?: string | null;
@@ -6828,12 +6858,14 @@ export interface ResearchProjectModel {
   proposed_budget: number;
   approved_budget: number;
   actual_expenditure: number;
+  total_budget_allocated?: number;
   requires_ethics_approval: boolean;
   ethics_approval_type?: string | null;
-  external_collaborators_json: Record<string, any>[];
-  risks_json: Record<string, any>[];
-  tags: string[];
-  metadata_json: Record<string, any>;
+  is_international?: boolean;
+  external_collaborators_json?: Record<string, any>[];
+  risks_json?: Record<string, any>[];
+  tags?: string[];
+  metadata_json?: Record<string, any>;
   created_at: string;
   updated_at: string;
 }
@@ -8646,113 +8678,9 @@ export interface StudentAffairsDashboardMetrics {
 // STEP 61: ENTERPRISE RESEARCH COLLABORATION, PORTFOLIO & SPONSORED GRANTS
 // ============================================================================
 
-export type ResearchProjectCategory =
-  | "FACULTY_LED"
-  | "DEPARTMENTAL"
-  | "INTERDISCIPLINARY"
-  | "STUDENT_RESEARCH"
-  | "INDUSTRY_SPONSORED"
-  | "GOVERNMENT_FUNDED"
-  | "COLLABORATIVE"
-  | "APPLIED_INNOVATION"
-  | "INTERNATIONAL_COLLABORATION"
-  | "FUNDED_RESEARCH";
-
-export type ResearchProjectStatus =
-  | "DRAFT"
-  | "PROPOSAL"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "ACTIVE"
-  | "ON_HOLD"
-  | "COMPLETED"
-  | "CLOSED"
-  | "CANCELLED";
-
-export type ResearchMilestoneStatus =
-  | "PLANNED"
-  | "IN_PROGRESS"
-  | "SUBMITTED_FOR_REVIEW"
-  | "ACCEPTED"
-  | "REVISION_REQUESTED"
-  | "BLOCKED"
-  | "CANCELLED";
-
-export type ResearchEthicsApprovalType =
-  | "HUMAN_SUBJECTS_IRB"
-  | "ANIMAL_CARE_IACUC"
-  | "BIO_SAFETY_IBC"
-  | "RADIATION_SAFETY"
-  | "DATA_PRIVACY_ETHICS"
-  | "GENERAL_INSTITUTIONAL";
-
-export type ResearchEthicsApprovalStatus =
-  | "NOT_REQUIRED"
-  | "PREPARATION"
-  | "SUBMITTED"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "CHANGES_REQUIRED"
-  | "REJECTED"
-  | "EXPIRED";
-
 export type ResearchRiskSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-export type ResearchRiskStatus = "IDENTIFIED" | "MONITORED" | "MITIGATED" | "ACCEPTED" | "CLOSED";
-
-export type ResearchTeamRole =
-  | "PRINCIPAL_INVESTIGATOR"
-  | "CO_INVESTIGATOR"
-  | "FACULTY_MENTOR"
-  | "POSTDOC_RESEARCHER"
-  | "RESEARCH_SCHOLAR"
-  | "STUDENT_RESEARCHER"
-  | "INDUSTRY_COLLABORATOR"
-  | "EXTERNAL_CO_PI"
-  | "PROJECT_MANAGER"
-  | "RESEARCH_ASSISTANT";
-
-export type ResearchOpportunityStatus = "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED" | "CANCELLED";
-
-export type ResearchGrantInternalReviewStatus =
-  | "DRAFT"
-  | "SUBMITTED_INTERNAL"
-  | "DEPARTMENTAL_REVIEW"
-  | "BUDGET_REVIEW"
-  | "REVISION_REQUESTED"
-  | "INSTITUTIONALLY_APPROVED"
-  | "REJECTED_INTERNAL";
-
-export type ResearchExternalSubmissionStatus =
-  | "NOT_SUBMITTED"
-  | "SUBMITTED_EXTERNAL"
-  | "UNDER_EXTERNAL_REVIEW"
-  | "AWARDED"
-  | "REJECTED_EXTERNAL"
-  | "DECLINED"
-  | "WITHDRAWN"
-  | "REVISION_REQUESTED";
-
-export interface ResearchProjectModel {
-  id: UUID;
-  tenant_id: UUID;
-  project_code: string;
-  title: string;
-  abstract: string;
-  research_category: ResearchProjectCategory | string;
-  research_domain: string;
-  principal_investigator_id: UUID;
-  pi_name?: string | null;
-  start_date: string;
-  planned_end_date: string;
-  actual_end_date?: string | null;
-  total_budget_allocated: number;
-  currency: string;
-  status: ResearchProjectStatus | string;
-  requires_ethics_approval: boolean;
-  is_international: boolean;
-  created_at: string;
-  updated_at: string;
-}
+export type ResearchRiskStatus =
+  "IDENTIFIED" | "MONITORED" | "MITIGATED" | "ACCEPTED" | "CLOSED";
 
 export interface ResearchProjectHealthReportModel {
   project_id: UUID;
@@ -8803,12 +8731,7 @@ export type ContractStatusType =
   | "ARCHIVED";
 
 export type ObligationStatusType =
-  | "PENDING"
-  | "APPROACHING"
-  | "COMPLETED"
-  | "OVERDUE"
-  | "WAIVED"
-  | "DISPUTED";
+  "PENDING" | "APPROACHING" | "COMPLETED" | "OVERDUE" | "WAIVED" | "DISPUTED";
 
 export type RiskLevelType = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
@@ -8836,20 +8759,12 @@ export interface InstitutionalContractModel {
 // ============================================================================
 
 export type OpportunityType =
-  | "SUMMER"
-  | "SEMESTER"
-  | "RESEARCH"
-  | "INDUSTRY_PROJECT"
-  | "EXTERNAL_APPROVED";
+  "SUMMER" | "SEMESTER" | "RESEARCH" | "INDUSTRY_PROJECT" | "EXTERNAL_APPROVED";
 
 export type InternshipWorkMode = "ON_SITE" | "REMOTE" | "HYBRID";
 
 export type InternshipOpportunityStatus =
-  | "DRAFT"
-  | "PUBLISHED"
-  | "PAUSED"
-  | "CLOSED"
-  | "ARCHIVED";
+  "DRAFT" | "PUBLISHED" | "PAUSED" | "CLOSED" | "ARCHIVED";
 
 export type InternshipApplicationStatus =
   | "DRAFT"
@@ -8905,15 +8820,10 @@ export type CheckinStatus = "SCHEDULED" | "COMPLETED" | "OVERDUE" | "CANCELLED";
 export type EvaluationType = "MIDPOINT" | "FINAL" | "STUDENT_REFLECTION";
 
 export type EvaluatorType =
-  | "FACULTY_SUPERVISOR"
-  | "EMPLOYER_SUPERVISOR"
-  | "STUDENT_SELF";
+  "FACULTY_SUPERVISOR" | "EMPLOYER_SUPERVISOR" | "STUDENT_SELF";
 
 export type GoalStatus =
-  | "NOT_STARTED"
-  | "IN_PROGRESS"
-  | "ACHIEVED"
-  | "ABANDONED";
+  "NOT_STARTED" | "IN_PROGRESS" | "ACHIEVED" | "ABANDONED";
 
 export type GoalCategory =
   | "SKILL_ACQUISITION"
@@ -9255,4 +9165,3 @@ export interface EmployabilityAnalytics {
   }>;
   employer_repeat_retention_rate_pct: number;
 }
-

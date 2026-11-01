@@ -24,16 +24,22 @@ import {
 
 export default function EngagementShiftsPage() {
   const [shifts, setShifts] = useState<VolunteerShift[]>([]);
-  const [opportunities, setOpportunities] = useState<VolunteerOpportunity[]>([]);
+  const [opportunities, setOpportunities] = useState<VolunteerOpportunity[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedShift, setSelectedShift] = useState<VolunteerShift | null>(null);
+  const [selectedShift, setSelectedShift] = useState<VolunteerShift | null>(
+    null,
+  );
 
   // Create Shift Form State
   const [oppId, setOppId] = useState("");
   const [title, setTitle] = useState("");
-  const [shiftDate, setShiftDate] = useState(new Date().toISOString().split("T")[0]);
+  const [shiftDate, setShiftDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [startTime, setStartTime] = useState("08:00");
   const [endTime, setEndTime] = useState("12:00");
   const [capacity, setCapacity] = useState(15);
@@ -104,7 +110,10 @@ export default function EngagementShiftsPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -118,7 +127,8 @@ export default function EngagementShiftsPage() {
               Shifts, Rosters & Slot Management
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Organize field operations, schedule volunteer rosters, and monitor participant attendance
+              Organize field operations, schedule volunteer rosters, and monitor
+              participant attendance
             </p>
           </div>
 
@@ -172,7 +182,9 @@ export default function EngagementShiftsPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-foreground line-clamp-1">{shift.title}</h3>
+                    <h3 className="text-base font-bold text-foreground line-clamp-1">
+                      {shift.title}
+                    </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
                       {shift.notes || "Standard volunteer service shift."}
                     </p>
@@ -184,7 +196,8 @@ export default function EngagementShiftsPage() {
                         <Clock className="h-3.5 w-3.5" /> Timing:
                       </span>
                       <span className="text-foreground font-medium">
-                        {shift.start_time.slice(0, 5)} - {shift.end_time.slice(0, 5)}
+                        {shift.start_time.slice(0, 5)} -{" "}
+                        {shift.end_time.slice(0, 5)}
                       </span>
                     </div>
 
@@ -230,27 +243,43 @@ export default function EngagementShiftsPage() {
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
                   <span className="text-[10px] text-muted-foreground block">
-                    Shift {selectedShift.shift_date} ({selectedShift.start_time.slice(0, 5)} - {selectedShift.end_time.slice(0, 5)})
+                    Shift {selectedShift.shift_date} (
+                    {selectedShift.start_time.slice(0, 5)} -{" "}
+                    {selectedShift.end_time.slice(0, 5)})
                   </span>
-                  <h2 className="text-base font-bold text-foreground">{selectedShift.title}</h2>
+                  <h2 className="text-base font-bold text-foreground">
+                    {selectedShift.title}
+                  </h2>
                 </div>
-                <button onClick={() => setSelectedShift(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedShift(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-3">
                 <div className="bg-muted/30 p-3 rounded-lg border border-border">
-                  <h4 className="font-semibold text-foreground mb-1">Field Logistics:</h4>
-                  <p className="text-muted-foreground">{selectedShift.notes || "No special logistics recorded."}</p>
+                  <h4 className="font-semibold text-foreground mb-1">
+                    Field Logistics:
+                  </h4>
+                  <p className="text-muted-foreground">
+                    {selectedShift.notes || "No special logistics recorded."}
+                  </p>
                   {selectedShift.location && (
-                    <p className="text-foreground font-medium mt-1">Location: {selectedShift.location}</p>
+                    <p className="text-foreground font-medium mt-1">
+                      Location: {selectedShift.location}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-foreground mb-2 flex items-center justify-between">
-                    <span>Enrolled Participants Roster ({selectedShift.assigned_count})</span>
+                    <span>
+                      Enrolled Participants Roster (
+                      {selectedShift.assigned_count})
+                    </span>
                     <span className="text-[10px] text-muted-foreground">
                       Max {selectedShift.capacity}
                     </span>
@@ -258,8 +287,12 @@ export default function EngagementShiftsPage() {
                   <div className="border border-border rounded-lg divide-y divide-border">
                     <div className="p-2.5 flex items-center justify-between">
                       <div>
-                        <span className="font-medium text-foreground block">Kavya Ramesh</span>
-                        <span className="text-[10px] text-muted-foreground font-mono">2023-CSE-042</span>
+                        <span className="font-medium text-foreground block">
+                          Kavya Ramesh
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-mono">
+                          2023-CSE-042
+                        </span>
                       </div>
                       <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[10px] font-semibold">
                         ASSIGNED
@@ -267,8 +300,12 @@ export default function EngagementShiftsPage() {
                     </div>
                     <div className="p-2.5 flex items-center justify-between">
                       <div>
-                        <span className="font-medium text-foreground block">Pooja Sundaram</span>
-                        <span className="text-[10px] text-muted-foreground font-mono">2023-IT-088</span>
+                        <span className="font-medium text-foreground block">
+                          Pooja Sundaram
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-mono">
+                          2023-IT-088
+                        </span>
                       </div>
                       <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[10px] font-semibold">
                         CONFIRMED
@@ -299,14 +336,19 @@ export default function EngagementShiftsPage() {
                   <PlusCircle className="h-5 w-5 text-emerald-500" />
                   Schedule Volunteer Shift
                 </h2>
-                <button onClick={() => setIsCreateOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsCreateOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateShift} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Linked Opportunity *</label>
+                  <label className="font-semibold text-foreground">
+                    Linked Opportunity *
+                  </label>
                   <select
                     value={oppId}
                     onChange={(e) => setOppId(e.target.value)}
@@ -322,7 +364,9 @@ export default function EngagementShiftsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Shift Title *</label>
+                  <label className="font-semibold text-foreground">
+                    Shift Title *
+                  </label>
                   <input
                     type="text"
                     required
@@ -335,7 +379,9 @@ export default function EngagementShiftsPage() {
 
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Date *</label>
+                    <label className="font-semibold text-foreground">
+                      Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -345,7 +391,9 @@ export default function EngagementShiftsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Start Time *</label>
+                    <label className="font-semibold text-foreground">
+                      Start Time *
+                    </label>
                     <input
                       type="time"
                       required
@@ -355,7 +403,9 @@ export default function EngagementShiftsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">End Time *</label>
+                    <label className="font-semibold text-foreground">
+                      End Time *
+                    </label>
                     <input
                       type="time"
                       required
@@ -368,7 +418,9 @@ export default function EngagementShiftsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Slot Capacity *</label>
+                    <label className="font-semibold text-foreground">
+                      Slot Capacity *
+                    </label>
                     <input
                       type="number"
                       min={1}
@@ -380,7 +432,9 @@ export default function EngagementShiftsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Field Location</label>
+                    <label className="font-semibold text-foreground">
+                      Field Location
+                    </label>
                     <input
                       type="text"
                       placeholder="e.g. Sector 2 Base Tent"
@@ -392,7 +446,9 @@ export default function EngagementShiftsPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Operational Notes</label>
+                  <label className="font-semibold text-foreground">
+                    Operational Notes
+                  </label>
                   <textarea
                     rows={2}
                     placeholder="Instructions for equipment, check-in requirements, or clothing..."
@@ -425,4 +481,3 @@ export default function EngagementShiftsPage() {
     </div>
   );
 }
-

@@ -28,7 +28,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,13 +42,16 @@ export default function ResearchBudgetsPage() {
   const [projects, setProjects] = useState<ResearchProject[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [budgetPlans, setBudgetPlans] = useState<ResearchBudgetPlan[]>([]);
-  const [financialSummary, setFinancialSummary] = useState<ResearchFinancialSummaryResponse | null>(null);
+  const [financialSummary, setFinancialSummary] =
+    useState<ResearchFinancialSummaryResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showReviseModal, setShowReviseModal] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<ResearchBudgetPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<ResearchBudgetPlan | null>(
+    null,
+  );
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -137,12 +145,15 @@ export default function ResearchBudgetsPage() {
       setErrorMsg(null);
       await ResearchService.createBudgetPlan({
         project_id: selectedProjectId,
-        plan_code: newPlan.plan_code || `BGT-${Date.now().toString().slice(-6)}`,
+        plan_code:
+          newPlan.plan_code || `BGT-${Date.now().toString().slice(-6)}`,
         category: newPlan.category,
         total_budget: Number(newPlan.total_budget),
         personnel_costs: Number(newPlan.personnel_costs),
         equipment_costs: Number(newPlan.equipment_costs),
-        consumables_materials_costs: Number(newPlan.consumables_materials_costs),
+        consumables_materials_costs: Number(
+          newPlan.consumables_materials_costs,
+        ),
         travel_fieldwork_costs: Number(newPlan.travel_fieldwork_costs),
         external_services_costs: Number(newPlan.external_services_costs),
         institutional_overheads: Number(newPlan.institutional_overheads),
@@ -166,15 +177,18 @@ export default function ResearchBudgetsPage() {
       setSubmitting(true);
       setErrorMsg(null);
       // Call backend revision endpoint
-      const res = await fetch(`http://localhost:8000/api/v1/research/budgets/${selectedPlan.id}/revise`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          revised_allocated_amount: Number(revisionData.revised_amount),
-          revision_reason: revisionData.revision_reason,
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:8000/api/v1/research/budgets/${selectedPlan.id}/revise`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            revised_allocated_amount: Number(revisionData.revised_amount),
+            revision_reason: revisionData.revision_reason,
+          }),
+        },
+      );
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
         throw new Error(error.detail || "Revision failed");
@@ -205,7 +219,12 @@ export default function ResearchBudgetsPage() {
               <ShieldAlert className="h-4 w-4 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-200">✕</button>
+            <button
+              onClick={() => setErrorMsg(null)}
+              className="text-rose-400 hover:text-rose-200"
+            >
+              ✕
+            </button>
           </div>
         )}
         {successMsg && (
@@ -214,7 +233,12 @@ export default function ResearchBudgetsPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200">✕</button>
+            <button
+              onClick={() => setSuccessMsg(null)}
+              className="text-emerald-400 hover:text-emerald-200"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -226,7 +250,8 @@ export default function ResearchBudgetsPage() {
               Research Budgets & Finance Ledger Reconciliation
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Multi-category cost allocation, committed vs. actual spend, audited budget revisions, and ledger sync.
+              Multi-category cost allocation, committed vs. actual spend,
+              audited budget revisions, and ledger sync.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -256,8 +281,13 @@ export default function ResearchBudgetsPage() {
         <div className="p-3.5 rounded-xl bg-slate-900/40 border border-slate-800 text-xs text-slate-400 flex items-start gap-3">
           <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
           <div>
-            <span className="font-semibold text-slate-200">Finance Module Authoritative Source of Truth: </span>
-            Actual expenditures and committed purchase orders are reconciled against the central general ledger. Research screens coordinate project budgets without creating parallel accounting ledgers or fabricating mock transaction records.
+            <span className="font-semibold text-slate-200">
+              Finance Module Authoritative Source of Truth:{" "}
+            </span>
+            Actual expenditures and committed purchase orders are reconciled
+            against the central general ledger. Research screens coordinate
+            project budgets without creating parallel accounting ledgers or
+            fabricating mock transaction records.
           </div>
         </div>
 
@@ -265,35 +295,61 @@ export default function ResearchBudgetsPage() {
         {financialSummary && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-4 bg-slate-900/60 border-slate-800">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Approved Budget</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Total Approved Budget
+              </span>
               <div className="text-2xl font-bold text-white mt-1">
-                ${Number(financialSummary.approved_budget).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                $
+                {Number(financialSummary.approved_budget).toLocaleString(
+                  undefined,
+                  { minimumFractionDigits: 2 },
+                )}
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Awarded: ${Number(financialSummary.awarded_grant_total).toLocaleString()}
+                Awarded: $
+                {Number(financialSummary.awarded_grant_total).toLocaleString()}
               </p>
             </Card>
 
             <Card className="p-4 bg-slate-900/60 border-slate-800">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Actual Expenditure</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Actual Expenditure
+              </span>
               <div className="text-2xl font-bold text-emerald-400 mt-1">
-                ${Number(financialSummary.actual_expenditure).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                $
+                {Number(financialSummary.actual_expenditure).toLocaleString(
+                  undefined,
+                  { minimumFractionDigits: 2 },
+                )}
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Committed POs: ${Number(financialSummary.committed_expenditure).toLocaleString()}
+                Committed POs: $
+                {Number(
+                  financialSummary.committed_expenditure,
+                ).toLocaleString()}
               </p>
             </Card>
 
             <Card className="p-4 bg-slate-900/60 border-slate-800">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Remaining Unspent Balance</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Remaining Unspent Balance
+              </span>
               <div className="text-2xl font-bold text-sky-400 mt-1">
-                ${Number(financialSummary.remaining_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                $
+                {Number(financialSummary.remaining_balance).toLocaleString(
+                  undefined,
+                  { minimumFractionDigits: 2 },
+                )}
               </div>
-              <p className="text-xs text-slate-500 mt-1">Available for project burn</p>
+              <p className="text-xs text-slate-500 mt-1">
+                Available for project burn
+              </p>
             </Card>
 
             <Card className="p-4 bg-slate-900/60 border-slate-800">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Budget Burn Rate</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Budget Burn Rate
+              </span>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-2xl font-bold text-amber-400">
                   {financialSummary.burn_rate_percentage.toFixed(1)}%
@@ -310,10 +366,12 @@ export default function ResearchBudgetsPage() {
                     financialSummary.burn_rate_percentage > 90
                       ? "bg-rose-500"
                       : financialSummary.burn_rate_percentage > 70
-                      ? "bg-amber-500"
-                      : "bg-emerald-500"
+                        ? "bg-amber-500"
+                        : "bg-emerald-500"
                   }`}
-                  style={{ width: `${Math.min(100, financialSummary.burn_rate_percentage)}%` }}
+                  style={{
+                    width: `${Math.min(100, financialSummary.burn_rate_percentage)}%`,
+                  }}
                 />
               </div>
             </Card>
@@ -325,16 +383,22 @@ export default function ResearchBudgetsPage() {
           <div className="p-4 border-b border-slate-800 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-white">
-                Itemized Cost Allocations {selectedProj ? `— ${selectedProj.project_code}` : ""}
+                Itemized Cost Allocations{" "}
+                {selectedProj ? `— ${selectedProj.project_code}` : ""}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Personnel, equipment, materials, external subcontracts, and institutional overhead allowances.
+                Personnel, equipment, materials, external subcontracts, and
+                institutional overhead allowances.
               </p>
             </div>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => (selectedProjectId ? loadProjectBudgets(selectedProjectId) : loadAllBudgets())}
+              onClick={() =>
+                selectedProjectId
+                  ? loadProjectBudgets(selectedProjectId)
+                  : loadAllBudgets()
+              }
               className="h-8 border-slate-700 bg-slate-800 text-slate-300 text-xs gap-1.5"
             >
               <RefreshCw className="h-3 w-3" />
@@ -349,7 +413,9 @@ export default function ResearchBudgetsPage() {
                   <th className="py-3 px-4">Plan Code / Version</th>
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Total Allocation</th>
-                  <th className="py-3 px-4">Direct Costs (Personnel + Equip)</th>
+                  <th className="py-3 px-4">
+                    Direct Costs (Personnel + Equip)
+                  </th>
                   <th className="py-3 px-4">Consumables & Travel</th>
                   <th className="py-3 px-4">Overheads & Contingency</th>
                   <th className="py-3 px-4 text-right">Actions</th>
@@ -366,19 +432,31 @@ export default function ResearchBudgetsPage() {
                 ) : budgetPlans.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-slate-500">
-                      No budget plans registered for this scope. Click &quot;New Budget Allocation&quot; to define cost categories.
+                      No budget plans registered for this scope. Click &quot;New
+                      Budget Allocation&quot; to define cost categories.
                     </td>
                   </tr>
                 ) : (
                   budgetPlans.map((plan) => {
-                    const direct = Number(plan.personnel_costs || 0) + Number(plan.equipment_costs || 0);
-                    const supplies = Number(plan.consumables_materials_costs || 0) + Number(plan.travel_fieldwork_costs || 0);
-                    const overheads = Number(plan.institutional_overheads || 0) + Number(plan.contingency_costs || 0);
+                    const direct =
+                      Number(plan.personnel_costs || 0) +
+                      Number(plan.equipment_costs || 0);
+                    const supplies =
+                      Number(plan.consumables_materials_costs || 0) +
+                      Number(plan.travel_fieldwork_costs || 0);
+                    const overheads =
+                      Number(plan.institutional_overheads || 0) +
+                      Number(plan.contingency_costs || 0);
 
                     return (
-                      <tr key={plan.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr
+                        key={plan.id}
+                        className="hover:bg-slate-800/30 transition-colors"
+                      >
                         <td className="py-3 px-4">
-                          <span className="font-semibold text-white block">{plan.plan_code}</span>
+                          <span className="font-semibold text-white block">
+                            {plan.plan_code}
+                          </span>
                           <span className="text-[11px] text-slate-400 flex items-center gap-1">
                             <History className="h-3 w-3" />
                             Version {plan.version_number}
@@ -391,20 +469,50 @@ export default function ResearchBudgetsPage() {
                         </td>
                         <td className="py-3 px-4">
                           <span className="text-white font-bold">
-                            ${Number(plan.total_budget).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            $
+                            {Number(plan.total_budget).toLocaleString(
+                              undefined,
+                              { minimumFractionDigits: 2 },
+                            )}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-xs text-slate-300">
-                          <div>Personnel: ${Number(plan.personnel_costs || 0).toLocaleString()}</div>
-                          <div className="text-slate-500">Equipment: ${Number(plan.equipment_costs || 0).toLocaleString()}</div>
+                          <div>
+                            Personnel: $
+                            {Number(plan.personnel_costs || 0).toLocaleString()}
+                          </div>
+                          <div className="text-slate-500">
+                            Equipment: $
+                            {Number(plan.equipment_costs || 0).toLocaleString()}
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-xs text-slate-300">
-                          <div>Supplies: ${Number(plan.consumables_materials_costs || 0).toLocaleString()}</div>
-                          <div className="text-slate-500">Travel: ${Number(plan.travel_fieldwork_costs || 0).toLocaleString()}</div>
+                          <div>
+                            Supplies: $
+                            {Number(
+                              plan.consumables_materials_costs || 0,
+                            ).toLocaleString()}
+                          </div>
+                          <div className="text-slate-500">
+                            Travel: $
+                            {Number(
+                              plan.travel_fieldwork_costs || 0,
+                            ).toLocaleString()}
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-xs text-slate-300">
-                          <div>Overheads: ${Number(plan.institutional_overheads || 0).toLocaleString()}</div>
-                          <div className="text-slate-500">Contingency: ${Number(plan.contingency_costs || 0).toLocaleString()}</div>
+                          <div>
+                            Overheads: $
+                            {Number(
+                              plan.institutional_overheads || 0,
+                            ).toLocaleString()}
+                          </div>
+                          <div className="text-slate-500">
+                            Contingency: $
+                            {Number(
+                              plan.contingency_costs || 0,
+                            ).toLocaleString()}
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-right">
                           <Button
@@ -446,97 +554,160 @@ export default function ResearchBudgetsPage() {
             <form onSubmit={handleCreateAllocation} className="space-y-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-slate-400">Budget Plan Code</Label>
+                  <Label className="text-xs text-slate-400">
+                    Budget Plan Code
+                  </Label>
                   <Input
                     placeholder="e.g. BGT-2026-Y1"
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newPlan.plan_code}
-                    onChange={(e) => setNewPlan({ ...newPlan, plan_code: e.target.value })}
+                    onChange={(e) =>
+                      setNewPlan({ ...newPlan, plan_code: e.target.value })
+                    }
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-slate-400">Total Approved Allocation ($) *</Label>
+                  <Label className="text-xs text-slate-400">
+                    Total Approved Allocation ($) *
+                  </Label>
                   <Input
                     type="number"
                     required
                     className="bg-slate-950 border-slate-800 mt-1"
                     value={newPlan.total_budget}
-                    onChange={(e) => setNewPlan({ ...newPlan, total_budget: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewPlan({
+                        ...newPlan,
+                        total_budget: Number(e.target.value),
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="p-4 bg-slate-950/70 rounded-lg border border-slate-800 space-y-3">
-                <span className="text-xs font-semibold text-emerald-400 block">Category Allocations</span>
+                <span className="text-xs font-semibold text-emerald-400 block">
+                  Category Allocations
+                </span>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-[11px] text-slate-400">Personnel & Staff ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Personnel & Staff ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.personnel_costs}
-                      onChange={(e) => setNewPlan({ ...newPlan, personnel_costs: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          personnel_costs: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                   <div>
-                    <Label className="text-[11px] text-slate-400">Capital Equipment ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Capital Equipment ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.equipment_costs}
-                      onChange={(e) => setNewPlan({ ...newPlan, equipment_costs: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          equipment_costs: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-[11px] text-slate-400">Consumables & Materials ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Consumables & Materials ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.consumables_materials_costs}
-                      onChange={(e) => setNewPlan({ ...newPlan, consumables_materials_costs: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          consumables_materials_costs: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                   <div>
-                    <Label className="text-[11px] text-slate-400">Travel & Fieldwork ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Travel & Fieldwork ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.travel_fieldwork_costs}
-                      onChange={(e) => setNewPlan({ ...newPlan, travel_fieldwork_costs: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          travel_fieldwork_costs: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-[11px] text-slate-400">Institutional Overheads ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Institutional Overheads ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.institutional_overheads}
-                      onChange={(e) => setNewPlan({ ...newPlan, institutional_overheads: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          institutional_overheads: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                   <div>
-                    <Label className="text-[11px] text-slate-400">Contingency Reserves ($)</Label>
+                    <Label className="text-[11px] text-slate-400">
+                      Contingency Reserves ($)
+                    </Label>
                     <Input
                       type="number"
                       className="bg-slate-900 border-slate-800 mt-1 text-xs"
                       value={newPlan.contingency_costs}
-                      onChange={(e) => setNewPlan({ ...newPlan, contingency_costs: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setNewPlan({
+                          ...newPlan,
+                          contingency_costs: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                >
                   {submitting ? "Allocating..." : "Save Cost Allocation"}
                 </Button>
               </div>
@@ -556,33 +727,55 @@ export default function ResearchBudgetsPage() {
 
             <form onSubmit={handleRevisePlan} className="space-y-4 pt-2">
               <div>
-                <Label className="text-xs text-slate-400">Revised Total Allocation ($) *</Label>
+                <Label className="text-xs text-slate-400">
+                  Revised Total Allocation ($) *
+                </Label>
                 <Input
                   type="number"
                   required
                   className="bg-slate-950 border-slate-800 mt-1"
                   value={revisionData.revised_amount}
-                  onChange={(e) => setRevisionData({ ...revisionData, revised_amount: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setRevisionData({
+                      ...revisionData,
+                      revised_amount: Number(e.target.value),
+                    })
+                  }
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-slate-400">Audit Justification & Reason *</Label>
+                <Label className="text-xs text-slate-400">
+                  Audit Justification & Reason *
+                </Label>
                 <Textarea
                   required
                   placeholder="Explain justification for budget re-allocation or scope modification..."
                   className="bg-slate-950 border-slate-800 mt-1"
                   rows={3}
                   value={revisionData.revision_reason}
-                  onChange={(e) => setRevisionData({ ...revisionData, revision_reason: e.target.value })}
+                  onChange={(e) =>
+                    setRevisionData({
+                      ...revisionData,
+                      revision_reason: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowReviseModal(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowReviseModal(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white"
+                >
                   {submitting ? "Revising..." : "Commit Audited Revision"}
                 </Button>
               </div>

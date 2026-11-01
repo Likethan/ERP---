@@ -28,7 +28,6 @@ class TransportAllocationsService {
     programCode?: string;
     search?: string;
   }): Promise<ApiResponse<TransportAllocation[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.allocations];
 
     if (filters?.routeId && filters.routeId !== "ALL") {
@@ -66,7 +65,6 @@ class TransportAllocationsService {
   async getAllocationById(
     id: string,
   ): Promise<ApiResponse<TransportAllocation | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const alloc = this.allocations.find((a) => a.id === id) || null;
     return { success: true, data: alloc };
   }
@@ -90,8 +88,6 @@ class TransportAllocationsService {
     semester?: number;
     status?: TransportAllocationStatus;
   }): Promise<ApiResponse<TransportAllocation>> {
-    await new Promise((r) => setTimeout(r, 60));
-
     const newAlloc: TransportAllocation = {
       id: `tr-alloc-${Date.now().toString(36)}`,
       studentId: payload.studentId,
@@ -124,7 +120,6 @@ class TransportAllocationsService {
     id: string,
     reason?: string,
   ): Promise<ApiResponse<TransportAllocation | null>> {
-    await new Promise((r) => setTimeout(r, 50));
     const alloc = this.allocations.find((a) => a.id === id);
     if (!alloc) return { success: false, data: null };
 

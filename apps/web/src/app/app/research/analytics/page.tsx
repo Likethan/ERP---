@@ -56,10 +56,13 @@ export default function ResearchAnalyticsPage() {
     try {
       setSweeping(true);
       setErrorMsg(null);
-      const res = await fetch("http://localhost:8000/api/v1/research/analytics/sweep", {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(
+        "http://localhost:8000/api/v1/research/analytics/sweep",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.detail || "Sweep failed");
@@ -69,7 +72,7 @@ export default function ResearchAnalyticsPage() {
       setSuccessMsg(
         `Compliance sweep completed: ${sweepRes.notifications_dispatched || 0} notifications dispatched, ${
           sweepRes.expired_ethics_locked || 0
-        } expired ethics protocols evaluated.`
+        } expired ethics protocols evaluated.`,
       );
       await loadAnalytics();
     } catch (err: any) {
@@ -93,7 +96,9 @@ export default function ResearchAnalyticsPage() {
         pending_ethics: summary.pending_ethics_reviews,
       },
     };
-    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -115,7 +120,12 @@ export default function ResearchAnalyticsPage() {
               <ShieldAlert className="h-4 w-4 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-200">✕</button>
+            <button
+              onClick={() => setErrorMsg(null)}
+              className="text-rose-400 hover:text-rose-200"
+            >
+              ✕
+            </button>
           </div>
         )}
         {successMsg && (
@@ -124,7 +134,12 @@ export default function ResearchAnalyticsPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200">✕</button>
+            <button
+              onClick={() => setSuccessMsg(null)}
+              className="text-emerald-400 hover:text-emerald-200"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -133,10 +148,12 @@ export default function ResearchAnalyticsPage() {
           <div>
             <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               <BarChart3 className="h-6 w-6 text-emerald-400" />
-              Institutional Research Analytics & Executive Portfolio Intelligence
+              Institutional Research Analytics & Executive Portfolio
+              Intelligence
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Verifiable funding pipeline conversion, expenditure burn rates, deliverable completion, and compliance sweeps.
+              Verifiable funding pipeline conversion, expenditure burn rates,
+              deliverable completion, and compliance sweeps.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -146,7 +163,9 @@ export default function ResearchAnalyticsPage() {
               variant="outline"
               className="border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 text-xs gap-1.5"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${sweeping ? "animate-spin text-emerald-400" : ""}`} />
+              <RefreshCw
+                className={`h-3.5 w-3.5 ${sweeping ? "animate-spin text-emerald-400" : ""}`}
+              />
               Run Compliance Sweep
             </Button>
             <Button
@@ -163,7 +182,9 @@ export default function ResearchAnalyticsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="p-5 bg-slate-900/60 border-slate-800">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Projects</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Active Projects
+              </span>
               <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
                 <FolderKanban className="h-4 w-4" />
               </span>
@@ -171,25 +192,37 @@ export default function ResearchAnalyticsPage() {
             <div className="text-3xl font-bold text-white mt-2">
               {summary?.total_active_projects || 0}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Multi-departmental portfolio</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Multi-departmental portfolio
+            </p>
           </Card>
 
           <Card className="p-5 bg-slate-900/60 border-slate-800">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Grant Funding Awarded</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Grant Funding Awarded
+              </span>
               <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
                 <DollarSign className="h-4 w-4" />
               </span>
             </div>
             <div className="text-3xl font-bold text-emerald-400 mt-2">
-              ${Number(summary?.total_grant_funding_awarded || 0).toLocaleString(undefined, { minimumFractionDigits: 0 })}
+              $
+              {Number(summary?.total_grant_funding_awarded || 0).toLocaleString(
+                undefined,
+                { minimumFractionDigits: 0 },
+              )}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Verified external sponsor awards</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Verified external sponsor awards
+            </p>
           </Card>
 
           <Card className="p-5 bg-slate-900/60 border-slate-800">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Proposals in Pipeline</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Proposals in Pipeline
+              </span>
               <span className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
                 <FileText className="h-4 w-4" />
               </span>
@@ -197,12 +230,16 @@ export default function ResearchAnalyticsPage() {
             <div className="text-3xl font-bold text-indigo-400 mt-2">
               {summary?.grant_proposals_in_pipeline || 0}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Under review / external sponsor</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Under review / external sponsor
+            </p>
           </Card>
 
           <Card className="p-5 bg-slate-900/60 border-slate-800">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Verified Publications</span>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                Verified Publications
+              </span>
               <span className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400">
                 <Lightbulb className="h-4 w-4" />
               </span>
@@ -210,7 +247,9 @@ export default function ResearchAnalyticsPage() {
             <div className="text-3xl font-bold text-sky-400 mt-2">
               {summary?.total_research_outputs_verified || 0}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Peer-reviewed & DOI indexed</p>
+            <p className="text-xs text-slate-500 mt-1">
+              Peer-reviewed & DOI indexed
+            </p>
           </Card>
         </div>
 
@@ -236,9 +275,14 @@ export default function ResearchAnalyticsPage() {
             <div className="space-y-4 pt-2">
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-400">Total Approved Budget Allocation</span>
+                  <span className="text-slate-400">
+                    Total Approved Budget Allocation
+                  </span>
                   <span className="font-semibold text-white">
-                    ${Number(summary?.total_budget_allocated || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    $
+                    {Number(
+                      summary?.total_budget_allocated || 0,
+                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2">
@@ -248,9 +292,14 @@ export default function ResearchAnalyticsPage() {
 
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-400">Reconciled Actual Expenditure</span>
+                  <span className="text-slate-400">
+                    Reconciled Actual Expenditure
+                  </span>
                   <span className="font-semibold text-emerald-400">
-                    ${Number(summary?.total_actual_expenditure || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    $
+                    {Number(
+                      summary?.total_actual_expenditure || 0,
+                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2">
@@ -260,8 +309,10 @@ export default function ResearchAnalyticsPage() {
                       width: `${Math.min(
                         100,
                         summary?.total_budget_allocated
-                          ? ((summary.total_actual_expenditure || 0) / summary.total_budget_allocated) * 100
-                          : 0
+                          ? ((summary.total_actual_expenditure || 0) /
+                              summary.total_budget_allocated) *
+                              100
+                          : 0,
                       )}%`,
                     }}
                   />
@@ -270,19 +321,30 @@ export default function ResearchAnalyticsPage() {
 
               <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
                 <div>
-                  <span className="text-xs text-slate-400 block">Remaining Portfolio Balance</span>
+                  <span className="text-xs text-slate-400 block">
+                    Remaining Portfolio Balance
+                  </span>
                   <span className="text-lg font-bold text-white mt-0.5 block">
-                    ${Math.max(
+                    $
+                    {Math.max(
                       0,
-                      Number(summary?.total_budget_allocated || 0) - Number(summary?.total_actual_expenditure || 0)
+                      Number(summary?.total_budget_allocated || 0) -
+                        Number(summary?.total_actual_expenditure || 0),
                     ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 block">Portfolio Burn</span>
+                  <span className="text-xs text-slate-400 block">
+                    Portfolio Burn
+                  </span>
                   <span className="text-lg font-bold text-amber-400 mt-0.5 block">
-                    {summary?.total_budget_allocated && summary.total_budget_allocated > 0
-                      ? (((summary.total_actual_expenditure || 0) / summary.total_budget_allocated) * 100).toFixed(1)
+                    {summary?.total_budget_allocated &&
+                    summary.total_budget_allocated > 0
+                      ? (
+                          ((summary.total_actual_expenditure || 0) /
+                            summary.total_budget_allocated) *
+                          100
+                        ).toFixed(1)
                       : "0.0"}
                     %
                   </span>
@@ -310,19 +372,27 @@ export default function ResearchAnalyticsPage() {
 
             <div className="grid grid-cols-2 gap-4 pt-2">
               <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                <span className="text-xs text-slate-400 block">Pending Ethics Reviews</span>
+                <span className="text-xs text-slate-400 block">
+                  Pending Ethics Reviews
+                </span>
                 <span className="text-2xl font-bold text-amber-400 mt-1 block">
                   {summary?.pending_ethics_reviews || 0}
                 </span>
-                <p className="text-[11px] text-slate-500 mt-1">IRB/IACUC queues</p>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  IRB/IACUC queues
+                </p>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                <span className="text-xs text-slate-400 block">Active Sponsored Grants</span>
+                <span className="text-xs text-slate-400 block">
+                  Active Sponsored Grants
+                </span>
                 <span className="text-2xl font-bold text-emerald-400 mt-1 block">
                   {summary?.active_grants_count || 0}
                 </span>
-                <p className="text-[11px] text-slate-500 mt-1">External agreements</p>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  External agreements
+                </p>
               </div>
             </div>
 
@@ -332,7 +402,10 @@ export default function ResearchAnalyticsPage() {
                 Operational Closure Blocking Active
               </div>
               <p>
-                CampusOS Step 61 enforces strict multi-gate criteria before any project transitions to CLOSED: all mandatory deliverables verified by independent reviewers, ethics protocol renewals current, and financial ledger balances reconciled.
+                CampusOS Step 61 enforces strict multi-gate criteria before any
+                project transitions to CLOSED: all mandatory deliverables
+                verified by independent reviewers, ethics protocol renewals
+                current, and financial ledger balances reconciled.
               </p>
             </div>
           </Card>

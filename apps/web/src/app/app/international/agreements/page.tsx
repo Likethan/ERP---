@@ -18,7 +18,11 @@ import {
 } from "lucide-react";
 import { InternationalNav } from "@/components/international/international-nav";
 import { internationalService } from "@/services/international.service";
-import { AgreementAmendment, InstitutionalAgreement, InternationalPartner } from "@/types/international";
+import {
+  AgreementAmendment,
+  InstitutionalAgreement,
+  InternationalPartner,
+} from "@/types/international";
 
 export default function AgreementsManagementPage() {
   const [agreements, setAgreements] = useState<InstitutionalAgreement[]>([]);
@@ -27,7 +31,8 @@ export default function AgreementsManagementPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedAgreementForAmendment, setSelectedAgreementForAmendment] = useState<InstitutionalAgreement | null>(null);
+  const [selectedAgreementForAmendment, setSelectedAgreementForAmendment] =
+    useState<InstitutionalAgreement | null>(null);
 
   // New Agreement Form
   const [formData, setFormData] = useState({
@@ -36,7 +41,9 @@ export default function AgreementsManagementPage() {
     agreement_title: "",
     agreement_type: "MOU",
     effective_start_date: new Date().toISOString().split("T")[0],
-    effective_end_date: new Date(Date.now() + 365 * 86400000 * 3).toISOString().split("T")[0],
+    effective_end_date: new Date(Date.now() + 365 * 86400000 * 3)
+      .toISOString()
+      .split("T")[0],
     renewal_warning_days: 90,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -96,7 +103,10 @@ export default function AgreementsManagementPage() {
     if (!selectedAgreementForAmendment) return;
     setSubmittingAmendment(true);
     try {
-      await internationalService.addAmendment(selectedAgreementForAmendment.id, amendmentForm);
+      await internationalService.addAmendment(
+        selectedAgreementForAmendment.id,
+        amendmentForm,
+      );
       alert("Amendment recorded successfully and agreement expiry updated.");
       setSelectedAgreementForAmendment(null);
       loadData();
@@ -109,7 +119,8 @@ export default function AgreementsManagementPage() {
   }
 
   const filtered = agreements.filter((a) => {
-    const text = `${a.agreement_title || a.title} ${a.agreement_reference_number || a.agreementReferenceNumber} ${a.partner_name || ""}`.toLowerCase();
+    const text =
+      `${a.agreement_title || a.title} ${a.agreement_reference_number || a.agreementReferenceNumber} ${a.partner_name || ""}`.toLowerCase();
     return text.includes(search.toLowerCase());
   });
 
@@ -125,7 +136,8 @@ export default function AgreementsManagementPage() {
               Institutional Agreements & MoUs Management
             </h2>
             <p className="text-xs text-slate-400">
-              Maintain bilateral treaties, student exchange protocols, and legal renewal audit trails
+              Maintain bilateral treaties, student exchange protocols, and legal
+              renewal audit trails
             </p>
           </div>
           <button
@@ -193,18 +205,26 @@ export default function AgreementsManagementPage() {
                   </tr>
                 ) : (
                   filtered.map((agr) => (
-                    <tr key={agr.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={agr.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-white">
-                          {agr.agreement_title || agr.agreementTitle || agr.title}
+                          {agr.agreement_title ||
+                            agr.agreementTitle ||
+                            agr.title}
                         </div>
                         <div className="text-[11px] text-slate-500 font-mono mt-0.5">
-                          {agr.agreement_reference_number || agr.agreementReferenceNumber}
+                          {agr.agreement_reference_number ||
+                            agr.agreementReferenceNumber}
                         </div>
                       </td>
 
                       <td className="py-3.5 px-4 font-medium text-slate-200">
-                        {agr.partner_name || agr.partnerName || "Institutional Partner"}
+                        {agr.partner_name ||
+                          agr.partnerName ||
+                          "Institutional Partner"}
                       </td>
 
                       <td className="py-3.5 px-4">
@@ -226,8 +246,8 @@ export default function AgreementsManagementPage() {
                             agr.is_expiring_soon || agr.status === "EXPIRING"
                               ? "bg-amber-500/10 text-amber-300 border border-amber-500/30"
                               : agr.status === "ACTIVE"
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                              : "bg-slate-800 text-slate-400"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                                : "bg-slate-800 text-slate-400"
                           }`}
                         >
                           {agr.is_expiring_soon ? "Expiring Soon" : agr.status}
@@ -266,83 +286,132 @@ export default function AgreementsManagementPage() {
                 Record New Institutional Agreement / MoU
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Enter bilateral legal covenants and set automated renewal notification windows
+                Enter bilateral legal covenants and set automated renewal
+                notification windows
               </p>
 
               <form onSubmit={handleCreateAgreement} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Partner Institution *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Partner Institution *
+                  </label>
                   <select
                     required
                     value={formData.partner_id}
-                    onChange={(e) => setFormData({ ...formData, partner_id: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, partner_id: e.target.value })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   >
-                    <option value="">Select foreign partner institution...</option>
+                    <option value="">
+                      Select foreign partner institution...
+                    </option>
                     {partners.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.partner_name || p.name} ({p.country_name || p.country || p.country_code})
+                        {p.partner_name || p.name} (
+                        {p.country_name || p.country || p.country_code})
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Agreement Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Agreement Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. Student Mobility Agreement in Engineering Sciences"
                     value={formData.agreement_title}
-                    onChange={(e) => setFormData({ ...formData, agreement_title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        agreement_title: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Agreement Type</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Agreement Type
+                    </label>
                     <select
                       value={formData.agreement_type}
-                      onChange={(e) => setFormData({ ...formData, agreement_type: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          agreement_type: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     >
                       <option value="MOU">General MoU</option>
-                      <option value="EXCHANGE_AGREEMENT">Student Exchange</option>
-                      <option value="DUAL_DEGREE_ARTICULATION">Dual Degree Articulation</option>
-                      <option value="RESEARCH_CONSORTIUM">Research Consortium</option>
+                      <option value="EXCHANGE_AGREEMENT">
+                        Student Exchange
+                      </option>
+                      <option value="DUAL_DEGREE_ARTICULATION">
+                        Dual Degree Articulation
+                      </option>
+                      <option value="RESEARCH_CONSORTIUM">
+                        Research Consortium
+                      </option>
                       <option value="LETTER_OF_INTENT">Letter of Intent</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Renewal Warning Days</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Renewal Warning Days
+                    </label>
                     <input
                       type="number"
                       value={formData.renewal_warning_days}
-                      onChange={(e) => setFormData({ ...formData, renewal_warning_days: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          renewal_warning_days: Number(e.target.value),
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Effective Start Date *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Effective Start Date *
+                    </label>
                     <input
                       required
                       type="date"
                       value={formData.effective_start_date}
-                      onChange={(e) => setFormData({ ...formData, effective_start_date: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          effective_start_date: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-slate-300 block mb-1">Effective End Date *</label>
+                    <label className="text-xs font-medium text-slate-300 block mb-1">
+                      Effective End Date *
+                    </label>
                     <input
                       required
                       type="date"
                       value={formData.effective_end_date}
-                      onChange={(e) => setFormData({ ...formData, effective_end_date: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          effective_end_date: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
@@ -387,31 +456,46 @@ export default function AgreementsManagementPage() {
               <p className="text-xs text-slate-400 mt-1">
                 Attach an extension amendment or scope modification for:{" "}
                 <span className="text-slate-200 font-semibold">
-                  {selectedAgreementForAmendment.agreement_title || selectedAgreementForAmendment.title}
+                  {selectedAgreementForAmendment.agreement_title ||
+                    selectedAgreementForAmendment.title}
                 </span>
               </p>
 
               <form onSubmit={handleAddAmendment} className="mt-5 space-y-4">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Amendment Title *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Amendment Title *
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. Scope Extension: Adding Joint AI Research"
                     value={amendmentForm.title}
-                    onChange={(e) => setAmendmentForm({ ...amendmentForm, title: e.target.value })}
+                    onChange={(e) =>
+                      setAmendmentForm({
+                        ...amendmentForm,
+                        title: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Change Summary / Notes *</label>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
+                    Change Summary / Notes *
+                  </label>
                   <textarea
                     required
                     rows={3}
                     placeholder="Detail the modified terms, added quota, or revised validity..."
                     value={amendmentForm.description}
-                    onChange={(e) => setAmendmentForm({ ...amendmentForm, description: e.target.value })}
+                    onChange={(e) =>
+                      setAmendmentForm({
+                        ...amendmentForm,
+                        description: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
@@ -423,7 +507,12 @@ export default function AgreementsManagementPage() {
                   <input
                     type="date"
                     value={amendmentForm.new_effective_end_date}
-                    onChange={(e) => setAmendmentForm({ ...amendmentForm, new_effective_end_date: e.target.value })}
+                    onChange={(e) =>
+                      setAmendmentForm({
+                        ...amendmentForm,
+                        new_effective_end_date: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>

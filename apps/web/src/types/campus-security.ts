@@ -28,12 +28,7 @@ export type VisitorCategory =
   | "VIP";
 
 export type VisitorPassStatus =
-  | "ISSUED"
-  | "CHECKED_IN"
-  | "CHECKED_OUT"
-  | "OVERDUE"
-  | "REVOKED"
-  | "EXPIRED";
+  "ISSUED" | "CHECKED_IN" | "CHECKED_OUT" | "OVERDUE" | "REVOKED" | "EXPIRED";
 
 export type IncidentCategory =
   | "UNAUTHORIZED_ACCESS"
@@ -64,22 +59,21 @@ export type EmergencyEventType =
   | "HAZMAT_LEAK"
   | "NATURAL_DISASTER";
 
-export type EmergencySeverity = "ADVISORY" | "WARNING" | "EMERGENCY" | "CATASTROPHIC";
+export type EmergencySeverity =
+  "ADVISORY" | "WARNING" | "EMERGENCY" | "CATASTROPHIC";
 
 export type EmergencyStatus = "ACTIVE" | "CONTAINED" | "ALL_CLEAR" | "CLOSED";
 
 export type EmergencyTaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
-export type EmergencyTaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
+export type EmergencyTaskStatus =
+  "PENDING" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
 
 export type PatrolShift =
-  | "MORNING_SHIFT"
-  | "AFTERNOON_SHIFT"
-  | "NIGHT_SHIFT"
-  | "WEEKEND_SHIFT";
+  "MORNING_SHIFT" | "AFTERNOON_SHIFT" | "NIGHT_SHIFT" | "WEEKEND_SHIFT";
 
-export type PatrolRecordStatus = "COMPLETED" | "MISSED" | "DELAYED" | "EXCEPTION_NOTED";
-
+export type PatrolRecordStatus =
+  "COMPLETED" | "MISSED" | "DELAYED" | "EXCEPTION_NOTED";
 
 export interface SecurityCheckpoint {
   id: string;

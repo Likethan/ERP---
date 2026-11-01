@@ -35,12 +35,16 @@ export default function EngagementServiceHoursPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [selectedEntry, setSelectedEntry] = useState<ServiceHourEntry | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<ServiceHourEntry | null>(
+    null,
+  );
 
   // Log Hours Modal State
   const [isLogOpen, setIsLogOpen] = useState(false);
   const [progId, setProgId] = useState("");
-  const [activityDate, setActivityDate] = useState(new Date().toISOString().split("T")[0]);
+  const [activityDate, setActivityDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [duration, setDuration] = useState(3.5);
   const [description, setDescription] = useState("");
   const [beneficiaries, setBeneficiaries] = useState(15);
@@ -50,12 +54,16 @@ export default function EngagementServiceHoursPage() {
   // Verification Modal State
   const [isVerifyOpen, setIsVerifyOpen] = useState(false);
   const [verifyEntry, setVerifyEntry] = useState<ServiceHourEntry | null>(null);
-  const [verifyStatus, setVerifyStatus] = useState<"APPROVED" | "REJECTED" | "CORRECTION_REQUESTED">("APPROVED");
+  const [verifyStatus, setVerifyStatus] = useState<
+    "APPROVED" | "REJECTED" | "CORRECTION_REQUESTED"
+  >("APPROVED");
   const [supervisorComments, setSupervisorComments] = useState("");
 
   // Correction Modal State
   const [isCorrectOpen, setIsCorrectOpen] = useState(false);
-  const [correctEntry, setCorrectEntry] = useState<ServiceHourEntry | null>(null);
+  const [correctEntry, setCorrectEntry] = useState<ServiceHourEntry | null>(
+    null,
+  );
   const [newHours, setNewHours] = useState(4.0);
   const [reasonForChange, setReasonForChange] = useState("");
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -97,7 +105,9 @@ export default function EngagementServiceHoursPage() {
       };
 
       await EngagementService.submitServiceHours(input);
-      setActionMessage("Service hours logged successfully in PENDING review status.");
+      setActionMessage(
+        "Service hours logged successfully in PENDING review status.",
+      );
       setIsLogOpen(false);
       setDescription("");
       await loadData();
@@ -137,7 +147,9 @@ export default function EngagementServiceHoursPage() {
       };
 
       await EngagementService.correctServiceHours(correctEntry.id, input);
-      setActionMessage("Hours corrected and recorded in the audit history ledger.");
+      setActionMessage(
+        "Hours corrected and recorded in the audit history ledger.",
+      );
       setIsCorrectOpen(false);
       setReasonForChange("");
       await loadData();
@@ -148,9 +160,12 @@ export default function EngagementServiceHoursPage() {
 
   const filteredHours = hours.filter((h) => {
     const matchesSearch =
-      (h.student_name && h.student_name.toLowerCase().includes(search.toLowerCase())) ||
-      (h.activity_description && h.activity_description.toLowerCase().includes(search.toLowerCase())) ||
-      (h.supervisor_name && h.supervisor_name.toLowerCase().includes(search.toLowerCase()));
+      (h.student_name &&
+        h.student_name.toLowerCase().includes(search.toLowerCase())) ||
+      (h.activity_description &&
+        h.activity_description.toLowerCase().includes(search.toLowerCase())) ||
+      (h.supervisor_name &&
+        h.supervisor_name.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === "ALL" || h.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -164,7 +179,10 @@ export default function EngagementServiceHoursPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -178,7 +196,8 @@ export default function EngagementServiceHoursPage() {
               Service Hours, Verification & Audit Ledger
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Strict multi-tier review, attendance cross-check, and tamper-evident adjustments ledger
+              Strict multi-tier review, attendance cross-check, and
+              tamper-evident adjustments ledger
             </p>
           </div>
 
@@ -244,7 +263,9 @@ export default function EngagementServiceHoursPage() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-3 text-muted-foreground">{entry.activity_date}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {entry.activity_date}
+                    </td>
 
                     <td className="px-4 py-3 font-bold text-foreground">
                       <div className="flex items-center gap-1.5">
@@ -258,10 +279,13 @@ export default function EngagementServiceHoursPage() {
                     </td>
 
                     <td className="px-4 py-3 text-muted-foreground max-w-xs">
-                      <p className="truncate text-foreground">{entry.activity_description}</p>
+                      <p className="truncate text-foreground">
+                        {entry.activity_description}
+                      </p>
                       {entry.community_beneficiaries_served && (
                         <span className="text-[10px] text-muted-foreground">
-                          {entry.community_beneficiaries_served} community beneficiaries served
+                          {entry.community_beneficiaries_served} community
+                          beneficiaries served
                         </span>
                       )}
                     </td>
@@ -276,10 +300,10 @@ export default function EngagementServiceHoursPage() {
                           entry.status === "APPROVED"
                             ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                             : entry.status === "PENDING"
-                            ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                            : entry.status === "CORRECTION_REQUESTED"
-                            ? "bg-blue-500/10 text-blue-500 border border-blue-500/20"
-                            : "bg-red-500/10 text-red-500 border border-red-500/20"
+                              ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                              : entry.status === "CORRECTION_REQUESTED"
+                                ? "bg-blue-500/10 text-blue-500 border border-blue-500/20"
+                                : "bg-red-500/10 text-red-500 border border-red-500/20"
                         }`}
                       >
                         {entry.status}
@@ -329,13 +353,18 @@ export default function EngagementServiceHoursPage() {
                 <div className="flex items-center gap-2">
                   <History className="h-5 w-5 text-amber-500" />
                   <div>
-                    <h2 className="text-base font-bold text-foreground">Service-Hour Audit Ledger</h2>
+                    <h2 className="text-base font-bold text-foreground">
+                      Service-Hour Audit Ledger
+                    </h2>
                     <span className="text-[10px] text-muted-foreground">
                       ID: {selectedEntry.id}
                     </span>
                   </div>
                 </div>
-                <button onClick={() => setSelectedEntry(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setSelectedEntry(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -343,21 +372,37 @@ export default function EngagementServiceHoursPage() {
               <div className="space-y-3">
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-1.5">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Current Duration:</span>
-                    <span className="font-bold text-foreground">{selectedEntry.duration_hours} hours</span>
+                    <span className="text-muted-foreground">
+                      Current Duration:
+                    </span>
+                    <span className="font-bold text-foreground">
+                      {selectedEntry.duration_hours} hours
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Verification Status:</span>
-                    <span className="font-semibold text-emerald-500">{selectedEntry.status}</span>
+                    <span className="text-muted-foreground">
+                      Verification Status:
+                    </span>
+                    <span className="font-semibold text-emerald-500">
+                      {selectedEntry.status}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Activity Date:</span>
-                    <span className="text-foreground">{selectedEntry.activity_date}</span>
+                    <span className="text-muted-foreground">
+                      Activity Date:
+                    </span>
+                    <span className="text-foreground">
+                      {selectedEntry.activity_date}
+                    </span>
                   </div>
                   {selectedEntry.supervisor_comments && (
                     <div className="pt-1 border-t border-border">
-                      <span className="text-muted-foreground block text-[10px]">Supervisor Comments:</span>
-                      <p className="text-foreground italic">&ldquo;{selectedEntry.supervisor_comments}&rdquo;</p>
+                      <span className="text-muted-foreground block text-[10px]">
+                        Supervisor Comments:
+                      </span>
+                      <p className="text-foreground italic">
+                        &ldquo;{selectedEntry.supervisor_comments}&rdquo;
+                      </p>
                     </div>
                   )}
                 </div>
@@ -368,7 +413,8 @@ export default function EngagementServiceHoursPage() {
                     Historical Corrections & Adjustments
                   </h4>
 
-                  {selectedEntry.corrections && selectedEntry.corrections.length > 0 ? (
+                  {selectedEntry.corrections &&
+                  selectedEntry.corrections.length > 0 ? (
                     <div className="border border-border rounded-lg divide-y divide-border">
                       {selectedEntry.corrections.map((corr) => (
                         <div key={corr.id} className="p-3 space-y-1">
@@ -380,16 +426,20 @@ export default function EngagementServiceHoursPage() {
                               {new Date(corr.changed_at).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-muted-foreground italic">&ldquo;{corr.reason_for_change}&rdquo;</p>
+                          <p className="text-muted-foreground italic">
+                            &ldquo;{corr.reason_for_change}&rdquo;
+                          </p>
                           <span className="text-[10px] text-muted-foreground block">
-                            Logged by: {corr.changed_by_name || "Authorized Coordinator"}
+                            Logged by:{" "}
+                            {corr.changed_by_name || "Authorized Coordinator"}
                           </span>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-muted-foreground italic bg-muted/20 p-3 rounded-lg text-center">
-                      No manual corrections recorded. Original submission intact.
+                      No manual corrections recorded. Original submission
+                      intact.
                     </p>
                   )}
                 </div>
@@ -416,7 +466,10 @@ export default function EngagementServiceHoursPage() {
                   <UserCheck className="h-5 w-5 text-emerald-500" />
                   Verify Service Hours
                 </h2>
-                <button onClick={() => setIsVerifyOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsVerifyOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -425,29 +478,41 @@ export default function EngagementServiceHoursPage() {
                 <div className="p-3 rounded-lg bg-muted/30 border border-border space-y-1">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Student:</span>
-                    <span className="font-semibold text-foreground">{verifyEntry.student_name}</span>
+                    <span className="font-semibold text-foreground">
+                      {verifyEntry.student_name}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Submitted Duration:</span>
-                    <span className="font-bold text-foreground">{verifyEntry.duration_hours} hours</span>
+                    <span className="text-muted-foreground">
+                      Submitted Duration:
+                    </span>
+                    <span className="font-bold text-foreground">
+                      {verifyEntry.duration_hours} hours
+                    </span>
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Decision *</label>
+                  <label className="font-semibold text-foreground">
+                    Decision *
+                  </label>
                   <select
                     value={verifyStatus}
                     onChange={(e) => setVerifyStatus(e.target.value as any)}
                     className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground"
                   >
                     <option value="APPROVED">Approve and Credit Hours</option>
-                    <option value="CORRECTION_REQUESTED">Request Student Correction</option>
+                    <option value="CORRECTION_REQUESTED">
+                      Request Student Correction
+                    </option>
                     <option value="REJECTED">Reject Hours Submission</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Supervisor Evaluation Comments</label>
+                  <label className="font-semibold text-foreground">
+                    Supervisor Evaluation Comments
+                  </label>
                   <textarea
                     rows={3}
                     placeholder="Document qualitative feedback on field performance and civic engagement..."
@@ -486,7 +551,10 @@ export default function EngagementServiceHoursPage() {
                   <Edit3 className="h-5 w-5 text-amber-500" />
                   Adjust Service Hours (Audit Ledger)
                 </h2>
-                <button onClick={() => setIsCorrectOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsCorrectOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -495,13 +563,16 @@ export default function EngagementServiceHoursPage() {
                 <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
                   <span>
-                    Any adjustment to service hours is immutably recorded in the institutional audit ledger.
+                    Any adjustment to service hours is immutably recorded in the
+                    institutional audit ledger.
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-muted-foreground">Original Hours</label>
+                    <label className="font-semibold text-muted-foreground">
+                      Original Hours
+                    </label>
                     <input
                       type="text"
                       disabled
@@ -510,7 +581,9 @@ export default function EngagementServiceHoursPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Adjusted Hours *</label>
+                    <label className="font-semibold text-foreground">
+                      Adjusted Hours *
+                    </label>
                     <input
                       type="number"
                       step="0.25"
@@ -525,7 +598,9 @@ export default function EngagementServiceHoursPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Documented Reason for Adjustment *</label>
+                  <label className="font-semibold text-foreground">
+                    Documented Reason for Adjustment *
+                  </label>
                   <textarea
                     rows={3}
                     required
@@ -565,14 +640,19 @@ export default function EngagementServiceHoursPage() {
                   <PlusCircle className="h-5 w-5 text-primary" />
                   Log Volunteer Service Hours
                 </h2>
-                <button onClick={() => setIsLogOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsLogOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleLogHours} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Program *</label>
+                  <label className="font-semibold text-foreground">
+                    Program *
+                  </label>
                   <select
                     value={progId}
                     onChange={(e) => setProgId(e.target.value)}
@@ -589,7 +669,9 @@ export default function EngagementServiceHoursPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Activity Date *</label>
+                    <label className="font-semibold text-foreground">
+                      Activity Date *
+                    </label>
                     <input
                       type="date"
                       required
@@ -599,7 +681,9 @@ export default function EngagementServiceHoursPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Duration (Hours) *</label>
+                    <label className="font-semibold text-foreground">
+                      Duration (Hours) *
+                    </label>
                     <input
                       type="number"
                       step="0.25"
@@ -614,7 +698,9 @@ export default function EngagementServiceHoursPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Activity Description *</label>
+                  <label className="font-semibold text-foreground">
+                    Activity Description *
+                  </label>
                   <textarea
                     rows={3}
                     required
@@ -627,7 +713,9 @@ export default function EngagementServiceHoursPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Beneficiaries Served</label>
+                    <label className="font-semibold text-foreground">
+                      Beneficiaries Served
+                    </label>
                     <input
                       type="number"
                       min={0}
@@ -637,7 +725,9 @@ export default function EngagementServiceHoursPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="font-semibold text-foreground">Field Supervisor Name</label>
+                    <label className="font-semibold text-foreground">
+                      Field Supervisor Name
+                    </label>
                     <input
                       type="text"
                       placeholder="e.g. Dr. Ananya Roy"
@@ -671,4 +761,3 @@ export default function EngagementServiceHoursPage() {
     </div>
   );
 }
-

@@ -25,8 +25,12 @@ import {
 } from "lucide-react";
 
 export default function RestrictedCounsellingWorkspacePage() {
-  const [records, setRecords] = useState<ConfidentialCounsellingRecordItem[]>([]);
-  const [appointments, setAppointments] = useState<CounsellingAppointmentItem[]>([]);
+  const [records, setRecords] = useState<ConfidentialCounsellingRecordItem[]>(
+    [],
+  );
+  const [appointments, setAppointments] = useState<
+    CounsellingAppointmentItem[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -36,7 +40,8 @@ export default function RestrictedCounsellingWorkspacePage() {
   const [clinicalNotes, setClinicalNotes] = useState("");
   const [interventions, setInterventions] = useState("");
   const [consentVerified, setConsentVerified] = useState(true);
-  const [disclosePermittedSummary, setDisclosePermittedSummary] = useState(false);
+  const [disclosePermittedSummary, setDisclosePermittedSummary] =
+    useState(false);
   const [permittedSummary, setPermittedSummary] = useState("");
   const [followUpRecommended, setFollowUpRecommended] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
@@ -51,7 +56,9 @@ export default function RestrictedCounsellingWorkspacePage() {
     try {
       const [allRecords, appts] = await Promise.all([
         StudentSupportService.getConfidentialRecords(),
-        StudentSupportService.getCounsellingAppointments({ status: "COMPLETED" }),
+        StudentSupportService.getCounsellingAppointments({
+          status: "COMPLETED",
+        }),
       ]);
       setRecords(allRecords);
       setAppointments(appts);
@@ -60,7 +67,11 @@ export default function RestrictedCounsellingWorkspacePage() {
       }
     } catch (err: any) {
       console.error("Workspace access error:", err);
-      if (err?.status === 403 || err?.message?.includes("403") || err?.message?.includes("Forbidden")) {
+      if (
+        err?.status === 403 ||
+        err?.message?.includes("403") ||
+        err?.message?.includes("Forbidden")
+      ) {
         setPermissionDenied(true);
       }
     } finally {
@@ -81,18 +92,24 @@ export default function RestrictedCounsellingWorkspacePage() {
         interventions_applied: interventions,
         consent_verified: consentVerified,
         disclose_to_student: disclosePermittedSummary,
-        disclosed_summary: disclosePermittedSummary ? permittedSummary : undefined,
+        disclosed_summary: disclosePermittedSummary
+          ? permittedSummary
+          : undefined,
         follow_up_recommended: followUpRecommended,
       });
 
-      setNotification("Confidential clinical session record sealed and encrypted in audit store.");
+      setNotification(
+        "Confidential clinical session record sealed and encrypted in audit store.",
+      );
       setClinicalNotes("");
       setInterventions("");
       setPermittedSummary("");
       loadWorkspace();
     } catch (err) {
       console.error("Failed to save clinical record:", err);
-      alert("Error sealing confidential record. Ensure you have COUNSELLING_CONFIDENTIAL_WRITE authorization.");
+      alert(
+        "Error sealing confidential record. Ensure you have COUNSELLING_CONFIDENTIAL_WRITE authorization.",
+      );
     } finally {
       setSavingRecord(false);
     }
@@ -105,15 +122,23 @@ export default function RestrictedCounsellingWorkspacePage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Restricted Workspace", href: "/app/student-support/counselling/workspace" },
+            {
+              label: "Restricted Workspace",
+              href: "/app/student-support/counselling/workspace",
+            },
           ]}
         />
         <StudentSupportNav />
         <Card className="border-amber-900/50 bg-amber-950/20 p-8 text-center max-w-xl mx-auto space-y-4">
           <ShieldAlert className="h-12 w-12 text-amber-400 mx-auto" />
-          <h2 className="text-lg font-bold text-white">Confidential Clinical Boundary Enforced</h2>
+          <h2 className="text-lg font-bold text-white">
+            Confidential Clinical Boundary Enforced
+          </h2>
           <p className="text-xs text-slate-300">
-            Access to confidential counselling observations is strictly restricted to licensed counselling professionals and designated clinical staff. This record layer is isolated from institutional administration, HODs, faculty mentors, and academic transcripts.
+            Access to confidential counselling observations is strictly
+            restricted to licensed counselling professionals and designated
+            clinical staff. This record layer is isolated from institutional
+            administration, HODs, faculty mentors, and academic transcripts.
           </p>
           <div className="pt-2">
             <Button
@@ -136,7 +161,10 @@ export default function RestrictedCounsellingWorkspacePage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Restricted Workspace", href: "/app/student-support/counselling/workspace" },
+            {
+              label: "Restricted Workspace",
+              href: "/app/student-support/counselling/workspace",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -146,10 +174,14 @@ export default function RestrictedCounsellingWorkspacePage() {
               Restricted Counselling Clinical Workspace
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Protected clinical notes and observations. Strictly governed by professional counselling confidentiality protocols.
+              Protected clinical notes and observations. Strictly governed by
+              professional counselling confidentiality protocols.
             </p>
           </div>
-          <Badge variant="outline" className="border-amber-500/40 text-amber-400 bg-amber-500/10 text-xs px-3 py-1">
+          <Badge
+            variant="outline"
+            className="border-amber-500/40 text-amber-400 bg-amber-500/10 text-xs px-3 py-1"
+          >
             <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
             End-to-End Audited Workspace
           </Badge>
@@ -163,9 +195,14 @@ export default function RestrictedCounsellingWorkspacePage() {
         <div className="flex items-start gap-3">
           <EyeOff className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
           <div className="text-xs text-slate-300 space-y-1">
-            <span className="font-semibold text-white">CampusOS Mental Health Confidentiality Standard:</span>
+            <span className="font-semibold text-white">
+              CampusOS Mental Health Confidentiality Standard:
+            </span>
             <p>
-              Under institutional privacy regulations, entries written in this workspace cannot be viewed by faculty mentors, academic departments, or senior leadership. Automated psychological diagnoses and automated risk algorithms are strictly prohibited.
+              Under institutional privacy regulations, entries written in this
+              workspace cannot be viewed by faculty mentors, academic
+              departments, or senior leadership. Automated psychological
+              diagnoses and automated risk algorithms are strictly prohibited.
             </p>
           </div>
         </div>
@@ -177,7 +214,10 @@ export default function RestrictedCounsellingWorkspacePage() {
             <CheckCircle2 className="h-4 w-4" />
             {notification}
           </span>
-          <button onClick={() => setNotification(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setNotification(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -192,12 +232,20 @@ export default function RestrictedCounsellingWorkspacePage() {
                 <FileText className="h-4 w-4 text-indigo-400" />
                 Record Clinical Observations
               </h2>
-              <p className="text-xs text-slate-400">Document session interventions, coping strategies, and follow-up guidance</p>
+              <p className="text-xs text-slate-400">
+                Document session interventions, coping strategies, and follow-up
+                guidance
+              </p>
             </div>
 
-            <form onSubmit={handleSaveClinicalRecord} className="space-y-4 text-xs">
+            <form
+              onSubmit={handleSaveClinicalRecord}
+              className="space-y-4 text-xs"
+            >
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Associated Appointment *</label>
+                <label className="text-slate-400 font-medium">
+                  Associated Appointment *
+                </label>
                 {appointments.length > 0 ? (
                   <select
                     required
@@ -207,7 +255,12 @@ export default function RestrictedCounsellingWorkspacePage() {
                   >
                     {appointments.map((a) => (
                       <option key={a.id} value={a.id}>
-                        {a.appointment_number || a.id} - {a.student_id || a.studentId} ({String(a.category).replace("_", " ")}) - {new Date(a.scheduled_start || a.appointmentDate || "").toLocaleDateString()}
+                        {a.appointment_number || a.id} -{" "}
+                        {a.student_id || a.studentId} (
+                        {String(a.category).replace("_", " ")}) -{" "}
+                        {new Date(
+                          a.scheduled_start || a.appointmentDate || "",
+                        ).toLocaleDateString()}
                       </option>
                     ))}
                   </select>
@@ -219,7 +272,9 @@ export default function RestrictedCounsellingWorkspacePage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Session Observations & Progress *</label>
+                <label className="text-slate-400 font-medium">
+                  Session Observations & Progress *
+                </label>
                 <Textarea
                   required
                   placeholder="Record confidential practitioner observations, student affect, and session themes..."
@@ -231,7 +286,9 @@ export default function RestrictedCounsellingWorkspacePage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Therapeutic Interventions Applied</label>
+                <label className="text-slate-400 font-medium">
+                  Therapeutic Interventions Applied
+                </label>
                 <Textarea
                   placeholder="e.g. Cognitive reframing, sleep hygiene review, academic pacing schedule..."
                   value={interventions}
@@ -251,7 +308,8 @@ export default function RestrictedCounsellingWorkspacePage() {
                     className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0"
                   />
                   <span className="text-slate-300">
-                    Student informed consent and privacy parameters verified for this session
+                    Student informed consent and privacy parameters verified for
+                    this session
                   </span>
                 </label>
 
@@ -259,11 +317,14 @@ export default function RestrictedCounsellingWorkspacePage() {
                   <input
                     type="checkbox"
                     checked={disclosePermittedSummary}
-                    onChange={(e) => setDisclosePermittedSummary(e.target.checked)}
+                    onChange={(e) =>
+                      setDisclosePermittedSummary(e.target.checked)
+                    }
                     className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0"
                   />
                   <span className="text-slate-300">
-                    Provide privacy-safe takeaway summary to student (non-clinical)
+                    Provide privacy-safe takeaway summary to student
+                    (non-clinical)
                   </span>
                 </label>
 
@@ -294,11 +355,15 @@ export default function RestrictedCounsellingWorkspacePage() {
 
               <Button
                 type="submit"
-                disabled={savingRecord || !selectedApptId || !clinicalNotes.trim()}
+                disabled={
+                  savingRecord || !selectedApptId || !clinicalNotes.trim()
+                }
                 className="bg-amber-600 hover:bg-amber-700 text-xs text-white"
               >
                 <Lock className="mr-1.5 h-3.5 w-3.5" />
-                {savingRecord ? "Sealing Record..." : "Seal & Encrypt Clinical Record"}
+                {savingRecord
+                  ? "Sealing Record..."
+                  : "Seal & Encrypt Clinical Record"}
               </Button>
             </form>
           </Card>
@@ -312,13 +377,19 @@ export default function RestrictedCounsellingWorkspacePage() {
                 <History className="h-4 w-4 text-indigo-400" />
                 Sealed Clinical History
               </h2>
-              <span className="text-[11px] text-slate-500">{records.length} Records</span>
+              <span className="text-[11px] text-slate-500">
+                {records.length} Records
+              </span>
             </div>
 
             {loading ? (
-              <div className="py-6 text-center text-xs text-slate-500">Loading audit log...</div>
+              <div className="py-6 text-center text-xs text-slate-500">
+                Loading audit log...
+              </div>
             ) : records.length === 0 ? (
-              <div className="py-6 text-center text-xs text-slate-500">No sealed records found in this vault.</div>
+              <div className="py-6 text-center text-xs text-slate-500">
+                No sealed records found in this vault.
+              </div>
             ) : (
               <div className="space-y-3">
                 {records.map((rec) => (
@@ -327,18 +398,30 @@ export default function RestrictedCounsellingWorkspacePage() {
                     className="p-3 rounded-lg border border-slate-800 bg-slate-950/60 space-y-2 text-xs"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-slate-200">Ref: {rec.id.slice(0, 8)}...</span>
+                      <span className="font-semibold text-slate-200">
+                        Ref: {rec.id.slice(0, 8)}...
+                      </span>
                       <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-800/30">
                         Encrypted
                       </span>
                     </div>
                     <div className="text-[11px] text-slate-400">
                       <div>Student Ref: {rec.student_id || rec.studentId}</div>
-                      <div>Sealed At: {new Date(rec.recorded_at || rec.createdAt || "").toLocaleDateString()}</div>
-                      <div>Counsellor: {rec.counsellor_staff_id || rec.counsellorUserId}</div>
+                      <div>
+                        Sealed At:{" "}
+                        {new Date(
+                          rec.recorded_at || rec.createdAt || "",
+                        ).toLocaleDateString()}
+                      </div>
+                      <div>
+                        Counsellor:{" "}
+                        {rec.counsellor_staff_id || rec.counsellorUserId}
+                      </div>
                     </div>
                     <div className="pt-1 text-[11px] text-slate-500 italic">
-                      {rec.follow_up_recommended ? "• Follow-up flagged" : "• Routine completion"}
+                      {rec.follow_up_recommended
+                        ? "• Follow-up flagged"
+                        : "• Routine completion"}
                       {rec.consent_verified && " • Consent logged"}
                     </div>
                   </div>

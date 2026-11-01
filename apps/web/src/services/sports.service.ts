@@ -71,7 +71,9 @@ import {
 const departmentsState: SportsDepartmentItem[] = [...MOCK_SPORTS_DEPARTMENTS];
 const facilitiesState: SportsFacilityItem[] = [...MOCK_SPORTS_FACILITIES];
 const bookingsState: FacilityBookingItem[] = [...MOCK_FACILITY_BOOKINGS];
-const participantsState: SportsParticipantItem[] = [...MOCK_SPORTS_PARTICIPANTS];
+const participantsState: SportsParticipantItem[] = [
+  ...MOCK_SPORTS_PARTICIPANTS,
+];
 const teamsState: SportsTeamItem[] = [...MOCK_SPORTS_TEAMS];
 const rosterState: TeamRosterMemberItem[] = [...MOCK_ROSTER_MEMBERS];
 const coachingState: CoachingAssignmentItem[] = [...MOCK_COACHING_ASSIGNMENTS];
@@ -79,11 +81,19 @@ const programsState: TrainingProgramItem[] = [...MOCK_TRAINING_PROGRAMS];
 const sessionsState: TrainingSessionItem[] = [...MOCK_TRAINING_SESSIONS];
 const attendanceState: TrainingAttendanceItem[] = [...MOCK_TRAINING_ATTENDANCE];
 const competitionsState: SportsCompetitionItem[] = [...MOCK_COMPETITIONS];
-const registrationsState: CompetitionRegistrationItem[] = [...MOCK_COMPETITION_REGISTRATIONS];
+const registrationsState: CompetitionRegistrationItem[] = [
+  ...MOCK_COMPETITION_REGISTRATIONS,
+];
 const fixturesState: MatchFixtureItem[] = [...MOCK_MATCH_FIXTURES];
-const standingsState: CompetitionStandingItem[] = [...MOCK_COMPETITION_STANDINGS];
-const achievementsState: SportsAchievementItem[] = [...MOCK_SPORTS_ACHIEVEMENTS];
-const equipmentState: SportsEquipmentAssignmentItem[] = [...MOCK_EQUIPMENT_ASSIGNMENTS];
+const standingsState: CompetitionStandingItem[] = [
+  ...MOCK_COMPETITION_STANDINGS,
+];
+const achievementsState: SportsAchievementItem[] = [
+  ...MOCK_SPORTS_ACHIEVEMENTS,
+];
+const equipmentState: SportsEquipmentAssignmentItem[] = [
+  ...MOCK_EQUIPMENT_ASSIGNMENTS,
+];
 const feesState: SportsFeeItem[] = [...MOCK_SPORTS_FEES];
 
 class SportsService {
@@ -91,7 +101,9 @@ class SportsService {
   // 1. DASHBOARD & OVERVIEW
   // =========================================================================
 
-  async getSportsDashboard(campusId?: string): Promise<ApiResponse<SportsDashboardData>> {
+  async getSportsDashboard(
+    campusId?: string,
+  ): Promise<ApiResponse<SportsDashboardData>> {
     const qs = campusId && campusId !== "ALL" ? `?campus_id=${campusId}` : "";
     try {
       const res = await apiFetch<any>(`/api/v1/sports/dashboard${qs}`);
@@ -102,22 +114,43 @@ class SportsService {
           data: {
             totalDepartments: d.total_departments ?? departmentsState.length,
             totalFacilities: d.total_facilities ?? facilitiesState.length,
-            facilitiesAvailable: d.facilities_available ?? facilitiesState.filter(f => f.status === "AVAILABLE").length,
-            facilitiesMaintenance: d.facilities_maintenance ?? facilitiesState.filter(f => f.status === "MAINTENANCE_CLOSED").length,
+            facilitiesAvailable:
+              d.facilities_available ??
+              facilitiesState.filter((f) => f.status === "AVAILABLE").length,
+            facilitiesMaintenance:
+              d.facilities_maintenance ??
+              facilitiesState.filter((f) => f.status === "MAINTENANCE_CLOSED")
+                .length,
             totalParticipants: d.total_participants ?? participantsState.length,
-            participantsCleared: d.participants_cleared ?? participantsState.filter(p => p.clearanceStatus === "CLEARED").length,
+            participantsCleared:
+              d.participants_cleared ??
+              participantsState.filter((p) => p.clearanceStatus === "CLEARED")
+                .length,
             clearanceComplianceRate: d.clearance_compliance_rate ?? 91.9,
             totalTeams: d.total_teams ?? teamsState.length,
-            activeTournaments: d.active_tournaments ?? competitionsState.filter(c => c.status === "IN_PROGRESS").length,
-            matchesScheduledToday: d.matches_scheduled_today ?? fixturesState.length,
-            equipmentItemsCheckedOut: d.equipment_items_checked_out ?? equipmentState.filter(e => e.status === "ISSUED").length,
-            equipmentOverdueCount: d.equipment_overdue_count ?? equipmentState.filter(e => e.status === "OVERDUE").length,
-            upcomingTrainingSessionsCount: d.upcoming_training_sessions_count ?? sessionsState.length,
+            activeTournaments:
+              d.active_tournaments ??
+              competitionsState.filter((c) => c.status === "IN_PROGRESS")
+                .length,
+            matchesScheduledToday:
+              d.matches_scheduled_today ?? fixturesState.length,
+            equipmentItemsCheckedOut:
+              d.equipment_items_checked_out ??
+              equipmentState.filter((e) => e.status === "ISSUED").length,
+            equipmentOverdueCount:
+              d.equipment_overdue_count ??
+              equipmentState.filter((e) => e.status === "OVERDUE").length,
+            upcomingTrainingSessionsCount:
+              d.upcoming_training_sessions_count ?? sessionsState.length,
             todayFixtures: fixturesState.slice(0, 4),
             upcomingTrainingSessions: sessionsState.slice(0, 4),
             activeTournamentsList: competitionsState,
-            overdueEquipmentList: equipmentState.filter(e => e.status === "OVERDUE"),
-            facilitiesInMaintenanceList: facilitiesState.filter(f => f.status === "MAINTENANCE_CLOSED"),
+            overdueEquipmentList: equipmentState.filter(
+              (e) => e.status === "OVERDUE",
+            ),
+            facilitiesInMaintenanceList: facilitiesState.filter(
+              (f) => f.status === "MAINTENANCE_CLOSED",
+            ),
           },
         };
       }
@@ -125,9 +158,15 @@ class SportsService {
       // Fallback to local state
     }
 
-    const availableFac = facilitiesState.filter(f => f.status === "AVAILABLE").length;
-    const maintFac = facilitiesState.filter(f => f.status === "MAINTENANCE_CLOSED").length;
-    const clearedPart = participantsState.filter(p => p.clearanceStatus === "CLEARED").length;
+    const availableFac = facilitiesState.filter(
+      (f) => f.status === "AVAILABLE",
+    ).length;
+    const maintFac = facilitiesState.filter(
+      (f) => f.status === "MAINTENANCE_CLOSED",
+    ).length;
+    const clearedPart = participantsState.filter(
+      (p) => p.clearanceStatus === "CLEARED",
+    ).length;
 
     return {
       success: true,
@@ -139,13 +178,19 @@ class SportsService {
         facilitiesMaintenance: maintFac,
         totalParticipants: participantsState.length,
         participantsCleared: clearedPart,
-        clearanceComplianceRate: participantsState.length ? Number(((clearedPart / participantsState.length) * 100).toFixed(1)) : 100,
+        clearanceComplianceRate: participantsState.length
+          ? Number(((clearedPart / participantsState.length) * 100).toFixed(1))
+          : 100,
         totalTeams: teamsState.length,
         todayFixtures: fixturesState.slice(0, 4),
         upcomingTrainingSessions: sessionsState.slice(0, 4),
         activeTournamentsList: competitionsState,
-        overdueEquipmentList: equipmentState.filter(e => e.status === "OVERDUE"),
-        facilitiesInMaintenanceList: facilitiesState.filter(f => f.status === "MAINTENANCE_CLOSED"),
+        overdueEquipmentList: equipmentState.filter(
+          (e) => e.status === "OVERDUE",
+        ),
+        facilitiesInMaintenanceList: facilitiesState.filter(
+          (f) => f.status === "MAINTENANCE_CLOSED",
+        ),
       },
     };
   }
@@ -154,14 +199,16 @@ class SportsService {
   // 2. SPORTS DEPARTMENTS
   // =========================================================================
 
-  async listDepartments(campusId?: string): Promise<ApiResponse<SportsDepartmentItem[]>> {
+  async listDepartments(
+    campusId?: string,
+  ): Promise<ApiResponse<SportsDepartmentItem[]>> {
     const qs = campusId && campusId !== "ALL" ? `?campus_id=${campusId}` : "";
     try {
       const res = await apiFetch<any[]>(`/api/v1/sports/departments${qs}`);
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(d => ({
+          data: res.data.map((d) => ({
             id: d.id,
             code: d.code,
             name: d.name,
@@ -179,12 +226,14 @@ class SportsService {
 
     let list = [...departmentsState];
     if (campusId && campusId !== "ALL") {
-      list = list.filter(d => d.campusId === campusId);
+      list = list.filter((d) => d.campusId === campusId);
     }
     return { success: true, data: list };
   }
 
-  async createDepartment(data: Partial<SportsDepartmentItem>): Promise<ApiResponse<SportsDepartmentItem>> {
+  async createDepartment(
+    data: Partial<SportsDepartmentItem>,
+  ): Promise<ApiResponse<SportsDepartmentItem>> {
     try {
       const res = await apiFetch<any>("/api/v1/sports/departments", {
         method: "POST",
@@ -236,8 +285,11 @@ class SportsService {
     return { success: true, data: newItem };
   }
 
-  async updateDepartment(id: string, data: Partial<SportsDepartmentItem>): Promise<ApiResponse<SportsDepartmentItem>> {
-    const idx = departmentsState.findIndex(d => d.id === id);
+  async updateDepartment(
+    id: string,
+    data: Partial<SportsDepartmentItem>,
+  ): Promise<ApiResponse<SportsDepartmentItem>> {
+    const idx = departmentsState.findIndex((d) => d.id === id);
     if (idx !== -1) {
       departmentsState[idx] = { ...departmentsState[idx], ...data };
       return { success: true, data: departmentsState[idx] };
@@ -249,10 +301,14 @@ class SportsService {
   // 3. SPORTS FACILITIES & COURTS
   // =========================================================================
 
-  async listFacilities(campusId?: string, facilityType?: string): Promise<ApiResponse<SportsFacilityItem[]>> {
+  async listFacilities(
+    campusId?: string,
+    facilityType?: string,
+  ): Promise<ApiResponse<SportsFacilityItem[]>> {
     const params = new URLSearchParams();
     if (campusId && campusId !== "ALL") params.append("campus_id", campusId);
-    if (facilityType && facilityType !== "ALL") params.append("facility_type", facilityType);
+    if (facilityType && facilityType !== "ALL")
+      params.append("facility_type", facilityType);
     const qs = params.toString() ? `?${params.toString()}` : "";
 
     try {
@@ -260,7 +316,7 @@ class SportsService {
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(f => ({
+          data: res.data.map((f) => ({
             id: f.id,
             code: f.code,
             name: f.name,
@@ -282,12 +338,16 @@ class SportsService {
     } catch {}
 
     let list = [...facilitiesState];
-    if (campusId && campusId !== "ALL") list = list.filter(f => f.campusId === campusId);
-    if (facilityType && facilityType !== "ALL") list = list.filter(f => f.facilityType === facilityType);
+    if (campusId && campusId !== "ALL")
+      list = list.filter((f) => f.campusId === campusId);
+    if (facilityType && facilityType !== "ALL")
+      list = list.filter((f) => f.facilityType === facilityType);
     return { success: true, data: list };
   }
 
-  async createFacility(data: Partial<SportsFacilityItem>): Promise<ApiResponse<SportsFacilityItem>> {
+  async createFacility(
+    data: Partial<SportsFacilityItem>,
+  ): Promise<ApiResponse<SportsFacilityItem>> {
     try {
       const res = await apiFetch<any>("/api/v1/sports/facilities", {
         method: "POST",
@@ -346,17 +406,26 @@ class SportsService {
     return { success: true, data: newItem };
   }
 
-  async setFacilityMaintenance(id: string, isMaintenance: boolean, notes?: string): Promise<ApiResponse<SportsFacilityItem>> {
-    const idx = facilitiesState.findIndex(f => f.id === id);
+  async setFacilityMaintenance(
+    id: string,
+    isMaintenance: boolean,
+    notes?: string,
+  ): Promise<ApiResponse<SportsFacilityItem>> {
+    const idx = facilitiesState.findIndex((f) => f.id === id);
     if (idx !== -1) {
-      facilitiesState[idx].status = isMaintenance ? "MAINTENANCE_CLOSED" : "AVAILABLE";
+      facilitiesState[idx].status = isMaintenance
+        ? "MAINTENANCE_CLOSED"
+        : "AVAILABLE";
       if (notes) facilitiesState[idx].maintenanceNotes = notes;
       return { success: true, data: facilitiesState[idx] };
     }
     return { success: false, data: {} as any, error: "Facility not found" };
   }
 
-  async closeFacilityForMaintenance(id: string, notes?: string): Promise<ApiResponse<SportsFacilityItem>> {
+  async closeFacilityForMaintenance(
+    id: string,
+    notes?: string,
+  ): Promise<ApiResponse<SportsFacilityItem>> {
     return this.setFacilityMaintenance(id, true, notes);
   }
 
@@ -368,21 +437,28 @@ class SportsService {
   // 4. FACILITY BOOKINGS & AVAILABILITY
   // =========================================================================
 
-  async listBookings(facilityId?: string, date?: string): Promise<ApiResponse<FacilityBookingItem[]>> {
+  async listBookings(
+    facilityId?: string,
+    date?: string,
+  ): Promise<ApiResponse<FacilityBookingItem[]>> {
     const params = new URLSearchParams();
     if (facilityId) params.append("facility_id", facilityId);
     if (date) params.append("booking_date", date);
     const qs = params.toString() ? `?${params.toString()}` : "";
 
     try {
-      const res = await apiFetch<any[]>(`/api/v1/sports/facility-bookings${qs}`);
+      const res = await apiFetch<any[]>(
+        `/api/v1/sports/facility-bookings${qs}`,
+      );
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(b => ({
+          data: res.data.map((b) => ({
             id: b.id,
             facilityId: b.facility_id,
-            facilityName: facilitiesState.find(f => f.id === b.facility_id)?.name || "Facility",
+            facilityName:
+              facilitiesState.find((f) => f.id === b.facility_id)?.name ||
+              "Facility",
             title: b.title,
             purpose: b.purpose,
             bookingDate: b.booking_date,
@@ -400,15 +476,22 @@ class SportsService {
     } catch {}
 
     let list = [...bookingsState];
-    if (facilityId && facilityId !== "ALL") list = list.filter(b => b.facilityId === facilityId);
-    if (date) list = list.filter(b => b.bookingDate === date);
+    if (facilityId && facilityId !== "ALL")
+      list = list.filter((b) => b.facilityId === facilityId);
+    if (date) list = list.filter((b) => b.bookingDate === date);
     return { success: true, data: list };
   }
 
-  async createBooking(data: Partial<FacilityBookingItem>): Promise<ApiResponse<FacilityBookingItem>> {
+  async createBooking(
+    data: Partial<FacilityBookingItem>,
+  ): Promise<ApiResponse<FacilityBookingItem>> {
     // 1. Check for facility maintenance closure
-    const facility = facilitiesState.find(f => f.id === data.facilityId);
-    if (facility && facility.status === "MAINTENANCE_CLOSED" && data.purpose !== "MAINTENANCE") {
+    const facility = facilitiesState.find((f) => f.id === data.facilityId);
+    if (
+      facility &&
+      facility.status === "MAINTENANCE_CLOSED" &&
+      data.purpose !== "MAINTENANCE"
+    ) {
       return {
         success: false,
         data: {} as any,
@@ -418,7 +501,7 @@ class SportsService {
 
     // 2. Client-side conflict detection
     const conflict = detectFacilityBookingConflict(
-      bookingsState.map(b => ({
+      bookingsState.map((b) => ({
         id: b.id,
         facilityId: b.facilityId,
         bookingDate: b.bookingDate,
@@ -431,14 +514,16 @@ class SportsService {
         bookingDate: data.bookingDate!,
         startTime: data.startTime!,
         endTime: data.endTime!,
-      }
+      },
     );
 
     if (conflict.hasConflict) {
       return {
         success: false,
         data: {} as any,
-        error: conflict.message || "Overlapping booking detected for this facility and time window.",
+        error:
+          conflict.message ||
+          "Overlapping booking detected for this facility and time window.",
       };
     }
 
@@ -504,11 +589,16 @@ class SportsService {
     return { success: true, data: newBooking };
   }
 
-  async cancelBooking(id: string, reason?: string): Promise<ApiResponse<FacilityBookingItem>> {
-    const idx = bookingsState.findIndex(b => b.id === id);
+  async cancelBooking(
+    id: string,
+    reason?: string,
+  ): Promise<ApiResponse<FacilityBookingItem>> {
+    const idx = bookingsState.findIndex((b) => b.id === id);
     if (idx !== -1) {
       bookingsState[idx].status = "CANCELLED";
-      if (reason) bookingsState[idx].notes = `${bookingsState[idx].notes || ""} [Cancelled: ${reason}]`;
+      if (reason)
+        bookingsState[idx].notes =
+          `${bookingsState[idx].notes || ""} [Cancelled: ${reason}]`;
       return { success: true, data: bookingsState[idx] };
     }
     return { success: false, data: {} as any, error: "Booking not found" };
@@ -518,10 +608,14 @@ class SportsService {
   // 5. PARTICIPANTS & ATHLETIC PROFILES
   // =========================================================================
 
-  async listParticipants(sport?: string, clearanceStatus?: string): Promise<ApiResponse<SportsParticipantItem[]>> {
+  async listParticipants(
+    sport?: string,
+    clearanceStatus?: string,
+  ): Promise<ApiResponse<SportsParticipantItem[]>> {
     const params = new URLSearchParams();
     if (sport && sport !== "ALL") params.append("sport", sport);
-    if (clearanceStatus && clearanceStatus !== "ALL") params.append("clearance_status", clearanceStatus);
+    if (clearanceStatus && clearanceStatus !== "ALL")
+      params.append("clearance_status", clearanceStatus);
     const qs = params.toString() ? `?${params.toString()}` : "";
 
     try {
@@ -529,7 +623,7 @@ class SportsService {
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(p => ({
+          data: res.data.map((p) => ({
             id: p.id,
             userId: p.user_id,
             userName: p.user_name || "Athlete",
@@ -551,12 +645,18 @@ class SportsService {
     } catch {}
 
     let list = [...participantsState];
-    if (sport && sport !== "ALL") list = list.filter(p => p.primarySport.toLowerCase() === sport.toLowerCase());
-    if (clearanceStatus && clearanceStatus !== "ALL") list = list.filter(p => p.clearanceStatus === clearanceStatus);
+    if (sport && sport !== "ALL")
+      list = list.filter(
+        (p) => p.primarySport.toLowerCase() === sport.toLowerCase(),
+      );
+    if (clearanceStatus && clearanceStatus !== "ALL")
+      list = list.filter((p) => p.clearanceStatus === clearanceStatus);
     return { success: true, data: list };
   }
 
-  async createParticipant(data: Partial<SportsParticipantItem>): Promise<ApiResponse<SportsParticipantItem>> {
+  async createParticipant(
+    data: Partial<SportsParticipantItem>,
+  ): Promise<ApiResponse<SportsParticipantItem>> {
     try {
       const res = await apiFetch<any>("/api/v1/sports/participants", {
         method: "POST",
@@ -602,7 +702,9 @@ class SportsService {
       userName: data.userName || "Student Athlete",
       userEmail: data.userEmail || "athlete@campusos.edu",
       department: data.department || "Athletics",
-      participantCode: data.participantCode || `ATH-2026-${Math.floor(100 + Math.random() * 900)}`,
+      participantCode:
+        data.participantCode ||
+        `ATH-2026-${Math.floor(100 + Math.random() * 900)}`,
       primarySport: data.primarySport || "Basketball",
       status: data.status || "ACTIVE",
       clearanceStatus: data.clearanceStatus || "CLEARED",
@@ -622,12 +724,13 @@ class SportsService {
   async updateParticipantClearance(
     id: string,
     status: string,
-    restrictions?: Record<string, any>
+    restrictions?: Record<string, any>,
   ): Promise<ApiResponse<SportsParticipantItem>> {
-    const idx = participantsState.findIndex(p => p.id === id);
+    const idx = participantsState.findIndex((p) => p.id === id);
     if (idx !== -1) {
       participantsState[idx].clearanceStatus = status;
-      if (restrictions) participantsState[idx].operationalRestrictions = restrictions;
+      if (restrictions)
+        participantsState[idx].operationalRestrictions = restrictions;
       return { success: true, data: participantsState[idx] };
     }
     return { success: false, data: {} as any, error: "Participant not found" };
@@ -637,7 +740,10 @@ class SportsService {
   // 6. TEAMS & ROSTERS
   // =========================================================================
 
-  async listTeams(sport?: string, category?: string): Promise<ApiResponse<SportsTeamItem[]>> {
+  async listTeams(
+    sport?: string,
+    category?: string,
+  ): Promise<ApiResponse<SportsTeamItem[]>> {
     const params = new URLSearchParams();
     if (sport && sport !== "ALL") params.append("sport", sport);
     if (category && category !== "ALL") params.append("category", category);
@@ -648,7 +754,7 @@ class SportsService {
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(t => ({
+          data: res.data.map((t) => ({
             id: t.id,
             code: t.code,
             name: t.name,
@@ -671,12 +777,16 @@ class SportsService {
     } catch {}
 
     let list = [...teamsState];
-    if (sport && sport !== "ALL") list = list.filter(t => t.sport.toLowerCase() === sport.toLowerCase());
-    if (category && category !== "ALL") list = list.filter(t => t.category === category);
+    if (sport && sport !== "ALL")
+      list = list.filter((t) => t.sport.toLowerCase() === sport.toLowerCase());
+    if (category && category !== "ALL")
+      list = list.filter((t) => t.category === category);
     return { success: true, data: list };
   }
 
-  async createTeam(data: Partial<SportsTeamItem>): Promise<ApiResponse<SportsTeamItem>> {
+  async createTeam(
+    data: Partial<SportsTeamItem>,
+  ): Promise<ApiResponse<SportsTeamItem>> {
     try {
       const res = await apiFetch<any>("/api/v1/sports/teams", {
         method: "POST",
@@ -737,13 +847,17 @@ class SportsService {
     return { success: true, data: newTeam };
   }
 
-  async getTeamRoster(teamId: string): Promise<ApiResponse<TeamRosterMemberItem[]>> {
+  async getTeamRoster(
+    teamId: string,
+  ): Promise<ApiResponse<TeamRosterMemberItem[]>> {
     try {
-      const res = await apiFetch<any[]>(`/api/v1/sports/teams/${teamId}/roster`);
+      const res = await apiFetch<any[]>(
+        `/api/v1/sports/teams/${teamId}/roster`,
+      );
       if (res.success && res.data) {
         return {
           success: true,
-          data: res.data.map(m => ({
+          data: res.data.map((m) => ({
             id: m.id,
             teamId: m.team_id,
             participantId: m.participant_id,
@@ -762,14 +876,21 @@ class SportsService {
 
     return {
       success: true,
-      data: rosterState.filter(m => m.teamId === teamId && m.status === "ACTIVE"),
+      data: rosterState.filter(
+        (m) => m.teamId === teamId && m.status === "ACTIVE",
+      ),
     };
   }
 
-  async addTeamMember(teamId: string, data: Partial<TeamRosterMemberItem>): Promise<ApiResponse<TeamRosterMemberItem>> {
+  async addTeamMember(
+    teamId: string,
+    data: Partial<TeamRosterMemberItem>,
+  ): Promise<ApiResponse<TeamRosterMemberItem>> {
     // Check max roster limit
-    const team = teamsState.find(t => t.id === teamId);
-    const currentCount = rosterState.filter(m => m.teamId === teamId && m.status === "ACTIVE").length;
+    const team = teamsState.find((t) => t.id === teamId);
+    const currentCount = rosterState.filter(
+      (m) => m.teamId === teamId && m.status === "ACTIVE",
+    ).length;
     if (team && currentCount >= team.maxRosterSize) {
       return {
         success: false,
@@ -779,7 +900,9 @@ class SportsService {
     }
 
     // Check participant clearance for Varsity teams
-    const participant = participantsState.find(p => p.id === data.participantId);
+    const participant = participantsState.find(
+      (p) => p.id === data.participantId,
+    );
     if (team?.category === "VARSITY" && participant) {
       if (!["CLEARED", "RESTRICTED"].includes(participant.clearanceStatus)) {
         return {
@@ -841,13 +964,18 @@ class SportsService {
   // 7. COACHES & OFFICIALS
   // =========================================================================
 
-  async listCoachingAssignments(teamId?: string): Promise<ApiResponse<CoachingAssignmentItem[]>> {
+  async listCoachingAssignments(
+    teamId?: string,
+  ): Promise<ApiResponse<CoachingAssignmentItem[]>> {
     let list = [...coachingState];
-    if (teamId && teamId !== "ALL") list = list.filter(c => c.teamId === teamId);
+    if (teamId && teamId !== "ALL")
+      list = list.filter((c) => c.teamId === teamId);
     return { success: true, data: list };
   }
 
-  async assignCoach(data: Partial<CoachingAssignmentItem>): Promise<ApiResponse<CoachingAssignmentItem>> {
+  async assignCoach(
+    data: Partial<CoachingAssignmentItem>,
+  ): Promise<ApiResponse<CoachingAssignmentItem>> {
     const newItem: CoachingAssignmentItem = {
       id: `coach-asgn-${Date.now()}`,
       coachUserId: data.coachUserId || `coach-${Date.now()}`,
@@ -856,7 +984,8 @@ class SportsService {
       teamName: data.teamName,
       sport: data.sport || "Basketball",
       role: data.role || "HEAD_COACH",
-      certificationLevel: data.certificationLevel || "Certified University Coach",
+      certificationLevel:
+        data.certificationLevel || "Certified University Coach",
       isPrimary: data.isPrimary ?? true,
       startDate: data.startDate || new Date().toISOString().split("T")[0],
       status: "ACTIVE",
@@ -869,13 +998,18 @@ class SportsService {
   // 8. TRAINING PROGRAMS & ATTENDANCE
   // =========================================================================
 
-  async listTrainingPrograms(sport?: string): Promise<ApiResponse<TrainingProgramItem[]>> {
+  async listTrainingPrograms(
+    sport?: string,
+  ): Promise<ApiResponse<TrainingProgramItem[]>> {
     let list = [...programsState];
-    if (sport && sport !== "ALL") list = list.filter(p => p.sport.toLowerCase() === sport.toLowerCase());
+    if (sport && sport !== "ALL")
+      list = list.filter((p) => p.sport.toLowerCase() === sport.toLowerCase());
     return { success: true, data: list };
   }
 
-  async createTrainingProgram(data: Partial<TrainingProgramItem>): Promise<ApiResponse<TrainingProgramItem>> {
+  async createTrainingProgram(
+    data: Partial<TrainingProgramItem>,
+  ): Promise<ApiResponse<TrainingProgramItem>> {
     const newProg: TrainingProgramItem = {
       id: `prog-${Date.now()}`,
       code: data.code || `PROG-${Math.floor(100 + Math.random() * 900)}`,
@@ -885,11 +1019,15 @@ class SportsService {
       leadCoachUserId: data.leadCoachUserId,
       leadCoachName: data.leadCoachName || "Lead Coach",
       facilityId: data.facilityId,
-      facilityName: facilitiesState.find(f => f.id === data.facilityId)?.name || "Facility",
+      facilityName:
+        facilitiesState.find((f) => f.id === data.facilityId)?.name ||
+        "Facility",
       capacity: data.capacity || 25,
       enrolledCount: 0,
       startDate: data.startDate || new Date().toISOString().split("T")[0],
-      endDate: data.endDate || new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
+      endDate:
+        data.endDate ||
+        new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
       feeAmount: data.feeAmount,
       status: "ACTIVE",
       createdAt: new Date().toISOString(),
@@ -898,18 +1036,21 @@ class SportsService {
     return { success: true, data: newProg };
   }
 
-  async listTrainingSessions(programId?: string): Promise<ApiResponse<TrainingSessionItem[]>> {
+  async listTrainingSessions(
+    programId?: string,
+  ): Promise<ApiResponse<TrainingSessionItem[]>> {
     let list = [...sessionsState];
-    if (programId && programId !== "ALL") list = list.filter(s => s.programId === programId);
+    if (programId && programId !== "ALL")
+      list = list.filter((s) => s.programId === programId);
     return { success: true, data: list };
   }
 
   async recordSessionAttendance(
     sessionId: string,
-    records: Array<{ participantId: string; status: string; notes?: string }>
+    records: Array<{ participantId: string; status: string; notes?: string }>,
   ): Promise<ApiResponse<TrainingAttendanceItem[]>> {
-    const created: TrainingAttendanceItem[] = records.map(r => {
-      const part = participantsState.find(p => p.id === r.participantId);
+    const created: TrainingAttendanceItem[] = records.map((r) => {
+      const part = participantsState.find((p) => p.id === r.participantId);
       return {
         id: `att-${Date.now()}-${Math.random().toString(36).substring(7)}`,
         sessionId,
@@ -930,14 +1071,21 @@ class SportsService {
   // 9. COMPETITIONS & TOURNAMENT ENGINE
   // =========================================================================
 
-  async listCompetitions(sport?: string, status?: string): Promise<ApiResponse<SportsCompetitionItem[]>> {
+  async listCompetitions(
+    sport?: string,
+    status?: string,
+  ): Promise<ApiResponse<SportsCompetitionItem[]>> {
     let list = [...competitionsState];
-    if (sport && sport !== "ALL") list = list.filter(c => c.sport.toLowerCase() === sport.toLowerCase());
-    if (status && status !== "ALL") list = list.filter(c => c.status === status);
+    if (sport && sport !== "ALL")
+      list = list.filter((c) => c.sport.toLowerCase() === sport.toLowerCase());
+    if (status && status !== "ALL")
+      list = list.filter((c) => c.status === status);
     return { success: true, data: list };
   }
 
-  async createCompetition(data: Partial<SportsCompetitionItem>): Promise<ApiResponse<SportsCompetitionItem>> {
+  async createCompetition(
+    data: Partial<SportsCompetitionItem>,
+  ): Promise<ApiResponse<SportsCompetitionItem>> {
     const newComp: SportsCompetitionItem = {
       id: `comp-${Date.now()}`,
       code: data.code || `COMP-${Math.floor(100 + Math.random() * 900)}`,
@@ -952,9 +1100,15 @@ class SportsService {
       pointsForWin: data.pointsForWin ?? 3,
       pointsForDraw: data.pointsForDraw ?? 1,
       pointsForLoss: data.pointsForLoss ?? 0,
-      startDate: data.startDate || new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
-      endDate: data.endDate || new Date(Date.now() + 21 * 86400000).toISOString().split("T")[0],
-      registrationDeadline: data.registrationDeadline || new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0],
+      startDate:
+        data.startDate ||
+        new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
+      endDate:
+        data.endDate ||
+        new Date(Date.now() + 21 * 86400000).toISOString().split("T")[0],
+      registrationDeadline:
+        data.registrationDeadline ||
+        new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0],
       maxParticipants: data.maxParticipants || 8,
       registeredCount: 0,
       feeAmount: data.feeAmount,
@@ -966,19 +1120,23 @@ class SportsService {
     return { success: true, data: newComp };
   }
 
-  async listCompetitionRegistrations(competitionId: string): Promise<ApiResponse<CompetitionRegistrationItem[]>> {
+  async listCompetitionRegistrations(
+    competitionId: string,
+  ): Promise<ApiResponse<CompetitionRegistrationItem[]>> {
     return {
       success: true,
-      data: registrationsState.filter(r => r.competitionId === competitionId),
+      data: registrationsState.filter((r) => r.competitionId === competitionId),
     };
   }
 
   async registerCompetitionEntry(
     competitionId: string,
-    entry: { teamId?: string; participantId?: string }
+    entry: { teamId?: string; participantId?: string },
   ): Promise<ApiResponse<CompetitionRegistrationItem>> {
-    const team = teamsState.find(t => t.id === entry.teamId);
-    const participant = participantsState.find(p => p.id === entry.participantId);
+    const team = teamsState.find((t) => t.id === entry.teamId);
+    const participant = participantsState.find(
+      (p) => p.id === entry.participantId,
+    );
 
     const newReg: CompetitionRegistrationItem = {
       id: `reg-${Date.now()}`,
@@ -993,7 +1151,7 @@ class SportsService {
     };
     registrationsState.push(newReg);
 
-    const comp = competitionsState.find(c => c.id === competitionId);
+    const comp = competitionsState.find((c) => c.id === competitionId);
     if (comp) comp.registeredCount += 1;
 
     return { success: true, data: newReg };
@@ -1003,10 +1161,12 @@ class SportsService {
     competitionId: string,
     facilityIds: string[] = [],
     startDate: string = "2026-11-15",
-    startTime: string = "15:00"
+    startTime: string = "15:00",
   ): Promise<ApiResponse<MatchFixtureItem[]>> {
-    const comp = competitionsState.find(c => c.id === competitionId);
-    let regs = registrationsState.filter(r => r.competitionId === competitionId);
+    const comp = competitionsState.find((c) => c.id === competitionId);
+    let regs = registrationsState.filter(
+      (r) => r.competitionId === competitionId,
+    );
 
     if (regs.length < 2) {
       // Auto-populate from active campus squads
@@ -1022,18 +1182,22 @@ class SportsService {
           registeredAt: new Date().toISOString(),
         });
       });
-      regs = registrationsState.filter(r => r.competitionId === competitionId);
+      regs = registrationsState.filter(
+        (r) => r.competitionId === competitionId,
+      );
     }
 
-    const entrantIds = regs.map(r => r.teamId || r.participantId || r.id);
+    const entrantIds = regs.map((r) => r.teamId || r.participantId || r.id);
     const roundRobinSlots = generateRoundRobinFixtures(entrantIds);
 
     const generated: MatchFixtureItem[] = roundRobinSlots.map((slot, idx) => {
-      const homeTeam = teamsState.find(t => t.id === slot.home);
-      const awayTeam = teamsState.find(t => t.id === slot.away);
-      const homePart = participantsState.find(p => p.id === slot.home);
-      const awayPart = participantsState.find(p => p.id === slot.away);
-      const facilityId = facilityIds.length ? facilityIds[idx % facilityIds.length] : facilitiesState[0]?.id;
+      const homeTeam = teamsState.find((t) => t.id === slot.home);
+      const awayTeam = teamsState.find((t) => t.id === slot.away);
+      const homePart = participantsState.find((p) => p.id === slot.home);
+      const awayPart = participantsState.find((p) => p.id === slot.away);
+      const facilityId = facilityIds.length
+        ? facilityIds[idx % facilityIds.length]
+        : facilitiesState[0]?.id;
 
       return {
         id: `fix-gen-${Date.now()}-${idx + 1}`,
@@ -1051,7 +1215,9 @@ class SportsService {
         awayParticipantId: awayPart?.id,
         awayParticipantName: awayPart?.userName,
         facilityId,
-        facilityName: facilitiesState.find(f => f.id === facilityId)?.name || "Main Court",
+        facilityName:
+          facilitiesState.find((f) => f.id === facilityId)?.name ||
+          "Main Court",
         matchDate: startDate,
         startTime,
         endTime: "18:00",
@@ -1068,15 +1234,22 @@ class SportsService {
     return { success: true, data: generated };
   }
 
-  async listFixtures(competitionId?: string, date?: string): Promise<ApiResponse<MatchFixtureItem[]>> {
+  async listFixtures(
+    competitionId?: string,
+    date?: string,
+  ): Promise<ApiResponse<MatchFixtureItem[]>> {
     let list = [...fixturesState];
-    if (competitionId && competitionId !== "ALL") list = list.filter(f => f.competitionId === competitionId);
-    if (date) list = list.filter(f => f.matchDate === date);
+    if (competitionId && competitionId !== "ALL")
+      list = list.filter((f) => f.competitionId === competitionId);
+    if (date) list = list.filter((f) => f.matchDate === date);
     return { success: true, data: list };
   }
 
-  async updateFixture(id: string, data: Partial<MatchFixtureItem>): Promise<ApiResponse<MatchFixtureItem>> {
-    const idx = fixturesState.findIndex(f => f.id === id);
+  async updateFixture(
+    id: string,
+    data: Partial<MatchFixtureItem>,
+  ): Promise<ApiResponse<MatchFixtureItem>> {
+    const idx = fixturesState.findIndex((f) => f.id === id);
     if (idx !== -1) {
       fixturesState[idx] = { ...fixturesState[idx], ...data };
       return { success: true, data: fixturesState[idx] };
@@ -1084,9 +1257,14 @@ class SportsService {
     return { success: false, data: {} as any, error: "Fixture not found" };
   }
 
-  async assignOfficial(fixtureId: string, officialUserId: string, role: string): Promise<ApiResponse<MatchFixtureItem>> {
-    const fixture = fixturesState.find(f => f.id === fixtureId);
-    if (!fixture) return { success: false, data: {} as any, error: "Fixture not found" };
+  async assignOfficial(
+    fixtureId: string,
+    officialUserId: string,
+    role: string,
+  ): Promise<ApiResponse<MatchFixtureItem>> {
+    const fixture = fixturesState.find((f) => f.id === fixtureId);
+    if (!fixture)
+      return { success: false, data: {} as any, error: "Fixture not found" };
 
     if (!fixture.officials) fixture.officials = [];
     fixture.officials.push({
@@ -1109,10 +1287,11 @@ class SportsService {
     fixtureId: string,
     dataOrHomeScore: Partial<MatchResultItem> | number,
     awayScoreVal?: number,
-    auditNotesVal?: string
+    auditNotesVal?: string,
   ): Promise<ApiResponse<MatchResultItem>> {
-    const fixture = fixturesState.find(f => f.id === fixtureId);
-    if (!fixture) return { success: false, data: {} as any, error: "Fixture not found" };
+    const fixture = fixturesState.find((f) => f.id === fixtureId);
+    if (!fixture)
+      return { success: false, data: {} as any, error: "Fixture not found" };
 
     const data: Partial<MatchResultItem> =
       typeof dataOrHomeScore === "number"
@@ -1126,7 +1305,10 @@ class SportsService {
     const isDraw = data.homeScore === data.awayScore;
     let winnerTeamId = data.winnerTeamId;
     if (!winnerTeamId && !isDraw) {
-      winnerTeamId = (data.homeScore || 0) > (data.awayScore || 0) ? fixture.homeTeamId : fixture.awayTeamId;
+      winnerTeamId =
+        (data.homeScore || 0) > (data.awayScore || 0)
+          ? fixture.homeTeamId
+          : fixture.awayTeamId;
     }
 
     const resultItem: MatchResultItem = {
@@ -1139,7 +1321,9 @@ class SportsService {
       homeScore: data.homeScore ?? 0,
       awayScore: data.awayScore ?? 0,
       scoreBreakdown: data.scoreBreakdown,
-      verifiedByName: data.auditNotes ? "Verified with Notes" : "Pending Verification",
+      verifiedByName: data.auditNotes
+        ? "Verified with Notes"
+        : "Pending Verification",
       auditNotes: data.auditNotes,
     };
 
@@ -1152,11 +1336,15 @@ class SportsService {
   async verifyMatchResult(
     fixtureId: string,
     verifiedByName: string,
-    auditNotes?: string
+    auditNotes?: string,
   ): Promise<ApiResponse<MatchResultItem>> {
-    const fixture = fixturesState.find(f => f.id === fixtureId);
+    const fixture = fixturesState.find((f) => f.id === fixtureId);
     if (!fixture || !fixture.result) {
-      return { success: false, data: {} as any, error: "Match result not found" };
+      return {
+        success: false,
+        data: {} as any,
+        error: "Match result not found",
+      };
     }
 
     fixture.result.verifiedByName = verifiedByName;
@@ -1166,38 +1354,42 @@ class SportsService {
     return { success: true, data: fixture.result };
   }
 
-  async getCompetitionStandings(competitionId: string): Promise<ApiResponse<CompetitionStandingItem[]>> {
-    const compFixtures = fixturesState.filter(f => f.competitionId === competitionId && f.result);
+  async getCompetitionStandings(
+    competitionId: string,
+  ): Promise<ApiResponse<CompetitionStandingItem[]>> {
+    const compFixtures = fixturesState.filter(
+      (f) => f.competitionId === competitionId && f.result,
+    );
     if (compFixtures.length === 0) {
       return {
         success: true,
-        data: standingsState.filter(s => s.competitionId === competitionId),
+        data: standingsState.filter((s) => s.competitionId === competitionId),
       };
     }
 
     // Dynamic computation from recorded fixtures
     const competitors: Array<{ id: string; name: string }> = [];
-    compFixtures.forEach(f => {
-      if (f.homeTeamId && !competitors.some(c => c.id === f.homeTeamId)) {
+    compFixtures.forEach((f) => {
+      if (f.homeTeamId && !competitors.some((c) => c.id === f.homeTeamId)) {
         competitors.push({ id: f.homeTeamId, name: f.homeTeamName || "Team" });
       }
-      if (f.awayTeamId && !competitors.some(c => c.id === f.awayTeamId)) {
+      if (f.awayTeamId && !competitors.some((c) => c.id === f.awayTeamId)) {
         competitors.push({ id: f.awayTeamId, name: f.awayTeamName || "Team" });
       }
     });
 
     const computed = computeTournamentStandings(
       competitors,
-      compFixtures.map(f => ({
+      compFixtures.map((f) => ({
         homeCompetitorId: f.homeTeamId || "",
         awayCompetitorId: f.awayTeamId || "",
         homeScore: f.result!.homeScore,
         awayScore: f.result!.awayScore,
         status: f.status,
-      }))
+      })),
     );
 
-    const standings: CompetitionStandingItem[] = computed.map(row => ({
+    const standings: CompetitionStandingItem[] = computed.map((row) => ({
       id: `stand-${row.competitorId}`,
       competitionId,
       teamId: row.competitorId,
@@ -1221,13 +1413,18 @@ class SportsService {
   // 11. ACHIEVEMENTS & RECORDS
   // =========================================================================
 
-  async listAchievements(sport?: string): Promise<ApiResponse<SportsAchievementItem[]>> {
+  async listAchievements(
+    sport?: string,
+  ): Promise<ApiResponse<SportsAchievementItem[]>> {
     let list = [...achievementsState];
-    if (sport && sport !== "ALL") list = list.filter(a => a.sport.toLowerCase() === sport.toLowerCase());
+    if (sport && sport !== "ALL")
+      list = list.filter((a) => a.sport.toLowerCase() === sport.toLowerCase());
     return { success: true, data: list };
   }
 
-  async createAchievement(data: Partial<SportsAchievementItem>): Promise<ApiResponse<SportsAchievementItem>> {
+  async createAchievement(
+    data: Partial<SportsAchievementItem>,
+  ): Promise<ApiResponse<SportsAchievementItem>> {
     const newItem: SportsAchievementItem = {
       id: `ach-${Date.now()}`,
       recipientType: data.recipientType || "TEAM",
@@ -1251,13 +1448,18 @@ class SportsService {
   // 12. EQUIPMENT ALLOCATION & ASSET INTEGRATION
   // =========================================================================
 
-  async listEquipmentAssignments(status?: string): Promise<ApiResponse<SportsEquipmentAssignmentItem[]>> {
+  async listEquipmentAssignments(
+    status?: string,
+  ): Promise<ApiResponse<SportsEquipmentAssignmentItem[]>> {
     let list = [...equipmentState];
-    if (status && status !== "ALL") list = list.filter(e => e.status === status);
+    if (status && status !== "ALL")
+      list = list.filter((e) => e.status === status);
     return { success: true, data: list };
   }
 
-  async checkoutEquipment(data: Partial<SportsEquipmentAssignmentItem>): Promise<ApiResponse<SportsEquipmentAssignmentItem>> {
+  async checkoutEquipment(
+    data: Partial<SportsEquipmentAssignmentItem>,
+  ): Promise<ApiResponse<SportsEquipmentAssignmentItem>> {
     const newItem: SportsEquipmentAssignmentItem = {
       id: `eq-asgn-${Date.now()}`,
       assetId: data.assetId,
@@ -1272,10 +1474,13 @@ class SportsService {
       responsibleUserId: data.responsibleUserId || "user-coach-01",
       responsibleUserName: data.responsibleUserName || "Responsible Coach",
       checkoutDate: data.checkoutDate || new Date().toISOString().split("T")[0],
-      dueDate: data.dueDate || new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
+      dueDate:
+        data.dueDate ||
+        new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
       status: "ISSUED",
       returnCondition: "EXCELLENT",
-      conditionNotes: data.conditionNotes || "Checked out in clean operational state.",
+      conditionNotes:
+        data.conditionNotes || "Checked out in clean operational state.",
     };
     equipmentState.unshift(newItem);
     return { success: true, data: newItem };
@@ -1285,21 +1490,36 @@ class SportsService {
     id: string,
     returnCondition: string,
     notesOrFee?: string | number,
-    feeOrNotes?: number | string
+    feeOrNotes?: number | string,
   ): Promise<ApiResponse<SportsEquipmentAssignmentItem>> {
-    const idx = equipmentState.findIndex(e => e.id === id);
+    const idx = equipmentState.findIndex((e) => e.id === id);
     if (idx !== -1) {
-      const notes = typeof notesOrFee === "string" ? notesOrFee : typeof feeOrNotes === "string" ? feeOrNotes : "";
-      const replacementFee = typeof notesOrFee === "number" ? notesOrFee : typeof feeOrNotes === "number" ? feeOrNotes : undefined;
+      const notes =
+        typeof notesOrFee === "string"
+          ? notesOrFee
+          : typeof feeOrNotes === "string"
+            ? feeOrNotes
+            : "";
+      const replacementFee =
+        typeof notesOrFee === "number"
+          ? notesOrFee
+          : typeof feeOrNotes === "number"
+            ? feeOrNotes
+            : undefined;
 
       equipmentState[idx].status = "RETURNED";
       equipmentState[idx].returnDate = new Date().toISOString().split("T")[0];
       equipmentState[idx].returnCondition = returnCondition as any;
       if (notes) equipmentState[idx].conditionNotes = notes;
-      if (replacementFee !== undefined) equipmentState[idx].replacementFee = replacementFee;
+      if (replacementFee !== undefined)
+        equipmentState[idx].replacementFee = replacementFee;
       return { success: true, data: equipmentState[idx] };
     }
-    return { success: false, data: {} as any, error: "Equipment record not found" };
+    return {
+      success: false,
+      data: {} as any,
+      error: "Equipment record not found",
+    };
   }
 
   // =========================================================================
@@ -1308,7 +1528,8 @@ class SportsService {
 
   async listSportsFees(status?: string): Promise<ApiResponse<SportsFeeItem[]>> {
     let list = [...feesState];
-    if (status && status !== "ALL") list = list.filter(f => f.status === status);
+    if (status && status !== "ALL")
+      list = list.filter((f) => f.status === status);
     return { success: true, data: list };
   }
 
@@ -1318,21 +1539,49 @@ class SportsService {
 
   async getReportsAnalytics(): Promise<
     ApiResponse<{
-      facilityUtilization: Array<{ facilityName: string; bookedHours: number; availableHours: number; rate: number }>;
-      participationDemographics: Array<{ sport: string; count: number; percentage: number }>;
-      clearanceCompliance: { totalAthletes: number; cleared: number; restricted: number; suspended: number; rate: number };
-      tournamentSummaries: Array<{ name: string; sport: string; format: string; teams: number; matches: number; status: string }>;
+      facilityUtilization: Array<{
+        facilityName: string;
+        bookedHours: number;
+        availableHours: number;
+        rate: number;
+      }>;
+      participationDemographics: Array<{
+        sport: string;
+        count: number;
+        percentage: number;
+      }>;
+      clearanceCompliance: {
+        totalAthletes: number;
+        cleared: number;
+        restricted: number;
+        suspended: number;
+        rate: number;
+      };
+      tournamentSummaries: Array<{
+        name: string;
+        sport: string;
+        format: string;
+        teams: number;
+        matches: number;
+        status: string;
+      }>;
     }>
   > {
     const totalAthletes = participantsState.length;
-    const cleared = participantsState.filter(p => p.clearanceStatus === "CLEARED").length;
-    const restricted = participantsState.filter(p => p.clearanceStatus === "RESTRICTED").length;
-    const suspended = participantsState.filter(p => p.clearanceStatus === "SUSPENDED").length;
+    const cleared = participantsState.filter(
+      (p) => p.clearanceStatus === "CLEARED",
+    ).length;
+    const restricted = participantsState.filter(
+      (p) => p.clearanceStatus === "RESTRICTED",
+    ).length;
+    const suspended = participantsState.filter(
+      (p) => p.clearanceStatus === "SUSPENDED",
+    ).length;
 
     return {
       success: true,
       data: {
-        facilityUtilization: facilitiesState.slice(0, 6).map(f => ({
+        facilityUtilization: facilitiesState.slice(0, 6).map((f) => ({
           facilityName: f.name,
           bookedHours: 28,
           availableHours: 35,
@@ -1350,9 +1599,11 @@ class SportsService {
           cleared,
           restricted,
           suspended,
-          rate: totalAthletes ? Number(((cleared / totalAthletes) * 100).toFixed(1)) : 100,
+          rate: totalAthletes
+            ? Number(((cleared / totalAthletes) * 100).toFixed(1))
+            : 100,
         },
-        tournamentSummaries: competitionsState.map(c => ({
+        tournamentSummaries: competitionsState.map((c) => ({
           name: c.name,
           sport: c.sport,
           format: c.tournamentFormat,
@@ -1367,13 +1618,32 @@ class SportsService {
   // =========================================================================
   // CONVENIENCE ALIASES
   // =========================================================================
-  async getCompetitions(sport?: string, status?: string) { return this.listCompetitions(sport, status); }
-  async getFixtures(competitionId?: string, date?: string) { return this.listFixtures(competitionId, date); }
-  async getStandings(competitionId: string) { return this.getCompetitionStandings(competitionId); }
-  async getAchievements(sport?: string) { return this.listAchievements(sport); }
-  async getEquipmentAssignments(status?: string) { return this.listEquipmentAssignments(status); }
-  async rescheduleFixture(fixtureId: string, newDate: string, newTime: string, newVenue?: string) {
-    return this.updateFixture(fixtureId, { matchDate: newDate, startTime: newTime, facilityName: newVenue });
+  async getCompetitions(sport?: string, status?: string) {
+    return this.listCompetitions(sport, status);
+  }
+  async getFixtures(competitionId?: string, date?: string) {
+    return this.listFixtures(competitionId, date);
+  }
+  async getStandings(competitionId: string) {
+    return this.getCompetitionStandings(competitionId);
+  }
+  async getAchievements(sport?: string) {
+    return this.listAchievements(sport);
+  }
+  async getEquipmentAssignments(status?: string) {
+    return this.listEquipmentAssignments(status);
+  }
+  async rescheduleFixture(
+    fixtureId: string,
+    newDate: string,
+    newTime: string,
+    newVenue?: string,
+  ) {
+    return this.updateFixture(fixtureId, {
+      matchDate: newDate,
+      startTime: newTime,
+      facilityName: newVenue,
+    });
   }
 }
 

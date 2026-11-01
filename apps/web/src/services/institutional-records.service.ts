@@ -16,7 +16,6 @@ class InstitutionalRecordsService {
     status?: string;
     search?: string;
   }): Promise<ApiResponse<InstitutionalRecord[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.records];
 
     if (filters) {
@@ -56,7 +55,6 @@ class InstitutionalRecordsService {
   async getRecordById(
     id: string,
   ): Promise<ApiResponse<InstitutionalRecord | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const rec = this.records.find((r) => r.id === id || r.code === id) || null;
     return { success: true, data: rec };
   }
@@ -64,7 +62,6 @@ class InstitutionalRecordsService {
   async createRecord(
     data: Partial<InstitutionalRecord>,
   ): Promise<ApiResponse<InstitutionalRecord>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newRecord: InstitutionalRecord = {
       id: `rec-inst-${Date.now()}`,
       recordName: data.recordName || "New Institutional Record",
@@ -100,7 +97,6 @@ class InstitutionalRecordsService {
     id: string,
     data: Partial<InstitutionalRecord>,
   ): Promise<ApiResponse<InstitutionalRecord>> {
-    await new Promise((r) => setTimeout(r, 50));
     const rec = this.records.find((r) => r.id === id);
     if (!rec) {
       throw new Error(`Institutional record with ID ${id} not found`);

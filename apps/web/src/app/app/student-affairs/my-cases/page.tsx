@@ -23,7 +23,9 @@ import {
 
 export default function MyCasesPage() {
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [activeTab, setActiveTab] = useState<"ALL" | "ACTIVE" | "RESOLVED" | "APPEALS">("ALL");
+  const [activeTab, setActiveTab] = useState<
+    "ALL" | "ACTIVE" | "RESOLVED" | "APPEALS"
+  >("ALL");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,10 +41,14 @@ export default function MyCasesPage() {
 
   const filtered = cases.filter((c) => {
     if (activeTab === "ACTIVE") {
-      return c.status !== SACaseStatus.RESOLVED && c.status !== SACaseStatus.CLOSED;
+      return (
+        c.status !== SACaseStatus.RESOLVED && c.status !== SACaseStatus.CLOSED
+      );
     }
     if (activeTab === "RESOLVED") {
-      return c.status === SACaseStatus.RESOLVED || c.status === SACaseStatus.CLOSED;
+      return (
+        c.status === SACaseStatus.RESOLVED || c.status === SACaseStatus.CLOSED
+      );
     }
     if (activeTab === "APPEALS") {
       return (c.appeals && c.appeals.length > 0) || c.case_type === "APPEAL";
@@ -67,7 +73,8 @@ export default function MyCasesPage() {
             My Registered Grievances & Case Filings
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Personal portal for tracking your submitted grievances, formal notices, hearings, and appellate determinations.
+            Personal portal for tracking your submitted grievances, formal
+            notices, hearings, and appellate determinations.
           </p>
         </div>
         <Link href="/app/student-affairs/submit">
@@ -93,9 +100,12 @@ export default function MyCasesPage() {
             }`}
           >
             {tab === "ALL" && `All Cases (${cases.length})`}
-            {tab === "ACTIVE" && `Active (${cases.filter((c) => c.status !== "RESOLVED" && c.status !== "CLOSED").length})`}
-            {tab === "RESOLVED" && `Resolved (${cases.filter((c) => c.status === "RESOLVED" || c.status === "CLOSED").length})`}
-            {tab === "APPEALS" && `Appeals (${cases.filter((c) => (c.appeals && c.appeals.length > 0) || c.case_type === "APPEAL").length})`}
+            {tab === "ACTIVE" &&
+              `Active (${cases.filter((c) => c.status !== "RESOLVED" && c.status !== "CLOSED").length})`}
+            {tab === "RESOLVED" &&
+              `Resolved (${cases.filter((c) => c.status === "RESOLVED" || c.status === "CLOSED").length})`}
+            {tab === "APPEALS" &&
+              `Appeals (${cases.filter((c) => (c.appeals && c.appeals.length > 0) || c.case_type === "APPEAL").length})`}
           </button>
         ))}
       </div>
@@ -106,7 +116,9 @@ export default function MyCasesPage() {
           <div className="mx-auto w-12 h-12 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
             <CheckCircle2 className="h-6 w-6" />
           </div>
-          <h3 className="text-sm font-semibold text-white">No cases found in this category</h3>
+          <h3 className="text-sm font-semibold text-white">
+            No cases found in this category
+          </h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
             You do not currently have any cases matching the selected filter.
           </p>
@@ -114,8 +126,13 @@ export default function MyCasesPage() {
       ) : (
         <div className="space-y-3">
           {filtered.map((c) => {
-            const statusBadge = StudentAffairsCalculator.getStatusBadge(c.status);
-            const sla = StudentAffairsCalculator.calculateSlaStatus(c.target_response_date, c.status);
+            const statusBadge = StudentAffairsCalculator.getStatusBadge(
+              c.status,
+            );
+            const sla = StudentAffairsCalculator.calculateSlaStatus(
+              c.target_response_date,
+              c.status,
+            );
 
             return (
               <Card
@@ -127,44 +144,72 @@ export default function MyCasesPage() {
                     <span className="font-mono text-sm font-bold text-indigo-400">
                       {c.case_number}
                     </span>
-                    <span className={`px-2 py-0.5 rounded text-[10px] border ${statusBadge.className}`}>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] border ${statusBadge.className}`}
+                    >
                       {statusBadge.label}
                     </span>
-                    <Badge variant="outline" className="border-slate-700 text-slate-300 text-[10px]">
+                    <Badge
+                      variant="outline"
+                      className="border-slate-700 text-slate-300 text-[10px]"
+                    >
                       {c.case_type}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
                     <Clock className="h-3.5 w-3.5 text-slate-500" />
-                    <span>Logged on: {new Date(c.created_at).toLocaleDateString()}</span>
+                    <span>
+                      Logged on: {new Date(c.created_at).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-white">{c.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{c.description}</p>
+                  <h3 className="text-sm font-semibold text-white">
+                    {c.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                    {c.description}
+                  </p>
                 </div>
 
                 {c.resolution_summary && (
                   <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/20 text-xs">
-                    <span className="font-semibold text-emerald-400">Resolution Determination: </span>
-                    <span className="text-slate-300">{c.resolution_summary}</span>
+                    <span className="font-semibold text-emerald-400">
+                      Resolution Determination:{" "}
+                    </span>
+                    <span className="text-slate-300">
+                      {c.resolution_summary}
+                    </span>
                   </div>
                 )}
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                   <div className="text-xs text-slate-400">
-                    Category: <span className="text-slate-300 font-medium">{c.category?.name || "General"}</span>
+                    Category:{" "}
+                    <span className="text-slate-300 font-medium">
+                      {c.category?.name || "General"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Link href={`/app/student-affairs/cases/${c.id}`}>
-                      <Button size="sm" variant="outline" className="border-slate-700 text-slate-200 text-xs gap-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-slate-700 text-slate-200 text-xs gap-1"
+                      >
                         View Details
                         <ChevronRight className="h-3 w-3" />
                       </Button>
                     </Link>
-                    <Link href={`/app/student-affairs/communications?caseId=${c.id}`}>
-                      <Button size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300 text-xs gap-1">
+                    <Link
+                      href={`/app/student-affairs/communications?caseId=${c.id}`}
+                    >
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-indigo-400 hover:text-indigo-300 text-xs gap-1"
+                      >
                         <MessageSquare className="h-3 w-3" />
                         Messages
                       </Button>

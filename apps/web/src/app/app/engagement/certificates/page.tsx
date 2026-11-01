@@ -28,19 +28,23 @@ export default function EngagementCertificatesPage() {
   const [programs, setPrograms] = useState<EngagementProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedCert, setSelectedCert] = useState<EngagementCertificate | null>(null);
+  const [selectedCert, setSelectedCert] =
+    useState<EngagementCertificate | null>(null);
 
   // Verification Dialog
   const [isVerifyOpen, setIsVerifyOpen] = useState(false);
   const [verifyHashInput, setVerifyHashInput] = useState("");
-  const [verifiedCertResult, setVerifiedCertResult] = useState<EngagementCertificate | null>(null);
+  const [verifiedCertResult, setVerifiedCertResult] =
+    useState<EngagementCertificate | null>(null);
   const [verifyError, setVerifyError] = useState<string | null>(null);
 
   // Issue Certificate Modal
   const [isIssueOpen, setIsIssueOpen] = useState(false);
   const [progId, setProgId] = useState("");
   const [studentId, setStudentId] = useState("stu-101");
-  const [issuedTitle, setIssuedTitle] = useState("Dean of Student Affairs & Civic Engagement");
+  const [issuedTitle, setIssuedTitle] = useState(
+    "Dean of Student Affairs & Civic Engagement",
+  );
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,10 +75,14 @@ export default function EngagementCertificatesPage() {
     setVerifiedCertResult(null);
 
     try {
-      const result = await EngagementService.verifyCertificateHash(verifyHashInput.trim());
+      const result = await EngagementService.verifyCertificateHash(
+        verifyHashInput.trim(),
+      );
       setVerifiedCertResult(result);
     } catch (err: any) {
-      setVerifyError("Certificate hash could not be verified in institutional ledger.");
+      setVerifyError(
+        "Certificate hash could not be verified in institutional ledger.",
+      );
     }
   }
 
@@ -90,7 +98,9 @@ export default function EngagementCertificatesPage() {
       };
 
       await EngagementService.issueCertificate(input);
-      setActionMessage("Certificate issued with tamper-evident cryptographic hash!");
+      setActionMessage(
+        "Certificate issued with tamper-evident cryptographic hash!",
+      );
       setIsIssueOpen(false);
       await loadData();
     } catch (err: any) {
@@ -115,7 +125,10 @@ export default function EngagementCertificatesPage() {
         {actionMessage && (
           <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-medium flex items-center justify-between">
             <span>{actionMessage}</span>
-            <button onClick={() => setActionMessage(null)} className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setActionMessage(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -129,7 +142,8 @@ export default function EngagementCertificatesPage() {
               Verified Co-Curricular Records & Certificates
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Tamper-evident credentials, cryptographic SHA-256 hash checks, and verified civic transcripts
+              Tamper-evident credentials, cryptographic SHA-256 hash checks, and
+              verified civic transcripts
             </p>
           </div>
 
@@ -198,24 +212,36 @@ export default function EngagementCertificatesPage() {
 
                 <div className="bg-muted/30 p-3 rounded-lg border border-border space-y-1 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Verified Service:</span>
-                    <span className="font-bold text-foreground">{cert.total_verified_hours} Hours</span>
+                    <span className="text-muted-foreground">
+                      Verified Service:
+                    </span>
+                    <span className="font-bold text-foreground">
+                      {cert.total_verified_hours} Hours
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Issuance Date:</span>
-                    <span className="text-foreground">{new Date(cert.issued_at).toLocaleDateString()}</span>
+                    <span className="text-muted-foreground">
+                      Issuance Date:
+                    </span>
+                    <span className="text-foreground">
+                      {new Date(cert.issued_at).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
 
-                {cert.skills_recognized && cert.skills_recognized.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {cert.skills_recognized.map((s, i) => (
-                      <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                {cert.skills_recognized &&
+                  cert.skills_recognized.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {cert.skills_recognized.map((s, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                 <div className="p-2 rounded bg-muted/50 border border-border text-[10px] font-mono text-muted-foreground break-all">
                   <span className="text-purple-500 font-semibold block text-[9px] uppercase font-sans">
@@ -259,17 +285,35 @@ export default function EngagementCertificatesPage() {
               </div>
 
               <div className="border-y border-border py-4 space-y-2">
-                <p className="text-xs text-muted-foreground">This is to officially certify that</p>
-                <h3 className="text-lg font-bold text-foreground">{selectedCert.recipient_name}</h3>
-                <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                  has successfully performed <span className="font-bold text-foreground">{selectedCert.total_verified_hours} verified service hours</span> in community service and institutional civic mission:
+                <p className="text-xs text-muted-foreground">
+                  This is to officially certify that
                 </p>
-                <p className="text-sm font-semibold text-foreground italic">&ldquo;{selectedCert.program_name}&rdquo;</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  {selectedCert.recipient_name}
+                </h3>
+                <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                  has successfully performed{" "}
+                  <span className="font-bold text-foreground">
+                    {selectedCert.total_verified_hours} verified service hours
+                  </span>{" "}
+                  in community service and institutional civic mission:
+                </p>
+                <p className="text-sm font-semibold text-foreground italic">
+                  &ldquo;{selectedCert.program_name}&rdquo;
+                </p>
               </div>
 
               <div className="text-[11px] text-muted-foreground space-y-1">
-                <p>Issued by: <span className="font-semibold text-foreground">{selectedCert.issued_by_title}</span></p>
-                <p>Date of Award: {new Date(selectedCert.issued_at).toLocaleDateString()}</p>
+                <p>
+                  Issued by:{" "}
+                  <span className="font-semibold text-foreground">
+                    {selectedCert.issued_by_title}
+                  </span>
+                </p>
+                <p>
+                  Date of Award:{" "}
+                  {new Date(selectedCert.issued_at).toLocaleDateString()}
+                </p>
               </div>
 
               <div className="bg-muted/40 p-3 rounded-lg border border-border text-left font-mono text-[10px] space-y-1 break-all">
@@ -277,7 +321,9 @@ export default function EngagementCertificatesPage() {
                   <span>Cryptographic Proof</span>
                   <ShieldCheck className="h-4 w-4 text-emerald-500" />
                 </div>
-                <p className="text-muted-foreground">{selectedCert.verification_hash}</p>
+                <p className="text-muted-foreground">
+                  {selectedCert.verification_hash}
+                </p>
               </div>
 
               <div className="flex justify-center gap-3 pt-2">
@@ -301,14 +347,19 @@ export default function EngagementCertificatesPage() {
                   <ShieldCheck className="h-5 w-5 text-purple-500" />
                   Verify Credential Authenticity
                 </h2>
-                <button onClick={() => setIsVerifyOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsVerifyOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleVerifyHash} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">SHA-256 Certificate Hash</label>
+                  <label className="font-semibold text-foreground">
+                    SHA-256 Certificate Hash
+                  </label>
                   <input
                     type="text"
                     required
@@ -332,10 +383,17 @@ export default function EngagementCertificatesPage() {
                   <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
                     <CheckCircle2 className="h-4 w-4" /> Verified Authenticity
                   </div>
-                  <p className="text-foreground font-medium">{verifiedCertResult.recipient_name}</p>
-                  <p className="text-muted-foreground">{verifiedCertResult.program_name}</p>
+                  <p className="text-foreground font-medium">
+                    {verifiedCertResult.recipient_name}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {verifiedCertResult.program_name}
+                  </p>
                   <span className="text-[10px] text-muted-foreground block">
-                    {verifiedCertResult.total_verified_hours} Hours • Issued {new Date(verifiedCertResult.issued_at).toLocaleDateString()}
+                    {verifiedCertResult.total_verified_hours} Hours • Issued{" "}
+                    {new Date(
+                      verifiedCertResult.issued_at,
+                    ).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -358,14 +416,19 @@ export default function EngagementCertificatesPage() {
                   <PlusCircle className="h-5 w-5 text-purple-500" />
                   Issue Civic Impact Certificate
                 </h2>
-                <button onClick={() => setIsIssueOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setIsIssueOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form onSubmit={handleIssueCertificate} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Program *</label>
+                  <label className="font-semibold text-foreground">
+                    Program *
+                  </label>
                   <select
                     value={progId}
                     onChange={(e) => setProgId(e.target.value)}
@@ -381,7 +444,9 @@ export default function EngagementCertificatesPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Recipient Student ID *</label>
+                  <label className="font-semibold text-foreground">
+                    Recipient Student ID *
+                  </label>
                   <input
                     type="text"
                     required
@@ -392,7 +457,9 @@ export default function EngagementCertificatesPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-foreground">Signatory Title</label>
+                  <label className="font-semibold text-foreground">
+                    Signatory Title
+                  </label>
                   <input
                     type="text"
                     value={issuedTitle}
@@ -424,4 +491,3 @@ export default function EngagementCertificatesPage() {
     </div>
   );
 }
-

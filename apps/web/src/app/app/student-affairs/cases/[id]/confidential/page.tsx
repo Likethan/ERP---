@@ -4,9 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { studentAffairsService } from "@/services/student-affairs.service";
-import {
-  GrievanceCaseModel,
-} from "@/types/student-affairs";
+import { GrievanceCaseModel } from "@/types/student-affairs";
 import { StudentAffairsNav } from "@/components/student-affairs/student-affairs-nav";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -43,11 +41,19 @@ export default function ConfidentialCaseDetailPage() {
   }, [caseId]);
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-400 text-xs">Accessing confidential vault...</div>;
+    return (
+      <div className="p-8 text-center text-slate-400 text-xs">
+        Accessing confidential vault...
+      </div>
+    );
   }
 
   if (!caseItem) {
-    return <div className="p-8 text-center text-slate-400 text-xs">Confidential record not found.</div>;
+    return (
+      <div className="p-8 text-center text-slate-400 text-xs">
+        Confidential record not found.
+      </div>
+    );
   }
 
   return (
@@ -56,8 +62,14 @@ export default function ConfidentialCaseDetailPage() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: caseItem.case_number, href: `/app/student-affairs/cases/${caseItem.id}` },
-          { label: "Confidential Record", href: `/app/student-affairs/cases/${caseItem.id}/confidential` },
+          {
+            label: caseItem.case_number,
+            href: `/app/student-affairs/cases/${caseItem.id}`,
+          },
+          {
+            label: "Confidential Record",
+            href: `/app/student-affairs/cases/${caseItem.id}/confidential`,
+          },
         ]}
       />
 
@@ -75,12 +87,17 @@ export default function ConfidentialCaseDetailPage() {
               </Badge>
             </h1>
             <p className="text-xs text-amber-300/80">
-              Authorized personnel only. Your access event has been written to the permanent institutional case audit log.
+              Authorized personnel only. Your access event has been written to
+              the permanent institutional case audit log.
             </p>
           </div>
         </div>
         <Link href={`/app/student-affairs/cases/${caseItem.id}`}>
-          <Button variant="outline" size="sm" className="border-amber-500/30 text-amber-200 text-xs gap-1">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-amber-500/30 text-amber-200 text-xs gap-1"
+          >
             <ArrowLeft className="h-3.5 w-3.5" />
             Standard View
           </Button>
@@ -99,21 +116,35 @@ export default function ConfidentialCaseDetailPage() {
             <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 text-xs space-y-2">
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Registered Persona:</span>
-                <span className="text-white font-medium">{caseItem.submitter_name_redacted}</span>
+                <span className="text-white font-medium">
+                  {caseItem.submitter_name_redacted}
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Submitter Type:</span>
-                <span className="text-slate-200">{caseItem.submitter_type}</span>
+                <span className="text-slate-200">
+                  {caseItem.submitter_type}
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/80">
                 <span className="text-slate-400">Anonymity Flag:</span>
-                <span className={caseItem.is_anonymous ? "text-amber-400 font-semibold" : "text-emerald-400"}>
-                  {caseItem.is_anonymous ? "Protected Identity (Restricted from public logs)" : "Standard Submitter"}
+                <span
+                  className={
+                    caseItem.is_anonymous
+                      ? "text-amber-400 font-semibold"
+                      : "text-emerald-400"
+                  }
+                >
+                  {caseItem.is_anonymous
+                    ? "Protected Identity (Restricted from public logs)"
+                    : "Standard Submitter"}
                 </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-400">Confidentiality Tier:</span>
-                <span className="text-indigo-400 font-semibold">{caseItem.confidentiality_level}</span>
+                <span className="text-indigo-400 font-semibold">
+                  {caseItem.confidentiality_level}
+                </span>
               </div>
             </div>
           </Card>
@@ -132,16 +163,37 @@ export default function ConfidentialCaseDetailPage() {
                     className="p-3.5 rounded-lg border border-slate-800 bg-slate-950/60 text-xs space-y-2"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-white">{ev.title}</span>
-                      <Badge className={ev.is_redacted ? "bg-amber-500/10 text-amber-400" : "bg-purple-500/10 text-purple-400"}>
+                      <span className="font-semibold text-white">
+                        {ev.title}
+                      </span>
+                      <Badge
+                        className={
+                          ev.is_redacted
+                            ? "bg-amber-500/10 text-amber-400"
+                            : "bg-purple-500/10 text-purple-400"
+                        }
+                      >
                         {ev.confidentiality_level}
                       </Badge>
                     </div>
-                    <p className="text-slate-400 text-[11px]">{ev.description}</p>
+                    <p className="text-slate-400 text-[11px]">
+                      {ev.description}
+                    </p>
                     <div className="flex items-center justify-between pt-1 border-t border-slate-800/60 text-[10px] text-slate-500">
-                      <span>Status: {ev.is_redacted ? "Redacted copy available" : "Original Unredacted Evidence"}</span>
-                      <Link href={`/app/student-affairs/evidence?caseId=${caseItem.id}`}>
-                        <Button size="sm" variant="ghost" className="h-6 text-[10px] text-indigo-400">
+                      <span>
+                        Status:{" "}
+                        {ev.is_redacted
+                          ? "Redacted copy available"
+                          : "Original Unredacted Evidence"}
+                      </span>
+                      <Link
+                        href={`/app/student-affairs/evidence?caseId=${caseItem.id}`}
+                      >
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 text-[10px] text-indigo-400"
+                        >
                           Redact for Panel
                         </Button>
                       </Link>
@@ -150,7 +202,9 @@ export default function ConfidentialCaseDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500 italic">No evidence items recorded in vault.</p>
+              <p className="text-xs text-slate-500 italic">
+                No evidence items recorded in vault.
+              </p>
             )}
           </Card>
         </div>
@@ -162,14 +216,23 @@ export default function ConfidentialCaseDetailPage() {
               Safeguarding Controls
             </h3>
             <div className="space-y-2">
-              <Link href={`/app/student-affairs/escalations?caseId=${caseItem.id}`} className="block">
+              <Link
+                href={`/app/student-affairs/escalations?caseId=${caseItem.id}`}
+                className="block"
+              >
                 <Button className="w-full text-xs bg-rose-600 hover:bg-rose-500 text-white gap-2 justify-start">
                   <AlertTriangle className="h-4 w-4" />
                   Trigger Urgent Escalation
                 </Button>
               </Link>
-              <Link href={`/app/student-affairs/evidence?caseId=${caseItem.id}`} className="block">
-                <Button variant="outline" className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2">
+              <Link
+                href={`/app/student-affairs/evidence?caseId=${caseItem.id}`}
+                className="block"
+              >
+                <Button
+                  variant="outline"
+                  className="w-full text-xs border-slate-700 text-slate-200 justify-start gap-2"
+                >
                   <FileText className="h-4 w-4 text-indigo-400" />
                   Redaction Workspace
                 </Button>
@@ -183,7 +246,9 @@ export default function ConfidentialCaseDetailPage() {
               Privacy Compliance
             </h3>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Unredacted records must remain confidential within the committee. Any disclosure to unauthorized staff or external parties violates institutional privacy policy.
+              Unredacted records must remain confidential within the committee.
+              Any disclosure to unauthorized staff or external parties violates
+              institutional privacy policy.
             </p>
           </Card>
         </div>

@@ -22,15 +22,21 @@ import {
 } from "lucide-react";
 
 export default function GrantOpportunitiesPage() {
-  const [opportunities, setOpportunities] = useState<ResearchFundingOpportunity[]>([]);
+  const [opportunities, setOpportunities] = useState<
+    ResearchFundingOpportunity[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // EOI Modal state
   const [isEoiModalOpen, setIsEoiModalOpen] = useState(false);
-  const [selectedOpp, setSelectedOpp] = useState<ResearchFundingOpportunity | null>(null);
+  const [selectedOpp, setSelectedOpp] =
+    useState<ResearchFundingOpportunity | null>(null);
   const [eoiForm, setEoiForm] = useState({
     prospective_project_title: "",
     notes: "",
@@ -46,9 +52,12 @@ export default function GrantOpportunitiesPage() {
     funding_agency_name: "National Science Foundation",
     category: "GOVERNMENT_GRANT",
     research_domains: ["Renewable Energy", "Smart Grids"],
-    eligibility_criteria: "Higher Education Institutions and Research Consortia",
+    eligibility_criteria:
+      "Higher Education Institutions and Research Consortia",
     opening_date: new Date().toISOString().split("T")[0],
-    closing_date: new Date(Date.now() + 90 * 86400000).toISOString().split("T")[0],
+    closing_date: new Date(Date.now() + 90 * 86400000)
+      .toISOString()
+      .split("T")[0],
     min_funding_amount: 100000,
     max_funding_amount: 500000,
     currency: "USD",
@@ -62,7 +71,10 @@ export default function GrantOpportunitiesPage() {
       });
       setOpportunities(data);
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to load opportunities." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to load opportunities.",
+      });
     } finally {
       setLoading(false);
     }
@@ -77,14 +89,19 @@ export default function GrantOpportunitiesPage() {
     try {
       await ResearchService.saveOpportunity(opp.id, nextSaved);
       setOpportunities((prev) =>
-        prev.map((o) => (o.id === opp.id ? { ...o, is_saved: nextSaved } : o))
+        prev.map((o) => (o.id === opp.id ? { ...o, is_saved: nextSaved } : o)),
       );
       setFeedback({
         type: "success",
-        message: nextSaved ? "Opportunity saved to bookmarks." : "Opportunity removed from bookmarks.",
+        message: nextSaved
+          ? "Opportunity saved to bookmarks."
+          : "Opportunity removed from bookmarks.",
       });
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to update bookmark." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to update bookmark.",
+      });
     }
   };
 
@@ -92,7 +109,8 @@ export default function GrantOpportunitiesPage() {
     setSelectedOpp(opp);
     setEoiForm({
       prospective_project_title: `Proposal for ${opp.title}`,
-      notes: "Departmental team assembled. Preparing multi-institution collaborative draft.",
+      notes:
+        "Departmental team assembled. Preparing multi-institution collaborative draft.",
       estimated_budget: opp.max_funding_amount || 200000,
     });
     setIsEoiModalOpen(true);
@@ -115,7 +133,10 @@ export default function GrantOpportunitiesPage() {
       setIsEoiModalOpen(false);
       loadOpportunities();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to record Expression of Interest." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to record Expression of Interest.",
+      });
     }
   };
 
@@ -123,11 +144,17 @@ export default function GrantOpportunitiesPage() {
     e.preventDefault();
     try {
       await ResearchService.createFundingOpportunity(newOppForm as any);
-      setFeedback({ type: "success", message: `Opportunity '${newOppForm.title}' registered in registry.` });
+      setFeedback({
+        type: "success",
+        message: `Opportunity '${newOppForm.title}' registered in registry.`,
+      });
       setIsNewOppModalOpen(false);
       loadOpportunities();
     } catch (err: any) {
-      setFeedback({ type: "error", message: err.message || "Failed to catalog opportunity." });
+      setFeedback({
+        type: "error",
+        message: err.message || "Failed to catalog opportunity.",
+      });
     }
   };
 
@@ -153,7 +180,8 @@ export default function GrantOpportunitiesPage() {
               Grant Discovery & Funding Opportunity Registry
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Curated opportunities from research councils, government agencies, foundations, and industry sponsors.
+              Curated opportunities from research councils, government agencies,
+              foundations, and industry sponsors.
             </p>
           </div>
 
@@ -169,7 +197,9 @@ export default function GrantOpportunitiesPage() {
               onClick={loadOpportunities}
               className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? "animate-spin text-emerald-400" : ""}`}
+              />
             </button>
           </div>
         </div>
@@ -184,7 +214,10 @@ export default function GrantOpportunitiesPage() {
             }`}
           >
             <span>{feedback.message}</span>
-            <button onClick={() => setFeedback(null)} className="text-xs underline ml-4">
+            <button
+              onClick={() => setFeedback(null)}
+              className="text-xs underline ml-4"
+            >
               Dismiss
             </button>
           </div>
@@ -204,7 +237,9 @@ export default function GrantOpportunitiesPage() {
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <span className="text-xs text-slate-400 font-medium">Sponsor Category:</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Sponsor Category:
+            </span>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -214,7 +249,9 @@ export default function GrantOpportunitiesPage() {
               <option value="GOVERNMENT_GRANT">Government Grants</option>
               <option value="INDUSTRY_SPONSORED">Industry Sponsored</option>
               <option value="FOUNDATION_PHILANTHROPY">Foundations</option>
-              <option value="INTERNATIONAL_CONSORTIUM">International Consortia</option>
+              <option value="INTERNATIONAL_CONSORTIUM">
+                International Consortia
+              </option>
             </select>
           </div>
         </div>
@@ -228,9 +265,12 @@ export default function GrantOpportunitiesPage() {
         ) : filteredOpps.length === 0 ? (
           <div className="py-20 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 space-y-4">
             <Sparkles className="h-12 w-12 text-slate-600 mx-auto" />
-            <h3 className="text-base font-semibold text-white">No funding opportunities found</h3>
+            <h3 className="text-base font-semibold text-white">
+              No funding opportunities found
+            </h3>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
-              Clear your search or catalog verified funding schemes from government agencies or sponsors.
+              Clear your search or catalog verified funding schemes from
+              government agencies or sponsors.
             </p>
           </div>
         ) : (
@@ -254,7 +294,11 @@ export default function GrantOpportunitiesPage() {
                       }`}
                       title={opp.is_saved ? "Bookmarked" : "Save opportunity"}
                     >
-                      {opp.is_saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                      {opp.is_saved ? (
+                        <BookmarkCheck className="h-4 w-4" />
+                      ) : (
+                        <Bookmark className="h-4 w-4" />
+                      )}
                     </button>
                   </div>
 
@@ -262,25 +306,33 @@ export default function GrantOpportunitiesPage() {
                     <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">
                       {opp.title}
                     </h3>
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">{opp.description}</p>
+                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                      {opp.description}
+                    </p>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-slate-400 border-t border-slate-800/60 pt-3">
                     <div className="flex items-center gap-2">
                       <Building className="h-3.5 w-3.5 text-slate-500" />
-                      <span className="text-slate-300">{opp.funding_agency_name}</span>
+                      <span className="text-slate-300">
+                        {opp.funding_agency_name}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
                       <span className="text-emerald-400 font-mono font-semibold">
-                        {opp.currency} {Number(opp.min_funding_amount || 0).toLocaleString()} →{" "}
+                        {opp.currency}{" "}
+                        {Number(opp.min_funding_amount || 0).toLocaleString()} →{" "}
                         {Number(opp.max_funding_amount || 0).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5 text-amber-400" />
                       <span className="text-slate-300">
-                        Deadline: <strong className="font-mono text-amber-400">{opp.closing_date}</strong>
+                        Deadline:{" "}
+                        <strong className="font-mono text-amber-400">
+                          {opp.closing_date}
+                        </strong>
                       </span>
                     </div>
                   </div>
@@ -288,7 +340,8 @@ export default function GrantOpportunitiesPage() {
 
                 <div className="mt-5 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-2">
                   <span className="text-[11px] text-slate-500">
-                    {opp.metadata_json?.expressions_of_interest?.length || 0} EOI(s) Logged
+                    {opp.metadata_json?.expressions_of_interest?.length || 0}{" "}
+                    EOI(s) Logged
                   </span>
                   <button
                     onClick={() => handleOpenEoi(opp)}
@@ -313,38 +366,58 @@ export default function GrantOpportunitiesPage() {
               Record Institutional Expression of Interest
             </h3>
             <p className="text-xs text-slate-400">
-              For call: <strong className="text-white">{selectedOpp.title}</strong> ({selectedOpp.funding_agency_name})
+              For call:{" "}
+              <strong className="text-white">{selectedOpp.title}</strong> (
+              {selectedOpp.funding_agency_name})
             </p>
 
             <form onSubmit={handleSubmitEoi} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Prospective Project Title</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Prospective Project Title
+                </label>
                 <input
                   type="text"
                   value={eoiForm.prospective_project_title}
-                  onChange={(e) => setEoiForm({ ...eoiForm, prospective_project_title: e.target.value })}
+                  onChange={(e) =>
+                    setEoiForm({
+                      ...eoiForm,
+                      prospective_project_title: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Estimated Budget Request</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Estimated Budget Request
+                </label>
                 <input
                   type="number"
                   value={eoiForm.estimated_budget}
-                  onChange={(e) => setEoiForm({ ...eoiForm, estimated_budget: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setEoiForm({
+                      ...eoiForm,
+                      estimated_budget: Number(e.target.value),
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Proposal Concept & Teaming Notes</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Proposal Concept & Teaming Notes
+                </label>
                 <textarea
                   rows={3}
                   value={eoiForm.notes}
-                  onChange={(e) => setEoiForm({ ...eoiForm, notes: e.target.value })}
+                  onChange={(e) =>
+                    setEoiForm({ ...eoiForm, notes: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
@@ -381,33 +454,48 @@ export default function GrantOpportunitiesPage() {
 
             <form onSubmit={handleCreateOpp} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Opportunity Code</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Opportunity Code
+                </label>
                 <input
                   type="text"
                   value={newOppForm.code}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, code: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({ ...newOppForm, code: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Scheme / Program Title</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Scheme / Program Title
+                </label>
                 <input
                   type="text"
                   value={newOppForm.title}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({ ...newOppForm, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Sponsoring Agency</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Sponsoring Agency
+                </label>
                 <input
                   type="text"
                   value={newOppForm.funding_agency_name}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, funding_agency_name: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({
+                      ...newOppForm,
+                      funding_agency_name: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />
@@ -415,31 +503,52 @@ export default function GrantOpportunitiesPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Min Funding Amount</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Min Funding Amount
+                  </label>
                   <input
                     type="number"
                     value={newOppForm.min_funding_amount}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, min_funding_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        min_funding_amount: Number(e.target.value),
+                      })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Max Funding Amount</label>
+                  <label className="block text-slate-400 font-medium mb-1">
+                    Max Funding Amount
+                  </label>
                   <input
                     type="number"
                     value={newOppForm.max_funding_amount}
-                    onChange={(e) => setNewOppForm({ ...newOppForm, max_funding_amount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewOppForm({
+                        ...newOppForm,
+                        max_funding_amount: Number(e.target.value),
+                      })
+                    }
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Submission Deadline</label>
+                <label className="block text-slate-400 font-medium mb-1">
+                  Submission Deadline
+                </label>
                 <input
                   type="date"
                   value={newOppForm.closing_date}
-                  onChange={(e) => setNewOppForm({ ...newOppForm, closing_date: e.target.value })}
+                  onChange={(e) =>
+                    setNewOppForm({
+                      ...newOppForm,
+                      closing_date: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
                   required
                 />

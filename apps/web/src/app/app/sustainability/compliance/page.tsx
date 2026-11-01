@@ -23,7 +23,9 @@ import {
 } from "../../../../types/sustainability";
 
 export default function SustainabilityCompliancePage() {
-  const [requirements, setRequirements] = useState<EnvironmentalComplianceRequirement[]>([]);
+  const [requirements, setRequirements] = useState<
+    EnvironmentalComplianceRequirement[]
+  >([]);
   const [actions, setActions] = useState<EnvironmentalCorrectiveAction[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPermitModal, setShowPermitModal] = useState(false);
@@ -31,7 +33,9 @@ export default function SustainabilityCompliancePage() {
   // Form State
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("Tamil Nadu Pollution Control Board (TNPCB)");
+  const [body, setBody] = useState(
+    "Tamil Nadu Pollution Control Board (TNPCB)",
+  );
   const [cat, setCat] = useState<ComplianceCategory>("WATER_CONSENT");
   const [renewalDate, setRenewalDate] = useState("2025-06-30");
   const [permitNo, setPermitNo] = useState("");
@@ -91,7 +95,8 @@ export default function SustainabilityCompliancePage() {
             Statutory Legal Permits & Statutory Clearances
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Audit evidence securely logged for NAAC Criteria 7 and NIRF Green Institutional Rankings.
+            Audit evidence securely logged for NAAC Criteria 7 and NIRF Green
+            Institutional Rankings.
           </p>
         </div>
         <button
@@ -126,8 +131,8 @@ export default function SustainabilityCompliancePage() {
                         req.status === "COMPLIANT"
                           ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
                           : req.status === "RENEWAL_DUE"
-                          ? "bg-amber-950 text-amber-400 border border-amber-800"
-                          : "bg-red-950 text-red-400 border border-red-800"
+                            ? "bg-amber-950 text-amber-400 border border-amber-800"
+                            : "bg-red-950 text-red-400 border border-red-800"
                       }`}
                     >
                       {req.status.replace("_", " ")}
@@ -137,19 +142,25 @@ export default function SustainabilityCompliancePage() {
                   <h3 className="text-sm font-bold text-slate-100 mt-2 line-clamp-2">
                     {req.regulation_title}
                   </h3>
-                  <p className="text-xs text-emerald-400 mt-1 font-medium">{req.regulatory_body}</p>
+                  <p className="text-xs text-emerald-400 mt-1 font-medium">
+                    {req.regulatory_body}
+                  </p>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs">
                   <div className="flex items-center justify-between text-slate-400">
                     <span>Permit / License #:</span>
-                    <span className="font-mono text-slate-200">{req.permit_number || "—"}</span>
+                    <span className="font-mono text-slate-200">
+                      {req.permit_number || "—"}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-slate-400">
                     <span>Next Renewal Date:</span>
                     <span
                       className={`font-semibold ${
-                        req.status === "RENEWAL_DUE" ? "text-amber-400 font-bold" : "text-slate-200"
+                        req.status === "RENEWAL_DUE"
+                          ? "text-amber-400 font-bold"
+                          : "text-slate-200"
                       }`}
                     >
                       {req.next_renewal_date}
@@ -173,7 +184,8 @@ export default function SustainabilityCompliancePage() {
               Environmental Corrective & Preventive Action Items (CAPA)
             </h3>
             <p className="text-xs text-slate-400 mb-4">
-              Action items initiated during internal audits to ensure continuous regulatory compliance.
+              Action items initiated during internal audits to ensure continuous
+              regulatory compliance.
             </p>
 
             <div className="space-y-3">
@@ -184,7 +196,9 @@ export default function SustainabilityCompliancePage() {
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-slate-200">{act.action_code}</span>
+                      <span className="font-mono text-xs font-bold text-slate-200">
+                        {act.action_code}
+                      </span>
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800">
                         {act.priority} PRIORITY
                       </span>
@@ -192,12 +206,18 @@ export default function SustainabilityCompliancePage() {
                         {act.status}
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-200 mt-2">{act.issue_description}</h4>
-                    <p className="text-xs text-slate-400 mt-1">{act.action_plan}</p>
+                    <h4 className="text-xs font-bold text-slate-200 mt-2">
+                      {act.issue_description}
+                    </h4>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {act.action_plan}
+                    </p>
                   </div>
                   <div className="text-right shrink-0 text-xs">
                     <div className="text-slate-400">Due Date:</div>
-                    <div className="font-semibold text-slate-200 mt-0.5">{act.due_date}</div>
+                    <div className="font-semibold text-slate-200 mt-0.5">
+                      {act.due_date}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -215,12 +235,15 @@ export default function SustainabilityCompliancePage() {
               Register Environmental Permit / Clearance
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Add statutory license reference, responsible regulatory board, and audit schedule.
+              Add statutory license reference, responsible regulatory board, and
+              audit schedule.
             </p>
 
             <form onSubmit={handleCreate} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Regulation Title / Permit</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Regulation Title / Permit
+                </label>
                 <input
                   type="text"
                   required
@@ -233,7 +256,9 @@ export default function SustainabilityCompliancePage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Regulatory Body</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Regulatory Body
+                  </label>
                   <input
                     type="text"
                     required
@@ -243,25 +268,39 @@ export default function SustainabilityCompliancePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Permit Category</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Permit Category
+                  </label>
                   <select
                     value={cat}
-                    onChange={(e) => setCat(e.target.value as ComplianceCategory)}
+                    onChange={(e) =>
+                      setCat(e.target.value as ComplianceCategory)
+                    }
                     className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                   >
                     <option value="WATER_CONSENT">Water Consent (SPCB)</option>
                     <option value="AIR_EMISSIONS">Air Emissions (SPCB)</option>
-                    <option value="GROUNDWATER_EXTRACTION_NOC">CGWA Groundwater NOC</option>
-                    <option value="HAZARDOUS_WASTE_AUTHORIZATION">Hazardous TSDF Authorization</option>
-                    <option value="E_WASTE_EPR">E-Waste EPR Authorization</option>
-                    <option value="GREEN_BUILDING_IGBC">IGBC Green Building Platinum</option>
+                    <option value="GROUNDWATER_EXTRACTION_NOC">
+                      CGWA Groundwater NOC
+                    </option>
+                    <option value="HAZARDOUS_WASTE_AUTHORIZATION">
+                      Hazardous TSDF Authorization
+                    </option>
+                    <option value="E_WASTE_EPR">
+                      E-Waste EPR Authorization
+                    </option>
+                    <option value="GREEN_BUILDING_IGBC">
+                      IGBC Green Building Platinum
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Permit Number</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Permit Number
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. TNPCB/CTO/2024-991"
@@ -271,7 +310,9 @@ export default function SustainabilityCompliancePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Next Renewal Date</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Next Renewal Date
+                  </label>
                   <input
                     type="date"
                     required
@@ -304,4 +345,3 @@ export default function SustainabilityCompliancePage() {
     </div>
   );
 }
-

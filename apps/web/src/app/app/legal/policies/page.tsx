@@ -35,7 +35,13 @@ interface InstitutionalPolicyRecord {
   policy_code: string;
   title: string;
   category: string;
-  status: "DRAFT" | "UNDER_REVIEW" | "APPROVED" | "PUBLISHED" | "SUPERSEDED" | "RETIRED";
+  status:
+    | "DRAFT"
+    | "UNDER_REVIEW"
+    | "APPROVED"
+    | "PUBLISHED"
+    | "SUPERSEDED"
+    | "RETIRED";
   version: string;
   owner_department: string;
   responsible_official: string;
@@ -118,25 +124,31 @@ const MOCK_POLICIES: InstitutionalPolicyRecord[] = [
 ];
 
 export default function PolicyGovernancePage() {
-  const [policies, setPolicies] = useState<InstitutionalPolicyRecord[]>(MOCK_POLICIES);
+  const [policies, setPolicies] =
+    useState<InstitutionalPolicyRecord[]>(MOCK_POLICIES);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
 
   // Modals
   const [isDraftOpen, setIsDraftOpen] = useState(false);
-  const [selectedPolicy, setSelectedPolicy] = useState<InstitutionalPolicyRecord | null>(null);
+  const [selectedPolicy, setSelectedPolicy] =
+    useState<InstitutionalPolicyRecord | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   // Draft form
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("INFORMATION_SECURITY");
   const [newSummary, setNewSummary] = useState("");
-  const [newDepartment, setNewDepartment] = useState("Legal & Institutional Affairs");
+  const [newDepartment, setNewDepartment] = useState(
+    "Legal & Institutional Affairs",
+  );
   const [newRequiresAck, setNewRequiresAck] = useState(true);
 
   // Review form
-  const [reviewDecision, setReviewDecision] = useState<"PUBLISHED" | "APPROVED" | "SUPERSEDED">("PUBLISHED");
+  const [reviewDecision, setReviewDecision] = useState<
+    "PUBLISHED" | "APPROVED" | "SUPERSEDED"
+  >("PUBLISHED");
   const [reviewNotes, setReviewNotes] = useState("");
 
   function handleDraftSubmit(e: React.FormEvent) {
@@ -151,7 +163,9 @@ export default function PolicyGovernancePage() {
       owner_department: newDepartment,
       responsible_official: "Designated Policy Steward",
       effective_date: new Date().toISOString().split("T")[0],
-      review_by_date: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+      review_by_date: new Date(Date.now() + 365 * 86400000)
+        .toISOString()
+        .split("T")[0],
       requires_acknowledgment: newRequiresAck,
       summary: newSummary,
       scope: "Campus-wide Institutional Scope",
@@ -173,14 +187,15 @@ export default function PolicyGovernancePage() {
               status: reviewDecision,
               effective_date: new Date().toISOString().split("T")[0],
             }
-          : p
-      )
+          : p,
+      ),
     );
     setIsReviewOpen(false);
   }
 
   const filteredPolicies = policies.filter((p) => {
-    if (selectedCategory !== "ALL" && p.category !== selectedCategory) return false;
+    if (selectedCategory !== "ALL" && p.category !== selectedCategory)
+      return false;
     if (selectedStatus !== "ALL" && p.status !== selectedStatus) return false;
     if (
       searchTerm &&
@@ -201,10 +216,13 @@ export default function PolicyGovernancePage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-indigo-600" /> Institutional Policy & Procedure Governance
+              <BookOpen className="h-6 w-6 text-indigo-600" /> Institutional
+              Policy & Procedure Governance
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Controlled lifecycle management for university policies, senate reviews, mandatory faculty/staff attestations, and archival supersession.
+              Controlled lifecycle management for university policies, senate
+              reviews, mandatory faculty/staff attestations, and archival
+              supersession.
             </p>
           </div>
           <button
@@ -237,11 +255,19 @@ export default function PolicyGovernancePage() {
               >
                 <option value="ALL">All Categories</option>
                 <option value="ACADEMIC">Academic Policies</option>
-                <option value="INFORMATION_SECURITY">Information Security & Privacy</option>
+                <option value="INFORMATION_SECURITY">
+                  Information Security & Privacy
+                </option>
                 <option value="FINANCIAL">Finance & Procurement</option>
-                <option value="RESEARCH_ETHICS">Research & Human Subjects</option>
-                <option value="STUDENT_CONDUCT">Student Conduct & Grievances</option>
-                <option value="CAMPUS_OPERATIONS">Campus Operations & Safety</option>
+                <option value="RESEARCH_ETHICS">
+                  Research & Human Subjects
+                </option>
+                <option value="STUDENT_CONDUCT">
+                  Student Conduct & Grievances
+                </option>
+                <option value="CAMPUS_OPERATIONS">
+                  Campus Operations & Safety
+                </option>
               </select>
 
               <select
@@ -278,15 +304,17 @@ export default function PolicyGovernancePage() {
                       policy.status === "PUBLISHED"
                         ? "bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
                         : policy.status === "APPROVED"
-                        ? "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
-                        : "bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
+                          ? "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                          : "bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
                     }`}
                   >
                     {policy.status}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{policy.title}</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {policy.title}
+                </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
                   {policy.summary}
                 </p>
@@ -295,13 +323,17 @@ export default function PolicyGovernancePage() {
               <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
                 <div className="grid grid-cols-2 gap-2 text-slate-500">
                   <div>
-                    <span className="block text-[10px] uppercase font-bold text-slate-400">Owner</span>
+                    <span className="block text-[10px] uppercase font-bold text-slate-400">
+                      Owner
+                    </span>
                     <strong className="text-slate-700 dark:text-slate-300 truncate block">
                       {policy.owner_department}
                     </strong>
                   </div>
                   <div>
-                    <span className="block text-[10px] uppercase font-bold text-slate-400">Review Due</span>
+                    <span className="block text-[10px] uppercase font-bold text-slate-400">
+                      Review Due
+                    </span>
                     <strong className="text-slate-700 dark:text-slate-300 block">
                       {formatLegalDate(policy.review_by_date)}
                     </strong>
@@ -311,9 +343,12 @@ export default function PolicyGovernancePage() {
                 {policy.requires_acknowledgment && (
                   <div className="p-2.5 rounded-lg bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 font-medium">
-                      <UserCheck className="h-4 w-4" /> Mandatory Attestation Active
+                      <UserCheck className="h-4 w-4" /> Mandatory Attestation
+                      Active
                     </span>
-                    <span className="font-bold">{policy.acknowledgment_count} Signed</span>
+                    <span className="font-bold">
+                      {policy.acknowledgment_count} Signed
+                    </span>
                   </div>
                 )}
 
@@ -343,7 +378,8 @@ export default function PolicyGovernancePage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Plus className="h-5 w-5 text-indigo-600" /> Propose New Institutional Policy Draft
+                <Plus className="h-5 w-5 text-indigo-600" /> Propose New
+                Institutional Policy Draft
               </h3>
               <button
                 onClick={() => setIsDraftOpen(false)}
@@ -379,7 +415,9 @@ export default function PolicyGovernancePage() {
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="ACADEMIC">ACADEMIC</option>
-                    <option value="INFORMATION_SECURITY">INFORMATION_SECURITY</option>
+                    <option value="INFORMATION_SECURITY">
+                      INFORMATION_SECURITY
+                    </option>
                     <option value="FINANCIAL">FINANCIAL</option>
                     <option value="RESEARCH_ETHICS">RESEARCH_ETHICS</option>
                     <option value="STUDENT_CONDUCT">STUDENT_CONDUCT</option>
@@ -422,8 +460,12 @@ export default function PolicyGovernancePage() {
                   onChange={(e) => setNewRequiresAck(e.target.checked)}
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                <label htmlFor="requiresAck" className="text-xs text-slate-700 dark:text-slate-300">
-                  Require annual digital acknowledgment from affected campus personnel
+                <label
+                  htmlFor="requiresAck"
+                  className="text-xs text-slate-700 dark:text-slate-300"
+                >
+                  Require annual digital acknowledgment from affected campus
+                  personnel
                 </label>
               </div>
 
@@ -453,7 +495,8 @@ export default function PolicyGovernancePage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-indigo-600" /> Policy Review & Publication Workflow
+                <FileCheck className="h-5 w-5 text-indigo-600" /> Policy Review
+                & Publication Workflow
               </h3>
               <button
                 onClick={() => setIsReviewOpen(false)}
@@ -464,7 +507,8 @@ export default function PolicyGovernancePage() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Policy: <strong>{selectedPolicy.title}</strong> ({selectedPolicy.policy_code})
+              Policy: <strong>{selectedPolicy.title}</strong> (
+              {selectedPolicy.policy_code})
             </p>
 
             <form onSubmit={handleReviewSubmit} className="space-y-4 text-sm">
@@ -477,9 +521,15 @@ export default function PolicyGovernancePage() {
                   onChange={(e) => setReviewDecision(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
-                  <option value="PUBLISHED">PUBLISH (Enact as Official Institutional Policy)</option>
-                  <option value="APPROVED">APPROVE (Awaiting Next Semester Rollout)</option>
-                  <option value="SUPERSEDED">SUPERSEDE (Archive and Replace with New Edition)</option>
+                  <option value="PUBLISHED">
+                    PUBLISH (Enact as Official Institutional Policy)
+                  </option>
+                  <option value="APPROVED">
+                    APPROVE (Awaiting Next Semester Rollout)
+                  </option>
+                  <option value="SUPERSEDED">
+                    SUPERSEDE (Archive and Replace with New Edition)
+                  </option>
                 </select>
               </div>
 

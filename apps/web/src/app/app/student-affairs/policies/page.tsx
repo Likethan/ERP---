@@ -19,7 +19,9 @@ import {
 } from "lucide-react";
 
 export default function PolicyReferencesPage() {
-  const [policies, setPolicies] = useState<StudentAffairsPolicyConfigModel[]>([]);
+  const [policies, setPolicies] = useState<StudentAffairsPolicyConfigModel[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +40,10 @@ export default function PolicyReferencesPage() {
         items={[
           { label: "Dashboard", href: "/app/dashboard" },
           { label: "Student Affairs", href: "/app/student-affairs" },
-          { label: "Policy & Procedure References", href: "/app/student-affairs/policies" },
+          {
+            label: "Policy & Procedure References",
+            href: "/app/student-affairs/policies",
+          },
         ]}
       />
 
@@ -48,7 +53,8 @@ export default function PolicyReferencesPage() {
           Institutional Policies, Codes of Conduct & Procedural Regulations
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Version-controlled institutional policy frameworks, UGC statutory fairness regulations, and procedural timeline benchmarks.
+          Version-controlled institutional policy frameworks, UGC statutory
+          fairness regulations, and procedural timeline benchmarks.
         </p>
       </div>
 
@@ -81,22 +87,34 @@ export default function PolicyReferencesPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Triage SLA Window:</span>
-                  <span className="text-slate-200">{pol.sla_triage_hours} Hours</span>
+                  <span className="text-slate-200">
+                    {pol.sla_triage_hours} Hours
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Investigation Window:</span>
-                  <span className="text-slate-200">{pol.sla_investigation_days} Days</span>
+                  <span className="text-slate-200">
+                    {pol.sla_investigation_days} Days
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Statutory Appeal Window:</span>
-                  <span className="text-emerald-400 font-medium">{pol.standard_appeal_window_days} Days</span>
+                  <span className="text-emerald-400 font-medium">
+                    {pol.standard_appeal_window_days} Days
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-              <span className="text-[10px] text-slate-500">Official Syndicate Gazette</span>
-              <Button size="sm" variant="outline" className="border-slate-700 text-slate-300 text-xs gap-1.5">
+              <span className="text-[10px] text-slate-500">
+                Official Syndicate Gazette
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-slate-700 text-slate-300 text-xs gap-1.5"
+              >
                 <Download className="h-3 w-3" />
                 Charter PDF
               </Button>

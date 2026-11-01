@@ -357,7 +357,8 @@ export default function TransportDashboardPage() {
                 Fleet Telematics
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                Truthful GPS telemetry boundaries, AIS-140 tracking & modem health.
+                Truthful GPS telemetry boundaries, AIS-140 tracking & modem
+                health.
               </p>
             </Link>
 

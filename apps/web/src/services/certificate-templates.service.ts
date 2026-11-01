@@ -12,7 +12,6 @@ class CertificateTemplatesService {
   async listTemplates(
     audience?: string,
   ): Promise<ApiResponse<CertificateTemplate[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.templates];
     if (audience && audience !== "ALL") {
       items = items.filter(
@@ -27,7 +26,6 @@ class CertificateTemplatesService {
   async getTemplateById(
     id: string,
   ): Promise<ApiResponse<CertificateTemplate | null>> {
-    await new Promise((r) => setTimeout(r, 20));
     const tmpl = this.templates.find((t) => t.id === id) || null;
     return { success: true, data: tmpl };
   }
@@ -35,7 +33,6 @@ class CertificateTemplatesService {
   async createTemplate(
     data: Partial<CertificateTemplate>,
   ): Promise<ApiResponse<CertificateTemplate>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newTmpl: CertificateTemplate = {
       id: `tmpl-${Date.now()}`,
       templateName: data.templateName || "Custom Institutional Certificate",
@@ -90,7 +87,6 @@ class CertificateTemplatesService {
     id: string,
     data: Partial<CertificateTemplate>,
   ): Promise<ApiResponse<CertificateTemplate>> {
-    await new Promise((r) => setTimeout(r, 50));
     const tmpl = this.templates.find((t) => t.id === id);
     if (!tmpl) {
       throw new Error(`Template with ID ${id} not found`);

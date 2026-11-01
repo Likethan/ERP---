@@ -33,8 +33,10 @@ class DedicatedStaffService {
       if (params?.page) q.set("page", params.page.toString());
       if (params?.pageSize) q.set("page_size", params.pageSize.toString());
       const qs = q.toString() ? `?${q.toString()}` : "";
-      const res = await apiFetch<WorkforceEmployeeItem[]>(`/api/v1/workforce/employees${qs}`);
-      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+      const res = await apiFetch<WorkforceEmployeeItem[]>(
+        `/api/v1/workforce/employees${qs}`,
+      );
+      if (res.data && Array.isArray(res.data)) {
         const liveItems: StaffDetailView[] = res.data.map((emp) => ({
           id: emp.id,
           employeeCode: emp.employee_number,
@@ -45,9 +47,13 @@ class DedicatedStaffService {
           department: emp.department_name || "Academic Administration",
           role: emp.job_title || emp.designation,
           designation: emp.designation,
-          employmentType: emp.employment_type === "CONTRACT" ? "CONTRACT" : "PERMANENT",
+          employmentType:
+            emp.employment_type === "CONTRACT" ? "CONTRACT" : "PERMANENT",
           joiningDate: emp.joining_date,
-          status: emp.employment_status === "ACTIVE" ? "ACTIVE" : (emp.employment_status as any),
+          status:
+            emp.employment_status === "ACTIVE"
+              ? "ACTIVE"
+              : (emp.employment_status as any),
           shift: this.shifts[0],
           leaveBalance: { casual: 12, sick: 10, earned: 15 },
           leaves: [],
@@ -75,8 +81,6 @@ class DedicatedStaffService {
     } catch {
       // Fallback to in-memory mock roster
     }
-
-    await new Promise((r) => setTimeout(r, 50));
 
     let items = [...this.staff];
 
@@ -139,7 +143,6 @@ class DedicatedStaffService {
   }
 
   async getById(id: string): Promise<ApiResponse<StaffDetailView | null>> {
-    await new Promise((r) => setTimeout(r, 40));
     const member = this.staff.find(
       (s) => s.id === id || s.employeeCode.toLowerCase() === id.toLowerCase(),
     );
@@ -162,7 +165,6 @@ class DedicatedStaffService {
   async create(
     data: Partial<StaffDetailView>,
   ): Promise<ApiResponse<StaffDetailView>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newStaff: StaffDetailView = {
       id: `stf-${Date.now()}`,
       employeeCode: data.employeeCode || `STF-ADM-0${this.staff.length + 10}`,
@@ -192,7 +194,6 @@ class DedicatedStaffService {
     id: string,
     data: Partial<StaffDetailView>,
   ): Promise<ApiResponse<StaffDetailView>> {
-    await new Promise((r) => setTimeout(r, 60));
     const idx = this.staff.findIndex(
       (s) => s.id === id || s.employeeCode.toLowerCase() === id.toLowerCase(),
     );
@@ -206,7 +207,6 @@ class DedicatedStaffService {
   // ==========================================
 
   async getShifts(): Promise<ApiResponse<StaffShiftItem[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: this.shifts };
   }
 
@@ -214,7 +214,6 @@ class DedicatedStaffService {
     staffId: string,
     shiftId: string,
   ): Promise<ApiResponse<StaffDetailView>> {
-    await new Promise((r) => setTimeout(r, 60));
     const targetShift = this.shifts.find((sh) => sh.id === shiftId);
     if (!targetShift) throw new Error("Shift schedule not found");
 
@@ -230,7 +229,6 @@ class DedicatedStaffService {
   // ==========================================
 
   async getLeaves(staffId?: string): Promise<ApiResponse<StaffLeaveRequest[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.leaves];
     if (staffId) {
       items = items.filter((l) => l.staffId === staffId);
@@ -241,7 +239,6 @@ class DedicatedStaffService {
   async createLeaveRequest(
     data: Partial<StaffLeaveRequest>,
   ): Promise<ApiResponse<StaffLeaveRequest>> {
-    await new Promise((r) => setTimeout(r, 80));
     const newLeave: StaffLeaveRequest = {
       id: `lv-${Date.now()}`,
       staffId: data.staffId || "stf-001",
@@ -265,7 +262,6 @@ class DedicatedStaffService {
     reviewerName = "Registrar Office",
     remarks?: string,
   ): Promise<ApiResponse<StaffLeaveRequest>> {
-    await new Promise((r) => setTimeout(r, 60));
     const target = this.leaves.find((l) => l.id === leaveId);
     if (!target) throw new Error("Leave request not found");
     target.status = "APPROVED";
@@ -280,7 +276,6 @@ class DedicatedStaffService {
     reviewerName = "Registrar Office",
     remarks?: string,
   ): Promise<ApiResponse<StaffLeaveRequest>> {
-    await new Promise((r) => setTimeout(r, 60));
     const target = this.leaves.find((l) => l.id === leaveId);
     if (!target) throw new Error("Leave request not found");
     target.status = "REJECTED";

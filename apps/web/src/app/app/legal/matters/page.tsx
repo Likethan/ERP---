@@ -55,16 +55,20 @@ export default function LegalMattersRegisterPage() {
   const [selectedPriority, setSelectedPriority] = useState<string>("ALL");
 
   // Privileged notes reveal toggles per matter id
-  const [revealedNotes, setRevealedNotes] = useState<Record<string, boolean>>({});
+  const [revealedNotes, setRevealedNotes] = useState<Record<string, boolean>>(
+    {},
+  );
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [selectedMatter, setSelectedMatter] = useState<InstitutionalLegalMatter | null>(null);
+  const [selectedMatter, setSelectedMatter] =
+    useState<InstitutionalLegalMatter | null>(null);
 
   // Create form state
   const [newTitle, setNewTitle] = useState("");
-  const [newCategory, setNewCategory] = useState<LegalMatterCategory>("CONTRACT_DISPUTE");
+  const [newCategory, setNewCategory] =
+    useState<LegalMatterCategory>("CONTRACT_DISPUTE");
   const [newPriority, setNewPriority] = useState<LegalMatterPriority>("MEDIUM");
   const [newSummary, setNewSummary] = useState("");
   const [newCounselName, setNewCounselName] = useState("");
@@ -73,10 +77,14 @@ export default function LegalMattersRegisterPage() {
   const [newPrivilegedNotes, setNewPrivilegedNotes] = useState("");
 
   // Update form state
-  const [updateStatus, setUpdateStatus] = useState<LegalMatterStatus>("UNDER_REVIEW");
-  const [updatePriority, setUpdatePriority] = useState<LegalMatterPriority>("HIGH");
+  const [updateStatus, setUpdateStatus] =
+    useState<LegalMatterStatus>("UNDER_REVIEW");
+  const [updatePriority, setUpdatePriority] =
+    useState<LegalMatterPriority>("HIGH");
   const [updateResolutionSummary, setUpdateResolutionSummary] = useState("");
-  const [updateSettlementAmount, setUpdateSettlementAmount] = useState<number | undefined>(undefined);
+  const [updateSettlementAmount, setUpdateSettlementAmount] = useState<
+    number | undefined
+  >(undefined);
   const [updateConfidentialNotes, setUpdateConfidentialNotes] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,7 +129,10 @@ export default function LegalMattersRegisterPage() {
         priority: newPriority,
         description: newSummary,
         outside_counsel_json: newCounselName
-          ? { attorney: newCounselName, firm: newCounselFirm || "Retained External Counsel" }
+          ? {
+              attorney: newCounselName,
+              firm: newCounselFirm || "Retained External Counsel",
+            }
           : undefined,
         opposing_party_name: newOpposingParty || undefined,
         confidential_notes: newPrivilegedNotes || undefined,
@@ -200,10 +211,12 @@ export default function LegalMattersRegisterPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Gavel className="h-6 w-6 text-indigo-600" /> Restricted Institutional Legal Matters
+              <Gavel className="h-6 w-6 text-indigo-600" /> Restricted
+              Institutional Legal Matters
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Confidential case tracking for contract disputes, regulatory inquiries, litigation defense, and retained counsel engagements.
+              Confidential case tracking for contract disputes, regulatory
+              inquiries, litigation defense, and retained counsel engagements.
             </p>
           </div>
           <button
@@ -219,8 +232,12 @@ export default function LegalMattersRegisterPage() {
           <div className="flex items-center gap-3">
             <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0" />
             <div>
-              <strong className="font-semibold block">RESTRICTED LEGAL PRIVILEGE CLASSIFICATION</strong>
-              Records in this register are subject to institutional attorney-client privilege and work-product doctrine. Access is audited under CampusOS Compliance controls.
+              <strong className="font-semibold block">
+                RESTRICTED LEGAL PRIVILEGE CLASSIFICATION
+              </strong>
+              Records in this register are subject to institutional
+              attorney-client privilege and work-product doctrine. Access is
+              audited under CampusOS Compliance controls.
             </div>
           </div>
           <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-800">
@@ -253,9 +270,13 @@ export default function LegalMattersRegisterPage() {
                 <option value="VENDOR_DISPUTE">Vendor Dispute</option>
                 <option value="EMPLOYMENT_MATTER">Employment Dispute</option>
                 <option value="REGULATORY_INQUIRY">Regulatory Inquiry</option>
-                <option value="LITIGATION_PROCEEDING">Litigation / Proceedings</option>
+                <option value="LITIGATION_PROCEEDING">
+                  Litigation / Proceedings
+                </option>
                 <option value="LEGAL_OPINION">Legal Opinion / Advice</option>
-                <option value="EXTERNAL_COUNSEL">External Counsel Engagement</option>
+                <option value="EXTERNAL_COUNSEL">
+                  External Counsel Engagement
+                </option>
               </select>
 
               <select
@@ -266,7 +287,9 @@ export default function LegalMattersRegisterPage() {
                 <option value="ALL">All Statuses</option>
                 <option value="OPEN">Open</option>
                 <option value="IN_INVESTIGATION">In Investigation</option>
-                <option value="SETTLEMENT_NEGOTIATION">Settlement Negotiation</option>
+                <option value="SETTLEMENT_NEGOTIATION">
+                  Settlement Negotiation
+                </option>
                 <option value="LITIGATION_PENDING">Litigation Pending</option>
                 <option value="RESOLVED">Resolved</option>
                 <option value="CLOSED">Closed</option>
@@ -304,9 +327,12 @@ export default function LegalMattersRegisterPage() {
         ) : filteredMatters.length === 0 ? (
           <div className="p-16 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
             <Gavel className="h-10 w-10 text-slate-300 mx-auto" />
-            <p className="text-base font-semibold text-slate-700 dark:text-slate-300">No Legal Matters Found</p>
+            <p className="text-base font-semibold text-slate-700 dark:text-slate-300">
+              No Legal Matters Found
+            </p>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
-              No confidential legal matters match your current query or permissions scope.
+              No confidential legal matters match your current query or
+              permissions scope.
             </p>
           </div>
         ) : (
@@ -326,14 +352,14 @@ export default function LegalMattersRegisterPage() {
                         </span>
                         <span
                           className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${getMatterPriorityBadge(
-                            m.priority
+                            m.priority,
                           )}`}
                         >
                           {m.priority}
                         </span>
                         <span
                           className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${getMatterStatusBadge(
-                            m.status
+                            m.status,
                           )}`}
                         >
                           {m.status.replace(/_/g, " ")}
@@ -342,7 +368,9 @@ export default function LegalMattersRegisterPage() {
                           {m.category.replace(/_/g, " ")}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white pt-1">{m.title}</h3>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white pt-1">
+                        {m.title}
+                      </h3>
                       {m.description && (
                         <p className="text-xs text-slate-600 dark:text-slate-400 max-w-3xl">
                           {m.description}
@@ -363,13 +391,17 @@ export default function LegalMattersRegisterPage() {
                   {/* Metadata Sub-grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800">
                     <div>
-                      <span className="text-slate-400 block">Opposing Party</span>
+                      <span className="text-slate-400 block">
+                        Opposing Party
+                      </span>
                       <strong className="text-slate-700 dark:text-slate-200">
                         {m.opposing_party_name || "Confidential / Unspecified"}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block">Outside Counsel</span>
+                      <span className="text-slate-400 block">
+                        Outside Counsel
+                      </span>
                       <strong className="text-slate-700 dark:text-slate-200">
                         {m.outside_counsel_json?.attorney
                           ? `${m.outside_counsel_json.attorney} (${m.outside_counsel_json.firm || "Firm"})`
@@ -377,15 +409,21 @@ export default function LegalMattersRegisterPage() {
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block">Filed / Opened Date</span>
+                      <span className="text-slate-400 block">
+                        Filed / Opened Date
+                      </span>
                       <strong className="text-slate-700 dark:text-slate-200">
                         {formatLegalDate(m.opened_date || m.created_at)}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block">Settlement / Exposure</span>
+                      <span className="text-slate-400 block">
+                        Settlement / Exposure
+                      </span>
                       <strong className="text-slate-700 dark:text-slate-200">
-                        {m.settlement_amount ? formatCurrency(m.settlement_amount) : "No Direct Claim"}
+                        {m.settlement_amount
+                          ? formatCurrency(m.settlement_amount)
+                          : "No Direct Claim"}
                       </strong>
                     </div>
                   </div>
@@ -396,7 +434,9 @@ export default function LegalMattersRegisterPage() {
                       <strong className="text-emerald-800 dark:text-emerald-300 block mb-0.5">
                         Resolution & Settlement Summary:
                       </strong>
-                      <p className="text-emerald-900 dark:text-emerald-200">{m.resolution_summary}</p>
+                      <p className="text-emerald-900 dark:text-emerald-200">
+                        {m.resolution_summary}
+                      </p>
                     </div>
                   )}
 
@@ -408,11 +448,13 @@ export default function LegalMattersRegisterPage() {
                     >
                       {isRevealed ? (
                         <>
-                          <EyeOff className="h-3.5 w-3.5" /> Hide Attorney-Client Privileged Notes
+                          <EyeOff className="h-3.5 w-3.5" /> Hide
+                          Attorney-Client Privileged Notes
                         </>
                       ) : (
                         <>
-                          <Eye className="h-3.5 w-3.5" /> View Attorney-Client Privileged Notes
+                          <Eye className="h-3.5 w-3.5" /> View Attorney-Client
+                          Privileged Notes
                         </>
                       )}
                     </button>
@@ -429,7 +471,8 @@ export default function LegalMattersRegisterPage() {
                         Privileged Counsel Work-Product Record
                       </div>
                       <p className="text-indigo-950 dark:text-indigo-200 font-mono text-xs leading-relaxed">
-                        {m.confidential_notes || "No restricted counsel notes recorded for this matter."}
+                        {m.confidential_notes ||
+                          "No restricted counsel notes recorded for this matter."}
                       </p>
                     </div>
                   )}
@@ -446,7 +489,8 @@ export default function LegalMattersRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Gavel className="h-5 w-5 text-indigo-600" /> Open Institutional Legal Matter
+                <Gavel className="h-5 w-5 text-indigo-600" /> Open Institutional
+                Legal Matter
               </h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -478,16 +522,28 @@ export default function LegalMattersRegisterPage() {
                   </label>
                   <select
                     value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as LegalMatterCategory)}
+                    onChange={(e) =>
+                      setNewCategory(e.target.value as LegalMatterCategory)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="CONTRACT_DISPUTE">Contract Dispute</option>
                     <option value="VENDOR_DISPUTE">Vendor Dispute</option>
-                    <option value="EMPLOYMENT_MATTER">Employment Dispute</option>
-                    <option value="REGULATORY_INQUIRY">Regulatory Inquiry</option>
-                    <option value="LITIGATION_PROCEEDING">Litigation / Proceedings</option>
-                    <option value="LEGAL_OPINION">Legal Opinion / Advice</option>
-                    <option value="EXTERNAL_COUNSEL">External Counsel Engagement</option>
+                    <option value="EMPLOYMENT_MATTER">
+                      Employment Dispute
+                    </option>
+                    <option value="REGULATORY_INQUIRY">
+                      Regulatory Inquiry
+                    </option>
+                    <option value="LITIGATION_PROCEEDING">
+                      Litigation / Proceedings
+                    </option>
+                    <option value="LEGAL_OPINION">
+                      Legal Opinion / Advice
+                    </option>
+                    <option value="EXTERNAL_COUNSEL">
+                      External Counsel Engagement
+                    </option>
                   </select>
                 </div>
                 <div>
@@ -496,7 +552,9 @@ export default function LegalMattersRegisterPage() {
                   </label>
                   <select
                     value={newPriority}
-                    onChange={(e) => setNewPriority(e.target.value as LegalMatterPriority)}
+                    onChange={(e) =>
+                      setNewPriority(e.target.value as LegalMatterPriority)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="LOW">Low</option>
@@ -549,7 +607,8 @@ export default function LegalMattersRegisterPage() {
 
               <div>
                 <label className="block text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1 flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5" /> Confidential Counsel Notes (Privileged)
+                  <Lock className="h-3.5 w-3.5" /> Confidential Counsel Notes
+                  (Privileged)
                 </label>
                 <textarea
                   rows={3}
@@ -593,7 +652,8 @@ export default function LegalMattersRegisterPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-indigo-600" /> Update Matter Status / Closure
+                <Briefcase className="h-5 w-5 text-indigo-600" /> Update Matter
+                Status / Closure
               </h3>
               <button
                 onClick={() => setIsUpdateOpen(false)}
@@ -611,13 +671,19 @@ export default function LegalMattersRegisterPage() {
                   </label>
                   <select
                     value={updateStatus}
-                    onChange={(e) => setUpdateStatus(e.target.value as LegalMatterStatus)}
+                    onChange={(e) =>
+                      setUpdateStatus(e.target.value as LegalMatterStatus)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="OPEN">OPEN</option>
                     <option value="IN_INVESTIGATION">IN_INVESTIGATION</option>
-                    <option value="SETTLEMENT_NEGOTIATION">SETTLEMENT_NEGOTIATION</option>
-                    <option value="LITIGATION_PENDING">LITIGATION_PENDING</option>
+                    <option value="SETTLEMENT_NEGOTIATION">
+                      SETTLEMENT_NEGOTIATION
+                    </option>
+                    <option value="LITIGATION_PENDING">
+                      LITIGATION_PENDING
+                    </option>
                     <option value="RESOLVED">RESOLVED</option>
                     <option value="CLOSED">CLOSED</option>
                   </select>
@@ -628,7 +694,9 @@ export default function LegalMattersRegisterPage() {
                   </label>
                   <select
                     value={updatePriority}
-                    onChange={(e) => setUpdatePriority(e.target.value as LegalMatterPriority)}
+                    onChange={(e) =>
+                      setUpdatePriority(e.target.value as LegalMatterPriority)
+                    }
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                   >
                     <option value="LOW">LOW</option>
@@ -645,9 +713,15 @@ export default function LegalMattersRegisterPage() {
                 </label>
                 <input
                   type="number"
-                  value={updateSettlementAmount !== undefined ? updateSettlementAmount : ""}
+                  value={
+                    updateSettlementAmount !== undefined
+                      ? updateSettlementAmount
+                      : ""
+                  }
                   onChange={(e) =>
-                    setUpdateSettlementAmount(e.target.value ? parseFloat(e.target.value) : undefined)
+                    setUpdateSettlementAmount(
+                      e.target.value ? parseFloat(e.target.value) : undefined,
+                    )
                   }
                   placeholder="0.00"
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"

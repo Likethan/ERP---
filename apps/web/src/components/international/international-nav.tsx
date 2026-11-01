@@ -32,22 +32,86 @@ interface NavTab {
 }
 
 const NAV_TABS: NavTab[] = [
-  { label: "Dashboard", href: "/app/international", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { label: "Partners", href: "/app/international/partners", icon: <Building2 className="h-4 w-4" /> },
-  { label: "MoUs & Agreements", href: "/app/international/agreements", icon: <FileText className="h-4 w-4" /> },
-  { label: "Programs", href: "/app/international/programs", icon: <Compass className="h-4 w-4" /> },
-  { label: "Applications", href: "/app/international/applications", icon: <FileEdit className="h-4 w-4" /> },
-  { label: "Reviews", href: "/app/international/applications/review", icon: <ShieldCheck className="h-4 w-4" /> },
-  { label: "Nominations", href: "/app/international/nominations", icon: <CheckSquare className="h-4 w-4" /> },
-  { label: "Inbound Scholars", href: "/app/international/inbound", icon: <DoorOpen className="h-4 w-4" /> },
-  { label: "Outbound Mobility", href: "/app/international/outbound", icon: <MapPin className="h-4 w-4" /> },
-  { label: "Faculty Exchange", href: "/app/international/faculty-exchange", icon: <UserCheck className="h-4 w-4" /> },
-  { label: "Credit Transfer", href: "/app/international/credit-transfer", icon: <Scale className="h-4 w-4" /> },
-  { label: "Documents", href: "/app/international/documents", icon: <FileCheck2 className="h-4 w-4" /> },
-  { label: "Scholarships", href: "/app/international/scholarships", icon: <Award className="h-4 w-4" /> },
-  { label: "Calendar", href: "/app/international/calendar", icon: <Calendar className="h-4 w-4" /> },
-  { label: "Analytics", href: "/app/international/analytics", icon: <BarChart3 className="h-4 w-4" /> },
-  { label: "Policies & Config", href: "/app/international/config", icon: <Settings className="h-4 w-4" /> },
+  {
+    label: "Dashboard",
+    href: "/app/international",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+  },
+  {
+    label: "Partners",
+    href: "/app/international/partners",
+    icon: <Building2 className="h-4 w-4" />,
+  },
+  {
+    label: "MoUs & Agreements",
+    href: "/app/international/agreements",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    label: "Programs",
+    href: "/app/international/programs",
+    icon: <Compass className="h-4 w-4" />,
+  },
+  {
+    label: "Applications",
+    href: "/app/international/applications",
+    icon: <FileEdit className="h-4 w-4" />,
+  },
+  {
+    label: "Reviews",
+    href: "/app/international/applications/review",
+    icon: <ShieldCheck className="h-4 w-4" />,
+  },
+  {
+    label: "Nominations",
+    href: "/app/international/nominations",
+    icon: <CheckSquare className="h-4 w-4" />,
+  },
+  {
+    label: "Inbound Scholars",
+    href: "/app/international/inbound",
+    icon: <DoorOpen className="h-4 w-4" />,
+  },
+  {
+    label: "Outbound Mobility",
+    href: "/app/international/outbound",
+    icon: <MapPin className="h-4 w-4" />,
+  },
+  {
+    label: "Faculty Exchange",
+    href: "/app/international/faculty-exchange",
+    icon: <UserCheck className="h-4 w-4" />,
+  },
+  {
+    label: "Credit Transfer",
+    href: "/app/international/credit-transfer",
+    icon: <Scale className="h-4 w-4" />,
+  },
+  {
+    label: "Documents",
+    href: "/app/international/documents",
+    icon: <FileCheck2 className="h-4 w-4" />,
+  },
+  {
+    label: "Scholarships",
+    href: "/app/international/scholarships",
+    icon: <Award className="h-4 w-4" />,
+  },
+  {
+    label: "Calendar",
+    href: "/app/international/calendar",
+    icon: <Calendar className="h-4 w-4" />,
+  },
+  {
+    label: "Analytics",
+    href: "/app/international/analytics",
+    icon: <BarChart3 className="h-4 w-4" />,
+  },
+  {
+    label: "Policies & Config",
+    href: "/app/international/config",
+    icon: <Settings className="h-4 w-4" />,
+  },
 ];
 
 export function InternationalNav() {
@@ -96,7 +160,10 @@ export function InternationalNav() {
       {/* Horizontal Scrollable Tabs */}
       <div className="px-6 flex items-center gap-1 overflow-x-auto no-scrollbar pb-0">
         {NAV_TABS.map((tab) => {
-          const isActive = pathname === tab.href || (tab.href !== "/app/international" && pathname?.startsWith(tab.href));
+          const isActive =
+            pathname === tab.href ||
+            (tab.href !== "/app/international" &&
+              pathname?.startsWith(tab.href));
           return (
             <Link
               key={tab.href}
@@ -105,7 +172,7 @@ export function InternationalNav() {
                 "flex items-center gap-2 px-3 py-2.5 text-xs font-medium whitespace-nowrap border-b-2 transition-all",
                 isActive
                   ? "border-cyan-500 text-cyan-400 bg-cyan-500/5 font-semibold"
-                  : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                  : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700",
               )}
             >
               {tab.icon}

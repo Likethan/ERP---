@@ -10,7 +10,6 @@ class AiSavedService {
     type?: string;
     search?: string;
   }): Promise<ApiResponse<SavedInsight[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let result = [...this.saved];
 
     if (filters?.domain && filters.domain !== "ALL") {
@@ -40,7 +39,6 @@ class AiSavedService {
     contentSnippet: string;
     href: string;
   }): Promise<ApiResponse<SavedInsight>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newItem: SavedInsight = {
       id: `saved-${Date.now().toString(36)}`,
       title: payload.title,
@@ -59,7 +57,6 @@ class AiSavedService {
   }
 
   async removeSavedInsight(id: string): Promise<ApiResponse<boolean>> {
-    await new Promise((r) => setTimeout(r, 40));
     const idx = this.saved.findIndex((s) => s.id === id);
     if (idx === -1) return { success: false, data: false };
 

@@ -30,8 +30,6 @@ class InfrastructureService {
   async getInfrastructureDashboard(): Promise<
     ApiResponse<InfrastructureDashboardSummary>
   > {
-    await new Promise((r) => setTimeout(r, 40));
-
     const [
       hostelsRes,
       roomsRes,

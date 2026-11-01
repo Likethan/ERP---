@@ -318,8 +318,14 @@ export const MOCK_PROGRAMS: MobilityProgram[] = [
     status: "PUBLISHED",
     active_applications_count: 8,
     activeApplicationsCount: 8,
-    required_document_types: ["PASSPORT_BIO", "OFFICIAL_TRANSCRIPT", "STATEMENT_OF_PURPOSE", "LEARNING_AGREEMENT"],
-    instructions: "Selected applicants will be nominated to TUM portal for final admission review.",
+    required_document_types: [
+      "PASSPORT_BIO",
+      "OFFICIAL_TRANSCRIPT",
+      "STATEMENT_OF_PURPOSE",
+      "LEARNING_AGREEMENT",
+    ],
+    instructions:
+      "Selected applicants will be nominated to TUM portal for final admission review.",
     created_at: "2026-08-01T08:00:00Z",
   },
   {
@@ -365,7 +371,12 @@ export const MOCK_PROGRAMS: MobilityProgram[] = [
     status: "PUBLISHED",
     active_applications_count: 6,
     activeApplicationsCount: 6,
-    required_document_types: ["PASSPORT_BIO", "OFFICIAL_TRANSCRIPT", "STATEMENT_OF_PURPOSE", "FINANCIAL_GUARANTEE"],
+    required_document_types: [
+      "PASSPORT_BIO",
+      "OFFICIAL_TRANSCRIPT",
+      "STATEMENT_OF_PURPOSE",
+      "FINANCIAL_GUARANTEE",
+    ],
     created_at: "2026-08-10T10:00:00Z",
   },
   {
@@ -411,7 +422,12 @@ export const MOCK_PROGRAMS: MobilityProgram[] = [
     status: "PUBLISHED",
     active_applications_count: 5,
     activeApplicationsCount: 5,
-    required_document_types: ["PASSPORT_BIO", "OFFICIAL_TRANSCRIPT", "STATEMENT_OF_PURPOSE", "LEARNING_AGREEMENT"],
+    required_document_types: [
+      "PASSPORT_BIO",
+      "OFFICIAL_TRANSCRIPT",
+      "STATEMENT_OF_PURPOSE",
+      "LEARNING_AGREEMENT",
+    ],
     created_at: "2026-08-20T12:00:00Z",
   },
 ];
@@ -437,11 +453,27 @@ export const MOCK_APPLICATIONS: MobilityApplication[] = [
     status: "DEPARTMENT_REVIEW",
     submitted_at: "2026-09-15T10:00:00Z",
     submittedAt: "2026-09-15T10:00:00Z",
-    statement_of_purpose: "I am pursuing specialized research in High Performance Computing and Distributed Cloud Architectures at TUM.",
+    statement_of_purpose:
+      "I am pursuing specialized research in High Performance Computing and Distributed Cloud Architectures at TUM.",
     proposed_courses: [
-      { code: "IN2106", title: "Advanced Computer Architecture", credits: 6, department: "Informatics" },
-      { code: "IN2041", title: "Cloud Information Systems", credits: 5, department: "Informatics" },
-      { code: "IN2259", title: "Distributed Systems Seminar", credits: 4, department: "Informatics" },
+      {
+        code: "IN2106",
+        title: "Advanced Computer Architecture",
+        credits: 6,
+        department: "Informatics",
+      },
+      {
+        code: "IN2041",
+        title: "Cloud Information Systems",
+        credits: 5,
+        department: "Informatics",
+      },
+      {
+        code: "IN2259",
+        title: "Distributed Systems Seminar",
+        credits: 4,
+        department: "Informatics",
+      },
     ],
     student_cgpa_at_application: 8.92,
     studentCgpaAtApplication: 8.92,
@@ -474,10 +506,21 @@ export const MOCK_APPLICATIONS: MobilityApplication[] = [
     submittedAt: "2026-08-25T11:20:00Z",
     nominated_at: "2026-09-10T14:00:00Z",
     nominatedAt: "2026-09-10T14:00:00Z",
-    statement_of_purpose: "Focusing on AI algorithms and edge intelligence acceleration under the NUS fellowship track.",
+    statement_of_purpose:
+      "Focusing on AI algorithms and edge intelligence acceleration under the NUS fellowship track.",
     proposed_courses: [
-      { code: "CS5242", title: "Neural Networks and Deep Learning", credits: 4, department: "Computer Science" },
-      { code: "EE5904", title: "Neural Networks", credits: 4, department: "Electrical & Computer Eng" },
+      {
+        code: "CS5242",
+        title: "Neural Networks and Deep Learning",
+        credits: 4,
+        department: "Computer Science",
+      },
+      {
+        code: "EE5904",
+        title: "Neural Networks",
+        credits: 4,
+        department: "Electrical & Computer Eng",
+      },
     ],
     student_cgpa_at_application: 9.15,
     credits_completed_at_application: 62,
@@ -505,9 +548,14 @@ export const MOCK_APPLICATIONS: MobilityApplication[] = [
     partner_country: "Switzerland",
     status: "ELIGIBILITY_REVIEW",
     submitted_at: "2026-09-20T16:45:00Z",
-    statement_of_purpose: "Interested in computational fluid dynamics and multi-scale simulation techniques.",
+    statement_of_purpose:
+      "Interested in computational fluid dynamics and multi-scale simulation techniques.",
     proposed_courses: [
-      { code: "151-0105-00L", title: "Computational Fluid Dynamics", credits: 4 },
+      {
+        code: "151-0105-00L",
+        title: "Computational Fluid Dynamics",
+        credits: 4,
+      },
     ],
     student_cgpa_at_application: 7.2,
     credits_completed_at_application: 38,
@@ -593,11 +641,15 @@ export const MOCK_FACULTY_MOBILITIES: FacultyMobilityRecord[] = [
     mobility_type: "OUTBOUND",
     visit_start_date: "2026-10-15",
     visit_end_date: "2026-11-15",
-    purpose_summary: "Collaborative research fellowship on Autonomous Robotics perception and joint curriculum development.",
-    academic_visit_plan: "Conduct 4 graduate guest lectures, co-supervise 2 doctoral scholars, and draft joint Horizon Europe grant proposal.",
+    purpose_summary:
+      "Collaborative research fellowship on Autonomous Robotics perception and joint curriculum development.",
+    academic_visit_plan:
+      "Conduct 4 graduate guest lectures, co-supervise 2 doctoral scholars, and draft joint Horizon Europe grant proposal.",
     status: "APPROVED",
-    hod_approval_comments: "Strongly recommended; project directly aligns with department research objectives.",
-    vp_approval_comments: "Approved. Travel grant endorsed under International Academic Mobility Fund.",
+    hod_approval_comments:
+      "Strongly recommended; project directly aligns with department research objectives.",
+    vp_approval_comments:
+      "Approved. Travel grant endorsed under International Academic Mobility Fund.",
     created_at: "2026-08-10T10:00:00Z",
   },
   {
@@ -609,10 +661,13 @@ export const MOCK_FACULTY_MOBILITIES: FacultyMobilityRecord[] = [
     mobility_type: "INBOUND",
     visit_start_date: "2026-11-01",
     visit_end_date: "2026-11-20",
-    purpose_summary: "Visiting Scholar workshop series on Quantum Computing Algorithms and Hardware Co-Design.",
-    academic_visit_plan: "Deliver intensive 2-week course for final-year students and faculty seminar.",
+    purpose_summary:
+      "Visiting Scholar workshop series on Quantum Computing Algorithms and Hardware Co-Design.",
+    academic_visit_plan:
+      "Deliver intensive 2-week course for final-year students and faculty seminar.",
     status: "APPROVED",
-    hod_approval_comments: "Host arrangements in place with guest house booked.",
+    hod_approval_comments:
+      "Host arrangements in place with guest house booked.",
     vp_approval_comments: "Formal invitation letter issued.",
     created_at: "2026-08-25T11:00:00Z",
   },
@@ -632,7 +687,8 @@ export const MOCK_EQUIVALENCIES: CourseEquivalencyMapping[] = [
     department_id: "dept-cse",
     status: "ACTIVE",
     evaluator_name: "Prof. K. Venkatesh",
-    evaluation_notes: "Syllabus matches 85% of institutional core requirements. Approved for core credit transfer.",
+    evaluation_notes:
+      "Syllabus matches 85% of institutional core requirements. Approved for core credit transfer.",
     created_at: "2025-06-15T09:00:00Z",
   },
   {
@@ -648,7 +704,8 @@ export const MOCK_EQUIVALENCIES: CourseEquivalencyMapping[] = [
     department_id: "dept-cse",
     status: "ACTIVE",
     evaluator_name: "Dr. Anita Desai",
-    evaluation_notes: "High degree of mathematical and practical alignment. Approved as Professional Elective.",
+    evaluation_notes:
+      "High degree of mathematical and practical alignment. Approved as Professional Elective.",
     created_at: "2025-07-20T14:30:00Z",
   },
   {
@@ -664,7 +721,8 @@ export const MOCK_EQUIVALENCIES: CourseEquivalencyMapping[] = [
     department_id: "dept-cse",
     status: "ACTIVE",
     evaluator_name: "Prof. Rajesh Raman",
-    evaluation_notes: "Rigorous curriculum covering MPI, OpenMP, and GPU programming. Approved.",
+    evaluation_notes:
+      "Rigorous curriculum covering MPI, OpenMP, and GPU programming. Approved.",
     created_at: "2025-09-10T11:00:00Z",
   },
 ];
@@ -679,7 +737,8 @@ export const MOCK_CREDIT_TRANSFERS: CreditTransferRequest[] = [
     host_credits_earned: 15,
     target_campus_credits: 12,
     status: "COMMITTEE_REVIEW",
-    committee_review_notes: "Official sealed transcript received from TUM Examination Board. Course equivalencies validated.",
+    committee_review_notes:
+      "Official sealed transcript received from TUM Examination Board. Course equivalencies validated.",
     academic_council_approval_ref: "AC-2026-RES-881",
     created_at: "2026-09-18T10:00:00Z",
   },
@@ -692,7 +751,8 @@ export const MOCK_CREDIT_TRANSFERS: CreditTransferRequest[] = [
     host_credits_earned: 8,
     target_campus_credits: 8,
     status: "APPROVED",
-    committee_review_notes: "Grade conversion applied according to UGC/ECTS parity guidelines. Approved by Academic Committee.",
+    committee_review_notes:
+      "Grade conversion applied according to UGC/ECTS parity guidelines. Approved by Academic Committee.",
     academic_council_approval_ref: "AC-2026-RES-712",
     created_at: "2026-09-05T14:30:00Z",
   },
@@ -704,7 +764,8 @@ export const MOCK_DOCUMENTS: MobilityDocument[] = [
     application_id: "app-001",
     document_type: "PASSPORT_BIO",
     document_name: "Aditya_Sharma_Passport_Bio.pdf",
-    file_storage_url: "https://campus-storage.edu/docs/intl/aditya_passport.pdf",
+    file_storage_url:
+      "https://campus-storage.edu/docs/intl/aditya_passport.pdf",
     verification_status: "VERIFIED",
     verified_by_user_id: "usr-coord-101",
     document_expiry_date: "2032-05-15",
@@ -715,7 +776,8 @@ export const MOCK_DOCUMENTS: MobilityDocument[] = [
     application_id: "app-001",
     document_type: "OFFICIAL_TRANSCRIPT",
     document_name: "Aditya_Sharma_Sem1to5_Transcript.pdf",
-    file_storage_url: "https://campus-storage.edu/docs/intl/aditya_transcript.pdf",
+    file_storage_url:
+      "https://campus-storage.edu/docs/intl/aditya_transcript.pdf",
     verification_status: "VERIFIED",
     verified_by_user_id: "usr-coord-101",
     created_at: "2026-09-15T09:40:00Z",
@@ -725,7 +787,8 @@ export const MOCK_DOCUMENTS: MobilityDocument[] = [
     application_id: "app-003",
     document_type: "HEALTH_INSURANCE",
     document_name: "Vikram_SwissCare_Policy.pdf",
-    file_storage_url: "https://campus-storage.edu/docs/intl/vikram_insurance.pdf",
+    file_storage_url:
+      "https://campus-storage.edu/docs/intl/vikram_insurance.pdf",
     verification_status: "PENDING",
     document_expiry_date: "2027-08-31",
     created_at: "2026-09-20T16:05:00Z",
@@ -742,7 +805,8 @@ export const MOCK_SCHOLARSHIPS: MobilityScholarship[] = [
     total_available_slots: 10,
     application_deadline: "2026-11-30",
     is_active: true,
-    eligibility_criteria_notes: "CGPA >= 8.5, admitted to accredited top 100 global university exchange program.",
+    eligibility_criteria_notes:
+      "CGPA >= 8.5, admitted to accredited top 100 global university exchange program.",
     created_at: "2026-08-01T10:00:00Z",
   },
   {
@@ -754,7 +818,8 @@ export const MOCK_SCHOLARSHIPS: MobilityScholarship[] = [
     total_available_slots: 4,
     application_deadline: "2026-10-15",
     is_active: true,
-    eligibility_criteria_notes: "Enrolled in TUM semester exchange with German language proficiency.",
+    eligibility_criteria_notes:
+      "Enrolled in TUM semester exchange with German language proficiency.",
     created_at: "2026-08-10T11:00:00Z",
   },
 ];
@@ -771,7 +836,8 @@ export const MOCK_FUNDING_REQUESTS: MobilityFundingRequest[] = [
     approved_amount: 2500,
     currency: "USD",
     status: "APPROVED",
-    justification: "To cover international flight expenses and mandatory German public student health insurance.",
+    justification:
+      "To cover international flight expenses and mandatory German public student health insurance.",
     finance_disbursement_ref: "FIN-INTL-2026-8819",
     created_at: "2026-09-16T11:00:00Z",
   },

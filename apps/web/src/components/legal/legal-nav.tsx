@@ -29,14 +29,46 @@ interface NavTab {
 }
 
 const NAV_TABS: NavTab[] = [
-  { label: "Dashboard", href: "/app/legal", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { label: "Contracts Register", href: "/app/legal/contracts", icon: <FileText className="h-4 w-4" /> },
-  { label: "Obligations & Commitments", href: "/app/legal/obligations", icon: <CheckCircle2 className="h-4 w-4" /> },
-  { label: "Legal Matters (Restricted)", href: "/app/legal/matters", icon: <Gavel className="h-4 w-4" /> },
-  { label: "Policy Governance", href: "/app/legal/policies", icon: <BookOpen className="h-4 w-4" /> },
-  { label: "Compliance & Evidence", href: "/app/legal/compliance", icon: <ShieldCheck className="h-4 w-4" /> },
-  { label: "Enterprise Risk Register", href: "/app/legal/risks", icon: <ShieldAlert className="h-4 w-4" /> },
-  { label: "Deadlines & Calendar", href: "/app/legal/calendar", icon: <Calendar className="h-4 w-4" /> },
+  {
+    label: "Dashboard",
+    href: "/app/legal",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+  },
+  {
+    label: "Contracts Register",
+    href: "/app/legal/contracts",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    label: "Obligations & Commitments",
+    href: "/app/legal/obligations",
+    icon: <CheckCircle2 className="h-4 w-4" />,
+  },
+  {
+    label: "Legal Matters (Restricted)",
+    href: "/app/legal/matters",
+    icon: <Gavel className="h-4 w-4" />,
+  },
+  {
+    label: "Policy Governance",
+    href: "/app/legal/policies",
+    icon: <BookOpen className="h-4 w-4" />,
+  },
+  {
+    label: "Compliance & Evidence",
+    href: "/app/legal/compliance",
+    icon: <ShieldCheck className="h-4 w-4" />,
+  },
+  {
+    label: "Enterprise Risk Register",
+    href: "/app/legal/risks",
+    icon: <ShieldAlert className="h-4 w-4" />,
+  },
+  {
+    label: "Deadlines & Calendar",
+    href: "/app/legal/calendar",
+    icon: <Calendar className="h-4 w-4" />,
+  },
 ];
 
 export function LegalNav() {
@@ -58,7 +90,8 @@ export function LegalNav() {
                 </span>
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Institutional contract lifecycle, restricted matter management, policy approvals & 5x5 risk matrix
+                Institutional contract lifecycle, restricted matter management,
+                policy approvals & 5x5 risk matrix
               </p>
             </div>
           </div>
@@ -87,7 +120,7 @@ export function LegalNav() {
                 "flex items-center gap-2 px-3.5 py-2.5 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap border-b-2",
                 isActive
                   ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 font-semibold"
-                  : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700"
+                  : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700",
               )}
             >
               {tab.icon}

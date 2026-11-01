@@ -13,7 +13,10 @@ import {
 } from "lucide-react";
 import { SustainabilityNav } from "../../../../components/sustainability/sustainability-nav";
 import { sustainabilityService } from "../../../../services/sustainability.service";
-import { SustainabilityTarget, TargetCategory } from "../../../../types/sustainability";
+import {
+  SustainabilityTarget,
+  TargetCategory,
+} from "../../../../types/sustainability";
 
 export default function SustainabilityTargetsPage() {
   const [targets, setTargets] = useState<SustainabilityTarget[]>([]);
@@ -110,8 +113,12 @@ export default function SustainabilityTargetsPage() {
                   <span className="text-[11px] font-bold text-emerald-400 tracking-wider uppercase">
                     {tgt.category.replace("_", " ")}
                   </span>
-                  <h3 className="text-base font-bold text-slate-100 mt-0.5">{tgt.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1">{tgt.description || "Official institutional target."}</p>
+                  <h3 className="text-base font-bold text-slate-100 mt-0.5">
+                    {tgt.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    {tgt.description || "Official institutional target."}
+                  </p>
                 </div>
                 <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800">
                   {tgt.status.replace("_", " ")}
@@ -121,19 +128,25 @@ export default function SustainabilityTargetsPage() {
               {/* Metrics Grid */}
               <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-slate-800/80">
                 <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400">Baseline ({tgt.baseline_year})</span>
+                  <span className="text-[10px] uppercase font-semibold text-slate-400">
+                    Baseline ({tgt.baseline_year})
+                  </span>
                   <div className="text-sm font-bold text-slate-200 mt-1">
                     {tgt.baseline_value} {tgt.unit}
                   </div>
                 </div>
                 <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400">Current Progress</span>
+                  <span className="text-[10px] uppercase font-semibold text-slate-400">
+                    Current Progress
+                  </span>
                   <div className="text-sm font-bold text-emerald-400 mt-1">
                     {tgt.current_value} {tgt.unit}
                   </div>
                 </div>
                 <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400">Target ({tgt.target_year})</span>
+                  <span className="text-[10px] uppercase font-semibold text-slate-400">
+                    Target ({tgt.target_year})
+                  </span>
                   <div className="text-sm font-bold text-blue-400 mt-1">
                     {tgt.target_value} {tgt.unit}
                   </div>
@@ -145,7 +158,8 @@ export default function SustainabilityTargetsPage() {
                 <div className="flex items-center justify-between text-xs font-medium text-slate-300 mb-1">
                   <span>Reduction Progress</span>
                   <span className="text-emerald-400 font-bold">
-                    {tgt.reduction_pct_achieved}% achieved of {tgt.reduction_pct_target}% goal
+                    {tgt.reduction_pct_achieved}% achieved of{" "}
+                    {tgt.reduction_pct_target}% goal
                   </span>
                 </div>
                 <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
@@ -154,7 +168,11 @@ export default function SustainabilityTargetsPage() {
                     style={{
                       width: `${Math.min(
                         100,
-                        Math.round((tgt.reduction_pct_achieved / tgt.reduction_pct_target) * 100)
+                        Math.round(
+                          (tgt.reduction_pct_achieved /
+                            tgt.reduction_pct_target) *
+                            100,
+                        ),
                       )}%`,
                     }}
                   />
@@ -186,29 +204,42 @@ export default function SustainabilityTargetsPage() {
               Configure Sustainability Milestone Target
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Set quantitative reduction goals linked to institutional net-zero commitments.
+              Set quantitative reduction goals linked to institutional net-zero
+              commitments.
             </p>
 
             <form onSubmit={handleCreate} className="mt-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Target Category</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Target Category
+                </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as TargetCategory)}
+                  onChange={(e) =>
+                    setCategory(e.target.value as TargetCategory)
+                  }
                   className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200"
                 >
                   <option value="ENERGY_REDUCTION">Energy Reduction</option>
-                  <option value="RENEWABLE_SHARE">Renewable Energy Share</option>
+                  <option value="RENEWABLE_SHARE">
+                    Renewable Energy Share
+                  </option>
                   <option value="WATER_CONSERVATION">Water Conservation</option>
                   <option value="WASTE_DIVERSION">Waste Diversion</option>
-                  <option value="SCOPE_1_REDUCTION">Scope 1 Fuel Reduction</option>
-                  <option value="SCOPE_2_REDUCTION">Scope 2 Grid Reduction</option>
+                  <option value="SCOPE_1_REDUCTION">
+                    Scope 1 Fuel Reduction
+                  </option>
+                  <option value="SCOPE_2_REDUCTION">
+                    Scope 2 Grid Reduction
+                  </option>
                   <option value="NET_ZERO_GHG">Net-Zero GHG</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Target Title</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Target Title
+                </label>
                 <input
                   type="text"
                   required
@@ -221,7 +252,9 @@ export default function SustainabilityTargetsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Baseline Value (2022)</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Baseline Value (2022)
+                  </label>
                   <input
                     type="number"
                     value={baselineVal}
@@ -230,7 +263,9 @@ export default function SustainabilityTargetsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Target Value</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Target Value
+                  </label>
                   <input
                     type="number"
                     value={targetVal}
@@ -242,7 +277,9 @@ export default function SustainabilityTargetsPage() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Unit</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Unit
+                  </label>
                   <input
                     type="text"
                     value={unit}
@@ -251,7 +288,9 @@ export default function SustainabilityTargetsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Target Year</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Target Year
+                  </label>
                   <input
                     type="number"
                     value={targetYear}
@@ -260,7 +299,9 @@ export default function SustainabilityTargetsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300">Reduction %</label>
+                  <label className="text-xs font-semibold text-slate-300">
+                    Reduction %
+                  </label>
                   <input
                     type="number"
                     value={reductionPct}
@@ -271,7 +312,9 @@ export default function SustainabilityTargetsPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Responsible Team</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  Responsible Team
+                </label>
                 <input
                   type="text"
                   value={team}
@@ -302,4 +345,3 @@ export default function SustainabilityTargetsPage() {
     </div>
   );
 }
-

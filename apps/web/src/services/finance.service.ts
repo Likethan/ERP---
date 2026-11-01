@@ -121,8 +121,6 @@ class FinanceService {
   // ==========================================
 
   async getDashboardSummary(): Promise<ApiResponse<FinanceDashboardSummary>> {
-    await new Promise((r) => setTimeout(r, 40));
-
     // Dynamic aggregation over live state
     const totalBilled = this.invoices.reduce(
       (acc, i) => addMoney(acc, i.grossAmount),
@@ -200,7 +198,6 @@ class FinanceService {
       today_collections: number;
     }>
   > {
-    await new Promise((r) => setTimeout(r, 40));
     return {
       success: true,
       data: {
@@ -227,12 +224,10 @@ class FinanceService {
   // ==========================================
 
   async getFeeCategories(): Promise<ApiResponse<FeeCategory[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: [...this.categories] };
   }
 
   async getFeeCategoryById(id: string): Promise<ApiResponse<FeeCategory>> {
-    await new Promise((r) => setTimeout(r, 30));
     const cat = this.categories.find((c) => c.id === id);
     if (!cat) throw new Error(`Fee Category '${id}' not found.`);
     return { success: true, data: cat };
@@ -241,7 +236,6 @@ class FinanceService {
   async createFeeCategory(
     data: Partial<FeeCategory>,
   ): Promise<ApiResponse<FeeCategory>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newCat: FeeCategory = {
       id: `cat-${Date.now()}`,
       code: data.code || `CAT-${Date.now().toString().slice(-4)}`,
@@ -263,7 +257,6 @@ class FinanceService {
     id: string,
     updates: Partial<FeeCategory>,
   ): Promise<ApiResponse<FeeCategory>> {
-    await new Promise((r) => setTimeout(r, 50));
     const idx = this.categories.findIndex((c) => c.id === id);
     if (idx === -1) throw new Error(`Fee Category '${id}' not found.`);
     this.categories[idx] = {
@@ -287,7 +280,6 @@ class FinanceService {
   // ==========================================
 
   async getFeeItems(categoryId?: string): Promise<ApiResponse<FeeItem[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.feeItems];
     if (categoryId) {
       items = items.filter((item) => item.categoryId === categoryId);
@@ -296,7 +288,6 @@ class FinanceService {
   }
 
   async createFeeItem(data: Partial<FeeItem>): Promise<ApiResponse<FeeItem>> {
-    await new Promise((r) => setTimeout(r, 50));
     const newItem: FeeItem = {
       id: `item-${Date.now()}`,
       categoryId: data.categoryId || "cat-tuition",
@@ -324,7 +315,6 @@ class FinanceService {
   async getFeeStructures(
     filters?: FeeStructureFilters,
   ): Promise<ApiResponse<FeeStructure[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.feeStructures];
 
     if (filters?.status && filters.status !== "ALL") {
@@ -352,7 +342,6 @@ class FinanceService {
   }
 
   async getFeeStructureById(id: string): Promise<ApiResponse<FeeStructure>> {
-    await new Promise((r) => setTimeout(r, 30));
     const found = this.feeStructures.find((fs) => fs.id === id);
     if (!found) throw new Error(`Fee Structure '${id}' not found.`);
     return { success: true, data: found };
@@ -361,8 +350,6 @@ class FinanceService {
   async createFeeStructure(
     data: Partial<FeeStructure>,
   ): Promise<ApiResponse<FeeStructure>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const components = data.components || [
       {
         id: "c-1",
@@ -489,7 +476,6 @@ class FinanceService {
   // ==========================================
 
   async getFeeAssignments(): Promise<ApiResponse<StudentFeeAssignment[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     return { success: true, data: [...this.assignments] };
   }
 
@@ -500,8 +486,6 @@ class FinanceService {
     scholarshipAmount?: number;
     notes?: string;
   }): Promise<ApiResponse<StudentFeeAssignment>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     const student = MOCK_STUDENTS.find((s) => s.id === data.studentId);
     const fs = this.feeStructures.find((f) => f.id === data.feeStructureId);
 
@@ -599,7 +583,6 @@ class FinanceService {
   // ==========================================
 
   async getInvoices(filters?: InvoiceFilters): Promise<ApiResponse<Invoice[]>> {
-    await new Promise((r) => setTimeout(r, 40));
     let items = [...this.invoices];
 
     if (filters?.status && filters.status !== "ALL") {
@@ -630,7 +613,6 @@ class FinanceService {
   }
 
   async getInvoiceById(id: string): Promise<ApiResponse<Invoice>> {
-    await new Promise((r) => setTimeout(r, 30));
     const inv = this.invoices.find(
       (i) => i.id === id || i.invoiceNumber === id,
     );
@@ -639,8 +621,6 @@ class FinanceService {
   }
 
   async createInvoice(data: Partial<Invoice>): Promise<ApiResponse<Invoice>> {
-    await new Promise((r) => setTimeout(r, 70));
-
     const gross =
       data.grossAmount ||
       (data.lines ? calculateInvoiceGross(data.lines) : 75000);
@@ -707,7 +687,6 @@ class FinanceService {
     id: string,
     reason: string,
   ): Promise<ApiResponse<Invoice>> {
-    await new Promise((r) => setTimeout(r, 60));
     const inv = this.invoices.find((i) => i.id === id);
     if (!inv) throw new Error(`Invoice '${id}' not found.`);
 
@@ -738,7 +717,6 @@ class FinanceService {
   // ==========================================
 
   async getPayments(filters?: PaymentFilters): Promise<ApiResponse<Payment[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.payments];
 
     if (filters?.paymentMethod && filters.paymentMethod !== "ALL") {
@@ -761,7 +739,6 @@ class FinanceService {
   }
 
   async getPaymentById(id: string): Promise<ApiResponse<Payment>> {
-    await new Promise((r) => setTimeout(r, 30));
     const p = this.payments.find(
       (pay) => pay.id === id || pay.transactionRef === id,
     );
@@ -779,8 +756,6 @@ class FinanceService {
     notes?: string;
     recordedBy?: string;
   }): Promise<ApiResponse<{ payment: Payment; receipt: Receipt }>> {
-    await new Promise((r) => setTimeout(r, 100));
-
     if (data.amount <= 0) {
       throw new Error("Payment amount must be greater than zero.");
     }
@@ -897,12 +872,10 @@ class FinanceService {
   }
 
   async getReceipts(): Promise<ApiResponse<Receipt[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: [...this.receipts] };
   }
 
   async getReceiptById(id: string): Promise<ApiResponse<Receipt>> {
-    await new Promise((r) => setTimeout(r, 30));
     const r = this.receipts.find(
       (rc) => rc.id === id || rc.receiptNumber === id,
     );
@@ -915,12 +888,10 @@ class FinanceService {
   // ==========================================
 
   async getScholarships(): Promise<ApiResponse<Scholarship[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     return { success: true, data: [...this.scholarships] };
   }
 
   async getScholarshipById(id: string): Promise<ApiResponse<Scholarship>> {
-    await new Promise((r) => setTimeout(r, 30));
     const s = this.scholarships.find((sch) => sch.id === id);
     if (!s) throw new Error(`Scholarship '${id}' not found.`);
     return { success: true, data: s };
@@ -929,7 +900,6 @@ class FinanceService {
   async createScholarship(
     data: Partial<Scholarship>,
   ): Promise<ApiResponse<Scholarship>> {
-    await new Promise((r) => setTimeout(r, 60));
     const newSch: Scholarship = {
       id: `sch-${Date.now()}`,
       code: data.code || `SCH-${Date.now().toString().slice(-4)}`,
@@ -963,7 +933,6 @@ class FinanceService {
   async getStudentScholarships(
     studentId?: string,
   ): Promise<ApiResponse<StudentScholarship[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.studentScholarships];
     if (studentId) {
       items = items.filter((s) => s.studentId === studentId);
@@ -975,7 +944,6 @@ class FinanceService {
     invoiceId: string,
     scholarshipId: string,
   ): Promise<ApiResponse<Invoice>> {
-    await new Promise((r) => setTimeout(r, 70));
     const inv = this.invoices.find((i) => i.id === invoiceId);
     const sch = this.scholarships.find((s) => s.id === scholarshipId);
 
@@ -1019,7 +987,6 @@ class FinanceService {
   async getRefunds(filters?: {
     status?: RefundStatus | "ALL";
   }): Promise<ApiResponse<Refund[]>> {
-    await new Promise((r) => setTimeout(r, 30));
     let items = [...this.refunds];
     if (filters?.status && filters.status !== "ALL") {
       items = items.filter((r) => r.status === filters.status);
@@ -1028,7 +995,6 @@ class FinanceService {
   }
 
   async getRefundById(id: string): Promise<ApiResponse<Refund>> {
-    await new Promise((r) => setTimeout(r, 30));
     const ref = this.refunds.find((r) => r.id === id || r.refundNumber === id);
     if (!ref) throw new Error(`Refund '${id}' not found.`);
     return { success: true, data: ref };
@@ -1042,8 +1008,6 @@ class FinanceService {
     reason: string;
     requestedBy?: string;
   }): Promise<ApiResponse<Refund>> {
-    await new Promise((r) => setTimeout(r, 80));
-
     if (data.requestedAmount <= 0) {
       throw new Error("Refund requested amount must be positive.");
     }
@@ -1088,8 +1052,6 @@ class FinanceService {
     notes: string,
     approvedAmount?: number,
   ): Promise<ApiResponse<Refund>> {
-    await new Promise((r) => setTimeout(r, 70));
-
     const ref = this.refunds.find((r) => r.id === refundId);
     if (!ref) throw new Error(`Refund petition '${refundId}' not found.`);
 
@@ -1124,8 +1086,6 @@ class FinanceService {
   }
 
   async processRefund(refundId: string): Promise<ApiResponse<Refund>> {
-    await new Promise((r) => setTimeout(r, 70));
-
     const ref = this.refunds.find((r) => r.id === refundId);
     if (!ref) throw new Error(`Refund '${refundId}' not found.`);
 
@@ -1158,8 +1118,6 @@ class FinanceService {
       rows: Record<string, unknown>[];
     }>
   > {
-    await new Promise((r) => setTimeout(r, 60));
-
     let title = "Institutional Finance Summary Report";
     let rows: Record<string, unknown>[] = [];
 
@@ -1256,8 +1214,6 @@ class FinanceService {
   async getStudentStatement(
     studentId?: string,
   ): Promise<ApiResponse<StudentFeeStatement>> {
-    await new Promise((r) => setTimeout(r, 40));
-
     const sId = studentId || "std-001";
     const studentInvoices = this.invoices.filter(
       (i) => i.studentId === sId || i.rollNumber === "24CSE0101",

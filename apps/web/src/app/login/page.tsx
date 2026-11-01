@@ -31,7 +31,8 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 
-export type PortalKey = "STUDENT" | "ADMIN" | "VICE_PRINCIPAL" | "FACULTY" | "HOD";
+export type PortalKey =
+  "STUDENT" | "ADMIN" | "VICE_PRINCIPAL" | "FACULTY" | "HOD";
 
 interface PortalConfig {
   key: PortalKey;
@@ -66,14 +67,16 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     shortTitle: "Student",
     supportingText: "Access your academic life in one place.",
     identifierLabel: "Student ID / Roll No. or Email",
-    identifierPlaceholder: "e.g. aarav.patel@student.campusos.edu or 2024-CSE-042",
+    identifierPlaceholder:
+      "e.g. aarav.patel@student.campusos.edu or 2024-CSE-042",
     identifierHint: "Use your university roll number or student email.",
     demoEmail: "aarav.patel@student.campusos.edu",
     demoPassword: "StudentSecret123!",
     demoPersonaId: "user-student-01",
     badgeText: "Academic Lifecycle & Courses",
     accent: {
-      tabActive: "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-500/10",
+      tabActive:
+        "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-500/10",
       tabText: "text-amber-400",
       badgeBg: "bg-amber-500/10",
       badgeText: "text-amber-400",
@@ -90,13 +93,15 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     supportingText: "Manage your institution with confidence.",
     identifierLabel: "Institutional Administrator Email",
     identifierPlaceholder: "e.g. registrar@campusos.edu or admin@campusos.edu",
-    identifierHint: "Enter your authorized registrar or institutional administrator email.",
+    identifierHint:
+      "Enter your authorized registrar or institutional administrator email.",
     demoEmail: "registrar@campusos.edu",
     demoPassword: "SuperSecret123!",
     demoPersonaId: "user-super-admin-01",
     badgeText: "Governance & Master System Config",
     accent: {
-      tabActive: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-emerald-500/10",
+      tabActive:
+        "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-emerald-500/10",
       tabText: "text-emerald-400",
       badgeBg: "bg-emerald-500/10",
       badgeText: "text-emerald-400",
@@ -110,7 +115,8 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["PRINCIPAL", "SUPER_ADMIN"],
     label: "Vice Principal Portal",
     shortTitle: "Vice Principal",
-    supportingText: "Oversee academic operations and institutional performance.",
+    supportingText:
+      "Oversee academic operations and institutional performance.",
     identifierLabel: "Executive / Vice Principal Email",
     identifierPlaceholder: "e.g. vp.academics@campusos.edu",
     identifierHint: "Enter your executive academic operations credentials.",
@@ -119,7 +125,8 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     demoPersonaId: "user-vice-principal-01",
     badgeText: "Academic Oversight & Approvals",
     accent: {
-      tabActive: "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 shadow-indigo-500/10",
+      tabActive:
+        "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 shadow-indigo-500/10",
       tabText: "text-indigo-400",
       badgeBg: "bg-indigo-500/10",
       badgeText: "text-indigo-400",
@@ -133,16 +140,19 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["FACULTY", "PROFESSOR"],
     label: "Faculty Portal",
     shortTitle: "Faculty",
-    supportingText: "Manage teaching, attendance, assessments, and student progress.",
+    supportingText:
+      "Manage teaching, attendance, assessments, and student progress.",
     identifierLabel: "Faculty ID or Institutional Email",
     identifierPlaceholder: "e.g. rajesh.sharma@campusos.edu or FAC-CSE-108",
-    identifierHint: "Enter your faculty employee ID or academic department email.",
+    identifierHint:
+      "Enter your faculty employee ID or academic department email.",
     demoEmail: "rajesh.sharma@campusos.edu",
     demoPassword: "FacultySecret123!",
     demoPersonaId: "user-faculty-01",
     badgeText: "Teaching, Grading & Coursework",
     accent: {
-      tabActive: "bg-sky-500/15 border-sky-500/40 text-sky-300 shadow-sky-500/10",
+      tabActive:
+        "bg-sky-500/15 border-sky-500/40 text-sky-300 shadow-sky-500/10",
       tabText: "text-sky-400",
       badgeBg: "bg-sky-500/10",
       badgeText: "text-sky-400",
@@ -156,7 +166,8 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["HOD"],
     label: "Head of Department Portal",
     shortTitle: "HOD",
-    supportingText: "Coordinate departmental academics, faculty, and student outcomes.",
+    supportingText:
+      "Coordinate departmental academics, faculty, and student outcomes.",
     identifierLabel: "Department Head Institutional Email",
     identifierPlaceholder: "e.g. hod.cse@campusos.edu",
     identifierHint: "Enter your authorized department head credentials.",
@@ -165,7 +176,8 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     demoPersonaId: "user-hod-cse-01",
     badgeText: "Departmental Leadership & Workloads",
     accent: {
-      tabActive: "bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-purple-500/10",
+      tabActive:
+        "bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-purple-500/10",
       tabText: "text-purple-400",
       badgeBg: "bg-purple-500/10",
       badgeText: "text-purple-400",
@@ -226,8 +238,10 @@ function LoginFormContent() {
     const roleParam = searchParams.get("role")?.toUpperCase();
     if (roleParam) {
       if (roleParam === "STUDENT") setSelectedPortal("STUDENT");
-      else if (roleParam === "ADMIN" || roleParam === "SUPER_ADMIN") setSelectedPortal("ADMIN");
-      else if (roleParam === "VICE_PRINCIPAL" || roleParam === "PRINCIPAL") setSelectedPortal("VICE_PRINCIPAL");
+      else if (roleParam === "ADMIN" || roleParam === "SUPER_ADMIN")
+        setSelectedPortal("ADMIN");
+      else if (roleParam === "VICE_PRINCIPAL" || roleParam === "PRINCIPAL")
+        setSelectedPortal("VICE_PRINCIPAL");
       else if (roleParam === "FACULTY") setSelectedPortal("FACULTY");
       else if (roleParam === "HOD") setSelectedPortal("HOD");
     }
@@ -264,7 +278,9 @@ function LoginFormContent() {
 
     const trimmedIdentifier = identifier.trim();
     if (!trimmedIdentifier) {
-      setErrorMessage(`Please enter your ${activeConfig.identifierLabel.toLowerCase()}.`);
+      setErrorMessage(
+        `Please enter your ${activeConfig.identifierLabel.toLowerCase()}.`,
+      );
       return;
     }
 
@@ -287,13 +303,13 @@ function LoginFormContent() {
       if (authenticatedUser && authenticatedUser.roles) {
         const userRoleNames = authenticatedUser.roles.map((r) => r.name);
         const hasAuthorizedRole = userRoleNames.some((r) =>
-          activeConfig.allowedRoles.includes(r)
+          activeConfig.allowedRoles.includes(r),
         );
 
         if (!hasAuthorizedRole) {
           // Account authenticated, but lacks permissions for this portal
           setErrorMessage(
-            `Authentication succeeded, but your account is not authorized for the ${activeConfig.label}. Please select the appropriate portal or contact your campus administrator.`
+            `Authentication succeeded, but your account is not authorized for the ${activeConfig.label}. Please select the appropriate portal or contact your campus administrator.`,
           );
           setIsSubmitting(false);
           return;
@@ -312,7 +328,7 @@ function LoginFormContent() {
       router.push("/app/dashboard");
     } catch {
       setErrorMessage(
-        "Authentication failed. Please verify your credentials or use the demo credentials below."
+        "Authentication failed. Please verify your credentials or use the demo credentials below.",
       );
     } finally {
       setIsSubmitting(false);
@@ -380,14 +396,19 @@ function LoginFormContent() {
               Unified Institutional Gateway
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              One Campus.<br />
-              One System.<br />
+              One Campus.
+              <br />
+              One System.
+              <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400">
                 One Source of Truth.
               </span>
             </h1>
             <p className="text-xs text-slate-400 leading-relaxed max-w-md">
-              A comprehensive institutional ERP uniting student lifecycles, faculty teaching, examination integrity, workforce management, financial billing, and institutional accreditation under a unified security architecture.
+              A comprehensive institutional ERP uniting student lifecycles,
+              faculty teaching, examination integrity, workforce management,
+              financial billing, and institutional accreditation under a unified
+              security architecture.
             </p>
           </div>
 
@@ -408,16 +429,17 @@ function LoginFormContent() {
                 ISO 27001 Certified
               </div>
               <p className="text-[11px] text-slate-400 mt-1">
-                Continuous compliance, encrypted secrets, and tamper-evident audit logs.
+                Continuous compliance, encrypted secrets, and tamper-evident
+                audit logs.
               </p>
             </div>
             <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
               <div className="flex items-center gap-2 text-sky-400 text-xs font-semibold">
-                <Layers className="h-4 w-4" />
-                5 Campuses • 14 Depts
+                <Layers className="h-4 w-4" />5 Campuses • 14 Depts
               </div>
               <p className="text-[11px] text-slate-400 mt-1">
-                Synchronized operations across engineering, science, and medical faculties.
+                Synchronized operations across engineering, science, and medical
+                faculties.
               </p>
             </div>
             <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
@@ -434,15 +456,19 @@ function LoginFormContent() {
 
         {/* Bottom Institutional Seal Footer */}
         <div className="pt-8 mt-6 border-t border-slate-800/60 text-[11px] text-slate-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 relative z-10">
-          <div>
-            © {new Date().getFullYear()} CampusOS Technologies Inc.
-          </div>
+          <div>© {new Date().getFullYear()} CampusOS Technologies Inc.</div>
           <div className="flex items-center gap-3">
-            <span className="hover:text-slate-400 transition-colors cursor-pointer">Security Policy</span>
+            <span className="hover:text-slate-400 transition-colors cursor-pointer">
+              Security Policy
+            </span>
             <span>•</span>
-            <span className="hover:text-slate-400 transition-colors cursor-pointer">Privacy Notice</span>
+            <span className="hover:text-slate-400 transition-colors cursor-pointer">
+              Privacy Notice
+            </span>
             <span>•</span>
-            <span className="hover:text-slate-400 transition-colors cursor-pointer">Helpdesk</span>
+            <span className="hover:text-slate-400 transition-colors cursor-pointer">
+              Helpdesk
+            </span>
           </div>
         </div>
       </div>
@@ -459,7 +485,8 @@ function LoginFormContent() {
                 Institutional Access Portal
               </span>
               <span className="text-[11px] font-medium text-slate-500">
-                Tenant: <span className="font-mono text-slate-300">VSB-CAMPUS</span>
+                Tenant:{" "}
+                <span className="font-mono text-slate-300">VSB-CAMPUS</span>
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
@@ -494,7 +521,9 @@ function LoginFormContent() {
                       : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
                   }`}
                 >
-                  <div className={`mb-1 ${isSelected ? cfg.accent.tabText : "text-slate-500"}`}>
+                  <div
+                    className={`mb-1 ${isSelected ? cfg.accent.tabText : "text-slate-500"}`}
+                  >
                     {getRoleIcon(key, "h-4 w-4")}
                   </div>
                   <span className="text-[11px] leading-tight text-center font-bold">
@@ -506,15 +535,21 @@ function LoginFormContent() {
           </div>
 
           {/* Active Portal Header & Context Card */}
-          <div className={`rounded-2xl border border-slate-800/90 bg-slate-900/70 p-5 sm:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden transition-all duration-300`}>
+          <div
+            className={`rounded-2xl border border-slate-800/90 bg-slate-900/70 p-5 sm:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden transition-all duration-300`}
+          >
             {/* Ambient header glow */}
-            <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl ${activeConfig.accent.glow} to-transparent rounded-full blur-2xl pointer-events-none`} />
+            <div
+              className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl ${activeConfig.accent.glow} to-transparent rounded-full blur-2xl pointer-events-none`}
+            />
 
             {/* Portal Title Banner */}
             <div className="flex items-start justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full border ${activeConfig.accent.badgeBg} ${activeConfig.accent.badgeText} ${activeConfig.accent.badgeBorder}`}>
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full border ${activeConfig.accent.badgeBg} ${activeConfig.accent.badgeText} ${activeConfig.accent.badgeBorder}`}
+                  >
                     {getRoleIcon(activeConfig.key, "h-3 w-3")}
                     {activeConfig.badgeText}
                   </span>
@@ -615,7 +650,9 @@ function LoginFormContent() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-2.5 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -666,7 +703,9 @@ function LoginFormContent() {
               </div>
 
               {(() => {
-                const persona = DEMO_PERSONAS.find((p) => p.id === activeConfig.demoPersonaId);
+                const persona = DEMO_PERSONAS.find(
+                  (p) => p.id === activeConfig.demoPersonaId,
+                );
                 if (!persona) return null;
                 return (
                   <button
@@ -703,11 +742,11 @@ function LoginFormContent() {
           <div className="text-center space-y-1 text-[11px] text-slate-500">
             <div className="flex items-center justify-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-              <span>Institutional End-to-End Encryption • Strict Role Isolation</span>
+              <span>
+                Institutional End-to-End Encryption • Strict Role Isolation
+              </span>
             </div>
-            <div>
-              Protected by CampusOS Enterprise Authentication Layer
-            </div>
+            <div>Protected by CampusOS Enterprise Authentication Layer</div>
           </div>
         </div>
       </div>
@@ -741,9 +780,15 @@ function LoginFormContent() {
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs text-emerald-200 flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-emerald-100">Recovery Instructions Dispatched</div>
+                    <div className="font-semibold text-emerald-100">
+                      Recovery Instructions Dispatched
+                    </div>
                     <p className="text-[11px] text-emerald-300/90 mt-1 leading-relaxed">
-                      If an active institutional account exists for <span className="font-mono font-semibold text-emerald-200">{forgotEmail}</span>, password reset instructions have been dispatched.
+                      If an active institutional account exists for{" "}
+                      <span className="font-mono font-semibold text-emerald-200">
+                        {forgotEmail}
+                      </span>
+                      , password reset instructions have been dispatched.
                     </p>
                   </div>
                 </div>
@@ -761,9 +806,13 @@ function LoginFormContent() {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleForgotPasswordSubmit} className="space-y-4 pt-1">
+              <form
+                onSubmit={handleForgotPasswordSubmit}
+                className="space-y-4 pt-1"
+              >
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Enter your registered institutional email to receive a secure, time-limited password recovery link.
+                  Enter your registered institutional email to receive a secure,
+                  time-limited password recovery link.
                 </p>
 
                 {forgotError && (
@@ -819,7 +868,13 @@ function LoginFormContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">Loading CampusOS Gateway...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs">
+          Loading CampusOS Gateway...
+        </div>
+      }
+    >
       <LoginFormContent />
     </Suspense>
   );

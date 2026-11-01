@@ -81,14 +81,18 @@ export default function SubmitGrievancePage() {
   function handleRemoveDoc(index: number) {
     setForm((prev) => ({
       ...prev,
-      supportingDocuments: (prev.supportingDocuments || []).filter((_, i) => i !== index),
+      supportingDocuments: (prev.supportingDocuments || []).filter(
+        (_, i) => i !== index,
+      ),
     }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.title || !form.description || !form.categoryId) {
-      alert("Please fill out the required fields: Category, Title, and Detailed Description.");
+      alert(
+        "Please fill out the required fields: Category, Title, and Detailed Description.",
+      );
       return;
     }
 
@@ -123,7 +127,8 @@ export default function SubmitGrievancePage() {
           Institutional Grievance & Incident Submission
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Submit formal grievances, service complaints, or confidential incident notifications with institutional procedural fairness.
+          Submit formal grievances, service complaints, or confidential incident
+          notifications with institutional procedural fairness.
         </p>
       </div>
 
@@ -135,26 +140,35 @@ export default function SubmitGrievancePage() {
             <CheckCircle2 className="h-8 w-8" />
           </div>
           <div className="space-y-1">
-            <h2 className="text-xl font-bold text-white">Grievance Successfully Registered</h2>
+            <h2 className="text-xl font-bold text-white">
+              Grievance Successfully Registered
+            </h2>
             <p className="text-sm text-slate-300">
-              Your case has been securely recorded and assigned a unique institutional tracking identifier.
+              Your case has been securely recorded and assigned a unique
+              institutional tracking identifier.
             </p>
           </div>
 
           <div className="max-w-md mx-auto p-4 rounded-xl border border-slate-800 bg-slate-900/60 text-left space-y-2 text-xs">
             <div className="flex justify-between py-1 border-b border-slate-800">
               <span className="text-slate-400">Tracking Reference:</span>
-              <span className="font-mono font-bold text-indigo-400">{successCase.caseNumber}</span>
+              <span className="font-mono font-bold text-indigo-400">
+                {successCase.caseNumber}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800">
               <span className="text-slate-400">Confidentiality Tier:</span>
               <span className="text-slate-200">
-                {successCase.isAnonymous ? "Anonymous (Protected Identity)" : "Authenticated Submitter"}
+                {successCase.isAnonymous
+                  ? "Anonymous (Protected Identity)"
+                  : "Authenticated Submitter"}
               </span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-400">SLA Response Window:</span>
-              <span className="text-emerald-400 font-medium">Within 24-48 Business Hours</span>
+              <span className="text-emerald-400 font-medium">
+                Within 24-48 Business Hours
+              </span>
             </div>
           </div>
 
@@ -195,8 +209,10 @@ export default function SubmitGrievancePage() {
               Statutory Fairness & Non-Retaliation Assurance
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              CampusOS enforces strict protection against adverse retaliatory actions for bona fide grievance submissions.
-              Submissions undergo intake triage by designated Case Officers under published UGC / Institute standards.
+              CampusOS enforces strict protection against adverse retaliatory
+              actions for bona fide grievance submissions. Submissions undergo
+              intake triage by designated Case Officers under published UGC /
+              Institute standards.
             </p>
           </div>
 
@@ -209,11 +225,14 @@ export default function SubmitGrievancePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Institutional Category <span className="text-rose-400">*</span>
+                  Institutional Category{" "}
+                  <span className="text-rose-400">*</span>
                 </label>
                 <select
                   value={form.categoryId}
-                  onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, categoryId: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   required
                 >
@@ -231,11 +250,17 @@ export default function SubmitGrievancePage() {
                 </label>
                 <select
                   value={form.campusId}
-                  onChange={(e) => setForm({ ...form, campusId: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, campusId: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="camp-001">Main Technological Campus (Bangalore)</option>
-                  <option value="camp-002">South Satellite Campus (Electronic City)</option>
+                  <option value="camp-001">
+                    Main Technological Campus (Bangalore)
+                  </option>
+                  <option value="camp-002">
+                    South Satellite Campus (Electronic City)
+                  </option>
                 </select>
               </div>
             </div>
@@ -261,13 +286,16 @@ export default function SubmitGrievancePage() {
 
               <div>
                 <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Detailed Grievance Narrative <span className="text-rose-400">*</span>
+                  Detailed Grievance Narrative{" "}
+                  <span className="text-rose-400">*</span>
                 </label>
                 <textarea
                   rows={5}
                   placeholder="State the chronology of events, specific dates, affected parties, and procedural impacts..."
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   required
                 />
@@ -281,7 +309,9 @@ export default function SubmitGrievancePage() {
                   rows={2}
                   placeholder="What specific remedy, adjustment, repair, or policy clarification are you seeking?"
                   value={form.requestedResolution}
-                  onChange={(e) => setForm({ ...form, requestedResolution: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, requestedResolution: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                 />
               </div>
@@ -302,20 +332,26 @@ export default function SubmitGrievancePage() {
                       Anonymous Submission Mode
                     </label>
                     <p className="text-[11px] text-slate-400">
-                      Omits your student profile and name from initial case distribution logs.
+                      Omits your student profile and name from initial case
+                      distribution logs.
                     </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={form.isAnonymous}
-                    onChange={(e) => setForm({ ...form, isAnonymous: e.target.checked })}
+                    onChange={(e) =>
+                      setForm({ ...form, isAnonymous: e.target.checked })
+                    }
                     className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700"
                   />
                 </div>
 
                 {form.isAnonymous && (
                   <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300">
-                    <strong>Notice on Anonymity:</strong> Anonymous submissions protect identity, but may limit the Committee&apos;s ability to seek clarification or provide personalized restitution where direct contact is required.
+                    <strong>Notice on Anonymity:</strong> Anonymous submissions
+                    protect identity, but may limit the Committee&apos;s ability
+                    to seek clarification or provide personalized restitution
+                    where direct contact is required.
                   </div>
                 )}
 
@@ -325,12 +361,26 @@ export default function SubmitGrievancePage() {
                   </label>
                   <select
                     value={form.confidentialityLevel}
-                    onChange={(e) => setForm({ ...form, confidentialityLevel: e.target.value as SAConfidentialityLevel })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        confidentialityLevel: e.target
+                          .value as SAConfidentialityLevel,
+                      })
+                    }
                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
-                    <option value={SAConfidentialityLevel.STANDARD}>STANDARD - General Operational Disciplinary Review</option>
-                    <option value={SAConfidentialityLevel.CONFIDENTIAL}>CONFIDENTIAL - Restricted to Authorized Case Officers & Panel</option>
-                    <option value={SAConfidentialityLevel.RESTRICTED}>RESTRICTED - High-Sensitivity Safeguarding / Anti-Harassment</option>
+                    <option value={SAConfidentialityLevel.STANDARD}>
+                      STANDARD - General Operational Disciplinary Review
+                    </option>
+                    <option value={SAConfidentialityLevel.CONFIDENTIAL}>
+                      CONFIDENTIAL - Restricted to Authorized Case Officers &
+                      Panel
+                    </option>
+                    <option value={SAConfidentialityLevel.RESTRICTED}>
+                      RESTRICTED - High-Sensitivity Safeguarding /
+                      Anti-Harassment
+                    </option>
                   </select>
                 </div>
               </div>
@@ -361,35 +411,40 @@ export default function SubmitGrievancePage() {
                 </Button>
               </div>
 
-              {form.supportingDocuments && form.supportingDocuments.length > 0 && (
-                <div className="space-y-2">
-                  {form.supportingDocuments.map((doc, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-2.5 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
-                    >
-                      <div className="flex items-center gap-2 text-slate-300">
-                        <Paperclip className="h-3.5 w-3.5 text-indigo-400" />
-                        <span>{doc.title}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveDoc(idx)}
-                        className="text-slate-500 hover:text-red-400 text-xs"
+              {form.supportingDocuments &&
+                form.supportingDocuments.length > 0 && (
+                  <div className="space-y-2">
+                    {form.supportingDocuments.map((doc, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2.5 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
                       >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+                        <div className="flex items-center gap-2 text-slate-300">
+                          <Paperclip className="h-3.5 w-3.5 text-indigo-400" />
+                          <span>{doc.title}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDoc(idx)}
+                          className="text-slate-500 hover:text-red-400 text-xs"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </Card>
 
           {/* Action Row */}
           <div className="flex items-center justify-between">
             <Link href="/app/student-affairs">
-              <Button type="button" variant="ghost" className="text-slate-400 hover:text-slate-200 text-xs gap-1.5">
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-slate-400 hover:text-slate-200 text-xs gap-1.5"
+              >
                 <ArrowLeft className="h-4 w-4" />
                 Cancel
               </Button>

@@ -67,7 +67,9 @@ export default function TrainingProgramsPage() {
     });
 
     if (res.success && res.data) {
-      setToastMessage(`Training program "${res.data.name}" created successfully.`);
+      setToastMessage(
+        `Training program "${res.data.name}" created successfully.`,
+      );
       setIsModalOpen(false);
       loadPrograms();
     }
@@ -76,10 +78,13 @@ export default function TrainingProgramsPage() {
   const filteredPrograms = programs.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.leadCoachName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.leadCoachName || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       (p.facilityName || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      categoryFilter === "all" || p.sport.toLowerCase() === categoryFilter.toLowerCase();
+      categoryFilter === "all" ||
+      p.sport.toLowerCase() === categoryFilter.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
@@ -94,7 +99,8 @@ export default function TrainingProgramsPage() {
             Training Camps & Fitness Programs
           </h1>
           <p className="text-sm text-slate-500">
-            High-performance development academies, conditioning drills, and recreational fitness clinics.
+            High-performance development academies, conditioning drills, and
+            recreational fitness clinics.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -121,7 +127,10 @@ export default function TrainingProgramsPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{toastMessage}</span>
           </div>
-          <button onClick={() => setToastMessage(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -156,12 +165,16 @@ export default function TrainingProgramsPage() {
       {loading ? (
         <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto" />
-          <p className="mt-2 text-sm text-slate-500">Loading training programs...</p>
+          <p className="mt-2 text-sm text-slate-500">
+            Loading training programs...
+          </p>
         </div>
       ) : filteredPrograms.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
           <Dumbbell className="w-8 h-8 text-slate-300 mx-auto" />
-          <p className="mt-2 text-sm font-medium text-slate-700">No training programs found</p>
+          <p className="mt-2 text-sm font-medium text-slate-700">
+            No training programs found
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -183,7 +196,9 @@ export default function TrainingProgramsPage() {
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-slate-900 mt-2 text-base">{prog.name}</h3>
+                  <h3 className="font-bold text-slate-900 mt-2 text-base">
+                    {prog.name}
+                  </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Lead Instructor: {prog.leadCoachName || "Staff Coach"}
                   </p>
@@ -197,7 +212,9 @@ export default function TrainingProgramsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Venue: {prog.facilityName || "Campus Facility"}</span>
+                      <span>
+                        Venue: {prog.facilityName || "Campus Facility"}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileCheck className="w-3.5 h-3.5 text-slate-400" />
@@ -253,26 +270,36 @@ export default function TrainingProgramsPage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">Create Sports Training Program</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Create Sports Training Program
+            </h2>
             <form onSubmit={handleCreate} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Program Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Program Title
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Pre-Season Football Sprint & Stamina Camp"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Sport Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Sport Category
+                  </label>
                   <select
                     value={formData.sport}
-                    onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sport: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="Football">Football</option>
@@ -280,14 +307,20 @@ export default function TrainingProgramsPage() {
                     <option value="Basketball">Basketball</option>
                     <option value="Badminton">Badminton</option>
                     <option value="Swimming">Swimming</option>
-                    <option value="General Conditioning">General Conditioning</option>
+                    <option value="General Conditioning">
+                      General Conditioning
+                    </option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Program Type</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Program Type
+                  </label>
                   <select
                     value={formData.programType}
-                    onChange={(e) => setFormData({ ...formData, programType: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, programType: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="CAMP">Intensive Camp</option>
@@ -299,22 +332,33 @@ export default function TrainingProgramsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Lead Coach</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Lead Coach
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.leadCoachName}
-                    onChange={(e) => setFormData({ ...formData, leadCoachName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        leadCoachName: e.target.value,
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Facility / Court</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Facility / Court
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.facilityName}
-                    onChange={(e) => setFormData({ ...formData, facilityName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, facilityName: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
@@ -322,22 +366,30 @@ export default function TrainingProgramsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Start Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Start Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={formData.startDate}
-                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startDate: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">End Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    End Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={formData.endDate}
-                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, endDate: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
@@ -345,23 +397,37 @@ export default function TrainingProgramsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Max Capacity</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Max Capacity
+                  </label>
                   <input
                     type="number"
                     min={5}
                     max={100}
                     value={formData.capacity}
-                    onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        capacity: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Fee (₹, 0 if free)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Fee (₹, 0 if free)
+                  </label>
                   <input
                     type="number"
                     min={0}
                     value={formData.feeAmount}
-                    onChange={(e) => setFormData({ ...formData, feeAmount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        feeAmount: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>

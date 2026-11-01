@@ -18,7 +18,11 @@ interface FeeRecord {
   id: string;
   participant_name: string;
   activity_title: string;
-  activity_type: "tournament_entry" | "training_camp" | "facility_booking" | "equipment_damage";
+  activity_type:
+    | "tournament_entry"
+    | "training_camp"
+    | "facility_booking"
+    | "equipment_damage";
   amount: number;
   invoice_reference: string;
   status: "paid" | "pending" | "waived";
@@ -89,9 +93,15 @@ export default function SportsFeesPage() {
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
   const totalBilled = fees.reduce((sum, f) => sum + f.amount, 0);
-  const totalPaid = fees.filter((f) => f.status === "paid").reduce((sum, f) => sum + f.amount, 0);
-  const totalWaived = fees.filter((f) => f.status === "waived").reduce((sum, f) => sum + f.amount, 0);
-  const totalPending = fees.filter((f) => f.status === "pending").reduce((sum, f) => sum + f.amount, 0);
+  const totalPaid = fees
+    .filter((f) => f.status === "paid")
+    .reduce((sum, f) => sum + f.amount, 0);
+  const totalWaived = fees
+    .filter((f) => f.status === "waived")
+    .reduce((sum, f) => sum + f.amount, 0);
+  const totalPending = fees
+    .filter((f) => f.status === "pending")
+    .reduce((sum, f) => sum + f.amount, 0);
 
   const handleApplyWaiver = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,11 +111,13 @@ export default function SportsFeesPage() {
       prev.map((f) =>
         f.id === selectedFee.id
           ? { ...f, status: "waived", waiver_reason: waiverReason }
-          : f
-      )
+          : f,
+      ),
     );
 
-    setActionSuccess(`Athletic fee waiver granted for ${selectedFee.participant_name}.`);
+    setActionSuccess(
+      `Athletic fee waiver granted for ${selectedFee.participant_name}.`,
+    );
     setSelectedFee(null);
     setWaiverReason("");
   };
@@ -130,7 +142,8 @@ export default function SportsFeesPage() {
             Sports Registrations & Financial Operations
           </h1>
           <p className="text-sm text-slate-500">
-            Authoritative invoice linkages, competition entry reconciliations, and athletic waivers.
+            Authoritative invoice linkages, competition entry reconciliations,
+            and athletic waivers.
           </p>
         </div>
       </div>
@@ -141,7 +154,10 @@ export default function SportsFeesPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionSuccess}</span>
           </div>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -151,24 +167,42 @@ export default function SportsFeesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <p className="text-xs text-slate-500 font-medium">Total Billed</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">₹{totalBilled.toLocaleString()}</p>
-          <p className="text-[11px] text-slate-400 mt-1">All athletic entries</p>
+          <p className="text-2xl font-bold text-slate-900 mt-1">
+            ₹{totalBilled.toLocaleString()}
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            All athletic entries
+          </p>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-xs text-slate-500 font-medium">Reconciled / Paid</p>
-          <p className="text-2xl font-bold text-emerald-600 mt-1">₹{totalPaid.toLocaleString()}</p>
+          <p className="text-xs text-slate-500 font-medium">
+            Reconciled / Paid
+          </p>
+          <p className="text-2xl font-bold text-emerald-600 mt-1">
+            ₹{totalPaid.toLocaleString()}
+          </p>
           <p className="text-[11px] text-emerald-700 mt-1">
             {Math.round((totalPaid / totalBilled) * 100)}% collection rate
           </p>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-xs text-slate-500 font-medium">Scholarships & Waivers</p>
-          <p className="text-2xl font-bold text-indigo-600 mt-1">₹{totalWaived.toLocaleString()}</p>
-          <p className="text-[11px] text-slate-400 mt-1">Approved fellowship grants</p>
+          <p className="text-xs text-slate-500 font-medium">
+            Scholarships & Waivers
+          </p>
+          <p className="text-2xl font-bold text-indigo-600 mt-1">
+            ₹{totalWaived.toLocaleString()}
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Approved fellowship grants
+          </p>
         </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <p className="text-xs text-slate-500 font-medium">Outstanding Balance</p>
-          <p className="text-2xl font-bold text-amber-600 mt-1">₹{totalPending.toLocaleString()}</p>
+          <p className="text-xs text-slate-500 font-medium">
+            Outstanding Balance
+          </p>
+          <p className="text-2xl font-bold text-amber-600 mt-1">
+            ₹{totalPending.toLocaleString()}
+          </p>
           <p className="text-[11px] text-amber-700 mt-1">Pending payments</p>
         </div>
       </div>
@@ -215,12 +249,20 @@ export default function SportsFeesPage() {
             <tbody className="divide-y divide-slate-100 text-slate-700">
               {filtered.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-50/60">
-                  <td className="py-3 px-4 font-mono font-bold text-slate-900">{item.invoice_reference}</td>
-                  <td className="py-3 px-4 font-medium text-slate-900">{item.participant_name}</td>
+                  <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                    {item.invoice_reference}
+                  </td>
+                  <td className="py-3 px-4 font-medium text-slate-900">
+                    {item.participant_name}
+                  </td>
                   <td className="py-3 px-4">
-                    <span className="text-slate-800">{item.activity_title}</span>
+                    <span className="text-slate-800">
+                      {item.activity_title}
+                    </span>
                     {item.waiver_reason && (
-                      <p className="text-[11px] text-indigo-600 italic mt-0.5">{item.waiver_reason}</p>
+                      <p className="text-[11px] text-indigo-600 italic mt-0.5">
+                        {item.waiver_reason}
+                      </p>
                     )}
                   </td>
                   <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
@@ -233,8 +275,8 @@ export default function SportsFeesPage() {
                         item.status === "paid"
                           ? "bg-emerald-100 text-emerald-800"
                           : item.status === "waived"
-                          ? "bg-indigo-100 text-indigo-800"
-                          : "bg-amber-100 text-amber-800"
+                            ? "bg-indigo-100 text-indigo-800"
+                            : "bg-amber-100 text-amber-800"
                       }`}
                     >
                       {item.status}
@@ -265,9 +307,12 @@ export default function SportsFeesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Authorize Athletic Fee Waiver</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                Authorize Athletic Fee Waiver
+              </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                {selectedFee.participant_name} • Invoice: {selectedFee.invoice_reference} (₹{selectedFee.amount})
+                {selectedFee.participant_name} • Invoice:{" "}
+                {selectedFee.invoice_reference} (₹{selectedFee.amount})
               </p>
             </div>
 

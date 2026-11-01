@@ -30,17 +30,23 @@ function AppealsContent() {
   const preselectedCaseId = searchParams?.get("caseId");
 
   const [cases, setCases] = useState<GrievanceCaseModel[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(preselectedCaseId || "");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(
+    preselectedCaseId || "",
+  );
   const [appealsList, setAppealsList] = useState<AppealRecordModel[]>([]);
 
   // File appeal form
-  const [appealGrounds, setAppealGrounds] = useState<SAAppealGrounds>(SAAppealGrounds.NEW_EVIDENCE);
+  const [appealGrounds, setAppealGrounds] = useState<SAAppealGrounds>(
+    SAAppealGrounds.NEW_EVIDENCE,
+  );
   const [groundsStatement, setGroundsStatement] = useState("");
 
   // Review form
   const [selectedAppealId, setSelectedAppealId] = useState<string>("");
   const [reviewerId, setReviewerId] = useState("usr-ombuds-001");
-  const [reviewStatus, setReviewStatus] = useState<SAAppealStatus>(SAAppealStatus.OVERTURNED);
+  const [reviewStatus, setReviewStatus] = useState<SAAppealStatus>(
+    SAAppealStatus.OVERTURNED,
+  );
   const [outcomeSummary, setOutcomeSummary] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -71,7 +77,7 @@ function AppealsContent() {
 
   const activeCase = cases.find((c) => c.id === selectedCaseId);
   const isAppealWindowValid = StudentAffairsCalculator.isAppealWindowActive(
-    activeCase?.disciplinary_proceeding?.appeal_deadline
+    activeCase?.disciplinary_proceeding?.appeal_deadline,
   );
 
   async function handleFileAppeal(e: React.FormEvent) {
@@ -86,7 +92,9 @@ function AppealsContent() {
         appealGrounds,
         groundsStatement,
       });
-      setNotification("Statutory appeal record formally lodged with independent review panel.");
+      setNotification(
+        "Statutory appeal record formally lodged with independent review panel.",
+      );
       setAppealsList((prev) => [...prev, created]);
       setGroundsStatement("");
     } catch (err: any) {
@@ -103,11 +111,12 @@ function AppealsContent() {
     // Client-side separation of duties validation
     const appealMatch = appealsList.find((a) => a.id === selectedAppealId);
     const relatedCase = cases.find((c) => c.id === appealMatch?.case_id);
-    const originalDecisionMaker = relatedCase?.disciplinary_proceeding?.decision_maker_id;
+    const originalDecisionMaker =
+      relatedCase?.disciplinary_proceeding?.decision_maker_id;
 
     const sod = StudentAffairsCalculator.validateSeparationOfDuties(
       originalDecisionMaker,
-      reviewerId
+      reviewerId,
     );
     if (!sod.isValid) {
       setErrorMessage(sod.errorMessage || "Separation of Duties Violation");
@@ -123,7 +132,9 @@ function AppealsContent() {
         reviewStatus,
         outcomeSummary,
       });
-      setNotification("Appellate determination recorded and case status updated.");
+      setNotification(
+        "Appellate determination recorded and case status updated.",
+      );
       setOutcomeSummary("");
       const updated = await studentAffairsService.getCases();
       setCases(updated);
@@ -150,7 +161,8 @@ function AppealsContent() {
           Statutory Appeals, Reviews & Separation of Duties
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Independent appellate review workflow upholding procedural fairness and institutional separation between decision-maker and reviewer.
+          Independent appellate review workflow upholding procedural fairness
+          and institutional separation between decision-maker and reviewer.
         </p>
       </div>
 
@@ -163,8 +175,10 @@ function AppealsContent() {
           UGC Mandated Separation of Duties Enforcement
         </div>
         <p className="text-[11px] text-slate-400 leading-relaxed">
-          The original decision-maker who imposed a disciplinary sanction is barred by institutional policy from acting as the appellate reviewer.
-          Appeals are heard independently by the Institutional Ombudsperson or Standing Appellate Council.
+          The original decision-maker who imposed a disciplinary sanction is
+          barred by institutional policy from acting as the appellate reviewer.
+          Appeals are heard independently by the Institutional Ombudsperson or
+          Standing Appellate Council.
         </p>
       </div>
 
@@ -174,7 +188,10 @@ function AppealsContent() {
             <CheckCircle2 className="h-4 w-4" />
             <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification("")} className="text-emerald-400 hover:text-white">
+          <button
+            onClick={() => setNotification("")}
+            className="text-emerald-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -186,7 +203,10 @@ function AppealsContent() {
             <AlertCircle className="h-4 w-4 text-rose-400" />
             <span>{errorMessage}</span>
           </div>
-          <button onClick={() => setErrorMessage("")} className="text-rose-400 hover:text-white">
+          <button
+            onClick={() => setErrorMessage("")}
+            className="text-rose-400 hover:text-white"
+          >
             Dismiss
           </button>
         </div>
@@ -202,7 +222,9 @@ function AppealsContent() {
 
           <form onSubmit={handleFileAppeal} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-300 mb-1">Select Sanctioned Case *</label>
+              <label className="block text-slate-300 mb-1">
+                Select Sanctioned Case *
+              </label>
               <select
                 value={selectedCaseId}
                 onChange={(e) => setSelectedCaseId(e.target.value)}
@@ -217,21 +239,35 @@ function AppealsContent() {
             </div>
 
             <div>
-              <label className="block text-slate-300 mb-1">Recognized Grounds for Appeal *</label>
+              <label className="block text-slate-300 mb-1">
+                Recognized Grounds for Appeal *
+              </label>
               <select
                 value={appealGrounds}
-                onChange={(e) => setAppealGrounds(e.target.value as SAAppealGrounds)}
+                onChange={(e) =>
+                  setAppealGrounds(e.target.value as SAAppealGrounds)
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
               >
-                <option value={SAAppealGrounds.NEW_EVIDENCE}>NEW EVIDENCE (Material not available during inquiry)</option>
-                <option value={SAAppealGrounds.PROCEDURAL_IRREGULARITY}>PROCEDURAL IRREGULARITY (Failure of due process)</option>
-                <option value={SAAppealGrounds.DISPROPORTIONATE_SANCTION}>DISPROPORTIONATE SANCTION (Excessive penalty)</option>
-                <option value={SAAppealGrounds.BIAS_CONFLICT_OF_INTEREST}>BIAS / CONFLICT (Unrecused panel bias)</option>
+                <option value={SAAppealGrounds.NEW_EVIDENCE}>
+                  NEW EVIDENCE (Material not available during inquiry)
+                </option>
+                <option value={SAAppealGrounds.PROCEDURAL_IRREGULARITY}>
+                  PROCEDURAL IRREGULARITY (Failure of due process)
+                </option>
+                <option value={SAAppealGrounds.DISPROPORTIONATE_SANCTION}>
+                  DISPROPORTIONATE SANCTION (Excessive penalty)
+                </option>
+                <option value={SAAppealGrounds.BIAS_CONFLICT_OF_INTEREST}>
+                  BIAS / CONFLICT (Unrecused panel bias)
+                </option>
               </select>
             </div>
 
             <div>
-              <label className="block text-slate-300 mb-1">Grounds Narrative & New Facts *</label>
+              <label className="block text-slate-300 mb-1">
+                Grounds Narrative & New Facts *
+              </label>
               <textarea
                 rows={4}
                 placeholder="State the factual basis for the appeal, citing specific procedural gaps or newly discovered evidence..."
@@ -261,7 +297,9 @@ function AppealsContent() {
 
           <form onSubmit={handleReviewAppeal} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-300 mb-1">Select Pending Appeal *</label>
+              <label className="block text-slate-300 mb-1">
+                Select Pending Appeal *
+              </label>
               <select
                 value={selectedAppealId}
                 onChange={(e) => setSelectedAppealId(e.target.value)}
@@ -269,41 +307,64 @@ function AppealsContent() {
               >
                 {appealsList.map((app) => (
                   <option key={app.id} value={app.id}>
-                    Appeal #{app.id.slice(0, 8)} - {app.appeal_grounds} ({app.review_status})
+                    Appeal #{app.id.slice(0, 8)} - {app.appeal_grounds} (
+                    {app.review_status})
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-slate-300 mb-1">Assigned Independent Reviewer *</label>
+              <label className="block text-slate-300 mb-1">
+                Assigned Independent Reviewer *
+              </label>
               <select
                 value={reviewerId}
                 onChange={(e) => setReviewerId(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
               >
-                <option value="usr-ombuds-001">Dr. Meenakshi Sundaram (Independent Ombudsperson)</option>
-                <option value="usr-appellate-lead">Prof. R. Sengupta (Appellate Tribunal Chair)</option>
-                <option value="usr-dean-001">Dr. Vikram Sethi (ORIGINAL DECISION MAKER - VIOLATION TEST)</option>
+                <option value="usr-ombuds-001">
+                  Dr. Meenakshi Sundaram (Independent Ombudsperson)
+                </option>
+                <option value="usr-appellate-lead">
+                  Prof. R. Sengupta (Appellate Tribunal Chair)
+                </option>
+                <option value="usr-dean-001">
+                  Dr. Vikram Sethi (ORIGINAL DECISION MAKER - VIOLATION TEST)
+                </option>
               </select>
             </div>
 
             <div>
-              <label className="block text-slate-300 mb-1">Appellate Ruling Determination *</label>
+              <label className="block text-slate-300 mb-1">
+                Appellate Ruling Determination *
+              </label>
               <select
                 value={reviewStatus}
-                onChange={(e) => setReviewStatus(e.target.value as SAAppealStatus)}
+                onChange={(e) =>
+                  setReviewStatus(e.target.value as SAAppealStatus)
+                }
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"
               >
-                <option value={SAAppealStatus.OVERTURNED}>OVERTURNED (Sanction revoked, record expunged)</option>
-                <option value={SAAppealStatus.UPHELD}>UPHELD (Original decision affirmed)</option>
-                <option value={SAAppealStatus.SANCTION_MODIFIED}>SANCTION MODIFIED (Reduced penalty applied)</option>
-                <option value={SAAppealStatus.REMANDED}>REMANDED (Returned for re-inquiry)</option>
+                <option value={SAAppealStatus.OVERTURNED}>
+                  OVERTURNED (Sanction revoked, record expunged)
+                </option>
+                <option value={SAAppealStatus.UPHELD}>
+                  UPHELD (Original decision affirmed)
+                </option>
+                <option value={SAAppealStatus.SANCTION_MODIFIED}>
+                  SANCTION MODIFIED (Reduced penalty applied)
+                </option>
+                <option value={SAAppealStatus.REMANDED}>
+                  REMANDED (Returned for re-inquiry)
+                </option>
               </select>
             </div>
 
             <div>
-              <label className="block text-slate-300 mb-1">Appellate Outcome Rationale *</label>
+              <label className="block text-slate-300 mb-1">
+                Appellate Outcome Rationale *
+              </label>
               <textarea
                 rows={3}
                 placeholder="State the formal reasoning of the Ombudsperson / Appellate Board..."
@@ -330,9 +391,14 @@ function AppealsContent() {
 
 export default function AppealsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading appeals...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading appeals...
+        </div>
+      }
+    >
       <AppealsContent />
     </Suspense>
   );
 }
-

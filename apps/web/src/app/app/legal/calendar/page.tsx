@@ -37,11 +37,17 @@ import { RenewalSweepResult } from "@/types/legal";
 interface DeadlineItem {
   id: string;
   title: string;
-  type: "CONTRACT_EXPIRATION" | "RENEWAL_WINDOW" | "OBLIGATION_DUE" | "COMPLIANCE_REVIEW" | "MATTER_MILESTONE";
+  type:
+    | "CONTRACT_EXPIRATION"
+    | "RENEWAL_WINDOW"
+    | "OBLIGATION_DUE"
+    | "COMPLIANCE_REVIEW"
+    | "MATTER_MILESTONE";
   due_date: string;
   source_reference: string;
   responsible_owner: string;
-  urgency: "OVERDUE" | "URGENT_7_DAYS" | "UPCOMING_30_DAYS" | "SCHEDULED_90_DAYS";
+  urgency:
+    "OVERDUE" | "URGENT_7_DAYS" | "UPCOMING_30_DAYS" | "SCHEDULED_90_DAYS";
   link: string;
 }
 
@@ -102,7 +108,9 @@ export default function DeadlinesCalendarPage() {
   const [deadlines, setDeadlines] = useState<DeadlineItem[]>(MOCK_DEADLINES);
   const [selectedFilter, setSelectedFilter] = useState<string>("ALL");
   const [isSweeping, setIsSweeping] = useState(false);
-  const [sweepResult, setSweepResult] = useState<RenewalSweepResult | null>(null);
+  const [sweepResult, setSweepResult] = useState<RenewalSweepResult | null>(
+    null,
+  );
   const [isSweepResultOpen, setIsSweepResultOpen] = useState(false);
 
   async function handleTriggerSweep() {
@@ -132,10 +140,12 @@ export default function DeadlinesCalendarPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Calendar className="h-6 w-6 text-indigo-600" /> Legal Deadlines, Expirations & Renewal Automation
+              <Calendar className="h-6 w-6 text-indigo-600" /> Legal Deadlines,
+              Expirations & Renewal Automation
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Aggregated institutional timetable for contract renewal windows, contractual obligations, statutory filings, and case milestones.
+              Aggregated institutional timetable for contract renewal windows,
+              contractual obligations, statutory filings, and case milestones.
             </p>
           </div>
           <button
@@ -219,8 +229,8 @@ export default function DeadlinesCalendarPage() {
                     item.urgency === "OVERDUE"
                       ? "bg-rose-50 dark:bg-rose-950 text-rose-600 border border-rose-200 dark:border-rose-900"
                       : item.urgency === "URGENT_7_DAYS"
-                      ? "bg-amber-50 dark:bg-amber-950 text-amber-600 border border-amber-200 dark:border-amber-900"
-                      : "bg-indigo-50 dark:bg-indigo-950 text-indigo-600 border border-indigo-200 dark:border-indigo-900"
+                        ? "bg-amber-50 dark:bg-amber-950 text-amber-600 border border-amber-200 dark:border-amber-900"
+                        : "bg-indigo-50 dark:bg-indigo-950 text-indigo-600 border border-indigo-200 dark:border-indigo-900"
                   }`}
                 >
                   <Calendar className="h-5 w-5" />
@@ -240,16 +250,23 @@ export default function DeadlinesCalendarPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">{item.title}</h3>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    {item.title}
+                  </h3>
                   <p className="text-xs text-slate-500">
-                    Responsible: <strong className="text-slate-700 dark:text-slate-300">{item.responsible_owner}</strong>
+                    Responsible:{" "}
+                    <strong className="text-slate-700 dark:text-slate-300">
+                      {item.responsible_owner}
+                    </strong>
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 block">Due / Target Date</span>
+                  <span className="text-xs text-slate-400 block">
+                    Due / Target Date
+                  </span>
                   <strong className="text-sm font-mono text-slate-900 dark:text-white">
                     {formatLegalDate(item.due_date)}
                   </strong>
@@ -279,15 +296,20 @@ export default function DeadlinesCalendarPage() {
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
                   Renewal & Expiry Sweep Completed
                 </h3>
-                <p className="text-xs text-slate-500">Scheduled Automation Engine Execution</p>
+                <p className="text-xs text-slate-500">
+                  Scheduled Automation Engine Execution
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
               <div>
-                <span className="text-slate-400 block">Contracts Evaluated</span>
+                <span className="text-slate-400 block">
+                  Contracts Evaluated
+                </span>
                 <strong className="text-base font-bold text-slate-900 dark:text-white">
-                  {sweepResult.contracts_evaluated ?? sweepResult.contracts_flagged_expiring}
+                  {sweepResult.contracts_evaluated ??
+                    sweepResult.contracts_flagged_expiring}
                 </strong>
               </div>
               <div>
@@ -303,15 +325,20 @@ export default function DeadlinesCalendarPage() {
                 </strong>
               </div>
               <div>
-                <span className="text-slate-400 block">Obligations Overdue</span>
+                <span className="text-slate-400 block">
+                  Obligations Overdue
+                </span>
                 <strong className="text-base font-bold text-rose-600">
                   {sweepResult.obligations_flagged_overdue}
                 </strong>
               </div>
               <div className="col-span-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <span className="text-slate-400 block">Notifications Dispatched</span>
+                <span className="text-slate-400 block">
+                  Notifications Dispatched
+                </span>
                 <strong className="text-sm font-semibold text-emerald-600 flex items-center gap-1 mt-0.5">
-                  <Bell className="h-3.5 w-3.5" /> {sweepResult.notifications_dispatched} Alerts Sent
+                  <Bell className="h-3.5 w-3.5" />{" "}
+                  {sweepResult.notifications_dispatched} Alerts Sent
                 </strong>
               </div>
             </div>

@@ -8,9 +8,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=apps/web",
-    "dev:all": "powershell -ExecutionPolicy Bypass -File ./scripts/dev.ps1",
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "npm run dev --workspace=apps/web",
+    "dev:backend": "powershell -Command \"cd apps/api; .\\.venv\\Scripts\\activate; uvicorn app.main:app --reload --host 127.0.0.1 --port 8000\"",
+    "dev:all": "node scripts/dev.mjs",
     "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspace=apps/web",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""

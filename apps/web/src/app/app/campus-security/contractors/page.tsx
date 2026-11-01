@@ -79,9 +79,12 @@ export default function ContractorAccessPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-black tracking-tight">Contractor & Service Provider Access</h1>
+            <h1 className="text-2xl font-black tracking-tight">
+              Contractor & Service Provider Access
+            </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Approved vendors, maintenance technicians, safety induction compliance, and work order badges.
+              Approved vendors, maintenance technicians, safety induction
+              compliance, and work order badges.
             </p>
           </div>
           <button
@@ -96,14 +99,21 @@ export default function ContractorAccessPage() {
         {/* Contractor Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {contractors.map((c) => (
-            <div key={c.id} className="p-6 bg-card border border-border rounded-2xl shadow-xs space-y-4">
+            <div
+              key={c.id}
+              className="p-6 bg-card border border-border rounded-2xl shadow-xs space-y-4"
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm bg-muted text-muted-foreground">
                     {c.contractor_code}
                   </span>
-                  <h3 className="font-bold text-base mt-1">{c.organization_name}</h3>
-                  <div className="text-xs text-muted-foreground font-medium">{c.contractor_name}</div>
+                  <h3 className="font-bold text-base mt-1">
+                    {c.organization_name}
+                  </h3>
+                  <div className="text-xs text-muted-foreground font-medium">
+                    {c.contractor_name}
+                  </div>
                 </div>
                 <span
                   className={`text-xs px-2.5 py-1 rounded-full font-bold ${
@@ -119,15 +129,21 @@ export default function ContractorAccessPage() {
               <div className="text-xs space-y-1.5 pt-2 border-t border-border/60 text-muted-foreground">
                 <div className="flex items-center justify-between">
                   <span>Service:</span>
-                  <span className="font-semibold text-foreground">{c.service_type}</span>
+                  <span className="font-semibold text-foreground">
+                    {c.service_type}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Work Order:</span>
-                  <span className="font-mono text-foreground">{c.work_order_reference || "Direct Campus MoU"}</span>
+                  <span className="font-mono text-foreground">
+                    {c.work_order_reference || "Direct Campus MoU"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Badge Ref:</span>
-                  <span className="font-mono text-foreground">{c.badge_reference || "PENDING"}</span>
+                  <span className="font-mono text-foreground">
+                    {c.badge_reference || "PENDING"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Phone:</span>
@@ -150,7 +166,9 @@ export default function ContractorAccessPage() {
                 <div className="flex items-center space-x-2">
                   <HardHat className="h-4 w-4" />
                   <span className="font-semibold">
-                    {c.is_safety_induction_completed ? "Safety Induction Certified" : "Induction Pending"}
+                    {c.is_safety_induction_completed
+                      ? "Safety Induction Certified"
+                      : "Induction Pending"}
                   </span>
                 </div>
                 {c.is_safety_induction_completed && (
@@ -167,15 +185,22 @@ export default function ContractorAccessPage() {
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-card border border-border rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between pb-3 border-b border-border">
-              <h3 className="font-bold text-lg">Register Contractor or Service Provider</h3>
-              <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">
+              <h3 className="font-bold text-lg">
+                Register Contractor or Service Provider
+              </h3>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleCreate} className="space-y-4 text-sm">
               <div>
-                <label className="text-xs font-medium text-muted-foreground">Contractor / Vendor Organization</label>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Contractor / Vendor Organization
+                </label>
                 <input
                   type="text"
                   required
@@ -188,7 +213,9 @@ export default function ContractorAccessPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Lead Contractor Name</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Lead Contractor Name
+                  </label>
                   <input
                     type="text"
                     required
@@ -198,7 +225,9 @@ export default function ContractorAccessPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Contact Phone</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Contact Phone
+                  </label>
                   <input
                     type="tel"
                     required
@@ -211,7 +240,9 @@ export default function ContractorAccessPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Service / Trade Type</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Service / Trade Type
+                  </label>
                   <input
                     type="text"
                     required
@@ -222,7 +253,9 @@ export default function ContractorAccessPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground">Work Order Reference</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Work Order Reference
+                  </label>
                   <input
                     type="text"
                     value={workOrder}
@@ -234,7 +267,9 @@ export default function ContractorAccessPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-muted-foreground">Validity Expiration Date</label>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Validity Expiration Date
+                </label>
                 <input
                   type="date"
                   required
@@ -252,7 +287,10 @@ export default function ContractorAccessPage() {
                   onChange={(e) => setSafetyInducted(e.target.checked)}
                   className="rounded text-primary focus:ring-primary"
                 />
-                <label htmlFor="safetyCheck" className="text-xs font-medium text-foreground cursor-pointer">
+                <label
+                  htmlFor="safetyCheck"
+                  className="text-xs font-medium text-foreground cursor-pointer"
+                >
                   Mandatory Campus Safety & Fire Induction Completed
                 </label>
               </div>
@@ -279,4 +317,3 @@ export default function ContractorAccessPage() {
     </div>
   );
 }
-

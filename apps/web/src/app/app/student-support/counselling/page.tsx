@@ -44,7 +44,9 @@ const CATEGORIES = [
 ];
 
 export default function CounsellingBookingPage() {
-  const [appointments, setAppointments] = useState<CounsellingAppointmentItem[]>([]);
+  const [appointments, setAppointments] = useState<
+    CounsellingAppointmentItem[]
+  >([]);
   const [config, setConfig] = useState<SupportPolicyConfigItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -53,15 +55,20 @@ export default function CounsellingBookingPage() {
 
   // Form State
   const [category, setCategory] = useState("ACADEMIC_STRESS");
-  const [appointmentMode, setAppointmentMode] = useState<"IN_PERSON" | "ONLINE">("IN_PERSON");
+  const [appointmentMode, setAppointmentMode] = useState<
+    "IN_PERSON" | "ONLINE"
+  >("IN_PERSON");
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [studentNotes, setStudentNotes] = useState("");
 
   // Reschedule / Cancel Modal State
   const [actionModalOpen, setActionModalOpen] = useState(false);
-  const [actionType, setActionType] = useState<"RESCHEDULE" | "CANCEL">("CANCEL");
-  const [selectedAppt, setSelectedAppt] = useState<CounsellingAppointmentItem | null>(null);
+  const [actionType, setActionType] = useState<"RESCHEDULE" | "CANCEL">(
+    "CANCEL",
+  );
+  const [selectedAppt, setSelectedAppt] =
+    useState<CounsellingAppointmentItem | null>(null);
   const [actionReason, setActionReason] = useState("");
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTime, setRescheduleTime] = useState("");
@@ -93,27 +100,42 @@ export default function CounsellingBookingPage() {
     setSubmitting(true);
     setErrorMessage(null);
     try {
-      const scheduledStart = new Date(`${preferredDate}T${preferredTime}:00Z`).toISOString();
-      const scheduledEnd = new Date(new Date(scheduledStart).getTime() + 50 * 60000).toISOString();
+      const scheduledStart = new Date(
+        `${preferredDate}T${preferredTime}:00Z`,
+      ).toISOString();
+      const scheduledEnd = new Date(
+        new Date(scheduledStart).getTime() + 50 * 60000,
+      ).toISOString();
 
       await StudentSupportService.createCounsellingAppointment({
         category,
         appointment_mode: appointmentMode,
         scheduled_start: scheduledStart,
         scheduled_end: scheduledEnd,
-        location: appointmentMode === "IN_PERSON" ? "Student Wellness Centre, Suite 104" : "CampusOS Secure Video",
-        virtual_meeting_link: appointmentMode === "ONLINE" ? "https://meet.campusos.edu/counsel-confidential" : undefined,
-        reason_summary: studentNotes || "General guidance & consultation requested.",
+        location:
+          appointmentMode === "IN_PERSON"
+            ? "Student Wellness Centre, Suite 104"
+            : "CampusOS Secure Video",
+        virtual_meeting_link:
+          appointmentMode === "ONLINE"
+            ? "https://meet.campusos.edu/counsel-confidential"
+            : undefined,
+        reason_summary:
+          studentNotes || "General guidance & consultation requested.",
       });
 
-      setSuccessMessage("Your confidential counselling appointment has been requested. Confirmation will follow shortly.");
+      setSuccessMessage(
+        "Your confidential counselling appointment has been requested. Confirmation will follow shortly.",
+      );
       setPreferredDate("");
       setPreferredTime("");
       setStudentNotes("");
       loadData();
     } catch (err) {
       console.error("Booking error:", err);
-      setErrorMessage("Could not schedule appointment. Please ensure slot is at least 12 hours in advance and not in conflict.");
+      setErrorMessage(
+        "Could not schedule appointment. Please ensure slot is at least 12 hours in advance and not in conflict.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -125,20 +147,30 @@ export default function CounsellingBookingPage() {
     setProcessingAction(true);
     try {
       if (actionType === "CANCEL") {
-        await StudentSupportService.transitionCounsellingAppointment(selectedAppt.id, {
-          status: "CANCELLED",
-          cancellation_reason: actionReason || "Cancelled by student",
-        });
+        await StudentSupportService.transitionCounsellingAppointment(
+          selectedAppt.id,
+          {
+            status: "CANCELLED",
+            cancellation_reason: actionReason || "Cancelled by student",
+          },
+        );
         setSuccessMessage("Appointment has been cancelled.");
       } else {
-        const newStart = new Date(`${rescheduleDate}T${rescheduleTime}:00Z`).toISOString();
-        const newEnd = new Date(new Date(newStart).getTime() + 50 * 60000).toISOString();
-        await StudentSupportService.transitionCounsellingAppointment(selectedAppt.id, {
-          status: "RESCHEDULED",
-          rescheduled_start: newStart,
-          rescheduled_end: newEnd,
-          reschedule_reason: actionReason,
-        });
+        const newStart = new Date(
+          `${rescheduleDate}T${rescheduleTime}:00Z`,
+        ).toISOString();
+        const newEnd = new Date(
+          new Date(newStart).getTime() + 50 * 60000,
+        ).toISOString();
+        await StudentSupportService.transitionCounsellingAppointment(
+          selectedAppt.id,
+          {
+            status: "RESCHEDULED",
+            rescheduled_start: newStart,
+            rescheduled_end: newEnd,
+            reschedule_reason: actionReason,
+          },
+        );
         setSuccessMessage("Appointment rescheduled successfully.");
       }
       setActionModalOpen(false);
@@ -162,7 +194,10 @@ export default function CounsellingBookingPage() {
           items={[
             { label: "Dashboard", href: "/app/dashboard" },
             { label: "Student Support", href: "/app/student-support" },
-            { label: "Book Counselling", href: "/app/student-support/counselling" },
+            {
+              label: "Book Counselling",
+              href: "/app/student-support/counselling",
+            },
           ]}
         />
         <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -172,11 +207,15 @@ export default function CounsellingBookingPage() {
               Institutional Counselling Services
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Confidential, professional guidance for academic, emotional, and personal wellbeing.
+              Confidential, professional guidance for academic, emotional, and
+              personal wellbeing.
             </p>
           </div>
           <Link href="/app/student-support/counselling/schedule">
-            <Button variant="outline" className="border-slate-700 text-xs text-slate-200">
+            <Button
+              variant="outline"
+              className="border-slate-700 text-xs text-slate-200"
+            >
               <Calendar className="mr-1.5 h-3.5 w-3.5 text-indigo-400" />
               Counsellor Schedule View
             </Button>
@@ -191,7 +230,12 @@ export default function CounsellingBookingPage() {
         <div className="flex items-start gap-3">
           <ShieldCheck className="h-5 w-5 text-rose-400 mt-0.5 shrink-0" />
           <div className="text-xs text-slate-300">
-            <span className="font-semibold text-white">Confidentiality Guarantee:</span> Counselling sessions are strictly private. Session notes and personal discussions are never shared with academic mentors, professors, HODs, or recorded on academic transcripts.
+            <span className="font-semibold text-white">
+              Confidentiality Guarantee:
+            </span>{" "}
+            Counselling sessions are strictly private. Session notes and
+            personal discussions are never shared with academic mentors,
+            professors, HODs, or recorded on academic transcripts.
           </div>
         </div>
       </div>
@@ -202,7 +246,10 @@ export default function CounsellingBookingPage() {
             <CheckCircle2 className="h-4 w-4" />
             {successMessage}
           </span>
-          <button onClick={() => setSuccessMessage(null)} className="text-emerald-400 hover:text-emerald-200">
+          <button
+            onClick={() => setSuccessMessage(null)}
+            className="text-emerald-400 hover:text-emerald-200"
+          >
             Dismiss
           </button>
         </div>
@@ -214,7 +261,10 @@ export default function CounsellingBookingPage() {
             <AlertCircle className="h-4 w-4" />
             {errorMessage}
           </span>
-          <button onClick={() => setErrorMessage(null)} className="text-rose-400 hover:text-rose-200">
+          <button
+            onClick={() => setErrorMessage(null)}
+            className="text-rose-400 hover:text-rose-200"
+          >
             Dismiss
           </button>
         </div>
@@ -228,7 +278,9 @@ export default function CounsellingBookingPage() {
               <Calendar className="h-4 w-4 text-indigo-400" />
               Request an Appointment
             </h2>
-            <p className="text-xs text-slate-400">Choose your consultation mode and category</p>
+            <p className="text-xs text-slate-400">
+              Choose your consultation mode and category
+            </p>
           </div>
 
           <form onSubmit={handleBookAppointment} className="space-y-4 text-xs">
@@ -248,7 +300,9 @@ export default function CounsellingBookingPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Consultation Mode *</label>
+              <label className="text-slate-400 font-medium">
+                Consultation Mode *
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -289,7 +343,9 @@ export default function CounsellingBookingPage() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-400 font-medium">Time Slot *</label>
+                <label className="text-slate-400 font-medium">
+                  Time Slot *
+                </label>
                 <Input
                   required
                   type="time"
@@ -301,7 +357,9 @@ export default function CounsellingBookingPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-slate-400 font-medium">Brief Note (Optional)</label>
+              <label className="text-slate-400 font-medium">
+                Brief Note (Optional)
+              </label>
               <Textarea
                 placeholder="What topics or guidance would you like to focus on?"
                 value={studentNotes}
@@ -327,10 +385,14 @@ export default function CounsellingBookingPage() {
         {/* Existing Appointments (Right 2 Columns) */}
         <div className="lg:col-span-2 space-y-4">
           <Card className="border-slate-800 bg-slate-900/60 p-5">
-            <h2 className="text-base font-semibold text-white mb-3">Your Counselling Appointments</h2>
+            <h2 className="text-base font-semibold text-white mb-3">
+              Your Counselling Appointments
+            </h2>
 
             {loading ? (
-              <div className="py-8 text-center text-xs text-slate-500">Loading appointments...</div>
+              <div className="py-8 text-center text-xs text-slate-500">
+                Loading appointments...
+              </div>
             ) : appointments.length === 0 ? (
               <div className="py-8 text-center text-xs text-slate-500">
                 You have no current or past counselling appointments booked.
@@ -344,19 +406,21 @@ export default function CounsellingBookingPage() {
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-white">{appt.appointment_number}</span>
+                        <span className="font-semibold text-sm text-white">
+                          {appt.appointment_number}
+                        </span>
                         <Badge
                           variant="outline"
                           className={
                             appt.status === "CONFIRMED"
                               ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 text-[10px]"
                               : appt.status === "BOOKED"
-                              ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-[10px]"
-                              : appt.status === "COMPLETED"
-                              ? "border-teal-500/30 text-teal-400 bg-teal-500/10 text-[10px]"
-                              : appt.status === "CANCELLED"
-                              ? "border-rose-500/30 text-rose-400 bg-rose-500/10 text-[10px]"
-                              : "border-slate-700 text-slate-400 text-[10px]"
+                                ? "border-blue-500/30 text-blue-400 bg-blue-500/10 text-[10px]"
+                                : appt.status === "COMPLETED"
+                                  ? "border-teal-500/30 text-teal-400 bg-teal-500/10 text-[10px]"
+                                  : appt.status === "CANCELLED"
+                                    ? "border-rose-500/30 text-rose-400 bg-rose-500/10 text-[10px]"
+                                    : "border-slate-700 text-slate-400 text-[10px]"
                           }
                         >
                           {appt.status}
@@ -382,8 +446,13 @@ export default function CounsellingBookingPage() {
                       <div>
                         <span>Date & Time: </span>
                         <strong className="text-slate-200">
-                          {new Date(appt.scheduled_start || appt.appointmentDate || "").toLocaleDateString()} at{" "}
-                          {new Date(appt.scheduled_start || appt.appointmentDate || "").toLocaleTimeString([], {
+                          {new Date(
+                            appt.scheduled_start || appt.appointmentDate || "",
+                          ).toLocaleDateString()}{" "}
+                          at{" "}
+                          {new Date(
+                            appt.scheduled_start || appt.appointmentDate || "",
+                          ).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -391,7 +460,9 @@ export default function CounsellingBookingPage() {
                       </div>
                       <div>
                         <span>Counsellor: </span>
-                        <strong className="text-slate-200">{appt.counsellor_name ?? "Assigned Professional"}</strong>
+                        <strong className="text-slate-200">
+                          {appt.counsellor_name ?? "Assigned Professional"}
+                        </strong>
                       </div>
                     </div>
 
@@ -403,7 +474,8 @@ export default function CounsellingBookingPage() {
                     )}
 
                     {/* Reschedule / Cancel action buttons if active */}
-                    {(appt.status === "BOOKED" || appt.status === "CONFIRMED") && (
+                    {(appt.status === "BOOKED" ||
+                      appt.status === "CONFIRMED") && (
                       <div className="pt-2 flex justify-end gap-2 border-t border-slate-800/60">
                         <Button
                           variant="ghost"
@@ -459,7 +531,10 @@ export default function CounsellingBookingPage() {
               )}
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleConfirmAction} className="space-y-4 pt-2 text-xs">
+          <form
+            onSubmit={handleConfirmAction}
+            className="space-y-4 pt-2 text-xs"
+          >
             {actionType === "RESCHEDULE" && (
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
@@ -486,7 +561,10 @@ export default function CounsellingBookingPage() {
             )}
 
             <div className="space-y-1">
-              <label className="text-slate-400">Reason for {actionType === "CANCEL" ? "Cancellation" : "Rescheduling"} *</label>
+              <label className="text-slate-400">
+                Reason for{" "}
+                {actionType === "CANCEL" ? "Cancellation" : "Rescheduling"} *
+              </label>
               <Input
                 required
                 placeholder="e.g. Schedule clash with lab exam"
@@ -514,7 +592,9 @@ export default function CounsellingBookingPage() {
                     : "bg-indigo-600 hover:bg-indigo-700 text-xs text-white"
                 }
               >
-                {processingAction ? "Processing..." : `Confirm ${actionType === "CANCEL" ? "Cancellation" : "Reschedule"}`}
+                {processingAction
+                  ? "Processing..."
+                  : `Confirm ${actionType === "CANCEL" ? "Cancellation" : "Reschedule"}`}
               </Button>
             </DialogFooter>
           </form>

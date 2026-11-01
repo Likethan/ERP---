@@ -30,7 +30,9 @@ export default function HousingAgreementsPage() {
     assignment_id: "",
     agreement_title: "CampusOS Standard Residential Tenancy Lease 2026-27",
     valid_from: new Date().toISOString().split("T")[0],
-    valid_to: new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().split("T")[0],
+    valid_to: new Date(Date.now() + 365 * 24 * 3600 * 1000)
+      .toISOString()
+      .split("T")[0],
     rent_amount: 8500,
     deposit_amount: 15000,
     payment_frequency: "MONTHLY_ADVANCE",
@@ -90,7 +92,8 @@ export default function HousingAgreementsPage() {
               Residential Tenancy Agreements & Finance References
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Legally binding digital leases, ERP invoice linkages, and security deposit escrow reconciliation.
+              Legally binding digital leases, ERP invoice linkages, and security
+              deposit escrow reconciliation.
             </p>
           </div>
 
@@ -105,10 +108,14 @@ export default function HousingAgreementsPage() {
 
         {/* Agreements Table */}
         {loading ? (
-          <div className="py-20 text-center text-slate-400">Loading digital lease records...</div>
+          <div className="py-20 text-center text-slate-400">
+            Loading digital lease records...
+          </div>
         ) : agreements.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-slate-800 rounded-xl bg-slate-900/30">
-            <p className="text-slate-400">No active housing tenancy agreements registered yet.</p>
+            <p className="text-slate-400">
+              No active housing tenancy agreements registered yet.
+            </p>
           </div>
         ) : (
           <div className="bg-slate-900/70 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
@@ -126,7 +133,10 @@ export default function HousingAgreementsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {agreements.map((agr) => (
-                    <tr key={agr.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr
+                      key={agr.id}
+                      className="hover:bg-slate-800/30 transition-colors"
+                    >
                       <td className="px-5 py-4">
                         <div className="font-mono font-bold text-white text-xs">
                           {agr.agreement_number}
@@ -175,8 +185,8 @@ export default function HousingAgreementsPage() {
                             agr.deposit_refund_status === "HELD"
                               ? "bg-slate-800 text-slate-300"
                               : agr.deposit_refund_status === "REFUNDED"
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                              : "bg-rose-500/10 text-rose-400 border border-rose-500/30"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                                : "bg-rose-500/10 text-rose-400 border border-rose-500/30"
                           }`}
                         >
                           {agr.deposit_refund_status}
@@ -206,7 +216,10 @@ export default function HousingAgreementsPage() {
                   <ShieldCheck className="w-5 h-5 text-indigo-400" />
                   Generate Tenancy Agreement Reference
                 </h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-slate-400 hover:text-white"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -219,12 +232,18 @@ export default function HousingAgreementsPage() {
                   <select
                     required
                     value={formData.assignment_id}
-                    onChange={(e) => setFormData({ ...formData, assignment_id: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        assignment_id: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                   >
                     {assignments.map((asg) => (
                       <option key={asg.id} value={asg.id}>
-                        {asg.student_name} — Bed {asg.bed_code} ({asg.property_name})
+                        {asg.student_name} — Bed {asg.bed_code} (
+                        {asg.property_name})
                       </option>
                     ))}
                   </select>
@@ -239,7 +258,10 @@ export default function HousingAgreementsPage() {
                     type="text"
                     value={formData.agreement_title}
                     onChange={(e) =>
-                      setFormData({ ...formData, agreement_title: e.target.value })
+                      setFormData({
+                        ...formData,
+                        agreement_title: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                   />
@@ -254,7 +276,9 @@ export default function HousingAgreementsPage() {
                       required
                       type="date"
                       value={formData.valid_from}
-                      onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, valid_from: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
                   </div>
@@ -266,7 +290,9 @@ export default function HousingAgreementsPage() {
                       required
                       type="date"
                       value={formData.valid_to}
-                      onChange={(e) => setFormData({ ...formData, valid_to: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, valid_to: e.target.value })
+                      }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     />
                   </div>
@@ -317,11 +343,16 @@ export default function HousingAgreementsPage() {
                     <select
                       value={formData.payment_frequency || "MONTHLY_ADVANCE"}
                       onChange={(e) =>
-                        setFormData({ ...formData, payment_frequency: e.target.value })
+                        setFormData({
+                          ...formData,
+                          payment_frequency: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-md text-slate-200"
                     >
-                      <option value="MONTHLY_ADVANCE">Monthly in Advance</option>
+                      <option value="MONTHLY_ADVANCE">
+                        Monthly in Advance
+                      </option>
                       <option value="SEMESTER_UPFRONT">Semester Upfront</option>
                       <option value="ANNUAL_ONE_TIME">Annual Lump-sum</option>
                     </select>

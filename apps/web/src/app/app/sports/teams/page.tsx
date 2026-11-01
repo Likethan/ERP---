@@ -115,7 +115,9 @@ export default function TeamsPage() {
       });
       loadData();
     } else {
-      setFormError(typeof res.error === "string" ? res.error : "Failed to create team");
+      setFormError(
+        typeof res.error === "string" ? res.error : "Failed to create team",
+      );
     }
   };
 
@@ -129,7 +131,9 @@ export default function TeamsPage() {
       return;
     }
 
-    const participant = participants.find((p) => p.id === selectedParticipantId);
+    const participant = participants.find(
+      (p) => p.id === selectedParticipantId,
+    );
     if (!participant) {
       setFormError("Selected participant was not found");
       return;
@@ -137,14 +141,16 @@ export default function TeamsPage() {
 
     if (participant.clearanceStatus !== "CLEARED") {
       setFormError(
-        `Athlete ${participant.userName} has status "${participant.clearanceStatus}". Institutional policy requires "CLEARED" medical certification.`
+        `Athlete ${participant.userName} has status "${participant.clearanceStatus}". Institutional policy requires "CLEARED" medical certification.`,
       );
       return;
     }
 
     const activeCount = roster.filter((m) => m.status === "ACTIVE").length;
     if (activeCount >= selectedTeam.maxRosterSize) {
-      setFormError(`Cannot exceed team maximum roster capacity of ${selectedTeam.maxRosterSize}`);
+      setFormError(
+        `Cannot exceed team maximum roster capacity of ${selectedTeam.maxRosterSize}`,
+      );
       return;
     }
 
@@ -167,18 +173,27 @@ export default function TeamsPage() {
       const tRes = await sportsService.listTeams();
       if (tRes.data) setTeams(tRes.data);
     } else {
-      setFormError(typeof res.error === "string" ? res.error : "Failed to add member");
+      setFormError(
+        typeof res.error === "string" ? res.error : "Failed to add member",
+      );
     }
   };
 
   const handleRemoveMember = async (teamId: string, memberId: string) => {
-    if (!confirm("Are you sure you want to remove this athlete from the active roster?")) return;
+    if (
+      !confirm(
+        "Are you sure you want to remove this athlete from the active roster?",
+      )
+    )
+      return;
     setRoster((prev) => prev.filter((m) => m.id !== memberId));
     setActionSuccess("Roster membership updated.");
   };
 
   const filteredTeams = teams.filter((t) => {
-    const matchesSport = selectedSport === "all" || t.sport.toLowerCase() === selectedSport.toLowerCase();
+    const matchesSport =
+      selectedSport === "all" ||
+      t.sport.toLowerCase() === selectedSport.toLowerCase();
     const matchesQuery =
       t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -193,9 +208,12 @@ export default function TeamsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Teams & Rosters</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            Teams & Rosters
+          </h1>
           <p className="text-sm text-slate-500">
-            Manage varsity, collegiate, and intramural squads, player positions, and coaching staff.
+            Manage varsity, collegiate, and intramural squads, player positions,
+            and coaching staff.
           </p>
         </div>
         <button
@@ -216,7 +234,10 @@ export default function TeamsPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionSuccess}</span>
           </div>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -259,19 +280,28 @@ export default function TeamsPage() {
           {loading ? (
             <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto" />
-              <p className="mt-2 text-sm text-slate-500">Loading campus teams...</p>
+              <p className="mt-2 text-sm text-slate-500">
+                Loading campus teams...
+              </p>
             </div>
           ) : filteredTeams.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
               <Users className="w-8 h-8 text-slate-300 mx-auto" />
-              <p className="mt-2 text-sm font-medium text-slate-700">No teams found</p>
-              <p className="text-xs text-slate-500">Try adjusting your search or filters.</p>
+              <p className="mt-2 text-sm font-medium text-slate-700">
+                No teams found
+              </p>
+              <p className="text-xs text-slate-500">
+                Try adjusting your search or filters.
+              </p>
             </div>
           ) : (
             filteredTeams.map((team) => {
               const activeCount = team.activeRosterCount || 0;
               const isSelected = selectedTeam?.id === team.id;
-              const capacityPct = Math.min(100, Math.round((activeCount / team.maxRosterSize) * 100));
+              const capacityPct = Math.min(
+                100,
+                Math.round((activeCount / team.maxRosterSize) * 100),
+              );
 
               return (
                 <div
@@ -293,12 +323,16 @@ export default function TeamsPage() {
                           {team.genderCategory.toLowerCase()}&apos;s Squad
                         </span>
                       </div>
-                      <h3 className="font-semibold text-slate-900 mt-1 text-base">{team.name}</h3>
+                      <h3 className="font-semibold text-slate-900 mt-1 text-base">
+                        {team.name}
+                      </h3>
                       <p className="text-xs text-slate-500 mt-0.5">
                         Head Coach: {team.headCoachName || "Staff Coach"}
                       </p>
                     </div>
-                    <ChevronRight className={`w-5 h-5 ${isSelected ? "text-indigo-600" : "text-slate-300"}`} />
+                    <ChevronRight
+                      className={`w-5 h-5 ${isSelected ? "text-indigo-600" : "text-slate-300"}`}
+                    />
                   </div>
 
                   <div className="mt-4">
@@ -330,13 +364,16 @@ export default function TeamsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-slate-900">{selectedTeam.name}</h2>
+                    <h2 className="text-xl font-bold text-slate-900">
+                      {selectedTeam.name}
+                    </h2>
                     <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800">
                       Active Squad
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-1">
-                    Sport: {selectedTeam.sport} • Coach: {selectedTeam.headCoachName || "Head Coach"} • Roster Cap:{" "}
+                    Sport: {selectedTeam.sport} • Coach:{" "}
+                    {selectedTeam.headCoachName || "Head Coach"} • Roster Cap:{" "}
                     {selectedTeam.maxRosterSize}
                   </p>
                 </div>
@@ -356,14 +393,20 @@ export default function TeamsPage() {
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4 text-indigo-600" />
-                  Official Roster ({roster.filter((m) => m.status === "ACTIVE").length} Athletes)
+                  Official Roster (
+                  {roster.filter((m) => m.status === "ACTIVE").length} Athletes)
                 </h3>
 
                 {roster.length === 0 ? (
                   <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
                     <Users className="w-6 h-6 text-slate-400 mx-auto" />
-                    <p className="text-sm text-slate-600 mt-2 font-medium">No athletes assigned yet</p>
-                    <p className="text-xs text-slate-400">Click &quot;Add Athlete to Roster&quot; to assign eligible participants.</p>
+                    <p className="text-sm text-slate-600 mt-2 font-medium">
+                      No athletes assigned yet
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      Click &quot;Add Athlete to Roster&quot; to assign eligible
+                      participants.
+                    </p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto rounded-lg border border-slate-200">
@@ -371,25 +414,34 @@ export default function TeamsPage() {
                       <thead className="bg-slate-50 border-b border-slate-200 text-slate-600">
                         <tr>
                           <th className="py-2.5 px-3 font-semibold">Jersey</th>
-                          <th className="py-2.5 px-3 font-semibold">Athlete Name</th>
-                          <th className="py-2.5 px-3 font-semibold">Position</th>
+                          <th className="py-2.5 px-3 font-semibold">
+                            Athlete Name
+                          </th>
+                          <th className="py-2.5 px-3 font-semibold">
+                            Position
+                          </th>
                           <th className="py-2.5 px-3 font-semibold">Role</th>
                           <th className="py-2.5 px-3 font-semibold">Status</th>
-                          <th className="py-2.5 px-3 font-semibold text-right">Actions</th>
+                          <th className="py-2.5 px-3 font-semibold text-right">
+                            Actions
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 text-slate-700">
                         {roster.map((member) => (
                           <tr key={member.id} className="hover:bg-slate-50/60">
                             <td className="py-2.5 px-3 font-bold text-slate-900">
-                              {member.jerseyNumber !== undefined && member.jerseyNumber !== null
+                              {member.jerseyNumber !== undefined &&
+                              member.jerseyNumber !== null
                                 ? `#${member.jerseyNumber}`
                                 : "-"}
                             </td>
                             <td className="py-2.5 px-3 font-medium text-slate-900">
                               {member.participantName}
                             </td>
-                            <td className="py-2.5 px-3 text-slate-600">{member.position || "General"}</td>
+                            <td className="py-2.5 px-3 text-slate-600">
+                              {member.position || "General"}
+                            </td>
                             <td className="py-2.5 px-3">
                               {member.role === "CAPTAIN" ? (
                                 <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
@@ -401,7 +453,9 @@ export default function TeamsPage() {
                                   Vice Capt.
                                 </span>
                               ) : (
-                                <span className="text-slate-500 capitalize">{member.role.toLowerCase()}</span>
+                                <span className="text-slate-500 capitalize">
+                                  {member.role.toLowerCase()}
+                                </span>
                               )}
                             </td>
                             <td className="py-2.5 px-3">
@@ -417,7 +471,9 @@ export default function TeamsPage() {
                             </td>
                             <td className="py-2.5 px-3 text-right">
                               <button
-                                onClick={() => handleRemoveMember(selectedTeam.id, member.id)}
+                                onClick={() =>
+                                  handleRemoveMember(selectedTeam.id, member.id)
+                                }
                                 title="Remove from Roster"
                                 className="text-slate-400 hover:text-red-600 p-1 rounded transition-colors"
                               >
@@ -435,7 +491,9 @@ export default function TeamsPage() {
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500">
               <Shield className="w-10 h-10 text-slate-300 mx-auto" />
-              <p className="mt-3 text-sm font-medium">Select a team from the left to view and manage its roster.</p>
+              <p className="mt-3 text-sm font-medium">
+                Select a team from the left to view and manage its roster.
+              </p>
             </div>
           )}
         </div>
@@ -445,7 +503,9 @@ export default function TeamsPage() {
       {isAddTeamModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">Create Campus Sports Team</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Create Campus Sports Team
+            </h2>
 
             {formError && (
               <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-xs flex items-center gap-2">
@@ -456,23 +516,31 @@ export default function TeamsPage() {
 
             <form onSubmit={handleCreateTeam} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Team Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Team Name
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Campus Titans, Falcons XI"
                   value={newTeam.name}
-                  onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewTeam({ ...newTeam, name: e.target.value })
+                  }
                   className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Sport Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Sport Category
+                  </label>
                   <select
                     value={newTeam.sport}
-                    onChange={(e) => setNewTeam({ ...newTeam, sport: e.target.value })}
+                    onChange={(e) =>
+                      setNewTeam({ ...newTeam, sport: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="Cricket">Cricket</option>
@@ -485,10 +553,14 @@ export default function TeamsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Gender Division</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Gender Division
+                  </label>
                   <select
                     value={newTeam.genderCategory}
-                    onChange={(e) => setNewTeam({ ...newTeam, genderCategory: e.target.value })}
+                    onChange={(e) =>
+                      setNewTeam({ ...newTeam, genderCategory: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
                   >
                     <option value="MEN">Men</option>
@@ -500,22 +572,33 @@ export default function TeamsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Roster Limit</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Roster Limit
+                  </label>
                   <input
                     type="number"
                     min={5}
                     max={50}
                     value={newTeam.maxRosterSize}
-                    onChange={(e) => setNewTeam({ ...newTeam, maxRosterSize: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setNewTeam({
+                        ...newTeam,
+                        maxRosterSize: Number(e.target.value),
+                      })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Head Coach</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Head Coach
+                  </label>
                   <input
                     type="text"
                     value={newTeam.headCoachName}
-                    onChange={(e) => setNewTeam({ ...newTeam, headCoachName: e.target.value })}
+                    onChange={(e) =>
+                      setNewTeam({ ...newTeam, headCoachName: e.target.value })
+                    }
                     className="w-full text-sm border border-slate-300 rounded px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   />
                 </div>
@@ -546,8 +629,12 @@ export default function TeamsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Add Athlete to Roster</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Team: {selectedTeam.name}</p>
+              <h2 className="text-lg font-bold text-slate-900">
+                Add Athlete to Roster
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Team: {selectedTeam.name}
+              </p>
             </div>
 
             {formError && (
@@ -579,7 +666,9 @@ export default function TeamsPage() {
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Roster Role</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Roster Role
+                  </label>
                   <select
                     value={memberRole}
                     onChange={(e) => setMemberRole(e.target.value)}
@@ -592,7 +681,9 @@ export default function TeamsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Jersey #</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Jersey #
+                  </label>
                   <input
                     type="number"
                     min={1}
@@ -604,7 +695,9 @@ export default function TeamsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Position</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Position
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Striker"

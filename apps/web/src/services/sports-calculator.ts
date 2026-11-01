@@ -16,7 +16,7 @@ export interface BookingSlot {
   facilityId: string;
   bookingDate: string;
   startTime: string; // "HH:MM" or "HH:MM:SS"
-  endTime: string;   // "HH:MM" or "HH:MM:SS"
+  endTime: string; // "HH:MM" or "HH:MM:SS"
   status?: string;
 }
 
@@ -110,7 +110,10 @@ export function calculateWinRate(won: number, totalPlayed: number): number {
 /**
  * Calculates score / goal difference.
  */
-export function calculateGoalDifference(pointsFor: number, pointsAgainst: number): number {
+export function calculateGoalDifference(
+  pointsFor: number,
+  pointsAgainst: number,
+): number {
   return pointsFor - pointsAgainst;
 }
 
@@ -127,7 +130,11 @@ function normalizeTime(t: string): number {
 export function detectFacilityBookingConflict(
   existingBookings: BookingSlot[],
   newBooking: BookingSlot,
-): { hasConflict: boolean; conflictingBooking?: BookingSlot; message?: string } {
+): {
+  hasConflict: boolean;
+  conflictingBooking?: BookingSlot;
+  message?: string;
+} {
   const newStart = normalizeTime(newBooking.startTime);
   const newEnd = normalizeTime(newBooking.endTime);
 
@@ -145,7 +152,8 @@ export function detectFacilityBookingConflict(
     if (existing.facilityId !== newBooking.facilityId) continue;
     if (existing.bookingDate !== newBooking.bookingDate) continue;
     // Skip cancelled or rejected bookings
-    if (existing.status === "CANCELLED" || existing.status === "REJECTED") continue;
+    if (existing.status === "CANCELLED" || existing.status === "REJECTED")
+      continue;
 
     const existStart = normalizeTime(existing.startTime);
     const existEnd = normalizeTime(existing.endTime);
@@ -169,7 +177,11 @@ export function detectFacilityBookingConflict(
 export function detectParticipantScheduleConflict(
   existingSessions: SessionSlot[],
   newSession: SessionSlot,
-): { hasConflict: boolean; conflictingSession?: SessionSlot; message?: string } {
+): {
+  hasConflict: boolean;
+  conflictingSession?: SessionSlot;
+  message?: string;
+} {
   const newStart = normalizeTime(newSession.startTime);
   const newEnd = normalizeTime(newSession.endTime);
 
@@ -216,7 +228,10 @@ export function validateAthleteEligibility(
   }
 
   const minAtt = criteria.minAttendancePercentage ?? 75;
-  if (athlete.attendancePercentage !== undefined && athlete.attendancePercentage < minAtt) {
+  if (
+    athlete.attendancePercentage !== undefined &&
+    athlete.attendancePercentage < minAtt
+  ) {
     failureReasons.push(
       `Academic attendance of ${athlete.attendancePercentage.toFixed(1)}% is below required ${minAtt.toFixed(1)}%.`,
     );
@@ -296,9 +311,7 @@ export function generateRoundRobinFixtures<T>(
 /**
  * Generates single-elimination knockout tournament bracket.
  */
-export function generateKnockoutFixtures<T>(
-  competitors: T[],
-): Array<{
+export function generateKnockoutFixtures<T>(competitors: T[]): Array<{
   matchNumber: number;
   round: number;
   stage: string;
@@ -447,29 +460,32 @@ export function computeTournamentStandings(
   }
 
   // Convert to array and sort
-  const rows: ComputedStandingRow[] = Array.from(tableMap.entries()).map(([id, data]) => {
-    const pointDifference = data.pointsFor - data.pointsAgainst;
-    const formGuide = data.form.slice(-5).join("");
-    return {
-      competitorId: id,
-      competitorName: data.name,
-      rank: 1,
-      played: data.played,
-      won: data.won,
-      drawn: data.drawn,
-      lost: data.lost,
-      pointsFor: data.pointsFor,
-      pointsAgainst: data.pointsAgainst,
-      pointDifference,
-      points: data.points,
-      formGuide: formGuide || "-",
-    };
-  });
+  const rows: ComputedStandingRow[] = Array.from(tableMap.entries()).map(
+    ([id, data]) => {
+      const pointDifference = data.pointsFor - data.pointsAgainst;
+      const formGuide = data.form.slice(-5).join("");
+      return {
+        competitorId: id,
+        competitorName: data.name,
+        rank: 1,
+        played: data.played,
+        won: data.won,
+        drawn: data.drawn,
+        lost: data.lost,
+        pointsFor: data.pointsFor,
+        pointsAgainst: data.pointsAgainst,
+        pointDifference,
+        points: data.points,
+        formGuide: formGuide || "-",
+      };
+    },
+  );
 
   // Sort by Points DESC -> Point Difference DESC -> Points For DESC
   rows.sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
-    if (b.pointDifference !== a.pointDifference) return b.pointDifference - a.pointDifference;
+    if (b.pointDifference !== a.pointDifference)
+      return b.pointDifference - a.pointDifference;
     return b.pointsFor - a.pointsFor;
   });
 

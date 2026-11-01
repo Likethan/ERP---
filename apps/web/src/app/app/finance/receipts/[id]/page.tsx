@@ -311,9 +311,14 @@ function ReceiptDetailContent() {
 
 export default function ReceiptDetailPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500">Loading receipt...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-slate-500">
+          Loading receipt...
+        </div>
+      }
+    >
       <ReceiptDetailContent />
     </Suspense>
   );
 }
-

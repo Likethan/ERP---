@@ -21,15 +21,6 @@ if (-not (Test-Path "$CurrentDir\node_modules")) {
     npm install
 }
 
-# Start Concurrent Services
-Write-Host "`n[3/3] Launching Backend API (:8000) and Frontend Web (:3000)..." -ForegroundColor Green
-Write-Host "  - Backend API: http://localhost:8000 (Docs: http://localhost:8000/docs)" -ForegroundColor Gray
-Write-Host "  - Frontend Web: http://localhost:3000" -ForegroundColor Gray
-Write-Host "  Press Ctrl+C in the respective windows to stop.`n" -ForegroundColor DarkGray
-
-# Start backend in a new process window
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$CurrentDir\apps\api'; .\.venv\Scripts\activate; uvicorn app.main:app --reload --port 8000"
-
-# Start frontend in this window
-Set-Location "$CurrentDir"
-npm run dev --workspace=apps/web
+# Start Concurrent Services in a Single Unified Terminal Window
+Write-Host "`n[3/3] Launching Backend API (:8000) and Frontend Web (:3000) together..." -ForegroundColor Green
+node "$CurrentDir\scripts\dev.mjs"

@@ -25,7 +25,8 @@ export default function FixturesPage() {
   const [selectedStatus, setSelectedStatus] = useState("all");
 
   // Reschedule dialog
-  const [rescheduleFixture, setRescheduleFixture] = useState<MatchFixtureItem | null>(null);
+  const [rescheduleFixture, setRescheduleFixture] =
+    useState<MatchFixtureItem | null>(null);
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
@@ -58,19 +59,23 @@ export default function FixturesPage() {
       rescheduleFixture.id,
       newDate,
       newTime,
-      rescheduleFixture.facilityName
+      rescheduleFixture.facilityName,
     );
 
     if (res.success && res.data) {
-      setActionSuccess(`Match #${rescheduleFixture.matchNumber} rescheduled to ${newDate} at ${newTime}.`);
+      setActionSuccess(
+        `Match #${rescheduleFixture.matchNumber} rescheduled to ${newDate} at ${newTime}.`,
+      );
       setRescheduleFixture(null);
       loadData();
     }
   };
 
   const filteredFixtures = fixtures.filter((f) => {
-    const matchesComp = selectedCompId === "all" || f.competitionId === selectedCompId;
-    const matchesStatus = selectedStatus === "all" || f.status === selectedStatus;
+    const matchesComp =
+      selectedCompId === "all" || f.competitionId === selectedCompId;
+    const matchesStatus =
+      selectedStatus === "all" || f.status === selectedStatus;
     return matchesComp && matchesStatus;
   });
 
@@ -85,7 +90,8 @@ export default function FixturesPage() {
             Fixtures & Match Schedule
           </h1>
           <p className="text-sm text-slate-500">
-            Tournament brackets, scheduled match clashes, and verified venue slot assignments.
+            Tournament brackets, scheduled match clashes, and verified venue
+            slot assignments.
           </p>
         </div>
         <Link
@@ -103,7 +109,10 @@ export default function FixturesPage() {
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{actionSuccess}</span>
           </div>
-          <button onClick={() => setActionSuccess(null)} className="text-emerald-700 font-bold hover:underline">
+          <button
+            onClick={() => setActionSuccess(null)}
+            className="text-emerald-700 font-bold hover:underline"
+          >
             Dismiss
           </button>
         </div>
@@ -113,7 +122,9 @@ export default function FixturesPage() {
       <div className="flex flex-wrap items-center gap-3 bg-white p-3 rounded-lg border border-slate-200">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-slate-400" />
-          <span className="text-xs font-semibold text-slate-700">Tournament:</span>
+          <span className="text-xs font-semibold text-slate-700">
+            Tournament:
+          </span>
           <select
             value={selectedCompId}
             onChange={(e) => setSelectedCompId(e.target.value)}
@@ -148,13 +159,19 @@ export default function FixturesPage() {
       {loading ? (
         <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto" />
-          <p className="mt-2 text-sm text-slate-500">Loading match schedule...</p>
+          <p className="mt-2 text-sm text-slate-500">
+            Loading match schedule...
+          </p>
         </div>
       ) : filteredFixtures.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
           <Calendar className="w-8 h-8 text-slate-300 mx-auto" />
-          <p className="mt-2 text-sm font-medium text-slate-700">No match fixtures found</p>
-          <p className="text-xs text-slate-500">Select a tournament or generate fixtures.</p>
+          <p className="mt-2 text-sm font-medium text-slate-700">
+            No match fixtures found
+          </p>
+          <p className="text-xs text-slate-500">
+            Select a tournament or generate fixtures.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -171,17 +188,19 @@ export default function FixturesPage() {
                     <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
                       Match #{fixture.matchNumber}
                     </span>
-                    <span className="text-slate-500">Round {fixture.roundNumber}</span>
+                    <span className="text-slate-500">
+                      Round {fixture.roundNumber}
+                    </span>
                   </div>
                   <span
                     className={`px-2.5 py-0.5 rounded-full font-semibold uppercase text-[10px] ${
                       isCompleted
                         ? "bg-emerald-100 text-emerald-800"
                         : fixture.status === "POSTPONED"
-                        ? "bg-amber-100 text-amber-800"
-                        : fixture.status === "LIVE"
-                        ? "bg-red-100 text-red-800 animate-pulse"
-                        : "bg-blue-100 text-blue-800"
+                          ? "bg-amber-100 text-amber-800"
+                          : fixture.status === "LIVE"
+                            ? "bg-red-100 text-red-800 animate-pulse"
+                            : "bg-blue-100 text-blue-800"
                     }`}
                   >
                     {fixture.status}
@@ -191,8 +210,12 @@ export default function FixturesPage() {
                 {/* Clash Card: Team A vs Team B */}
                 <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg border border-slate-100">
                   <div className="flex-1 text-center pr-2">
-                    <p className="font-bold text-sm text-slate-900">{fixture.homeTeamName || "Home Team"}</p>
-                    <span className="text-[10px] text-slate-400 font-medium">Home Squad</span>
+                    <p className="font-bold text-sm text-slate-900">
+                      {fixture.homeTeamName || "Home Team"}
+                    </p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Home Squad
+                    </span>
                   </div>
 
                   <div className="px-3 text-center">
@@ -210,8 +233,12 @@ export default function FixturesPage() {
                   </div>
 
                   <div className="flex-1 text-center pl-2">
-                    <p className="font-bold text-sm text-slate-900">{fixture.awayTeamName || "Away Team"}</p>
-                    <span className="text-[10px] text-slate-400 font-medium">Away Squad</span>
+                    <p className="font-bold text-sm text-slate-900">
+                      {fixture.awayTeamName || "Away Team"}
+                    </p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Away Squad
+                    </span>
                   </div>
                 </div>
 
@@ -265,16 +292,21 @@ export default function FixturesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Reschedule Match Fixture</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                Reschedule Match Fixture
+              </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Match #{rescheduleFixture.matchNumber}: {rescheduleFixture.homeTeamName} vs{" "}
+                Match #{rescheduleFixture.matchNumber}:{" "}
+                {rescheduleFixture.homeTeamName} vs{" "}
                 {rescheduleFixture.awayTeamName}
               </p>
             </div>
 
             <form onSubmit={handleReschedule} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">New Date</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  New Date
+                </label>
                 <input
                   type="date"
                   required
@@ -285,7 +317,9 @@ export default function FixturesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">New Kick-off / Start Time</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  New Kick-off / Start Time
+                </label>
                 <input
                   type="time"
                   required
@@ -298,8 +332,8 @@ export default function FixturesPage() {
               <div className="p-3 bg-amber-50 border border-amber-200 rounded text-amber-800 text-xs flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>
-                  Rescheduling will verify against existing timetable slots and facility bookings to prevent court
-                  overlaps.
+                  Rescheduling will verify against existing timetable slots and
+                  facility bookings to prevent court overlaps.
                 </span>
               </div>
 
