@@ -163,7 +163,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 sm:pt-20">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -172,14 +172,14 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       <div
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden animate-scale-in z-10"
+        className="relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-scale-in z-10"
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 border-b border-slate-800 bg-slate-950/40">
+        <div className="flex items-center px-4 border-b border-slate-100 bg-yellow-50/30">
           {isSearching ? (
-            <Loader2 className="h-5 w-5 text-indigo-400 animate-spin shrink-0 mr-3" />
+            <Loader2 className="h-5 w-5 text-yellow-600 animate-spin shrink-0 mr-3" />
           ) : (
-            <Search className="h-5 w-5 text-slate-500 shrink-0 mr-3" />
+            <Search className="h-5 w-5 text-slate-400 shrink-0 mr-3" />
           )}
           <input
             type="text"
@@ -187,7 +187,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search CampusOS across Students, Faculty, Courses, Drives, Invoices..."
-            className="h-14 w-full bg-transparent text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
+            className="h-14 w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           />
           {query ? (
             <button
@@ -197,7 +197,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               <X className="h-4 w-4" />
             </button>
           ) : (
-            <span className="hidden sm:inline text-[11px] font-mono text-slate-500 bg-slate-800 px-1.5 py-0.5 rounded">
+            <span className="hidden sm:inline text-[11px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
               ESC
             </span>
           )}
@@ -216,17 +216,17 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     <button
                       key={item.id}
                       onClick={() => navigateTo(item.href)}
-                      className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-800/80 text-left transition-colors cursor-pointer group"
+                      className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-yellow-50 text-left transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 border border-slate-700/60">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-50 border border-yellow-200">
                           {getCategoryIcon(item.category)}
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors flex items-center gap-2">
+                          <div className="text-sm font-semibold text-slate-900 group-hover:text-yellow-800 transition-colors flex items-center gap-2">
                             <span>{item.title}</span>
                             {item.badge && (
-                              <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-300 border border-slate-700">
+                              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700 border border-slate-200">
                                 {item.badge}
                               </span>
                             )}
@@ -236,7 +236,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                           </div>
                         </div>
                       </div>
-                      <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-white transition-colors" />
+                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-800 transition-colors" />
                     </button>
                   ))}
                 </div>
@@ -256,9 +256,9 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   <button
                     key={link.href}
                     onClick={() => navigateTo(link.href)}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-800/70 text-slate-300 hover:text-white text-xs font-medium text-left transition-colors cursor-pointer"
+                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-yellow-50 text-slate-700 hover:text-slate-950 text-xs font-medium text-left transition-colors cursor-pointer"
                   >
-                    <div className="flex h-7 w-7 items-center justify-center rounded bg-slate-800/80 border border-slate-700/50">
+                    <div className="flex h-7 w-7 items-center justify-center rounded bg-yellow-50 border border-yellow-200">
                       {link.icon}
                     </div>
                     <span>{link.label}</span>
@@ -270,7 +270,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2.5 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="px-4 py-2.5 border-t border-slate-100 bg-yellow-50/40 flex items-center justify-between text-[11px] text-slate-500">
           <div className="flex items-center gap-2">
             <span>Navigation: Click to jump</span>
             <span>•</span>

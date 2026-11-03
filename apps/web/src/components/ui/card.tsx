@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-800 bg-slate-900/60 text-slate-100 shadow-sm backdrop-blur-sm",
+        "rounded-xl border border-slate-200 bg-white text-slate-900 shadow-xs",
         className,
       )}
       {...props}
@@ -23,7 +23,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex flex-col space-y-1.5 p-6 border-b border-slate-800/80",
+        "flex flex-col space-y-1.5 p-6 border-b border-slate-100",
         className,
       )}
       {...props}
@@ -38,7 +38,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "text-base font-semibold leading-none tracking-tight text-white",
+        "text-base font-semibold leading-none tracking-tight text-slate-900",
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ export function CardDescription({
   return (
     <p
       className={cn(
-        "text-xs text-slate-400 font-normal leading-relaxed",
+        "text-xs text-slate-500 font-normal leading-relaxed",
         className,
       )}
       {...props}
@@ -75,7 +75,7 @@ export function CardFooter({
   return (
     <div
       className={cn(
-        "flex items-center p-6 pt-0 border-t border-slate-800/60 mt-4",
+        "flex items-center p-6 pt-0 border-t border-slate-100 mt-4",
         className,
       )}
       {...props}

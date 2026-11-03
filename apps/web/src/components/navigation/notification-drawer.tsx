@@ -97,7 +97,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
             size="sm"
             onClick={handleMarkAllRead}
             leftIcon={<CheckCheck className="h-4 w-4" />}
-            className="text-xs text-slate-400 hover:text-white"
+            className="text-xs text-yellow-700 hover:text-yellow-800 font-medium"
           >
             Mark all as read
           </Button>
@@ -105,15 +105,15 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
             <Link
               href="/app/campus/notifications"
               onClick={onClose}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium inline-flex items-center gap-1"
+              className="text-xs text-yellow-700 hover:text-yellow-800 font-medium inline-flex items-center gap-1"
             >
               All Notifications
             </Link>
-            <span className="text-slate-700">•</span>
+            <span className="text-slate-300">•</span>
             <Link
               href="/app/campus/preferences"
               onClick={onClose}
-              className="text-xs text-slate-400 hover:text-slate-300 font-medium inline-flex items-center gap-1"
+              className="text-xs text-slate-500 hover:text-slate-700 font-medium inline-flex items-center gap-1"
             >
               Preferences <ExternalLink className="h-3 w-3" />
             </Link>
@@ -123,14 +123,14 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
     >
       <div className="space-y-4">
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <button
             onClick={() => setFilter("ALL")}
             className={cn(
               "px-3 py-1 rounded-full text-xs font-medium transition-colors",
               filter === "ALL"
-                ? "bg-indigo-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:text-slate-200",
+                ? "bg-yellow-400 text-slate-950 font-bold shadow-xs"
+                : "bg-slate-100 text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
             )}
           >
             All ({notifications.length})
@@ -140,8 +140,8 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
             className={cn(
               "px-3 py-1 rounded-full text-xs font-medium transition-colors",
               filter === "UNREAD"
-                ? "bg-indigo-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:text-slate-200",
+                ? "bg-yellow-400 text-slate-950 font-bold shadow-xs"
+                : "bg-slate-100 text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
             )}
           >
             Unread ({unreadCount})
@@ -159,12 +159,12 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                 className={cn(
                   "p-3.5 rounded-xl border transition-all text-left",
                   unread
-                    ? "border-indigo-900/60 bg-indigo-950/20 text-slate-200 shadow-sm"
-                    : "border-slate-800/60 bg-slate-900/40 text-slate-400",
+                    ? "border-yellow-300 bg-yellow-50/70 text-slate-900 shadow-xs"
+                    : "border-slate-200 bg-white text-slate-700",
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 border border-slate-700/60 shrink-0 mt-0.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-50 border border-yellow-200 shrink-0 mt-0.5">
                     {getCategoryIcon(notif.category)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -172,7 +172,9 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                       <span
                         className={cn(
                           "text-xs font-semibold truncate",
-                          unread ? "text-white" : "text-slate-300",
+                          unread
+                            ? "text-slate-950 font-bold"
+                            : "text-slate-800",
                         )}
                       >
                         {notif.title}
@@ -181,7 +183,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                         {notif.timestamp}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                    <p className="mt-1 text-xs text-slate-600 leading-relaxed">
                       {notif.message}
                     </p>
                     {targetUrl && (
@@ -192,7 +194,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                             campusService.markNotificationRead(notif.id);
                             onClose();
                           }}
-                          className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1"
+                          className="text-[11px] font-medium text-yellow-700 hover:text-yellow-800 inline-flex items-center gap-1"
                         >
                           Inspect item <ExternalLink className="h-3 w-3" />
                         </Link>
@@ -205,7 +207,7 @@ export function NotificationDrawer({ open, onClose }: NotificationDrawerProps) {
                               );
                               loadNotifications();
                             }}
-                            className="text-[10px] text-slate-500 hover:text-slate-300"
+                            className="text-[10px] text-slate-500 hover:text-slate-800"
                           >
                             Mark read
                           </button>

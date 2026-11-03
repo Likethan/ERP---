@@ -1,0 +1,7 @@
+first_name,last_name,email,password,roll_number,admission_number,date_of_birth,gender,blood_group,phone,emergency_contact_name,emergency_contact_phone,program_code,batch_name,section_name
+Rahul,Sharma,rahul.sharma@student.campusos.edu,StudentSecret123!,2024-CSE-006,ADM-2024-006,2006-04-12,MALE,O+,+91 9876543210,Ramesh Sharma,+91 9876543299,BTECH-CSE,Batch 2024-2028,Section A
+Pooja,Hegde,pooja.h@student.campusos.edu,StudentSecret123!,2024-CSE-007,ADM-2024-007,2006-09-25,FEMALE,A+,+91 9876543211,Suresh Hegde,+91 9876543298,BTECH-CSE,Batch 2024-2028,Section A
+Vikram,Aditya,vikram.a@student.campusos.edu,StudentSecret123!,2024-CSE-008,ADM-2024-008,2006-02-18,MALE,B+,+91 9876543212,Manish Aditya,+91 9876543297,BTECH-CSE,Batch 2024-2028,Section A
+Sneha,Reddy,sneha.reddy@student.campusos.edu,StudentSecret123!,2024-CSE-009,ADM-2024-009,2006-12-04,FEMALE,AB+,+91 9876543213,Krishna Reddy,+91 9876543296,BTECH-CSE,Batch 2024-2028,Section A
+Arjun,Das,arjun.das@student.campusos.edu,StudentSecret123!,2024-CSE-010,ADM-2024-010,2006-08-30,MALE,O-,+91 9876543214,Pradeep Das,+91 9876543295,BTECH-CSE,Batch 2024-2028,Section A
+

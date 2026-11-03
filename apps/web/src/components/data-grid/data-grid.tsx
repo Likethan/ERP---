@@ -411,7 +411,7 @@ export function DataGrid<T>({
                           if (el) el.indeterminate = isSomePageSelected;
                         }}
                         onChange={toggleSelectAll}
-                        className="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5"
+                        className="rounded border-slate-300 dark:border-slate-700 text-yellow-500 focus:ring-yellow-500 h-3.5 w-3.5"
                         aria-label="Select all rows on current page"
                       />
                     </th>
@@ -437,9 +437,9 @@ export function DataGrid<T>({
                             <span>{col.header}</span>
                             {isSorted ? (
                               sortState?.direction === "asc" ? (
-                                <ArrowUp className="h-3 w-3 text-indigo-600 dark:text-indigo-400" />
+                                <ArrowUp className="h-3 w-3 text-yellow-600" />
                               ) : (
-                                <ArrowDown className="h-3 w-3 text-indigo-600 dark:text-indigo-400" />
+                                <ArrowDown className="h-3 w-3 text-yellow-600" />
                               )
                             ) : (
                               <ArrowUpDown className="h-3 w-3 text-slate-300 dark:text-slate-600 group-hover:text-slate-500 transition" />
@@ -464,7 +464,7 @@ export function DataGrid<T>({
                       key={key}
                       className={`transition-colors duration-150 ${
                         isSelected
-                          ? "bg-indigo-50/40 dark:bg-indigo-950/20"
+                          ? "bg-yellow-50/80"
                           : "hover:bg-slate-50/70 dark:hover:bg-slate-800/40"
                       }`}
                     >
@@ -474,7 +474,7 @@ export function DataGrid<T>({
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => toggleSelectRow(key)}
-                            className="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5"
+                            className="rounded border-slate-300 dark:border-slate-700 text-yellow-500 focus:ring-yellow-500 h-3.5 w-3.5"
                             aria-label={`Select row ${key}`}
                           />
                         </td>

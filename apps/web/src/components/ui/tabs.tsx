@@ -45,7 +45,7 @@ export function Tabs(props: TabsProps) {
     return (
       <div
         className={cn(
-          "flex items-center gap-1 border-b border-slate-800 overflow-x-auto no-scrollbar",
+          "flex items-center gap-1 border-b border-slate-200 overflow-x-auto no-scrollbar",
           className,
         )}
         role="tablist"
@@ -61,8 +61,8 @@ export function Tabs(props: TabsProps) {
               className={cn(
                 "group inline-flex items-center gap-2 px-4 py-2.5 text-xs font-medium border-b-2 whitespace-nowrap transition-colors cursor-pointer",
                 isActive
-                  ? "border-indigo-500 text-white font-semibold"
-                  : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700",
+                  ? "border-yellow-500 text-slate-950 font-bold"
+                  : "border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300",
               )}
             >
               {tab.icon && (
@@ -70,8 +70,8 @@ export function Tabs(props: TabsProps) {
                   className={cn(
                     "transition-colors",
                     isActive
-                      ? "text-indigo-400"
-                      : "text-slate-500 group-hover:text-slate-400",
+                      ? "text-yellow-600"
+                      : "text-slate-400 group-hover:text-slate-600",
                   )}
                 >
                   {tab.icon}
@@ -83,8 +83,8 @@ export function Tabs(props: TabsProps) {
                   className={cn(
                     "ml-1 rounded-full px-2 py-0.5 text-[10px] font-mono",
                     isActive
-                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                      : "bg-slate-800 text-slate-400 border border-slate-700/60",
+                      ? "bg-yellow-100 text-yellow-950 border border-yellow-300 font-semibold"
+                      : "bg-slate-100 text-slate-600 border border-slate-200",
                   )}
                 >
                   {tab.count}
@@ -125,7 +125,7 @@ export function TabsList({
     <div
       role="tablist"
       className={cn(
-        "inline-flex items-center justify-start rounded-xl p-1 text-slate-400",
+        "inline-flex items-center justify-start rounded-xl p-1 text-slate-500 bg-yellow-50/60 border border-slate-200",
         className,
       )}
     >
@@ -158,8 +158,8 @@ export function TabsTrigger({
       className={cn(
         "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
         isActive
-          ? "bg-slate-800 text-white shadow-xs font-semibold"
-          : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50",
+          ? "bg-yellow-400 text-slate-950 shadow-xs font-bold border border-yellow-500/40"
+          : "text-slate-600 hover:text-slate-950 hover:bg-yellow-100/50",
         className,
       )}
     >

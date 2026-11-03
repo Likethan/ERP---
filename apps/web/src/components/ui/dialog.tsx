@@ -69,7 +69,7 @@ export function Dialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity animate-fade-in"
         onClick={handleClose}
         aria-hidden="true"
       />
@@ -79,28 +79,28 @@ export function Dialog({
         role="dialog"
         aria-modal="true"
         className={cn(
-          "relative w-full rounded-xl border border-slate-200 bg-white shadow-2xl p-6 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 animate-scale-in z-10 my-8",
+          "relative w-full rounded-xl border border-slate-200 bg-white shadow-2xl p-6 text-slate-900 animate-scale-in z-10 my-8",
           maxWidthClasses[maxWidth],
           className,
         )}
       >
         {(title || description) && (
-          <div className="flex items-start justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <div className="flex items-start justify-between pb-4 border-b border-slate-100">
             <div>
               {title && (
-                <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
+                <h2 className="text-lg font-semibold tracking-tight text-slate-900">
                   {title}
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
                   {description}
                 </p>
               )}
             </div>
             <button
               onClick={handleClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
               aria-label="Close dialog"
             >
               <X className="h-4 w-4" />
@@ -111,7 +111,7 @@ export function Dialog({
         <div className="py-2">{children}</div>
 
         {footer && (
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2.5">
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
             {footer}
           </div>
         )}
@@ -138,12 +138,7 @@ export function DialogHeader({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "pb-3 border-b border-slate-200 dark:border-slate-800",
-        className,
-      )}
-    >
+    <div className={cn("pb-3 border-b border-slate-100", className)}>
       {children}
     </div>
   );
@@ -159,7 +154,7 @@ export function DialogTitle({
   return (
     <h2
       className={cn(
-        "text-lg font-bold tracking-tight text-slate-900 dark:text-white",
+        "text-lg font-bold tracking-tight text-slate-900",
         className,
       )}
     >
@@ -176,12 +171,7 @@ export function DialogDescription({
   className?: string;
 }) {
   return (
-    <p
-      className={cn(
-        "text-xs text-slate-500 dark:text-slate-400 leading-relaxed",
-        className,
-      )}
-    >
+    <p className={cn("text-xs text-slate-500 leading-relaxed", className)}>
       {children}
     </p>
   );
@@ -197,7 +187,7 @@ export function DialogFooter({
   return (
     <div
       className={cn(
-        "pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2.5",
+        "pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5",
         className,
       )}
     >

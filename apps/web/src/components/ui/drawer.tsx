@@ -56,7 +56,7 @@ export function Drawer({
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -71,28 +71,28 @@ export function Drawer({
           role="dialog"
           aria-modal="true"
           className={cn(
-            "w-screen bg-slate-900 border-slate-800 shadow-2xl flex flex-col justify-between text-slate-100",
+            "w-screen bg-white border-slate-200 shadow-2xl flex flex-col justify-between text-slate-900",
             side === "right" ? "border-l" : "border-r",
             sizeClasses[size],
           )}
         >
           {/* Header */}
-          <div className="flex items-start justify-between p-6 border-b border-slate-800">
+          <div className="flex items-start justify-between p-6 border-b border-slate-100">
             <div>
               {title && (
-                <h2 className="text-base font-semibold text-white tracking-tight">
+                <h2 className="text-base font-semibold text-slate-900 tracking-tight">
                   {title}
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
                   {description}
                 </p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
               aria-label="Close drawer"
             >
               <X className="h-4 w-4" />
@@ -104,7 +104,7 @@ export function Drawer({
 
           {/* Footer */}
           {footer && (
-            <div className="p-4 border-t border-slate-800 bg-slate-950/60 flex items-center justify-end gap-2.5">
+            <div className="p-4 border-t border-slate-100 bg-yellow-50/40 flex items-center justify-end gap-2.5">
               {footer}
             </div>
           )}

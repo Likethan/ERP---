@@ -32,22 +32,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none select-none rounded-lg cursor-pointer";
+      "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none select-none rounded-lg cursor-pointer";
 
     const variantStyles: Record<string, string> = {
       primary:
-        "bg-indigo-600 text-white hover:bg-indigo-500 active:bg-indigo-700 shadow-sm",
+        "bg-yellow-400 text-slate-950 hover:bg-yellow-500 active:bg-yellow-600 font-semibold shadow-xs border border-yellow-500/60",
       secondary:
-        "bg-slate-800 text-slate-100 hover:bg-slate-700 active:bg-slate-800/80 border border-slate-700",
+        "bg-white text-slate-800 hover:bg-yellow-50 hover:border-yellow-300 active:bg-yellow-100 border border-slate-200 shadow-xs",
       outline:
-        "border border-slate-700 bg-transparent text-slate-200 hover:bg-slate-800/80 hover:text-white",
+        "border border-slate-300 bg-white text-slate-700 hover:bg-yellow-50 hover:border-yellow-400 hover:text-slate-950",
       ghost:
-        "bg-transparent text-slate-300 hover:bg-slate-800/70 hover:text-white",
+        "bg-transparent text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
       destructive:
-        "bg-red-600 text-white hover:bg-red-500 active:bg-red-700 shadow-sm",
+        "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-xs",
       success:
-        "bg-emerald-600 text-white hover:bg-emerald-500 active:bg-emerald-700 shadow-sm",
-      link: "text-indigo-400 underline-offset-4 hover:underline p-0 h-auto bg-transparent",
+        "bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-xs",
+      link: "text-yellow-700 underline-offset-4 hover:underline hover:text-yellow-800 p-0 h-auto bg-transparent font-medium",
     };
 
     const sizeStyles: Record<string, string> = {

@@ -1458,19 +1458,19 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const { user } = useAuth();
 
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-slate-950 border-r border-slate-800 text-slate-200">
+    <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
       {/* Brand Header */}
-      <div className="flex h-16 items-center justify-between px-6 border-b border-slate-800">
+      <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200">
         <Link href="/app/dashboard" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-black text-sm shadow-md shadow-indigo-600/30">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 font-black text-sm shadow-xs border border-yellow-500">
             C
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-base font-bold tracking-tight text-white">
+              <span className="text-base font-bold tracking-tight text-slate-900">
                 CampusOS
               </span>
-              <span className="rounded bg-indigo-500/20 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-indigo-300 border border-indigo-500/30">
+              <span className="rounded bg-yellow-100 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-yellow-950 border border-yellow-300">
                 ERP
               </span>
             </div>
@@ -1482,7 +1482,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="lg:hidden rounded-lg p-1.5 text-slate-400 hover:text-white"
+            className="lg:hidden rounded-lg p-1.5 text-slate-400 hover:text-slate-800 hover:bg-yellow-50"
           >
             <X className="h-5 w-5" />
           </button>
@@ -1508,7 +1508,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
           return (
             <div key={section.title} className="space-y-1">
-              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                 {section.title}
               </div>
               {visibleItems.map((item) => {
@@ -1526,8 +1526,8 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                     className={cn(
                       "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-colors group",
                       isActive
-                        ? "bg-indigo-600 text-white shadow-sm font-semibold"
-                        : "text-slate-400 hover:bg-slate-900 hover:text-slate-200",
+                        ? "bg-yellow-400 text-slate-950 shadow-xs font-bold"
+                        : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
                     )}
                   >
                     <div className="flex items-center gap-2.5">
@@ -1535,8 +1535,8 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                         className={cn(
                           "transition-colors",
                           isActive
-                            ? "text-white"
-                            : "text-slate-500 group-hover:text-slate-300",
+                            ? "text-slate-950"
+                            : "text-slate-400 group-hover:text-slate-800",
                         )}
                       >
                         {item.icon}
@@ -1544,7 +1544,14 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                       <span>{item.label}</span>
                     </div>
                     {item.badge && (
-                      <span className="rounded-full bg-slate-800 px-1.5 py-0.2 text-[9px] font-mono text-slate-400">
+                      <span
+                        className={cn(
+                          "rounded-full px-1.5 py-0.2 text-[9px] font-mono",
+                          isActive
+                            ? "bg-yellow-500/30 text-slate-950 border border-yellow-600/30 font-semibold"
+                            : "bg-slate-100 text-slate-600 border border-slate-200",
+                        )}
+                      >
                         {item.badge}
                       </span>
                     )}
@@ -1557,16 +1564,16 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       </nav>
 
       {/* Tenant Context Footer */}
-      <div className="p-3.5 border-t border-slate-800 bg-slate-950/80">
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3">
+      <div className="p-3.5 border-t border-slate-200 bg-yellow-50/40">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-xs">
           <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500 mb-1 flex items-center justify-between">
             <span>Tenant Scope</span>
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
           </div>
-          <div className="text-xs font-semibold text-white truncate">
+          <div className="text-xs font-semibold text-slate-900 truncate">
             {user?.tenant?.name || "Vidyasagar State University"}
           </div>
-          <div className="text-[10px] text-slate-400 font-mono mt-0.5 truncate">
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">
             CODE: {user?.tenant?.code || "VSB-CAMPUS"}
           </div>
         </div>
@@ -1585,7 +1592,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in"
+            className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs animate-fade-in"
             onClick={onCloseMobile}
           />
           <div className="fixed inset-y-0 left-0 w-72 max-w-[85vw] shadow-2xl animate-slide-right z-10">

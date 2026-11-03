@@ -24,40 +24,40 @@ export function Badge({
 }: BadgeProps) {
   const variantStyles: Record<string, { badge: string; dot: string }> = {
     default: {
-      badge: "bg-slate-800 text-slate-300 border-slate-700/60",
-      dot: "bg-slate-400",
+      badge: "bg-slate-100 text-slate-800 border-slate-200",
+      dot: "bg-slate-500",
     },
     success: {
-      badge: "bg-emerald-950/70 text-emerald-400 border-emerald-800/80",
-      dot: "bg-emerald-400",
+      badge: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      dot: "bg-emerald-600",
     },
     warning: {
-      badge: "bg-amber-950/70 text-amber-400 border-amber-800/80",
-      dot: "bg-amber-400",
+      badge: "bg-amber-50 text-amber-900 border-amber-200",
+      dot: "bg-amber-600",
     },
     destructive: {
-      badge: "bg-red-950/70 text-red-400 border-red-800/80",
-      dot: "bg-red-400",
+      badge: "bg-red-50 text-red-800 border-red-200",
+      dot: "bg-red-600",
     },
     danger: {
-      badge: "bg-red-950/70 text-red-400 border-red-800/80",
-      dot: "bg-red-400",
+      badge: "bg-red-50 text-red-800 border-red-200",
+      dot: "bg-red-600",
     },
     info: {
-      badge: "bg-sky-950/70 text-sky-400 border-sky-800/80",
-      dot: "bg-sky-400",
+      badge: "bg-sky-50 text-sky-800 border-sky-200",
+      dot: "bg-sky-600",
     },
     secondary: {
-      badge: "bg-indigo-950/70 text-indigo-400 border-indigo-800/80",
-      dot: "bg-indigo-400",
+      badge: "bg-yellow-100 text-yellow-950 border-yellow-300 font-semibold",
+      dot: "bg-yellow-600",
     },
     neutral: {
-      badge: "bg-slate-800 text-slate-300 border-slate-700/60",
-      dot: "bg-slate-400",
+      badge: "bg-slate-100 text-slate-700 border-slate-200",
+      dot: "bg-slate-500",
     },
     outline: {
-      badge: "bg-transparent text-slate-400 border-slate-700",
-      dot: "bg-slate-400",
+      badge: "bg-white text-slate-700 border-slate-300",
+      dot: "bg-slate-500",
     },
   };
 

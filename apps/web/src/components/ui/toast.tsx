@@ -112,11 +112,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           };
 
           const borders = {
-            success:
-              "border-emerald-800/80 bg-slate-900/95 shadow-emerald-950/20",
-            error: "border-red-800/80 bg-slate-900/95 shadow-red-950/20",
-            warning: "border-amber-800/80 bg-slate-900/95 shadow-amber-950/20",
-            info: "border-sky-800/80 bg-slate-900/95 shadow-sky-950/20",
+            success: "border-emerald-200 bg-white shadow-lg",
+            error: "border-red-200 bg-white shadow-lg",
+            warning: "border-amber-200 bg-white shadow-lg",
+            info: "border-sky-200 bg-white shadow-lg",
           };
 
           return (
@@ -129,18 +128,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             >
               {icons[toast.type]}
               <div className="flex-1">
-                <div className="text-sm font-semibold text-white tracking-tight">
+                <div className="text-sm font-semibold text-slate-900 tracking-tight">
                   {toast.title}
                 </div>
                 {toast.message && (
-                  <div className="mt-0.5 text-xs text-slate-300 leading-relaxed">
+                  <div className="mt-0.5 text-xs text-slate-600 leading-relaxed">
                     {toast.message}
                   </div>
                 )}
               </div>
               <button
                 onClick={() => removeToast(toast.id)}
-                className="text-slate-400 hover:text-white p-0.5 rounded transition-colors"
+                className="text-slate-400 hover:text-slate-700 p-0.5 rounded transition-colors"
                 aria-label="Dismiss toast"
               >
                 <X className="h-4 w-4" />

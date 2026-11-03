@@ -24,10 +24,10 @@ export default function AuthenticatedLayout({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950">
-        <div className="flex flex-col items-center gap-3 text-slate-400">
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3 text-slate-500">
           <svg
-            className="h-8 w-8 animate-spin text-indigo-500"
+            className="h-8 w-8 animate-spin text-yellow-500"
             viewBox="0 0 24 24"
             fill="none"
           >
@@ -55,7 +55,7 @@ export default function AuthenticatedLayout({
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen bg-slate-950 text-slate-100 antialiased font-sans">
+      <div className="flex min-h-screen bg-background text-foreground antialiased font-sans">
         {/* Navigation Sidebar */}
         <Sidebar
           mobileOpen={mobileSidebarOpen}
@@ -63,7 +63,7 @@ export default function AuthenticatedLayout({
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 bg-yellow-50/25">
           {/* Global Topbar */}
           <Topbar
             onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}

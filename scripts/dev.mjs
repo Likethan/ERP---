@@ -3,16 +3,97 @@
 /**
  * CampusOS Unified Dev Orchestrator
  * Runs Backend API (:8000) and Frontend Web (:3000) together in a single terminal.
- * Handles process lifecycle, output prefixing, space-safe paths, and graceful multi-process termination.
+ * Handles pre-flight port clearance, process lifecycle, output prefixing, space-safe paths, and graceful multi-process termination.
  */
 
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 
 const rootDir = process.cwd();
 const isWin = process.platform === "win32";
+
+// Helper: Ensure ports are free before launching
+function freePort(port) {
+  try {
+    if (isWin) {
+      const output = execSync("netstat -ano", {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      });
+      const pids = new Set();
+      for (const line of output.split("\n")) {
+        if (line.includes(`:${port}`) && line.includes("LISTENING")) {
+          const parts = line.trim().split(/\s+/);
+          const pid = Number(parts[parts.length - 1]);
+          if (!isNaN(pid) && pid > 0 && pid !== process.pid) {
+            pids.add(pid);
+          }
+        }
+      }
+      for (const pid of pids) {
+        try {
+          console.log(
+            `\x1b[33m[PRE-FLIGHT] Port ${port} is occupied by stale process (PID ${pid}). Freeing port...\x1b[0m`,
+          );
+          execSync(`taskkill /F /PID ${pid} /T`, { stdio: "ignore" });
+        } catch {
+          // Process already exited
+        }
+      }
+    } else {
+      execSync(`lsof -ti:${port} | xargs kill -9 2>/dev/null`, {
+        stdio: "ignore",
+      });
+    }
+  } catch {
+    // Port check completed
+  }
+}
+
+// Helper: Ensure local PostgreSQL database is active
+function ensurePostgres() {
+  try {
+    if (isWin) {
+      const pgData = path.join(rootDir, ".pgdata");
+      const pgCtl = "C:\\Program Files\\PostgreSQL\\16\\bin\\pg_ctl.exe";
+      if (!fs.existsSync(pgCtl) || !fs.existsSync(pgData)) return;
+
+      try {
+        const status = execSync(`"${pgCtl}" status -D "${pgData}"`, {
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "ignore"],
+        });
+        if (status.includes("server is running")) {
+          console.log(
+            "\x1b[32m[DATABASE] Local PostgreSQL is active on port 5433.\x1b[0m",
+          );
+          return;
+        }
+      } catch {
+        // Server not running yet
+      }
+
+      console.log(
+        "\x1b[33m[DATABASE] Starting local PostgreSQL cluster on port 5433...\x1b[0m",
+      );
+      execSync(`"${pgCtl}" start -D "${pgData}" -o "-p 5433" -w`, {
+        stdio: "ignore",
+      });
+      console.log(
+        "\x1b[32m[DATABASE] Local PostgreSQL started successfully on port 5433.\x1b[0m",
+      );
+    }
+  } catch {
+    // Non-blocking
+  }
+}
+
+// 0. Pre-flight Checks (Database & Port Cleanup)
+ensurePostgres();
+freePort(8000);
+freePort(3000);
 
 // 1. Resolve Python Binary
 const winVenv = path.join(
@@ -122,9 +203,7 @@ function cleanExit(code = 0) {
     if (!proc || !proc.pid) return;
     try {
       if (isWin) {
-        spawn("taskkill", ["/pid", proc.pid.toString(), "/T", "/F"], {
-          stdio: "ignore",
-        });
+        execSync(`taskkill /pid ${proc.pid} /T /F`, { stdio: "ignore" });
       } else {
         process.kill(-proc.pid, "SIGKILL");
       }
@@ -136,10 +215,14 @@ function cleanExit(code = 0) {
   killTree(apiProcess);
   killTree(webProcess);
 
+  // Guarantee ports 8000 and 3000 are completely released
+  freePort(8000);
+  freePort(3000);
+
   setTimeout(() => {
     console.log("\x1b[32m[SHUTDOWN] Both servers stopped cleanly.\x1b[0m");
     process.exit(code);
-  }, 500);
+  }, 200);
 }
 
 process.on("SIGINT", () => cleanExit(0));
@@ -148,14 +231,22 @@ process.on("exit", () => cleanExit(0));
 
 apiProcess.on("exit", (code) => {
   if (!shuttingDown) {
-    console.log(`\x1b[31m[API] Process exited with code ${code}\x1b[0m`);
-    cleanExit(code || 1);
+    if (code !== 0 && code !== null) {
+      console.log(
+        `\x1b[31m[API] Backend process exited unexpectedly with code ${code}\x1b[0m`,
+      );
+    }
+    cleanExit(code || 0);
   }
 });
 
 webProcess.on("exit", (code) => {
   if (!shuttingDown) {
-    console.log(`\x1b[31m[WEB] Process exited with code ${code}\x1b[0m`);
-    cleanExit(code || 1);
+    if (code !== 0 && code !== null) {
+      console.log(
+        `\x1b[31m[WEB] Frontend process exited unexpectedly with code ${code}\x1b[0m`,
+      );
+    }
+    cleanExit(code || 0);
   }
 });

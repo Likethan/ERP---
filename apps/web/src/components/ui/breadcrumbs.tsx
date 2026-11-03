@@ -36,7 +36,7 @@ export function Breadcrumbs({
           <li>
             <Link
               href="/app/dashboard"
-              className="text-slate-500 hover:text-slate-300 transition-colors flex items-center"
+              className="text-slate-400 hover:text-yellow-700 transition-colors flex items-center"
             >
               <Home className="h-3.5 w-3.5" />
             </Link>
@@ -45,16 +45,16 @@ export function Breadcrumbs({
             const isLast = idx === segments.length - 1;
             return (
               <li key={idx} className="flex items-center gap-1.5">
-                <ChevronRight className="h-3 w-3 text-slate-600" />
+                <ChevronRight className="h-3 w-3 text-slate-300" />
                 {segment.href && !isLast ? (
                   <Link
                     href={segment.href}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-slate-500 hover:text-slate-800 transition-colors"
                   >
                     {segment.label}
                   </Link>
                 ) : (
-                  <span className="font-medium text-slate-200">
+                  <span className="font-semibold text-slate-900">
                     {segment.label}
                   </span>
                 )}
@@ -88,7 +88,7 @@ export function Breadcrumbs({
         <li>
           <Link
             href="/app/dashboard"
-            className="text-slate-500 hover:text-slate-300 transition-colors flex items-center"
+            className="text-slate-400 hover:text-yellow-700 transition-colors flex items-center"
           >
             <Home className="h-3.5 w-3.5" />
           </Link>
@@ -98,15 +98,15 @@ export function Breadcrumbs({
           const href = `/app/${relevantParts.slice(0, idx + 1).join("/")}`;
           return (
             <li key={idx} className="flex items-center gap-1.5">
-              <ChevronRight className="h-3 w-3 text-slate-600" />
+              <ChevronRight className="h-3 w-3 text-slate-300" />
               {isLast ? (
-                <span className="font-medium text-slate-200">
+                <span className="font-semibold text-slate-900">
                   {formatLabel(part)}
                 </span>
               ) : (
                 <Link
                   href={href}
-                  className="text-slate-400 hover:text-white transition-colors"
+                  className="text-slate-500 hover:text-slate-800 transition-colors"
                 >
                   {formatLabel(part)}
                 </Link>

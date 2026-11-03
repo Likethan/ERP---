@@ -76,12 +76,12 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     badgeText: "Academic Lifecycle & Courses",
     accent: {
       tabActive:
-        "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-amber-500/10",
-      tabText: "text-amber-400",
-      badgeBg: "bg-amber-500/10",
-      badgeText: "text-amber-400",
-      badgeBorder: "border-amber-500/20",
-      glow: "from-amber-500/10",
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-yellow-100",
+      badgeText: "text-yellow-950 font-semibold",
+      badgeBorder: "border-yellow-300",
+      glow: "from-yellow-400/20",
     },
   },
   ADMIN: {
@@ -101,12 +101,12 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     badgeText: "Governance & Master System Config",
     accent: {
       tabActive:
-        "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-emerald-500/10",
-      tabText: "text-emerald-400",
-      badgeBg: "bg-emerald-500/10",
-      badgeText: "text-emerald-400",
-      badgeBorder: "border-emerald-500/20",
-      glow: "from-emerald-500/10",
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-emerald-50",
+      badgeText: "text-emerald-900 font-semibold",
+      badgeBorder: "border-emerald-200",
+      glow: "from-emerald-400/10",
     },
   },
   VICE_PRINCIPAL: {
@@ -126,12 +126,12 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     badgeText: "Academic Oversight & Approvals",
     accent: {
       tabActive:
-        "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 shadow-indigo-500/10",
-      tabText: "text-indigo-400",
-      badgeBg: "bg-indigo-500/10",
-      badgeText: "text-indigo-400",
-      badgeBorder: "border-indigo-500/20",
-      glow: "from-indigo-500/10",
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-yellow-100",
+      badgeText: "text-yellow-950 font-semibold",
+      badgeBorder: "border-yellow-300",
+      glow: "from-yellow-400/20",
     },
   },
   FACULTY: {
@@ -152,12 +152,12 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     badgeText: "Teaching, Grading & Coursework",
     accent: {
       tabActive:
-        "bg-sky-500/15 border-sky-500/40 text-sky-300 shadow-sky-500/10",
-      tabText: "text-sky-400",
-      badgeBg: "bg-sky-500/10",
-      badgeText: "text-sky-400",
-      badgeBorder: "border-sky-500/20",
-      glow: "from-sky-500/10",
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-sky-50",
+      badgeText: "text-sky-900 font-semibold",
+      badgeBorder: "border-sky-200",
+      glow: "from-sky-400/10",
     },
   },
   HOD: {
@@ -177,12 +177,12 @@ const PORTALS: Record<PortalKey, PortalConfig> = {
     badgeText: "Departmental Leadership & Workloads",
     accent: {
       tabActive:
-        "bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-purple-500/10",
-      tabText: "text-purple-400",
-      badgeBg: "bg-purple-500/10",
-      badgeText: "text-purple-400",
-      badgeBorder: "border-purple-500/20",
-      glow: "from-purple-500/10",
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-purple-50",
+      badgeText: "text-purple-900 font-semibold",
+      badgeBorder: "border-purple-200",
+      glow: "from-purple-400/10",
     },
   },
 };
@@ -362,49 +362,49 @@ function LoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col lg:flex-row antialiased selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col lg:flex-row antialiased selection:bg-yellow-200 selection:text-slate-900">
       {/* ===================================================================== */}
       {/* LEFT PANEL: Institutional Branding & Mission (Desktop)               */}
       {/* ===================================================================== */}
-      <div className="lg:w-5/12 xl:w-5/12 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/80 border-b lg:border-b-0 lg:border-r border-slate-800/80 p-6 sm:p-10 lg:p-14 flex flex-col justify-between relative overflow-hidden">
+      <div className="lg:w-5/12 xl:w-5/12 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50/40 border-b lg:border-b-0 lg:border-r border-yellow-200 p-6 sm:p-10 lg:p-14 flex flex-col justify-between relative overflow-hidden">
         {/* Subtle background ambient gradients */}
-        <div className="absolute -top-32 -left-32 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 -left-32 w-80 h-80 bg-yellow-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-amber-400/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top: University Brand Header */}
         <div className="space-y-6 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 border border-indigo-400/30">
-              <School className="h-5 w-5 text-white" />
+            <div className="h-10 w-10 rounded-xl bg-yellow-400 text-slate-950 flex items-center justify-center shadow-md border border-yellow-500">
+              <School className="h-5 w-5 text-slate-950" />
             </div>
             <div>
-              <div className="text-lg font-black tracking-tight text-white flex items-center gap-1.5">
+              <div className="text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5">
                 CampusOS
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-950 border border-yellow-300">
                   ERP v2.4
                 </span>
               </div>
-              <div className="text-[11px] font-medium text-slate-400">
+              <div className="text-[11px] font-medium text-slate-600">
                 Vidyasagar State University of Engineering
               </div>
             </div>
           </div>
 
           <div className="space-y-3 pt-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-slate-800/80 px-3 py-1 text-[11px] font-semibold text-slate-300 border border-slate-700/60 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold text-slate-700 border border-yellow-300 shadow-xs backdrop-blur-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               Unified Institutional Gateway
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
               One Campus.
               <br />
               One System.
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-700 to-amber-800 font-black">
                 One Source of Truth.
               </span>
             </h1>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-md">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-md">
               A comprehensive institutional ERP uniting student lifecycles,
               faculty teaching, examination integrity, workforce management,
               financial billing, and institutional accreditation under a unified
@@ -414,40 +414,40 @@ function LoginFormContent() {
 
           {/* Institutional Trust Features Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-            <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold">
+            <div className="rounded-xl border border-yellow-200 bg-white/90 p-3 shadow-xs">
+              <div className="flex items-center gap-2 text-yellow-800 text-xs font-semibold">
                 <ShieldCheck className="h-4 w-4" />
                 Zero-Trust RBAC
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-600 mt-1">
                 Strict multi-tenant boundaries with granular role permissions.
               </p>
             </div>
-            <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+            <div className="rounded-xl border border-yellow-200 bg-white/90 p-3 shadow-xs">
+              <div className="flex items-center gap-2 text-emerald-800 text-xs font-semibold">
                 <CheckCircle2 className="h-4 w-4" />
                 ISO 27001 Certified
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-600 mt-1">
                 Continuous compliance, encrypted secrets, and tamper-evident
                 audit logs.
               </p>
             </div>
-            <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-sky-400 text-xs font-semibold">
+            <div className="rounded-xl border border-yellow-200 bg-white/90 p-3 shadow-xs">
+              <div className="flex items-center gap-2 text-sky-800 text-xs font-semibold">
                 <Layers className="h-4 w-4" />5 Campuses • 14 Depts
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-600 mt-1">
                 Synchronized operations across engineering, science, and medical
                 faculties.
               </p>
             </div>
-            <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-amber-400 text-xs font-semibold">
+            <div className="rounded-xl border border-yellow-200 bg-white/90 p-3 shadow-xs">
+              <div className="flex items-center gap-2 text-amber-800 text-xs font-semibold">
                 <Sparkles className="h-4 w-4" />
                 Real-Time Telemetry
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-600 mt-1">
                 Instant analytics for attendance, fee reconciliation, and exams.
               </p>
             </div>
@@ -455,7 +455,7 @@ function LoginFormContent() {
         </div>
 
         {/* Bottom Institutional Seal Footer */}
-        <div className="pt-8 mt-6 border-t border-slate-800/60 text-[11px] text-slate-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 relative z-10">
+        <div className="pt-8 mt-6 border-t border-yellow-200 text-[11px] text-slate-600 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 relative z-10">
           <div>© {new Date().getFullYear()} CampusOS Technologies Inc.</div>
           <div className="flex items-center gap-3">
             <span className="hover:text-slate-400 transition-colors cursor-pointer">
@@ -489,7 +489,7 @@ function LoginFormContent() {
                 <span className="font-mono text-slate-300">VSB-CAMPUS</span>
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Select Your Portal Experience
             </h2>
             <p className="text-xs text-slate-400 mt-1">
@@ -501,7 +501,7 @@ function LoginFormContent() {
           <div
             role="tablist"
             aria-label="Portal Selection"
-            className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1.5 rounded-xl border border-slate-800 bg-slate-900/90 shadow-inner"
+            className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1.5 rounded-xl border border-slate-200 bg-slate-50 shadow-inner"
           >
             {PORTAL_KEYS.map((key) => {
               const cfg = PORTALS[key];
@@ -518,7 +518,7 @@ function LoginFormContent() {
                   className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer border ${
                     isSelected
                       ? `${cfg.accent.tabActive} shadow-sm`
-                      : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                      : "border-transparent text-slate-600 hover:text-slate-900 hover:bg-yellow-50"
                   }`}
                 >
                   <div
@@ -536,7 +536,7 @@ function LoginFormContent() {
 
           {/* Active Portal Header & Context Card */}
           <div
-            className={`rounded-2xl border border-slate-800/90 bg-slate-900/70 p-5 sm:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden transition-all duration-300`}
+            className={`rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xl relative overflow-hidden transition-all duration-300`}
           >
             {/* Ambient header glow */}
             <div
@@ -544,7 +544,7 @@ function LoginFormContent() {
             />
 
             {/* Portal Title Banner */}
-            <div className="flex items-start justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80">
+            <div className="flex items-start justify-between gap-3 pb-4 mb-4 border-b border-slate-100">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span
@@ -554,10 +554,10 @@ function LoginFormContent() {
                     {activeConfig.badgeText}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-white tracking-tight">
+                <h3 className="text-lg font-bold text-slate-900 tracking-tight">
                   {activeConfig.label}
                 </h3>
-                <p className="text-xs text-slate-400 italic">
+                <p className="text-xs text-slate-500 italic">
                   "{activeConfig.supportingText}"
                 </p>
               </div>
@@ -566,7 +566,7 @@ function LoginFormContent() {
               <button
                 type="button"
                 onClick={handleAutofillDemo}
-                className="shrink-0 text-[10px] font-semibold text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                className="shrink-0 text-[10px] font-semibold text-yellow-800 hover:text-yellow-900 bg-yellow-100 hover:bg-yellow-200 border border-yellow-300 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1"
                 title="Autofill standard demo credentials for this role"
               >
                 <Sparkles className="h-3 w-3 text-amber-400" />
@@ -590,7 +590,7 @@ function LoginFormContent() {
               <div>
                 <label
                   htmlFor="identifier-input"
-                  className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
                 >
                   {activeConfig.identifierLabel}
                 </label>
@@ -619,14 +619,14 @@ function LoginFormContent() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label
                     htmlFor="password-input"
-                    className="block text-xs font-semibold uppercase tracking-wider text-slate-300"
+                    className="block text-xs font-semibold uppercase tracking-wider text-slate-700"
                   >
                     Institutional Password
                   </label>
                   <button
                     type="button"
                     onClick={() => setShowForgotPasswordModal(true)}
-                    className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors font-medium cursor-pointer"
+                    className="text-xs text-yellow-700 hover:text-yellow-800 transition-colors font-medium cursor-pointer"
                   >
                     Forgot password?
                   </button>
@@ -670,7 +670,7 @@ function LoginFormContent() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-900"
+                    className="h-3.5 w-3.5 rounded border-slate-300 bg-white text-yellow-500 focus:ring-yellow-500"
                   />
                   <span className="text-xs text-slate-400 font-medium">
                     Remember me on this institutional device
@@ -711,14 +711,14 @@ function LoginFormContent() {
                   <button
                     type="button"
                     onClick={() => handleDirectPersonaLogin(persona.id)}
-                    className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 hover:border-slate-700 text-left transition-all cursor-pointer group"
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200 bg-yellow-50/40 hover:bg-yellow-50 hover:border-yellow-300 text-left transition-all cursor-pointer group shadow-xs"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="h-7 w-7 rounded-lg bg-indigo-500/20 text-indigo-300 font-bold text-xs flex items-center justify-center border border-indigo-500/30 shrink-0">
+                      <div className="h-7 w-7 rounded-lg bg-yellow-400 text-slate-950 font-bold text-xs flex items-center justify-center border border-yellow-500 shrink-0 shadow-xs">
                         {persona.avatarInitials}
                       </div>
                       <div className="truncate">
-                        <div className="text-xs font-semibold text-white group-hover:text-indigo-300 transition-colors">
+                        <div className="text-xs font-semibold text-slate-900 group-hover:text-yellow-800 transition-colors">
                           {persona.name}
                         </div>
                         <div className="text-[10px] text-slate-400 truncate">

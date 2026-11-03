@@ -38,23 +38,23 @@ export function StatCard({
   const displayDesc = description || subtitle;
 
   const iconBgs: Record<string, string> = {
-    default: "bg-slate-800 text-slate-300 border-slate-700/60",
-    indigo: "bg-indigo-950/80 text-indigo-400 border-indigo-800/80",
-    emerald: "bg-emerald-950/80 text-emerald-400 border-emerald-800/80",
-    amber: "bg-amber-950/80 text-amber-400 border-amber-800/80",
-    sky: "bg-sky-950/80 text-sky-400 border-sky-800/80",
-    purple: "bg-purple-950/80 text-purple-400 border-purple-800/80",
+    default: "bg-yellow-50 text-yellow-800 border-yellow-200",
+    indigo: "bg-yellow-100 text-yellow-950 border-yellow-300",
+    emerald: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    amber: "bg-amber-50 text-amber-900 border-amber-200",
+    sky: "bg-sky-50 text-sky-800 border-sky-200",
+    purple: "bg-purple-50 text-purple-800 border-purple-200",
   };
 
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur-sm transition-all hover:border-slate-700",
+        "rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-yellow-400 hover:shadow-sm",
         className,
       )}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
           {displayLabel}
         </span>
         {icon && (
@@ -70,16 +70,16 @@ export function StatCard({
       </div>
 
       <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-white font-mono">
+        <span className="text-2xl font-bold tracking-tight text-slate-900 font-mono">
           {value}
         </span>
         {change && (
           <span
             className={cn(
               "inline-flex items-center gap-0.5 text-xs font-medium",
-              change.trend === "up" && "text-emerald-400",
-              change.trend === "down" && "text-red-400",
-              change.trend === "neutral" && "text-slate-400",
+              change.trend === "up" && "text-emerald-600",
+              change.trend === "down" && "text-red-600",
+              change.trend === "neutral" && "text-slate-500",
             )}
           >
             {change.trend === "up" && <TrendingUp className="h-3 w-3" />}
@@ -91,7 +91,7 @@ export function StatCard({
       </div>
 
       {displayDesc && (
-        <p className="mt-1 text-xs text-slate-400 leading-relaxed font-normal">
+        <p className="mt-1 text-xs text-slate-500 leading-relaxed font-normal">
           {displayDesc}
         </p>
       )}

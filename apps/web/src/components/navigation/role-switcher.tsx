@@ -49,16 +49,16 @@ export function RoleSwitcher({ className }: { className?: string }) {
     <div className={cn("relative", className)}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/90 px-2.5 py-1.5 text-xs font-medium text-slate-200 hover:border-slate-700 hover:bg-slate-800 transition-all cursor-pointer"
+        className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-800 hover:border-yellow-400 hover:bg-yellow-50/50 transition-all cursor-pointer shadow-xs"
         aria-label="Switch Role Persona"
       >
         <span className="flex items-center gap-1.5">
           {getRoleIcon(activePersona.role)}
-          <span className="font-semibold text-white max-w-[130px] truncate sm:max-w-none">
+          <span className="font-semibold text-slate-900 max-w-[130px] truncate sm:max-w-none">
             {activePersona.role.replace("_", " ")}
           </span>
         </span>
-        <span className="hidden md:inline text-slate-400 font-mono text-[11px] border-l border-slate-700 pl-2">
+        <span className="hidden md:inline text-slate-400 font-mono text-[11px] border-l border-slate-200 pl-2 text-slate-500">
           {activePersona.name}
         </span>
         <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
@@ -67,12 +67,12 @@ export function RoleSwitcher({ className }: { className?: string }) {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 w-72 rounded-xl border border-slate-800 bg-slate-900 p-2 shadow-2xl z-50 animate-scale-in">
-            <div className="px-3 py-2 border-b border-slate-800 mb-1">
+          <div className="absolute right-0 mt-2 w-72 rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50 animate-scale-in">
+            <div className="px-3 py-2 border-b border-slate-100 mb-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Switch Role Persona (Demo Mode)
               </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-500 mt-0.5">
                 Experience role-aware dashboards & permissions.
               </p>
             </div>
@@ -90,23 +90,23 @@ export function RoleSwitcher({ className }: { className?: string }) {
                     className={cn(
                       "w-full text-left rounded-lg px-3 py-2 text-xs transition-colors flex items-start gap-2.5 cursor-pointer",
                       isCurrent
-                        ? "bg-indigo-600/20 text-white border border-indigo-500/30"
-                        : "text-slate-300 hover:bg-slate-800 hover:text-white",
+                        ? "bg-yellow-100 text-slate-950 font-semibold border border-yellow-400"
+                        : "text-slate-700 hover:bg-yellow-50 hover:text-slate-950",
                     )}
                   >
                     <div className="mt-0.5 shrink-0">
                       {getRoleIcon(persona.role)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold flex items-center justify-between">
+                      <div className="font-semibold flex items-center justify-between text-slate-900">
                         <span>{persona.name}</span>
                         {isCurrent && (
-                          <span className="text-[10px] text-indigo-400 font-mono uppercase">
+                          <span className="text-[10px] text-yellow-800 font-bold font-mono uppercase">
                             Active
                           </span>
                         )}
                       </div>
-                      <div className="text-[11px] text-slate-400 truncate">
+                      <div className="text-[11px] text-slate-500 truncate">
                         {persona.roleTitle}
                       </div>
                     </div>

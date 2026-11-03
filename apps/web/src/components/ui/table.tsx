@@ -6,10 +6,10 @@ export function Table({
   ...props
 }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-auto rounded-lg border border-slate-800 bg-slate-900/40">
+    <div className="relative w-full overflow-auto rounded-lg border border-slate-200 bg-white shadow-xs">
       <table
         className={cn(
-          "w-full caption-bottom text-sm text-left text-slate-200",
+          "w-full caption-bottom text-sm text-left text-slate-800",
           className,
         )}
         {...props}
@@ -25,7 +25,7 @@ export function TableHeader({
   return (
     <thead
       className={cn(
-        "border-b border-slate-800 bg-slate-950/70 text-xs font-semibold uppercase tracking-wider text-slate-400",
+        "border-b border-slate-200 bg-yellow-50/60 text-xs font-semibold uppercase tracking-wider text-slate-700",
         className,
       )}
       {...props}
@@ -40,7 +40,7 @@ export function TableBody({
   return (
     <tbody
       className={cn(
-        "[&_tr:last-child]:border-0 divide-y divide-slate-800/60",
+        "[&_tr:last-child]:border-0 divide-y divide-slate-100",
         className,
       )}
       {...props}
@@ -55,7 +55,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        "transition-colors hover:bg-slate-800/40 data-[state=selected]:bg-slate-800/60",
+        "transition-colors hover:bg-yellow-50/40 data-[state=selected]:bg-yellow-100/50",
         className,
       )}
       {...props}
@@ -70,7 +70,7 @@ export function TableHead({
   return (
     <th
       className={cn(
-        "h-10 px-4 text-left align-middle font-medium text-slate-400 whitespace-nowrap",
+        "h-10 px-4 text-left align-middle font-medium text-slate-600 whitespace-nowrap",
         className,
       )}
       {...props}
@@ -84,7 +84,7 @@ export function TableCell({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-4 py-3 align-middle text-slate-300 text-sm", className)}
+      className={cn("px-4 py-3 align-middle text-slate-700 text-sm", className)}
       {...props}
     />
   );
@@ -116,16 +116,16 @@ export function TablePagination({
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-800 text-xs text-slate-400 bg-slate-950/40",
+        "flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-200 text-xs text-slate-500 bg-yellow-50/20",
         className,
       )}
     >
       <div>
         {totalRecords !== undefined ? (
           <span>
-            Showing <strong className="text-slate-200">{startRecord}</strong> to{" "}
-            <strong className="text-slate-200">{endRecord}</strong> of{" "}
-            <strong className="text-slate-200">{totalRecords}</strong> entries
+            Showing <strong className="text-slate-900">{startRecord}</strong> to{" "}
+            <strong className="text-slate-900">{endRecord}</strong> of{" "}
+            <strong className="text-slate-900">{totalRecords}</strong> entries
           </span>
         ) : (
           <span>
@@ -138,17 +138,17 @@ export function TablePagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="inline-flex items-center justify-center h-8 px-2.5 rounded border border-slate-700 bg-slate-800/60 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:pointer-events-none transition-colors"
+          className="inline-flex items-center justify-center h-8 px-2.5 rounded border border-slate-200 bg-white text-slate-700 hover:bg-yellow-50 hover:border-yellow-300 hover:text-slate-950 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-xs"
         >
           Previous
         </button>
-        <span className="px-2 font-mono text-xs text-slate-300">
+        <span className="px-2 font-mono text-xs text-slate-700">
           {currentPage} / {Math.max(1, totalPages)}
         </span>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="inline-flex items-center justify-center h-8 px-2.5 rounded border border-slate-700 bg-slate-800/60 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:pointer-events-none transition-colors"
+          className="inline-flex items-center justify-center h-8 px-2.5 rounded border border-slate-200 bg-white text-slate-700 hover:bg-yellow-50 hover:border-yellow-300 hover:text-slate-950 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-xs"
         >
           Next
         </button>

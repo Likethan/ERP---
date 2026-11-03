@@ -7,7 +7,7 @@ export function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-slate-800/80", className)}
+      className={cn("animate-pulse rounded-md bg-yellow-100/60", className)}
       {...props}
     />
   );
@@ -22,7 +22,7 @@ export function TableSkeleton({
 }) {
   return (
     <div className="w-full space-y-3 p-4">
-      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-2 border-b border-slate-100">
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-8 w-32" />
       </div>
@@ -30,7 +30,7 @@ export function TableSkeleton({
         {Array.from({ length: rows }).map((_, rIdx) => (
           <div
             key={rIdx}
-            className="flex gap-4 py-2 border-b border-slate-800/50"
+            className="flex gap-4 py-2 border-b border-slate-100/50"
           >
             {Array.from({ length: cols }).map((_, cIdx) => (
               <Skeleton
