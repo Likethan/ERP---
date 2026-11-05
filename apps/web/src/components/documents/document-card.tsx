@@ -51,7 +51,9 @@ export function DocumentCard({
               </Link>
             </h4>
             <div className="flex items-center gap-2 mt-1 text-xs text-slate-500 font-medium">
-              <span className="text-yellow-700 font-semibold">{document.category}</span>
+              <span className="text-yellow-700 font-semibold">
+                {document.category}
+              </span>
               <span>•</span>
               <span className="truncate">{document.documentType}</span>
             </div>

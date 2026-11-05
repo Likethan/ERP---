@@ -270,7 +270,9 @@ export function CampusCalendarView({
                     <span
                       className={cn(
                         "text-xs font-bold font-mono px-1.5 py-0.5 rounded",
-                        isToday ? "bg-yellow-400 text-slate-950 font-bold" : "text-slate-700",
+                        isToday
+                          ? "bg-yellow-400 text-slate-950 font-bold"
+                          : "text-slate-700",
                       )}
                     >
                       {dayNum}

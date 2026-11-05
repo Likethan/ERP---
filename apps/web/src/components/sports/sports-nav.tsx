@@ -140,7 +140,9 @@ export function SportsNav() {
                   : "text-slate-600 hover:bg-yellow-50/60 hover:text-slate-900 border border-transparent hover:border-yellow-200",
               )}
             >
-              <span className={cn(isActive ? "text-slate-950" : "text-slate-500")}>
+              <span
+                className={cn(isActive ? "text-slate-950" : "text-slate-500")}
+              >
                 {tab.icon}
               </span>
               <span>{tab.label}</span>

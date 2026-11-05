@@ -242,7 +242,9 @@ export function StudentDashboard() {
                         <td className="px-4 py-3.5 text-slate-700">
                           {c.faculty}
                         </td>
-                        <td className="px-4 py-3.5 font-mono text-slate-700">{c.credits}</td>
+                        <td className="px-4 py-3.5 font-mono text-slate-700">
+                          {c.credits}
+                        </td>
                         <td className="px-4 py-3.5">
                           <span className="font-semibold text-emerald-700 font-mono">
                             {c.attendanceRate}%
