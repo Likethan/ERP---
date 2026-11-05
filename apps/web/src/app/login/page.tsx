@@ -578,9 +578,9 @@ function LoginFormContent() {
             {errorMessage && (
               <div
                 role="alert"
-                className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-200 flex items-start gap-2.5 shadow-sm"
+                className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800 flex items-start gap-2.5 shadow-xs"
               >
-                <AlertCircle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+                <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                 <div className="leading-relaxed">{errorMessage}</div>
               </div>
             )}
@@ -816,8 +816,8 @@ function LoginFormContent() {
                 </p>
 
                 {forgotError && (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300 flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+                  <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-800 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
                     <span>{forgotError}</span>
                   </div>
                 )}

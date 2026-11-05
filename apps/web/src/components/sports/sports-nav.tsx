@@ -121,7 +121,7 @@ export function SportsNav() {
   const pathname = usePathname();
 
   return (
-    <div className="mb-6 border-b border-slate-800 pb-2">
+    <div className="mb-6 border-b border-slate-200 pb-2">
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1">
         {SPORTS_TABS.map((tab) => {
           const isActive =
@@ -136,11 +136,11 @@ export function SportsNav() {
               className={cn(
                 "flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0",
                 isActive
-                  ? "bg-indigo-600/90 text-white font-semibold shadow-sm shadow-indigo-600/30"
-                  : "text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent hover:border-slate-800",
+                  ? "bg-yellow-400 text-slate-950 font-bold shadow-xs"
+                  : "text-slate-600 hover:bg-yellow-50/60 hover:text-slate-900 border border-transparent hover:border-yellow-200",
               )}
             >
-              <span className={cn(isActive ? "text-white" : "text-slate-500")}>
+              <span className={cn(isActive ? "text-slate-950" : "text-slate-500")}>
                 {tab.icon}
               </span>
               <span>{tab.label}</span>

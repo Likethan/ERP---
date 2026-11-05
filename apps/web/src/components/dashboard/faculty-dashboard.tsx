@@ -44,16 +44,16 @@ export function FacultyDashboard() {
   return (
     <div className="space-y-6">
       {/* Faculty Welcome Banner */}
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-sky-950/40 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-semibold text-sky-400 border border-sky-500/20 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Faculty Academic Workspace • {faculty.employeeCode}
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Welcome, {faculty.firstName} {faculty.lastName}!
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             {faculty.designation} • {faculty.department}
           </p>
         </div>
@@ -132,7 +132,7 @@ export function FacultyDashboard() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs text-slate-400 hover:text-white"
+                  className="text-xs text-slate-500 hover:text-slate-900"
                 >
                   My Timetable <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
@@ -142,23 +142,23 @@ export function FacultyDashboard() {
               {faculty.todayClasses.map((cls, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-slate-950/60"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-yellow-50/20 shadow-xs transition-all"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600/20 text-sky-300 border border-sky-500/30 text-xs font-mono font-bold">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-100 text-yellow-950 border border-yellow-300 text-xs font-mono font-bold">
                       0{idx + 1}
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-white">
+                      <div className="text-xs font-semibold text-slate-900">
                         {cls.subject}
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">
+                      <div className="text-[11px] text-slate-500 mt-0.5">
                         {cls.section} • {cls.room}
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-mono font-medium text-slate-300">
+                    <span className="text-xs font-mono font-medium text-slate-700">
                       {cls.time}
                     </span>
                     <div className="mt-1">
@@ -192,13 +192,13 @@ export function FacultyDashboard() {
               {faculty.assignedSubjects.map((sub) => (
                 <div
                   key={sub.id}
-                  className="p-3 rounded-lg border border-slate-800 bg-slate-950/40 flex items-center justify-between"
+                  className="p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/20 shadow-xs transition-all flex items-center justify-between"
                 >
                   <div>
-                    <div className="text-xs font-semibold text-white">
+                    <div className="text-xs font-semibold text-slate-900">
                       {sub.code} — {sub.name}
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
+                    <div className="text-[11px] text-slate-500 mt-0.5">
                       Sem {sub.semester} ({sub.section}) • {sub.studentCount}{" "}
                       Students
                     </div>

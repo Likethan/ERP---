@@ -41,16 +41,16 @@ export function PlacementDashboard() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-purple-950/40 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/10 px-2.5 py-0.5 text-xs font-semibold text-purple-400 border border-purple-500/20 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Corporate Relations & Career Placement Cell
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Placement & Corporate Recruiting Hub
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             Empanelled corporate recruiters, recruitment drives, candidate
             shortlisting, and verified job offers.
           </p>
@@ -118,7 +118,7 @@ export function PlacementDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-500 hover:text-slate-900"
               >
                 All Drives <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
@@ -128,19 +128,19 @@ export function PlacementDashboard() {
             {drives.map((d) => (
               <div
                 key={d.id}
-                className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/40 text-xs space-y-2"
+                className="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-yellow-50/20 shadow-xs transition-all text-xs space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-bold text-white text-sm">
+                  <div className="font-bold text-slate-900 text-sm">
                     {d.companyName}
                   </div>
                   <Badge variant="success">₹{d.packageLPA} LPA</Badge>
                 </div>
-                <div className="text-slate-300 font-medium">{d.roleTitle}</div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/60">
+                <div className="text-slate-700 font-medium">{d.roleTitle}</div>
+                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
                   <span>
                     Min CGPA:{" "}
-                    <strong className="text-slate-200">{d.minimumCGPA}</strong>
+                    <strong className="text-slate-800">{d.minimumCGPA}</strong>
                   </span>
                   <span>
                     {d.totalApplicants} Applicants • {d.shortlistedCount}{" "}
@@ -166,18 +166,18 @@ export function PlacementDashboard() {
             {offers.map((o) => (
               <div
                 key={o.id}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-slate-950/40 text-xs"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-yellow-50/20 shadow-xs transition-all text-xs"
               >
                 <div>
-                  <div className="font-semibold text-white">
+                  <div className="font-semibold text-slate-900">
                     {o.studentName} ({o.rollNumber})
                   </div>
-                  <div className="text-slate-400 text-[11px] mt-0.5">
+                  <div className="text-slate-500 text-[11px] mt-0.5">
                     {o.companyName} • {o.designation}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-bold text-emerald-400 text-sm">
+                  <div className="font-mono font-bold text-emerald-700 text-sm">
                     ₹{o.packageLPA} LPA
                   </div>
                   <Badge variant="success" dot className="mt-0.5">

@@ -42,16 +42,16 @@ export function HodDashboard() {
   return (
     <div className="space-y-6">
       {/* HOD Header Banner */}
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-indigo-950/40 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Departmental Leadership Workspace • CSE
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Department of Computer Science & Engineering
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             Head of Department: Dr. K. S. Anand • 720 Students • 28 Faculty
             Members
           </p>
@@ -123,7 +123,7 @@ export function HodDashboard() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-400 hover:text-white"
+              className="text-xs text-slate-500 hover:text-slate-900"
             >
               Full Faculty Directory <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
@@ -131,8 +131,8 @@ export function HodDashboard() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left text-slate-300">
-              <thead className="bg-slate-950/60 text-[11px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <table className="w-full text-xs text-left text-slate-700">
+              <thead className="bg-yellow-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-700 border-b border-slate-200">
                 <tr>
                   <th className="px-5 py-3">Faculty Member</th>
                   <th className="px-4 py-3">Designation</th>
@@ -141,27 +141,27 @@ export function HodDashboard() {
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-100">
                 {facultyList.map((f) => (
                   <tr
                     key={f.id}
-                    className="hover:bg-slate-800/40 transition-colors"
+                    className="hover:bg-yellow-50/40 transition-colors"
                   >
-                    <td className="px-5 py-3.5 font-medium text-white">
+                    <td className="px-5 py-3.5 font-medium text-slate-900">
                       <div>
                         {f.firstName} {f.lastName}
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono">
+                      <div className="text-[11px] text-slate-500 font-mono">
                         {f.employeeCode}
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-300">
+                    <td className="px-4 py-3.5 text-slate-700">
                       {f.designation}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-400 truncate max-w-xs">
+                    <td className="px-4 py-3.5 text-slate-600 truncate max-w-xs">
                       {f.specialization}
                     </td>
-                    <td className="px-4 py-3.5 font-mono">
+                    <td className="px-4 py-3.5 font-mono text-slate-700">
                       {f.teachingLoadHours} Hrs
                     </td>
                     <td className="px-4 py-3.5">

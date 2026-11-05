@@ -77,7 +77,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
           {/* Notifications Bell */}
           <button
             onClick={() => setNotifOpen(true)}
-            className="relative rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
+            className="relative rounded-lg p-2 text-slate-600 hover:bg-yellow-50 hover:text-slate-900 transition-colors cursor-pointer"
             aria-label="Open notifications"
           >
             <Bell className="h-4 w-4" />

@@ -34,16 +34,16 @@ export function AccountsDashboard() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 border border-emerald-500/20 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 border border-emerald-200 mb-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
             Finance & Bursar Comptroller Office
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Institutional Accounts & Treasury
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             Tuition fee schedules, student billing, online UPI/bank receipts,
             and scholarships.
           </p>
@@ -120,7 +120,7 @@ export function AccountsDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-500 hover:text-slate-900"
               >
                 All Transactions <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
@@ -130,18 +130,18 @@ export function AccountsDashboard() {
             {payments.slice(0, 5).map((p) => (
               <div
                 key={p.id}
-                className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
+                className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/20 transition-all text-xs shadow-xs"
               >
                 <div>
-                  <div className="font-semibold text-white">
+                  <div className="font-semibold text-slate-900">
                     {p.studentName} ({p.rollNumber})
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono mt-0.5">
+                  <div className="text-[11px] text-slate-500 font-mono mt-0.5">
                     {p.receiptNumber} • {p.paymentMethod}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-bold text-emerald-400 text-sm">
+                  <div className="font-mono font-bold text-emerald-700 text-sm">
                     +₹{p.amount.toLocaleString()}
                   </div>
                   <div className="text-[10px] text-slate-500">
@@ -166,7 +166,7 @@ export function AccountsDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-500 hover:text-slate-900"
               >
                 Invoices Ledger <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
@@ -176,23 +176,23 @@ export function AccountsDashboard() {
             {invoices.slice(0, 5).map((inv) => (
               <div
                 key={inv.id}
-                className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950/40 text-xs"
+                className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/20 transition-all text-xs shadow-xs"
               >
                 <div>
-                  <div className="font-semibold text-white">
+                  <div className="font-semibold text-slate-900">
                     {inv.studentName} ({inv.rollNumber})
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono mt-0.5">
+                  <div className="text-[11px] text-slate-500 font-mono mt-0.5">
                     {inv.invoiceNumber} • Due: {inv.dueDate}
                   </div>
                 </div>
                 <div className="text-right flex items-center gap-3">
                   <div>
-                    <div className="font-mono font-bold text-white">
+                    <div className="font-mono font-bold text-slate-900">
                       ₹{inv.netPayable.toLocaleString()}
                     </div>
                     {inv.outstandingAmount > 0 && (
-                      <div className="text-[10px] text-red-400 font-mono font-medium">
+                      <div className="text-[10px] text-red-600 font-mono font-medium">
                         Due: ₹{inv.outstandingAmount.toLocaleString()}
                       </div>
                     )}

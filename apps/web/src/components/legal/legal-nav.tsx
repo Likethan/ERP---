@@ -79,13 +79,13 @@ export function LegalNav() {
       <div className="px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+            <span className="p-2 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300">
               <Scale className="h-5 w-5" />
             </span>
             <div>
               <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                 Enterprise Legal Affairs & Contract Operations
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-900 border border-yellow-300">
                   Step 62
                 </span>
               </h1>
@@ -119,8 +119,8 @@ export function LegalNav() {
               className={cn(
                 "flex items-center gap-2 px-3.5 py-2.5 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap border-b-2",
                 isActive
-                  ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 font-semibold"
-                  : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700",
+                  ? "border-yellow-500 text-slate-950 bg-yellow-50 font-bold"
+                  : "border-transparent text-slate-600 hover:text-slate-900 hover:bg-yellow-50/40 hover:border-yellow-200",
               )}
             >
               {tab.icon}

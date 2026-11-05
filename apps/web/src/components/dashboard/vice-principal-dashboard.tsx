@@ -125,14 +125,14 @@ export function VicePrincipalDashboard() {
       {/* Header & Institutional Overview */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Vice Principal Operations • Academic Oversight & Statutory Sanctions
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Academic Operations & Institutional Oversight
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             Real-time curriculum delivery, teaching quality audits, faculty
             workloads, and statutory approvals for VSB Campus.
           </p>
@@ -199,11 +199,11 @@ export function VicePrincipalDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
-                <CardTitle className="text-base font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
                   <Building className="h-4 w-4 text-indigo-400" />
                   Department Academic Operations Matrix
                 </CardTitle>
-                <CardDescription className="text-xs text-slate-400">
+                <CardDescription className="text-xs text-slate-500">
                   Head of Department academic progress, attendance adherence,
                   and quality audits.
                 </CardDescription>
@@ -221,7 +221,7 @@ export function VicePrincipalDashboard() {
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold text-[10px]">
+                  <thead className="border-b border-slate-200 bg-yellow-50/70 text-slate-700 uppercase tracking-wider font-semibold text-[10px]">
                     <tr>
                       <th className="pb-3">Department & HOD</th>
                       <th className="pb-3 text-center">Students</th>
@@ -231,34 +231,34 @@ export function VicePrincipalDashboard() {
                       <th className="pb-3 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 font-medium">
+                  <tbody className="divide-y divide-slate-100 font-medium">
                     {DEPARTMENT_ACADEMIC_HEALTH.map((dept) => (
                       <tr
                         key={dept.name}
-                        className="hover:bg-slate-900/40 transition-colors"
+                        className="hover:bg-yellow-50/40 transition-colors"
                       >
                         <td className="py-3">
-                          <div className="font-semibold text-slate-200">
+                          <div className="font-semibold text-slate-900">
                             {dept.name}
                           </div>
                           <div className="text-[11px] text-slate-400">
                             {dept.hod} • Ratio {dept.facultyRatio}
                           </div>
                         </td>
-                        <td className="py-3 text-center text-slate-300 font-semibold">
+                        <td className="py-3 text-center text-slate-700 font-semibold">
                           {dept.students}
                         </td>
                         <td className="py-3 text-center">
-                          <span className="font-semibold text-emerald-400">
+                          <span className="font-semibold text-emerald-700">
                             {dept.attendance}
                           </span>
                         </td>
                         <td className="py-3 text-center">
-                          <span className="font-semibold text-sky-400">
+                          <span className="font-semibold text-sky-700">
                             {dept.syllabusProgress}
                           </span>
                         </td>
-                        <td className="py-3 text-center font-bold text-slate-200">
+                        <td className="py-3 text-center font-bold text-slate-800">
                           {dept.accreditationScore}
                         </td>
                         <td className="py-3 text-right">
@@ -292,11 +292,11 @@ export function VicePrincipalDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
-                <CardTitle className="text-base font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
                   <FileCheck className="h-4 w-4 text-amber-400" />
                   Statutory Approvals
                 </CardTitle>
-                <CardDescription className="text-xs text-slate-400">
+                <CardDescription className="text-xs text-slate-500">
                   Submissions requiring Vice Principal executive sign-off.
                 </CardDescription>
               </div>
@@ -306,10 +306,10 @@ export function VicePrincipalDashboard() {
               {PENDING_STATUTORY_APPROVALS.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 hover:border-slate-700 transition-colors"
+                  className="rounded-lg border border-slate-200 bg-white p-3 hover:border-yellow-300 hover:bg-yellow-50/20 shadow-xs transition-all"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="font-semibold text-xs text-slate-200">
+                    <div className="font-semibold text-xs text-slate-900">
                       {item.type}
                     </div>
                     <Badge
@@ -324,10 +324,10 @@ export function VicePrincipalDashboard() {
                       {item.urgency}
                     </Badge>
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-1">
+                  <div className="text-[11px] text-slate-500 mt-1">
                     {item.dept}
                   </div>
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-800/80 text-[10px] text-slate-400">
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
                     <span>By {item.submittedBy}</span>
                     <span>{item.date}</span>
                   </div>
@@ -346,9 +346,9 @@ export function VicePrincipalDashboard() {
           </Card>
 
           {/* Quick Institutional Links */}
-          <Card className="bg-gradient-to-br from-indigo-950/30 to-slate-900/60 border-indigo-900/40">
+          <Card className="bg-white border-slate-200 shadow-xs">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase font-bold tracking-wider text-indigo-300 flex items-center gap-1.5">
+              <CardTitle className="text-xs uppercase font-bold tracking-wider text-slate-800 flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Executive Governance Links
               </CardTitle>
@@ -356,21 +356,21 @@ export function VicePrincipalDashboard() {
             <CardContent className="space-y-2">
               <Link
                 href="/app/faculty"
-                className="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-slate-200 transition-colors"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
               >
                 <span>Faculty Teaching Registry & Leaves</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
               </Link>
               <Link
                 href="/app/accreditation"
-                className="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-slate-200 transition-colors"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
               >
                 <span>NIRF / NAAC Quality Metrics</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
               </Link>
               <Link
                 href="/app/intelligence"
-                className="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-slate-200 transition-colors"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
               >
                 <span>Campus AI Predictive Analytics</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
