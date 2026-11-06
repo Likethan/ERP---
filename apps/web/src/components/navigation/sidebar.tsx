@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -1460,22 +1461,28 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const sidebarContent = (
     <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
       {/* Brand Header */}
-      <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200">
-        <Link href="/app/dashboard" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 font-black text-sm shadow-xs border border-yellow-500">
-            C
+      <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200">
+        <Link href="/app/dashboard" className="flex items-center gap-3 min-w-0">
+          <div className="relative h-10 w-10 shrink-0">
+            <Image
+              src="/college-logo.jpg"
+              alt="V.S.B. Engineering College"
+              fill
+              className="object-contain rounded-md"
+              priority
+            />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-base font-bold tracking-tight text-slate-900">
+              <span className="text-sm font-bold tracking-tight text-slate-900 truncate">
                 CampusOS
               </span>
-              <span className="rounded bg-yellow-100 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-yellow-950 border border-yellow-300">
+              <span className="rounded bg-yellow-100 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-yellow-950 border border-yellow-300 shrink-0">
                 ERP
               </span>
             </div>
-            <div className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold">
-              Operating System
+            <div className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold truncate">
+              V.S.B. Engineering College
             </div>
           </div>
         </Link>

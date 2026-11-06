@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -245,8 +246,14 @@ export default function CampusOSPortalPage() {
       <header className="border-b border-slate-200 bg-white sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-9 w-9 rounded-lg bg-yellow-400 border border-yellow-500/60 flex items-center justify-center text-slate-950 font-black text-sm tracking-wider shadow-xs">
-              COS
+            <div className="relative h-10 w-10 shrink-0">
+              <Image
+                src="/college-logo.jpg"
+                alt="V.S.B. Engineering College"
+                fill
+                className="object-contain rounded-md"
+                priority
+              />
             </div>
             <div>
               <div className="flex items-center space-x-2">
