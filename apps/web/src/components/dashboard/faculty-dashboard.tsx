@@ -21,6 +21,11 @@ import {
   ArrowRight,
   FileSpreadsheet,
   Users,
+  GraduationCap,
+  Award,
+  Heart,
+  FlaskConical,
+  Layers,
 } from "lucide-react";
 
 export function FacultyDashboard() {
@@ -214,6 +219,71 @@ export function FacultyDashboard() {
                   </Link>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+
+          {/* Faculty Teaching & Mentoring Hub */}
+          <Card className="bg-white border-slate-200 shadow-xs">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase font-bold tracking-wider text-slate-800 flex items-center gap-1.5">
+                <BookOpen className="h-3.5 w-3.5 text-yellow-600" />
+                Faculty Teaching & Mentoring Hub
+              </CardTitle>
+              <CardDescription className="text-xs text-slate-500">
+                Departmental courses, grading, and student mentoring.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Link
+                href="/app/academics/subjects"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Layers className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Curriculum & Subject Syllabi</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/attendance/courses"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Course Registers & Attendance</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/examinations/assessments"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Award className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Assessments & Exam Schedules</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/student-support/mentees"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Heart className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Assigned Student Mentees</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/research"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <FlaskConical className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Research Projects & Grants</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
             </CardContent>
           </Card>
         </div>

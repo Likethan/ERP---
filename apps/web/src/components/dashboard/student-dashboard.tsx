@@ -28,6 +28,10 @@ import {
   FileText,
   BedDouble,
   Bus,
+  BookOpen,
+  Award,
+  Layers,
+  Heart,
 } from "lucide-react";
 
 export function StudentDashboard() {
@@ -82,13 +86,13 @@ export function StudentDashboard() {
               Apply for Leave
             </Button>
           </Link>
-          <Link href="/app/documents">
+          <Link href="/app/documents/my-documents">
             <Button
               variant="primary"
               size="sm"
               leftIcon={<FileText className="h-3.5 w-3.5" />}
             >
-              Document Vault
+              My Documents
             </Button>
           </Link>
         </div>
@@ -205,13 +209,13 @@ export function StudentDashboard() {
                   attendance.
                 </CardDescription>
               </div>
-              <Link href="/app/academics/subjects">
+              <Link href="/app/academics/enrollments">
                 <Button
                   variant="ghost"
                   size="sm"
                   className="text-xs text-slate-500 hover:text-slate-900"
                 >
-                  Curriculum View <ArrowRight className="h-3 w-3 ml-1" />
+                  My Enrollments <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </Link>
             </CardHeader>
@@ -343,6 +347,71 @@ export function StudentDashboard() {
                   </div>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Student Self-Service Quick Hub */}
+          <Card className="bg-white border-slate-200 shadow-xs">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase font-bold tracking-wider text-slate-800 flex items-center gap-1.5">
+                <GraduationCap className="h-3.5 w-3.5 text-yellow-600" />
+                Student Academic & Campus Hub
+              </CardTitle>
+              <CardDescription className="text-xs text-slate-500">
+                Direct access to your enrolled academic options.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Link
+                href="/app/academics/enrollments"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-3.5 w-3.5 text-slate-500" />
+                  <span>My Enrolled Courses & Electives</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/examinations/results"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Award className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Examination Results & GPA</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/finance/invoices"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Tuition Invoices & Payment Receipts</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/student-support/mentor"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Heart className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Faculty Mentor & Guidance</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/documents/certificates"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Certificate Center & Transcripts</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
             </CardContent>
           </Card>
         </div>

@@ -23,6 +23,11 @@ import {
   CheckCircle2,
   ArrowRight,
   FileSpreadsheet,
+  BookOpen,
+  Award,
+  ShieldCheck,
+  Layers,
+  FileText,
 } from "lucide-react";
 
 export function HodDashboard() {
@@ -173,6 +178,131 @@ export function HodDashboard() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Departmental Operations & Governance Hub */}
+      <Card className="bg-white border-slate-200 shadow-xs">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Building className="h-4 w-4 text-yellow-600" />
+            Departmental Operations & Governance Hub
+          </CardTitle>
+          <CardDescription className="text-xs text-slate-500">
+            Direct access to departmental academic programs, workloads, and
+            student compliance.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <Link
+              href="/app/programs"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Layers className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Programs & Structure
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    B.Tech & M.Tech course schemes
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/attendance/policies"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <ShieldCheck className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Attendance Regulations
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    75% threshold & leave rules
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/examinations/reports"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <FileText className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Exam Performance & GPA
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Semester pass analysis & rank
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/student-support/assignments"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Users className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Faculty Mentors & Mentees
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Department student allocations
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/accreditation"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Award className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Department Accreditation
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    NBA / NAAC criterion metrics
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/students"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <GraduationCap className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Department Students Roster
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    720 enrolled student records
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
           </div>
         </CardContent>
       </Card>

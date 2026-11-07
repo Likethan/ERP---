@@ -13,6 +13,17 @@
 
 import { DEMO_PERSONAS } from "../mocks/auth.mock";
 import { UserRole } from "@campusos/types";
+import {
+  PORTALS as APP_PORTALS,
+  REGULAR_PORTAL_KEYS,
+  PORTAL_KEYS,
+} from "../lib/portals";
+import {
+  NAV_SECTIONS,
+  getNormalizedRoleSet,
+  isPathAuthorized,
+} from "../components/navigation/sidebar";
+import type { AuthenticatedUser } from "@campusos/types";
 
 // Simulated portal definitions matching apps/web/src/app/login/page.tsx
 export type PortalKey =
@@ -473,7 +484,488 @@ async function runAuthPortalTests() {
   );
 
   // -------------------------------------------------------------------------
-  // 12. Summary
+  // 12. Portal Separation & Regular Portal Selector Isolation
+  // -------------------------------------------------------------------------
+  assert(
+    REGULAR_PORTAL_KEYS.length === 4,
+    "Exactly four regular portal choices are defined for public selector",
+  );
+  assert(
+    REGULAR_PORTAL_KEYS.includes("STUDENT"),
+    "Regular portal choices include Student",
+  );
+  assert(
+    REGULAR_PORTAL_KEYS.includes("FACULTY"),
+    "Regular portal choices include Faculty",
+  );
+  assert(
+    REGULAR_PORTAL_KEYS.includes("VICE_PRINCIPAL"),
+    "Regular portal choices include Vice Principal",
+  );
+  assert(
+    REGULAR_PORTAL_KEYS.includes("HOD"),
+    "Regular portal choices include HOD",
+  );
+  assert(
+    !REGULAR_PORTAL_KEYS.includes("ADMIN"),
+    "Admin is strictly excluded from the regular portal selector",
+  );
+  assert(
+    APP_PORTALS.ADMIN.canonicalRole === "SUPER_ADMIN",
+    "Admin portal configuration maps to canonical SUPER_ADMIN role",
+  );
+  assert(
+    APP_PORTALS.VICE_PRINCIPAL.canonicalRole === "PRINCIPAL",
+    "Vice Principal configuration maps to internal PRINCIPAL role",
+  );
+
+  // Test role normalization helper
+  const vpMockUser: AuthenticatedUser = {
+    id: "user-vp",
+    email: "vp@campusos.edu",
+    first_name: "VP",
+    last_name: "Academic",
+    status: "ACTIVE",
+    roles: [{ id: "r1", name: "PRINCIPAL", display_name: "Vice Principal" }],
+    permissions: [],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const normalizedVP = getNormalizedRoleSet(vpMockUser);
+  assert(
+    normalizedVP.has("PRINCIPAL") && normalizedVP.has("VICE_PRINCIPAL"),
+    "Role normalizer equates PRINCIPAL and VICE_PRINCIPAL interchangeably",
+  );
+
+  const studentMockUser: AuthenticatedUser = {
+    id: "user-student",
+    email: "stu@campusos.edu",
+    first_name: "Student",
+    last_name: "User",
+    status: "ACTIVE",
+    roles: [{ id: "r2", name: "STUDENT", display_name: "Student" }],
+    permissions: [],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const facultyMockUser: AuthenticatedUser = {
+    id: "user-faculty",
+    email: "fac@campusos.edu",
+    first_name: "Faculty",
+    last_name: "User",
+    status: "ACTIVE",
+    roles: [{ id: "r3", name: "FACULTY", display_name: "Faculty" }],
+    permissions: [],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const hodMockUser: AuthenticatedUser = {
+    id: "user-hod",
+    email: "hod@campusos.edu",
+    first_name: "HOD",
+    last_name: "User",
+    status: "ACTIVE",
+    roles: [{ id: "r4", name: "HOD", display_name: "Head of Department" }],
+    permissions: [],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const adminMockUser: AuthenticatedUser = {
+    id: "user-admin",
+    email: "admin@campusos.edu",
+    first_name: "Admin",
+    last_name: "User",
+    status: "ACTIVE",
+    roles: [{ id: "r5", name: "SUPER_ADMIN", display_name: "Super Admin" }],
+    permissions: ["*"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+
+  // -------------------------------------------------------------------------
+  // 13. Direct Page Access Guard & Navigation Route Security
+  // -------------------------------------------------------------------------
+  // Student direct access tests
+  assert(
+    isPathAuthorized("/app/dashboard", studentMockUser) === true,
+    "Student is authorized for /app/dashboard",
+  );
+  assert(
+    isPathAuthorized("/app/attendance/leaves", studentMockUser) === true,
+    "Student is authorized for /app/attendance/leaves",
+  );
+  assert(
+    isPathAuthorized("/app/academics/timetable", studentMockUser) === true,
+    "Student is authorized for /app/academics/timetable",
+  );
+  assert(
+    isPathAuthorized("/app/finance/invoices", studentMockUser) === true,
+    "Student is authorized for /app/finance/invoices",
+  );
+  assert(
+    isPathAuthorized("/app/workforce", studentMockUser) === false,
+    "Direct student navigation to /app/workforce is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/payroll", studentMockUser) === false,
+    "Direct student navigation to /app/payroll is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/attendance/policies", studentMockUser) === false,
+    "Direct student navigation to /app/attendance/policies is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/attendance/sessions", studentMockUser) === false,
+    "Direct student navigation to /app/attendance/sessions is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/examinations/marks", studentMockUser) === false,
+    "Direct student navigation to /app/examinations/marks is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/security", studentMockUser) === false,
+    "Direct student navigation to /app/security is blocked",
+  );
+
+  // Faculty direct access tests
+  assert(
+    isPathAuthorized("/app/academics/subjects", facultyMockUser) === true,
+    "Faculty is authorized for /app/academics/subjects",
+  );
+  assert(
+    isPathAuthorized("/app/attendance/courses", facultyMockUser) === true,
+    "Faculty is authorized for /app/attendance/courses",
+  );
+  assert(
+    isPathAuthorized("/app/examinations/marks", facultyMockUser) === true,
+    "Faculty is authorized for /app/examinations/marks",
+  );
+  assert(
+    isPathAuthorized("/app/finance", facultyMockUser) === false,
+    "Direct faculty navigation to /app/finance is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/payroll", facultyMockUser) === false,
+    "Direct faculty navigation to /app/payroll is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/campuses", facultyMockUser) === false,
+    "Direct faculty navigation to /app/campuses is blocked",
+  );
+
+  // HOD direct access tests
+  assert(
+    isPathAuthorized("/app/departments", hodMockUser) === true,
+    "HOD is authorized for /app/departments",
+  );
+  assert(
+    isPathAuthorized("/app/programs", hodMockUser) === true,
+    "HOD is authorized for /app/programs",
+  );
+  assert(
+    isPathAuthorized("/app/attendance/policies", hodMockUser) === true,
+    "HOD is authorized for /app/attendance/policies",
+  );
+  assert(
+    isPathAuthorized("/app/payroll", hodMockUser) === false,
+    "Direct HOD navigation to /app/payroll is blocked",
+  );
+
+  // Vice Principal direct access tests
+  assert(
+    isPathAuthorized("/app/institution", vpMockUser) === true,
+    "Vice Principal is authorized for /app/institution",
+  );
+  assert(
+    isPathAuthorized("/app/campuses", vpMockUser) === true,
+    "Vice Principal is authorized for /app/campuses",
+  );
+  assert(
+    isPathAuthorized("/app/accreditation", vpMockUser) === true,
+    "Vice Principal is authorized for /app/accreditation",
+  );
+  assert(
+    isPathAuthorized("/app/examinations/publications", vpMockUser) === true,
+    "Vice Principal is authorized for /app/examinations/publications",
+  );
+
+  // Super Admin direct access tests
+  assert(
+    isPathAuthorized("/app/security", adminMockUser) === true,
+    "Admin is authorized for /app/security",
+  );
+  assert(
+    isPathAuthorized("/app/marketplace", adminMockUser) === true,
+    "Admin is authorized for /app/marketplace",
+  );
+  assert(
+    isPathAuthorized("/app/subscriptions", adminMockUser) === true,
+    "Admin is authorized for /app/subscriptions",
+  );
+  assert(
+    isPathAuthorized("/app/adoption", adminMockUser) === true,
+    "Admin is authorized for /app/adoption",
+  );
+
+  // Standalone admin-only modules blocked for non-admins
+  assert(
+    isPathAuthorized("/app/marketplace", studentMockUser) === false,
+    "Student direct navigation to /app/marketplace is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/marketplace", facultyMockUser) === false,
+    "Faculty direct navigation to /app/marketplace is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/subscriptions", vpMockUser) === false,
+    "Vice Principal direct navigation to SaaS /app/subscriptions is blocked",
+  );
+  assert(
+    isPathAuthorized("/app/data-import", studentMockUser) === false,
+    "Student direct navigation to /app/data-import is blocked",
+  );
+
+  // -------------------------------------------------------------------------
+  // 14. Comprehensive Five-Role Navigation Menu Filtering
+  // -------------------------------------------------------------------------
+  const allNavItems = NAV_SECTIONS.flatMap((s) => s.items);
+
+  function getVisibleNavHrefs(user: AuthenticatedUser): string[] {
+    const roleSet = getNormalizedRoleSet(user);
+    const isSuperOrAdmin = roleSet.has("SUPER_ADMIN") || roleSet.has("ADMIN");
+    return allNavItems
+      .filter((item) => {
+        if (isSuperOrAdmin) return true;
+        if (!item.roles || item.roles.includes("*")) return true;
+        return item.roles.some((r) => roleSet.has(r));
+      })
+      .map((item) => item.href);
+  }
+
+  const studentNavHrefs = getVisibleNavHrefs(studentMockUser);
+  const facultyNavHrefs = getVisibleNavHrefs(facultyMockUser);
+  const hodNavHrefs = getVisibleNavHrefs(hodMockUser);
+  const vpNavHrefs = getVisibleNavHrefs(vpMockUser);
+  const adminNavHrefs = getVisibleNavHrefs(adminMockUser);
+
+  // Student navigation verification
+  assert(
+    !studentNavHrefs.includes("/app/workforce"),
+    "Student sidebar excludes /app/workforce",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/people"),
+    "Student sidebar excludes /app/people",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/faculty"),
+    "Student sidebar excludes /app/faculty",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/staff"),
+    "Student sidebar excludes /app/staff",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/programs"),
+    "Student sidebar excludes /app/programs",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/attendance/policies"),
+    "Student sidebar excludes /app/attendance/policies",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/attendance/sessions"),
+    "Student sidebar excludes /app/attendance/sessions",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/attendance/courses"),
+    "Student sidebar excludes /app/attendance/courses",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/examinations/marks"),
+    "Student sidebar excludes /app/examinations/marks",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/examinations/publications"),
+    "Student sidebar excludes /app/examinations/publications",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/finance"),
+    "Student sidebar excludes /app/finance dashboard",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/payroll"),
+    "Student sidebar excludes /app/payroll",
+  );
+  assert(
+    !studentNavHrefs.includes("/app/security"),
+    "Student sidebar excludes /app/security",
+  );
+  assert(
+    studentNavHrefs.includes("/app/academics/enrollments"),
+    "Student sidebar includes /app/academics/enrollments",
+  );
+  assert(
+    studentNavHrefs.includes("/app/academics/timetable"),
+    "Student sidebar includes /app/academics/timetable",
+  );
+  assert(
+    studentNavHrefs.includes("/app/attendance/leaves"),
+    "Student sidebar includes /app/attendance/leaves",
+  );
+  assert(
+    studentNavHrefs.includes("/app/finance/invoices"),
+    "Student sidebar includes /app/finance/invoices",
+  );
+
+  // Faculty navigation verification
+  assert(
+    facultyNavHrefs.includes("/app/academics/subjects"),
+    "Faculty sidebar includes /app/academics/subjects",
+  );
+  assert(
+    facultyNavHrefs.includes("/app/academics/curricula"),
+    "Faculty sidebar includes /app/academics/curricula",
+  );
+  assert(
+    facultyNavHrefs.includes("/app/attendance/sessions"),
+    "Faculty sidebar includes /app/attendance/sessions",
+  );
+  assert(
+    facultyNavHrefs.includes("/app/attendance/courses"),
+    "Faculty sidebar includes /app/attendance/courses",
+  );
+  assert(
+    facultyNavHrefs.includes("/app/examinations/marks"),
+    "Faculty sidebar includes /app/examinations/marks",
+  );
+  assert(
+    facultyNavHrefs.includes("/app/workforce"),
+    "Faculty sidebar includes /app/workforce",
+  );
+  assert(
+    !facultyNavHrefs.includes("/app/finance"),
+    "Faculty sidebar excludes /app/finance dashboard",
+  );
+  assert(
+    !facultyNavHrefs.includes("/app/payroll"),
+    "Faculty sidebar excludes /app/payroll",
+  );
+  assert(
+    !facultyNavHrefs.includes("/app/campuses"),
+    "Faculty sidebar excludes /app/campuses",
+  );
+  assert(
+    !facultyNavHrefs.includes("/app/institution"),
+    "Faculty sidebar excludes /app/institution",
+  );
+  assert(
+    !facultyNavHrefs.includes("/app/security"),
+    "Faculty sidebar excludes /app/security",
+  );
+
+  // HOD navigation verification
+  assert(
+    hodNavHrefs.includes("/app/departments"),
+    "HOD sidebar includes /app/departments",
+  );
+  assert(
+    hodNavHrefs.includes("/app/programs"),
+    "HOD sidebar includes /app/programs",
+  );
+  assert(
+    hodNavHrefs.includes("/app/academic-structure"),
+    "HOD sidebar includes /app/academic-structure",
+  );
+  assert(
+    hodNavHrefs.includes("/app/attendance/policies"),
+    "HOD sidebar includes /app/attendance/policies",
+  );
+  assert(
+    hodNavHrefs.includes("/app/attendance/reports"),
+    "HOD sidebar includes /app/attendance/reports",
+  );
+  assert(
+    hodNavHrefs.includes("/app/examinations/reports"),
+    "HOD sidebar includes /app/examinations/reports",
+  );
+  assert(
+    !hodNavHrefs.includes("/app/payroll"),
+    "HOD sidebar excludes /app/payroll",
+  );
+  assert(
+    !hodNavHrefs.includes("/app/institution"),
+    "HOD sidebar excludes /app/institution",
+  );
+  assert(
+    !hodNavHrefs.includes("/app/campuses"),
+    "HOD sidebar excludes /app/campuses",
+  );
+  assert(
+    !hodNavHrefs.includes("/app/security"),
+    "HOD sidebar excludes /app/security",
+  );
+
+  // Vice Principal navigation verification (internal role: PRINCIPAL)
+  assert(
+    vpNavHrefs.includes("/app/people"),
+    "Vice Principal sidebar includes /app/people overview",
+  );
+  assert(
+    vpNavHrefs.includes("/app/institution"),
+    "Vice Principal sidebar includes /app/institution",
+  );
+  assert(
+    vpNavHrefs.includes("/app/campuses"),
+    "Vice Principal sidebar includes /app/campuses",
+  );
+  assert(
+    vpNavHrefs.includes("/app/accreditation"),
+    "Vice Principal sidebar includes /app/accreditation",
+  );
+  assert(
+    vpNavHrefs.includes("/app/examinations/publications"),
+    "Vice Principal sidebar includes /app/examinations/publications",
+  );
+  assert(
+    vpNavHrefs.includes("/app/security"),
+    "Vice Principal sidebar includes /app/security",
+  );
+
+  // Admin navigation verification
+  assert(
+    adminNavHrefs.length === allNavItems.length,
+    "Super Admin sidebar includes all institutional navigation items",
+  );
+  assert(
+    adminNavHrefs.includes("/app/payroll"),
+    "Super Admin sidebar includes /app/payroll",
+  );
+
+  // Vice Principal role name alias compatibility test
+  const vpAliasUser: AuthenticatedUser = {
+    id: "user-vp-alias",
+    email: "vp2@campusos.edu",
+    first_name: "VP",
+    last_name: "Alias",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-vp-alias",
+        name: "VICE_PRINCIPAL",
+        display_name: "Vice Principal",
+      },
+    ],
+    permissions: [],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const vpAliasNavHrefs = getVisibleNavHrefs(vpAliasUser);
+  assert(
+    vpAliasNavHrefs.length === vpNavHrefs.length,
+    "VICE_PRINCIPAL role alias generates identical navigation set as PRINCIPAL",
+  );
+  assert(
+    isPathAuthorized("/app/accreditation", vpAliasUser) === true,
+    "VICE_PRINCIPAL role alias is authorized for /app/accreditation",
+  );
+
+  // -------------------------------------------------------------------------
+  // 15. Summary
   // -------------------------------------------------------------------------
   console.log("=================================================");
   console.log(

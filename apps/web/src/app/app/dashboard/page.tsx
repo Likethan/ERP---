@@ -66,6 +66,7 @@ export default function DashboardPage() {
     case "HOD":
       return <HodDashboard />;
     case "PRINCIPAL":
+    case "VICE_PRINCIPAL":
       return <VicePrincipalDashboard />;
     case "ACCOUNTS":
       return <AccountsDashboard />;

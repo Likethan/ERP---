@@ -335,11 +335,11 @@ export function VicePrincipalDashboard() {
               ))}
 
               <Link
-                href="/app/examinations/approvals"
+                href="/app/examinations/publications"
                 className="block w-full pt-1"
               >
                 <Button variant="outline" size="sm" className="w-full text-xs">
-                  Open Executive Approval Queue
+                  Open Moderation & Publications Queue
                 </Button>
               </Link>
             </CardContent>
@@ -349,16 +349,19 @@ export function VicePrincipalDashboard() {
           <Card className="bg-white border-slate-200 shadow-xs">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs uppercase font-bold tracking-wider text-slate-800 flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5" />
+                <ShieldCheck className="h-3.5 w-3.5 text-yellow-600" />
                 Executive Governance Links
               </CardTitle>
+              <CardDescription className="text-xs text-slate-500">
+                Institutional oversight and statutory academic operations.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <Link
                 href="/app/faculty"
                 className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
               >
-                <span>Faculty Teaching Registry & Leaves</span>
+                <span>Faculty Teaching Registry & Workloads</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
               </Link>
               <Link
@@ -366,6 +369,34 @@ export function VicePrincipalDashboard() {
                 className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
               >
                 <span>NIRF / NAAC Quality Metrics</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
+              </Link>
+              <Link
+                href="/app/programs"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <span>Academic Programs & Curricula</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
+              </Link>
+              <Link
+                href="/app/campuses"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <span>Campus Infrastructure & Centers</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
+              </Link>
+              <Link
+                href="/app/attendance/policies"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <span>Attendance Regulations & Policies</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
+              </Link>
+              <Link
+                href="/app/research"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <span>Research Projects & Grants Cell</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
               </Link>
               <Link
