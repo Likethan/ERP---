@@ -94,6 +94,7 @@ function ensurePostgres() {
 ensurePostgres();
 freePort(8000);
 freePort(3000);
+freePort(5434);
 
 // 1. Resolve Python Binary
 const winVenv = path.join(
@@ -124,12 +125,29 @@ console.log(
   "\x1b[36m====================================================\x1b[0m",
 );
 console.log(
-  "  \x1b[32m• Backend API:\x1b[0m  http://127.0.0.1:8000  (Docs: http://127.0.0.1:8000/docs)",
+  "  \x1b[32m• Backend API:\x1b[0m         http://127.0.0.1:8000  (Docs: http://127.0.0.1:8000/docs)",
 );
-console.log("  \x1b[35m• Frontend Web:\x1b[0m http://localhost:3000");
+console.log("  \x1b[35m• Frontend Web:\x1b[0m        http://localhost:3000");
+console.log("  \x1b[33m• Database Visualizer:\x1b[0m http://localhost:5434");
 console.log(
-  "  \x1b[90mPress Ctrl+C to terminate both servers together.\x1b[0m\n",
+  "  \x1b[90mPress Ctrl+C to terminate all servers together.\x1b[0m\n",
 );
+
+let browserOpened = false;
+function onServerReady() {
+  if (browserOpened) return;
+  browserOpened = true;
+  console.log(
+    "\n\x1b[32m[READY] CampusOS is online! Opening browser to http://localhost:3000 ...\x1b[0m\n",
+  );
+  try {
+    if (isWin) {
+      execSync("start http://localhost:3000", { stdio: "ignore" });
+    }
+  } catch {
+    // Non-blocking
+  }
+}
 
 function pipeWithPrefix(stream, prefix, colorCode) {
   if (!stream) return;
@@ -137,6 +155,9 @@ function pipeWithPrefix(stream, prefix, colorCode) {
   rl.on("line", (line) => {
     if (!line.trim()) return;
     console.log(`${colorCode}${prefix}\x1b[0m ${line}`);
+    if (line.includes("Ready in") || line.includes("✓ Ready")) {
+      onServerReady();
+    }
   });
 }
 
@@ -165,6 +186,22 @@ const apiProcess = spawn(
 
 pipeWithPrefix(apiProcess.stdout, "[API]", "\x1b[36m");
 pipeWithPrefix(apiProcess.stderr, "[API]", "\x1b[36m");
+
+// 2b. Spawn Database Visualizer (:5434)
+const dbViewerScript = path.join(rootDir, "scripts", "db_viewer.py");
+let dbViewerProcess = null;
+if (fs.existsSync(dbViewerScript)) {
+  dbViewerProcess = spawn(pythonBin, [dbViewerScript], {
+    cwd: rootDir,
+    shell: false,
+    env: {
+      ...process.env,
+      PYTHONUNBUFFERED: "1",
+    },
+  });
+  pipeWithPrefix(dbViewerProcess.stdout, "[DB-VIEWER]", "\x1b[33m");
+  pipeWithPrefix(dbViewerProcess.stderr, "[DB-VIEWER]", "\x1b[33m");
+}
 
 // 3. Spawn Frontend Next.js (:3000) via cmd.exe on Windows for safe .cmd invocation
 const webProcess = isWin
@@ -196,7 +233,7 @@ function cleanExit(code = 0) {
   if (shuttingDown) return;
   shuttingDown = true;
   console.log(
-    "\n\x1b[33m[SHUTDOWN] Stopping CampusOS Backend and Frontend servers...\x1b[0m",
+    "\n\x1b[33m[SHUTDOWN] Stopping CampusOS Backend, Frontend, and Database Visualizer servers...\x1b[0m",
   );
 
   const killTree = (proc) => {
@@ -214,10 +251,12 @@ function cleanExit(code = 0) {
 
   killTree(apiProcess);
   killTree(webProcess);
+  if (dbViewerProcess) killTree(dbViewerProcess);
 
-  // Guarantee ports 8000 and 3000 are completely released
+  // Guarantee ports 8000, 3000, and 5434 are completely released
   freePort(8000);
   freePort(3000);
+  freePort(5434);
 
   setTimeout(() => {
     console.log("\x1b[32m[SHUTDOWN] Both servers stopped cleanly.\x1b[0m");

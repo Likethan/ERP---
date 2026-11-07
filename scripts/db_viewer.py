@@ -9,7 +9,6 @@ import os
 import sys
 import webbrowser
 from pathlib import Path
-from typing import Any
 
 workspace_root = Path(__file__).resolve().parent.parent
 api_dir = workspace_root / "apps" / "api"
@@ -17,12 +16,12 @@ sys.path.insert(0, str(api_dir))
 os.chdir(api_dir)
 
 import uvicorn
+from app.core.database import AsyncSessionLocal
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sqlalchemy import text
-from app.core.database import AsyncSessionLocal, engine
 
 app = FastAPI(title="CampusOS Database Visualizer", version="1.0.0")
 
@@ -486,7 +485,7 @@ async def get_table_data(table_name: str, limit: int = Query(100, le=500)):
 
     async with AsyncSessionLocal() as session:
         # Fetch columns
-        col_res = await session.execute(text(f"""
+        col_res = await session.execute(text("""
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = :tname 
@@ -548,8 +547,18 @@ async def execute_query(req: QueryRequest):
                 safe_rows.append(clean)
 
             return {"columns": columns, "rows": safe_rows}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             return {"error": str(e)}
+
+
+def open_browser(port: int):
+    import time
+
+    time.sleep(1.0)
+    try:
+        webbrowser.open(f"http://localhost:{port}")
+    except OSError:
+        pass
 
 
 def main():
@@ -558,6 +567,8 @@ def main():
     print(" CampusOS Database Web Visualizer")
     print(f" URL: http://localhost:{port}")
     print("=" * 70)
+    import threading
+    threading.Thread(target=open_browser, args=(port,), daemon=True).start()
     uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
 
 
