@@ -6,7 +6,11 @@ export const metadata: Metadata = {
   description:
     "Enterprise-grade College ERP and Campus Operating System uniting academic governance, student lifecycle, and institutional operations.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: "/icon-192.png",
   },
 };
 

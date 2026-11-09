@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -205,8 +206,14 @@ function LoginFormContent() {
         {/* Top: University Brand Header */}
         <div className="space-y-6 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-yellow-400 text-slate-950 flex items-center justify-center shadow-md border border-yellow-500">
-              <School className="h-5 w-5 text-slate-950" />
+            <div className="relative h-12 w-12 shrink-0">
+              <Image
+                src="/college-logo.jpg"
+                alt="V.S.B. Engineering College"
+                fill
+                className="object-contain rounded-lg"
+                priority
+              />
             </div>
             <div>
               <div className="text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5">
@@ -216,7 +223,7 @@ function LoginFormContent() {
                 </span>
               </div>
               <div className="text-[11px] font-medium text-slate-600">
-                Vidyasagar State University of Engineering
+                V.S.B. Engineering College
               </div>
             </div>
           </div>
