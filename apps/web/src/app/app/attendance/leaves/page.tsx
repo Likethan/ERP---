@@ -26,15 +26,32 @@ import {
   FileText,
   User,
   ArrowRight,
+  GraduationCap,
+  Briefcase,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function LeaveManagementPage() {
-  const { hasPermission } = useAuth();
+  const { user, activePersona } = useAuth();
   const { showToast } = useToast();
+
+  const userRole = (activePersona?.role ||
+    user?.roles?.[0]?.name ||
+    "STUDENT") as string;
+  const isFaculty = userRole === "FACULTY";
+  const isStudent = userRole === "STUDENT";
+  const isHOD =
+    userRole === "HOD" ||
+    userRole === "PRINCIPAL" ||
+    userRole === "SUPER_ADMIN" ||
+    userRole === "ADMIN";
 
   const [loading, setLoading] = useState(true);
   const [leaves, setLeaves] = useState<AttendanceLeave[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [categoryFilter, setCategoryFilter] = useState<
+    "ALL" | "STUDENT" | "FACULTY"
+  >("ALL");
 
   // Create Modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -50,6 +67,7 @@ export default function LeaveManagementPage() {
     totalDays: 1,
     reason: "",
     supportingDocName: "",
+    applicantType: "STUDENT" as "STUDENT" | "FACULTY",
   });
 
   // Review Modal
@@ -68,6 +86,7 @@ export default function LeaveManagementPage() {
       setLoading(true);
       const res = await attendanceService.getLeaves({
         status: statusFilter !== "ALL" ? statusFilter : undefined,
+        applicantType: categoryFilter !== "ALL" ? categoryFilter : undefined,
       });
       if (res.success) {
         setLeaves(res.data);
@@ -86,7 +105,56 @@ export default function LeaveManagementPage() {
 
   useEffect(() => {
     loadLeaves();
-  }, [statusFilter]);
+  }, [statusFilter, categoryFilter]);
+
+  const handleOpenCreateModal = () => {
+    if (isFaculty) {
+      setFormData({
+        studentName: activePersona?.name || "Dr. Rajesh Sharma",
+        rollNumber: "EMP-CSE-01",
+        department:
+          activePersona?.department || "Computer Science & Engineering",
+        section: "Faculty Staff",
+        leaveType: "CASUAL",
+        startDate: new Date().toISOString().split("T")[0],
+        endDate: new Date().toISOString().split("T")[0],
+        totalDays: 1,
+        reason: "",
+        supportingDocName: "",
+        applicantType: "FACULTY",
+      });
+    } else if (isStudent) {
+      setFormData({
+        studentName: activePersona?.name || "Aarav Patel",
+        rollNumber: "24CSE0101",
+        department: "Computer Science & Engineering",
+        section: "A",
+        leaveType: "MEDICAL",
+        startDate: new Date().toISOString().split("T")[0],
+        endDate: new Date().toISOString().split("T")[0],
+        totalDays: 1,
+        reason: "",
+        supportingDocName: "",
+        applicantType: "STUDENT",
+      });
+    } else {
+      setFormData({
+        studentName: activePersona?.name || "Dr. K. S. Anand",
+        rollNumber: "HOD-CSE-01",
+        department:
+          activePersona?.department || "Computer Science & Engineering",
+        section: "Department Head",
+        leaveType: "CASUAL",
+        startDate: new Date().toISOString().split("T")[0],
+        endDate: new Date().toISOString().split("T")[0],
+        totalDays: 1,
+        reason: "",
+        supportingDocName: "",
+        applicantType: "FACULTY",
+      });
+    }
+    setCreateModalOpen(true);
+  };
 
   const handleCreateLeave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,10 +162,15 @@ export default function LeaveManagementPage() {
       setSubmitting(true);
       const res = await attendanceService.submitLeave(formData);
       if (res.success) {
+        const dest =
+          formData.applicantType === "FACULTY"
+            ? "Submitted to HOD (Dr. K. S. Anand) for departmental endorsement."
+            : "Submitted to Course Faculty for attendance exemption approval.";
+
         showToast({
           type: "success",
-          title: "Leave Submitted",
-          message: "Application queued for academic review.",
+          title: "Leave Application Submitted",
+          message: dest,
         });
         setCreateModalOpen(false);
         setFormData({ ...formData, reason: "", supportingDocName: "" });
@@ -120,11 +193,16 @@ export default function LeaveManagementPage() {
     if (!selectedLeave) return;
     try {
       setReviewing(true);
+      const isTargetFacultyLeave = selectedLeave.applicantType === "FACULTY";
+      const reviewerSignature = isTargetFacultyLeave
+        ? `${activePersona?.name || "Dr. K. S. Anand"} (HOD - CSE)`
+        : `${activePersona?.name || "Dr. Rajesh Sharma"} (Faculty - CSE)`;
+
       const res = await attendanceService.updateLeaveStatus(
         selectedLeave.id,
         reviewAction,
         reviewNotes,
-        "Dr. K. S. Anand (HOD - CSE)",
+        reviewerSignature,
       );
       if (res.success) {
         showToast({
@@ -167,18 +245,33 @@ export default function LeaveManagementPage() {
   const columns: ColumnDef<AttendanceLeave>[] = useMemo(
     () => [
       {
-        id: "student",
-        header: "Student Name & Roll No.",
-        cell: (row) => (
-          <div>
-            <div className="font-semibold text-slate-900 dark:text-white">
-              {row.studentName}
+        id: "applicant",
+        header: "Applicant Name & ID",
+        cell: (row) => {
+          const isFac = row.applicantType === "FACULTY";
+          return (
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-semibold text-slate-900 dark:text-white">
+                  {row.studentName}
+                </span>
+                {isFac ? (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300">
+                    FACULTY
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                    STUDENT
+                  </span>
+                )}
+              </div>
+              <div className="text-xs text-slate-500 mt-0.5">
+                {row.rollNumber} •{" "}
+                {isFac ? row.department : `Sec ${row.section}`}
+              </div>
             </div>
-            <div className="text-xs text-slate-500">
-              {row.rollNumber} • Sec {row.section}
-            </div>
-          </div>
-        ),
+          );
+        },
         sortable: true,
       },
       {
@@ -218,63 +311,78 @@ export default function LeaveManagementPage() {
       },
       {
         id: "reviewedBy",
-        header: "Review Details",
-        cell: (row) => (
-          <div className="text-xs text-slate-600 dark:text-slate-400">
-            {row.reviewedBy ? (
-              <div>
-                <div className="font-medium text-slate-800 dark:text-slate-200">
-                  {row.reviewedBy}
+        header: "Approval & Routing",
+        cell: (row) => {
+          const isFac = row.applicantType === "FACULTY";
+          return (
+            <div className="text-xs text-slate-600 dark:text-slate-400">
+              {row.reviewedBy ? (
+                <div>
+                  <div className="font-medium text-slate-800 dark:text-slate-200">
+                    {row.reviewedBy}
+                  </div>
+                  <div className="text-[10px] text-slate-400">
+                    {new Date(row.reviewedAt || "").toLocaleDateString()}
+                  </div>
                 </div>
-                <div className="text-[10px] text-slate-400">
-                  {new Date(row.reviewedAt || "").toLocaleDateString()}
-                </div>
-              </div>
-            ) : (
-              <span className="text-slate-400 italic">
-                Awaiting HOD sign-off
-              </span>
-            )}
-          </div>
-        ),
+              ) : (
+                <span className="text-amber-600 dark:text-amber-400 font-medium">
+                  {isFac
+                    ? "Awaiting HOD sign-off"
+                    : "Awaiting Faculty sign-off"}
+                </span>
+              )}
+            </div>
+          );
+        },
       },
       {
         id: "actions",
         header: "Actions",
-        cell: (row) => (
-          <div className="flex items-center gap-2">
-            {row.status === "PENDING" && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setSelectedLeave(row);
-                  setReviewAction("APPROVED");
-                  setReviewModalOpen(true);
-                }}
-                className="h-7 text-xs"
-              >
-                Review Request
-              </Button>
-            )}
-            {row.status !== "PENDING" && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => {
-                  setSelectedLeave(row);
-                  setReviewModalOpen(true);
-                }}
-                className="h-7 text-xs text-slate-500"
-              >
-                View Details
-              </Button>
-            )}
-          </div>
-        ),
+        cell: (row) => {
+          const isFacLeave = row.applicantType === "FACULTY";
+          // Faculty can review Student leaves; HOD can review Faculty and Student leaves
+          const canReview =
+            row.status === "PENDING" &&
+            ((isFaculty && !isFacLeave) || (isHOD && isFacLeave) || isHOD);
+
+          return (
+            <div className="flex items-center gap-2">
+              {canReview && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => {
+                    setSelectedLeave(row);
+                    setReviewAction("APPROVED");
+                    setReviewModalOpen(true);
+                  }}
+                  className="h-7 text-xs"
+                >
+                  {isFacLeave
+                    ? "Endorse Faculty Leave"
+                    : "Approve Student Leave"}
+                </Button>
+              )}
+              {!canReview && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setSelectedLeave(row);
+                    setReviewModalOpen(true);
+                  }}
+                  className="h-7 text-xs text-slate-500"
+                >
+                  View Details
+                </Button>
+              )}
+            </div>
+          );
+        },
       },
     ],
-    [],
+    [isFaculty, isHOD],
   );
 
   return (
@@ -284,48 +392,103 @@ export default function LeaveManagementPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-              Absence Exemption
+              {isFaculty
+                ? "Faculty Portal • Leave Operations"
+                : isStudent
+                  ? "Student Portal • Leave Exemption"
+                  : "Department Governance • Leave Endorsements"}
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              Excused Absence Workflow
+              {isFaculty
+                ? "Student Approvals & HOD Submissions"
+                : isStudent
+                  ? "Excused Absence Workflow"
+                  : "Academic & Staff Leave Registry"}
             </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Student Leave Management
+            {isFaculty
+              ? "Faculty Leave & Student Approvals"
+              : isStudent
+                ? "Student Leave Application"
+                : "Department Leave Endorsements & Governance"}
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Submit and review medical, sports, and official on-duty leave
-            requests for percentage exemption.
+            {isFaculty
+              ? "Review student absence applications for your courses and apply for faculty leave to the HOD."
+              : isStudent
+                ? "Submit medical, sports, and official on-duty leave applications to your course faculty for attendance exemption."
+                : "Review and endorse departmental faculty leave applications and student attendance escalations."}
           </p>
         </div>
 
         <Button
           variant="primary"
           className="gap-2"
-          onClick={() => setCreateModalOpen(true)}
+          onClick={handleOpenCreateModal}
         >
           <Plus className="h-4 w-4" />
-          Apply for Leave
+          {isFaculty ? "Apply for Faculty Leave (to HOD)" : "Apply for Leave"}
         </Button>
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
-        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-          <Filter className="h-3.5 w-3.5" />
-          Filter Status:
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 text-xs">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+            <Filter className="h-3.5 w-3.5" />
+            Category:
+          </div>
+          <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={() => setCategoryFilter("ALL")}
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                categoryFilter === "ALL"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900"
+              }`}
+            >
+              All Records ({leaves.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setCategoryFilter("STUDENT")}
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                categoryFilter === "STUDENT"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900"
+              }`}
+            >
+              Student Leaves
+            </button>
+            <button
+              type="button"
+              onClick={() => setCategoryFilter("FACULTY")}
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                categoryFilter === "FACULTY"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900"
+              }`}
+            >
+              Faculty Leaves (to HOD)
+            </button>
+          </div>
         </div>
 
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        >
-          <option value="ALL">All Requests ({leaves.length})</option>
-          <option value="PENDING">Pending Review</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
-        </select>
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-medium">Status:</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="PENDING">Pending Review</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </div>
       </div>
 
       {/* Enterprise DataGrid */}
@@ -334,27 +497,43 @@ export default function LeaveManagementPage() {
         columns={columns}
         keyExtractor={(row) => row.id}
         loading={loading}
-        searchPlaceholder="Search leaves by student name, roll number, or reason..."
+        searchPlaceholder="Search leaves by applicant name, roll / employee code, or reason..."
         emptyTitle="No leave requests found"
-        emptyDescription="Submit a new application to request an excused attendance exemption."
+        emptyDescription="Submit a new application or adjust status filters."
       />
 
       {/* Apply Leave Modal */}
       <Dialog
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        title="Submit Excused Leave Application"
+        title={
+          isFaculty
+            ? "Submit Faculty Leave Application (to HOD)"
+            : "Submit Excused Leave Application"
+        }
       >
         <form onSubmit={handleCreateLeave} className="space-y-4 text-xs">
-          <p className="text-slate-500">
-            Approved leaves are counted as valid exemptions in course attendance
-            calculations.
-          </p>
+          <div className="p-2.5 rounded-lg bg-blue-50/80 border border-blue-200 text-blue-900 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300">
+            {isFaculty ? (
+              <span>
+                <strong>Routing Note: </strong>This application will be
+                forwarded directly to{" "}
+                <strong>Dr. K. S. Anand (HOD - CSE)</strong> for departmental
+                sanction and workload arrangement.
+              </span>
+            ) : (
+              <span>
+                <strong>Routing Note: </strong>Approved leaves are counted as
+                valid attendance percentage exemptions and sent to your Course
+                Faculty.
+              </span>
+            )}
+          </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
-                Student Name
+                {isFaculty ? "Faculty Name" : "Student Name"}
               </label>
               <input
                 type="text"
@@ -369,7 +548,7 @@ export default function LeaveManagementPage() {
 
             <div>
               <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
-                Roll Number
+                {isFaculty ? "Employee Code / ID" : "Roll Number"}
               </label>
               <input
                 type="text"
@@ -398,11 +577,11 @@ export default function LeaveManagementPage() {
                 }
                 className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
+                <option value="CASUAL">Personal / Casual</option>
                 <option value="MEDICAL">Medical Emergency</option>
                 <option value="ON_DUTY">On-Duty Official</option>
+                <option value="ACADEMIC">Academic / Conference</option>
                 <option value="SPORTS">Sports Championship</option>
-                <option value="ACADEMIC">Academic Conference</option>
-                <option value="CASUAL">Personal / Casual</option>
               </select>
             </div>
 
@@ -448,14 +627,18 @@ export default function LeaveManagementPage() {
               onChange={(e) =>
                 setFormData({ ...formData, reason: e.target.value })
               }
-              placeholder="e.g. Hospitalized with dengue fever at Apollo Hospitals; medical certificate verified by medical officer."
+              placeholder={
+                isFaculty
+                  ? "e.g. Attending NBA accreditation workshop at Anna University; lecture sessions rescheduled to Saturday."
+                  : "e.g. Hospitalized with viral fever at Apollo Hospitals; medical certificate verified."
+              }
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Supporting Document (Optional filename)
+              Supporting Document (Optional attachment name)
             </label>
             <input
               type="text"
@@ -463,7 +646,11 @@ export default function LeaveManagementPage() {
               onChange={(e) =>
                 setFormData({ ...formData, supportingDocName: e.target.value })
               }
-              placeholder="Medical_Certificate_Oct26.pdf"
+              placeholder={
+                isFaculty
+                  ? "Workshop_Invite_Nov26.pdf"
+                  : "Medical_Certificate_Oct26.pdf"
+              }
               className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             />
           </div>
@@ -477,7 +664,11 @@ export default function LeaveManagementPage() {
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit Application"}
+              {submitting
+                ? "Submitting..."
+                : isFaculty
+                  ? "Submit Application to HOD"
+                  : "Submit Application"}
             </Button>
           </div>
         </form>
@@ -487,16 +678,27 @@ export default function LeaveManagementPage() {
       <Dialog
         open={reviewModalOpen}
         onClose={() => setReviewModalOpen(false)}
-        title="Leave Request Review & Sign-off"
+        title="Leave Request Review & Endorsement"
       >
         <form onSubmit={handleReviewLeave} className="space-y-4 text-xs">
           {selectedLeave && (
             <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 space-y-2">
-              <div className="flex justify-between">
-                <span className="font-semibold text-slate-900 dark:text-white">
-                  {selectedLeave.studentName}
-                </span>
-                <span className="text-slate-500">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-slate-900 dark:text-white text-sm">
+                    {selectedLeave.studentName}
+                  </span>
+                  {selectedLeave.applicantType === "FACULTY" ? (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300">
+                      FACULTY LEAVE
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                      STUDENT LEAVE
+                    </span>
+                  )}
+                </div>
+                <span className="text-slate-500 font-mono">
                   {selectedLeave.rollNumber}
                 </span>
               </div>
@@ -557,7 +759,11 @@ export default function LeaveManagementPage() {
                   rows={2}
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
-                  placeholder="e.g. Medical certificate verified with university medical officer."
+                  placeholder={
+                    selectedLeave?.applicantType === "FACULTY"
+                      ? "e.g. Approved by HOD. Substitute lectures confirmed."
+                      : "e.g. Medical certificate verified with university medical officer."
+                  }
                   className="w-full rounded-lg border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 />
               </div>

@@ -20,6 +20,13 @@ import {
 } from "../lib/portals";
 import {
   NAV_SECTIONS,
+  STUDENT_PORTAL_NAV,
+  FACULTY_PORTAL_NAV,
+  HOD_PORTAL_NAV,
+  VICE_PRINCIPAL_PORTAL_NAV,
+  ADMIN_PORTAL_NAV,
+  getPortalNavSections,
+  getPortalHeaderMeta,
   getNormalizedRoleSet,
   isPathAuthorized,
 } from "../components/navigation/sidebar";
@@ -965,7 +972,116 @@ async function runAuthPortalTests() {
   );
 
   // -------------------------------------------------------------------------
-  // 15. Summary
+  // 15. Dedicated Role-Specific Portal Navigation & Header Verification
+  // -------------------------------------------------------------------------
+  assert(
+    getPortalNavSections(studentMockUser) === STUDENT_PORTAL_NAV,
+    "Student user receives dedicated STUDENT_PORTAL_NAV",
+  );
+  assert(
+    getPortalNavSections(facultyMockUser) === FACULTY_PORTAL_NAV,
+    "Faculty user receives dedicated FACULTY_PORTAL_NAV",
+  );
+  assert(
+    getPortalNavSections(hodMockUser) === HOD_PORTAL_NAV,
+    "HOD user receives dedicated HOD_PORTAL_NAV",
+  );
+  assert(
+    getPortalNavSections(vpMockUser) === VICE_PRINCIPAL_PORTAL_NAV,
+    "Vice Principal user receives dedicated VICE_PRINCIPAL_PORTAL_NAV",
+  );
+  assert(
+    getPortalNavSections(vpAliasUser) === VICE_PRINCIPAL_PORTAL_NAV,
+    "VICE_PRINCIPAL alias user receives dedicated VICE_PRINCIPAL_PORTAL_NAV",
+  );
+  assert(
+    getPortalNavSections(adminMockUser) === ADMIN_PORTAL_NAV,
+    "Super Admin user receives dedicated ADMIN_PORTAL_NAV",
+  );
+
+  // Portal Header Badges and Titles
+  const studentHeader = getPortalHeaderMeta(studentMockUser);
+  assert(
+    studentHeader.badge === "STUDENT" &&
+      studentHeader.title.includes("Student"),
+    "Student portal header displays STUDENT badge and title",
+  );
+
+  const facultyHeader = getPortalHeaderMeta(facultyMockUser);
+  assert(
+    facultyHeader.badge === "FACULTY" &&
+      facultyHeader.title.includes("Faculty"),
+    "Faculty portal header displays FACULTY badge and title",
+  );
+
+  const hodHeader = getPortalHeaderMeta(hodMockUser);
+  assert(
+    hodHeader.badge === "HOD" && hodHeader.title.includes("Head of Dept"),
+    "HOD portal header displays HOD badge and title",
+  );
+
+  const vpHeader = getPortalHeaderMeta(vpMockUser);
+  assert(
+    vpHeader.badge === "VICE PRINCIPAL" &&
+      vpHeader.title.includes("Vice Principal"),
+    "Vice Principal portal header displays VICE PRINCIPAL badge and title",
+  );
+
+  const adminHeader = getPortalHeaderMeta(adminMockUser);
+  assert(
+    adminHeader.badge === "ADMIN" &&
+      adminHeader.title.includes("Administrator"),
+    "Admin portal header displays ADMIN badge and title",
+  );
+
+  // Verify that all items in each portal's dedicated navigation are authorized
+  for (const section of STUDENT_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, studentMockUser) === true,
+        `Student portal item ${item.href} is strictly authorized for student`,
+      );
+    }
+  }
+
+  for (const section of FACULTY_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, facultyMockUser) === true,
+        `Faculty portal item ${item.href} is strictly authorized for faculty`,
+      );
+    }
+  }
+
+  for (const section of HOD_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, hodMockUser) === true,
+        `HOD portal item ${item.href} is strictly authorized for HOD`,
+      );
+    }
+  }
+
+  for (const section of VICE_PRINCIPAL_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, vpMockUser) === true,
+        `Vice Principal portal item ${item.href} is strictly authorized for Vice Principal`,
+      );
+    }
+  }
+
+  for (const section of ADMIN_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, adminMockUser) === true,
+        `Admin portal item ${item.href} is strictly authorized for Admin`,
+      );
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // 16. Summary
   // -------------------------------------------------------------------------
   console.log("=================================================");
   console.log(

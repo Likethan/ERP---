@@ -80,19 +80,30 @@ import {
 } from "lucide-react";
 import type { AuthenticatedUser } from "@campusos/types";
 import { cn } from "@/lib/utils";
+import {
+  STUDENT_PORTAL_NAV,
+  FACULTY_PORTAL_NAV,
+  HOD_PORTAL_NAV,
+  VICE_PRINCIPAL_PORTAL_NAV,
+  ADMIN_PORTAL_NAV,
+  getPortalNavSections,
+  getPortalHeaderMeta,
+  getNormalizedRoleSet,
+  type NavLinkItem,
+  type NavSection,
+} from "./portal-nav";
 
-export interface NavLinkItem {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-  badge?: string;
-  roles?: string[];
-}
-
-export interface NavSection {
-  title: string;
-  items: NavLinkItem[];
-}
+export {
+  STUDENT_PORTAL_NAV,
+  FACULTY_PORTAL_NAV,
+  HOD_PORTAL_NAV,
+  VICE_PRINCIPAL_PORTAL_NAV,
+  ADMIN_PORTAL_NAV,
+  getPortalNavSections,
+  getPortalHeaderMeta,
+  getNormalizedRoleSet,
+};
+export type { NavLinkItem, NavSection };
 
 interface SidebarProps {
   mobileOpen?: boolean;
@@ -2322,21 +2333,6 @@ export const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-export function getNormalizedRoleSet(
-  user: AuthenticatedUser | null,
-): Set<string> {
-  if (!user) return new Set();
-  const rawRoles = (user?.roles?.map((r) => r.name) || []).concat(
-    (user as any)?.role ? [(user as any).role] : [],
-  );
-  const set = new Set<string>(rawRoles);
-  if (set.has("PRINCIPAL")) set.add("VICE_PRINCIPAL");
-  if (set.has("VICE_PRINCIPAL")) set.add("PRINCIPAL");
-  if (set.has("SUPER_ADMIN")) set.add("ADMIN");
-  if (set.has("ADMIN")) set.add("SUPER_ADMIN");
-  return set;
-}
-
 export function isPathAuthorized(
   pathname: string,
   user: AuthenticatedUser | null,
@@ -2393,10 +2389,12 @@ export function isPathAuthorized(
 export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const portalSections = getPortalNavSections(user);
+  const portalMeta = getPortalHeaderMeta(user);
 
   const sidebarContent = (
     <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
-      {/* Brand Header */}
+      {/* Brand Header with Role-Specific Portal Identity */}
       <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200">
         <Link href="/app/dashboard" className="flex items-center gap-3 min-w-0">
           <div className="relative h-10 w-10 shrink-0">
@@ -2413,12 +2411,17 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
               <span className="text-sm font-bold tracking-tight text-slate-900 truncate">
                 CampusOS
               </span>
-              <span className="rounded bg-yellow-100 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-yellow-950 border border-yellow-300 shrink-0">
-                ERP
+              <span
+                className={cn(
+                  "rounded px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase border shrink-0",
+                  portalMeta.badgeClass,
+                )}
+              >
+                {portalMeta.badge}
               </span>
             </div>
             <div className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold truncate">
-              V.S.B. Engineering College
+              {portalMeta.title}
             </div>
           </div>
         </Link>
@@ -2432,26 +2435,17 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         )}
       </div>
 
-      {/* Navigation Sections */}
+      {/* Role-Specific Portal Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {NAV_SECTIONS.map((section) => {
-          const roleSet = getNormalizedRoleSet(user);
-          const isSuperOrAdmin =
-            roleSet.has("SUPER_ADMIN") || roleSet.has("ADMIN");
-          const visibleItems = section.items.filter((item) => {
-            if (isSuperOrAdmin) return true;
-            if (!item.roles || item.roles.includes("*")) return true;
-            return item.roles.some((role) => roleSet.has(role));
-          });
-
-          if (visibleItems.length === 0) return null;
+        {portalSections.map((section) => {
+          if (!section.items || section.items.length === 0) return null;
 
           return (
             <div key={section.title} className="space-y-1">
               <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                 {section.title}
               </div>
-              {visibleItems.map((item) => {
+              {section.items.map((item) => {
                 const isActive =
                   item.href === "/app/dashboard"
                     ? pathname === "/app/dashboard"

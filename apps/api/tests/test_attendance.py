@@ -9,8 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_password_hash
-from app.models.core import Institution
-from app.models.people import Role, User, UserRoleAssignment
+from app.models.core import Institution, TenantMembership
+from app.models.people import Role, StudentProfile, User, UserRoleAssignment
 
 
 async def authenticate_user(
@@ -625,6 +625,280 @@ async def test_student_leave_workflow_and_impact(
     assert rec_res.status_code == 200
     s1_rec = next(r for r in rec_res.json()["data"] if r["student_id"] == s1_id)
     assert s1_rec["status"] == "ON_LEAVE"
+
+
+@pytest.mark.asyncio
+async def test_faculty_can_view_and_approve_student_leave(
+    client: AsyncClient,
+    super_admin_user: User,
+    tenant_a: Institution,
+    db_session: AsyncSession,
+) -> None:
+    """Verify student leave reaches faculty and faculty can approve with LEAVE_APPROVE permission."""
+    await authenticate_user(client, super_admin_user.email)
+    env = await setup_academic_environment(client)
+    s1_id = env["student_ids"][0]
+
+    # Create active faculty user with FACULTY role in Tenant A
+    f_uid = uuid.uuid4().hex[:6]
+    fac_email = f"prof_{f_uid}@campusos.internal"
+    fac_user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=fac_email,
+        phone_number="+919876543299",
+        password_hash=get_password_hash("SuperSecret123!"),
+        status="ACTIVE",
+        first_name="Rajesh",
+        last_name="Sharma",
+    )
+    db_session.add(fac_user)
+    await db_session.flush()
+
+    role_res = await db_session.execute(select(Role).where(Role.name == "FACULTY"))
+    faculty_role = role_res.scalar_one_or_none()
+    assert faculty_role is not None
+
+    db_session.add(
+        UserRoleAssignment(
+            id=uuid.uuid4(),
+            user_id=fac_user.id,
+            role_id=faculty_role.id,
+            tenant_id=tenant_a.id,
+        )
+    )
+    db_session.add(
+        TenantMembership(
+            id=uuid.uuid4(),
+            user_id=fac_user.id,
+            tenant_id=tenant_a.id,
+            status="ACTIVE",
+        )
+    )
+    await db_session.commit()
+
+    # 1. Student submits a leave application
+    leave_payload = {
+        "student_id": s1_id,
+        "leave_type": "MEDICAL",
+        "start_date": "2026-10-10",
+        "end_date": "2026-10-12",
+        "reason": "Viral fever - applying to faculty for attendance exemption",
+    }
+    leave_res = await client.post("/api/v1/attendance/leaves", json=leave_payload)
+    assert leave_res.status_code == 201
+    leave_data = leave_res.json()["data"]
+    leave_id = leave_data["id"]
+    assert leave_data["status"] == "PENDING"
+
+    # 2. Switch session: Faculty logs in
+    await authenticate_user(client, fac_email, "SuperSecret123!")
+
+    # 3. Faculty queries pending leaves - request MUST reach the faculty
+    fac_leaves_res = await client.get("/api/v1/attendance/leaves?status=PENDING")
+    assert fac_leaves_res.status_code == 200
+    leaves_list = fac_leaves_res.json()["data"]
+    assert any(item["id"] == leave_id for item in leaves_list), "Student leave must reach faculty"
+
+    # 4. Faculty approves the student leave request
+    fac_approve_res = await client.post(
+        f"/api/v1/attendance/leaves/{leave_id}/approve",
+        json={"review_notes": "Approved by Class In-Charge Faculty. Valid medical certificate."},
+    )
+    assert fac_approve_res.status_code == 200
+    approved_leave = fac_approve_res.json()["data"]
+    assert approved_leave["status"] == "APPROVED"
+    assert (
+        approved_leave["review_notes"]
+        == "Approved by Class In-Charge Faculty. Valid medical certificate."
+    )
+
+
+@pytest.mark.asyncio
+async def test_leave_approval_workflow_hod_and_faculty_matrix(
+    client: AsyncClient,
+    super_admin_user: User,
+    tenant_a: Institution,
+    db_session: AsyncSession,
+) -> None:
+    """Verify leave workflow matrix:
+    1. Student applies for leave.
+    2. Faculty queries and approves Student 1 leave.
+    3. HOD queries and rejects Student 2 leave with review comments.
+    4. Student attempts unauthorized approval -> 403 Forbidden.
+    """
+    await authenticate_user(client, super_admin_user.email)
+    env = await setup_academic_environment(client)
+    s1_id = env["student_ids"][0]
+    s2_id = env["student_ids"][1]
+
+    # Create Student 1 User
+    u_uid1 = uuid.uuid4().hex[:6]
+    stud_email = f"student_{u_uid1}@campusos.internal"
+    stud_user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=stud_email,
+        phone_number="+919876543201",
+        password_hash=get_password_hash("SuperSecret123!"),
+        status="ACTIVE",
+        first_name="Aarav",
+        last_name="Patel",
+    )
+    db_session.add(stud_user)
+
+    # Create Faculty User
+    f_uid = uuid.uuid4().hex[:6]
+    fac_email = f"faculty_{f_uid}@campusos.internal"
+    fac_user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=fac_email,
+        phone_number="+919876543202",
+        password_hash=get_password_hash("SuperSecret123!"),
+        status="ACTIVE",
+        first_name="Rajesh",
+        last_name="Sharma",
+    )
+    db_session.add(fac_user)
+
+    # Create HOD User
+    h_uid = uuid.uuid4().hex[:6]
+    hod_email = f"hod_{h_uid}@campusos.internal"
+    hod_user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=hod_email,
+        phone_number="+919876543203",
+        password_hash=get_password_hash("SuperSecret123!"),
+        status="ACTIVE",
+        first_name="K.S.",
+        last_name="Anand",
+    )
+    db_session.add(hod_user)
+    await db_session.flush()
+
+    # Assign roles
+    roles = await db_session.execute(
+        select(Role).where(Role.name.in_(["STUDENT", "FACULTY", "HOD"]))
+    )
+    role_map = {r.name: r for r in roles.scalars().all()}
+
+    db_session.add(
+        UserRoleAssignment(
+            id=uuid.uuid4(),
+            user_id=stud_user.id,
+            role_id=role_map["STUDENT"].id,
+            tenant_id=tenant_a.id,
+        )
+    )
+    db_session.add(
+        TenantMembership(
+            id=uuid.uuid4(), user_id=stud_user.id, tenant_id=tenant_a.id, status="ACTIVE"
+        )
+    )
+
+    db_session.add(
+        UserRoleAssignment(
+            id=uuid.uuid4(),
+            user_id=fac_user.id,
+            role_id=role_map["FACULTY"].id,
+            tenant_id=tenant_a.id,
+        )
+    )
+    db_session.add(
+        TenantMembership(
+            id=uuid.uuid4(), user_id=fac_user.id, tenant_id=tenant_a.id, status="ACTIVE"
+        )
+    )
+
+    db_session.add(
+        UserRoleAssignment(
+            id=uuid.uuid4(), user_id=hod_user.id, role_id=role_map["HOD"].id, tenant_id=tenant_a.id
+        )
+    )
+    db_session.add(
+        TenantMembership(
+            id=uuid.uuid4(), user_id=hod_user.id, tenant_id=tenant_a.id, status="ACTIVE"
+        )
+    )
+
+    # Link StudentProfile to stud_user
+    stud_prof = await db_session.get(
+        StudentProfile, uuid.UUID(s1_id) if isinstance(s1_id, str) else s1_id
+    )
+    if stud_prof:
+        stud_prof.user_id = stud_user.id
+
+    await db_session.commit()
+
+    # 1. Student 1 and Student 2 submit leave requests
+    await authenticate_user(client, super_admin_user.email)
+    leave1_res = await client.post(
+        "/api/v1/attendance/leaves",
+        json={
+            "student_id": s1_id,
+            "leave_type": "MEDICAL",
+            "start_date": "2026-11-15",
+            "end_date": "2026-11-17",
+            "reason": "Viral fever recovery",
+        },
+    )
+    assert leave1_res.status_code == 201
+    leave1_id = leave1_res.json()["data"]["id"]
+
+    leave2_res = await client.post(
+        "/api/v1/attendance/leaves",
+        json={
+            "student_id": s2_id,
+            "leave_type": "CASUAL",
+            "start_date": "2026-11-20",
+            "end_date": "2026-11-21",
+            "reason": "Attending family function",
+        },
+    )
+    assert leave2_res.status_code == 201
+    leave2_id = leave2_res.json()["data"]["id"]
+
+    # 2. Student attempts unauthorized approval on leave 2 -> 403 Forbidden
+    await authenticate_user(client, stud_email, "SuperSecret123!")
+    unauth_res = await client.post(
+        f"/api/v1/attendance/leaves/{leave2_id}/approve",
+        json={"review_notes": "Student trying to approve"},
+    )
+    assert unauth_res.status_code == 403, "Student must not be authorized to approve leaves"
+
+    # 3. Faculty logs in -> Views pending leaves -> Approves Leave 1
+    await authenticate_user(client, fac_email, "SuperSecret123!")
+    fac_leaves = await client.get("/api/v1/attendance/leaves?status=PENDING")
+    assert fac_leaves.status_code == 200
+    fac_ids = [l["id"] for l in fac_leaves.json()["data"]]
+    assert leave1_id in fac_ids, "Student 1 leave must reach Faculty"
+
+    fac_approve = await client.post(
+        f"/api/v1/attendance/leaves/{leave1_id}/approve",
+        json={"review_notes": "Approved by Faculty Dr. Rajesh Sharma"},
+    )
+    assert fac_approve.status_code == 200
+    assert fac_approve.json()["data"]["status"] == "APPROVED"
+    assert fac_approve.json()["data"]["review_notes"] == "Approved by Faculty Dr. Rajesh Sharma"
+
+    # 4. HOD logs in -> Views pending leaves -> Rejects Leave 2
+    await authenticate_user(client, hod_email, "SuperSecret123!")
+    hod_leaves = await client.get("/api/v1/attendance/leaves?status=PENDING")
+    assert hod_leaves.status_code == 200
+    hod_ids = [l["id"] for l in hod_leaves.json()["data"]]
+    assert leave2_id in hod_ids, "Student 2 leave must reach HOD"
+
+    hod_reject = await client.post(
+        f"/api/v1/attendance/leaves/{leave2_id}/reject",
+        json={
+            "review_notes": "Rejected by HOD Dr. K.S. Anand - attendance below department threshold"
+        },
+    )
+    assert hod_reject.status_code == 200
+    assert hod_reject.json()["data"]["status"] == "REJECTED"
+    assert "Rejected by HOD" in hod_reject.json()["data"]["review_notes"]
 
 
 # =============================================================================

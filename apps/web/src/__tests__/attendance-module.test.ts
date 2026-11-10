@@ -316,6 +316,102 @@ export async function runAttendanceModuleTests(): Promise<{
       "8. Reviewer identity logged",
     );
 
+    // 8b. Student applies to Faculty -> Approval reaches Faculty -> Faculty approves
+    const studentAppRes = await attendanceService.submitLeave({
+      studentName: "Aarav Patel",
+      rollNumber: "24CSE0101",
+      department: "Computer Science & Engineering",
+      section: "A",
+      leaveType: "MEDICAL",
+      startDate: "2026-11-20",
+      endDate: "2026-11-22",
+      totalDays: 3,
+      reason: "Applying to class faculty for medical exemption",
+      applicantType: "STUDENT",
+    });
+    assert(studentAppRes.success === true, "8b. Student applies for leave");
+    assert(
+      studentAppRes.data.applicantType === "STUDENT",
+      "8b. Leave is flagged as STUDENT",
+    );
+    assert(
+      studentAppRes.data.approverRole === "FACULTY",
+      "8b. Student leave routes to FACULTY for approval",
+    );
+
+    // Faculty retrieves leaves and sees the student's pending leave
+    const facLeavesRes = await attendanceService.getLeaves({
+      applicantType: "STUDENT",
+      status: "PENDING",
+    });
+    assert(
+      facLeavesRes.data.some((l) => l.id === studentAppRes.data.id),
+      "8b. Student leave application successfully reaches Faculty",
+    );
+
+    // Faculty approves the student leave
+    const facApprovedRes = await attendanceService.updateLeaveStatus(
+      studentAppRes.data.id,
+      "APPROVED",
+      "Medical prescription verified by Class In-Charge",
+      "Dr. Rajesh Sharma (Faculty - CSE)",
+    );
+    assert(
+      facApprovedRes.data.status === "APPROVED",
+      "8b. Faculty successfully approves student leave",
+    );
+    assert(
+      facApprovedRes.data.reviewedBy?.includes("Faculty"),
+      "8b. Approval signature confirms Faculty reviewer",
+    );
+
+    // 8c. Faculty applies for leave to HOD -> Shows Faculty name & ID, NOT student
+    const facLeaveAppRes = await attendanceService.submitLeave({
+      studentName: "Dr. Rajesh Sharma",
+      rollNumber: "EMP-CSE-01",
+      department: "Computer Science & Engineering",
+      section: "Faculty Staff",
+      leaveType: "ACADEMIC",
+      startDate: "2026-12-01",
+      endDate: "2026-12-03",
+      totalDays: 3,
+      reason: "Attending international symposium at IISc Bengaluru",
+      applicantType: "FACULTY",
+    });
+    assert(facLeaveAppRes.success === true, "8c. Faculty applies for leave");
+    assert(
+      facLeaveAppRes.data.studentName === "Dr. Rajesh Sharma",
+      "8c. Faculty application has Faculty Name (not student)",
+    );
+    assert(
+      facLeaveAppRes.data.rollNumber === "EMP-CSE-01",
+      "8c. Faculty application has Employee Code (not roll number)",
+    );
+    assert(
+      facLeaveAppRes.data.applicantType === "FACULTY",
+      "8c. Leave is categorized as FACULTY",
+    );
+    assert(
+      facLeaveAppRes.data.approverRole === "HOD",
+      "8c. Faculty leave routes to HOD for approval",
+    );
+
+    // HOD approves the faculty leave
+    const hodApprovedRes = await attendanceService.updateLeaveStatus(
+      facLeaveAppRes.data.id,
+      "APPROVED",
+      "Workload arrangements approved by Head of Department",
+      "Dr. K. S. Anand (HOD - CSE)",
+    );
+    assert(
+      hodApprovedRes.data.status === "APPROVED",
+      "8c. HOD successfully approves faculty leave",
+    );
+    assert(
+      hodApprovedRes.data.reviewedBy?.includes("HOD"),
+      "8c. Approval signature confirms HOD reviewer",
+    );
+
     // ==========================================
     // 9. Attendance Corrections & Audit Trail
     // ==========================================

@@ -631,16 +631,54 @@ class AttendanceService {
   }
 
   // ==========================================
-  // 9. LEAVE WORKFLOW
+  // 9. LEAVE WORKFLOW (MULTI-ROLE PERSISTENT)
   // ==========================================
+
+  private getStoredLeaves(): AttendanceLeave[] {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("campusos_attendance_leaves_v1");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            this.leaves = parsed;
+            return this.leaves;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse stored leaves", e);
+      }
+    }
+    return this.leaves;
+  }
+
+  private saveStoredLeaves(leaves: AttendanceLeave[]) {
+    this.leaves = leaves;
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(
+          "campusos_attendance_leaves_v1",
+          JSON.stringify(leaves),
+        );
+      } catch (e) {
+        console.error("Failed to persist leaves", e);
+      }
+    }
+  }
 
   async getLeaves(filters?: {
     studentId?: string;
     status?: string;
     department?: string;
+    applicantType?: "STUDENT" | "FACULTY";
   }): Promise<ApiResponse<AttendanceLeave[]>> {
-    let items = [...this.leaves];
+    let items = this.getStoredLeaves();
 
+    if (filters?.applicantType) {
+      items = items.filter(
+        (l) => (l.applicantType || "STUDENT") === filters.applicantType,
+      );
+    }
     if (filters?.studentId && filters.studentId !== "ALL") {
       items = items.filter(
         (l) =>
@@ -661,7 +699,8 @@ class AttendanceService {
   }
 
   async getLeaveById(id: string): Promise<ApiResponse<AttendanceLeave>> {
-    const leave = this.leaves.find((l) => l.id === id);
+    const current = this.getStoredLeaves();
+    const leave = current.find((l) => l.id === id);
     if (!leave) throw new Error("Leave request not found");
     return { success: true, data: leave };
   }
@@ -669,25 +708,38 @@ class AttendanceService {
   async submitLeave(
     data: Partial<AttendanceLeave>,
   ): Promise<ApiResponse<AttendanceLeave>> {
+    const isFaculty = data.applicantType === "FACULTY";
+    const current = this.getStoredLeaves();
     const newLeave: AttendanceLeave = {
       id: `leave-${Date.now()}`,
-      studentId: data.studentId || "stu-24cse0101",
-      studentName: data.studentName || "Aarav Patel",
-      rollNumber: data.rollNumber || "24CSE0101",
+      studentId:
+        data.studentId || (isFaculty ? "user-faculty-01" : "stu-24cse0101"),
+      studentName:
+        data.studentName || (isFaculty ? "Dr. Rajesh Sharma" : "Aarav Patel"),
+      rollNumber: data.rollNumber || (isFaculty ? "EMP-CSE-01" : "24CSE0101"),
       department: data.department || "Computer Science & Engineering",
-      program: data.program || "B.Tech Computer Science & Engineering",
-      section: data.section || "A",
+      program:
+        data.program ||
+        (isFaculty
+          ? "Faculty of Engineering"
+          : "B.Tech Computer Science & Engineering"),
+      section: data.section || (isFaculty ? "Faculty Staff" : "A"),
       leaveType: data.leaveType || "CASUAL",
       startDate: data.startDate || new Date().toISOString().split("T")[0],
       endDate: data.endDate || new Date().toISOString().split("T")[0],
       totalDays: data.totalDays || 1,
-      reason: data.reason || "Personal work",
+      reason:
+        data.reason || (isFaculty ? "Faculty leave request" : "Personal work"),
       supportingDocName: data.supportingDocName,
       supportingDocUrl: data.supportingDocUrl,
       status: "PENDING",
       requestedAt: new Date().toISOString(),
+      applicantType: isFaculty ? "FACULTY" : "STUDENT",
+      applicantRole: isFaculty ? "FACULTY" : "STUDENT",
+      approverRole: isFaculty ? "HOD" : "FACULTY",
     };
-    this.leaves.unshift(newLeave);
+    current.unshift(newLeave);
+    this.saveStoredLeaves(current);
     return { success: true, data: newLeave };
   }
 
@@ -695,16 +747,21 @@ class AttendanceService {
     id: string,
     status: AttendanceLeaveStatus,
     reviewerNotes?: string,
-    reviewerName: string = "Dr. K. S. Anand (HOD - CSE)",
+    reviewerName: string = "Faculty In-Charge",
   ): Promise<ApiResponse<AttendanceLeave>> {
-    const leave = this.leaves.find((l) => l.id === id);
+    const current = this.getStoredLeaves();
+    const leave = current.find((l) => l.id === id);
     if (!leave) throw new Error("Leave request not found");
     leave.status = status;
     leave.reviewedBy = reviewerName;
     leave.reviewedAt = new Date().toISOString();
+    if (reviewerNotes) {
+      leave.reviewNotes = reviewerNotes;
+    }
     if (status === "REJECTED" && reviewerNotes) {
       leave.rejectionReason = reviewerNotes;
     }
+    this.saveStoredLeaves(current);
     return { success: true, data: leave };
   }
 

@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   Layers,
   FileText,
+  Calendar,
 } from "lucide-react";
 
 export function HodDashboard() {
@@ -208,6 +209,24 @@ export function HodDashboard() {
                   </div>
                   <div className="text-[11px] text-slate-500">
                     B.Tech & M.Tech course schemes
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+
+            <Link
+              href="/app/attendance/leaves"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50/40 hover:border-yellow-300 shadow-xs transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Calendar className="h-4 w-4 text-slate-500" />
+                <div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    Faculty & Student Leave Endorsements
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Department faculty leaves & student exemptions
                   </div>
                 </div>
               </div>

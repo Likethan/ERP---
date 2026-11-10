@@ -187,7 +187,11 @@ export interface AttendanceLeave {
   requestedAt: string;
   reviewedBy?: string;
   reviewedAt?: string;
+  reviewNotes?: string;
   rejectionReason?: string;
+  applicantType?: "STUDENT" | "FACULTY";
+  applicantRole?: string;
+  approverRole?: "FACULTY" | "HOD";
 }
 
 // ==========================================

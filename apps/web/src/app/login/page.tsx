@@ -63,9 +63,10 @@ function LoginFormContent() {
   const [forgotSuccess, setForgotSuccess] = useState(false);
   const [forgotError, setForgotError] = useState<string | null>(null);
 
-  // Read URL query parameter on mount e.g. ?role=student or ?role=vice_principal
+  // Read URL query parameter on mount e.g. ?role=student or ?portal=student
   useEffect(() => {
-    const roleParam = searchParams.get("role")?.toUpperCase();
+    const rawParam = searchParams.get("portal") || searchParams.get("role");
+    const roleParam = rawParam?.toUpperCase().replace(/-/g, "_");
     if (roleParam) {
       if (roleParam === "ADMIN" || roleParam === "SUPER_ADMIN") {
         router.push("/admin");
@@ -85,6 +86,9 @@ function LoginFormContent() {
   const handleSelectPortal = (key: PortalKey) => {
     setSelectedPortal(key);
     setErrorMessage(null);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("role", key.toLowerCase());
+    router.replace(`/login?${newParams.toString()}`, { scroll: false });
   };
 
   // Pre-fill demo credentials for the currently selected portal

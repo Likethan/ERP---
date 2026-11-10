@@ -69,6 +69,10 @@ export const DEMO_PERSONAS: DemoPersona[] = [
       "campus.publish_announcements",
       "campus.view_notifications",
       "campus.view_reports",
+      "leave:read",
+      "leave:create",
+      "leave:approve",
+      "leave:reject",
     ],
   },
   {
@@ -96,6 +100,10 @@ export const DEMO_PERSONAS: DemoPersona[] = [
       "campus.manage_clubs",
       "campus.create_announcements",
       "campus.view_notifications",
+      "leave:read",
+      "leave:create",
+      "leave:approve",
+      "leave:reject",
     ],
   },
   {
@@ -123,6 +131,8 @@ export const DEMO_PERSONAS: DemoPersona[] = [
       "infrastructure:self:read",
       "infrastructure:leaves:create",
       "infrastructure:complaints:create",
+      "leave:read",
+      "leave:create",
     ],
   },
   {

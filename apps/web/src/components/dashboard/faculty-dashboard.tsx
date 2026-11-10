@@ -26,6 +26,7 @@ import {
   Heart,
   FlaskConical,
   Layers,
+  Calendar,
 } from "lucide-react";
 
 export function FacultyDashboard() {
@@ -71,6 +72,15 @@ export function FacultyDashboard() {
               leftIcon={<CheckCircle2 className="h-3.5 w-3.5" />}
             >
               Mark Class Attendance
+            </Button>
+          </Link>
+          <Link href="/app/attendance/leaves">
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Calendar className="h-3.5 w-3.5" />}
+            >
+              Leave Management
             </Button>
           </Link>
           <Link href="/app/examinations/marks">
@@ -241,6 +251,16 @@ export function FacultyDashboard() {
                 <div className="flex items-center gap-2">
                   <Layers className="h-3.5 w-3.5 text-slate-500" />
                   <span>Curriculum & Subject Syllabi</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              </Link>
+              <Link
+                href="/app/attendance/leaves"
+                className="flex items-center justify-between p-2.5 rounded-lg bg-white hover:bg-yellow-50/40 hover:border-yellow-300 border border-slate-200 text-xs font-medium text-slate-800 shadow-xs transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Student Leaves & Faculty Applications (to HOD)</span>
                 </div>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
               </Link>
