@@ -6,7 +6,7 @@
   "npm_installed": true,
   "npx_installed": true,
   "web_server_active": false,
-  "api_server_active": true,
+  "api_server_active": false,
   "status": "BLOCKED",
   "details": "Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev').",
   "journeys_tested": [

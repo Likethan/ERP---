@@ -1,7 +1,7 @@
 {
   "release_certification": {
-    "commit_sha": "ce7267f5c1a3c2f1c81ec7327b877cb0fb2a5967",
-    "timestamp": "2026-11-01T05:33:49.235894+00:00",
+    "commit_sha": "4f5d69c537ac675497220b51d93eaddcc054cea9",
+    "timestamp": "2026-11-10T17:59:45.864434+00:00",
     "environment": {
       "os": "Windows-10-10.0.26300-SP0",
       "python": "3.11.9"
@@ -21,7 +21,7 @@
         "passed": 11,
         "failed": 0,
         "skipped": 0,
-        "summary": "11 passed, 1 warning in 8.07s"
+        "summary": "11 passed, 1 warning in 15.01s"
       },
       {
         "suite": "tests/test_enterprise_database_migrations.py",
@@ -29,7 +29,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 8.85s"
+        "summary": "5 passed, 1 warning in 14.76s"
       },
       {
         "suite": "tests/test_enterprise_api_contracts.py",
@@ -37,7 +37,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 2 warnings in 17.10s"
+        "summary": "5 passed, 2 warnings in 30.29s"
       },
       {
         "suite": "tests/test_enterprise_failure_injection.py",
@@ -45,7 +45,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "summary": "5 passed, 1 warning in 7.12s"
+        "summary": "5 passed, 1 warning in 13.73s"
       },
       {
         "suite": "tests/test_enterprise_ai_safety_eval.py",
@@ -53,13 +53,13 @@
         "passed": 19,
         "failed": 0,
         "skipped": 0,
-        "summary": "19 passed, 1 warning in 6.96s"
+        "summary": "19 passed, 1 warning in 13.80s"
       }
     ],
     "accessibility": {
       "status": "PASS",
-      "compliance_rate": "79.71%",
-      "files_scanned": 305,
+      "compliance_rate": "79.85%",
+      "files_scanned": 310,
       "violations": 0
     },
     "e2e_browser": {
@@ -119,7 +119,7 @@
         "gate": "G-09",
         "name": "Frontend Accessibility (WCAG 2.1 AA)",
         "status": "PASS",
-        "details": "Compliance 79.71%, 0 violations"
+        "details": "Compliance 79.85%, 0 violations"
       },
       {
         "gate": "G-10",

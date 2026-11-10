@@ -1,15 +1,21 @@
 {
   "tool": "CampusOS Enterprise a11y Auditor (WCAG 2.1 AA)",
   "status": "PASS",
-  "compliance_rate": "79.71%",
+  "compliance_rate": "79.85%",
   "metrics": {
-    "files_scanned": 305,
-    "elements_inspected": 3504,
-    "passes": 2793,
-    "warnings": 711,
+    "files_scanned": 310,
+    "elements_inspected": 3533,
+    "passes": 2821,
+    "warnings": 712,
     "violations": 0
   },
   "findings": [
+    {
+      "file": "src/app/admin/page.tsx",
+      "rule": "A11Y-03",
+      "severity": "WARNING",
+      "message": "Form input lacks aria-label, placeholder, or associated id."
+    },
     {
       "file": "src/app/app/academic-structure/page.tsx",
       "rule": "A11Y-03",
