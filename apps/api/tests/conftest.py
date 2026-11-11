@@ -16,7 +16,11 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.ext.compiler import compiles
 
 import app.models  # noqa: F401 - Register all models
+from app.core.config import settings
 from app.core.database import get_db_session
+
+# Ensure testing environment is active during pytest execution
+settings.ENVIRONMENT = "test"
 from app.core.security import get_password_hash
 from app.core.seeds import seed_system_permissions_and_roles
 from app.main import app

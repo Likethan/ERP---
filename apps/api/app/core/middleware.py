@@ -129,15 +129,19 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         if forwarded:
             client_ip = forwarded.split(",")[0].strip()
 
-        # Test client bypass (pytest fixtures connect via "testclient" / "testserver")
-        is_test_client = client_ip in ("testclient", "testserver")
-        is_localhost = client_ip in ("127.0.0.1", "localhost", "::1")
+        # Test environment & client bypass (pytest fixtures connect via "testclient" / "testserver" or 127.0.0.1 ASGI transport)
+        is_test_client = client_ip in ("testclient", "testserver", "127.0.0.1", "localhost", "::1")
+        is_test_env = settings.ENVIRONMENT in ("test", "testing")
+        test_explicitly_enabled = (
+            getattr(rate_limiter, "enabled_for_tests", False)
+            or request.headers.get("X-Enable-Rate-Limit") == "true"
+        )
 
-        if is_test_client and settings.ENVIRONMENT != "production":
-            if not getattr(rate_limiter, "enabled_for_tests", False) and request.headers.get("X-Enable-Rate-Limit") != "true":
+        if (is_test_env or is_test_client) and settings.ENVIRONMENT != "production":
+            if not test_explicitly_enabled:
                 return await call_next(request)
 
-        if is_localhost and settings.RATE_LIMIT_LOCALHOST_BYPASS and request.headers.get("X-Enable-Rate-Limit") != "true":
+        if settings.RATE_LIMIT_LOCALHOST_BYPASS and not test_explicitly_enabled:
             return await call_next(request)
 
         # Authenticated tenant context extraction from cryptographic token (server-side verified only)
