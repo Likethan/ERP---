@@ -107,7 +107,12 @@ class FacultyService {
 
   async getById(id: string): Promise<ApiResponse<FacultyDetailView | null>> {
     const member = this.faculty.find(
-      (f) => f.id === id || f.employeeCode === id,
+      (f) =>
+        f.id === id ||
+        f.employeeCode === id ||
+        f.id.toLowerCase() === id.toLowerCase() ||
+        f.employeeCode.toLowerCase() === id.toLowerCase() ||
+        id.toLowerCase().replace(/00/g, "0") === f.id.toLowerCase(),
     );
     if (!member) {
       return { success: true, data: null };
@@ -115,7 +120,9 @@ class FacultyService {
 
     // Attach workload, labs, and publications
     const workload = this.workloadsPool[member.id] ||
-      this.workloadsPool[member.employeeCode] || {
+      this.workloadsPool[id] ||
+      this.workloadsPool[member.employeeCode] ||
+      this.workloadsPool[member.employeeCode.toLowerCase()] || {
         facultyId: member.id,
         academicYear: "2026-2027",
         semester: 5,

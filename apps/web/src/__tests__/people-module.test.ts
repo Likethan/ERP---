@@ -392,3 +392,23 @@ export async function runPeopleModuleTests(): Promise<{
   const failed = results.filter((r) => !r.passed).length;
   return { passed, failed, results };
 }
+
+if (
+  typeof process !== "undefined" &&
+  process.argv[1]?.includes("people-module.test")
+) {
+  runPeopleModuleTests().then((res) => {
+    console.log(`\n========================================`);
+    console.log(`CampusOS People Module Test Results:`);
+    console.log(`Passed: ${res.passed}, Failed: ${res.failed}`);
+    console.log(`========================================`);
+    res.results.forEach((r) => {
+      if (!r.passed) {
+        console.log(`❌ FAIL: ${r.testName} (${r.message})`);
+      }
+    });
+    if (res.failed > 0) {
+      process.exit(1);
+    }
+  });
+}
