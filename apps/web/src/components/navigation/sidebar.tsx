@@ -2437,15 +2437,15 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
       {/* Role-Specific Portal Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {portalSections.map((section) => {
+        {portalSections.map((section, sIdx) => {
           if (!section.items || section.items.length === 0) return null;
 
           return (
-            <div key={section.title} className="space-y-1">
+            <div key={section.title || sIdx} className="space-y-1">
               <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                 {section.title}
               </div>
-              {section.items.map((item) => {
+              {section.items.map((item, itemIdx) => {
                 const isActive =
                   item.href === "/app/dashboard"
                     ? pathname === "/app/dashboard"
@@ -2453,7 +2453,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
                 return (
                   <Link
-                    key={item.href}
+                    key={`${section.title}-${item.href}-${item.label || itemIdx}`}
                     href={item.href}
                     prefetch={false}
                     onClick={onCloseMobile}

@@ -254,7 +254,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
                 {QUICK_LINKS.map((link) => (
                   <button
-                    key={link.href}
+                    key={`${link.href}-${link.label}`}
                     onClick={() => navigateTo(link.href)}
                     className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-yellow-50 text-slate-700 hover:text-slate-950 text-xs font-medium text-left transition-colors cursor-pointer"
                   >
