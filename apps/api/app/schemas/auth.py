@@ -57,3 +57,15 @@ class ResetPasswordRequest(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+
+class RateLimitStatusResponse(BaseModel):
+    category: str = Field(..., description="Endpoint rate limit tier")
+    limit: int = Field(..., description="Maximum requests permitted in sliding window")
+    remaining: int = Field(..., description="Remaining requests before throttling")
+    reset_epoch: int = Field(..., description="Unix epoch timestamp when sliding window resets")
+    retry_after: int = Field(0, description="Seconds to wait if currently throttled")
+    window_seconds: int = Field(60, description="Sliding window duration in seconds")
+    client_ip: str = Field(..., description="Client IP address as detected by API gateway")
+    tenant_id: str | None = Field(None, description="Active tenant ID context")
+    user_id: str | None = Field(None, description="Active authenticated user ID")

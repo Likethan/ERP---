@@ -129,10 +129,16 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         if forwarded:
             client_ip = forwarded.split(",")[0].strip()
 
-        # In testing environments, bypass rate limiter unless explicitly enabled for a security/load test
-        if client_ip in ("testclient", "testserver", "127.0.0.1") and settings.ENVIRONMENT != "production":
+        # Test client bypass (pytest fixtures connect via "testclient" / "testserver")
+        is_test_client = client_ip in ("testclient", "testserver")
+        is_localhost = client_ip in ("127.0.0.1", "localhost", "::1")
+
+        if is_test_client and settings.ENVIRONMENT != "production":
             if not getattr(rate_limiter, "enabled_for_tests", False) and request.headers.get("X-Enable-Rate-Limit") != "true":
                 return await call_next(request)
+
+        if is_localhost and settings.RATE_LIMIT_LOCALHOST_BYPASS and request.headers.get("X-Enable-Rate-Limit") != "true":
+            return await call_next(request)
 
         # Authenticated tenant context extraction from cryptographic token (server-side verified only)
         tenant_id = None
@@ -155,24 +161,24 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
                 pass
 
         # Check rate limiter
-        allowed, retry_after, category = rate_limiter.check_request(
+        decision = rate_limiter.check_request(
             path=path,
             client_ip=client_ip,
             tenant_id=tenant_id,
             user_id=user_id,
         )
 
-        if not allowed:
+        if not decision.allowed:
             req_id = getattr(request.state, "request_id", str(uuid4()))
-            if category == "tenant_quota":
+            if decision.category == "tenant_quota":
                 code = "TENANT_QUOTA_EXCEEDED"
                 msg = (
                     f"Institutional request rate quota exceeded ({settings.TENANT_RATE_LIMIT_PER_MINUTE} req/min). "
-                    f"Please retry after {retry_after} seconds."
+                    f"Please retry after {decision.retry_after} seconds."
                 )
             else:
                 code = "RATE_LIMIT_EXCEEDED"
-                msg = f"Too many requests to {category} endpoint. Please retry after {retry_after} seconds."
+                msg = f"Too many requests to {decision.category} endpoint. Please retry after {decision.retry_after} seconds."
 
             envelope = ApiErrorEnvelope(
                 code=code,
@@ -181,7 +187,7 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
                 details=[
                     ApiErrorDetail(
                         field="rate_limit",
-                        message=f"Retry after {retry_after}s",
+                        message=f"Retry after {decision.retry_after}s",
                         code="THROTTLED",
                     )
                 ],
@@ -190,12 +196,19 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content=ApiErrorResponse(error=envelope).model_dump(),
                 headers={
-                    "Retry-After": str(retry_after),
+                    "Retry-After": str(decision.retry_after),
+                    "X-RateLimit-Limit": str(decision.limit),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": str(decision.reset_epoch),
                     "X-Request-ID": req_id,
                 },
             )
 
-        return await call_next(request)
+        response = await call_next(request)
+        response.headers["X-RateLimit-Limit"] = str(decision.limit)
+        response.headers["X-RateLimit-Remaining"] = str(decision.remaining)
+        response.headers["X-RateLimit-Reset"] = str(decision.reset_epoch)
+        return response
 
 
 class TimingAndMetricsMiddleware(BaseHTTPMiddleware):

@@ -243,7 +243,7 @@ async def test_oversized_payload_returns_413(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_rate_limiting_enforcement_and_retry_after(client: AsyncClient):
-    """Verify rate limiter triggers 429 Too Many Requests with Retry-After header."""
+    """Verify rate limiter triggers 429 Too Many Requests with standard RFC/IETF headers."""
     rate_limiter.reset()
     rate_limiter.enabled_for_tests = True
 
@@ -251,23 +251,64 @@ async def test_rate_limiting_enforcement_and_retry_after(client: AsyncClient):
         # Simulate burst requests exceeding auth threshold
         limit = 10
         responses = []
-        for _ in range(limit + 2):
+        last_429_res = None
+        first_res = None
+
+        for i in range(limit + 3):
             res = await client.post(
                 "/api/v1/auth/login",
                 json={"email": "burst@campusos.edu", "password": "WrongPassword!"},
                 headers={"X-Enable-Rate-Limit": "true"},
             )
+            if i == 0:
+                first_res = res
+            if res.status_code == 429:
+                last_429_res = res
             responses.append(res.status_code)
 
-        # At least one request must have been throttled with 429
+        # 1. First request should include rate limit telemetry headers
+        assert first_res is not None
+        assert "X-RateLimit-Limit" in first_res.headers
+        assert "X-RateLimit-Remaining" in first_res.headers
+        assert "X-RateLimit-Reset" in first_res.headers
+        assert int(first_res.headers["X-RateLimit-Limit"]) == limit
+
+        # 2. At least one request must have been throttled with 429
         assert 429 in responses
-        # Check security event recorded
+        assert last_429_res is not None
+        assert last_429_res.status_code == 429
+        assert "Retry-After" in last_429_res.headers
+        assert int(last_429_res.headers["Retry-After"]) >= 1
+        assert last_429_res.headers["X-RateLimit-Remaining"] == "0"
+        assert last_429_res.headers["X-RateLimit-Limit"] == str(limit)
+
+        data = last_429_res.json()
+        assert data["error"]["code"] == "RATE_LIMIT_EXCEEDED"
+
+        # 3. Check security event recorded
         events = security_events.get_events(limit=5)
         rate_events = [e for e in events if e.event_type == "SECURITY_RATE_LIMIT"]
         assert len(rate_events) > 0
     finally:
         rate_limiter.reset()
         rate_limiter.enabled_for_tests = False
+
+
+@pytest.mark.asyncio
+async def test_rate_limit_status_endpoint(client: AsyncClient):
+    """Verify GET /api/v1/auth/rate-limit-status returns current quota telemetry."""
+    res = await client.get("/api/v1/auth/rate-limit-status")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["success"] is True
+    data = body["data"]
+    assert "limit" in data
+    assert "remaining" in data
+    assert "reset_epoch" in data
+    assert "category" in data
+    assert data["category"] == "auth"
+    assert data["limit"] == 10
+    assert data["window_seconds"] == 60
 
 
 # =============================================================================

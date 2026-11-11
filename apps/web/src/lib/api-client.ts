@@ -7,15 +7,41 @@ import type {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export class ApiClientError extends Error {
+  public readonly isRateLimited: boolean;
+  public readonly retryAfterSeconds?: number;
+  public readonly rateLimitLimit?: number;
+  public readonly rateLimitRemaining?: number;
+  public readonly rateLimitReset?: number;
+
   constructor(
     public readonly statusCode: number,
     public readonly errorResponse: ApiErrorResponse,
+    headers?: Headers,
   ) {
-    super(
+    const isThrottled = statusCode === 429;
+    const retryAfter = headers?.get("Retry-After")
+      ? parseInt(headers.get("Retry-After")!, 10)
+      : undefined;
+
+    const baseMessage =
       errorResponse.error.message ||
-        `API Request failed with status ${statusCode}`,
-    );
+      (isThrottled
+        ? `Rate limit exceeded. Please wait ${retryAfter ?? 60} seconds before retrying.`
+        : `API Request failed with status ${statusCode}`);
+
+    super(baseMessage);
     this.name = "ApiClientError";
+    this.isRateLimited = isThrottled;
+    this.retryAfterSeconds = retryAfter;
+    this.rateLimitLimit = headers?.get("X-RateLimit-Limit")
+      ? parseInt(headers.get("X-RateLimit-Limit")!, 10)
+      : undefined;
+    this.rateLimitRemaining = headers?.get("X-RateLimit-Remaining")
+      ? parseInt(headers.get("X-RateLimit-Remaining")!, 10)
+      : undefined;
+    this.rateLimitReset = headers?.get("X-RateLimit-Reset")
+      ? parseInt(headers.get("X-RateLimit-Reset")!, 10)
+      : undefined;
   }
 }
 
@@ -82,7 +108,7 @@ export async function apiFetch<T>(
           },
         };
       }
-      throw new ApiClientError(response.status, errorData);
+      throw new ApiClientError(response.status, errorData, response.headers);
     }
 
     return response.json();
@@ -146,7 +172,7 @@ export async function apiFetchPaginated<T>(
           },
         };
       }
-      throw new ApiClientError(response.status, errorData);
+      throw new ApiClientError(response.status, errorData, response.headers);
     }
 
     return response.json();

@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, resolve_user_permissions
+from app.core.rate_limiter import rate_limiter
 from app.core.security import (
     ACCESS_TOKEN_COOKIE_NAME,
     REFRESH_TOKEN_COOKIE_NAME,
@@ -25,6 +26,7 @@ from app.schemas.auth import (
     ForgotPasswordRequest,
     LoginRequest,
     MessageResponse,
+    RateLimitStatusResponse,
     ResetPasswordRequest,
     UserResponse,
 )
@@ -311,3 +313,47 @@ async def reset_password(
     return ApiResponse(
         data=MessageResponse(message="Password has been reset successfully. You may now log in.")
     )
+
+
+@router.get(
+    "/rate-limit-status",
+    response_model=ApiResponse[RateLimitStatusResponse],
+    summary="Check current rate limit tier and remaining requests",
+)
+async def get_rate_limit_status(
+    request: Request,
+    target_path: str = "/api/v1/auth/login",
+) -> ApiResponse[RateLimitStatusResponse]:
+    """Inspect remaining rate limit quota, sliding window reset, and active tier for target path."""
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+
+    tenant_id = None
+    user_id = None
+    auth_header = request.headers.get("Authorization")
+    token_str = None
+    if auth_header and auth_header.startswith("Bearer "):
+        token_str = auth_header[7:].strip()
+    elif "access_token" in request.cookies:
+        token_str = request.cookies.get("access_token")
+
+    if token_str:
+        try:
+            from app.core.security import decode_token
+
+            payload = decode_token(token_str, expected_type="access")
+            tenant_id = payload.get("tenant_id")
+            user_id = payload.get("sub")
+        except Exception:
+            pass
+
+    status_data = rate_limiter.get_status(
+        path=target_path,
+        client_ip=client_ip,
+        tenant_id=tenant_id,
+        user_id=user_id,
+    )
+    return ApiResponse(data=RateLimitStatusResponse(**status_data))
+

@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_DEFAULT_PER_MINUTE: int = 120
     RATE_LIMIT_AUTH_PER_MINUTE: int = 10
     RATE_LIMIT_BURST_MAX: int = 30
+    RATE_LIMIT_LOCALHOST_BYPASS: bool = False
 
     # Storage Settings
     STORAGE_PROVIDER: str = "minio"
