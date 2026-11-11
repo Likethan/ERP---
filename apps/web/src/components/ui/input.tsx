@@ -27,7 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={id}
-            className="block text-xs font-medium text-slate-700 mb-1.5"
+            className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
           >
             {label}
           </label>
@@ -42,7 +42,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={id}
             type={type}
             className={cn(
-              "flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-yellow-500 focus-visible:border-yellow-500 disabled:cursor-not-allowed disabled:opacity-50 shadow-xs",
+              "flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:border-yellow-500 disabled:cursor-not-allowed disabled:opacity-50 shadow-xs",
               leftIcon && "pl-9",
               rightIcon && "pr-9",
               error && "border-red-500 focus-visible:ring-red-500",
@@ -56,7 +56,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               {rightIcon}
             </div>
           )}
-          {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+          {error && (
+            <p className="mt-1 text-xs font-medium text-red-600">{error}</p>
+          )}
         </div>
       </div>
     );

@@ -74,10 +74,20 @@
     color: var(--foreground);
     background: var(--background);
     font-feature-settings:
+      "cv02",
+      "cv03",
+      "cv04",
+      "cv11",
       "rlig" 1,
       "calt" 1;
     -webkit-font-smoothing: antialiased;
-    selection-background-color: #fde047;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: #fde047;
+    color: #0f172a;
   }
 
   /* Custom scrollbar */

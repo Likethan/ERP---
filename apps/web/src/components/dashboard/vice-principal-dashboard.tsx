@@ -129,10 +129,10 @@ export function VicePrincipalDashboard() {
             <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Vice Principal Operations • Academic Oversight & Statutory Sanctions
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Academic Operations & Institutional Oversight
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs sm:text-sm text-slate-500">
             Real-time curriculum delivery, teaching quality audits, faculty
             workloads, and statutory approvals for VSB Campus.
           </p>
@@ -157,7 +157,7 @@ export function VicePrincipalDashboard() {
       </div>
 
       {/* KPI Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <StatCard
           label="Institution Attendance Rate"
           value="88.4%"

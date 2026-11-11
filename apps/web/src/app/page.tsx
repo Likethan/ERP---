@@ -244,7 +244,7 @@ export default function CampusOSPortalPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between">
       {/* Top Enterprise Navigation */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 shrink-0">
               <Image
@@ -317,7 +317,7 @@ export default function CampusOSPortalPage() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 flex-1">
+      <main className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-10 space-y-12 flex-1">
         {/* Hero Section */}
         <section className="bg-white border border-slate-200 rounded-2xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
           <div className="max-w-3xl space-y-4">
@@ -593,7 +593,7 @@ export default function CampusOSPortalPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             CampusOS • College Operating System • Built for Institutional Scale
           </div>

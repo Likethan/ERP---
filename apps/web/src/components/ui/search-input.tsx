@@ -31,14 +31,14 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-yellow-500 focus-visible:border-yellow-500 shadow-xs"
+        className="flex h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:border-yellow-500 shadow-xs"
         {...props}
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-700"
+          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-900"
           aria-label="Clear search"
         >
           <X className="h-3.5 w-3.5" />

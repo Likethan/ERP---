@@ -93,7 +93,7 @@ export function Dialog({
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                <p className="mt-1 text-xs sm:text-sm text-slate-500 leading-relaxed">
                   {description}
                 </p>
               )}
@@ -171,7 +171,12 @@ export function DialogDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("text-xs text-slate-500 leading-relaxed", className)}>
+    <p
+      className={cn(
+        "text-xs sm:text-sm text-slate-500 leading-relaxed",
+        className,
+      )}
+    >
       {children}
     </p>
   );

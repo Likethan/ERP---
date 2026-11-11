@@ -85,7 +85,7 @@ export function Drawer({
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                <p className="mt-1 text-xs sm:text-sm text-slate-500 leading-relaxed">
                   {description}
                 </p>
               )}

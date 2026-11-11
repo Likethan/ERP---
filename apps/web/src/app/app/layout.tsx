@@ -76,7 +76,7 @@ export default function AuthenticatedLayout({
           />
 
           {/* Page Content Shell */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fade-in">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 max-w-[1600px] w-full mx-auto animate-fade-in">
             {!isAuthorized ? (
               <div
                 role="alert"

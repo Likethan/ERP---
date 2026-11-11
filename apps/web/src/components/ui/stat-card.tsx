@@ -49,7 +49,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-yellow-400 hover:shadow-sm",
+        "rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs transition-all hover:border-yellow-400 hover:shadow-sm",
         className,
       )}
     >
@@ -69,8 +69,8 @@ export function StatCard({
         )}
       </div>
 
-      <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900 font-mono">
+      <div className="mt-2.5 flex items-baseline gap-2">
+        <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 font-mono">
           {value}
         </span>
         {change && (

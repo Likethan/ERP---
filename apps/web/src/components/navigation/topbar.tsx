@@ -41,7 +41,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
           {/* Command Palette Trigger */}
           <button
             onClick={() => setCommandOpen(true)}
-            className="hidden sm:flex items-center gap-3 rounded-lg border border-slate-200 bg-yellow-50/50 px-3 py-1.5 text-xs text-slate-500 hover:border-yellow-400 hover:bg-yellow-50 hover:text-slate-900 transition-colors cursor-pointer w-48 lg:w-64 shadow-xs"
+            className="hidden sm:flex items-center gap-3 rounded-lg border border-slate-200 bg-yellow-50/50 px-3 py-1.5 text-xs text-slate-500 hover:border-yellow-400 hover:bg-yellow-50 hover:text-slate-900 transition-colors cursor-pointer w-48 sm:w-56 lg:w-72 xl:w-80 shadow-xs"
           >
             <Search className="h-3.5 w-3.5 text-slate-500 shrink-0" />
             <span className="flex-1 text-left truncate">

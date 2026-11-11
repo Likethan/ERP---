@@ -59,7 +59,7 @@ export function Tabs(props: TabsProps) {
               aria-selected={isActive}
               onClick={() => onChange(tab.id)}
               className={cn(
-                "group inline-flex items-center gap-2 px-4 py-2.5 text-xs font-medium border-b-2 whitespace-nowrap transition-colors cursor-pointer",
+                "group inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 whitespace-nowrap transition-colors cursor-pointer",
                 isActive
                   ? "border-yellow-500 text-slate-950 font-bold"
                   : "border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300",

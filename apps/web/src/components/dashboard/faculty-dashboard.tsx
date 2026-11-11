@@ -50,16 +50,16 @@ export function FacultyDashboard() {
   return (
     <div className="space-y-6">
       {/* Faculty Welcome Banner */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-l-4 border-l-yellow-400">
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
             <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
             Faculty Academic Workspace • {faculty.employeeCode}
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Welcome, {faculty.firstName} {faculty.lastName}!
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs sm:text-sm text-slate-500">
             {faculty.designation} • {faculty.department}
           </p>
         </div>
@@ -96,7 +96,7 @@ export function FacultyDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <StatCard
           label="Assigned Course Offerings"
           value={faculty.stats.coursesCount}
