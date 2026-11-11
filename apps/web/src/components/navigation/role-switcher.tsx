@@ -52,13 +52,16 @@ export function RoleSwitcher({ className }: { className?: string }) {
         className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-800 hover:border-yellow-400 hover:bg-yellow-50/50 transition-all cursor-pointer shadow-xs"
         aria-label="Switch Role Persona"
       >
-        <span className="flex items-center gap-1.5">
+        <span suppressHydrationWarning className="flex items-center gap-1.5">
           {getRoleIcon(activePersona.role)}
           <span className="font-semibold text-slate-900 max-w-[130px] truncate sm:max-w-none">
             {activePersona.role.replace("_", " ")}
           </span>
         </span>
-        <span className="hidden md:inline text-slate-400 font-mono text-[11px] border-l border-slate-200 pl-2 text-slate-500">
+        <span
+          suppressHydrationWarning
+          className="hidden md:inline text-slate-400 font-mono text-[11px] border-l border-slate-200 pl-2 text-slate-500"
+        >
           {activePersona.name}
         </span>
         <ChevronDown className="h-3.5 w-3.5 text-slate-500" />

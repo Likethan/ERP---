@@ -2412,6 +2412,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                 CampusOS
               </span>
               <span
+                suppressHydrationWarning
                 className={cn(
                   "rounded px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase border shrink-0",
                   portalMeta.badgeClass,
@@ -2420,7 +2421,10 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
                 {portalMeta.badge}
               </span>
             </div>
-            <div className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold truncate">
+            <div
+              suppressHydrationWarning
+              className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold truncate"
+            >
               {portalMeta.title}
             </div>
           </div>

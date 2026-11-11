@@ -94,7 +94,10 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
               className="flex items-center gap-2 rounded-lg p-1 text-slate-700 hover:bg-yellow-50 transition-colors cursor-pointer"
               aria-label="Open user menu"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 border border-yellow-500 text-xs font-bold font-mono shadow-xs">
+              <div
+                suppressHydrationWarning
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 border border-yellow-500 text-xs font-bold font-mono shadow-xs"
+              >
                 {activePersona.avatarInitials}
               </div>
             </button>

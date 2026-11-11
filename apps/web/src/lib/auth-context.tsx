@@ -58,21 +58,12 @@ function personaToUser(persona: DemoPersona): AuthenticatedUser {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [activePersona, setActivePersona] = useState<DemoPersona>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("campusos_active_persona");
-      if (saved) {
-        const found = DEMO_PERSONAS.find(
-          (p) => p.role === saved || p.id === saved,
-        );
-        if (found) return found;
-      }
-    }
-    return DEMO_PERSONAS[0]; // Default: Super Admin
-  });
+  const [activePersona, setActivePersona] = useState<DemoPersona>(
+    DEMO_PERSONAS[0],
+  );
 
   const [user, setUser] = useState<AuthenticatedUser | null>(() =>
-    personaToUser(activePersona),
+    personaToUser(DEMO_PERSONAS[0]),
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -99,6 +90,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("campusos_active_persona");
+        if (saved) {
+          const found = DEMO_PERSONAS.find(
+            (p) => p.role === saved || p.id === saved,
+          );
+          if (found) {
+            setActivePersona(found);
+            setUser(personaToUser(found));
+          }
+        }
+      }
+    } catch {
+      // Storage unavailable or disabled
+    }
+
     refreshUser();
   }, [refreshUser]);
 
