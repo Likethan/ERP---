@@ -10,7 +10,8 @@ import React, {
 import type { AuthenticatedUser } from "@campusos/types";
 import { DEMO_PERSONAS } from "@/mocks/auth.mock";
 import { DemoPersona } from "@/types/domain";
-import { apiFetch } from "./api-client";
+import { PORTALS } from "./portals";
+import { apiFetch, ApiClientError } from "./api-client";
 
 interface AuthContextValue {
   user: AuthenticatedUser | null;
@@ -62,10 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     DEMO_PERSONAS[0],
   );
 
-  const [user, setUser] = useState<AuthenticatedUser | null>(() =>
-    personaToUser(DEMO_PERSONAS[0]),
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<AuthenticatedUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -81,16 +80,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (matched) {
           setActivePersona(matched);
         }
+      } else {
+        setUser(null);
       }
     } catch {
-      // Backend unavailable; maintain current persona
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
+      // Offline fallback: check whether an active persona session was previously saved
       if (typeof window !== "undefined") {
         const saved = localStorage.getItem("campusos_active_persona");
         if (saved) {
@@ -100,13 +94,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (found) {
             setActivePersona(found);
             setUser(personaToUser(found));
+          } else {
+            setUser(null);
           }
+        } else {
+          setUser(null);
         }
+      } else {
+        setUser(null);
       }
-    } catch {
-      // Storage unavailable or disabled
+    } finally {
+      setIsLoading(false);
     }
+  }, []);
 
+  useEffect(() => {
     refreshUser();
   }, [refreshUser]);
 
@@ -153,20 +155,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         return response.data;
       }
-    } catch {
-      // If backend fails or in offline/mock demo mode, check for matching demo persona or fallback to match email
-      const matchedPersona =
-        DEMO_PERSONAS.find(
-          (p) => p.email.toLowerCase() === credentials.email.toLowerCase(),
-        ) || DEMO_PERSONAS[0];
-
-      setActivePersona(matchedPersona);
-      const authenticatedUser = personaToUser(matchedPersona);
-      setUser(authenticatedUser);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("campusos_active_persona", matchedPersona.role);
+    } catch (err: unknown) {
+      if (err instanceof ApiClientError) {
+        throw new Error(err.message || "Invalid username or password.");
       }
-      return authenticatedUser;
+
+      // Offline development fallback verification
+      const trimmedEmail = credentials.email.trim().toLowerCase();
+      const personaMatch = DEMO_PERSONAS.find(
+        (p) => p.email.toLowerCase() === trimmedEmail,
+      );
+      const portalMatch = Object.values(PORTALS).find(
+        (p) => p.demoEmail.toLowerCase() === trimmedEmail,
+      );
+
+      const expectedPassword = portalMatch?.demoPassword || "Password123!";
+      if (
+        credentials.password &&
+        (credentials.password === expectedPassword ||
+          credentials.password === "CampusOS2026!" ||
+          credentials.password === "SuperSecret123!" ||
+          credentials.password === "StudentSecret123!" ||
+          credentials.password === "FacultySecret123!" ||
+          credentials.password === "HodSecret123!" ||
+          credentials.password === "ExecutiveSecret123!")
+      ) {
+        const targetPersona =
+          personaMatch ||
+          (portalMatch
+            ? DEMO_PERSONAS.find((p) => p.id === portalMatch.demoPersonaId)
+            : null) ||
+          DEMO_PERSONAS[0];
+        setActivePersona(targetPersona);
+        const authenticatedUser = personaToUser(targetPersona);
+        setUser(authenticatedUser);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("campusos_active_persona", targetPersona.role);
+        }
+        return authenticatedUser;
+      }
+
+      throw new Error("Invalid username or password.");
     } finally {
       setIsLoading(false);
     }
@@ -181,9 +210,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Ignore network errors
     } finally {
-      // In offline mode, reset to Super Admin or redirect to login
       setUser(null);
       if (typeof window !== "undefined") {
+        localStorage.removeItem("campusos_active_persona");
         window.location.href = "/login";
       }
     }
