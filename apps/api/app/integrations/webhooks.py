@@ -18,6 +18,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.exceptions import (
     NotFoundException,
     ValidationException,
@@ -64,14 +65,11 @@ class WebhookDeliveryEngine:
         envelope: IntegrationEventEnvelope,
     ) -> list[IntegrationWebhookDelivery]:
         """Find matching active webhook subscriptions and enqueue delivery records."""
-        stmt = (
-            select(IntegrationWebhookSubscription)
-            .where(
-                and_(
-                    IntegrationWebhookSubscription.tenant_id == tenant_id,
-                    IntegrationWebhookSubscription.status == WebhookStatus.ACTIVE,
-                    IntegrationWebhookSubscription.deleted_at.is_(None),
-                )
+        stmt = select(IntegrationWebhookSubscription).where(
+            and_(
+                IntegrationWebhookSubscription.tenant_id == tenant_id,
+                IntegrationWebhookSubscription.status == WebhookStatus.ACTIVE,
+                IntegrationWebhookSubscription.deleted_at.is_(None),
             )
         )
         res = await db.execute(stmt)
@@ -110,9 +108,8 @@ class WebhookDeliveryEngine:
         allow_private_networks_for_tests: bool = False,
     ) -> IntegrationWebhookDelivery:
         """Execute a single outbound webhook delivery attempt."""
-        stmt = (
-            select(IntegrationWebhookDelivery)
-            .where(IntegrationWebhookDelivery.id == delivery_id)
+        stmt = select(IntegrationWebhookDelivery).where(
+            IntegrationWebhookDelivery.id == delivery_id
         )
         delivery = (await db.execute(stmt)).scalar_one_or_none()
         if not delivery:
@@ -154,7 +151,9 @@ class WebhookDeliveryEngine:
                     or secret_value
                 )
             except Exception as exc:
-                logger.warning("Could not decrypt secret for subscription %s: %s", subscription.id, exc)
+                logger.warning(
+                    "Could not decrypt secret for subscription %s: %s", subscription.id, exc
+                )
 
         # Check circuit breaker if connector present
         if connector and connector.health:
@@ -237,7 +236,9 @@ class WebhookDeliveryEngine:
                     )
             else:
                 classification = SafeHttpClient.classify_failure(None, status_code=resp.status_code)
-                cls._handle_attempt_failure(delivery, connector, classification, f"HTTP {resp.status_code}")
+                cls._handle_attempt_failure(
+                    delivery, connector, classification, f"HTTP {resp.status_code}"
+                )
 
         except Exception as exc:
             classification = SafeHttpClient.classify_failure(exc)
@@ -275,14 +276,17 @@ class WebhookDeliveryEngine:
                 else IntegrationHealthStatus.DEGRADED
             )
 
-        if delivery.attempt_count >= delivery.max_attempts or classification == FailureClassification.NON_RETRYABLE:
+        if (
+            delivery.attempt_count >= delivery.max_attempts
+            or classification == FailureClassification.NON_RETRYABLE
+        ):
             delivery.status = WebhookDeliveryStatus.DEAD_LETTER
             delivery.next_attempt_at = None
         else:
             delivery.status = WebhookDeliveryStatus.RETRYING
             # Exponential backoff: (2^attempt_count * 10s) + jitter
             jitter = random.uniform(0.5, 2.5)
-            delay_sec = int(min(3600, (2 ** delivery.attempt_count) * 10 + jitter))
+            delay_sec = int(min(3600, (2**delivery.attempt_count) * 10 + jitter))
             delivery.next_attempt_at = now + timedelta(seconds=delay_sec)
 
 
@@ -304,14 +308,11 @@ class InboundWebhookReceiver:
         start_t = time.perf_counter()
 
         # 1. Load and validate connector
-        stmt = (
-            select(IntegrationConnector)
-            .where(
-                and_(
-                    IntegrationConnector.id == connector_id,
-                    IntegrationConnector.provider_key == provider_key,
-                    IntegrationConnector.deleted_at.is_(None),
-                )
+        stmt = select(IntegrationConnector).where(
+            and_(
+                IntegrationConnector.id == connector_id,
+                IntegrationConnector.provider_key == provider_key,
+                IntegrationConnector.deleted_at.is_(None),
             )
         )
         connector = (await db.execute(stmt)).scalar_one_or_none()
@@ -326,7 +327,7 @@ class InboundWebhookReceiver:
         tenant_id = connector.tenant_id
 
         # 2. Retrieve webhook signing secret from connector credential
-        secret = "default_inbound_secret"
+        configured_secret: str | None = None
         if connector.credential_reference:
             creds = await SecretManager.get_decrypted_credential(
                 db=db,
@@ -334,12 +335,18 @@ class InboundWebhookReceiver:
                 tenant_id=tenant_id,
                 allow_platform=True,
             )
-            secret = (
-                creds.get("webhook_secret")
-                or creds.get("secret")
-                or creds.get("api_key")
-                or secret
+            configured_secret = (
+                creds.get("webhook_secret") or creds.get("secret") or creds.get("api_key")
             )
+
+        if not configured_secret:
+            if settings.ENVIRONMENT == "production":
+                raise ValidationException(
+                    f"Connector '{connector.name}' has no active webhook signing credential configured."
+                )
+            configured_secret = getattr(settings, "WEBHOOK_SIGNING_SECRET", settings.SECRET_KEY)
+
+        secret = configured_secret
 
         # 3. Cryptographic Signature Validation
         raw_text = raw_body.decode("utf-8", errors="replace")
@@ -350,15 +357,17 @@ class InboundWebhookReceiver:
             or ""
         )
 
-        if sig_header:
-            is_valid = verify_webhook_signature(
-                secret=secret,
-                raw_payload=raw_text,
-                signature_header=sig_header,
-                tolerance_seconds=300,
-            )
-            if not is_valid:
-                raise AuthenticationException("Inbound webhook signature verification failed.")
+        if not sig_header:
+            raise AuthenticationException("Missing required webhook signature header.")
+
+        is_valid = verify_webhook_signature(
+            secret=secret,
+            raw_payload=raw_text,
+            signature_header=sig_header,
+            tolerance_seconds=300,
+        )
+        if not is_valid:
+            raise AuthenticationException("Inbound webhook signature verification failed.")
 
         # 4. Extract Idempotency Key
         idemp_header = (

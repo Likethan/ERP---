@@ -103,7 +103,7 @@ class PayloadSizeLimitMiddleware(BaseHTTPMiddleware):
                     ],
                 )
                 return JSONResponse(
-                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    status_code=status.HTTP_413_CONTENT_TOO_LARGE,
                     content=ApiErrorResponse(error=envelope).model_dump(),
                     headers={"X-Request-ID": req_id},
                 )

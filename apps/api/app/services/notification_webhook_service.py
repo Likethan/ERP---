@@ -78,7 +78,9 @@ class NotificationWebhookService:
             if secret:
                 is_valid = cls.verify_signature(raw_body, signature, secret)
                 if not is_valid:
-                    logger.warning("Invalid webhook signature received for provider '%s'.", provider_key)
+                    logger.warning(
+                        "Invalid webhook signature received for provider '%s'.", provider_key
+                    )
                     raise AuthenticationException("Invalid provider callback signature.")
 
         # Extract normalized attributes from payload
@@ -119,7 +121,11 @@ class NotificationWebhookService:
                 provider_msg_id,
                 delivery_id_raw,
             )
-            return {"success": False, "status": "unmatched", "message": "Delivery record not found."}
+            return {
+                "success": False,
+                "status": "unmatched",
+                "message": "Delivery record not found.",
+            }
 
         effective_tenant_id = delivery.tenant_id
         now = datetime.now(UTC)
@@ -145,7 +151,9 @@ class NotificationWebhookService:
             delivery.failure_classification = "BOUNCE"
             delivery.error_message = error_msg or "Recipient bounced permanently"
 
-            identifier = recipient_target or (str(delivery.recipient_user_id) if delivery.recipient_user_id else "unknown")
+            identifier = recipient_target or (
+                str(delivery.recipient_user_id) if delivery.recipient_user_id else "unknown"
+            )
             suppression = NotificationSuppression(
                 id=uuid4(),
                 tenant_id=effective_tenant_id,
@@ -163,7 +171,9 @@ class NotificationWebhookService:
             delivery.failure_classification = "COMPLAINT"
             delivery.error_message = error_msg or "Spam complaint registered"
 
-            identifier = recipient_target or (str(delivery.recipient_user_id) if delivery.recipient_user_id else "unknown")
+            identifier = recipient_target or (
+                str(delivery.recipient_user_id) if delivery.recipient_user_id else "unknown"
+            )
             suppression = NotificationSuppression(
                 id=uuid4(),
                 tenant_id=effective_tenant_id,
@@ -235,11 +245,13 @@ class NotificationWebhookService:
         payload: WebhookCallbackPayload,
     ) -> dict[str, Any]:
         """Endpoint facade verifying signature and delegating to process_provider_callback."""
-        if signature_header:
-            is_valid = cls.verify_signature(raw_body, signature_header, secret)
-            if not is_valid:
-                logger.warning("Invalid webhook signature received for provider '%s'.", provider_key)
-                raise AuthenticationException("Invalid provider callback signature.")
+        if not signature_header:
+            raise AuthenticationException("Missing required provider callback signature header.")
+
+        is_valid = cls.verify_signature(raw_body, signature_header, secret)
+        if not is_valid:
+            logger.warning("Invalid webhook signature received for provider '%s'.", provider_key)
+            raise AuthenticationException("Invalid provider callback signature.")
 
         # Determine tenant from delivery if possible
         repo = NotificationRepository(db)

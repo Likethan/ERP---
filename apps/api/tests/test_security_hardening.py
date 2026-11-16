@@ -28,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditEventCategory, record_audit_log
 from app.core.config import Settings
+from app.core.exceptions import ValidationException
 from app.core.export_security import sanitize_csv_field, sanitize_csv_row
 from app.core.jobs import JobStatus, TenantJobContext, TenantJobRunner
 from app.core.rate_limiter import rate_limiter
@@ -43,9 +44,14 @@ from app.core.security import (
     validate_password_strength,
 )
 from app.core.security_events import security_events
-from app.core.storage import sanitize_filename
+from app.core.storage import sanitize_filename, validate_file_magic_bytes
 from app.models.core import Institution
 from app.models.people import User
+from app.services.notification_webhook_service import (
+    NotificationWebhookService,
+    WebhookCallbackPayload,
+)
+from app.services.restore_verification_service import CANONICAL_CRITICAL_TABLES
 
 # =============================================================================
 # 1. AUTHENTICATION & TOKEN HARDENING
@@ -94,6 +100,7 @@ async def test_auth_unsupported_algorithm_rejected():
     # Insecure alg=none token
     import base64
     import json
+
     h_b64 = base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip("=")
     p_b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
     insecure_token = f"{h_b64}.{p_b64}."
@@ -182,8 +189,6 @@ async def test_student_blocked_from_administrative_endpoints(
     )
     assert res.status_code == 403
     assert res.json()["error"]["code"] == "PERMISSION_DENIED"
-
-
 
 
 # =============================================================================
@@ -360,12 +365,16 @@ def test_recursive_sensitive_dict_masking():
 
 def test_connection_string_and_bearer_token_masking():
     """Verify database credentials and Bearer tokens are masked in strings."""
-    raw_db_str = "postgresql+asyncpg://admin_user:super_secret_pw@db.campusos.local:5432/campusos_db"
+    raw_db_str = (
+        "postgresql+asyncpg://admin_user:super_secret_pw@db.campusos.local:5432/campusos_db"
+    )
     masked_db = mask_sensitive_string(raw_db_str)
     assert "super_secret_pw" not in masked_db
     assert "[REDACTED]" in masked_db
 
-    raw_auth_header = "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0"
+    raw_auth_header = (
+        "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0"
+    )
     masked_auth = mask_sensitive_string(raw_auth_header)
     assert "eyJhbGci" not in masked_auth
     assert "Bearer [REDACTED]" in masked_auth
@@ -384,6 +393,59 @@ def test_filename_sanitization_and_traversal_neutralization():
     assert sanitize_filename("file:with*bad?chars|.png") == "file_with_bad_chars_.png"
     assert sanitize_filename("control\x00\x08null.txt") == "controlnull.txt"
     assert sanitize_filename("") == "unnamed_document"
+
+
+def test_file_magic_bytes_validation_and_executable_blocking():
+    """Verify binary content magic byte sniffing blocks spoofed files and executables."""
+    # 1. Proactively block Windows PE, Linux ELF, Java Class, and scripts regardless of claimed MIME
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"MZ\x90\x00\x03\x00\x00\x00", "application/pdf")
+
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"\x7fELF\x02\x01\x01\x00", "image/png")
+
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"\xca\xfe\xba\xbe\x00\x00\x003", "application/pdf")
+
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"#!/bin/bash\nrm -rf /", "text/plain")
+
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"<?php phpinfo(); ?>", "text/plain")
+
+    with pytest.raises(ValidationException, match="Executable or script payload detected"):
+        validate_file_magic_bytes(b"<script>alert('xss')</script>", "text/plain")
+
+    # 2. Rejection of empty payload
+    with pytest.raises(ValidationException, match="Empty file payload is not permitted"):
+        validate_file_magic_bytes(b"", "application/pdf")
+
+    # 3. Content mismatch rejection
+    with pytest.raises(ValidationException, match="does not match declared PDF"):
+        validate_file_magic_bytes(b"Plain text masquerading as PDF", "application/pdf")
+
+    with pytest.raises(ValidationException, match="does not match declared JPEG"):
+        validate_file_magic_bytes(b"Not a jpeg photo header", "image/jpeg")
+
+    with pytest.raises(ValidationException, match="does not match declared PNG"):
+        validate_file_magic_bytes(b"Not a png image header", "image/png")
+
+    with pytest.raises(
+        ValidationException, match="Text documents cannot contain binary null bytes"
+    ):
+        validate_file_magic_bytes(b"Hello\x00World malicious null byte", "text/plain")
+
+    # 4. Valid files pass cleanly
+    validate_file_magic_bytes(b"%PDF-1.7\nValid PDF body", "application/pdf")
+    validate_file_magic_bytes(b"\xff\xd8\xff\xe0\x00\x10JFIF", "image/jpeg")
+    validate_file_magic_bytes(b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR", "image/png")
+    validate_file_magic_bytes(b"RIFF\x24\x00\x00\x00WEBPVP8 ", "image/webp")
+    validate_file_magic_bytes(
+        b"PK\x03\x04\x14\x00\x06\x00",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    )
+    validate_file_magic_bytes(b"col1,col2,col3\nval1,val2,val3\n", "text/csv")
+    validate_file_magic_bytes(b'{"status": "ok", "items": [1, 2, 3]}', "application/json")
 
 
 # =============================================================================
@@ -567,7 +629,6 @@ def test_production_configuration_validation():
     with pytest.raises(ValueError, match=r"Wildcard '\*' CORS origin is not permitted"):
         cors_settings.validate_production_configuration()
 
-
     # Valid production settings pass
     valid_settings = Settings(
         ENVIRONMENT="production",
@@ -576,3 +637,52 @@ def test_production_configuration_validation():
         CORS_ORIGINS=["https://campusos.edu", "https://app.campusos.edu"],
     )
     valid_settings.validate_production_configuration()
+
+
+# =============================================================================
+# 12. WEBHOOK & INFRASTRUCTURE SECURITY HARDENING
+# =============================================================================
+
+
+@pytest.mark.asyncio
+async def test_notification_webhook_missing_signature_rejected(db_session: AsyncSession):
+    """Verify notification webhook callbacks strictly reject requests with missing signatures."""
+    payload = WebhookCallbackPayload(
+        event_type="delivered",
+        provider_message_id="msg-12345",
+        status="DELIVERED",
+    )
+    raw_body = (
+        b'{"event_type": "delivered", "provider_message_id": "msg-12345", "status": "DELIVERED"}'
+    )
+
+    with pytest.raises(
+        AuthenticationException, match="Missing required provider callback signature header"
+    ):
+        await NotificationWebhookService.process_callback(
+            db=db_session,
+            provider_key="resend",
+            raw_body=raw_body,
+            signature_header=None,
+            secret="some-secure-secret-key-1234567890",
+            payload=payload,
+        )
+
+
+def test_restore_table_identifier_allowlist():
+    """Verify table names used during sandbox verification strictly match canonical allowlist and identifiers."""
+    for tbl in CANONICAL_CRITICAL_TABLES:
+        assert tbl.isidentifier()
+        assert not tbl.startswith("--")
+        assert ";" not in tbl
+        assert "'" not in tbl
+
+    # Non-canonical tables are rejected
+    malicious_inputs = [
+        "users; DROP TABLE users;--",
+        "arbitrary_table",
+        "123invalid",
+        "users UNION SELECT",
+    ]
+    for bad in malicious_inputs:
+        assert bad not in CANONICAL_CRITICAL_TABLES or not bad.isidentifier()

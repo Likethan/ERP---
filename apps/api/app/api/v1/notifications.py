@@ -19,6 +19,7 @@ from fastapi import APIRouter, Depends, Header, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import build_audit_entry
+from app.core.config import settings
 from app.core.database import get_db_session
 from app.core.deps import (
     get_current_active_user,
@@ -123,7 +124,9 @@ async def get_user_unread_count(
 # =============================================================================
 # 2. USER NOTIFICATION PREFERENCES & QUIET HOURS
 # =============================================================================
-@router.get("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
+@router.get(
+    "/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse]
+)
 @router.get("/notifications/preferences", response_model=ApiResponse[Any])
 async def get_notification_preferences(
     tenant: Annotated[TenantContext, Depends(get_tenant_context)],
@@ -137,7 +140,9 @@ async def get_notification_preferences(
     return ApiResponse(data=detail)
 
 
-@router.patch("/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse])
+@router.patch(
+    "/notification-preferences", response_model=ApiResponse[NotificationPreferencesDetailResponse]
+)
 @router.put("/notifications/preferences", response_model=ApiResponse[Any])
 @router.post("/notifications/preferences", response_model=ApiResponse[Any])
 async def update_notification_preferences(
@@ -167,7 +172,9 @@ async def get_notification_item(
     return ApiResponse(data=NotificationResponse.model_validate(notif))
 
 
-@router.patch("/notifications/{notification_id}/read", response_model=ApiResponse[NotificationResponse])
+@router.patch(
+    "/notifications/{notification_id}/read", response_model=ApiResponse[NotificationResponse]
+)
 async def mark_notification_read(
     notification_id: UUID,
     tenant: Annotated[TenantContext, Depends(get_tenant_context)],
@@ -274,7 +281,9 @@ async def create_admin_notification_rule(
     return ApiResponse(data=NotificationRuleResponse.model_validate(created))
 
 
-@router.patch("/admin/notification-rules/{rule_id}", response_model=ApiResponse[NotificationRuleResponse])
+@router.patch(
+    "/admin/notification-rules/{rule_id}", response_model=ApiResponse[NotificationRuleResponse]
+)
 async def update_admin_notification_rule(
     rule_id: UUID,
     payload: NotificationRuleUpdate,
@@ -333,7 +342,9 @@ async def update_admin_notification_rule(
 # =============================================================================
 # 4. ADMIN: NOTIFICATION TEMPLATES & VERSIONS
 # =============================================================================
-@router.get("/admin/notification-templates", response_model=ApiResponse[list[NotificationTemplateResponse]])
+@router.get(
+    "/admin/notification-templates", response_model=ApiResponse[list[NotificationTemplateResponse]]
+)
 async def list_admin_notification_templates(
     tenant: Annotated[TenantContext, Depends(get_tenant_context)],
     current_user: Annotated[User, Depends(require_permission(NOTIFICATION_TEMPLATES_READ))],
@@ -367,7 +378,10 @@ async def create_admin_notification_template(
     return ApiResponse(data=NotificationTemplateResponse.model_validate(tmpl))
 
 
-@router.post("/admin/notification-templates/{template_id}/preview", response_model=ApiResponse[TemplatePreviewResponse])
+@router.post(
+    "/admin/notification-templates/{template_id}/preview",
+    response_model=ApiResponse[TemplatePreviewResponse],
+)
 async def preview_admin_notification_template(
     template_id: UUID,
     payload: TemplatePreviewRequest,
@@ -382,7 +396,10 @@ async def preview_admin_notification_template(
     return ApiResponse(data=preview)
 
 
-@router.post("/admin/notification-templates/{template_id}/publish", response_model=ApiResponse[NotificationTemplateVersionResponse])
+@router.post(
+    "/admin/notification-templates/{template_id}/publish",
+    response_model=ApiResponse[NotificationTemplateVersionResponse],
+)
 async def publish_admin_notification_template_version(
     template_id: UUID,
     payload: TemplatePublishRequest,
@@ -512,7 +529,9 @@ async def cancel_admin_delivery(
 # =============================================================================
 # 6. ADMIN: ANALYTICS & PROVIDER HEALTH
 # =============================================================================
-@router.get("/admin/notification-analytics", response_model=ApiResponse[NotificationAnalyticsResponse])
+@router.get(
+    "/admin/notification-analytics", response_model=ApiResponse[NotificationAnalyticsResponse]
+)
 async def get_admin_notification_analytics(
     tenant: Annotated[TenantContext, Depends(get_tenant_context)],
     current_user: Annotated[User, Depends(require_permission(NOTIFICATION_ANALYTICS_READ))],
@@ -525,7 +544,9 @@ async def get_admin_notification_analytics(
     return ApiResponse(data=NotificationAnalyticsResponse(**metrics))
 
 
-@router.get("/admin/notification-providers/health", response_model=ApiResponse[ProviderHealthResponse])
+@router.get(
+    "/admin/notification-providers/health", response_model=ApiResponse[ProviderHealthResponse]
+)
 async def get_admin_provider_health(
     tenant: Annotated[TenantContext, Depends(get_tenant_context)],
     current_user: Annotated[User, Depends(require_permission(NOTIFICATION_PROVIDERS_MANAGE))],
@@ -604,8 +625,8 @@ async def process_provider_delivery_callback(
 ) -> ApiResponse[dict]:
     """Authenticated endpoint receiving provider delivery callbacks (bounces, delivered, complaints)."""
     raw_body = await request.body()
-    # In production, secret is retrieved from SecretManager; test secret fallback:
-    webhook_secret = "test-webhook-secret"
+    # Retrieve signing secret from environment / configuration
+    webhook_secret = getattr(settings, "WEBHOOK_SIGNING_SECRET", settings.SECRET_KEY)
 
     result = await NotificationWebhookService.process_callback(
         db=db,

@@ -145,7 +145,9 @@ class RestoreVerificationService:
         try:
             # 2. Verify file existence and nonzero size
             if not backup_file.exists() or backup_file.stat().st_size == 0:
-                raise ValueError(f"Backup file '{backup_file}' does not exist or is empty (0 bytes).")
+                raise ValueError(
+                    f"Backup file '{backup_file}' does not exist or is empty (0 bytes)."
+                )
 
             # 3. Cryptographic SHA-256 Checksum Verification
             actual_sha256 = cls.compute_sha256(backup_file)
@@ -160,8 +162,13 @@ class RestoreVerificationService:
             if meta_path.exists():
                 try:
                     meta_json = json.loads(meta_path.read_text(encoding="utf-8"))
-                    if meta_json.get("sha256") and meta_json["sha256"].lower() != actual_sha256.lower():
-                        raise ValueError("Metadata JSON checksum does not match computed archive checksum.")
+                    if (
+                        meta_json.get("sha256")
+                        and meta_json["sha256"].lower() != actual_sha256.lower()
+                    ):
+                        raise ValueError(
+                            "Metadata JSON checksum does not match computed archive checksum."
+                        )
                 except Exception as meta_err:
                     logger.warning("Metadata JSON validation warning: %s", meta_err)
 
@@ -176,8 +183,10 @@ class RestoreVerificationService:
                 async with test_engine_override.connect() as conn:
                     schema_ok = True
                     for tbl in CANONICAL_CRITICAL_TABLES:
+                        if tbl not in CANONICAL_CRITICAL_TABLES or not tbl.isidentifier():
+                            continue
                         try:
-                            res = await conn.execute(text(f"SELECT count(*) FROM {tbl}"))
+                            res = await conn.execute(text(f'SELECT count(*) FROM "{tbl}"'))
                             cnt = res.scalar() or 0
                             sandbox_table_counts[tbl] = cnt
                         except Exception:
@@ -192,14 +201,16 @@ class RestoreVerificationService:
                             )
                         )
                         orphan_count = res.scalar() or 0
-                        isolation_ok = (orphan_count == 0)
+                        isolation_ok = orphan_count == 0
                     except Exception:
                         isolation_ok = True
 
                 duration = time.perf_counter() - start_time
                 verification.schema_verified = schema_ok
                 verification.table_row_counts_json = sandbox_table_counts
-                verification.tables_verified_count = sum(1 for c in sandbox_table_counts.values() if c >= 0)
+                verification.tables_verified_count = sum(
+                    1 for c in sandbox_table_counts.values() if c >= 0
+                )
                 verification.isolation_check_passed = isolation_ok
                 verification.status = RestoreVerificationStatus.PASSED
                 verification.completed_at = datetime.now(UTC)

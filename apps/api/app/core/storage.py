@@ -23,6 +23,7 @@ ALLOWED_DOCUMENT_TYPES: dict[str, list[str]] = {
     "image/webp": [".webp"],
     "text/plain": [".txt"],
     "text/csv": [".csv"],
+    "application/json": [".json"],
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
     "application/msword": [".doc"],
@@ -30,6 +31,78 @@ ALLOWED_DOCUMENT_TYPES: dict[str, list[str]] = {
 
 # Maximum default file size (25 megabytes)
 MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024
+
+# Executable and malicious script signatures to reject regardless of claimed MIME
+DISALLOWED_EXECUTABLE_SIGNATURES: tuple[bytes, ...] = (
+    b"MZ",  # Windows Portable Executable (EXE, DLL)
+    b"\x7fELF",  # Linux Executable and Linkable Format
+    b"\xca\xfe\xba\xbe",  # Java Class bytecode / Mach-O universal binary
+    b"#!",  # Shell script / shebang execution
+    b"<?php",  # PHP script
+    b"<script",  # HTML/JS script injection
+)
+
+
+def validate_file_magic_bytes(content: bytes, mime_type: str) -> None:
+    """Validate binary content magic numbers against claimed MIME type.
+
+    Protects against executable masking, content-spoofing, and malicious payload uploads.
+    """
+    if not content:
+        raise ValidationException("Empty file payload is not permitted.")
+
+    norm_mime = mime_type.lower().strip()
+
+    # 1. Proactively block known executable and script signatures
+    for sig in DISALLOWED_EXECUTABLE_SIGNATURES:
+        if content.startswith(sig) or (sig == b"<script" and b"<script" in content[:256].lower()):
+            raise ValidationException(
+                "Executable or script payload detected. Upload rejected for security reasons."
+            )
+
+    # 2. Match binary signatures against declared MIME type
+    if norm_mime == "application/pdf":
+        if not content.startswith(b"%PDF-"):
+            raise ValidationException("File content header does not match declared PDF format.")
+    elif norm_mime in ("image/jpeg", "image/jpg"):
+        if not content.startswith(b"\xff\xd8\xff"):
+            raise ValidationException("File content header does not match declared JPEG format.")
+    elif norm_mime == "image/png":
+        if not content.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValidationException("File content header does not match declared PNG format.")
+    elif norm_mime == "image/webp":
+        if not (len(content) >= 12 and content[:4] == b"RIFF" and content[8:12] == b"WEBP"):
+            raise ValidationException("File content header does not match declared WebP format.")
+    elif norm_mime in (
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ):
+        # OpenXML documents are ZIP packages starting with PK\x03\x04
+        if not content.startswith(b"PK\x03\x04"):
+            if (
+                norm_mime == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                and b"\x00" not in content
+            ):
+                # Tabular text representation fallback
+                pass
+            else:
+                raise ValidationException(
+                    "File content header does not match declared Office OpenXML format."
+                )
+    elif norm_mime == "application/msword":
+        # Legacy MS Word binary format (Compound File Binary Format: \xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1)
+        if not content.startswith(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"):
+            raise ValidationException(
+                "File content header does not match declared MS Word document format."
+            )
+    elif norm_mime in ("text/plain", "text/csv"):
+        # Text/CSV files cannot contain null bytes
+        if b"\x00" in content:
+            raise ValidationException("Text documents cannot contain binary null bytes.")
+    elif norm_mime == "application/json":
+        stripped = content.strip()
+        if not (stripped.startswith(b"{") or stripped.startswith(b"[")):
+            raise ValidationException("File content does not match declared JSON format.")
 
 
 def calculate_sha256(content: bytes) -> str:
@@ -67,7 +140,6 @@ def sanitize_filename(filename: str) -> str:
         ext = Path(safe_name).suffix
         safe_name = f"{stem}{ext}"
     return safe_name
-
 
 
 class DocumentStorage(ABC):
@@ -155,7 +227,9 @@ class LocalDocumentStorage(DocumentStorage):
         try:
             resolved_path.relative_to(self.base_dir)
         except ValueError as exc:
-            raise ValidationException("Storage path traversal attempted outside storage root.") from exc
+            raise ValidationException(
+                "Storage path traversal attempted outside storage root."
+            ) from exc
 
         return resolved_path
 
@@ -179,7 +253,10 @@ class LocalDocumentStorage(DocumentStorage):
                 f"Unsupported media type: '{mime_type}'. Supported types: {', '.join(sorted(ALLOWED_DOCUMENT_TYPES.keys()))}"
             )
 
-        # 3. Resolve path and ensure parent directories exist
+        # 3. Validate content magic numbers and disallow executable payloads
+        validate_file_magic_bytes(file_content, norm_mime)
+
+        # 4. Resolve path and ensure parent directories exist
         target_path = self._sanitize_and_resolve(destination_key)
         target_path.parent.mkdir(parents=True, exist_ok=True)
 

@@ -8,21 +8,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from app.core.config import settings
-from app.core.exceptions import CampusOSException
+from app.core.exceptions import AuthenticationException, CampusOSException
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 ACCESS_TOKEN_COOKIE_NAME = "campusos_access_token"
 REFRESH_TOKEN_COOKIE_NAME = "campusos_refresh_token"
-
-
-class AuthenticationException(CampusOSException):
-    def __init__(self, message: str = "Could not validate authentication credentials."):
-        super().__init__(
-            status_code=401,
-            code="AUTHENTICATION_FAILED",
-            message=message,
-        )
 
 
 class AccountLockedException(CampusOSException):
