@@ -1,238 +1,314 @@
-# CampusOS
+# 🎓 CampusOS ERP — Project README & Roadmap
 
-> **One Campus. One System. One Source of Truth.**
-
-CampusOS is an enterprise-grade College ERP / Campus Operating System designed to unify student lifecycle management, faculty operations, academic governance, attendance tracking, examination workflows, financial billing, placement drives, campus events, hostel/transport logistics, institutional documentation, and role-guarded campus intelligence.
-
-Initially architected for a single high-scale institution, CampusOS is fundamentally structured to scale into a multi-tenant SaaS platform serving diverse colleges and universities with strict tenant data isolation.
+> **V.S.B. Engineering College, Karur** | One Campus. One System. One Source of Truth.
 
 ---
 
-## 🏛️ Core Design Principles
-
-1. **Unified Core Entities**: A `Student` is a single source of truth across all modules (Attendance, Academics, Examination, Fees, Placement, Documents, Events), eliminating cross-module data duplication.
-2. **Modular Monolith**: Clean, domain-driven boundaries in a unified repository, maximizing development velocity while maintaining strict decoupled architectural layers.
-3. **Multi-Tenancy Readiness**: Row-Level Isolation backed by `tenant_id` context and database security policies, ensuring seamless migration to schema or database isolation without rewriting domain models.
-4. **Zero Client-Side Trust**: Authentication and fine-grained authorization (RBAC + PBAC) are rigorously enforced at backend API route guards. Frontend role checks only govern presentation.
-5. **Role-Driven Dashboards**: Dedicated operational views tailored for Super Admin, Principal / Management, HOD, Faculty, Accounts, Placement Officers, Students, and Parents.
-6. **Ambient Intelligence Layer**: AI capabilities operate strictly through permission-guarded tools and domain services, never executing uncontrolled queries directly against storage.
-
----
-
-## 📂 Repository Structure
-
-```text
-campusos/
-├── apps/
-│   ├── api/                      # Backend: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic
-│   └── web/                      # Frontend: Next.js 15 (App Router), TypeScript, Tailwind CSS
-├── packages/
-│   ├── config/                   # Shared linting, formatting, and TypeScript configs
-│   └── types/                    # Shared TypeScript interfaces & API contracts
-├── docs/                         # Architecture, security, database, and UX documentation
-│   ├── product/                  # Vision, scope, and roadmap
-│   ├── architecture/             # Monolith design & domain boundaries
-│   ├── database/                 # Multi-tenancy isolation & entity relationships
-│   ├── api/                      # REST standards & error formats
-│   ├── security/                 # AuthN/AuthZ & RBAC/PBAC matrix
-│   ├── ux/                       # Design system tokens & role-specific dashboards
-│   ├── ai/                       # AI assistant tool boundaries & RAG design
-│   ├── deployment/               # Local setup & production topology
-│   └── decisions/                # Architecture Decision Records (ADRs)
-├── infrastructure/               # Container definitions & deployment configs
-├── scripts/                      # Developer automation scripts (cross-platform & PowerShell)
-├── docker-compose.yml            # Local supporting services (PostgreSQL, Redis, MinIO)
-├── package.json                  # Monorepo workspaces definition
-└── README.md
-```
+## 📋 Table of Contents
+- [What Has Been Done](#-what-has-been-done)
+- [API Workflow Test Results](#-api-workflow-test-results)
+- [What Is Missing / Incomplete](#-what-is-missing--incomplete)
+- [Next Steps](#-next-steps)
+- [Project Roadmap](#-project-roadmap)
+- [Running the Project](#-running-the-project)
 
 ---
 
-## 🚀 Getting Started
+## ✅ What Has Been Done
 
-### Prerequisites
+### 🏗️ Infrastructure & DevOps
+| Item | Status |
+|------|--------|
+| Docker Compose stack (Postgres, Redis, MinIO, API, Web) | ✅ Done |
+| PostgreSQL 16 with async connection pooling | ✅ Done |
+| Redis 7 for caching & rate limiting | ✅ Done |
+| MinIO object storage for documents | ✅ Done |
+| Alembic database migrations (50 migration files) | ✅ Done |
+| Multi-environment config (.env.development, .env.production) | ✅ Done |
+| Health check endpoints (`/health/live`, `/health/ready`) | ✅ Done |
 
-- **Node.js**: `>= 20.0.0` (Tested on Node.js v22/v26)
-- **npm**: `>= 10.0.0`
-- **Python**: `>= 3.11.0` (Tested on Python 3.11 & 3.12)
-- **PostgreSQL 16+** & **Redis 7+** (Optional for local testing; SQLite in-memory and local cache fallbacks are included)
+### 🔐 Authentication & Security
+| Item | Status |
+|------|--------|
+| JWT-based auth with HttpOnly cookies | ✅ Done |
+| Access token + Refresh token rotation | ✅ Done |
+| Role-Based Access Control (RBAC) | ✅ Done |
+| Policy-Based Access Control (PBAC) | ✅ Done |
+| Multi-tenancy (tenant isolation per institution) | ✅ Done |
+| Rate limiting (per-route, per-user) | ✅ Done |
+| Audit trail logging for all actions | ✅ Done |
+| Password change / forgot password endpoints | ✅ Done |
+| Security headers & CORS configuration | ✅ Done |
+
+### 🎓 Core Academic Modules (API + UI)
+| Module | API | UI | DB Model |
+|--------|-----|----|----|
+| Students (CRUD, enrollment, 360° view) | ✅ | ✅ | ✅ |
+| Faculty management | ✅ | ✅ | ✅ |
+| Staff management | ✅ | ✅ | ✅ |
+| Departments | ✅ | ✅ | ✅ |
+| Programs & Courses | ✅ | ✅ | ✅ |
+| Academic Structure (Semesters, Batches) | ✅ | ✅ | ✅ |
+| Subjects & Curriculum | ✅ | ✅ | ✅ |
+| Course Offerings & Enrollments | ✅ | ✅ | ✅ |
+| Timetable | ✅ | ✅ | ✅ |
+| Attendance (Sessions, Records, Leaves, Corrections) | ✅ | ✅ | ✅ |
+| Examinations & Results | ✅ | ✅ | ✅ |
+| Library & Learning Resources | ✅ | ✅ | ✅ |
+
+### 💰 Finance & HR
+| Module | API | UI | DB Model |
+|--------|-----|----|----|
+| Fee management & Invoices | ✅ | ✅ | ✅ |
+| Payments & Receipts | ✅ | ✅ | ✅ |
+| Payroll | ✅ | ✅ | ✅ |
+| Procurement & Inventory | ✅ | ✅ | ✅ |
+| Workforce & HR management | ✅ | ✅ | ✅ |
+
+### 🏠 Campus Life Modules
+| Module | API | UI | DB Model |
+|--------|-----|----|----|
+| Housing / Hostel allocation | ✅ | ✅ | ✅ |
+| Transport management | ✅ | ✅ | ✅ |
+| Campus Events & Clubs | ✅ | ✅ | ✅ |
+| Sports management | ✅ | ✅ | ✅ |
+| Campus Security & Access control | ✅ | ✅ | ✅ |
+| Student Affairs | ✅ | ✅ | ✅ |
+| Placement & Career services | ✅ | ✅ | ✅ |
+| Research management | ✅ | ✅ | ✅ |
+| Sustainability tracking | ✅ | ✅ | ✅ |
+
+### 🤖 Advanced / Enterprise Features
+| Feature | Status |
+|---------|--------|
+| AI Intelligence / Query composer | ✅ Done (mock provider) |
+| Notifications system (in-app, webhooks) | ✅ Done |
+| Workflow & Case management engine | ✅ Done |
+| Documents & Certificates management | ✅ Done |
+| Analytics ingestion pipeline | ✅ Done |
+| Reporting engine | ✅ Done |
+| Accreditation tracking (NAAC/NIRF) | ✅ Done |
+| Data import (CSV/bulk upload) | ✅ Done |
+| Governance & Policy engine | ✅ Done |
+| Event-driven architecture (domain events) | ✅ Done |
+
+### 🖥️ Frontend (Next.js 15)
+| Feature | Status |
+|---------|--------|
+| Role-based dashboards (Admin, VP, HOD, Faculty, Student, Accounts, Placement) | ✅ Done |
+| Sidebar navigation with 60+ routes | ✅ Done |
+| Command palette (⌘K search) | ✅ Done |
+| Notification drawer | ✅ Done |
+| Role switcher (demo personas) | ✅ Done |
+| V.S.B. College logo in sidebar, login, landing page | ✅ Done |
+| Favicon with college logo | ✅ Done |
+| Responsive mobile layout | ✅ Done |
+| White + Yellow institutional theme | ✅ Done |
+| 251 statically generated pages | ✅ Done |
 
 ---
 
-### Quick Start (Local Development)
+## 🧪 API Workflow Test Results
 
-#### 1. Setup Environment Files
+> Tested against live API at `http://localhost:8000`
 
+| Test | Endpoint | Result | Notes |
+|------|----------|--------|-------|
+| Health check (live) | `GET /health/live` | ✅ Healthy | Service alive |
+| Health check (API v1) | `GET /api/v1/health` | ✅ Healthy | v0.1.0 |
+| Swagger UI | `GET /docs` | ✅ 200 OK | Full API docs available |
+| Login — wrong field | `POST /api/v1/auth/login` body `{username}` | ✅ Proper 422 validation error | Expects `email` field |
+| Login — email field | `POST /api/v1/auth/login` body `{email}` | ⚠️ No seed users in DB | Migrations not yet run |
+| Students list | `GET /api/v1/students` | ✅ Auth guard: 401 | Correctly blocked without token |
+| Faculty list | `GET /api/v1/faculty` | ✅ Auth guard: 401 | Correctly blocked without token |
+
+> **Key Finding:** API is running correctly. Auth guards work properly. The frontend uses **mock/demo personas** because no real DB seed data exists yet.
+
+---
+
+## ❌ What Is Missing / Incomplete
+
+### 🔴 Critical (Fix First)
+| Issue | Impact |
+|-------|--------|
+| **DB migrations not applied** — 50 Alembic files exist but tables not created | No real data possible |
+| **No database seed data** — No admin user, students, or records in Postgres | Cannot login via real API |
+| **Frontend not connected to real API** — Auth and all data is mocked | App is a demo shell only |
+| **No real login flow** — Frontend auth bypasses API entirely | Not production-ready |
+
+### 🟡 Partially Implemented
+| Item | What's Missing |
+|------|----------------|
+| AI Assistant | Only mock provider — no real Gemini/OpenAI integration |
+| Email notifications | SMTP config missing; notifications stored but not sent |
+| File uploads | MinIO configured but upload flows not wired in UI |
+| Reports export | PDF/Excel service exists but UI download not complete |
+| MFA / 2FA | Documented in `docs/mfa.md` but not implemented |
+| International students | UI nav exists; backend partial |
+| E2E tests (Playwright) | Framework set up; test coverage minimal |
+| CI/CD pipeline | No GitHub Actions workflow file |
+
+### 🔵 Frontend Pages With No Backend Wiring
+- Student detail pages (no real API calls)
+- Attendance marking UI (not calling API)
+- Examination result entry (not wired)
+- Finance payment forms (not submitting to API)
+- Document upload (not calling MinIO storage API)
+
+---
+
+## 🚀 Next Steps
+
+### Phase 1 — Make It Real (Do This Now)
 ```bash
-# Backend environment template
-cp apps/api/.env.example apps/api/.env
+# Step 1: Apply all DB migrations
+docker exec campusos-api alembic upgrade head
 
-# Frontend environment template
-cp apps/web/.env.example apps/web/.env.local
+# Step 2: Seed the database with initial admin user
+docker exec campusos-api python -m app.scripts.seed_dev
+
+# Step 3: Wire frontend login to real API
+# Edit: apps/web/src/lib/auth-context.tsx
+# Replace mock persona with real POST /api/v1/auth/login
+
+# Step 4: Connect student/faculty CRUD pages to API
+# Replace mock data with fetch() calls to API endpoints
 ```
 
-#### 2. Install & Start Backend API (`apps/api`)
-
-```bash
-cd apps/api
-
-# Create & activate virtual environment
-python -m venv .venv
-
-# On Windows (PowerShell):
-.venv\Scripts\Activate.ps1
-# On Linux / macOS:
-# source .venv/bin/activate
-
-# Install runtime and development dependencies
-pip install -r requirements-dev.txt
-
-# Run forward schema migrations (against PostgreSQL when configured)
-# alembic upgrade head
-
-# Start FastAPI ASGI server
-uvicorn app.main:app --reload --port 8000
+### Phase 2 — Core Workflows
+```
+5.  Attendance marking flow (Faculty marks → saves to DB)
+6.  Exam result entry and publication
+7.  Fee invoice generation and payment recording
+8.  Document upload (ID cards, certificates) via MinIO
+9.  Real email notification delivery (configure SMTP)
+10. Timetable auto-generation
 ```
 
-- **Interactive API Documentation (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc Contract Documentation:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **Liveness Probe:** [http://localhost:8000/api/v1/health/live](http://localhost:8000/api/v1/health/live)
-- **Readiness Probe:** [http://localhost:8000/api/v1/health/ready](http://localhost:8000/api/v1/health/ready)
-
-#### 3. Install & Start Frontend Web Application (`apps/web`)
-
-```bash
-# In the repository root:
-npm install
-
-# Start Next.js development server
-npm run dev --workspace=apps/web
+### Phase 3 — Quality & Testing
+```
+11. Write unit tests for all service classes
+12. Write integration tests for critical API flows
+13. Complete Playwright E2E tests for key user journeys
+14. Add GitHub Actions CI/CD pipeline
+15. Add API rate limiting tests
 ```
 
-- **Web Application Portal:** [http://localhost:3000](http://localhost:3000)
-- **Multi-Role Entry Portal:** [http://localhost:3000/login](http://localhost:3000/login)
-
-#### 4. Background Workers & Distributed Scheduler
-
-```bash
-cd apps/api
-
-# Run transactional outbox batch worker (processes pending domain events)
-python -m app.worker
-
-# Run distributed scheduler (sweeps maintenance schedules, overdue invoices, escalation SLAs)
-python -m app.scheduler
+### Phase 4 — Production Readiness
+```
+16. Integrate real AI provider (Gemini API) for intelligence module
+17. Implement MFA (TOTP/OTP via authenticator app)
+18. Configure SMTP for email notifications
+19. Set up monitoring (Prometheus + Grafana)
+20. Configure production Docker Compose with SSL/HTTPS
+21. Load testing & performance benchmarks
 ```
 
 ---
 
-## 🧪 Testing & Quality Assurance
+## 🗺️ Project Roadmap
 
-CampusOS maintains strict, evidence-based test suites ensuring 100% test pass rates across both applications with zero mock workarounds:
+```mermaid
+flowchart LR
+    subgraph DONE["✅ Phase 0 — Foundation (DONE)"]
+        A1[Docker Stack]
+        A2[Auth & RBAC]
+        A3[60+ API Modules]
+        A4[50 DB Migrations]
+        A5[Next.js 15 UI - 251 pages]
+        A6[VSB College Branding]
+    end
 
-### 1. Backend Automated Tests (747 Tests)
-```bash
-cd apps/api
+    subgraph P1["🔴 Phase 1 — Real Data (NOW)"]
+        B1[Run Alembic Migrations]
+        B2[Seed Admin User]
+        B3[Wire Frontend Auth to API]
+        B4[Connect CRUD Pages to API]
+    end
 
-# Run complete backend pytest suite (all 63 test files)
-.venv\Scripts\python.exe -m pytest -q
+    subgraph P2["🟡 Phase 2 — Core Workflows"]
+        C1[Attendance Workflow]
+        C2[Exam Results Entry]
+        C3[Fee and Payments]
+        C4[Document Uploads via MinIO]
+        C5[Email Notifications via SMTP]
+    end
 
-# Run specific domain test suites:
-.venv\Scripts\python.exe -m pytest tests/test_core_and_people.py -v
-.venv\Scripts\python.exe -m pytest tests/test_auth.py tests/test_saas_isolation.py -v
-.venv\Scripts\python.exe -m pytest tests/test_security_hardening.py -v
-.venv\Scripts\python.exe -m pytest tests/test_enterprise_database_migrations.py -v
-.venv\Scripts\python.exe -m pytest tests/test_enterprise_asset_lifecycle.py -v
-.venv\Scripts\python.exe -m pytest tests/test_enterprise_student_housing_step66.py -v
-.venv\Scripts\python.exe -m pytest tests/test_enterprise_sustainability_step67.py -v
-.venv\Scripts\python.exe -m pytest tests/test_enterprise_campus_security_step68.py -v
+    subgraph P3["🔵 Phase 3 — Quality"]
+        D1[Unit Tests - pytest]
+        D2[Integration Tests]
+        D3[E2E Tests - Playwright]
+        D4[CI/CD - GitHub Actions]
+    end
+
+    subgraph P4["🟢 Phase 4 — Production"]
+        E1[Real AI - Gemini API]
+        E2[MFA and 2FA]
+        E3[Monitoring - Prometheus]
+        E4[SSL and Production Deploy]
+    end
+
+    DONE --> P1 --> P2 --> P3 --> P4
 ```
 
-### 2. Frontend Test Suites (21 Suites)
+### Timeline Estimate
+
+| Phase | Effort | Milestone |
+|-------|--------|-----------|
+| **Phase 1** — Real Data | 1–2 weeks | Can login, view real student records from DB |
+| **Phase 2** — Core Workflows | 3–4 weeks | End-to-end attendance, exams, fees working |
+| **Phase 3** — Quality | 2–3 weeks | 80%+ test coverage, CI passing on every push |
+| **Phase 4** — Production | 2–3 weeks | Live HTTPS deployment with monitoring |
+
+---
+
+## 🏃 Running the Project
+
+### Start All Services
 ```bash
-cd apps/web
-
-# Run all 21 frontend test suites:
-node ../../scratch/run_all_frontend_tests.mjs
-
-# Or run individual test suite using tsx:
-npx tsx src/__tests__/auth-login-portal.test.ts
-npx tsx src/__tests__/academics-module.test.ts
-npx tsx src/__tests__/attendance-module.test.ts
-npx tsx src/__tests__/campus-security-module.test.ts
-npx tsx src/__tests__/housing-module.test.ts
-npx tsx src/__tests__/sustainability-module.test.ts
+cd ERP---
+docker compose up -d
 ```
 
-### 3. Code Quality, Linting & Type Checking
+### Service URLs
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| 🌐 Web App | http://localhost:3000 | Use demo personas on landing page |
+| 📡 API | http://localhost:8000 | — |
+| 📖 Swagger Docs | http://localhost:8000/docs | Full interactive API explorer |
+| 🗄️ MinIO Console | http://localhost:9001 | `campusos_admin` / `campusos_minio_secret` |
+
+### Apply Database Migrations
 ```bash
-# Backend lint check (Ruff 0.6+):
-cd apps/api
-.venv\Scripts\ruff.exe check app
+docker exec campusos-api alembic upgrade head
+```
 
-# Frontend TypeScript strict type checking:
-npx tsc --noEmit -p apps/web/tsconfig.json
+### Check Container Health
+```bash
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
 
-# Frontend ESLint:
-cd apps/web
-npm run lint
-
-# Production Next.js build (verifies static prerendering across all 251 routes):
-cd apps/web
-npm run build
+### Stop All Services
+```bash
+docker compose down
 ```
 
 ---
 
-## 🔐 Multi-Role Authentication & Demo Personas
+## 🏛️ Tech Stack
 
-The unified login experience at `/login` provides 5 dedicated entry experiences with built-in role scoping:
-
-| Role Portal | Canonical Role | Demo Persona Email | Scope & Permissions |
-| :--- | :--- | :--- | :--- |
-| **Student Portal** | `STUDENT` | `aarav.patel@apextech.edu` | View personal attendance, grades, fee dues, timetable, housing requests. |
-| **Faculty Portal** | `FACULTY` | `rajesh.sharma@apextech.edu` | Mark attendance rosters, enter marks, submit leave requests, view courses. |
-| **HOD Portal** | `HOD` | `meenakshi.sundaram@apextech.edu` | Approve leaves, sign off mark corrections, review departmental health metrics. |
-| **Vice Principal** | `PRINCIPAL` | `arvind.swaminathan@apextech.edu` | Institutional analytics, high-level accreditation snapshots, executive escalations. |
-| **Administrator** | `SUPER_ADMIN` | `admin@apextech.edu` | Global campus management, security ops, billing, user role assignments. |
-
----
-
-## 📦 Implemented Domain Modules (Steps 1–68)
-
-CampusOS integrates 68 comprehensive enterprise domains:
-1. **Core Organization:** Multi-campus hierarchy, departments, academic structures, degree programs.
-2. **Academic Life:** Curricula (R-2024, R-2026), course offerings, timetable clash detection, student enrollments.
-3. **Attendance Engine:** 75% threshold policy, session rosters, leave approvals, immutable audit logs.
-4. **Examinations & Evaluation:** Internal/External rosters, lock/reopen flows, COE publication batches.
-5. **Finance & Accounting:** Fee schedules, invoice ledgers, gateway reconciliation, printable vouchers with SHA-256 seals.
-6. **Asset Lifecycle:** Commissioning, corrective work orders, depreciation schedules, inspection checklists.
-7. **Transactional Outbox:** Guaranteed delivery, exponential backoff retries, dead-letter queue, sanitized payloads.
-8. **Student Affairs & Support:** Confidential grievance intake, disciplinary hearings, appeals, IDP personal development plans.
-9. **Global Mobility & Legal:** International partner universities, exchange applications, contract lifecycle risk matrix.
-10. **Research & Sports:** Grant pipeline, milestone budget tracking, tournament brackets (Round Robin/Knockout), equipment checkouts.
-11. **Student Housing (Step 66):** Off-campus landlords, bed telemetry, lease agreements, safety violation suspensions.
-12. **Sustainability & Carbon (Step 67):** Scope 1/2/3 GHG accounting, IoT smart meters, TSDF hazardous waste tracking, CAPA permits.
-13. **Campus Security (Step 68):** Visitor QR badges, NFC guard patrol checkpoint scans, hardware controller telemetry, emergency coordination.
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 15, TypeScript, Tailwind CSS, Lucide Icons |
+| **Backend API** | FastAPI (Python 3.11), SQLAlchemy (async), Alembic |
+| **Database** | PostgreSQL 16 |
+| **Cache** | Redis 7 |
+| **Object Storage** | MinIO (S3-compatible) |
+| **Auth** | JWT (HttpOnly cookies), RBAC + PBAC |
+| **Containers** | Docker, Docker Compose |
+| **Testing** | pytest (backend), Playwright (E2E) |
+| **Code Style** | Prettier (frontend), Black/Ruff (backend) |
 
 ---
 
-## 📖 Architecture Documentation
-
-Detailed architectural specifications and engineering standards are available in the [`docs/`](./docs) directory:
-
-- [Product Overview](./docs/product/overview.md)
-- [System Architecture](./docs/architecture/system-overview.md)
-- [Domain Boundaries](./docs/architecture/domain-boundaries.md)
-- [Database & Multi-Tenancy Strategy](./docs/database/multi-tenancy-strategy.md)
-- [Security Architecture](./docs/security/architecture.md)
-- [Production Deployment Runbook](./docs/deployment.md)
-- [Production Security Checklist](./docs/production-security-checklist.md)
-- [Disaster Recovery Plan](./docs/disaster-recovery.md)
-- [Incident Response Plan](./docs/incident-response.md)
-- [Database Backup & Restore](./docs/backup-restore.md)
-- [Production Infrastructure Architecture](./docs/infrastructure.md)
-- [Environment Configuration Strategy](./docs/environment-configuration.md)
-- [Design System & UX Philosophy](./docs/ux/design-system.md)
-- [AI Architecture & Guardrails](./docs/ai/architecture.md)
-- [Architecture Decision Records (ADRs)](./docs/decisions/)
+*📍 V.S.B. Engineering College, Karur — 639 111 | Hardwork is the Key to Success*
