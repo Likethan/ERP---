@@ -311,4 +311,4 @@ docker compose down
 
 ---
 
-*📍 V.S.B. Engineering College, Karur — 639 111 | Hardwork is the Key to Success*
+*📍 V.S.B. Engineering College, Coimbatore | Hardwork is the Key to Success*
