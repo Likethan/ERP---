@@ -1,6 +1,6 @@
 # 🎓 CampusOS ERP — Project README & Roadmap
 
-> **V.S.B. Engineering College, Karur** | One Campus. One System. One Source of Truth.
+> **V.S.B. Engineering College, Coimbatore** | One Campus. One System. One Source of Truth.
 
 ---
 
