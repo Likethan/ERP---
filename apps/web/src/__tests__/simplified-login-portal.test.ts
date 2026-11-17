@@ -77,10 +77,11 @@ async function runSimplifiedLeftPanelLoginTests() {
 
   // Left Column: Brand Section
   assert(
-    loginPageSource.includes('src="/college-logo.jpg"') &&
+    loginPageSource.includes('src="/vsb-college-header.jpg"') &&
+      loginPageSource.includes('src="/college-logo.jpg"') &&
       loginPageSource.includes("CampusOS") &&
       loginPageSource.includes("V.S.B. Engineering College"),
-    "Left Column Brand Section: VSB crest seal, 'CampusOS', and 'V.S.B. Engineering College' are present",
+    "Left Column Brand Section: Official big institutional header image from vsbec.edu.in, VSB crest seal, 'CampusOS', and 'V.S.B. Engineering College' are present",
   );
 
   // Left Column: Small Label

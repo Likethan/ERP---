@@ -412,24 +412,36 @@ function LoginFormContent() {
           Minimalist institutional identity, headline, and compact highlights
           ========================================================================= */}
       <div className="w-full lg:w-[48%] xl:w-[46%] 2xl:w-[44%] bg-gradient-to-br from-[#FAF8F2] via-[#FAF8F2] to-[#F5EFEB] border-b lg:border-b-0 lg:border-r border-amber-200/50 p-8 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between shrink-0">
-        {/* Brand Section */}
-        <div className="flex items-center gap-3.5">
-          <div className="relative h-12 w-12 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs">
+        {/* Brand Section with Big Institutional Image from vsbec.edu.in */}
+        <div className="space-y-4">
+          <div className="relative w-full max-w-[380px] sm:max-w-[420px] h-20 sm:h-24 bg-white/95 p-2 rounded-2xl border border-amber-200/70 shadow-xs overflow-hidden">
             <Image
-              src="/college-logo.jpg"
-              alt="VSB Engineering College"
+              src="/vsb-college-header.jpg"
+              alt="V.S.B. Engineering College (An Autonomous Institution)"
               fill
-              className="object-contain rounded-full"
+              className="object-contain p-1"
               priority
             />
           </div>
-          <div>
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block font-sans">
-              CampusOS
-            </span>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">
-              V.S.B. Engineering College
-            </p>
+
+          <div className="flex items-center gap-3">
+            <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs">
+              <Image
+                src="/college-logo.jpg"
+                alt="VSB Engineering College Seal"
+                fill
+                className="object-contain rounded-full"
+                priority
+              />
+            </div>
+            <div>
+              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block font-sans">
+                CampusOS
+              </span>
+              <p className="text-xs font-medium text-slate-500 mt-0.5">
+                V.S.B. Engineering College
+              </p>
+            </div>
           </div>
         </div>
 
