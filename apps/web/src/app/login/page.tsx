@@ -12,14 +12,10 @@ import {
   EyeOff,
   AlertCircle,
   ShieldCheck,
-  CheckCircle2,
-  Building2,
-  Activity,
   GraduationCap,
   Users,
   Landmark,
   Building,
-  ArrowRight,
 } from "lucide-react";
 import {
   PORTALS,
@@ -413,118 +409,54 @@ function LoginFormContent() {
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white selection:bg-amber-200 selection:text-slate-900 font-sans">
       {/* =========================================================================
           LEFT COLUMN: WARM IVORY GRADIENT (#FAF8F2)
-          Brand header, status pill, editorial serif headline & 2x2 feature grid
+          Minimalist institutional identity, headline, and compact highlights
           ========================================================================= */}
-      <div className="w-full lg:w-[48%] xl:w-[46%] 2xl:w-[44%] bg-gradient-to-br from-[#FAF8F2] via-[#FAF8F2] to-[#F5EFEB] border-b lg:border-b-0 lg:border-r border-amber-200/50 p-8 sm:p-10 lg:p-12 xl:p-14 flex flex-col justify-between shrink-0">
-        <div className="space-y-8 lg:space-y-10">
-          {/* Brand Header */}
-          <div className="flex items-center gap-3.5">
-            <div className="relative h-12 w-12 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs">
-              <Image
-                src="/college-logo.jpg"
-                alt="VSB Engineering College"
-                fill
-                className="object-contain rounded-full"
-                priority
-              />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-                  CampusOS
-                </span>
-                <span className="px-2 py-0.5 text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-300 rounded-full">
-                  ERP V2.4
-                </span>
-              </div>
-              <p className="text-xs font-medium text-slate-500 mt-0.5">
-                V.S.B. Engineering College
-              </p>
-            </div>
+      <div className="w-full lg:w-[48%] xl:w-[46%] 2xl:w-[44%] bg-gradient-to-br from-[#FAF8F2] via-[#FAF8F2] to-[#F5EFEB] border-b lg:border-b-0 lg:border-r border-amber-200/50 p-8 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between shrink-0">
+        {/* Brand Section */}
+        <div className="flex items-center gap-3.5">
+          <div className="relative h-12 w-12 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs">
+            <Image
+              src="/college-logo.jpg"
+              alt="VSB Engineering College"
+              fill
+              className="object-contain rounded-full"
+              priority
+            />
           </div>
-
-          {/* Status Pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-white/95 border border-emerald-200/90 text-slate-700 shadow-2xs w-fit">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          <div>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block font-sans">
+              CampusOS
             </span>
-            <span>Unified Institutional Gateway</span>
-          </div>
-
-          {/* Headline & Description */}
-          <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[46px] font-serif font-bold text-slate-900 leading-[1.16] tracking-tight">
-              One Campus.
-              <br />
-              One System.
-              <br />
-              <span className="text-amber-800">One Source of Truth.</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md">
-              A comprehensive institutional ERP uniting student lifecycles,
-              faculty teaching, examination integrity, workforce management,
-              financial billing, and institutional accreditation under a unified
-              security architecture.
+            <p className="text-xs font-medium text-slate-500 mt-0.5">
+              V.S.B. Engineering College
             </p>
           </div>
         </div>
 
-        {/* 2x2 Feature Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-8 lg:pt-10">
-          {/* Card 1: Zero-Trust RBAC */}
-          <div className="bg-white/85 backdrop-blur-xs border border-amber-200/60 rounded-xl p-3.5 shadow-2xs hover:border-amber-300 transition-colors">
-            <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck className="h-4 w-4 text-amber-800 shrink-0" />
-              <span className="font-semibold text-xs text-slate-900">
-                Zero-Trust RBAC
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 leading-normal">
-              Strict multi-tenant boundaries with granular role permissions.
-            </p>
-          </div>
+        {/* Central Identity Section */}
+        <div className="my-auto py-10 lg:py-14 space-y-5">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-800/90 font-mono">
+            ONE INSTITUTION. ONE DIGITAL ECOSYSTEM.
+          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-[40px] xl:text-[44px] font-serif font-bold text-slate-900 leading-[1.2] tracking-tight">
+            Everything Your Campus Needs.
+            <br />
+            <span className="text-amber-900">One Connected Platform.</span>
+          </h1>
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-md">
+            A unified digital workspace connecting students, faculty,
+            departments and institutional administration.
+          </p>
+        </div>
 
-          {/* Card 2: ISO 27001 Certified */}
-          <div className="bg-white/85 backdrop-blur-xs border border-amber-200/60 rounded-xl p-3.5 shadow-2xs hover:border-amber-300 transition-colors">
-            <div className="flex items-center gap-2 mb-1">
-              <CheckCircle2 className="h-4 w-4 text-emerald-700 shrink-0" />
-              <span className="font-semibold text-xs text-slate-900">
-                ISO 27001 Certified
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 leading-normal">
-              Continuous compliance, encrypted secrets, and tamper-evident audit
-              logs.
-            </p>
-          </div>
-
-          {/* Card 3: 5 Campuses • 14 Depts */}
-          <div className="bg-white/85 backdrop-blur-xs border border-amber-200/60 rounded-xl p-3.5 shadow-2xs hover:border-amber-300 transition-colors">
-            <div className="flex items-center gap-2 mb-1">
-              <Building2 className="h-4 w-4 text-slate-700 shrink-0" />
-              <span className="font-semibold text-xs text-slate-900">
-                5 Campuses • 14 Depts
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 leading-normal">
-              Synchronized operations across engineering, science, and medical
-              faculties.
-            </p>
-          </div>
-
-          {/* Card 4: Real-Time Telemetry */}
-          <div className="bg-white/85 backdrop-blur-xs border border-amber-200/60 rounded-xl p-3.5 shadow-2xs hover:border-amber-300 transition-colors">
-            <div className="flex items-center gap-2 mb-1">
-              <Activity className="h-4 w-4 text-amber-800 shrink-0" />
-              <span className="font-semibold text-xs text-slate-900">
-                Real-Time Telemetry
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 leading-normal">
-              Instant analytics for attendance, fee reconciliation, and exams.
-            </p>
-          </div>
+        {/* Compact Functional Highlights */}
+        <div className="pt-6 border-t border-amber-200/50 space-y-2">
+          <p className="text-xs sm:text-sm font-semibold text-slate-800 tracking-wide">
+            Academics · Attendance · Examinations · Finance · Administration
+          </p>
+          <p className="text-[11px] sm:text-xs text-slate-500">
+            Secure Access · Role-Based Workspaces · Centralized Management
+          </p>
         </div>
       </div>
 

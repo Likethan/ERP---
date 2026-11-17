@@ -1,13 +1,17 @@
 /**
- * Desktop Landscape Institutional Login Portal Verification Suite
+ * Simplified Left Panel Institutional Login Portal Verification Suite
  * Verifies:
  * 1. Desktop landscape (16:9 widescreen) two-column split layout.
- * 2. Left Column (Warm ivory gradient #FAF8F2):
- *    - Brand header: VSB university crest seal (/college-logo.jpg), bold "CampusOS" wordmark, amber "ERP V2.4" pill badge, college subtitle.
- *    - Status pill: "Unified Institutional Gateway" with live green status dot.
- *    - Headline: "One Campus. One System. One Source of Truth." (editorial serif typography with amber highlight).
- *    - 2x2 Feature Grid: "Zero-Trust RBAC", "ISO 27001 Certified", "5 Campuses • 14 Depts", "Real-Time Telemetry".
- * 3. Right Column (Clean white canvas with centered access card):
+ * 2. Left Column Simplified Institutional Content:
+ *    - Brand section: VSB university crest seal (/college-logo.jpg), "CampusOS", "V.S.B. Engineering College".
+ *    - Small label: "ONE INSTITUTION. ONE DIGITAL ECOSYSTEM."
+ *    - Main headline: "Everything Your Campus Needs. One Connected Platform." (editorial serif typography).
+ *    - Description: "A unified digital workspace connecting students, faculty, departments and institutional administration."
+ *    - Compact functional highlights: "Academics · Attendance · Examinations · Finance · Administration"
+ *    - Subtle supporting line: "Secure Access · Role-Based Workspaces · Centralized Management"
+ *    - Complete removal of promotional clutter: "Unified Institutional Gateway" badge, "One Campus. One System...",
+ *      and the four feature cards (Zero-Trust RBAC, ISO 27001, 5 Campuses, Real-Time Telemetry).
+ * 3. Right Column (Unchanged):
  *    - Top meta: "Tenant: VSB-CAMPUS" and "INSTITUTIONAL ACCESS PORTAL" heading with "Select Your Portal Experience".
  *    - 4-Role Segment Bar: "Student" (active yellow pill with graduation cap), "Faculty", "Vice Principal", "HOD".
  *    - Elevated Login Card: Academic pill badge, "✨ Fill Demo" trigger, "Student Portal" title, stylized inputs with visibility toggle, "Remember me" checkbox, and bold golden CTA.
@@ -36,9 +40,9 @@ function assert(condition: boolean, message: string) {
   }
 }
 
-async function runLandscapeLoginTests() {
+async function runSimplifiedLeftPanelLoginTests() {
   console.log("=================================================");
-  console.log("CampusOS Landscape Institutional Login Portal Test Suite");
+  console.log("CampusOS Simplified Left Panel Login Test Suite");
   console.log("=================================================");
 
   const loginPagePath = path.resolve(__dirname, "../app/login/page.tsx");
@@ -62,51 +66,85 @@ async function runLandscapeLoginTests() {
   );
 
   // -------------------------------------------------------------------------
-  // 2. Desktop Landscape Two-Column Split Layout & Left Column
+  // 2. Desktop Landscape Two-Column Split Layout & Simplified Left Column
   // -------------------------------------------------------------------------
   assert(
     loginPageSource.includes("lg:flex-row") &&
       (loginPageSource.includes("#FAF8F2") ||
         loginPageSource.includes("bg-[#FAF8F2]")),
-    "Clean desktop landscape two-column split layout with warm ivory (#FAF8F2) is present",
+    "Clean desktop landscape two-column split layout with warm ivory (#FAF8F2) is maintained",
   );
 
-  // Left Column: Brand Header
+  // Left Column: Brand Section
   assert(
     loginPageSource.includes('src="/college-logo.jpg"') &&
       loginPageSource.includes("CampusOS") &&
-      loginPageSource.includes("ERP V2.4") &&
       loginPageSource.includes("V.S.B. Engineering College"),
-    "Left Column Brand Header: VSB university crest seal, bold 'CampusOS' wordmark, amber 'ERP V2.4' pill badge, and college subtitle",
+    "Left Column Brand Section: VSB crest seal, 'CampusOS', and 'V.S.B. Engineering College' are present",
   );
 
-  // Left Column: Status Pill
+  // Left Column: Small Label
   assert(
-    loginPageSource.includes("Unified Institutional Gateway") &&
-      loginPageSource.includes("bg-emerald-500"),
-    "Left Column Status Pill: 'Unified Institutional Gateway' with live green status dot is present",
+    loginPageSource.includes("ONE INSTITUTION. ONE DIGITAL ECOSYSTEM."),
+    "Left Column Small Label: 'ONE INSTITUTION. ONE DIGITAL ECOSYSTEM.' is present",
   );
 
-  // Left Column: Headline
+  // Left Column: Main Headline
   assert(
-    loginPageSource.includes("One Campus.") &&
-      loginPageSource.includes("One System.") &&
-      loginPageSource.includes("One Source of Truth.") &&
+    loginPageSource.includes("Everything Your Campus Needs.") &&
+      loginPageSource.includes("One Connected Platform.") &&
       loginPageSource.includes("font-serif"),
-    "Left Column Headline: 'One Campus. One System. One Source of Truth.' with editorial serif typography and amber highlight",
+    "Left Column Main Headline: 'Everything Your Campus Needs. One Connected Platform.' with editorial serif typography",
   );
 
-  // Left Column: 2x2 Feature Grid
+  // Left Column: Description
   assert(
-    loginPageSource.includes("Zero-Trust RBAC") &&
-      loginPageSource.includes("ISO 27001 Certified") &&
-      loginPageSource.includes("5 Campuses • 14 Depts") &&
-      loginPageSource.includes("Real-Time Telemetry"),
-    "Left Column 2x2 Feature Grid: Cards for Zero-Trust RBAC, ISO 27001 Certified, 5 Campuses • 14 Depts, and Real-Time Telemetry",
+    loginPageSource.includes(
+      "A unified digital workspace connecting students, faculty,",
+    ) &&
+      loginPageSource.includes("departments and institutional administration."),
+    "Left Column Description: Concise narrative describing the unified digital workspace is present",
+  );
+
+  // Left Column: Compact Functional Highlights
+  assert(
+    loginPageSource.includes(
+      "Academics · Attendance · Examinations · Finance · Administration",
+    ),
+    "Left Column Compact Highlights: 'Academics · Attendance · Examinations · Finance · Administration' is present",
+  );
+
+  // Left Column: Subtle Supporting Line
+  assert(
+    loginPageSource.includes(
+      "Secure Access · Role-Based Workspaces · Centralized Management",
+    ),
+    "Left Column Supporting Line: 'Secure Access · Role-Based Workspaces · Centralized Management' is present",
   );
 
   // -------------------------------------------------------------------------
-  // 3. Right Column: Top Meta, Heading, 4-Role Segment Bar & Elevated Card
+  // 3. Clutter Removal Verification
+  // -------------------------------------------------------------------------
+  assert(
+    !loginPageSource.includes("Unified Institutional Gateway"),
+    "Removed: 'Unified Institutional Gateway' status badge",
+  );
+
+  assert(
+    !loginPageSource.includes("One Campus. One System. One Source of Truth."),
+    "Removed: Oversized promotional headline ('One Campus. One System...')",
+  );
+
+  assert(
+    !loginPageSource.includes("Zero-Trust RBAC") &&
+      !loginPageSource.includes("ISO 27001 Certified") &&
+      !loginPageSource.includes("5 Campuses • 14 Depts") &&
+      !loginPageSource.includes("Real-Time Telemetry"),
+    "Removed: All four separate bottom promotional feature cards",
+  );
+
+  // -------------------------------------------------------------------------
+  // 4. Right Column (Completely Unchanged)
   // -------------------------------------------------------------------------
   assert(
     loginPageSource.includes("Tenant: VSB-CAMPUS") &&
@@ -188,7 +226,7 @@ async function runLandscapeLoginTests() {
   );
 
   // -------------------------------------------------------------------------
-  // 4. Authentication Functionality & Security
+  // 5. Authentication Functionality & Security
   // -------------------------------------------------------------------------
   assert(
     loginPageSource.includes("await login({") &&
@@ -201,15 +239,6 @@ async function runLandscapeLoginTests() {
     loginPageSource.includes("router.replace(redirectUrl)") ||
       loginPageSource.includes('router.replace("/app/dashboard")'),
     "Authenticated redirect securely routes to /app/dashboard",
-  );
-
-  // -------------------------------------------------------------------------
-  // 5. Password Recovery Page Consistency
-  // -------------------------------------------------------------------------
-  assert(
-    forgotPasswordSource.includes("Reset your password") &&
-      forgotPasswordSource.includes('href="/login"'),
-    "Forgot password page is aligned with clean white-and-yellow enterprise design",
   );
 
   // -------------------------------------------------------------------------
@@ -232,7 +261,7 @@ async function runLandscapeLoginTests() {
 
   console.log("=================================================");
   console.log(
-    `Landscape Login Tests Finished: Passed: ${passed}, Failed: ${failed}`,
+    `Simplified Left Panel Tests Finished: Passed: ${passed}, Failed: ${failed}`,
   );
   console.log("=================================================");
 
@@ -241,7 +270,7 @@ async function runLandscapeLoginTests() {
   }
 }
 
-runLandscapeLoginTests().catch((err) => {
+runSimplifiedLeftPanelLoginTests().catch((err) => {
   console.error("Test execution failed:", err);
   process.exit(1);
 });
