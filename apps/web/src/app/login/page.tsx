@@ -411,21 +411,25 @@ function LoginFormContent() {
           LEFT COLUMN: WARM IVORY GRADIENT (#FAF8F2)
           Minimalist institutional identity, headline, and compact highlights
           ========================================================================= */}
-      <div className="w-full lg:w-[48%] xl:w-[46%] 2xl:w-[44%] bg-gradient-to-br from-[#FAF8F2] via-[#FAF8F2] to-[#F5EFEB] border-b lg:border-b-0 lg:border-r border-amber-200/50 p-8 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between shrink-0">
+      <div className="w-full lg:w-[48%] xl:w-[46%] 2xl:w-[44%] bg-gradient-to-br from-[#FAF8F2] via-[#FAF8F2] to-[#F5EFEB] border-b lg:border-b-0 lg:border-r border-amber-200/50 p-8 sm:p-10 lg:p-12 xl:p-16 flex flex-col justify-between shrink-0 relative overflow-hidden">
+        {/* Subtle decorative atmospheric warmth */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl pointer-events-none" />
+
         {/* Brand Section with Big Institutional Image from vsbec.edu.in */}
-        <div className="space-y-4">
-          <div className="relative w-full max-w-[380px] sm:max-w-[420px] h-20 sm:h-24 bg-white/95 p-2 rounded-2xl border border-amber-200/70 shadow-xs overflow-hidden">
+        <div className="space-y-4 relative z-10">
+          <div className="relative w-full max-w-[380px] sm:max-w-[420px] h-20 sm:h-24 bg-white/95 p-3 rounded-2xl border border-amber-200/80 shadow-xs hover:shadow-sm transition-all overflow-hidden backdrop-blur-xs">
             <Image
               src="/vsb-college-header.jpg"
               alt="V.S.B. Engineering College (An Autonomous Institution)"
               fill
-              className="object-contain p-1"
+              className="object-contain object-left p-0.5"
               priority
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs">
+          <div className="flex items-center gap-3 pt-1">
+            <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden border border-amber-200/90 bg-white p-0.5 shadow-2xs ring-2 ring-amber-100/60">
               <Image
                 src="/college-logo.jpg"
                 alt="VSB Engineering College Seal"
@@ -435,9 +439,14 @@ function LoginFormContent() {
               />
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block font-sans">
-                CampusOS
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block font-sans">
+                  CampusOS
+                </span>
+                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-amber-100 text-amber-900 border border-amber-300/80 rounded-full">
+                  ERP V2.4
+                </span>
+              </div>
               <p className="text-xs font-medium text-slate-500 mt-0.5">
                 V.S.B. Engineering College
               </p>
@@ -446,23 +455,28 @@ function LoginFormContent() {
         </div>
 
         {/* Central Identity Section */}
-        <div className="my-auto py-10 lg:py-14 space-y-5">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-800/90 font-mono">
-            ONE INSTITUTION. ONE DIGITAL ECOSYSTEM.
-          </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-[40px] xl:text-[44px] font-serif font-bold text-slate-900 leading-[1.2] tracking-tight">
+        <div className="my-auto py-10 lg:py-14 space-y-6 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/70 border border-amber-200 text-amber-900 shadow-2xs w-fit">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-pulse" />
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest font-mono">
+              ONE INSTITUTION. ONE DIGITAL ECOSYSTEM.
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[46px] font-serif font-bold text-slate-900 leading-[1.18] tracking-tight">
             Everything Your Campus Needs.
             <br />
-            <span className="text-amber-900">One Connected Platform.</span>
+            <span className="text-amber-800">One Connected Platform.</span>
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-md">
+
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg">
             A unified digital workspace connecting students, faculty,
             departments and institutional administration.
           </p>
         </div>
 
         {/* Compact Functional Highlights */}
-        <div className="pt-6 border-t border-amber-200/50 space-y-2">
+        <div className="pt-6 border-t border-amber-200/60 space-y-2.5 relative z-10">
           <p className="text-xs sm:text-sm font-semibold text-slate-800 tracking-wide">
             Academics · Attendance · Examinations · Finance · Administration
           </p>
@@ -476,7 +490,7 @@ function LoginFormContent() {
           RIGHT COLUMN: CLEAN WHITE CANVAS
           Top meta, 4-role segment bar, elevated login card & quick test persona
           ========================================================================= */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-12 xl:px-16 py-8 sm:py-10 bg-white">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-12 xl:px-16 py-8 sm:py-10 bg-white relative">
         <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-5">
           {/* Top Meta Bar */}
           <div className="flex items-center justify-between text-[11px] font-semibold tracking-wider uppercase text-slate-400">
@@ -495,7 +509,7 @@ function LoginFormContent() {
           </div>
 
           {/* 4-Role Segment Bar */}
-          <div className="grid grid-cols-4 gap-1 p-1.5 bg-slate-100/80 border border-slate-200/80 rounded-2xl">
+          <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-slate-100/90 border border-slate-200/80 rounded-2xl shadow-2xs">
             {FOUR_ROLES.map((roleKey) => {
               const isActive = activeRole === roleKey;
               const meta = ROLE_METAS[roleKey];
@@ -505,10 +519,10 @@ function LoginFormContent() {
                   type="button"
                   onClick={() => handleRoleSwitch(roleKey)}
                   className={cn(
-                    "flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs transition-all cursor-pointer select-none",
+                    "flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs transition-all duration-200 cursor-pointer select-none",
                     isActive
-                      ? "bg-yellow-400 text-slate-950 font-bold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-medium",
+                      ? "bg-amber-400 text-slate-950 font-bold shadow-xs scale-[1.01]"
+                      : "text-slate-600 hover:text-slate-950 hover:bg-white/80 font-medium",
                   )}
                   aria-label={`Select ${meta.label} Portal`}
                 >
@@ -531,12 +545,12 @@ function LoginFormContent() {
           </div>
 
           {/* Elevated Login Card */}
-          <div className="relative bg-white border border-slate-200/90 rounded-2xl shadow-sm p-6 sm:p-7 overflow-hidden">
+          <div className="relative bg-white border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6 sm:p-8 overflow-hidden">
             {/* Ambient Radial Warmth Glow */}
-            <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-100/40 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -top-16 -right-16 w-56 h-56 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
 
             {/* Header Row: Academic Pill Badge & Fill Demo Trigger */}
-            <div className="flex items-center justify-between relative z-10 mb-2">
+            <div className="flex items-center justify-between relative z-10 mb-3">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200/80 shadow-2xs">
                 <span>{currentMeta.badgeIcon}</span>
                 <span>{currentMeta.badgeLabel}</span>
@@ -545,7 +559,7 @@ function LoginFormContent() {
               <button
                 type="button"
                 onClick={handleFillDemo}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition-colors shadow-2xs cursor-pointer"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition-all hover:scale-105 active:scale-95 shadow-2xs cursor-pointer"
               >
                 <span>✨ Fill Demo</span>
               </button>
@@ -553,10 +567,10 @@ function LoginFormContent() {
 
             {/* Title & Quote */}
             <div className="relative z-10 mb-5">
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 {currentMeta.portalTitle}
               </h3>
-              <p className="text-xs italic text-slate-500 mt-0.5">
+              <p className="text-xs italic text-slate-500 mt-1 font-serif">
                 &ldquo;{currentMeta.quote}&rdquo;
               </p>
             </div>
@@ -565,7 +579,7 @@ function LoginFormContent() {
             {errorMessage && (
               <div
                 role="alert"
-                className="mb-4 p-3 text-xs rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-2.5 animate-fade-in relative z-10"
+                className="mb-4 p-3.5 text-xs rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-2.5 animate-fade-in relative z-10"
               >
                 <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                 <div className="leading-relaxed">{errorMessage}</div>
@@ -591,7 +605,7 @@ function LoginFormContent() {
                   placeholder={currentMeta.identifierPlaceholder}
                   autoComplete="username"
                   required
-                  className="h-10 text-sm rounded-xl border-slate-200 focus:border-yellow-400 focus:ring-yellow-400/20"
+                  className="h-11 text-sm rounded-xl border-slate-200 bg-white/90 focus:bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-400/15 transition-all shadow-2xs"
                 />
                 <p className="text-[11px] text-slate-400 mt-1">
                   {currentMeta.identifierHint}
@@ -609,7 +623,7 @@ function LoginFormContent() {
                   </label>
                   <Link
                     href="/login/forgot-password"
-                    className="text-xs font-medium text-amber-800 hover:text-amber-900 hover:underline"
+                    className="text-xs font-semibold text-amber-700 hover:text-amber-900 hover:underline transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -624,12 +638,12 @@ function LoginFormContent() {
                     placeholder="••••••••••••"
                     autoComplete="current-password"
                     required
-                    className="h-10 pr-10 text-sm rounded-xl border-slate-200 focus:border-yellow-400 focus:ring-yellow-400/20"
+                    className="h-11 pr-10 text-sm rounded-xl border-slate-200 bg-white/90 focus:bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-400/15 transition-all shadow-2xs"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer transition-colors"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
@@ -650,7 +664,7 @@ function LoginFormContent() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-400 accent-yellow-500 cursor-pointer"
+                  className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400 accent-amber-500 cursor-pointer"
                 />
                 <label
                   htmlFor="rememberMe"
@@ -666,7 +680,7 @@ function LoginFormContent() {
                   type="submit"
                   variant="primary"
                   size="lg"
-                  className="w-full h-11 text-sm font-bold text-slate-950 bg-amber-400 hover:bg-amber-500 rounded-xl transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full h-11 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 rounded-xl transition-all shadow-xs hover:shadow-md active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
@@ -687,14 +701,14 @@ function LoginFormContent() {
 
             <div
               onClick={handleDirectPersonaLaunch}
-              className="border border-slate-200 hover:border-amber-400 bg-white hover:bg-amber-50/20 rounded-xl p-3 flex items-center justify-between transition-all cursor-pointer group shadow-2xs"
+              className="border border-slate-200/90 hover:border-amber-400/80 bg-gradient-to-r from-amber-50/30 via-white to-white hover:from-amber-50/60 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer group shadow-2xs hover:shadow-sm"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-400 text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs ring-2 ring-white">
                   {currentMeta.persona.avatarInitials}
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-slate-900 group-hover:text-amber-900">
+                  <div className="text-xs sm:text-sm font-semibold text-slate-900 group-hover:text-amber-950 transition-colors">
                     {currentMeta.persona.name}
                   </div>
                   <div className="text-[11px] text-slate-500">
@@ -702,7 +716,7 @@ function LoginFormContent() {
                   </div>
                 </div>
               </div>
-              <div className="text-xs font-semibold text-slate-400 group-hover:text-slate-900 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+              <div className="text-xs font-semibold text-amber-900 bg-amber-100/80 group-hover:bg-amber-200 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all group-hover:translate-x-0.5">
                 <span>Enter</span>
                 <span>&gt;</span>
               </div>
