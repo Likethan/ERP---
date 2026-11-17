@@ -36,6 +36,7 @@ export interface PortalConfig {
   allowedRoles: string[];
   label: string;
   shortTitle: string;
+  description: string;
   supportingText: string;
   identifierLabel: string;
   identifierPlaceholder: string;
@@ -55,37 +56,13 @@ export interface PortalConfig {
 }
 
 export const PORTALS: Record<PortalKey, PortalConfig> = {
-  STUDENT: {
-    key: "STUDENT",
-    canonicalRole: "STUDENT",
-    allowedRoles: ["STUDENT"],
-    label: "Student Portal",
-    shortTitle: "Student",
-    supportingText: "Access your academic life in one place.",
-    identifierLabel: "Student ID / Roll No. or Email",
-    identifierPlaceholder:
-      "e.g. aarav.patel@student.campusos.edu or 2024-CSE-042",
-    identifierHint: "Use your university roll number or student email.",
-    demoEmail: "aarav.patel@student.campusos.edu",
-    demoPassword: "StudentSecret123!",
-    demoPersonaId: "user-student-01",
-    badgeText: "Academic Lifecycle & Courses",
-    accent: {
-      tabActive:
-        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
-      tabText: "text-slate-950",
-      badgeBg: "bg-yellow-100",
-      badgeText: "text-yellow-950 font-semibold",
-      badgeBorder: "border-yellow-300",
-      glow: "from-yellow-400/20",
-    },
-  },
   ADMIN: {
     key: "ADMIN",
     canonicalRole: "SUPER_ADMIN",
     allowedRoles: ["SUPER_ADMIN", "ADMIN", "INSTITUTION_ADMIN"],
     label: "Administrator Portal",
     shortTitle: "Admin",
+    description: "Institution administration and system management.",
     supportingText: "Manage your institution with confidence.",
     identifierLabel: "Institutional Administrator Email",
     identifierPlaceholder: "e.g. registrar@campusos.edu or admin@campusos.edu",
@@ -111,6 +88,7 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["PRINCIPAL", "SUPER_ADMIN"],
     label: "Vice Principal Portal",
     shortTitle: "Vice Principal",
+    description: "Institutional oversight and academic monitoring.",
     supportingText:
       "Oversee academic operations and institutional performance.",
     identifierLabel: "Executive / Vice Principal Email",
@@ -130,12 +108,39 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
       glow: "from-yellow-400/20",
     },
   },
+  HOD: {
+    key: "HOD",
+    canonicalRole: "HOD",
+    allowedRoles: ["HOD"],
+    label: "Head of Department Portal",
+    shortTitle: "HOD",
+    description: "Department administration and academic coordination.",
+    supportingText:
+      "Coordinate departmental academics, faculty, and student outcomes.",
+    identifierLabel: "Department Head Institutional Email",
+    identifierPlaceholder: "e.g. hod.cse@campusos.edu",
+    identifierHint: "Enter your authorized department head credentials.",
+    demoEmail: "hod.cse@campusos.edu",
+    demoPassword: "HodSecret123!",
+    demoPersonaId: "user-hod-cse-01",
+    badgeText: "Departmental Leadership & Workloads",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-purple-50",
+      badgeText: "text-purple-900 font-semibold",
+      badgeBorder: "border-purple-200",
+      glow: "from-purple-400/10",
+    },
+  },
   FACULTY: {
     key: "FACULTY",
     canonicalRole: "FACULTY",
     allowedRoles: ["FACULTY", "PROFESSOR"],
     label: "Faculty Portal",
     shortTitle: "Faculty",
+    description: "Teaching, attendance and academic activities.",
     supportingText:
       "Manage teaching, attendance, assessments, and student progress.",
     identifierLabel: "Faculty ID or Institutional Email",
@@ -156,29 +161,30 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
       glow: "from-sky-400/10",
     },
   },
-  HOD: {
-    key: "HOD",
-    canonicalRole: "HOD",
-    allowedRoles: ["HOD"],
-    label: "Head of Department Portal",
-    shortTitle: "HOD",
-    supportingText:
-      "Coordinate departmental academics, faculty, and student outcomes.",
-    identifierLabel: "Department Head Institutional Email",
-    identifierPlaceholder: "e.g. hod.cse@campusos.edu",
-    identifierHint: "Enter your authorized department head credentials.",
-    demoEmail: "hod.cse@campusos.edu",
-    demoPassword: "HodSecret123!",
-    demoPersonaId: "user-hod-cse-01",
-    badgeText: "Departmental Leadership & Workloads",
+  STUDENT: {
+    key: "STUDENT",
+    canonicalRole: "STUDENT",
+    allowedRoles: ["STUDENT"],
+    label: "Student Portal",
+    shortTitle: "Student",
+    description: "Personal academics and student services.",
+    supportingText: "Access your academic life in one place.",
+    identifierLabel: "Student ID / Roll No. or Email",
+    identifierPlaceholder:
+      "e.g. aarav.patel@student.campusos.edu or 2024-CSE-042",
+    identifierHint: "Use your university roll number or student email.",
+    demoEmail: "aarav.patel@student.campusos.edu",
+    demoPassword: "StudentSecret123!",
+    demoPersonaId: "user-student-01",
+    badgeText: "Academic Lifecycle & Courses",
     accent: {
       tabActive:
         "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
       tabText: "text-slate-950",
-      badgeBg: "bg-purple-50",
-      badgeText: "text-purple-900 font-semibold",
-      badgeBorder: "border-purple-200",
-      glow: "from-purple-400/10",
+      badgeBg: "bg-yellow-100",
+      badgeText: "text-yellow-950 font-semibold",
+      badgeBorder: "border-yellow-300",
+      glow: "from-yellow-400/20",
     },
   },
   ACCOUNTS: {
@@ -187,6 +193,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["ACCOUNTS", "BURSAR", "FINANCE", "SUPER_ADMIN"],
     label: "Finance & Accounts Portal",
     shortTitle: "Accounts",
+    description:
+      "Student fee invoicing, receipts, billing ledgers, and scholarships.",
     supportingText:
       "Student fee invoicing, receipts, billing ledgers, and scholarships.",
     identifierLabel: "Finance Office Email / Employee ID",
@@ -212,6 +220,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["PLACEMENT_OFFICER", "PLACEMENT", "SUPER_ADMIN"],
     label: "Corporate Placement Portal",
     shortTitle: "Placement",
+    description:
+      "Corporate relations, recruitment drives, job offers, and student talent pool.",
     supportingText:
       "Corporate relations, recruitment drives, job offers, and student talent pool.",
     identifierLabel: "Corporate Relations Email / ID",
@@ -237,6 +247,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["WARDEN", "HOSTEL_WARDEN", "SUPER_ADMIN"],
     label: "Hostel Warden Portal",
     shortTitle: "Warden",
+    description:
+      "Hostel room allocation, bed capacity, resident welfare, and leave passes.",
     supportingText:
       "Hostel room allocation, bed capacity, resident welfare, and leave passes.",
     identifierLabel: "Hostel Warden Email / ID",
@@ -262,6 +274,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["TRANSPORT_OFFICER", "TRANSPORT", "SUPER_ADMIN"],
     label: "Transport & Fleet Portal",
     shortTitle: "Transport",
+    description:
+      "Bus fleet management, route scheduling, driver rosters, and student passes.",
     supportingText:
       "Bus fleet management, route scheduling, driver rosters, and student passes.",
     identifierLabel: "Transport Operations Email / ID",
@@ -287,6 +301,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["LIBRARIAN", "LIBRARY", "SUPER_ADMIN"],
     label: "Library Portal",
     shortTitle: "Librarian",
+    description:
+      "Catalogue search, circulation, book loans, and institutional knowledge assets.",
     supportingText:
       "Catalogue search, circulation, book loans, and institutional knowledge assets.",
     identifierLabel: "Library Operations Email / ID",
@@ -317,6 +333,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     ],
     label: "Campus Security Portal",
     shortTitle: "Security",
+    description:
+      "Gate access control, visitor logs, surveillance checkpoints, and emergency response.",
     supportingText:
       "Gate access control, visitor logs, surveillance checkpoints, and emergency response.",
     identifierLabel: "Campus Security Email / ID",
@@ -342,6 +360,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["FACILITY_OFFICER", "FACILITY", "ESTATE", "SUPER_ADMIN"],
     label: "Estate & Facilities Portal",
     shortTitle: "Facilities",
+    description:
+      "Campus physical estate, preventive maintenance, and utility infrastructure.",
     supportingText:
       "Campus physical estate, preventive maintenance, and utility infrastructure.",
     identifierLabel: "Estate Operations Email / ID",
@@ -368,6 +388,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     allowedRoles: ["STAFF", "SUPER_ADMIN"],
     label: "Staff Portal",
     shortTitle: "Staff",
+    description:
+      "General employee self-service, attendance check-in, leaves, and documents.",
     supportingText:
       "General employee self-service, attendance check-in, leaves, and documents.",
     identifierLabel: "Staff Employee Email / ID",
@@ -388,6 +410,14 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
     },
   },
 };
+
+export const PRIMARY_PORTAL_KEYS: PrimaryPortalKey[] = [
+  "ADMIN",
+  "VICE_PRINCIPAL",
+  "HOD",
+  "FACULTY",
+  "STUDENT",
+];
 
 export const PORTAL_KEYS: PrimaryPortalKey[] = [
   "STUDENT",
@@ -423,13 +453,13 @@ export const ALL_PORTAL_KEYS: PortalKey[] = [
 export function getRoleIcon(portalKey: PortalKey, className = "h-4 w-4") {
   switch (portalKey) {
     case "STUDENT":
-      return <GraduationCap className={className} />;
+      return <BookOpen className={className} />;
     case "ADMIN":
       return <ShieldCheck className={className} />;
     case "VICE_PRINCIPAL":
-      return <Landmark className={className} />;
+      return <GraduationCap className={className} />;
     case "FACULTY":
-      return <UserCheck className={className} />;
+      return <Users className={className} />;
     case "HOD":
       return <Building className={className} />;
     case "ACCOUNTS":

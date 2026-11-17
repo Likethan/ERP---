@@ -27,6 +27,7 @@ interface AuthContextValue {
     password?: string;
   }) => Promise<AuthenticatedUser | null>;
   logout: () => Promise<void>;
+  clearSession: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -202,7 +203,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   };
 
-  const logout = async () => {
+  const clearSession = useCallback(async () => {
     try {
       await apiFetch<{ message: string }>("/api/v1/auth/logout", {
         method: "POST",
@@ -213,8 +214,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       if (typeof window !== "undefined") {
         localStorage.removeItem("campusos_active_persona");
-        window.location.href = "/login";
       }
+    }
+  }, []);
+
+  const logout = async () => {
+    await clearSession();
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
     }
   };
 
@@ -250,6 +257,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     switchPersona,
     login,
     logout,
+    clearSession,
     refreshUser,
   };
 
