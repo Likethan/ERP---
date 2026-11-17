@@ -41,6 +41,7 @@ import {
   Landmark,
   Bot,
   ClipboardCheck,
+  Wrench,
 } from "lucide-react";
 import type { AuthenticatedUser } from "@campusos/types";
 
@@ -69,6 +70,30 @@ export function getNormalizedRoleSet(
   if (set.has("VICE_PRINCIPAL")) set.add("PRINCIPAL");
   if (set.has("SUPER_ADMIN")) set.add("ADMIN");
   if (set.has("ADMIN")) set.add("SUPER_ADMIN");
+  if (set.has("BURSAR") || set.has("FINANCE")) set.add("ACCOUNTS");
+  if (set.has("ACCOUNTS")) {
+    set.add("BURSAR");
+    set.add("FINANCE");
+  }
+  if (set.has("PLACEMENT")) set.add("PLACEMENT_OFFICER");
+  if (set.has("PLACEMENT_OFFICER")) set.add("PLACEMENT");
+  if (set.has("HOSTEL_WARDEN")) set.add("WARDEN");
+  if (set.has("WARDEN")) set.add("HOSTEL_WARDEN");
+  if (set.has("TRANSPORT")) set.add("TRANSPORT_OFFICER");
+  if (set.has("TRANSPORT_OFFICER")) set.add("TRANSPORT");
+  if (set.has("LIBRARY")) set.add("LIBRARIAN");
+  if (set.has("LIBRARIAN")) set.add("LIBRARY");
+  if (set.has("SECURITY") || set.has("SECURITY_HEAD"))
+    set.add("SECURITY_OFFICER");
+  if (set.has("SECURITY_OFFICER")) {
+    set.add("SECURITY");
+    set.add("SECURITY_HEAD");
+  }
+  if (set.has("FACILITY") || set.has("ESTATE")) set.add("FACILITY_OFFICER");
+  if (set.has("FACILITY_OFFICER")) {
+    set.add("FACILITY");
+    set.add("ESTATE");
+  }
   return set;
 }
 
@@ -928,6 +953,584 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
 ];
 
 // -----------------------------------------------------------------------------
+// 6. Finance & Accounts Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const ACCOUNTS_PORTAL_NAV: NavSection[] = [
+  {
+    title: "ACCOUNTS OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Financial Overview",
+        href: "/app/finance",
+        icon: <Landmark className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "FEES & BILLING",
+    items: [
+      {
+        label: "Fee Structures",
+        href: "/app/finance/fee-structures",
+        icon: <Layers className="h-4 w-4" />,
+      },
+      {
+        label: "Student Invoices",
+        href: "/app/finance/invoices",
+        icon: <Receipt className="h-4 w-4" />,
+      },
+      {
+        label: "Fee Categories",
+        href: "/app/finance/fee-categories",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
+        label: "Fee Assignments",
+        href: "/app/finance/assignments",
+        icon: <CheckSquare className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "COLLECTIONS & PAYMENTS",
+    items: [
+      {
+        label: "Payment Ledger",
+        href: "/app/finance/payments",
+        icon: <CreditCard className="h-4 w-4" />,
+      },
+      {
+        label: "Receipts Registry",
+        href: "/app/finance/receipts",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Refunds & Adjustments",
+        href: "/app/finance/refunds",
+        icon: <ArrowRightLeft className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "AID & FINANCIAL AUDIT",
+    items: [
+      {
+        label: "Scholarships & Concessions",
+        href: "/app/finance/scholarships",
+        icon: <Award className="h-4 w-4" />,
+      },
+      {
+        label: "Financial Reports",
+        href: "/app/finance/reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "STUDENTS & WORKFORCE",
+    items: [
+      {
+        label: "Student Master Registry",
+        href: "/app/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+      {
+        label: "Workforce & Payroll",
+        href: "/app/payroll",
+        icon: <DollarSign className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 7. Corporate Placement Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const PLACEMENT_PORTAL_NAV: NavSection[] = [
+  {
+    title: "PLACEMENT OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Corporate Relations Hub",
+        href: "/app/placement",
+        icon: <Briefcase className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "CORPORATE PARTNERS",
+    items: [
+      {
+        label: "Partner Companies",
+        href: "/app/placement/companies",
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        label: "Job Positions & Roles",
+        href: "/app/placement/positions",
+        icon: <Layers className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "RECRUITMENT DRIVES",
+    items: [
+      {
+        label: "Campus Drives",
+        href: "/app/placement/drives",
+        icon: <Calendar className="h-4 w-4" />,
+      },
+      {
+        label: "Interview Schedules",
+        href: "/app/placement/interviews",
+        icon: <CalendarDays className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "APPLICATIONS & OUTCOMES",
+    items: [
+      {
+        label: "Student Applications",
+        href: "/app/placement/applications",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
+        label: "Job Offers & CTC",
+        href: "/app/placement/offers",
+        icon: <Award className="h-4 w-4" />,
+      },
+      {
+        label: "Placement Outcomes",
+        href: "/app/placement/outcomes",
+        icon: <Trophy className="h-4 w-4" />,
+      },
+      {
+        label: "Placement Reports",
+        href: "/app/placement/reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "TALENT POOL",
+    items: [
+      {
+        label: "Candidate Pool",
+        href: "/app/placement/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 8. Hostel Warden Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const WARDEN_PORTAL_NAV: NavSection[] = [
+  {
+    title: "RESIDENTIAL OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Hostel Administration",
+        href: "/app/hostel",
+        icon: <BedDouble className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "BLOCKS & ALLOCATIONS",
+    items: [
+      {
+        label: "Hostel Blocks & Rooms",
+        href: "/app/infrastructure/hostel",
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        label: "Bed Capacity & Housing",
+        href: "/app/housing",
+        icon: <Layers className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "RESIDENT WELFARE & LEAVES",
+    items: [
+      {
+        label: "Student Residents",
+        href: "/app/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+      {
+        label: "Outing & Leave Approvals",
+        href: "/app/attendance/leaves",
+        icon: <Calendar className="h-4 w-4" />,
+      },
+      {
+        label: "Facility Maintenance Orders",
+        href: "/app/infrastructure/maintenance",
+        icon: <Wrench className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "SAFETY & INCIDENTS",
+    items: [
+      {
+        label: "Incident Log",
+        href: "/app/campus-security/incidents",
+        icon: <ShieldAlert className="h-4 w-4" />,
+      },
+      {
+        label: "Gate Checkpoints",
+        href: "/app/campus-security/gate-operations",
+        icon: <ShieldCheck className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 9. Transport & Fleet Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const TRANSPORT_PORTAL_NAV: NavSection[] = [
+  {
+    title: "TRANSPORT OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Fleet Hub",
+        href: "/app/transport",
+        icon: <Bus className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "ROUTES & OPERATIONS",
+    items: [
+      {
+        label: "Transport Routes",
+        href: "/app/infrastructure/transport",
+        icon: <Bus className="h-4 w-4" />,
+      },
+      {
+        label: "Fleet Maintenance & Repairs",
+        href: "/app/infrastructure/maintenance",
+        icon: <Wrench className="h-4 w-4" />,
+      },
+      {
+        label: "Operations Reports",
+        href: "/app/infrastructure/reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "PASSENGERS & COMMUTE",
+    items: [
+      {
+        label: "Student Commuters",
+        href: "/app/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+      {
+        label: "Staff Commuters",
+        href: "/app/staff",
+        icon: <Users className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "SAFETY & EMERGENCY",
+    items: [
+      {
+        label: "Transit Safety Incidents",
+        href: "/app/campus-security/incidents",
+        icon: <ShieldAlert className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 10. Library Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const LIBRARY_PORTAL_NAV: NavSection[] = [
+  {
+    title: "LIBRARY OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Library Catalogue",
+        href: "/app/library",
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "KNOWLEDGE & REPOSITORIES",
+    items: [
+      {
+        label: "Institutional Knowledge",
+        href: "/app/knowledge",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
+        label: "Digital Documents",
+        href: "/app/documents",
+        icon: <FileText className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "CIRCULATION PATRONS",
+    items: [
+      {
+        label: "Student Borrowers",
+        href: "/app/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+      {
+        label: "Faculty Borrowers",
+        href: "/app/faculty",
+        icon: <UserCheck className="h-4 w-4" />,
+      },
+      {
+        label: "Staff Directory",
+        href: "/app/staff",
+        icon: <Users className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 11. Campus Security Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const SECURITY_PORTAL_NAV: NavSection[] = [
+  {
+    title: "SECURITY OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Security Command",
+        href: "/app/security",
+        icon: <ShieldAlert className="h-4 w-4 text-red-500" />,
+      },
+      {
+        label: "Campus Security Hub",
+        href: "/app/campus-security",
+        icon: <ShieldCheck className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "GATES & ACCESS CONTROL",
+    items: [
+      {
+        label: "Gate Operations",
+        href: "/app/campus-security/gate-operations",
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        label: "Access Grants & Badges",
+        href: "/app/campus-security/access-grants",
+        icon: <CheckSquare className="h-4 w-4" />,
+      },
+      {
+        label: "Security Checkpoints & Zones",
+        href: "/app/campus-security/zones",
+        icon: <Layers className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "VISITORS & CONTRACTORS",
+    items: [
+      {
+        label: "Visitor Log",
+        href: "/app/campus-security/visitors",
+        icon: <Users className="h-4 w-4" />,
+      },
+      {
+        label: "Contractor Access",
+        href: "/app/campus-security/contractors",
+        icon: <UserCheck className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "INCIDENTS & PATROLS",
+    items: [
+      {
+        label: "Security Incidents",
+        href: "/app/campus-security/incidents",
+        icon: <ShieldAlert className="h-4 w-4" />,
+      },
+      {
+        label: "Patrol Rounds",
+        href: "/app/campus-security/patrols",
+        icon: <Activity className="h-4 w-4" />,
+      },
+      {
+        label: "Emergency Protocol",
+        href: "/app/campus-security/emergency",
+        icon: <Bell className="h-4 w-4 text-red-400" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 12. Estate & Facilities Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const FACILITY_PORTAL_NAV: NavSection[] = [
+  {
+    title: "ESTATE OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Infrastructure Hub",
+        href: "/app/infrastructure",
+        icon: <Building className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "FACILITIES & BUILDINGS",
+    items: [
+      {
+        label: "Physical Facilities",
+        href: "/app/infrastructure/facilities",
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        label: "Hostel Blocks",
+        href: "/app/infrastructure/hostel",
+        icon: <BedDouble className="h-4 w-4" />,
+      },
+      {
+        label: "Campuses & Sites",
+        href: "/app/campuses",
+        icon: <Landmark className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "MAINTENANCE & ASSETS",
+    items: [
+      {
+        label: "Work Orders & Repairs",
+        href: "/app/infrastructure/maintenance",
+        icon: <Wrench className="h-4 w-4" />,
+      },
+      {
+        label: "Infrastructure Reports",
+        href: "/app/infrastructure/reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+      },
+      {
+        label: "Green Campus & Sustainability",
+        href: "/app/sustainability",
+        icon: <Leaf className="h-4 w-4 text-emerald-500" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// 13. Staff Portal Dedicated Navigation
+// -----------------------------------------------------------------------------
+export const STAFF_PORTAL_NAV: NavSection[] = [
+  {
+    title: "STAFF OVERVIEW",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/app/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Staff Directory",
+        href: "/app/staff",
+        icon: <Users className="h-4 w-4" />,
+      },
+      {
+        label: "Workforce & HR",
+        href: "/app/workforce",
+        icon: <Building2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "TIME & ATTENDANCE",
+    items: [
+      {
+        label: "My Attendance",
+        href: "/app/attendance",
+        icon: <CheckSquare className="h-4 w-4" />,
+      },
+      {
+        label: "Apply for Leave",
+        href: "/app/attendance/leaves",
+        icon: <Calendar className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "CAMPUS & COMMUNICATIONS",
+    items: [
+      {
+        label: "Announcements",
+        href: "/app/announcements",
+        icon: <Bell className="h-4 w-4" />,
+      },
+      {
+        label: "Documents & Policies",
+        href: "/app/documents",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Knowledge Base",
+        href: "/app/knowledge",
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
 // Portal Navigation Resolver & Role Context Helpers
 // -----------------------------------------------------------------------------
 export function getPortalNavSections(
@@ -947,6 +1550,30 @@ export function getPortalNavSections(
   }
   if (roleSet.has("FACULTY")) {
     return FACULTY_PORTAL_NAV;
+  }
+  if (roleSet.has("ACCOUNTS")) {
+    return ACCOUNTS_PORTAL_NAV;
+  }
+  if (roleSet.has("PLACEMENT_OFFICER")) {
+    return PLACEMENT_PORTAL_NAV;
+  }
+  if (roleSet.has("WARDEN")) {
+    return WARDEN_PORTAL_NAV;
+  }
+  if (roleSet.has("TRANSPORT_OFFICER")) {
+    return TRANSPORT_PORTAL_NAV;
+  }
+  if (roleSet.has("LIBRARIAN")) {
+    return LIBRARY_PORTAL_NAV;
+  }
+  if (roleSet.has("SECURITY_OFFICER")) {
+    return SECURITY_PORTAL_NAV;
+  }
+  if (roleSet.has("FACILITY_OFFICER")) {
+    return FACILITY_PORTAL_NAV;
+  }
+  if (roleSet.has("STAFF")) {
+    return STAFF_PORTAL_NAV;
   }
   if (roleSet.has("STUDENT")) {
     return STUDENT_PORTAL_NAV;
@@ -1007,6 +1634,71 @@ export function getPortalHeaderMeta(
       badge: "FACULTY",
       badgeClass: "bg-sky-50 text-sky-900 border-sky-300 font-bold",
       glowClass: "from-sky-400/20",
+    };
+  }
+  if (roleSet.has("ACCOUNTS")) {
+    return {
+      title: "Finance & Accounts Portal",
+      badge: "ACCOUNTS",
+      badgeClass:
+        "bg-emerald-100 text-emerald-950 border-emerald-300 font-bold",
+      glowClass: "from-emerald-400/20",
+    };
+  }
+  if (roleSet.has("PLACEMENT_OFFICER")) {
+    return {
+      title: "Corporate Placement Portal",
+      badge: "PLACEMENT",
+      badgeClass: "bg-blue-100 text-blue-950 border-blue-300 font-bold",
+      glowClass: "from-blue-400/20",
+    };
+  }
+  if (roleSet.has("WARDEN")) {
+    return {
+      title: "Hostel Warden Portal",
+      badge: "WARDEN",
+      badgeClass: "bg-amber-100 text-amber-950 border-amber-300 font-bold",
+      glowClass: "from-amber-400/20",
+    };
+  }
+  if (roleSet.has("TRANSPORT_OFFICER")) {
+    return {
+      title: "Transport & Fleet Portal",
+      badge: "TRANSPORT",
+      badgeClass: "bg-cyan-100 text-cyan-950 border-cyan-300 font-bold",
+      glowClass: "from-cyan-400/20",
+    };
+  }
+  if (roleSet.has("LIBRARIAN")) {
+    return {
+      title: "Library Portal",
+      badge: "LIBRARIAN",
+      badgeClass: "bg-teal-100 text-teal-950 border-teal-300 font-bold",
+      glowClass: "from-teal-400/20",
+    };
+  }
+  if (roleSet.has("SECURITY_OFFICER")) {
+    return {
+      title: "Campus Security Portal",
+      badge: "SECURITY",
+      badgeClass: "bg-rose-100 text-rose-950 border-rose-300 font-bold",
+      glowClass: "from-rose-400/20",
+    };
+  }
+  if (roleSet.has("FACILITY_OFFICER")) {
+    return {
+      title: "Estate & Facilities Portal",
+      badge: "FACILITIES",
+      badgeClass: "bg-lime-100 text-lime-950 border-lime-300 font-bold",
+      glowClass: "from-lime-400/20",
+    };
+  }
+  if (roleSet.has("STAFF")) {
+    return {
+      title: "Staff Portal",
+      badge: "STAFF",
+      badgeClass: "bg-slate-100 text-slate-900 border-slate-300 font-bold",
+      glowClass: "from-slate-400/20",
     };
   }
 

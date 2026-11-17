@@ -37,7 +37,9 @@ export type RoleName =
   | "TRANSPORT_OFFICER"
   | "FACILITY_OFFICER"
   | "SPORTS_OFFICER"
-  | "COACH";
+  | "COACH"
+  | "LIBRARIAN"
+  | "SECURITY_OFFICER";
 
 export interface DemoPersona {
   id: string;

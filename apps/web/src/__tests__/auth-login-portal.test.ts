@@ -17,6 +17,8 @@ import {
   PORTALS as APP_PORTALS,
   REGULAR_PORTAL_KEYS,
   PORTAL_KEYS,
+  EXTENDED_PORTAL_KEYS,
+  ALL_PORTAL_KEYS,
 } from "../lib/portals";
 import {
   NAV_SECTIONS,
@@ -25,6 +27,14 @@ import {
   HOD_PORTAL_NAV,
   VICE_PRINCIPAL_PORTAL_NAV,
   ADMIN_PORTAL_NAV,
+  ACCOUNTS_PORTAL_NAV,
+  PLACEMENT_PORTAL_NAV,
+  WARDEN_PORTAL_NAV,
+  TRANSPORT_PORTAL_NAV,
+  LIBRARY_PORTAL_NAV,
+  SECURITY_PORTAL_NAV,
+  FACILITY_PORTAL_NAV,
+  STAFF_PORTAL_NAV,
   getPortalNavSections,
   getPortalHeaderMeta,
   getNormalizedRoleSet,
@@ -1081,7 +1091,292 @@ async function runAuthPortalTests() {
   }
 
   // -------------------------------------------------------------------------
-  // 16. Summary
+  // 16. Extended Portals & Dedicated Navigation for Other Institutional Roles
+  // -------------------------------------------------------------------------
+  assert(
+    EXTENDED_PORTAL_KEYS.length === 8,
+    "Exactly eight extended portal keys are defined for specialized institutional roles",
+  );
+  assert(
+    ALL_PORTAL_KEYS.length === 13,
+    "Thirteen total portal keys exist covering all institutional stakeholders",
+  );
+
+  // Accounts Mock User
+  const accountsMockUser: AuthenticatedUser = {
+    id: "user-accounts-test",
+    email: "finance.bursar@campusos.edu",
+    first_name: "Priya",
+    last_name: "Nair",
+    status: "ACTIVE",
+    roles: [
+      { id: "r-acc", name: "ACCOUNTS", display_name: "Bursar & Accounts" },
+    ],
+    permissions: ["finance:read", "finance:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(accountsMockUser) === ACCOUNTS_PORTAL_NAV,
+    "Accounts role resolves to ACCOUNTS_PORTAL_NAV",
+  );
+  const accountsHeader = getPortalHeaderMeta(accountsMockUser);
+  assert(
+    accountsHeader.badge === "ACCOUNTS" &&
+      accountsHeader.title.includes("Finance & Accounts"),
+    "Accounts role receives Finance & Accounts Portal header identity",
+  );
+  for (const section of ACCOUNTS_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, accountsMockUser) === true,
+        `Accounts portal item ${item.href} is strictly authorized for Accounts`,
+      );
+    }
+  }
+
+  // Placement Officer Mock User
+  const placementMockUser: AuthenticatedUser = {
+    id: "user-placement-test",
+    email: "placement.dean@campusos.edu",
+    first_name: "Vikram",
+    last_name: "Sen",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-plc",
+        name: "PLACEMENT_OFFICER",
+        display_name: "Head Corporate Relations",
+      },
+    ],
+    permissions: ["placement:read", "placement:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(placementMockUser) === PLACEMENT_PORTAL_NAV,
+    "Placement officer resolves to PLACEMENT_PORTAL_NAV",
+  );
+  const placementHeader = getPortalHeaderMeta(placementMockUser);
+  assert(
+    placementHeader.badge === "PLACEMENT" &&
+      placementHeader.title.includes("Corporate Placement"),
+    "Placement role receives Corporate Placement Portal header identity",
+  );
+  for (const section of PLACEMENT_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, placementMockUser) === true,
+        `Placement portal item ${item.href} is strictly authorized for Placement`,
+      );
+    }
+  }
+
+  // Warden Mock User
+  const wardenMockUser: AuthenticatedUser = {
+    id: "user-warden-test",
+    email: "warden.raman@campusos.edu",
+    first_name: "S. K.",
+    last_name: "Patil",
+    status: "ACTIVE",
+    roles: [{ id: "r-wrd", name: "WARDEN", display_name: "Chief Warden" }],
+    permissions: ["hostel:read", "hostel:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(wardenMockUser) === WARDEN_PORTAL_NAV,
+    "Warden role resolves to WARDEN_PORTAL_NAV",
+  );
+  const wardenHeader = getPortalHeaderMeta(wardenMockUser);
+  assert(
+    wardenHeader.badge === "WARDEN" &&
+      wardenHeader.title.includes("Hostel Warden"),
+    "Warden role receives Hostel Warden Portal header identity",
+  );
+  for (const section of WARDEN_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, wardenMockUser) === true,
+        `Warden portal item ${item.href} is strictly authorized for Warden`,
+      );
+    }
+  }
+
+  // Transport Officer Mock User
+  const transportMockUser: AuthenticatedUser = {
+    id: "user-transport-test",
+    email: "transport.officer@campusos.edu",
+    first_name: "M.",
+    last_name: "Narayanan",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-trp",
+        name: "TRANSPORT_OFFICER",
+        display_name: "Chief Transport Officer",
+      },
+    ],
+    permissions: ["transport:read", "transport:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(transportMockUser) === TRANSPORT_PORTAL_NAV,
+    "Transport role resolves to TRANSPORT_PORTAL_NAV",
+  );
+  const transportHeader = getPortalHeaderMeta(transportMockUser);
+  assert(
+    transportHeader.badge === "TRANSPORT" &&
+      transportHeader.title.includes("Transport & Fleet"),
+    "Transport role receives Transport & Fleet Portal header identity",
+  );
+  for (const section of TRANSPORT_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, transportMockUser) === true,
+        `Transport portal item ${item.href} is strictly authorized for Transport`,
+      );
+    }
+  }
+
+  // Librarian Mock User
+  const librarianMockUser: AuthenticatedUser = {
+    id: "user-librarian-test",
+    email: "librarian@campusos.edu",
+    first_name: "Ananya",
+    last_name: "Sen",
+    status: "ACTIVE",
+    roles: [
+      { id: "r-lib", name: "LIBRARIAN", display_name: "Chief Librarian" },
+    ],
+    permissions: ["library:read", "library:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(librarianMockUser) === LIBRARY_PORTAL_NAV,
+    "Librarian role resolves to LIBRARY_PORTAL_NAV",
+  );
+  const librarianHeader = getPortalHeaderMeta(librarianMockUser);
+  assert(
+    librarianHeader.badge === "LIBRARIAN" &&
+      librarianHeader.title.includes("Library"),
+    "Librarian role receives Library Portal header identity",
+  );
+  for (const section of LIBRARY_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, librarianMockUser) === true,
+        `Library portal item ${item.href} is strictly authorized for Librarian`,
+      );
+    }
+  }
+
+  // Security Officer Mock User
+  const securityMockUser: AuthenticatedUser = {
+    id: "user-security-test",
+    email: "security.chief@campusos.edu",
+    first_name: "R.",
+    last_name: "Veerappan",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-sec",
+        name: "SECURITY_OFFICER",
+        display_name: "Chief Security Officer",
+      },
+    ],
+    permissions: ["security:read", "security:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(securityMockUser) === SECURITY_PORTAL_NAV,
+    "Security role resolves to SECURITY_PORTAL_NAV",
+  );
+  const securityHeader = getPortalHeaderMeta(securityMockUser);
+  assert(
+    securityHeader.badge === "SECURITY" &&
+      securityHeader.title.includes("Campus Security"),
+    "Security role receives Campus Security Portal header identity",
+  );
+  for (const section of SECURITY_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, securityMockUser) === true,
+        `Security portal item ${item.href} is strictly authorized for Security`,
+      );
+    }
+  }
+
+  // Facility Officer Mock User
+  const facilityMockUser: AuthenticatedUser = {
+    id: "user-facility-test",
+    email: "facilities.estate@campusos.edu",
+    first_name: "Ramesh",
+    last_name: "Sundar",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-fac",
+        name: "FACILITY_OFFICER",
+        display_name: "Estate & Facilities Engineer",
+      },
+    ],
+    permissions: ["facilities:read", "facilities:write"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(facilityMockUser) === FACILITY_PORTAL_NAV,
+    "Facility role resolves to FACILITY_PORTAL_NAV",
+  );
+  const facilityHeader = getPortalHeaderMeta(facilityMockUser);
+  assert(
+    facilityHeader.badge === "FACILITIES" &&
+      facilityHeader.title.includes("Estate & Facilities"),
+    "Facility role receives Estate & Facilities Portal header identity",
+  );
+  for (const section of FACILITY_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, facilityMockUser) === true,
+        `Facility portal item ${item.href} is strictly authorized for Facility`,
+      );
+    }
+  }
+
+  // Staff Mock User
+  const staffMockUser: AuthenticatedUser = {
+    id: "user-staff-test",
+    email: "staff.member@campusos.edu",
+    first_name: "K.",
+    last_name: "Manjunath",
+    status: "ACTIVE",
+    roles: [
+      {
+        id: "r-stf",
+        name: "STAFF",
+        display_name: "Administrative Staff",
+      },
+    ],
+    permissions: ["attendance:read", "documents:read"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  assert(
+    getPortalNavSections(staffMockUser) === STAFF_PORTAL_NAV,
+    "Staff role resolves to STAFF_PORTAL_NAV",
+  );
+  const staffHeader = getPortalHeaderMeta(staffMockUser);
+  assert(
+    staffHeader.badge === "STAFF" && staffHeader.title.includes("Staff"),
+    "Staff role receives Staff Portal header identity",
+  );
+  for (const section of STAFF_PORTAL_NAV) {
+    for (const item of section.items) {
+      assert(
+        isPathAuthorized(item.href, staffMockUser) === true,
+        `Staff portal item ${item.href} is strictly authorized for Staff`,
+      );
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // 17. Summary
   // -------------------------------------------------------------------------
   console.log("=================================================");
   console.log(

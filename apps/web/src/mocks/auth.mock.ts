@@ -229,4 +229,58 @@ export const DEMO_PERSONAS: DemoPersona[] = [
       "infrastructure:maintenance:approve",
     ],
   },
+  {
+    id: "user-librarian-01",
+    name: "Smt. Ananya Sen",
+    email: "librarian@campusos.edu",
+    role: "LIBRARIAN",
+    roleTitle: "Chief Librarian & Information Specialist",
+    department: "Library & Information Services",
+    avatarInitials: "AS",
+    description:
+      "Library catalogue circulation, digital archive accession, book issue/returns, journal subscriptions, and repository curation.",
+    permissions: [
+      "library:read",
+      "library:write",
+      "documents:read",
+      "documents:write",
+      "people:students:read",
+      "people:faculty:read",
+    ],
+  },
+  {
+    id: "user-security-01",
+    name: "Sub. Maj. R. Veerappan",
+    email: "security.chief@campusos.edu",
+    role: "SECURITY_OFFICER",
+    roleTitle: "Chief Security Officer & Access Controller",
+    department: "Campus Safety & Surveillance",
+    avatarInitials: "RV",
+    description:
+      "Gate operations, biometric check-in, visitor registration, access authorization, vehicle movement, and physical security incident logs.",
+    permissions: [
+      "security:read",
+      "security:write",
+      "security:gates:write",
+      "security:visitors:write",
+      "security:incidents:write",
+    ],
+  },
+  {
+    id: "user-staff-01",
+    name: "K. Manjunath",
+    email: "staff.member@campusos.edu",
+    role: "STAFF",
+    roleTitle: "Senior Administrative Executive",
+    department: "General Administration",
+    avatarInitials: "KM",
+    description:
+      "Employee self-service, daily biometric clock-in, departmental leave requests, document requisitions, and institutional circulars.",
+    permissions: [
+      "attendance:read",
+      "attendance:write",
+      "documents:read",
+      "announcements:read",
+    ],
+  },
 ];

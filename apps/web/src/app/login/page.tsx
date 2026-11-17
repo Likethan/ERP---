@@ -8,11 +8,63 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import {
+  PORTALS,
+  ALL_PORTAL_KEYS,
+  getRoleIcon,
+  type PortalKey,
+} from "@/lib/portals";
+import { cn } from "@/lib/utils";
+
+function resolvePortalKey(
+  rawRole: string | null | undefined,
+): PortalKey | null {
+  if (!rawRole) return null;
+  const r = rawRole.toLowerCase().trim();
+  if (r === "student") return "STUDENT";
+  if (r === "faculty" || r === "professor") return "FACULTY";
+  if (r === "hod") return "HOD";
+  if (
+    r === "vice-principal" ||
+    r === "vice_principal" ||
+    r === "principal" ||
+    r === "vp"
+  )
+    return "VICE_PRINCIPAL";
+  if (r === "admin" || r === "super_admin" || r === "super-admin")
+    return "ADMIN";
+  if (r === "accounts" || r === "finance" || r === "bursar") return "ACCOUNTS";
+  if (r === "placement" || r === "placement_officer" || r === "tpo")
+    return "PLACEMENT";
+  if (r === "warden" || r === "hostel") return "WARDEN";
+  if (r === "transport" || r === "transport_officer" || r === "fleet")
+    return "TRANSPORT";
+  if (r === "library" || r === "librarian") return "LIBRARIAN";
+  if (r === "security" || r === "security_officer" || r === "security_head")
+    return "SECURITY";
+  if (r === "facility" || r === "facilities" || r === "estate")
+    return "FACILITY";
+  if (r === "staff") return "STAFF";
+  return null;
+}
 
 function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoading, login } = useAuth();
+
+  const [selectedPortal, setSelectedPortal] = useState<PortalKey | null>(() =>
+    resolvePortalKey(searchParams.get("role")),
+  );
+
+  useEffect(() => {
+    const fromUrl = resolvePortalKey(searchParams.get("role"));
+    if (fromUrl) {
+      setSelectedPortal(fromUrl);
+    }
+  }, [searchParams]);
+
+  const currentPortal = selectedPortal ? PORTALS[selectedPortal] : null;
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -100,7 +152,7 @@ function LoginFormContent() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4 sm:p-6 antialiased selection:bg-yellow-200 selection:text-slate-900">
       <div className="w-full max-w-sm sm:max-w-md bg-white rounded-xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
         {/* 1. CampusOS Logo & Brand Name */}
-        <div className="flex items-center justify-center gap-2.5 mb-6">
+        <div className="flex items-center justify-center gap-2.5 mb-5">
           <div className="relative h-8 w-8 shrink-0">
             <Image
               src="/college-logo.jpg"
@@ -114,6 +166,23 @@ function LoginFormContent() {
             CampusOS
           </span>
         </div>
+
+        {/* Selected Portal Identity Badge */}
+        {currentPortal && (
+          <div className="flex justify-center mb-4">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border",
+                currentPortal.accent.badgeBg,
+                currentPortal.accent.badgeText,
+                currentPortal.accent.badgeBorder,
+              )}
+            >
+              {getRoleIcon(currentPortal.key, "h-3.5 w-3.5")}
+              {currentPortal.label}
+            </span>
+          </div>
+        )}
 
         {/* 2. Login Heading */}
         <h1 className="text-xl font-semibold text-slate-900 text-center mb-6 tracking-tight">
@@ -139,18 +208,29 @@ function LoginFormContent() {
               htmlFor="identifier"
               className="block text-xs font-medium text-slate-700"
             >
-              Username or Email
+              {currentPortal
+                ? currentPortal.identifierLabel
+                : "Username or Email"}
             </label>
             <Input
               id="identifier"
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="name@campusos.edu or username"
+              placeholder={
+                currentPortal
+                  ? currentPortal.identifierPlaceholder
+                  : "name@campusos.edu or username"
+              }
               autoComplete="username"
               required
               className="h-10 text-sm"
             />
+            {currentPortal?.identifierHint && (
+              <p className="text-[11px] text-slate-500 leading-tight">
+                {currentPortal.identifierHint}
+              </p>
+            )}
           </div>
 
           {/* 4. Password Input */}
@@ -209,6 +289,50 @@ function LoginFormContent() {
             >
               Sign In
             </Button>
+          </div>
+
+          {/* Portal Switcher */}
+          <div className="pt-2 text-center border-t border-slate-100">
+            <details className="group">
+              <summary className="text-xs font-medium text-slate-500 hover:text-slate-800 cursor-pointer inline-flex items-center gap-1 select-none">
+                <span>
+                  Portal:{" "}
+                  <span className="text-slate-800 font-semibold">
+                    {currentPortal
+                      ? currentPortal.shortTitle
+                      : "Standard Gateway"}
+                  </span>
+                </span>
+                <span className="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">
+                  ▼
+                </span>
+              </summary>
+              <div className="mt-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-left grid grid-cols-2 gap-1 text-xs">
+                {ALL_PORTAL_KEYS.map((k) => {
+                  const p = PORTALS[k];
+                  const isActive = selectedPortal === k;
+                  return (
+                    <button
+                      key={k}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPortal(k);
+                        setErrorMessage(null);
+                      }}
+                      className={cn(
+                        "flex items-center gap-1.5 px-2 py-1.5 rounded text-left transition-colors cursor-pointer",
+                        isActive
+                          ? "bg-yellow-400 text-slate-950 font-bold"
+                          : "text-slate-600 hover:bg-slate-200/70",
+                      )}
+                    >
+                      {getRoleIcon(k, "h-3.5 w-3.5 shrink-0")}
+                      <span className="truncate">{p.shortTitle}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </details>
           </div>
         </form>
       </div>

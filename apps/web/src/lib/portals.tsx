@@ -5,10 +5,30 @@ import {
   Landmark,
   UserCheck,
   Building,
+  DollarSign,
+  Briefcase,
+  BedDouble,
+  Bus,
+  BookOpen,
+  ShieldAlert,
+  Wrench,
+  Users,
 } from "lucide-react";
 
-export type PortalKey =
+export type PrimaryPortalKey =
   "STUDENT" | "ADMIN" | "VICE_PRINCIPAL" | "FACULTY" | "HOD";
+
+export type ExtendedPortalKey =
+  | "ACCOUNTS"
+  | "PLACEMENT"
+  | "WARDEN"
+  | "TRANSPORT"
+  | "LIBRARIAN"
+  | "SECURITY"
+  | "FACILITY"
+  | "STAFF";
+
+export type PortalKey = PrimaryPortalKey | ExtendedPortalKey;
 
 export interface PortalConfig {
   key: PortalKey;
@@ -161,9 +181,215 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
       glow: "from-purple-400/10",
     },
   },
+  ACCOUNTS: {
+    key: "ACCOUNTS",
+    canonicalRole: "ACCOUNTS",
+    allowedRoles: ["ACCOUNTS", "BURSAR", "FINANCE", "SUPER_ADMIN"],
+    label: "Finance & Accounts Portal",
+    shortTitle: "Accounts",
+    supportingText:
+      "Student fee invoicing, receipts, billing ledgers, and scholarships.",
+    identifierLabel: "Finance Office Email / Employee ID",
+    identifierPlaceholder: "e.g. finance.bursar@campusos.edu or ACC-201",
+    identifierHint: "Enter your institutional finance or bursar credentials.",
+    demoEmail: "finance.bursar@campusos.edu",
+    demoPassword: "FinanceSecret123!",
+    demoPersonaId: "user-accounts-01",
+    badgeText: "Fee Billing, Ledgers & Scholarships",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-emerald-50",
+      badgeText: "text-emerald-900 font-semibold",
+      badgeBorder: "border-emerald-200",
+      glow: "from-emerald-400/10",
+    },
+  },
+  PLACEMENT: {
+    key: "PLACEMENT",
+    canonicalRole: "PLACEMENT_OFFICER",
+    allowedRoles: ["PLACEMENT_OFFICER", "PLACEMENT", "SUPER_ADMIN"],
+    label: "Corporate Placement Portal",
+    shortTitle: "Placement",
+    supportingText:
+      "Corporate relations, recruitment drives, job offers, and student talent pool.",
+    identifierLabel: "Corporate Relations Email / ID",
+    identifierPlaceholder: "e.g. placement.dean@campusos.edu or TPO-104",
+    identifierHint: "Enter your Training & Placement Officer credentials.",
+    demoEmail: "placement.dean@campusos.edu",
+    demoPassword: "PlacementSecret123!",
+    demoPersonaId: "user-placement-01",
+    badgeText: "Drives, Corporate Directory & Offers",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-blue-50",
+      badgeText: "text-blue-900 font-semibold",
+      badgeBorder: "border-blue-200",
+      glow: "from-blue-400/10",
+    },
+  },
+  WARDEN: {
+    key: "WARDEN",
+    canonicalRole: "WARDEN",
+    allowedRoles: ["WARDEN", "HOSTEL_WARDEN", "SUPER_ADMIN"],
+    label: "Hostel Warden Portal",
+    shortTitle: "Warden",
+    supportingText:
+      "Hostel room allocation, bed capacity, resident welfare, and leave passes.",
+    identifierLabel: "Hostel Warden Email / ID",
+    identifierPlaceholder: "e.g. warden.raman@campusos.edu or WRD-01",
+    identifierHint: "Enter your residential hostel administration credentials.",
+    demoEmail: "warden.raman@campusos.edu",
+    demoPassword: "WardenSecret123!",
+    demoPersonaId: "user-warden-01",
+    badgeText: "Hostel Blocks, Rooms & Leave Approvals",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-amber-50",
+      badgeText: "text-amber-900 font-semibold",
+      badgeBorder: "border-amber-200",
+      glow: "from-amber-400/10",
+    },
+  },
+  TRANSPORT: {
+    key: "TRANSPORT",
+    canonicalRole: "TRANSPORT_OFFICER",
+    allowedRoles: ["TRANSPORT_OFFICER", "TRANSPORT", "SUPER_ADMIN"],
+    label: "Transport & Fleet Portal",
+    shortTitle: "Transport",
+    supportingText:
+      "Bus fleet management, route scheduling, driver rosters, and student passes.",
+    identifierLabel: "Transport Operations Email / ID",
+    identifierPlaceholder: "e.g. transport.officer@campusos.edu or TRP-01",
+    identifierHint: "Enter your fleet and transport management credentials.",
+    demoEmail: "transport.officer@campusos.edu",
+    demoPassword: "TransportSecret123!",
+    demoPersonaId: "user-transport-01",
+    badgeText: "Routes, Vehicles & Bus Passes",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-cyan-50",
+      badgeText: "text-cyan-900 font-semibold",
+      badgeBorder: "border-cyan-200",
+      glow: "from-cyan-400/10",
+    },
+  },
+  LIBRARIAN: {
+    key: "LIBRARIAN",
+    canonicalRole: "LIBRARIAN",
+    allowedRoles: ["LIBRARIAN", "LIBRARY", "SUPER_ADMIN"],
+    label: "Library Portal",
+    shortTitle: "Librarian",
+    supportingText:
+      "Catalogue search, circulation, book loans, and institutional knowledge assets.",
+    identifierLabel: "Library Operations Email / ID",
+    identifierPlaceholder: "e.g. librarian@campusos.edu or LIB-01",
+    identifierHint: "Enter your institutional library management credentials.",
+    demoEmail: "librarian@campusos.edu",
+    demoPassword: "LibrarySecret123!",
+    demoPersonaId: "user-librarian-01",
+    badgeText: "Catalogue, Circulation & Journals",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-teal-50",
+      badgeText: "text-teal-900 font-semibold",
+      badgeBorder: "border-teal-200",
+      glow: "from-teal-400/10",
+    },
+  },
+  SECURITY: {
+    key: "SECURITY",
+    canonicalRole: "SECURITY_HEAD",
+    allowedRoles: [
+      "SECURITY_HEAD",
+      "SECURITY_OFFICER",
+      "SECURITY",
+      "SUPER_ADMIN",
+    ],
+    label: "Campus Security Portal",
+    shortTitle: "Security",
+    supportingText:
+      "Gate access control, visitor logs, surveillance checkpoints, and emergency response.",
+    identifierLabel: "Campus Security Email / ID",
+    identifierPlaceholder: "e.g. security.chief@campusos.edu or SEC-01",
+    identifierHint: "Enter your campus security operations credentials.",
+    demoEmail: "security.chief@campusos.edu",
+    demoPassword: "SecuritySecret123!",
+    demoPersonaId: "user-security-01",
+    badgeText: "Gate Pass, Access Grants & Incidents",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-rose-50",
+      badgeText: "text-rose-900 font-semibold",
+      badgeBorder: "border-rose-200",
+      glow: "from-rose-400/10",
+    },
+  },
+  FACILITY: {
+    key: "FACILITY",
+    canonicalRole: "FACILITY_OFFICER",
+    allowedRoles: ["FACILITY_OFFICER", "FACILITY", "ESTATE", "SUPER_ADMIN"],
+    label: "Estate & Facilities Portal",
+    shortTitle: "Facilities",
+    supportingText:
+      "Campus physical estate, preventive maintenance, and utility infrastructure.",
+    identifierLabel: "Estate Operations Email / ID",
+    identifierPlaceholder: "e.g. facilities.estate@campusos.edu or FAC-01",
+    identifierHint:
+      "Enter your physical plant and estate operations credentials.",
+    demoEmail: "facilities.estate@campusos.edu",
+    demoPassword: "FacilitySecret123!",
+    demoPersonaId: "user-facility-01",
+    badgeText: "Estate, Maintenance & Work Orders",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-lime-50",
+      badgeText: "text-lime-900 font-semibold",
+      badgeBorder: "border-lime-200",
+      glow: "from-lime-400/10",
+    },
+  },
+  STAFF: {
+    key: "STAFF",
+    canonicalRole: "STAFF",
+    allowedRoles: ["STAFF", "SUPER_ADMIN"],
+    label: "Staff Portal",
+    shortTitle: "Staff",
+    supportingText:
+      "General employee self-service, attendance check-in, leaves, and documents.",
+    identifierLabel: "Staff Employee Email / ID",
+    identifierPlaceholder: "e.g. staff.member@campusos.edu or STF-101",
+    identifierHint: "Enter your institutional staff employee ID or email.",
+    demoEmail: "staff.member@campusos.edu",
+    demoPassword: "StaffSecret123!",
+    demoPersonaId: "user-staff-01",
+    badgeText: "Staff Self-Service & Attendance",
+    accent: {
+      tabActive:
+        "bg-yellow-400 border-yellow-500 text-slate-950 shadow-xs font-bold",
+      tabText: "text-slate-950",
+      badgeBg: "bg-slate-100",
+      badgeText: "text-slate-900 font-semibold",
+      badgeBorder: "border-slate-300",
+      glow: "from-slate-400/10",
+    },
+  },
 };
 
-export const PORTAL_KEYS: PortalKey[] = [
+export const PORTAL_KEYS: PrimaryPortalKey[] = [
   "STUDENT",
   "ADMIN",
   "VICE_PRINCIPAL",
@@ -171,11 +397,27 @@ export const PORTAL_KEYS: PortalKey[] = [
   "HOD",
 ];
 
-export const REGULAR_PORTAL_KEYS: PortalKey[] = [
+export const REGULAR_PORTAL_KEYS: PrimaryPortalKey[] = [
   "STUDENT",
   "FACULTY",
   "VICE_PRINCIPAL",
   "HOD",
+];
+
+export const EXTENDED_PORTAL_KEYS: ExtendedPortalKey[] = [
+  "ACCOUNTS",
+  "PLACEMENT",
+  "WARDEN",
+  "TRANSPORT",
+  "LIBRARIAN",
+  "SECURITY",
+  "FACILITY",
+  "STAFF",
+];
+
+export const ALL_PORTAL_KEYS: PortalKey[] = [
+  ...PORTAL_KEYS,
+  ...EXTENDED_PORTAL_KEYS,
 ];
 
 export function getRoleIcon(portalKey: PortalKey, className = "h-4 w-4") {
@@ -190,5 +432,23 @@ export function getRoleIcon(portalKey: PortalKey, className = "h-4 w-4") {
       return <UserCheck className={className} />;
     case "HOD":
       return <Building className={className} />;
+    case "ACCOUNTS":
+      return <DollarSign className={className} />;
+    case "PLACEMENT":
+      return <Briefcase className={className} />;
+    case "WARDEN":
+      return <BedDouble className={className} />;
+    case "TRANSPORT":
+      return <Bus className={className} />;
+    case "LIBRARIAN":
+      return <BookOpen className={className} />;
+    case "SECURITY":
+      return <ShieldAlert className={className} />;
+    case "FACILITY":
+      return <Wrench className={className} />;
+    case "STAFF":
+      return <Users className={className} />;
+    default:
+      return <UserCheck className={className} />;
   }
 }

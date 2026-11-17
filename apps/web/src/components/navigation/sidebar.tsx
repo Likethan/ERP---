@@ -86,6 +86,14 @@ import {
   HOD_PORTAL_NAV,
   VICE_PRINCIPAL_PORTAL_NAV,
   ADMIN_PORTAL_NAV,
+  ACCOUNTS_PORTAL_NAV,
+  PLACEMENT_PORTAL_NAV,
+  WARDEN_PORTAL_NAV,
+  TRANSPORT_PORTAL_NAV,
+  LIBRARY_PORTAL_NAV,
+  SECURITY_PORTAL_NAV,
+  FACILITY_PORTAL_NAV,
+  STAFF_PORTAL_NAV,
   getPortalNavSections,
   getPortalHeaderMeta,
   getNormalizedRoleSet,
@@ -99,6 +107,14 @@ export {
   HOD_PORTAL_NAV,
   VICE_PRINCIPAL_PORTAL_NAV,
   ADMIN_PORTAL_NAV,
+  ACCOUNTS_PORTAL_NAV,
+  PLACEMENT_PORTAL_NAV,
+  WARDEN_PORTAL_NAV,
+  TRANSPORT_PORTAL_NAV,
+  LIBRARY_PORTAL_NAV,
+  SECURITY_PORTAL_NAV,
+  FACILITY_PORTAL_NAV,
+  STAFF_PORTAL_NAV,
   getPortalNavSections,
   getPortalHeaderMeta,
   getNormalizedRoleSet,
@@ -2357,6 +2373,16 @@ export function isPathAuthorized(
     )
   ) {
     return false;
+  }
+
+  // Check if pathname matches any item in the user's dedicated portal navigation
+  const portalNav = getPortalNavSections(user);
+  for (const section of portalNav) {
+    for (const item of section.items) {
+      if (item.href === pathname || pathname.startsWith(item.href + "/")) {
+        return true;
+      }
+    }
   }
 
   // Find matching nav item: match exact href first, then longest matching prefix for subroutes
