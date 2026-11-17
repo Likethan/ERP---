@@ -1,9 +1,17 @@
 /**
- * Simplified Login Portal Verification Suite
+ * Desktop Landscape Institutional Login Portal Verification Suite
  * Verifies:
- * 1. Application opens directly on the login portal (no introductory screen).
- * 2. Left-side promotional content, marketing text, and promo sections are completely removed.
- * 3. Centered login card structure with the 8 essential elements only.
+ * 1. Desktop landscape (16:9 widescreen) two-column split layout.
+ * 2. Left Column (Warm ivory gradient #FAF8F2):
+ *    - Brand header: VSB university crest seal (/college-logo.jpg), bold "CampusOS" wordmark, amber "ERP V2.4" pill badge, college subtitle.
+ *    - Status pill: "Unified Institutional Gateway" with live green status dot.
+ *    - Headline: "One Campus. One System. One Source of Truth." (editorial serif typography with amber highlight).
+ *    - 2x2 Feature Grid: "Zero-Trust RBAC", "ISO 27001 Certified", "5 Campuses • 14 Depts", "Real-Time Telemetry".
+ * 3. Right Column (Clean white canvas with centered access card):
+ *    - Top meta: "Tenant: VSB-CAMPUS" and "INSTITUTIONAL ACCESS PORTAL" heading with "Select Your Portal Experience".
+ *    - 4-Role Segment Bar: "Student" (active yellow pill with graduation cap), "Faculty", "Vice Principal", "HOD".
+ *    - Elevated Login Card: Academic pill badge, "✨ Fill Demo" trigger, "Student Portal" title, stylized inputs with visibility toggle, "Remember me" checkbox, and bold golden CTA.
+ *    - Quick-Switch Test Persona: "Aarav Patel (Year 3 / Sem 5)" 1-click launch card at bottom.
  * 4. Authentication logic: valid credentials succeed; invalid credentials display appropriate errors.
  * 5. Password visibility control toggling.
  * 6. Existing password recovery portal compatibility.
@@ -12,7 +20,6 @@
  */
 
 import { DEMO_PERSONAS } from "../mocks/auth.mock";
-import { PORTALS } from "../lib/portals";
 import fs from "fs";
 import path from "path";
 
@@ -29,9 +36,9 @@ function assert(condition: boolean, message: string) {
   }
 }
 
-async function runSimplifiedLoginTests() {
+async function runLandscapeLoginTests() {
   console.log("=================================================");
-  console.log("CampusOS Simplified Login Portal Test Suite");
+  console.log("CampusOS Landscape Institutional Login Portal Test Suite");
   console.log("=================================================");
 
   const loginPagePath = path.resolve(__dirname, "../app/login/page.tsx");
@@ -46,110 +53,142 @@ async function runSimplifiedLoginTests() {
   const forgotPasswordSource = fs.readFileSync(forgotPasswordPath, "utf-8");
 
   // -------------------------------------------------------------------------
-  // 1. Initial Application Loading & Introductory Content Removal
+  // 1. Initial Application Loading & Root Page Resolution
   // -------------------------------------------------------------------------
   assert(
     rootPageSource.includes("<LoginPage") ||
       rootPageSource.includes("LoginPage"),
     "Root page '/' directly renders LoginPage without intermediate welcome or initialization screens",
   );
-  assert(
-    !rootPageSource.includes("CampusOSPortalPage") &&
-      !rootPageSource.includes("domainModules") &&
-      !rootPageSource.includes("DEMO_PERSONAS"),
-    "All previous 600+ line welcome, promotional, and module showcase content is removed from root page",
-  );
 
   // -------------------------------------------------------------------------
-  // 2. Removal of Left-Side Promotional & Marketing Content
+  // 2. Desktop Landscape Two-Column Split Layout & Left Column
   // -------------------------------------------------------------------------
   assert(
-    !loginPageSource.includes("lg:w-5/12") &&
-      !loginPageSource.includes("xl:w-5/12"),
-    "Left-side split panel (5/12 width) is completely removed",
-  );
-  assert(
-    !loginPageSource.includes("One Campus. One System. One Source of Truth."),
-    "Large marketing slogan ('One Campus. One System...') is removed from login page",
-  );
-  assert(
-    !loginPageSource.includes("Unified Institutional Gateway") &&
-      !loginPageSource.includes("handleAutofillDemo") &&
-      !loginPageSource.includes("handleDirectPersonaLogin"),
-    "Promotional badges, autofill buttons, and 1-click bypass buttons are removed from login page",
+    loginPageSource.includes("lg:flex-row") &&
+      (loginPageSource.includes("#FAF8F2") ||
+        loginPageSource.includes("bg-[#FAF8F2]")),
+    "Clean desktop landscape two-column split layout with warm ivory (#FAF8F2) is present",
   );
 
-  // -------------------------------------------------------------------------
-  // 3. Centered Single Login Card Layout & 8 Elements
-  // -------------------------------------------------------------------------
-  assert(
-    (loginPageSource.includes("min-h-screen") &&
-      loginPageSource.includes("flex-col items-center justify-center") &&
-      loginPageSource.includes("max-w-md")) ||
-      loginPageSource.includes("max-w-sm"),
-    "Responsive single centered login card container is present",
-  );
-
-  // Element 1: CampusOS logo / brand
+  // Left Column: Brand Header
   assert(
     loginPageSource.includes('src="/college-logo.jpg"') &&
-      loginPageSource.includes("CampusOS"),
-    "Element 1: CampusOS logo and brand name are present",
+      loginPageSource.includes("CampusOS") &&
+      loginPageSource.includes("ERP V2.4") &&
+      loginPageSource.includes("V.S.B. Engineering College"),
+    "Left Column Brand Header: VSB university crest seal, bold 'CampusOS' wordmark, amber 'ERP V2.4' pill badge, and college subtitle",
   );
 
-  // Element 2: Login heading
+  // Left Column: Status Pill
   assert(
-    loginPageSource.includes("<h1") &&
-      loginPageSource.includes("Sign in to your account"),
-    "Element 2: Clean login heading 'Sign in to your account' is present",
+    loginPageSource.includes("Unified Institutional Gateway") &&
+      loginPageSource.includes("bg-emerald-500"),
+    "Left Column Status Pill: 'Unified Institutional Gateway' with live green status dot is present",
   );
 
-  // Element 3: Username / Email input
+  // Left Column: Headline
+  assert(
+    loginPageSource.includes("One Campus.") &&
+      loginPageSource.includes("One System.") &&
+      loginPageSource.includes("One Source of Truth.") &&
+      loginPageSource.includes("font-serif"),
+    "Left Column Headline: 'One Campus. One System. One Source of Truth.' with editorial serif typography and amber highlight",
+  );
+
+  // Left Column: 2x2 Feature Grid
+  assert(
+    loginPageSource.includes("Zero-Trust RBAC") &&
+      loginPageSource.includes("ISO 27001 Certified") &&
+      loginPageSource.includes("5 Campuses • 14 Depts") &&
+      loginPageSource.includes("Real-Time Telemetry"),
+    "Left Column 2x2 Feature Grid: Cards for Zero-Trust RBAC, ISO 27001 Certified, 5 Campuses • 14 Depts, and Real-Time Telemetry",
+  );
+
+  // -------------------------------------------------------------------------
+  // 3. Right Column: Top Meta, Heading, 4-Role Segment Bar & Elevated Card
+  // -------------------------------------------------------------------------
+  assert(
+    loginPageSource.includes("Tenant: VSB-CAMPUS") &&
+      loginPageSource.includes("INSTITUTIONAL ACCESS PORTAL") &&
+      loginPageSource.includes("Select Your Portal Experience"),
+    "Right Column Top Meta: 'Tenant: VSB-CAMPUS', 'INSTITUTIONAL ACCESS PORTAL', and 'Select Your Portal Experience'",
+  );
+
+  // 4-Role Segment Bar
+  assert(
+    loginPageSource.includes("FOUR_ROLES") &&
+      loginPageSource.includes("STUDENT") &&
+      loginPageSource.includes("FACULTY") &&
+      loginPageSource.includes("VICE_PRINCIPAL") &&
+      loginPageSource.includes("HOD"),
+    "4-Role Segment Bar: 'Student' (active yellow pill with graduation cap), 'Faculty', 'Vice Principal', and 'HOD'",
+  );
+
+  // Elevated Login Card & Elements
+  assert(
+    loginPageSource.includes("Academic Lifecycle & Courses") &&
+      loginPageSource.includes("✨ Fill Demo") &&
+      loginPageSource.includes("Student Portal"),
+    "Elevated Login Card: Academic pill badge, '✨ Fill Demo' trigger, and 'Student Portal' title",
+  );
+
+  // Username / Student ID input
   assert(
     loginPageSource.includes('id="identifier"') &&
-      loginPageSource.includes("Username or Email"),
-    "Element 3: Username or Email input with accessible label is present",
+      loginPageSource.includes("STUDENT ID / ROLL NO. OR EMAIL"),
+    "Stylized input: Student ID / Roll No or Email with accessible label is present",
   );
 
-  // Element 4: Password input
+  // Password input & visibility toggle
   assert(
     loginPageSource.includes('id="password"') &&
-      loginPageSource.includes("Password"),
-    "Element 4: Password input with accessible label is present",
-  );
-
-  // Element 5: Show / hide password control
-  assert(
-    loginPageSource.includes("showPassword") &&
-      loginPageSource.includes("setShowPassword") &&
+      loginPageSource.includes("INSTITUTIONAL PASSWORD") &&
+      loginPageSource.includes("showPassword") &&
       loginPageSource.includes("EyeOff") &&
       loginPageSource.includes("Eye"),
-    "Element 5: Show / hide password visibility toggle is present",
+    "Stylized input: Institutional Password input with show/hide password visibility toggle",
   );
 
-  // Element 6: Forgot password link
+  // Remember me checkbox
+  assert(
+    loginPageSource.includes('id="rememberMe"') &&
+      loginPageSource.includes("Remember me on this institutional device"),
+    "Remember me checkbox control is present",
+  );
+
+  // Forgot password link
   assert(
     loginPageSource.includes('href="/login/forgot-password"') &&
       loginPageSource.includes("Forgot password?"),
-    "Element 6: Forgot password link pointing to /login/forgot-password is present",
+    "Forgot password link pointing to /login/forgot-password is present",
   );
 
-  // Element 7: Sign In button
+  // Golden CTA button
   assert(
     loginPageSource.includes('type="submit"') &&
-      loginPageSource.includes("Sign In"),
-    "Element 7: Sign In primary submit button is present",
+      loginPageSource.includes("Sign In to Student Portal →"),
+    "Bold golden CTA: 'Sign In to Student Portal →' submit button is present",
   );
 
-  // Element 8: Existing authentication error messages
+  // Accessible alert container
   assert(
     loginPageSource.includes("errorMessage") &&
       loginPageSource.includes('role="alert"'),
-    "Element 8: Accessible alert container for authentication error messages is present",
+    "Accessible alert container for authentication error messages is present",
+  );
+
+  // Quick-Switch Test Persona
+  assert(
+    loginPageSource.includes("INSTANT TEST PERSONA") &&
+      loginPageSource.includes("1-Click Workspace Launch") &&
+      loginPageSource.includes("Aarav Patel") &&
+      loginPageSource.includes("Student — B.Tech CSE (Year 3 / Sem 5)"),
+    "Quick-Switch Test Persona: 'Aarav Patel (Year 3 / Sem 5)' 1-click launch card at bottom",
   );
 
   // -------------------------------------------------------------------------
-  // 4. Authentication Functionality & Error Handling
+  // 4. Authentication Functionality & Security
   // -------------------------------------------------------------------------
   assert(
     loginPageSource.includes("await login({") &&
@@ -169,11 +208,8 @@ async function runSimplifiedLoginTests() {
   // -------------------------------------------------------------------------
   assert(
     forgotPasswordSource.includes("Reset your password") &&
-      forgotPasswordSource.includes('href="/login"') &&
-      !forgotPasswordSource.includes(
-        "One Campus. One System. One Source of Truth.",
-      ),
-    "Forgot password page is aligned with minimal clean white-and-yellow enterprise design",
+      forgotPasswordSource.includes('href="/login"'),
+    "Forgot password page is aligned with clean white-and-yellow enterprise design",
   );
 
   // -------------------------------------------------------------------------
@@ -196,7 +232,7 @@ async function runSimplifiedLoginTests() {
 
   console.log("=================================================");
   console.log(
-    `Simplified Login Tests Finished: Passed: ${passed}, Failed: ${failed}`,
+    `Landscape Login Tests Finished: Passed: ${passed}, Failed: ${failed}`,
   );
   console.log("=================================================");
 
@@ -205,7 +241,7 @@ async function runSimplifiedLoginTests() {
   }
 }
 
-runSimplifiedLoginTests().catch((err) => {
+runLandscapeLoginTests().catch((err) => {
   console.error("Test execution failed:", err);
   process.exit(1);
 });
