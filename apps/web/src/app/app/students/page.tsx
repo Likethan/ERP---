@@ -13,6 +13,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
+import { useAuth } from "@/lib/auth-context";
 import { DataGrid, ColumnDef, BulkAction } from "@/components/data-grid";
 import { useDebounce } from "@/lib/use-debounce";
 import {
@@ -26,6 +27,12 @@ import {
 
 export default function StudentsDirectoryPage() {
   const { showToast } = useToast();
+  const { user, activePersona } = useAuth();
+  const userRole = activePersona?.role || user?.roles?.[0]?.name || "ADMIN";
+  const isFaculty = userRole === "FACULTY";
+  const canManageAdmissions =
+    userRole === "ADMIN" || userRole === "SUPER_ADMIN" || userRole === "STAFF";
+
   const [students, setStudents] = useState<StudentComprehensiveDetail[]>([]);
   const [departments, setDepartments] = useState<DepartmentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +40,9 @@ export default function StudentsDirectoryPage() {
   // Search & Filter state
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
-  const [selectedDept, setSelectedDept] = useState("ALL");
+  const [selectedDept, setSelectedDept] = useState(
+    isFaculty ? (activePersona?.department || "Computer Science & Engineering") : "ALL"
+  );
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedSemester, setSelectedSemester] = useState("ALL");
   const [selectedGender, setSelectedGender] = useState("ALL");
@@ -393,29 +402,39 @@ export default function StudentsDirectoryPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20 mb-2">
-            <Users className="h-3 w-3" />
-            People Domain &bull; Student Lifecycle Master
-          </div>
+          {isFaculty ? (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
+              <GraduationCap className="h-3 w-3 text-yellow-700" />
+              Faculty Access Scoped • Departmental & Course Cohort
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-400 border border-indigo-500/20 mb-2">
+              <Users className="h-3 w-3" />
+              People Domain &bull; Student Lifecycle Master
+            </div>
+          )}
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Student Management & 360 Registry
+            {isFaculty ? "Assigned Course Cohort Directory" : "Student Management & 360 Registry"}
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Canonical university student directory, admissions lifecycle, and
-            academic identity records.
+            {isFaculty
+              ? "Authorized student roster across your assigned courses and academic mentoring cohorts."
+              : "Canonical university student directory, admissions lifecycle, and academic identity records."}
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <Button
-            onClick={() => setCreateModalOpen(true)}
-            variant="primary"
-            size="sm"
-            leftIcon={<Plus className="h-4 w-4" />}
-          >
-            Admit New Student
-          </Button>
-        </div>
+        {canManageAdmissions && (
+          <div className="flex items-center gap-2.5">
+            <Button
+              onClick={() => setCreateModalOpen(true)}
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="h-4 w-4" />}
+            >
+              Admit New Student
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* KPI Stat Cards */}

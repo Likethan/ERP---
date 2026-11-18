@@ -400,7 +400,7 @@ export default function LeaveManagementPage() {
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
               {isFaculty
-                ? "Student Approvals & HOD Submissions"
+                ? "Course Attendance Exemption Workflow"
                 : isStudent
                   ? "Excused Absence Workflow"
                   : "Academic & Staff Leave Registry"}
@@ -408,28 +408,42 @@ export default function LeaveManagementPage() {
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             {isFaculty
-              ? "Faculty Leave & Student Approvals"
+              ? "Student Leave Approvals"
               : isStudent
                 ? "Student Leave Application"
                 : "Department Leave Endorsements & Governance"}
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {isFaculty
-              ? "Review student absence applications for your courses and apply for faculty leave to the HOD."
+              ? "Review and approve student medical and official on-duty leave applications for attendance exemption."
               : isStudent
                 ? "Submit medical, sports, and official on-duty leave applications to your course faculty for attendance exemption."
                 : "Review and endorse departmental faculty leave applications and student attendance escalations."}
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          className="gap-2"
-          onClick={handleOpenCreateModal}
-        >
-          <Plus className="h-4 w-4" />
-          {isFaculty ? "Apply for Faculty Leave (to HOD)" : "Apply for Leave"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {isFaculty ? (
+            <Link href="/app/faculty/leaves">
+              <Button
+                variant="outline"
+                className="gap-2 text-xs"
+              >
+                <Briefcase className="h-4 w-4" />
+                Apply for Faculty Leave &rarr;
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="primary"
+              className="gap-2"
+              onClick={handleOpenCreateModal}
+            >
+              <Plus className="h-4 w-4" />
+              Apply for Leave
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filter Bar */}

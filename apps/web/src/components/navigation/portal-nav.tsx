@@ -125,6 +125,17 @@ export const STUDENT_PORTAL_NAV: NavSection[] = [
         href: "/app/academics/timetable",
         icon: <CalendarDays className="h-4 w-4" />,
       },
+      {
+        label: "Course Study Materials",
+        href: "/app/academics/materials",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Assignments & Grades",
+        href: "/app/academics/assignments",
+        badge: "Homework",
+        icon: <ClipboardCheck className="h-4 w-4" />,
+      },
     ],
   },
   {
@@ -279,14 +290,14 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
         icon: <BookOpen className="h-4 w-4" />,
       },
       {
-        label: "Curricula Schemes",
-        href: "/app/academics/curricula",
-        icon: <FileSpreadsheet className="h-4 w-4" />,
+        label: "Lesson Plans & Syllabus",
+        href: "/app/academics/lesson-plans",
+        icon: <Layers className="h-4 w-4" />,
       },
       {
-        label: "Course Offerings",
-        href: "/app/academics/course-offerings",
-        icon: <Layers className="h-4 w-4" />,
+        label: "Class Diary / Teaching Log",
+        href: "/app/academics/class-diary",
+        icon: <Calendar className="h-4 w-4" />,
       },
       {
         label: "Teaching Timetable",
@@ -294,9 +305,30 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
         icon: <CalendarDays className="h-4 w-4" />,
       },
       {
+        label: "Curricula Schemes",
+        href: "/app/academics/curricula",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
         label: "Student Directory",
         href: "/app/students",
         icon: <GraduationCap className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: "STUDY MATERIALS & ASSIGNMENTS",
+    items: [
+      {
+        label: "Study Materials",
+        href: "/app/academics/materials",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Assignments & Evaluations",
+        href: "/app/academics/assignments",
+        badge: "Evaluations",
+        icon: <ClipboardCheck className="h-4 w-4" />,
       },
     ],
   },
@@ -320,14 +352,14 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
         icon: <Activity className="h-4 w-4" />,
       },
       {
+        label: "Attendance Corrections",
+        href: "/app/attendance/corrections",
+        icon: <Clock className="h-4 w-4" />,
+      },
+      {
         label: "Student Leave Approvals",
         href: "/app/attendance/leaves",
         icon: <Calendar className="h-4 w-4" />,
-      },
-      {
-        label: "Apply for Faculty Leave",
-        href: "/app/attendance/leaves",
-        icon: <CalendarDays className="h-4 w-4" />,
       },
     ],
   },
@@ -346,12 +378,12 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
         icon: <ClipboardCheck className="h-4 w-4" />,
       },
       {
-        label: "Exam Schedules",
+        label: "Exam Schedules & Duties",
         href: "/app/examinations/schedules",
         icon: <CalendarDays className="h-4 w-4" />,
       },
       {
-        label: "Published Results",
+        label: "View Published Results",
         href: "/app/examinations/results",
         icon: <Award className="h-4 w-4" />,
       },
@@ -384,8 +416,19 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
     ],
   },
   {
-    title: "RESEARCH & ACADEMIC LIFE",
+    title: "FACULTY ADMINISTRATION",
     items: [
+      {
+        label: "Apply for Faculty Leave",
+        href: "/app/faculty/leaves",
+        badge: "Leave",
+        icon: <CalendarDays className="h-4 w-4" />,
+      },
+      {
+        label: "Faculty Workload & Staff",
+        href: "/app/workforce",
+        icon: <Briefcase className="h-4 w-4" />,
+      },
       {
         label: "Research Grants & Projects",
         href: "/app/research",
@@ -393,19 +436,14 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
         icon: <FlaskConical className="h-4 w-4" />,
       },
       {
-        label: "Faculty Colleagues",
-        href: "/app/workforce",
-        icon: <Briefcase className="h-4 w-4" />,
+        label: "Campus Announcements",
+        href: "/app/campus/announcements",
+        icon: <Bell className="h-4 w-4" />,
       },
       {
         label: "Campus Events",
         href: "/app/events",
         icon: <PartyPopper className="h-4 w-4" />,
-      },
-      {
-        label: "Announcements",
-        href: "/app/announcements",
-        icon: <Bell className="h-4 w-4" />,
       },
       {
         label: "My Documents Vault",

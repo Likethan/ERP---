@@ -27,7 +27,12 @@ import {
 
 export default function CurriculaDirectoryPage() {
   const { showToast } = useToast();
-  const { hasPermission } = useAuth();
+  const { hasPermission, activePersona } = useAuth();
+  const canManageCurriculum =
+    hasPermission("academics:curriculum:manage") ||
+    activePersona?.role === "ADMIN" ||
+    activePersona?.role === "HOD" ||
+    activePersona?.role === "SUPER_ADMIN";
   const [curricula, setCurricula] = useState<CurriculumScheme[]>([]);
   const [departments, setDepartments] = useState<DepartmentItem[]>([]);
   const [programs, setPrograms] = useState<ProgramItem[]>([]);
@@ -398,14 +403,20 @@ export default function CurriculaDirectoryPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Button
-            variant="primary"
-            size="sm"
-            leftIcon={<Plus className="h-4 w-4" />}
-            onClick={() => setCreateModalOpen(true)}
-          >
-            New Curriculum Scheme
-          </Button>
+          {canManageCurriculum ? (
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="h-4 w-4" />}
+              onClick={() => setCreateModalOpen(true)}
+            >
+              New Curriculum Scheme
+            </Button>
+          ) : (
+            <div className="text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
+              View-Only Curriculum Reference
+            </div>
+          )}
         </div>
       </div>
 

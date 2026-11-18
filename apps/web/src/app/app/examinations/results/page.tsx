@@ -26,8 +26,15 @@ import {
 } from "lucide-react";
 
 export default function ResultsAndFinalizationPage() {
-  const { hasPermission } = useAuth();
+  const { hasPermission, activePersona } = useAuth();
   const { showToast } = useToast();
+
+  const canPublishResults =
+    hasPermission("examination:results:publish") ||
+    activePersona?.role === "ADMIN" ||
+    activePersona?.role === "HOD" ||
+    activePersona?.role === "PRINCIPAL" ||
+    activePersona?.role === "SUPER_ADMIN";
 
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<Result[]>([]);
@@ -226,7 +233,7 @@ export default function ResultsAndFinalizationPage() {
             </span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Semester Examination Results
+            View Published Results & Ledger
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Weighted assessment outcomes, 10-point grade conversions, and formal
@@ -245,15 +252,21 @@ export default function ResultsAndFinalizationPage() {
             View Grade Scale
           </Button>
 
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setFinalizeModalOpen(true)}
-            className="gap-1.5 text-xs"
-          >
-            <Lock className="h-3.5 w-3.5" />
-            Finalize Cohort Results
-          </Button>
+          {canPublishResults ? (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setFinalizeModalOpen(true)}
+              className="gap-1.5 text-xs"
+            >
+              <Lock className="h-3.5 w-3.5" />
+              Finalize Cohort Results
+            </Button>
+          ) : (
+            <div className="text-[11px] text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+              Publication Gate: COE Authorization Required
+            </div>
+          )}
         </div>
       </div>
 
