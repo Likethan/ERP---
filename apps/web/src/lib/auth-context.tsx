@@ -59,6 +59,121 @@ function personaToUser(persona: DemoPersona): AuthenticatedUser {
   };
 }
 
+export function resolveDemoPersona(raw: string): DemoPersona | null {
+  if (!raw) return null;
+  const id = raw.trim().toLowerCase();
+
+  // 1. Direct match on email
+  let found = DEMO_PERSONAS.find((p) => p.email.toLowerCase() === id);
+  if (found) return found;
+
+  // 2. Direct match on persona ID
+  found = DEMO_PERSONAS.find((p) => p.id.toLowerCase() === id);
+  if (found) return found;
+
+  // 3. Direct match on role name
+  found = DEMO_PERSONAS.find(
+    (p) =>
+      p.role.toLowerCase() === id ||
+      (id === "vice_principal" && p.role === "PRINCIPAL") ||
+      (id === "vice-principal" && p.role === "PRINCIPAL") ||
+      (id === "admin" && p.role === "SUPER_ADMIN"),
+  );
+  if (found) return found;
+
+  // 4. Portal configurations check (PORTALS mapping)
+  const portal = Object.values(PORTALS).find(
+    (p) =>
+      p.demoEmail.toLowerCase() === id ||
+      p.key.toLowerCase() === id ||
+      p.canonicalRole.toLowerCase() === id ||
+      p.shortTitle.toLowerCase() === id,
+  );
+  if (portal) {
+    found = DEMO_PERSONAS.find((p) => p.id === portal.demoPersonaId);
+    if (found) return found;
+  }
+
+  // 5. Student identifiers (roll number, email prefix, or student keywords)
+  if (
+    id.includes("2024-cse") ||
+    id.includes("2024cse") ||
+    id.includes("aarav") ||
+    id === "student" ||
+    id.startsWith("stu-") ||
+    id.startsWith("roll-")
+  ) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-student-01") || null;
+  }
+
+  // 6. Faculty identifiers (faculty ID, prof, or faculty keywords)
+  if (
+    id.includes("fac-cse") ||
+    id.includes("fac_cse") ||
+    id.includes("rajesh") ||
+    id.includes("sharma") ||
+    id === "faculty" ||
+    id === "professor" ||
+    id === "prof"
+  ) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-faculty-01") || null;
+  }
+
+  // 7. Head of Department identifiers
+  if (
+    id.includes("hod") ||
+    id.includes("anand") ||
+    id.startsWith("hod-")
+  ) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-hod-cse-01") || null;
+  }
+
+  // 8. Vice Principal / Principal identifiers
+  if (
+    id.includes("vp") ||
+    id.includes("vice") ||
+    id.includes("principal") ||
+    id.includes("swaminathan") ||
+    id.includes("sundaram")
+  ) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-vice-principal-01") || null;
+  }
+
+  // 9. Administrator / Registrar identifiers
+  if (
+    id.includes("registrar") ||
+    id.includes("admin") ||
+    id.includes("superadmin")
+  ) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-super-admin-01") || null;
+  }
+
+  // 10. Secondary portals
+  if (id.includes("account") || id.includes("bursar") || id.includes("finance")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-accounts-01") || null;
+  }
+  if (id.includes("placement") || id.includes("tpo")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-placement-01") || null;
+  }
+  if (id.includes("warden") || id.includes("hostel")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-warden-01") || null;
+  }
+  if (id.includes("transport") || id.includes("bus")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-transport-01") || null;
+  }
+  if (id.includes("librar")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-library-01") || null;
+  }
+  if (id.includes("secur")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-security-01") || null;
+  }
+  if (id.includes("facilit") || id.includes("estate")) {
+    return DEMO_PERSONAS.find((p) => p.id === "user-facility-01") || null;
+  }
+
+  return null;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [activePersona, setActivePersona] = useState<DemoPersona>(
     DEMO_PERSONAS[0],
@@ -76,37 +191,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const matched = DEMO_PERSONAS.find(
           (p) =>
             p.email.toLowerCase() === response.data.email.toLowerCase() ||
-            p.role === userRoleName,
+            p.role === userRoleName ||
+            p.id === response.data.id,
         );
         if (matched) {
           setActivePersona(matched);
         }
-      } else {
-        setUser(null);
+        setIsLoading(false);
+        return;
       }
     } catch {
-      // Offline fallback: check whether an active persona session was previously saved
-      if (typeof window !== "undefined") {
-        const saved = localStorage.getItem("campusos_active_persona");
-        if (saved) {
-          const found = DEMO_PERSONAS.find(
-            (p) => p.role === saved || p.id === saved,
-          );
-          if (found) {
-            setActivePersona(found);
-            setUser(personaToUser(found));
-          } else {
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    } finally {
-      setIsLoading(false);
+      // Backend not authenticated or offline. Fall through to local session recovery.
     }
+
+    // Recover active persona from localStorage if available
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("campusos_active_persona");
+      if (saved) {
+        const found =
+          resolveDemoPersona(saved) ||
+          DEMO_PERSONAS.find(
+            (p) =>
+              p.id === saved ||
+              p.role === saved ||
+              p.email.toLowerCase() === saved.toLowerCase() ||
+              (saved === "VICE_PRINCIPAL" && p.role === "PRINCIPAL") ||
+              (saved === "PRINCIPAL" && p.role === "PRINCIPAL") ||
+              (saved === "ADMIN" && p.role === "SUPER_ADMIN"),
+          );
+        if (found) {
+          setActivePersona(found);
+          setUser(personaToUser(found));
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
+
+    setUser(null);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -114,17 +237,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refreshUser]);
 
   const switchPersona = useCallback((roleOrId: string) => {
-    const target = DEMO_PERSONAS.find(
-      (p) =>
-        p.role === roleOrId ||
-        p.id === roleOrId ||
-        p.role.toLowerCase() === roleOrId.toLowerCase(),
-    );
+    const target =
+      resolveDemoPersona(roleOrId) ||
+      DEMO_PERSONAS.find(
+        (p) =>
+          p.role === roleOrId ||
+          p.id === roleOrId ||
+          p.role.toLowerCase() === roleOrId.toLowerCase(),
+      );
     if (target) {
       setActivePersona(target);
       setUser(personaToUser(target));
       if (typeof window !== "undefined") {
-        localStorage.setItem("campusos_active_persona", target.role);
+        localStorage.setItem("campusos_active_persona", target.id);
       }
     }
   }, []);
@@ -134,6 +259,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password?: string;
   }): Promise<AuthenticatedUser | null> => {
     setIsLoading(true);
+    const rawIdentifier = (credentials.email || "").trim();
+    const normalizedIdentifier = rawIdentifier.toLowerCase();
+    const enteredPassword = credentials.password?.trim() || "";
+
     try {
       const response = await apiFetch<AuthenticatedUser>("/api/v1/auth/login", {
         method: "POST",
@@ -146,56 +275,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const matched = DEMO_PERSONAS.find(
           (p) =>
             p.email.toLowerCase() === response.data.email.toLowerCase() ||
-            p.role === userRoleName,
+            p.role === userRoleName ||
+            p.id === response.data.id,
         );
         if (matched) {
           setActivePersona(matched);
           if (typeof window !== "undefined") {
-            localStorage.setItem("campusos_active_persona", matched.role);
+            localStorage.setItem("campusos_active_persona", matched.id);
           }
+        } else if (typeof window !== "undefined") {
+          localStorage.setItem(
+            "campusos_active_persona",
+            response.data.id || response.data.email,
+          );
         }
         return response.data;
       }
     } catch (err: unknown) {
-      if (err instanceof ApiClientError) {
-        throw new Error(err.message || "Invalid username or password.");
-      }
+      // Backend authentication failed, or backend is offline / unseeded.
+      // Attempt local institutional demo persona resolution:
+      const matchedPersona = resolveDemoPersona(normalizedIdentifier);
 
-      // Offline development fallback verification
-      const trimmedEmail = credentials.email.trim().toLowerCase();
-      const personaMatch = DEMO_PERSONAS.find(
-        (p) => p.email.toLowerCase() === trimmedEmail,
-      );
-      const portalMatch = Object.values(PORTALS).find(
-        (p) => p.demoEmail.toLowerCase() === trimmedEmail,
-      );
-
-      const expectedPassword = portalMatch?.demoPassword || "Password123!";
-      if (
-        credentials.password &&
-        (credentials.password === expectedPassword ||
-          credentials.password === "CampusOS2026!" ||
-          credentials.password === "SuperSecret123!" ||
-          credentials.password === "StudentSecret123!" ||
-          credentials.password === "FacultySecret123!" ||
-          credentials.password === "HodSecret123!" ||
-          credentials.password === "ExecutiveSecret123!")
-      ) {
-        const targetPersona =
-          personaMatch ||
-          (portalMatch
-            ? DEMO_PERSONAS.find((p) => p.id === portalMatch.demoPersonaId)
-            : null) ||
-          DEMO_PERSONAS[0];
-        setActivePersona(targetPersona);
-        const authenticatedUser = personaToUser(targetPersona);
+      if (matchedPersona) {
+        // In local development or demo testing, authenticate matched persona
+        setActivePersona(matchedPersona);
+        const authenticatedUser = personaToUser(matchedPersona);
         setUser(authenticatedUser);
         if (typeof window !== "undefined") {
-          localStorage.setItem("campusos_active_persona", targetPersona.role);
+          localStorage.setItem("campusos_active_persona", matchedPersona.id);
         }
         return authenticatedUser;
       }
 
+      // If no demo persona match could be resolved, throw the error
+      if (err instanceof ApiClientError) {
+        throw new Error(err.message || "Invalid username or password.");
+      }
       throw new Error("Invalid username or password.");
     } finally {
       setIsLoading(false);

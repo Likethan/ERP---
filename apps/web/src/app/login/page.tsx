@@ -258,6 +258,23 @@ function LoginFormContent() {
       } else {
         router.replace("/app/dashboard");
       }
+      if (typeof window !== "undefined") {
+        const dest =
+          redirectUrl &&
+          redirectUrl.startsWith("/app") &&
+          !redirectUrl.includes("//") &&
+          !redirectUrl.includes("\\")
+            ? redirectUrl
+            : "/app/dashboard";
+        setTimeout(() => {
+          if (
+            window.location.pathname === "/login" ||
+            window.location.pathname === "/"
+          ) {
+            window.location.href = dest;
+          }
+        }, 350);
+      }
     }
   }, [isLoading, user, router, searchParams]);
 
@@ -316,6 +333,23 @@ function LoginFormContent() {
         router.replace(redirectUrl);
       } else {
         router.replace("/app/dashboard");
+      }
+      if (typeof window !== "undefined") {
+        const dest =
+          redirectUrl &&
+          redirectUrl.startsWith("/app") &&
+          !redirectUrl.includes("//") &&
+          !redirectUrl.includes("\\")
+            ? redirectUrl
+            : "/app/dashboard";
+        setTimeout(() => {
+          if (
+            window.location.pathname === "/login" ||
+            window.location.pathname === "/"
+          ) {
+            window.location.href = dest;
+          }
+        }, 350);
       }
     } catch (err: unknown) {
       const message =
@@ -385,6 +419,23 @@ function LoginFormContent() {
         router.replace(redirectUrl);
       } else {
         router.replace("/app/dashboard");
+      }
+      if (typeof window !== "undefined") {
+        const dest =
+          redirectUrl &&
+          redirectUrl.startsWith("/app") &&
+          !redirectUrl.includes("//") &&
+          !redirectUrl.includes("\\")
+            ? redirectUrl
+            : "/app/dashboard";
+        setTimeout(() => {
+          if (
+            window.location.pathname === "/login" ||
+            window.location.pathname === "/"
+          ) {
+            window.location.href = dest;
+          }
+        }, 350);
       }
     } catch (err: unknown) {
       const message =
