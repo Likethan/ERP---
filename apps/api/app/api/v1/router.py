@@ -74,6 +74,7 @@ from app.api.v1.support import router as support_router
 from app.api.v1.sustainability import sustainability_router
 from app.api.v1.timetable import router as timetable_router
 from app.api.v1.transport import transport_router
+from app.api.v1.vice_principal import router as vice_principal_router
 from app.api.v1.workflows import router as workflows_router
 from app.api.v1.workforce import router as workforce_router
 from app.identity.routers import identity_router
@@ -100,6 +101,7 @@ api_v1_router.include_router(academic_structure_router, prefix="/academic-struct
 api_v1_router.include_router(students_router)
 api_v1_router.include_router(faculty_router)
 api_v1_router.include_router(hod_router)
+api_v1_router.include_router(vice_principal_router)
 api_v1_router.include_router(staff_router)
 
 # Academics Engine
