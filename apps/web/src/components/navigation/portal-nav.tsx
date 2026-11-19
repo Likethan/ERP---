@@ -462,9 +462,39 @@ export const HOD_PORTAL_NAV: NavSection[] = [
     title: "DEPARTMENT LEADERSHIP",
     items: [
       {
+        label: "HOD Dedicated Portal",
+        href: "/hod/dashboard",
+        badge: "Phase 1",
+        icon: <Building className="h-4 w-4" />,
+      },
+      {
         label: "Dashboard",
         href: "/app/dashboard",
         icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Faculty Management",
+        href: "/hod/faculty",
+        badge: "28 Faculty",
+        icon: <UserCheck className="h-4 w-4" />,
+      },
+      {
+        label: "Student Management",
+        href: "/hod/students",
+        badge: "720 Enrolled",
+        icon: <GraduationCap className="h-4 w-4" />,
+      },
+      {
+        label: "Attendance Management",
+        href: "/hod/attendance",
+        badge: "88.4%",
+        icon: <CheckSquare className="h-4 w-4" />,
+      },
+      {
+        label: "Timetable Management",
+        href: "/hod/timetable",
+        badge: "Master Grid",
+        icon: <CalendarDays className="h-4 w-4" />,
       },
     ],
   },

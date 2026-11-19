@@ -39,6 +39,7 @@ from app.api.v1.faculty import router as faculty_router
 from app.api.v1.finance import router as finance_router
 from app.api.v1.governance import governance_router
 from app.api.v1.health import router as health_router
+from app.api.v1.hod import router as hod_router
 from app.api.v1.housing import housing_router
 from app.api.v1.institutions import router as institutions_router
 from app.api.v1.integrations import router as integrations_router
@@ -98,6 +99,7 @@ api_v1_router.include_router(academic_structure_router, prefix="/academic-struct
 # People Domain
 api_v1_router.include_router(students_router)
 api_v1_router.include_router(faculty_router)
+api_v1_router.include_router(hod_router)
 api_v1_router.include_router(staff_router)
 
 # Academics Engine
