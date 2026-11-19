@@ -50,7 +50,8 @@ export default function HodApprovalsPage() {
   const [search, setSearch] = useState("");
 
   // Action Drawer / Modal
-  const [selectedRequest, setSelectedRequest] = useState<HodApprovalItem | null>(null);
+  const [selectedRequest, setSelectedRequest] =
+    useState<HodApprovalItem | null>(null);
   const [actionRemarks, setActionRemarks] = useState("");
   const [processingAction, setProcessingAction] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -58,7 +59,10 @@ export default function HodApprovalsPage() {
   const loadApprovals = async () => {
     setLoading(true);
     try {
-      const res = await hodService.getApprovals(selectedCategory, selectedStatus);
+      const res = await hodService.getApprovals(
+        selectedCategory,
+        selectedStatus,
+      );
       if (res.success && res.data) {
         setData(res.data);
       }
@@ -83,18 +87,20 @@ export default function HodApprovalsPage() {
     );
   });
 
-  const handleAction = async (action: "APPROVE" | "REJECT" | "REQUEST_INFO") => {
+  const handleAction = async (
+    action: "APPROVE" | "REJECT" | "REQUEST_INFO",
+  ) => {
     if (!selectedRequest) return;
     setProcessingAction(action);
     try {
       const res = await hodService.processApprovalAction(
         selectedRequest.id,
         action,
-        actionRemarks.trim() || undefined
+        actionRemarks.trim() || undefined,
       );
       if (res.success && res.data) {
         setToastMessage(
-          `Request #${selectedRequest.id} has been marked as ${res.data.status}. Audit trail recorded.`
+          `Request #${selectedRequest.id} has been marked as ${res.data.status}. Audit trail recorded.`,
         );
         setSelectedRequest(res.data);
         setActionRemarks("");
@@ -117,7 +123,10 @@ export default function HodApprovalsPage() {
             <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>{toastMessage}</span>
           </div>
-          <button onClick={() => setToastMessage(null)} className="text-emerald-700 hover:text-emerald-900">
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-emerald-700 hover:text-emerald-900"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -130,14 +139,17 @@ export default function HodApprovalsPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full border border-yellow-300">
               Department Operations
             </span>
-            <span className="text-[11px] font-mono text-slate-500">Statutory Governance Queue</span>
+            <span className="text-[11px] font-mono text-slate-500">
+              Statutory Governance Queue
+            </span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
             <CheckSquare className="h-6 w-6 text-yellow-600" />
             Leave & Department Approvals Hub
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Centralized institutional approval authority for faculty leave/OD, student requests, academic exemptions, and department logistics.
+            Centralized institutional approval authority for faculty leave/OD,
+            student requests, academic exemptions, and department logistics.
           </p>
         </div>
 
@@ -195,7 +207,9 @@ export default function HodApprovalsPage() {
             <div className="text-2xl font-black text-slate-900 mt-2">
               {data?.stats.infoRequested || 0}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Pending applicant response</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              Pending applicant response
+            </div>
           </CardContent>
         </Card>
 
@@ -210,7 +224,9 @@ export default function HodApprovalsPage() {
             <div className="text-2xl font-black text-slate-900 mt-2">
               {data?.stats.totalRequests || 9}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">This Academic Semester</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              This Academic Semester
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -218,7 +234,9 @@ export default function HodApprovalsPage() {
       {/* Filter and Category Tabs */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
         <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
-          <span className="text-xs font-bold text-slate-500 mr-1">Category:</span>
+          <span className="text-xs font-bold text-slate-500 mr-1">
+            Category:
+          </span>
           {[
             { id: "ALL", label: "All Requests" },
             { id: "FACULTY", label: "Faculty Requests" },
@@ -232,7 +250,7 @@ export default function HodApprovalsPage() {
                 "px-2.5 py-1 text-xs rounded-md font-bold transition-colors",
                 selectedCategory === cat.id
                   ? "bg-yellow-400 text-slate-950 shadow-xs"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200",
               )}
             >
               {cat.label}
@@ -296,11 +314,13 @@ export default function HodApprovalsPage() {
                     key={req.id}
                     className={cn(
                       "hover:bg-yellow-50/30 transition-colors",
-                      req.status === "PENDING" && "bg-amber-50/20"
+                      req.status === "PENDING" && "bg-amber-50/20",
                     )}
                   >
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{req.title}</div>
+                      <div className="font-bold text-slate-900">
+                        {req.title}
+                      </div>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
                           {req.id}
@@ -308,7 +328,8 @@ export default function HodApprovalsPage() {
                         {req.attachments.length > 0 && (
                           <span className="text-[10px] text-slate-500 flex items-center gap-0.5">
                             <Paperclip className="h-3 w-3" />
-                            {req.attachments.length} file{req.attachments.length > 1 ? "s" : ""}
+                            {req.attachments.length} file
+                            {req.attachments.length > 1 ? "s" : ""}
                           </span>
                         )}
                       </div>
@@ -321,8 +342,8 @@ export default function HodApprovalsPage() {
                           req.category === "FACULTY"
                             ? "bg-blue-50 text-blue-800 border-blue-200"
                             : req.category === "STUDENT"
-                            ? "bg-purple-50 text-purple-800 border-purple-200"
-                            : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                              ? "bg-purple-50 text-purple-800 border-purple-200"
+                              : "bg-emerald-50 text-emerald-800 border-emerald-200",
                         )}
                       >
                         {req.category}
@@ -332,8 +353,12 @@ export default function HodApprovalsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{req.submittedBy}</div>
-                      <div className="text-[11px] text-slate-500">{req.submittedByRole}</div>
+                      <div className="font-bold text-slate-900">
+                        {req.submittedBy}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {req.submittedByRole}
+                      </div>
                     </td>
                     <td className="py-3 px-4 font-mono text-slate-600">
                       {req.submissionDate.split("T")[0]}
@@ -345,8 +370,8 @@ export default function HodApprovalsPage() {
                           req.urgency === "CRITICAL"
                             ? "bg-red-100 text-red-800"
                             : req.urgency === "HIGH"
-                            ? "bg-amber-100 text-amber-900"
-                            : "bg-slate-100 text-slate-700"
+                              ? "bg-amber-100 text-amber-900"
+                              : "bg-slate-100 text-slate-700",
                         )}
                       >
                         {req.urgency}
@@ -359,10 +384,10 @@ export default function HodApprovalsPage() {
                           req.status === "APPROVED"
                             ? "bg-emerald-100 text-emerald-800 border-emerald-200"
                             : req.status === "REJECTED"
-                            ? "bg-red-100 text-red-800 border-red-200"
-                            : req.status === "INFO_REQUESTED"
-                            ? "bg-blue-100 text-blue-800 border-blue-200"
-                            : "bg-yellow-100 text-yellow-950 border-yellow-300 animate-pulse"
+                              ? "bg-red-100 text-red-800 border-red-200"
+                              : req.status === "INFO_REQUESTED"
+                                ? "bg-blue-100 text-blue-800 border-blue-200"
+                                : "bg-yellow-100 text-yellow-950 border-yellow-300 animate-pulse",
                         )}
                       >
                         {req.status}
@@ -376,10 +401,12 @@ export default function HodApprovalsPage() {
                           "text-xs font-bold h-7 px-3",
                           req.status === "PENDING"
                             ? "bg-yellow-400 text-slate-950 hover:bg-yellow-500 shadow-xs"
-                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200",
                         )}
                       >
-                        {req.status === "PENDING" ? "Review & Act" : "View Audit Trail"}
+                        {req.status === "PENDING"
+                          ? "Review & Act"
+                          : "View Audit Trail"}
                       </Button>
                     </td>
                   </tr>
@@ -411,10 +438,10 @@ export default function HodApprovalsPage() {
                         selectedRequest.status === "APPROVED"
                           ? "bg-emerald-100 text-emerald-800"
                           : selectedRequest.status === "REJECTED"
-                          ? "bg-red-100 text-red-800"
-                          : selectedRequest.status === "INFO_REQUESTED"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-yellow-100 text-yellow-950"
+                            ? "bg-red-100 text-red-800"
+                            : selectedRequest.status === "INFO_REQUESTED"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-yellow-100 text-yellow-950",
                       )}
                     >
                       {selectedRequest.status}
@@ -444,14 +471,18 @@ export default function HodApprovalsPage() {
                   <div className="font-bold text-slate-900 mt-0.5">
                     {selectedRequest.submittedBy}
                   </div>
-                  <div className="text-[11px] text-slate-500">{selectedRequest.submittedByRole}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {selectedRequest.submittedByRole}
+                  </div>
                 </div>
 
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Category
                   </div>
-                  <div className="font-bold text-slate-900 mt-0.5">{selectedRequest.category}</div>
+                  <div className="font-bold text-slate-900 mt-0.5">
+                    {selectedRequest.category}
+                  </div>
                   <div className="text-[11px] text-slate-500 font-mono">
                     {selectedRequest.subCategory}
                   </div>
@@ -476,7 +507,9 @@ export default function HodApprovalsPage() {
                   <div className="font-bold text-slate-900 mt-0.5">
                     {selectedRequest.departmentName}
                   </div>
-                  <div className="text-[11px] text-emerald-600 font-semibold">Authorized Scoped</div>
+                  <div className="text-[11px] text-emerald-600 font-semibold">
+                    Authorized Scoped
+                  </div>
                 </div>
               </div>
 
@@ -497,7 +530,10 @@ export default function HodApprovalsPage() {
                 </div>
                 <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5 font-mono text-[11px]">
                   {Object.entries(selectedRequest.details).map(([key, val]) => (
-                    <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200/50 pb-1">
+                    <div
+                      key={key}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200/50 pb-1"
+                    >
                       <span className="text-slate-500 font-bold uppercase text-[10px]">
                         {key.replace(/_/g, " ")}:
                       </span>
@@ -519,12 +555,16 @@ export default function HodApprovalsPage() {
                     {selectedRequest.attachments.map((att) => (
                       <div
                         key={att.name}
-                        onClick={() => alert(`Opening statutory attachment: ${att.name}`)}
+                        onClick={() =>
+                          alert(`Opening statutory attachment: ${att.name}`)
+                        }
                         className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 bg-white hover:bg-yellow-50 cursor-pointer transition-colors shadow-xs"
                       >
                         <FileText className="h-4 w-4 text-red-500" />
                         <div>
-                          <div className="font-bold text-slate-900 text-xs">{att.name}</div>
+                          <div className="font-bold text-slate-900 text-xs">
+                            {att.name}
+                          </div>
                           <div className="text-[10px] text-slate-400 font-mono">
                             {att.size} • {att.type}
                           </div>
@@ -551,12 +591,16 @@ export default function HodApprovalsPage() {
                         {audit.action}
                       </span>
                       <div className="flex-1">
-                        <span className="font-semibold text-slate-900">{audit.by}</span>
+                        <span className="font-semibold text-slate-900">
+                          {audit.by}
+                        </span>
                         <span className="text-slate-500 text-[10px] ml-1">
                           ({audit.timestamp.replace("T", " ").replace("Z", "")})
                         </span>
                         {audit.notes && (
-                          <div className="text-slate-600 mt-0.5 italic">"{audit.notes}"</div>
+                          <div className="text-slate-600 mt-0.5 italic">
+                            "{audit.notes}"
+                          </div>
                         )}
                       </div>
                     </div>
@@ -610,7 +654,9 @@ export default function HodApprovalsPage() {
                       className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-xs"
                     >
                       <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                      {processingAction === "APPROVE" ? "Approving..." : "Endorse & Approve"}
+                      {processingAction === "APPROVE"
+                        ? "Approving..."
+                        : "Endorse & Approve"}
                     </Button>
                   </div>
                 </div>

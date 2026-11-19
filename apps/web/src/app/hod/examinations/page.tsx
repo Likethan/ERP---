@@ -41,7 +41,9 @@ export default function HodExaminationsPage() {
 
   const [data, setData] = useState<HodExaminationsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"schedules" | "submissions" | "terms">("schedules");
+  const [activeTab, setActiveTab] = useState<
+    "schedules" | "submissions" | "terms"
+  >("schedules");
 
   useEffect(() => {
     async function loadData() {
@@ -69,14 +71,17 @@ export default function HodExaminationsPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full border border-yellow-300">
               Academic Operations
             </span>
-            <span className="text-[11px] font-mono text-slate-500">Autonomous Term 2026-2027</span>
+            <span className="text-[11px] font-mono text-slate-500">
+              Autonomous Term 2026-2027
+            </span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
             <FileText className="h-6 w-6 text-yellow-600" />
             Department Examination Management
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Examination timetable scheduling, hall allocations, marks submission compliance tracking, and missing marks identification.
+            Examination timetable scheduling, hall allocations, marks submission
+            compliance tracking, and missing marks identification.
           </p>
         </div>
 
@@ -85,7 +90,9 @@ export default function HodExaminationsPage() {
             variant="outline"
             size="sm"
             className="text-xs bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
-            onClick={() => alert("Downloading Department Examination Timetable (PDF)...")}
+            onClick={() =>
+              alert("Downloading Department Examination Timetable (PDF)...")
+            }
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Download Exam Schedule
@@ -106,7 +113,9 @@ export default function HodExaminationsPage() {
             <div className="text-2xl font-black text-slate-900 mt-2">
               {data?.summary.totalScheduledExams || 4}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Model Examinations Nov 2026</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              Model Examinations Nov 2026
+            </div>
           </CardContent>
         </Card>
 
@@ -152,7 +161,9 @@ export default function HodExaminationsPage() {
               </span>
               <Sparkles className="h-4 w-4 text-yellow-600" />
             </div>
-            <div className="text-2xl font-black text-slate-900 mt-2">Dec 08 - 22</div>
+            <div className="text-2xl font-black text-slate-900 mt-2">
+              Dec 08 - 22
+            </div>
             <div className="text-[11px] text-yellow-800 font-medium mt-1">
               Controller of Exams Autonomous Window
             </div>
@@ -168,11 +179,12 @@ export default function HodExaminationsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "schedules"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <Calendar className="h-3.5 w-3.5" />
-          Examination Timetable & Hall Allocations ({data?.schedules.length || 4})
+          Examination Timetable & Hall Allocations (
+          {data?.schedules.length || 4})
         </button>
 
         <button
@@ -181,7 +193,7 @@ export default function HodExaminationsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "submissions"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -194,7 +206,7 @@ export default function HodExaminationsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "terms"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <Layers className="h-3.5 w-3.5" />
@@ -220,7 +232,10 @@ export default function HodExaminationsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
                 {(data?.schedules || []).map((sch) => (
-                  <tr key={sch.id} className="hover:bg-yellow-50/30 transition-colors">
+                  <tr
+                    key={sch.id}
+                    className="hover:bg-yellow-50/30 transition-colors"
+                  >
                     <td className="py-3 px-4">
                       <div className="font-bold text-slate-900 flex items-center gap-1.5">
                         <Calendar className="h-3.5 w-3.5 text-slate-400" />
@@ -232,17 +247,26 @@ export default function HodExaminationsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{sch.courseName}</div>
+                      <div className="font-bold text-slate-900">
+                        {sch.courseName}
+                      </div>
                       <span className="font-mono text-[10px] font-bold text-yellow-800 bg-yellow-100 px-1.5 py-0.2 rounded">
                         {sch.courseCode}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-700">Sem {sch.semester}</div>
-                      <span className="text-[10px] font-mono text-slate-500">Sec {sch.section}</span>
+                      <div className="font-semibold text-slate-700">
+                        Sem {sch.semester}
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-500">
+                        Sec {sch.section}
+                      </span>
                     </td>
                     <td className="py-3 px-4">
-                      <Badge variant="outline" className="text-[10px] font-bold bg-slate-50">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] font-bold bg-slate-50"
+                      >
                         {sch.examType.replace(/_/g, " ")}
                       </Badge>
                     </td>
@@ -282,7 +306,8 @@ export default function HodExaminationsPage() {
                 Department Faculty Marks Submission Progress
               </CardTitle>
               <CardDescription className="text-xs text-slate-500">
-                HOD statutory audit of marks entries across Internal Assessment 1, 2, and Model Exams.
+                HOD statutory audit of marks entries across Internal Assessment
+                1, 2, and Model Exams.
               </CardDescription>
             </CardHeader>
             <div className="overflow-x-auto">
@@ -301,7 +326,9 @@ export default function HodExaminationsPage() {
                   {(data?.submissionProgress || []).map((row) => (
                     <tr key={row.courseCode} className="hover:bg-yellow-50/30">
                       <td className="py-3 px-4">
-                        <div className="font-bold text-slate-900">{row.courseName}</div>
+                        <div className="font-bold text-slate-900">
+                          {row.courseName}
+                        </div>
                         <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                           <span className="font-mono font-bold text-yellow-800 bg-yellow-100 px-1 rounded">
                             {row.courseCode}
@@ -320,14 +347,17 @@ export default function HodExaminationsPage() {
                             "text-[10px]",
                             row.ia2Status.includes("PARTIAL")
                               ? "bg-amber-100 text-amber-900 border-amber-300 font-bold"
-                              : "bg-emerald-100 text-emerald-800 border-emerald-200"
+                              : "bg-emerald-100 text-emerald-800 border-emerald-200",
                           )}
                         >
                           {row.ia2Status}
                         </Badge>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant="outline" className="text-[10px] bg-slate-50">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-slate-50"
+                        >
                           {row.modelStatus.replace(/_/g, " ")}
                         </Badge>
                       </td>
@@ -348,10 +378,12 @@ export default function HodExaminationsPage() {
                             "text-[10px] font-bold px-2 py-0.5 rounded",
                             row.missingMarks > 0
                               ? "bg-amber-100 text-amber-800"
-                              : "bg-emerald-100 text-emerald-800"
+                              : "bg-emerald-100 text-emerald-800",
                           )}
                         >
-                          {row.missingMarks > 0 ? "ACTION REQUIRED" : "COMPLIANT"}
+                          {row.missingMarks > 0
+                            ? "ACTION REQUIRED"
+                            : "COMPLIANT"}
                         </span>
                       </td>
                     </tr>
@@ -376,8 +408,8 @@ export default function HodExaminationsPage() {
                       term.status === "COMPLETED"
                         ? "bg-emerald-100 text-emerald-800 border-emerald-200"
                         : term.status === "ONGOING"
-                        ? "bg-yellow-100 text-yellow-900 border-yellow-300"
-                        : "bg-blue-100 text-blue-800 border-blue-200"
+                          ? "bg-yellow-100 text-yellow-900 border-yellow-300"
+                          : "bg-blue-100 text-blue-800 border-blue-200",
                     )}
                   >
                     {term.status}
@@ -398,14 +430,18 @@ export default function HodExaminationsPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500">Marks Submission Deadline:</span>
+                  <span className="text-slate-500">
+                    Marks Submission Deadline:
+                  </span>
                   <span className="font-mono font-bold text-red-600">
                     {term.marksSubmissionDeadline}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-1">
                   <span className="text-slate-500">Submission Progress:</span>
-                  <span className="font-bold text-slate-800">{term.submissionStatus}</span>
+                  <span className="font-bold text-slate-800">
+                    {term.submissionStatus}
+                  </span>
                 </div>
               </CardContent>
             </Card>

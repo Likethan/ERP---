@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import {
-  hodService,
-  HodSemesterResultsData,
-} from "@/services/hod.service";
+import { hodService, HodSemesterResultsData } from "@/services/hod.service";
 import {
   Card,
   CardHeader,
@@ -36,7 +33,9 @@ export default function HodSemesterResultsPage() {
 
   const [data, setData] = useState<HodSemesterResultsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "toppers" | "support" | "arrears">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "toppers" | "support" | "arrears"
+  >("overview");
 
   useEffect(() => {
     async function loadData() {
@@ -64,14 +63,17 @@ export default function HodSemesterResultsPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full border border-yellow-300">
               Academic Analytics
             </span>
-            <span className="text-[11px] font-mono text-slate-500">Autonomous Term Result Audit</span>
+            <span className="text-[11px] font-mono text-slate-500">
+              Autonomous Term Result Audit
+            </span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
             <TrendingUp className="h-6 w-6 text-yellow-600" />
             Semester Results & Performance Analytics
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Comprehensive academic performance analytics, subject-wise pass percentages, department toppers, and arrear remediation tracking.
+            Comprehensive academic performance analytics, subject-wise pass
+            percentages, department toppers, and arrear remediation tracking.
           </p>
         </div>
 
@@ -80,7 +82,11 @@ export default function HodSemesterResultsPage() {
             variant="outline"
             size="sm"
             className="text-xs bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
-            onClick={() => alert("Downloading Department Comprehensive Semester Result Gazette (PDF)...")}
+            onClick={() =>
+              alert(
+                "Downloading Department Comprehensive Semester Result Gazette (PDF)...",
+              )
+            }
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export Result Gazette
@@ -101,7 +107,9 @@ export default function HodSemesterResultsPage() {
             <div className="text-2xl font-black text-slate-900 mt-2">
               {data?.overview.totalStudentsAppeared || 240}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Semesters 3, 5, and 7</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              Semesters 3, 5, and 7
+            </div>
           </CardContent>
         </Card>
 
@@ -131,9 +139,12 @@ export default function HodSemesterResultsPage() {
               <Award className="h-4 w-4 text-yellow-600" />
             </div>
             <div className="text-2xl font-black text-slate-900 mt-2">
-              {data?.overview.totalStudentsPassed || 218} / {data?.overview.totalStudentsAppeared || 240}
+              {data?.overview.totalStudentsPassed || 218} /{" "}
+              {data?.overview.totalStudentsAppeared || 240}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">All registered courses cleared</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              All registered courses cleared
+            </div>
           </CardContent>
         </Card>
 
@@ -149,7 +160,8 @@ export default function HodSemesterResultsPage() {
               {data?.overview.totalStudentsFailed || 22}
             </div>
             <div className="text-[11px] text-amber-700 font-semibold mt-1">
-              {data?.arrearAnalytics.repeatedArrearsCount || 3} Repeated Backlogs
+              {data?.arrearAnalytics.repeatedArrearsCount || 3} Repeated
+              Backlogs
             </div>
           </CardContent>
         </Card>
@@ -163,11 +175,12 @@ export default function HodSemesterResultsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "overview"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <BarChart3 className="h-3.5 w-3.5" />
-          Subject-Wise Performance & Pass Rates ({data?.subjectResults.length || 4})
+          Subject-Wise Performance & Pass Rates (
+          {data?.subjectResults.length || 4})
         </button>
 
         <button
@@ -176,7 +189,7 @@ export default function HodSemesterResultsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "toppers"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <Award className="h-3.5 w-3.5" />
@@ -189,11 +202,12 @@ export default function HodSemesterResultsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "support"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
-          Students Requiring Support ({data?.studentsNeedingSupport.length || 2})
+          Students Requiring Support ({data?.studentsNeedingSupport.length || 2}
+          )
         </button>
 
         <button
@@ -202,7 +216,7 @@ export default function HodSemesterResultsPage() {
             "px-4 py-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-2",
             activeTab === "arrears"
               ? "border-yellow-500 text-yellow-900 bg-yellow-50/50"
-              : "border-transparent text-slate-600 hover:text-slate-900"
+              : "border-transparent text-slate-600 hover:text-slate-900",
           )}
         >
           <Layers className="h-3.5 w-3.5" />
@@ -218,7 +232,8 @@ export default function HodSemesterResultsPage() {
               Subject-Wise Autonomous Result Analysis
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
-              Department pass percentages and average grade points across all core instructional subjects.
+              Department pass percentages and average grade points across all
+              core instructional subjects.
             </CardDescription>
           </CardHeader>
           <div className="overflow-x-auto">
@@ -238,7 +253,9 @@ export default function HodSemesterResultsPage() {
                 {(data?.subjectResults || []).map((sub) => (
                   <tr key={sub.courseCode} className="hover:bg-yellow-50/30">
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{sub.courseName}</div>
+                      <div className="font-bold text-slate-900">
+                        {sub.courseName}
+                      </div>
                       <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                         <span className="font-mono font-bold text-yellow-800 bg-yellow-100 px-1 rounded">
                           {sub.courseCode}
@@ -257,8 +274,12 @@ export default function HodSemesterResultsPage() {
                     </td>
                     <td className="py-3 px-4 w-44">
                       <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-slate-800">{sub.passPercentage}%</span>
-                        <span className="text-[10px] text-slate-400">Target 85%</span>
+                        <span className="font-bold text-slate-800">
+                          {sub.passPercentage}%
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          Target 85%
+                        </span>
                       </div>
                       <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                         <div
@@ -267,8 +288,8 @@ export default function HodSemesterResultsPage() {
                             sub.passPercentage >= 90
                               ? "bg-emerald-500"
                               : sub.passPercentage >= 85
-                              ? "bg-yellow-500"
-                              : "bg-amber-500"
+                                ? "bg-yellow-500"
+                                : "bg-amber-500",
                           )}
                           style={{ width: `${sub.passPercentage}%` }}
                         />
@@ -283,7 +304,7 @@ export default function HodSemesterResultsPage() {
                           "text-[10px] font-bold",
                           sub.passPercentage >= 90
                             ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                            : "bg-yellow-100 text-yellow-900 border-yellow-300"
+                            : "bg-yellow-100 text-yellow-900 border-yellow-300",
                         )}
                       >
                         {sub.passPercentage >= 90 ? "EXEMPLARY" : "COMPLIANT"}
@@ -305,7 +326,8 @@ export default function HodSemesterResultsPage() {
               Department Academic Merit & Top Achievers
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
-              Recognized students with CGPA $\ge 8.5$ and First Class with Distinction eligibility.
+              Recognized students with CGPA $\ge 8.5$ and First Class with
+              Distinction eligibility.
             </CardDescription>
           </CardHeader>
           <div className="overflow-x-auto">
@@ -331,9 +353,13 @@ export default function HodSemesterResultsPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="font-bold text-slate-900">{t.name}</div>
-                      <div className="font-mono text-[11px] text-slate-500">{t.rollNumber}</div>
+                      <div className="font-mono text-[11px] text-slate-500">
+                        {t.rollNumber}
+                      </div>
                     </td>
-                    <td className="py-3 px-4 font-semibold text-slate-700">Semester {t.semester}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-700">
+                      Semester {t.semester}
+                    </td>
                     <td className="py-3 px-4 text-center font-mono font-black text-sm text-emerald-700">
                       {t.cgpa}
                     </td>
@@ -364,15 +390,21 @@ export default function HodSemesterResultsPage() {
               Students Requiring Academic Mentoring & Remedial Support
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
-              Identified based on CGPA &lt; 6.0 or active semester backlogs for institutional NAAC Criteria 2.2 remedial tracking.
+              Identified based on CGPA &lt; 6.0 or active semester backlogs for
+              institutional NAAC Criteria 2.2 remedial tracking.
             </CardDescription>
           </CardHeader>
           <div className="divide-y divide-slate-100">
             {(data?.studentsNeedingSupport || []).map((stu) => (
-              <div key={stu.rollNumber} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50">
+              <div
+                key={stu.rollNumber}
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50"
+              >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900 text-sm">{stu.name}</span>
+                    <span className="font-bold text-slate-900 text-sm">
+                      {stu.name}
+                    </span>
                     <span className="font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
                       {stu.rollNumber}
                     </span>
@@ -387,20 +419,27 @@ export default function HodSemesterResultsPage() {
                     </span>
                   </div>
                   <div className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-                    <span className="font-bold text-slate-700">Remedial Action:</span>
+                    <span className="font-bold text-slate-700">
+                      Remedial Action:
+                    </span>
                     <span>{stu.supportPlan}</span>
                   </div>
                 </div>
 
                 <div className="text-right shrink-0">
                   <div className="font-mono font-bold text-slate-900 text-sm">
-                    CGPA: {stu.cgpa} <span className="text-xs text-slate-400 font-normal">(SGPA: {stu.sgpa})</span>
+                    CGPA: {stu.cgpa}{" "}
+                    <span className="text-xs text-slate-400 font-normal">
+                      (SGPA: {stu.sgpa})
+                    </span>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
                     className="text-[11px] h-7 px-2.5 mt-1 border-slate-300 text-slate-700 hover:bg-yellow-50"
-                    onClick={() => alert(`Assigned Senior Faculty Mentor to ${stu.name}.`)}
+                    onClick={() =>
+                      alert(`Assigned Senior Faculty Mentor to ${stu.name}.`)
+                    }
                   >
                     Assign Faculty Mentor
                   </Button>
@@ -420,28 +459,31 @@ export default function HodSemesterResultsPage() {
                 Subject-Wise Arrear Distribution
               </CardTitle>
               <CardDescription className="text-xs text-slate-500">
-                Breakdown of active backlog occurrences by instructional subject.
+                Breakdown of active backlog occurrences by instructional
+                subject.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4 space-y-3">
-              {(data?.arrearAnalytics.subjectWiseArrearBreakdown || []).map((item) => (
-                <div key={item.courseCode} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-900">
-                      {item.courseCode} - {item.subject}
-                    </span>
-                    <span className="font-mono font-bold text-red-600">
-                      {item.arrearCount} Arrears
-                    </span>
+              {(data?.arrearAnalytics.subjectWiseArrearBreakdown || []).map(
+                (item) => (
+                  <div key={item.courseCode} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-slate-900">
+                        {item.courseCode} - {item.subject}
+                      </span>
+                      <span className="font-mono font-bold text-red-600">
+                        {item.arrearCount} Arrears
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-red-500 h-2 rounded-full"
+                        style={{ width: `${(item.arrearCount / 14) * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-red-500 h-2 rounded-full"
-                      style={{ width: `${(item.arrearCount / 14) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                ),
+              )}
             </CardContent>
           </Card>
 
@@ -457,8 +499,12 @@ export default function HodSemesterResultsPage() {
             <CardContent className="pt-4 space-y-3 text-xs">
               <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
                 <div>
-                  <div className="font-bold text-slate-900">Single Course Arrear</div>
-                  <div className="text-slate-500 text-[11px]">Cleared with targeted coaching</div>
+                  <div className="font-bold text-slate-900">
+                    Single Course Arrear
+                  </div>
+                  <div className="text-slate-500 text-[11px]">
+                    Cleared with targeted coaching
+                  </div>
                 </div>
                 <div className="font-mono font-bold text-base text-slate-900">
                   {data?.arrearAnalytics.singleArrearCount || 16} Students
@@ -467,8 +513,12 @@ export default function HodSemesterResultsPage() {
 
               <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
                 <div>
-                  <div className="font-bold text-slate-900">Multiple Arrears (2+ Courses)</div>
-                  <div className="text-slate-500 text-[11px]">Academic counselling initiated</div>
+                  <div className="font-bold text-slate-900">
+                    Multiple Arrears (2+ Courses)
+                  </div>
+                  <div className="text-slate-500 text-[11px]">
+                    Academic counselling initiated
+                  </div>
                 </div>
                 <div className="font-mono font-bold text-base text-amber-700">
                   {data?.arrearAnalytics.multipleArrearsCount || 6} Students
@@ -477,8 +527,12 @@ export default function HodSemesterResultsPage() {
 
               <div className="flex items-center justify-between p-3 rounded-lg bg-red-50/70 border border-red-200">
                 <div>
-                  <div className="font-bold text-red-900">Repeated Consecutive Arrears</div>
-                  <div className="text-red-700 text-[11px]">HOD Proctorial Review mandated</div>
+                  <div className="font-bold text-red-900">
+                    Repeated Consecutive Arrears
+                  </div>
+                  <div className="text-red-700 text-[11px]">
+                    HOD Proctorial Review mandated
+                  </div>
                 </div>
                 <div className="font-mono font-bold text-base text-red-700">
                   {data?.arrearAnalytics.repeatedArrearsCount || 3} Students

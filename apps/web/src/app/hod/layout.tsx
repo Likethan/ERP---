@@ -201,7 +201,8 @@ export default function HodPortalLayout({
             {section.items.map((item) => {
               const isActive =
                 pathname === item.href ||
-                (item.href !== "/hod/dashboard" && pathname.startsWith(item.href));
+                (item.href !== "/hod/dashboard" &&
+                  pathname.startsWith(item.href));
 
               return (
                 <Link
@@ -212,14 +213,16 @@ export default function HodPortalLayout({
                     "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all group",
                     isActive
                       ? "bg-yellow-400 text-slate-950 shadow-xs font-bold border border-yellow-500/50"
-                      : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950"
+                      : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
                   )}
                 >
                   <div className="flex items-center gap-2.5">
                     <span
                       className={cn(
                         "transition-colors",
-                        isActive ? "text-slate-950" : "text-slate-400 group-hover:text-slate-800"
+                        isActive
+                          ? "text-slate-950"
+                          : "text-slate-400 group-hover:text-slate-800",
                       )}
                     >
                       {item.icon}
@@ -232,7 +235,7 @@ export default function HodPortalLayout({
                         "rounded-full px-1.5 py-0.5 text-[9px] font-mono",
                         isActive
                           ? "bg-yellow-500/40 text-slate-950 font-bold"
-                          : "bg-slate-100 text-slate-600 border border-slate-200"
+                          : "bg-slate-100 text-slate-600 border border-slate-200",
                       )}
                     >
                       {item.badge}

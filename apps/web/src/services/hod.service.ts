@@ -901,9 +901,13 @@ class HodService {
   // PHASE 2: ACADEMIC MANAGEMENT & DEPARTMENT APPROVALS
   // =========================================================================
 
-  async getCurriculum(semester?: number): Promise<ApiResponse<HodCurriculumData>> {
+  async getCurriculum(
+    semester?: number,
+  ): Promise<ApiResponse<HodCurriculumData>> {
     try {
-      const url = semester ? `/api/v1/hod/curriculum?semester=${semester}` : "/api/v1/hod/curriculum";
+      const url = semester
+        ? `/api/v1/hod/curriculum?semester=${semester}`
+        : "/api/v1/hod/curriculum";
       const res = await apiFetch<any>(url);
       if (res && res.data) {
         return { success: true, data: res.data };
@@ -914,9 +918,13 @@ class HodService {
     return { success: true, data: this.getMockCurriculum(semester) };
   }
 
-  async getLessonPlans(subjectCode?: string): Promise<ApiResponse<HodLessonPlansData>> {
+  async getLessonPlans(
+    subjectCode?: string,
+  ): Promise<ApiResponse<HodLessonPlansData>> {
     try {
-      const url = subjectCode ? `/api/v1/hod/lesson-plans?subject_code=${subjectCode}` : "/api/v1/hod/lesson-plans";
+      const url = subjectCode
+        ? `/api/v1/hod/lesson-plans?subject_code=${subjectCode}`
+        : "/api/v1/hod/lesson-plans";
       const res = await apiFetch<any>(url);
       if (res && res.data) {
         return { success: true, data: res.data };
@@ -939,7 +947,10 @@ class HodService {
     return { success: true, data: this.getMockExaminations() };
   }
 
-  async getInternalMarks(semester?: number, courseCode?: string): Promise<ApiResponse<HodInternalMarksData>> {
+  async getInternalMarks(
+    semester?: number,
+    courseCode?: string,
+  ): Promise<ApiResponse<HodInternalMarksData>> {
     try {
       const params = new URLSearchParams();
       if (semester) params.append("semester", String(semester));
@@ -952,7 +963,10 @@ class HodService {
     } catch {
       // Fallback
     }
-    return { success: true, data: this.getMockInternalMarks(semester, courseCode) };
+    return {
+      success: true,
+      data: this.getMockInternalMarks(semester, courseCode),
+    };
   }
 
   async requestMarkCorrection(payload: {
@@ -964,17 +978,20 @@ class HodService {
     reason: string;
   }): Promise<ApiResponse<any>> {
     try {
-      const res = await apiFetch<any>("/api/v1/hod/internal-marks/correction-request", {
-        method: "POST",
-        body: JSON.stringify({
-          student_id: payload.studentId,
-          assessment_id: payload.assessmentId,
-          course_code: payload.courseCode,
-          original_mark: payload.originalMark,
-          requested_mark: payload.requestedMark,
-          reason: payload.reason,
-        }),
-      });
+      const res = await apiFetch<any>(
+        "/api/v1/hod/internal-marks/correction-request",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            student_id: payload.studentId,
+            assessment_id: payload.assessmentId,
+            course_code: payload.courseCode,
+            original_mark: payload.originalMark,
+            requested_mark: payload.requestedMark,
+            reason: payload.reason,
+          }),
+        },
+      );
       if (res && res.data) {
         return { success: true, data: res.data };
       }
@@ -986,15 +1003,20 @@ class HodService {
       data: {
         correction_id: `corr-${Date.now()}`,
         status: "PENDING_AUDIT",
-        message: "Mark correction request recorded in departmental audit ledger.",
+        message:
+          "Mark correction request recorded in departmental audit ledger.",
         ...payload,
       },
     };
   }
 
-  async getSemesterResults(semester?: number): Promise<ApiResponse<HodSemesterResultsData>> {
+  async getSemesterResults(
+    semester?: number,
+  ): Promise<ApiResponse<HodSemesterResultsData>> {
     try {
-      const url = semester ? `/api/v1/hod/results?semester=${semester}` : "/api/v1/hod/results";
+      const url = semester
+        ? `/api/v1/hod/results?semester=${semester}`
+        : "/api/v1/hod/results";
       const res = await apiFetch<any>(url);
       if (res && res.data) {
         return { success: true, data: res.data };
@@ -1007,7 +1029,7 @@ class HodService {
 
   async getApprovals(
     category: string = "ALL",
-    statusFilter: string = "ALL"
+    statusFilter: string = "ALL",
   ): Promise<ApiResponse<HodApprovalsData>> {
     try {
       const params = new URLSearchParams();
@@ -1021,19 +1043,25 @@ class HodService {
     } catch {
       // Fallback
     }
-    return { success: true, data: this.getMockApprovals(category, statusFilter) };
+    return {
+      success: true,
+      data: this.getMockApprovals(category, statusFilter),
+    };
   }
 
   async processApprovalAction(
     approvalId: string,
     action: "APPROVE" | "REJECT" | "REQUEST_INFO",
-    remarks?: string
+    remarks?: string,
   ): Promise<ApiResponse<HodApprovalItem>> {
     try {
-      const res = await apiFetch<any>(`/api/v1/hod/approvals/${approvalId}/action`, {
-        method: "POST",
-        body: JSON.stringify({ action, remarks }),
-      });
+      const res = await apiFetch<any>(
+        `/api/v1/hod/approvals/${approvalId}/action`,
+        {
+          method: "POST",
+          body: JSON.stringify({ action, remarks }),
+        },
+      );
       if (res && res.data) {
         return { success: true, data: res.data };
       }
@@ -1212,7 +1240,9 @@ class HodService {
       },
     ];
 
-    const filtered = semester ? subjects.filter((s) => s.semester === semester) : subjects;
+    const filtered = semester
+      ? subjects.filter((s) => s.semester === semester)
+      : subjects;
 
     return {
       department: "Computer Science & Engineering",
@@ -1234,27 +1264,32 @@ class HodService {
       courseOutcomesSample: [
         {
           coCode: "CO1",
-          description: "Analyze asymptotic complexity of iterative and recursive algorithms.",
+          description:
+            "Analyze asymptotic complexity of iterative and recursive algorithms.",
           bloomLevel: "K4 (Analyze)",
         },
         {
           coCode: "CO2",
-          description: "Design and implement self-balancing search trees and multidimensional indexes.",
+          description:
+            "Design and implement self-balancing search trees and multidimensional indexes.",
           bloomLevel: "K3 (Apply)",
         },
         {
           coCode: "CO3",
-          description: "Formulate dynamic programming and greedy strategies for optimization problems.",
+          description:
+            "Formulate dynamic programming and greedy strategies for optimization problems.",
           bloomLevel: "K4 (Analyze)",
         },
         {
           coCode: "CO4",
-          description: "Develop graph traversal and network flow algorithms for real-world topologies.",
+          description:
+            "Develop graph traversal and network flow algorithms for real-world topologies.",
           bloomLevel: "K3 (Apply)",
         },
         {
           coCode: "CO5",
-          description: "Evaluate P and NP completeness concepts in computational complexity.",
+          description:
+            "Evaluate P and NP completeness concepts in computational complexity.",
           bloomLevel: "K5 (Evaluate)",
         },
       ],
@@ -1291,9 +1326,18 @@ class HodService {
             status: "COMPLETED",
             completionPercentage: 100,
             topics: [
-              { topic: "Asymptotic notations & Big-O complexity", completed: true },
-              { topic: "Amortized complexity of dynamic tables", completed: true },
-              { topic: "Singly and doubly linked lists operations", completed: true },
+              {
+                topic: "Asymptotic notations & Big-O complexity",
+                completed: true,
+              },
+              {
+                topic: "Amortized complexity of dynamic tables",
+                completed: true,
+              },
+              {
+                topic: "Singly and doubly linked lists operations",
+                completed: true,
+              },
               { topic: "Stack and queue memory abstractions", completed: true },
             ],
           },
@@ -1305,10 +1349,19 @@ class HodService {
             status: "COMPLETED",
             completionPercentage: 100,
             topics: [
-              { topic: "Binary search trees insertion and deletion", completed: true },
-              { topic: "AVL Tree single and double rotations", completed: true },
+              {
+                topic: "Binary search trees insertion and deletion",
+                completed: true,
+              },
+              {
+                topic: "AVL Tree single and double rotations",
+                completed: true,
+              },
               { topic: "Red-Black Tree coloring invariants", completed: true },
-              { topic: "B-Trees and B+ Trees for secondary storage indexing", completed: true },
+              {
+                topic: "B-Trees and B+ Trees for secondary storage indexing",
+                completed: true,
+              },
             ],
           },
           {
@@ -1321,8 +1374,14 @@ class HodService {
             topics: [
               { topic: "Min/Max Binary Heaps and Heapify", completed: true },
               { topic: "Binomial Heaps and merge operations", completed: true },
-              { topic: "Fibonacci Heaps and amortized extract-min", completed: true },
-              { topic: "Disjoint set union by rank and path compression", completed: true },
+              {
+                topic: "Fibonacci Heaps and amortized extract-min",
+                completed: true,
+              },
+              {
+                topic: "Disjoint set union by rank and path compression",
+                completed: true,
+              },
             ],
           },
           {
@@ -1333,11 +1392,26 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 70,
             topics: [
-              { topic: "Breadth-first and depth-first traversals", completed: true },
-              { topic: "Dijkstra algorithm with priority queues", completed: true },
-              { topic: "Bellman-Ford and negative cycle detection", completed: true },
-              { topic: "All-pairs shortest paths: Floyd-Warshall", completed: false },
-              { topic: "Network maximum flow: Ford-Fulkerson", completed: false },
+              {
+                topic: "Breadth-first and depth-first traversals",
+                completed: true,
+              },
+              {
+                topic: "Dijkstra algorithm with priority queues",
+                completed: true,
+              },
+              {
+                topic: "Bellman-Ford and negative cycle detection",
+                completed: true,
+              },
+              {
+                topic: "All-pairs shortest paths: Floyd-Warshall",
+                completed: false,
+              },
+              {
+                topic: "Network maximum flow: Ford-Fulkerson",
+                completed: false,
+              },
             ],
           },
           {
@@ -1348,10 +1422,19 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 25,
             topics: [
-              { topic: "Polynomial time reductions and Turing reductions", completed: true },
-              { topic: "Classes P, NP, NP-Hard, and NP-Complete", completed: false },
+              {
+                topic: "Polynomial time reductions and Turing reductions",
+                completed: true,
+              },
+              {
+                topic: "Classes P, NP, NP-Hard, and NP-Complete",
+                completed: false,
+              },
               { topic: "Cook-Levin theorem overview", completed: false },
-              { topic: "Vertex cover and Traveling Salesperson approximations", completed: false },
+              {
+                topic: "Vertex cover and Traveling Salesperson approximations",
+                completed: false,
+              },
             ],
           },
         ],
@@ -1377,9 +1460,15 @@ class HodService {
             status: "COMPLETED",
             completionPercentage: 100,
             topics: [
-              { topic: "ER Modeling and relational schema translation", completed: true },
+              {
+                topic: "ER Modeling and relational schema translation",
+                completed: true,
+              },
               { topic: "Relational algebra operations", completed: true },
-              { topic: "Complex SQL joins and aggregate groupings", completed: true },
+              {
+                topic: "Complex SQL joins and aggregate groupings",
+                completed: true,
+              },
             ],
           },
           {
@@ -1391,7 +1480,10 @@ class HodService {
             completionPercentage: 100,
             topics: [
               { topic: "1NF, 2NF, 3NF, BCNF decomposition", completed: true },
-              { topic: "Lossless join and dependency preservation", completed: true },
+              {
+                topic: "Lossless join and dependency preservation",
+                completed: true,
+              },
             ],
           },
           {
@@ -1402,7 +1494,10 @@ class HodService {
             status: "COMPLETED",
             completionPercentage: 100,
             topics: [
-              { topic: "ACID properties and serializability schedules", completed: true },
+              {
+                topic: "ACID properties and serializability schedules",
+                completed: true,
+              },
               { topic: "Two-phase locking protocol (2PL)", completed: true },
               { topic: "Timestamp-based ordering protocols", completed: true },
             ],
@@ -1415,8 +1510,14 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 88,
             topics: [
-              { topic: "Query tree generation and heuristic optimization", completed: true },
-              { topic: "Cost-based execution plan estimation", completed: true },
+              {
+                topic: "Query tree generation and heuristic optimization",
+                completed: true,
+              },
+              {
+                topic: "Cost-based execution plan estimation",
+                completed: true,
+              },
             ],
           },
           {
@@ -1428,8 +1529,14 @@ class HodService {
             completionPercentage: 37,
             topics: [
               { topic: "CAP Theorem and BASE architecture", completed: true },
-              { topic: "Document-oriented databases (MongoDB)", completed: false },
-              { topic: "Columnar stores and distributed sharding", completed: false },
+              {
+                topic: "Document-oriented databases (MongoDB)",
+                completed: false,
+              },
+              {
+                topic: "Columnar stores and distributed sharding",
+                completed: false,
+              },
             ],
           },
         ],
@@ -1456,7 +1563,10 @@ class HodService {
             completionPercentage: 100,
             topics: [
               { topic: "OSI and TCP/IP protocol layering", completed: true },
-              { topic: "Ethernet 802.3 and CSMA/CD protocols", completed: true },
+              {
+                topic: "Ethernet 802.3 and CSMA/CD protocols",
+                completed: true,
+              },
             ],
           },
           {
@@ -1479,8 +1589,14 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 88,
             topics: [
-              { topic: "TCP three-way handshake and connection teardown", completed: true },
-              { topic: "TCP Reno and Cubic congestion window scaling", completed: true },
+              {
+                topic: "TCP three-way handshake and connection teardown",
+                completed: true,
+              },
+              {
+                topic: "TCP Reno and Cubic congestion window scaling",
+                completed: true,
+              },
             ],
           },
           {
@@ -1491,7 +1607,10 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 55,
             topics: [
-              { topic: "DNS hierarchy and iterative resolution", completed: true },
+              {
+                topic: "DNS hierarchy and iterative resolution",
+                completed: true,
+              },
               { topic: "TLS 1.3 cryptographic handshakes", completed: false },
             ],
           },
@@ -1503,8 +1622,14 @@ class HodService {
             status: "IN_PROGRESS",
             completionPercentage: 12,
             topics: [
-              { topic: "Separation of control and data planes", completed: true },
-              { topic: "OpenFlow protocol and centralized controllers", completed: false },
+              {
+                topic: "Separation of control and data planes",
+                completed: true,
+              },
+              {
+                topic: "OpenFlow protocol and centralized controllers",
+                completed: false,
+              },
             ],
           },
         ],
@@ -1512,7 +1637,9 @@ class HodService {
     ];
 
     const filtered = subjectCode
-      ? plans.filter((p) => p.courseCode.toUpperCase() === subjectCode.toUpperCase())
+      ? plans.filter(
+          (p) => p.courseCode.toUpperCase() === subjectCode.toUpperCase(),
+        )
       : plans;
 
     return {
@@ -1523,13 +1650,21 @@ class HodService {
         averageSyllabusCompletion:
           filtered.length > 0
             ? Math.round(
-                (filtered.reduce((acc, p) => acc + p.overallCompletionPercentage, 0) /
+                (filtered.reduce(
+                  (acc, p) => acc + p.overallCompletionPercentage,
+                  0,
+                ) /
                   filtered.length) *
-                  10
+                  10,
               ) / 10
             : 0,
-        coursesBehindSchedule: filtered.filter((p) => p.overallCompletionPercentage < 75.0).length,
-        pendingLessonPlans: filtered.reduce((acc, p) => acc + p.pendingPlansCount, 0),
+        coursesBehindSchedule: filtered.filter(
+          (p) => p.overallCompletionPercentage < 75.0,
+        ).length,
+        pendingLessonPlans: filtered.reduce(
+          (acc, p) => acc + p.pendingPlansCount,
+          0,
+        ),
       },
     };
   }
@@ -1679,7 +1814,10 @@ class HodService {
     };
   }
 
-  private getMockInternalMarks(semester?: number, courseCode?: string): HodInternalMarksData {
+  private getMockInternalMarks(
+    semester?: number,
+    courseCode?: string,
+  ): HodInternalMarksData {
     const records: HodInternalMarkRecord[] = [
       {
         id: "im-001",
@@ -1791,9 +1929,13 @@ class HodService {
     let filtered = records;
     if (semester) filtered = filtered.filter((r) => r.semester === semester);
     if (courseCode)
-      filtered = filtered.filter((r) => r.courseCode.toUpperCase() === courseCode.toUpperCase());
+      filtered = filtered.filter(
+        (r) => r.courseCode.toUpperCase() === courseCode.toUpperCase(),
+      );
 
-    const attentionList = filtered.filter((r) => r.requiresAttention || r.percentage < 50.0);
+    const attentionList = filtered.filter(
+      (r) => r.requiresAttention || r.percentage < 50.0,
+    );
 
     return {
       department: "Computer Science & Engineering",
@@ -1804,7 +1946,9 @@ class HodService {
         averagePercentage:
           filtered.length > 0
             ? Math.round(
-                (filtered.reduce((acc, r) => acc + r.percentage, 0) / filtered.length) * 10
+                (filtered.reduce((acc, r) => acc + r.percentage, 0) /
+                  filtered.length) *
+                  10,
               ) / 10
             : 0,
         studentsRequiringAttention: attentionList.length,
@@ -1818,7 +1962,8 @@ class HodService {
       department: "Computer Science & Engineering",
       overview: {
         academicYear: "2026-2027",
-        examination: "Autonomous End Semester Examinations (Previous Academic Term)",
+        examination:
+          "Autonomous End Semester Examinations (Previous Academic Term)",
         totalStudentsAppeared: 240,
         totalStudentsPassed: 218,
         totalStudentsFailed: 22,
@@ -1875,7 +2020,7 @@ class HodService {
           name: "Aarav Patel",
           semester: 5,
           cgpa: 9.42,
-          sgpa: 9.60,
+          sgpa: 9.6,
           totalCredits: 104,
           arrears: 0,
           status: "FIRST_CLASS_DISTINCTION",
@@ -1886,7 +2031,7 @@ class HodService {
           name: "Ananya Reddy",
           semester: 5,
           cgpa: 9.15,
-          sgpa: 9.30,
+          sgpa: 9.3,
           totalCredits: 104,
           arrears: 0,
           status: "FIRST_CLASS_DISTINCTION",
@@ -1897,7 +2042,7 @@ class HodService {
           name: "Diya Sharma",
           semester: 5,
           cgpa: 8.84,
-          sgpa: 8.90,
+          sgpa: 8.9,
           totalCredits: 104,
           arrears: 0,
           status: "FIRST_CLASS_DISTINCTION",
@@ -1909,20 +2054,22 @@ class HodService {
           name: "Rohan Iyer",
           semester: 5,
           cgpa: 6.12,
-          sgpa: 5.80,
+          sgpa: 5.8,
           arrears: 1,
           arrearSubjects: ["CS303 Computer Networks"],
-          supportPlan: "Peer tutoring and Saturday remedial coaching scheduled.",
+          supportPlan:
+            "Peer tutoring and Saturday remedial coaching scheduled.",
         },
         {
           rollNumber: "24CSE0105",
           name: "Karthik Raja",
           semester: 5,
           cgpa: 5.94,
-          sgpa: 5.50,
+          sgpa: 5.5,
           arrears: 2,
           arrearSubjects: ["CS303 Computer Networks", "CS304 DAA"],
-          supportPlan: "Parent-Teacher meeting scheduled; faculty mentor assigned.",
+          supportPlan:
+            "Parent-Teacher meeting scheduled; faculty mentor assigned.",
         },
       ],
       arrearAnalytics: {
@@ -1931,10 +2078,22 @@ class HodService {
         multipleArrearsCount: 6,
         repeatedArrearsCount: 3,
         subjectWiseArrearBreakdown: [
-          { courseCode: "CS303", subject: "Computer Networks", arrearCount: 10 },
-          { courseCode: "CS304", subject: "Design & Analysis of Algorithms", arrearCount: 7 },
+          {
+            courseCode: "CS303",
+            subject: "Computer Networks",
+            arrearCount: 10,
+          },
+          {
+            courseCode: "CS304",
+            subject: "Design & Analysis of Algorithms",
+            arrearCount: 7,
+          },
           { courseCode: "CS302", subject: "Database Systems", arrearCount: 5 },
-          { courseCode: "CS301", subject: "Advanced Data Structures", arrearCount: 4 },
+          {
+            courseCode: "CS301",
+            subject: "Advanced Data Structures",
+            arrearCount: 4,
+          },
         ],
       },
     };
@@ -1954,7 +2113,8 @@ class HodService {
       submissionDate: "2026-11-18T10:15:00Z",
       urgency: "HIGH",
       status: "PENDING",
-      description: "Medical leave required for acute throat infection and vocal cord rest as advised by physician.",
+      description:
+        "Medical leave required for acute throat infection and vocal cord rest as advised by physician.",
       details: {
         leaveType: "MEDICAL",
         startDate: "2026-11-20",
@@ -1964,7 +2124,9 @@ class HodService {
         classesRearranged: true,
         affectedCourses: ["CS302 Database Management Systems (Sec A & B)"],
       },
-      attachments: [{ name: "Medical_Certificate_Apollo.pdf", size: "1.2 MB", type: "PDF" }],
+      attachments: [
+        { name: "Medical_Certificate_Apollo.pdf", size: "1.2 MB", type: "PDF" },
+      ],
       remarks: undefined,
       decidedBy: undefined,
       decisionDate: undefined,
@@ -1979,7 +2141,8 @@ class HodService {
     },
     {
       id: "appr-cse-002",
-      title: "Faculty On-Duty (OD): IEEE International Conference Paper Presentation",
+      title:
+        "Faculty On-Duty (OD): IEEE International Conference Paper Presentation",
       category: "FACULTY",
       subCategory: "FACULTY_ON_DUTY",
       departmentId: "dept-cse",
@@ -1993,7 +2156,8 @@ class HodService {
       description:
         "Presenting accepted research paper 'SDN Orchestration in High-Throughput Campus Fabrics' at IEEE ICET 2026, IIT Madras.",
       details: {
-        eventName: "IEEE International Conference on Emerging Technologies (ICET)",
+        eventName:
+          "IEEE International Conference on Emerging Technologies (ICET)",
         venue: "IIT Madras Research Park, Chennai",
         startDate: "2026-12-04",
         endDate: "2026-12-06",
@@ -2038,10 +2202,12 @@ class HodService {
         course2: "CS302 Database Systems (Period 5 -> Period 2)",
         effectiveDate: "2026-11-25",
         classroom: "LH-201",
-        consentObtained: "Both faculty members and student class representative agreed.",
+        consentObtained:
+          "Both faculty members and student class representative agreed.",
       },
       attachments: [],
-      remarks: "Approved. Academic timetable coordinator notified to update physical display board.",
+      remarks:
+        "Approved. Academic timetable coordinator notified to update physical display board.",
       decidedBy: "Dr. K. S. Anand (HOD)",
       decisionDate: "2026-11-17T09:00:00Z",
       auditTrail: [
@@ -2072,7 +2238,8 @@ class HodService {
       submissionDate: "2026-11-15T11:20:00Z",
       urgency: "LOW",
       status: "APPROVED",
-      description: "Punch-in biometric scanner timeout at Main Academic Block Entrance B on 14-Nov-2026.",
+      description:
+        "Punch-in biometric scanner timeout at Main Academic Block Entrance B on 14-Nov-2026.",
       details: {
         punchDate: "2026-11-14",
         recordedTime: "MISSING",
@@ -2101,7 +2268,8 @@ class HodService {
     },
     {
       id: "appr-cse-005",
-      title: "Student Academic On-Duty (OD): Smart India Hackathon (SIH 2026) Grand Finale",
+      title:
+        "Student Academic On-Duty (OD): Smart India Hackathon (SIH 2026) Grand Finale",
       category: "STUDENT",
       subCategory: "STUDENT_ON_DUTY",
       departmentId: "dept-cse",
@@ -2116,12 +2284,22 @@ class HodService {
         "Selected for Ministry of Education Smart India Hackathon Grand Finale at PIET Nodal Centre, Jaipur.",
       details: {
         teamName: "AlgoKnights",
-        members: ["Aarav Patel (24CSE0101)", "Diya Sharma (24CSE0102)", "Rohan Iyer (24CSE0103)"],
+        members: [
+          "Aarav Patel (24CSE0101)",
+          "Diya Sharma (24CSE0102)",
+          "Rohan Iyer (24CSE0103)",
+        ],
         dates: "2026-11-26 to 2026-11-30 (5 Days)",
         facultyMentor: "Dr. Rajesh Sharma",
         problemStatement: "AI-Powered Real-time Traffic Congestion Mitigation",
       },
-      attachments: [{ name: "SIH_2026_Finalist_Call_Letter.pdf", size: "950 KB", type: "PDF" }],
+      attachments: [
+        {
+          name: "SIH_2026_Finalist_Call_Letter.pdf",
+          size: "950 KB",
+          type: "PDF",
+        },
+      ],
       remarks: undefined,
       decidedBy: undefined,
       decisionDate: undefined,
@@ -2147,7 +2325,8 @@ class HodService {
       submissionDate: "2026-11-17T09:45:00Z",
       urgency: "MEDIUM",
       status: "PENDING",
-      description: "Absence exemption requested for 4 instructional days due to severe dengue fever hospitalization.",
+      description:
+        "Absence exemption requested for 4 instructional days due to severe dengue fever hospitalization.",
       details: {
         hospital: "Kauvery Hospital, Trichy",
         admissionDate: "2026-11-10",
@@ -2156,7 +2335,9 @@ class HodService {
         currentAttendance: "72.4%",
         restoredAttendance: "78.2% upon medical approval",
       },
-      attachments: [{ name: "Medical_Discharge_Summary.pdf", size: "1.8 MB", type: "PDF" }],
+      attachments: [
+        { name: "Medical_Discharge_Summary.pdf", size: "1.8 MB", type: "PDF" },
+      ],
       remarks: undefined,
       decidedBy: undefined,
       decisionDate: undefined,
@@ -2182,7 +2363,8 @@ class HodService {
       submissionDate: "2026-11-16T15:10:00Z",
       urgency: "MEDIUM",
       status: "PENDING",
-      description: "Question 4(b) in CS301 (Data Structures) IA-1 totaling error: 8 marks in answer booklet recorded as 4 in portal.",
+      description:
+        "Question 4(b) in CS301 (Data Structures) IA-1 totaling error: 8 marks in answer booklet recorded as 4 in portal.",
       details: {
         courseCode: "CS301",
         courseName: "Data Structures & Core Algorithms",
@@ -2191,7 +2373,13 @@ class HodService {
         requestedMark: 88,
         assessmentName: "Internal Assessment 1",
       },
-      attachments: [{ name: "Evaluated_Answer_Script_Scan.pdf", size: "2.4 MB", type: "PDF" }],
+      attachments: [
+        {
+          name: "Evaluated_Answer_Script_Scan.pdf",
+          size: "2.4 MB",
+          type: "PDF",
+        },
+      ],
       remarks: undefined,
       decidedBy: undefined,
       decisionDate: undefined,
@@ -2206,7 +2394,8 @@ class HodService {
     },
     {
       id: "appr-cse-008",
-      title: "Department Technical Symposium: 'CYBERFEST 2026' Organization & Budget",
+      title:
+        "Department Technical Symposium: 'CYBERFEST 2026' Organization & Budget",
       category: "DEPARTMENT",
       subCategory: "EVENT_APPROVAL",
       departmentId: "dept-cse",
@@ -2229,9 +2418,14 @@ class HodService {
       },
       attachments: [
         { name: "Cyberfest_Event_Brochure.pdf", size: "3.1 MB", type: "PDF" },
-        { name: "Detailed_Budget_Estimate.xlsx", size: "540 KB", type: "EXCEL" },
+        {
+          name: "Detailed_Budget_Estimate.xlsx",
+          size: "540 KB",
+          type: "EXCEL",
+        },
       ],
-      remarks: "Approved by HOD and forwarded to Vice Principal for institutional finance release.",
+      remarks:
+        "Approved by HOD and forwarded to Vice Principal for institutional finance release.",
       decidedBy: "Dr. K. S. Anand (HOD)",
       decisionDate: "2026-11-16T10:00:00Z",
       auditTrail: [
@@ -2251,7 +2445,8 @@ class HodService {
     },
     {
       id: "appr-cse-009",
-      title: "Laboratory Infrastructure Upgrade: NVIDIA RTX Workstations for AI Lab",
+      title:
+        "Laboratory Infrastructure Upgrade: NVIDIA RTX Workstations for AI Lab",
       category: "DEPARTMENT",
       subCategory: "LAB_REQUIREMENT",
       departmentId: "dept-cse",
@@ -2262,15 +2457,19 @@ class HodService {
       submissionDate: "2026-11-14T10:00:00Z",
       urgency: "CRITICAL",
       status: "PENDING",
-      description: "Procurement of 12 NVIDIA RTX 4080 (16GB VRAM) compute workstations for AI/Deep Learning Laboratory.",
+      description:
+        "Procurement of 12 NVIDIA RTX 4080 (16GB VRAM) compute workstations for AI/Deep Learning Laboratory.",
       details: {
         labName: "Advanced Computing & Artificial Intelligence Lab (Lab 4)",
         quantity: 12,
         estimatedCost: "Rs. 18,50,000",
-        justification: "Required for Final Year B.Tech project training and NBA criteria 6 facility compliance.",
+        justification:
+          "Required for Final Year B.Tech project training and NBA criteria 6 facility compliance.",
         preferredVendor: "Dell Commercial Enterprises India",
       },
-      attachments: [{ name: "Vendor_Quotes_Dell_HP.pdf", size: "2.1 MB", type: "PDF" }],
+      attachments: [
+        { name: "Vendor_Quotes_Dell_HP.pdf", size: "2.1 MB", type: "PDF" },
+      ],
       remarks: undefined,
       decidedBy: undefined,
       decisionDate: undefined,
@@ -2285,23 +2484,37 @@ class HodService {
     },
   ];
 
-  private getMockApprovals(category: string, statusFilter: string): HodApprovalsData {
+  private getMockApprovals(
+    category: string,
+    statusFilter: string,
+  ): HodApprovalsData {
     let items = this._mockApprovalsStore;
     if (category !== "ALL") {
-      items = items.filter((i) => i.category.toUpperCase() === category.toUpperCase());
+      items = items.filter(
+        (i) => i.category.toUpperCase() === category.toUpperCase(),
+      );
     }
     if (statusFilter !== "ALL") {
-      items = items.filter((i) => i.status.toUpperCase() === statusFilter.toUpperCase());
+      items = items.filter(
+        (i) => i.status.toUpperCase() === statusFilter.toUpperCase(),
+      );
     }
 
     return {
       department: "Computer Science & Engineering",
       stats: {
         totalRequests: this._mockApprovalsStore.length,
-        pending: this._mockApprovalsStore.filter((i) => i.status === "PENDING").length,
-        approved: this._mockApprovalsStore.filter((i) => i.status === "APPROVED").length,
-        rejected: this._mockApprovalsStore.filter((i) => i.status === "REJECTED").length,
-        infoRequested: this._mockApprovalsStore.filter((i) => i.status === "INFO_REQUESTED").length,
+        pending: this._mockApprovalsStore.filter((i) => i.status === "PENDING")
+          .length,
+        approved: this._mockApprovalsStore.filter(
+          (i) => i.status === "APPROVED",
+        ).length,
+        rejected: this._mockApprovalsStore.filter(
+          (i) => i.status === "REJECTED",
+        ).length,
+        infoRequested: this._mockApprovalsStore.filter(
+          (i) => i.status === "INFO_REQUESTED",
+        ).length,
       },
       requests: items,
     };
@@ -2586,4 +2799,3 @@ export interface HodApprovalsData {
   };
   requests: HodApprovalItem[];
 }
-

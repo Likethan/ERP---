@@ -4,7 +4,7 @@ Provides department-scoped access for Department Heads with strict RBAC enforcem
 Ensures HOD can only access records belonging to their assigned academic department.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Annotated, Any
 from uuid import UUID
 
@@ -1725,7 +1725,7 @@ async def request_internal_marks_correction(
     """Submit a formal marks correction request with audit history for HOD verification."""
     dept = await get_hod_department(current_user, tenant, db)
 
-    now_iso = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(UTC).isoformat()
     record = {
         "correction_id": f"corr-{int(datetime.now().timestamp())}",
         "department": dept.name,
@@ -1965,7 +1965,7 @@ async def process_department_approval_action(
             detail="Forbidden: HOD can only act upon approval requests within their assigned department.",
         )
 
-    now_iso = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(UTC).isoformat()
     status_map = {
         "APPROVE": "APPROVED",
         "REJECT": "REJECTED",

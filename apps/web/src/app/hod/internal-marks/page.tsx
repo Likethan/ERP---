@@ -45,7 +45,8 @@ export default function HodInternalMarksPage() {
   const [selectedSemester, setSelectedSemester] = useState<number | "ALL">(5);
 
   // Correction Request Modal
-  const [correctionTarget, setCorrectionTarget] = useState<HodInternalMarkRecord | null>(null);
+  const [correctionTarget, setCorrectionTarget] =
+    useState<HodInternalMarkRecord | null>(null);
   const [requestedMark, setRequestedMark] = useState<number>(0);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -57,7 +58,7 @@ export default function HodInternalMarksPage() {
       try {
         const res = await hodService.getInternalMarks(
           selectedSemester === "ALL" ? undefined : selectedSemester,
-          selectedCourse === "ALL" ? undefined : selectedCourse
+          selectedCourse === "ALL" ? undefined : selectedCourse,
         );
         if (res.success && res.data) {
           setData(res.data);
@@ -98,12 +99,14 @@ export default function HodInternalMarksPage() {
         courseCode: correctionTarget.courseCode,
         originalMark: correctionTarget.totalInternal,
         requestedMark: Number(requestedMark),
-        reason: reason.trim() || "Marks retotalling discrepancy verified against answer script.",
+        reason:
+          reason.trim() ||
+          "Marks retotalling discrepancy verified against answer script.",
       });
 
       if (res.success) {
         setToastMessage(
-          `Correction request submitted for ${correctionTarget.studentName} (${correctionTarget.rollNumber}). Recorded in audit ledger.`
+          `Correction request submitted for ${correctionTarget.studentName} (${correctionTarget.rollNumber}). Recorded in audit ledger.`,
         );
         setCorrectionTarget(null);
       }
@@ -123,7 +126,10 @@ export default function HodInternalMarksPage() {
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             <span>{toastMessage}</span>
           </div>
-          <button onClick={() => setToastMessage(null)} className="text-emerald-700 hover:text-emerald-900">
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-emerald-700 hover:text-emerald-900"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -136,14 +142,18 @@ export default function HodInternalMarksPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full border border-yellow-300">
               Academic Assessment
             </span>
-            <span className="text-[11px] font-mono text-slate-500">Continuous Evaluation Scheme</span>
+            <span className="text-[11px] font-mono text-slate-500">
+              Continuous Evaluation Scheme
+            </span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
             <ClipboardList className="h-6 w-6 text-yellow-600" />
             Internal Marks Management & Attention Radar
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Department internal assessment ledger, component breakdown (IA1, IA2, IA3, assignments, attendance), and audited correction workflows.
+            Department internal assessment ledger, component breakdown (IA1,
+            IA2, IA3, assignments, attendance), and audited correction
+            workflows.
           </p>
         </div>
 
@@ -152,7 +162,11 @@ export default function HodInternalMarksPage() {
             variant="outline"
             size="sm"
             className="text-xs bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
-            onClick={() => alert("Downloading Department Consolidated Internal Marks Ledger (Excel)...")}
+            onClick={() =>
+              alert(
+                "Downloading Department Consolidated Internal Marks Ledger (Excel)...",
+              )
+            }
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export Marks Ledger
@@ -173,7 +187,9 @@ export default function HodInternalMarksPage() {
             <div className="text-2xl font-black text-slate-900 mt-2">
               {data?.summary.totalRecords || 5}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Active Department Students</div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              Active Department Students
+            </div>
           </CardContent>
         </Card>
 
@@ -238,10 +254,12 @@ export default function HodInternalMarksPage() {
             </div>
             <div>
               <div className="text-xs font-black uppercase tracking-wider text-red-800">
-                Academic Attention Radar ({data?.attentionList.length} Student Flagged)
+                Academic Attention Radar ({data?.attentionList.length} Student
+                Flagged)
               </div>
               <div className="text-xs text-red-700 mt-0.5">
-                Students scoring below 50% total internal assessment in core subjects. Remedial mentoring prescribed.
+                Students scoring below 50% total internal assessment in core
+                subjects. Remedial mentoring prescribed.
               </div>
             </div>
           </div>
@@ -251,7 +269,8 @@ export default function HodInternalMarksPage() {
                 key={stu.id}
                 className="px-2.5 py-1 rounded bg-white font-mono text-xs font-bold text-red-700 border border-red-300 shadow-xs"
               >
-                {stu.studentName} ({stu.rollNumber}) — {stu.percentage}% in {stu.courseCode}
+                {stu.studentName} ({stu.rollNumber}) — {stu.percentage}% in{" "}
+                {stu.courseCode}
               </span>
             ))}
           </div>
@@ -323,17 +342,21 @@ export default function HodInternalMarksPage() {
                       "transition-colors",
                       r.requiresAttention || r.percentage < 50.0
                         ? "bg-red-50/40 hover:bg-red-50/60"
-                        : "hover:bg-yellow-50/30"
+                        : "hover:bg-yellow-50/30",
                     )}
                   >
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{r.studentName}</div>
+                      <div className="font-bold text-slate-900">
+                        {r.studentName}
+                      </div>
                       <div className="font-mono text-[11px] text-slate-500 font-semibold">
                         {r.rollNumber} • Sec {r.section}
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-bold text-slate-900">{r.courseName}</div>
+                      <div className="font-bold text-slate-900">
+                        {r.courseName}
+                      </div>
                       <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                         <span className="font-mono font-bold text-yellow-800 bg-yellow-100 px-1 rounded">
                           {r.courseCode}
@@ -360,7 +383,10 @@ export default function HodInternalMarksPage() {
                       <span className="font-mono font-black text-sm text-slate-900">
                         {r.totalInternal}
                       </span>
-                      <span className="text-[10px] text-slate-400"> / {r.maxInternal}</span>
+                      <span className="text-[10px] text-slate-400">
+                        {" "}
+                        / {r.maxInternal}
+                      </span>
                     </td>
                     <td className="py-3 px-4 text-center">
                       <span
@@ -369,8 +395,8 @@ export default function HodInternalMarksPage() {
                           r.percentage >= 85
                             ? "bg-emerald-100 text-emerald-800"
                             : r.percentage >= 50
-                            ? "bg-yellow-100 text-yellow-900"
-                            : "bg-red-100 text-red-800"
+                              ? "bg-yellow-100 text-yellow-900"
+                              : "bg-red-100 text-red-800",
                         )}
                       >
                         {r.percentage}%
@@ -414,7 +440,10 @@ export default function HodInternalMarksPage() {
               </button>
             </div>
 
-            <form onSubmit={handleCorrectionSubmit} className="p-4 space-y-3.5 text-xs">
+            <form
+              onSubmit={handleCorrectionSubmit}
+              className="p-4 space-y-3.5 text-xs"
+            >
               <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
                 <div className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">
                   Target Student & Assessment
@@ -428,14 +457,16 @@ export default function HodInternalMarksPage() {
                 <div className="text-slate-600">
                   Current Recorded Mark:{" "}
                   <span className="font-mono font-bold text-slate-900">
-                    {correctionTarget.totalInternal} / {correctionTarget.maxInternal}
+                    {correctionTarget.totalInternal} /{" "}
+                    {correctionTarget.maxInternal}
                   </span>
                 </div>
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
-                  Proposed Corrected Mark (out of {correctionTarget.maxInternal})
+                  Proposed Corrected Mark (out of {correctionTarget.maxInternal}
+                  )
                 </label>
                 <Input
                   type="number"
@@ -443,7 +474,9 @@ export default function HodInternalMarksPage() {
                   min="0"
                   max={correctionTarget.maxInternal}
                   value={requestedMark}
-                  onChange={(e) => setRequestedMark(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setRequestedMark(parseFloat(e.target.value) || 0)
+                  }
                   required
                   className="font-mono text-sm font-bold"
                 />
@@ -466,7 +499,9 @@ export default function HodInternalMarksPage() {
               <div className="p-2.5 bg-yellow-50 rounded text-[11px] text-yellow-900 flex items-start gap-2 border border-yellow-200">
                 <ShieldAlert className="h-4 w-4 shrink-0 text-yellow-700 mt-0.5" />
                 <span>
-                  HOD cannot overwrite marks directly. This submission enters the departmental audit log and notifies the Controller of Examinations.
+                  HOD cannot overwrite marks directly. This submission enters
+                  the departmental audit log and notifies the Controller of
+                  Examinations.
                 </span>
               </div>
 
