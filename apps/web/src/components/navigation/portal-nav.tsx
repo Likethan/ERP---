@@ -459,17 +459,11 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
 // -----------------------------------------------------------------------------
 export const HOD_PORTAL_NAV: NavSection[] = [
   {
-    title: "DEPARTMENT LEADERSHIP",
+    title: "ACADEMIC MANAGEMENT",
     items: [
       {
-        label: "HOD Dedicated Portal",
+        label: "HOD Dashboard",
         href: "/hod/dashboard",
-        badge: "Phase 1",
-        icon: <Building className="h-4 w-4" />,
-      },
-      {
-        label: "Dashboard",
-        href: "/app/dashboard",
         icon: <LayoutDashboard className="h-4 w-4" />,
       },
       {
@@ -496,11 +490,46 @@ export const HOD_PORTAL_NAV: NavSection[] = [
         badge: "Master Grid",
         icon: <CalendarDays className="h-4 w-4" />,
       },
+      {
+        label: "Subjects & Curriculum",
+        href: "/hod/curriculum",
+        badge: "R-2026",
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+      {
+        label: "Lesson Plan Monitoring",
+        href: "/hod/lesson-plans",
+        badge: "82.8%",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
+        label: "Examination Management",
+        href: "/hod/examinations",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Internal Marks",
+        href: "/hod/internal-marks",
+        badge: "IA Ledger",
+        icon: <Award className="h-4 w-4" />,
+      },
+      {
+        label: "Semester Results",
+        href: "/hod/results",
+        badge: "90.8%",
+        icon: <BarChart3 className="h-4 w-4" />,
+      },
     ],
   },
   {
-    title: "DEPARTMENTAL ACADEMICS",
+    title: "DEPARTMENT OPERATIONS",
     items: [
+      {
+        label: "Leave & Approvals",
+        href: "/hod/approvals",
+        badge: "5 Pending",
+        icon: <ShieldCheck className="h-4 w-4" />,
+      },
       {
         label: "Department Faculty Workloads",
         href: "/app/faculty",

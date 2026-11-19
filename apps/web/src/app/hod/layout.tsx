@@ -21,6 +21,12 @@ import {
   ChevronRight,
   ExternalLink,
   Sparkles,
+  BookOpen,
+  ListChecks,
+  FileText,
+  ClipboardList,
+  TrendingUp,
+  CheckSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,33 +37,82 @@ interface HodNavItem {
   badge?: string;
 }
 
-const HOD_NAV_ITEMS: HodNavItem[] = [
+interface HodNavSection {
+  title: string;
+  items: HodNavItem[];
+}
+
+const HOD_NAV_SECTIONS: HodNavSection[] = [
   {
-    label: "Dashboard",
-    href: "/hod/dashboard",
-    icon: <LayoutDashboard className="h-4 w-4" />,
+    title: "ACADEMIC MANAGEMENT",
+    items: [
+      {
+        label: "Dashboard",
+        href: "/hod/dashboard",
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+      {
+        label: "Faculty Management",
+        href: "/hod/faculty",
+        icon: <Users className="h-4 w-4" />,
+        badge: "28 Faculty",
+      },
+      {
+        label: "Student Management",
+        href: "/hod/students",
+        icon: <GraduationCap className="h-4 w-4" />,
+        badge: "720 Enrolled",
+      },
+      {
+        label: "Attendance Management",
+        href: "/hod/attendance",
+        icon: <CalendarCheck className="h-4 w-4" />,
+      },
+      {
+        label: "Timetable Management",
+        href: "/hod/timetable",
+        icon: <Calendar className="h-4 w-4" />,
+      },
+      {
+        label: "Subjects & Curriculum",
+        href: "/hod/curriculum",
+        icon: <BookOpen className="h-4 w-4" />,
+        badge: "R-2026",
+      },
+      {
+        label: "Lesson Plan Monitoring",
+        href: "/hod/lesson-plans",
+        icon: <ListChecks className="h-4 w-4" />,
+        badge: "82.8%",
+      },
+      {
+        label: "Examination Management",
+        href: "/hod/examinations",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "Internal Marks",
+        href: "/hod/internal-marks",
+        icon: <ClipboardList className="h-4 w-4" />,
+      },
+      {
+        label: "Semester Results",
+        href: "/hod/results",
+        icon: <TrendingUp className="h-4 w-4" />,
+        badge: "90.8%",
+      },
+    ],
   },
   {
-    label: "Faculty Management",
-    href: "/hod/faculty",
-    icon: <Users className="h-4 w-4" />,
-    badge: "28 Faculty",
-  },
-  {
-    label: "Student Management",
-    href: "/hod/students",
-    icon: <GraduationCap className="h-4 w-4" />,
-    badge: "720 Enrolled",
-  },
-  {
-    label: "Attendance Management",
-    href: "/hod/attendance",
-    icon: <CalendarCheck className="h-4 w-4" />,
-  },
-  {
-    label: "Timetable Management",
-    href: "/hod/timetable",
-    icon: <Calendar className="h-4 w-4" />,
+    title: "DEPARTMENT OPERATIONS",
+    items: [
+      {
+        label: "Leave & Approvals",
+        href: "/hod/approvals",
+        icon: <CheckSquare className="h-4 w-4" />,
+        badge: "5 Pending",
+      },
+    ],
   },
 ];
 
@@ -137,55 +192,57 @@ export default function HodPortalLayout({
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
-        <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-          HOD Navigation
-        </div>
-        {HOD_NAV_ITEMS.map((item) => {
-          const isActive =
-            pathname === item.href ||
-            (item.href !== "/hod/dashboard" && pathname.startsWith(item.href));
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+        {HOD_NAV_SECTIONS.map((section) => (
+          <div key={section.title} className="space-y-1">
+            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              {section.title}
+            </div>
+            {section.items.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/hod/dashboard" && pathname.startsWith(item.href));
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                "flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition-all group",
-                isActive
-                  ? "bg-yellow-400 text-slate-950 shadow-xs font-bold border border-yellow-500/50"
-                  : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
-              )}
-            >
-              <div className="flex items-center gap-2.5">
-                <span
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "transition-colors",
+                    "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all group",
                     isActive
-                      ? "text-slate-950"
-                      : "text-slate-400 group-hover:text-slate-800",
+                      ? "bg-yellow-400 text-slate-950 shadow-xs font-bold border border-yellow-500/50"
+                      : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950"
                   )}
                 >
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </div>
-              {item.badge && (
-                <span
-                  className={cn(
-                    "rounded-full px-1.5 py-0.5 text-[9px] font-mono",
-                    isActive
-                      ? "bg-yellow-500/40 text-slate-950 font-bold"
-                      : "bg-slate-100 text-slate-600 border border-slate-200",
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={cn(
+                        "transition-colors",
+                        isActive ? "text-slate-950" : "text-slate-400 group-hover:text-slate-800"
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[9px] font-mono",
+                        isActive
+                          ? "bg-yellow-500/40 text-slate-950 font-bold"
+                          : "bg-slate-100 text-slate-600 border border-slate-200"
+                      )}
+                    >
+                      {item.badge}
+                    </span>
                   )}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
 
         <div className="pt-4 mt-4 border-t border-slate-100">
           <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
