@@ -2,7 +2,7 @@ import assert from "node:assert";
 import path from "node:path";
 import createJITI from "jiti";
 
-const rootDir = "/home/mk/Documents/eRP/ERP---";
+const rootDir = process.cwd();
 const jiti = createJITI(path.resolve(rootDir, "apps/web"), {
   alias: {
     "@/": path.resolve(rootDir, "apps/web/src") + "/",
