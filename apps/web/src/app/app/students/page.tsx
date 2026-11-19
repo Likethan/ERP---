@@ -41,7 +41,9 @@ export default function StudentsDirectoryPage() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [selectedDept, setSelectedDept] = useState(
-    isFaculty ? (activePersona?.department || "Computer Science & Engineering") : "ALL"
+    isFaculty
+      ? activePersona?.department || "Computer Science & Engineering"
+      : "ALL",
   );
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedSemester, setSelectedSemester] = useState("ALL");
@@ -414,7 +416,9 @@ export default function StudentsDirectoryPage() {
             </div>
           )}
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            {isFaculty ? "Assigned Course Cohort Directory" : "Student Management & 360 Registry"}
+            {isFaculty
+              ? "Assigned Course Cohort Directory"
+              : "Student Management & 360 Registry"}
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {isFaculty

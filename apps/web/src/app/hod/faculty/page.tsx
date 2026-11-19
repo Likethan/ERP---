@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { hodService } from "@/services/hod.service";
 import { FacultyDetailView } from "@/types/domain";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,7 +48,8 @@ export default function HodFacultyPage() {
         const res = await hodService.getDepartmentFaculty({
           department: deptName,
           search: search.trim() || undefined,
-          designation: selectedDesignation !== "ALL" ? selectedDesignation : undefined,
+          designation:
+            selectedDesignation !== "ALL" ? selectedDesignation : undefined,
         });
         if (res.success && res.data) {
           // Strict department filter in frontend as defense-in-depth
@@ -79,13 +86,16 @@ export default function HodFacultyPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-950 border border-yellow-300">
               Department Faculty Roster
             </span>
-            <span className="text-xs text-slate-500 font-mono">• {deptName}</span>
+            <span className="text-xs text-slate-500 font-mono">
+              • {deptName}
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
             Faculty Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Monitor instructional workloads, assigned subjects, and teaching performance.
+            Monitor instructional workloads, assigned subjects, and teaching
+            performance.
           </p>
         </div>
 
@@ -133,7 +143,10 @@ export default function HodFacultyPage() {
       {loading ? (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-white border border-slate-200 animate-pulse" />
+            <div
+              key={i}
+              className="h-24 rounded-xl bg-white border border-slate-200 animate-pulse"
+            />
           ))}
         </div>
       ) : faculty.length === 0 ? (
@@ -177,7 +190,9 @@ export default function HodFacultyPage() {
                     </Badge>
                   </div>
                   <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-3 flex-wrap">
-                    <span className="font-medium text-slate-700">{f.designation}</span>
+                    <span className="font-medium text-slate-700">
+                      {f.designation}
+                    </span>
                     <span>•</span>
                     <span>{f.qualification}</span>
                     <span>•</span>

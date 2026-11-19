@@ -61,20 +61,36 @@ class TeachingService {
   }
 
   private init() {
-    this.lessonPlans = safeStorageGet(STORAGE_KEYS.LESSON_PLANS, [...MOCK_LESSON_PLANS]);
-    this.classDiary = safeStorageGet(STORAGE_KEYS.CLASS_DIARY, [...MOCK_CLASS_DIARY]);
-    this.materials = safeStorageGet(STORAGE_KEYS.MATERIALS, [...MOCK_STUDY_MATERIALS]);
-    this.assignments = safeStorageGet(STORAGE_KEYS.ASSIGNMENTS, [...MOCK_ASSIGNMENTS]);
-    this.submissions = safeStorageGet(STORAGE_KEYS.SUBMISSIONS, [...MOCK_SUBMISSIONS]);
-    this.facultyLeaves = safeStorageGet(STORAGE_KEYS.FACULTY_LEAVES, [...MOCK_FACULTY_LEAVES]);
-    this.facultyBalances = safeStorageGet(STORAGE_KEYS.FACULTY_BALANCES, [...MOCK_FACULTY_LEAVE_BALANCES]);
+    this.lessonPlans = safeStorageGet(STORAGE_KEYS.LESSON_PLANS, [
+      ...MOCK_LESSON_PLANS,
+    ]);
+    this.classDiary = safeStorageGet(STORAGE_KEYS.CLASS_DIARY, [
+      ...MOCK_CLASS_DIARY,
+    ]);
+    this.materials = safeStorageGet(STORAGE_KEYS.MATERIALS, [
+      ...MOCK_STUDY_MATERIALS,
+    ]);
+    this.assignments = safeStorageGet(STORAGE_KEYS.ASSIGNMENTS, [
+      ...MOCK_ASSIGNMENTS,
+    ]);
+    this.submissions = safeStorageGet(STORAGE_KEYS.SUBMISSIONS, [
+      ...MOCK_SUBMISSIONS,
+    ]);
+    this.facultyLeaves = safeStorageGet(STORAGE_KEYS.FACULTY_LEAVES, [
+      ...MOCK_FACULTY_LEAVES,
+    ]);
+    this.facultyBalances = safeStorageGet(STORAGE_KEYS.FACULTY_BALANCES, [
+      ...MOCK_FACULTY_LEAVE_BALANCES,
+    ]);
   }
 
   // =========================================================================
   // LESSON PLANS & SYLLABUS TRACKING
   // =========================================================================
 
-  async getLessonPlans(courseOfferingId?: string): Promise<ApiResponse<LessonPlanUnit[]>> {
+  async getLessonPlans(
+    courseOfferingId?: string,
+  ): Promise<ApiResponse<LessonPlanUnit[]>> {
     let items = [...this.lessonPlans];
     if (courseOfferingId && courseOfferingId !== "ALL") {
       items = items.filter((p) => p.courseOfferingId === courseOfferingId);
@@ -82,14 +98,19 @@ class TeachingService {
     return { success: true, data: items };
   }
 
-  async createLessonPlan(plan: Omit<LessonPlanUnit, "id" | "lastUpdated">): Promise<ApiResponse<LessonPlanUnit>> {
+  async createLessonPlan(
+    plan: Omit<LessonPlanUnit, "id" | "lastUpdated">,
+  ): Promise<ApiResponse<LessonPlanUnit>> {
     const newPlan: LessonPlanUnit = {
       ...plan,
       id: `lp-${Date.now()}`,
       lastUpdated: new Date().toISOString(),
       completionPercentage:
         plan.plannedHours > 0
-          ? Math.min(100, Math.round((plan.completedHours / plan.plannedHours) * 100))
+          ? Math.min(
+              100,
+              Math.round((plan.completedHours / plan.plannedHours) * 100),
+            )
           : 0,
       status:
         plan.completedHours >= plan.plannedHours
@@ -105,7 +126,7 @@ class TeachingService {
 
   async updateLessonPlanHours(
     id: string,
-    completedHours: number
+    completedHours: number,
   ): Promise<ApiResponse<LessonPlanUnit>> {
     const idx = this.lessonPlans.findIndex((p) => p.id === id);
     if (idx === -1) throw new Error("Lesson plan not found");
@@ -113,7 +134,12 @@ class TeachingService {
     const plan = this.lessonPlans[idx];
     const newHours = Math.max(0, Math.min(plan.plannedHours, completedHours));
     const pct = Math.round((newHours / plan.plannedHours) * 100);
-    const status = newHours >= plan.plannedHours ? "COMPLETED" : newHours > 0 ? "IN_PROGRESS" : "NOT_STARTED";
+    const status =
+      newHours >= plan.plannedHours
+        ? "COMPLETED"
+        : newHours > 0
+          ? "IN_PROGRESS"
+          : "NOT_STARTED";
 
     this.lessonPlans[idx] = {
       ...plan,
@@ -130,24 +156,31 @@ class TeachingService {
   // CLASS DIARY / TEACHING LOG
   // =========================================================================
 
-  async getClassDiaryEntries(courseOfferingId?: string): Promise<ApiResponse<ClassDiaryEntry[]>> {
+  async getClassDiaryEntries(
+    courseOfferingId?: string,
+  ): Promise<ApiResponse<ClassDiaryEntry[]>> {
     let items = [...this.classDiary];
     if (courseOfferingId && courseOfferingId !== "ALL") {
       items = items.filter((e) => e.courseOfferingId === courseOfferingId);
     }
     // Sort descending by date
-    items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    items.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
     return { success: true, data: items };
   }
 
-  async logClassDiaryEntry(entry: Omit<ClassDiaryEntry, "id" | "createdAt">): Promise<ApiResponse<ClassDiaryEntry>> {
+  async logClassDiaryEntry(
+    entry: Omit<ClassDiaryEntry, "id" | "createdAt">,
+  ): Promise<ApiResponse<ClassDiaryEntry>> {
     const newEntry: ClassDiaryEntry = {
       ...entry,
       id: `cd-${Date.now()}`,
       createdAt: new Date().toISOString(),
       attendancePercentage:
         entry.totalStudents > 0
-          ? Math.round((entry.studentsPresent / entry.totalStudents) * 1000) / 10
+          ? Math.round((entry.studentsPresent / entry.totalStudents) * 1000) /
+            10
           : 100,
     };
     this.classDiary.unshift(newEntry);
@@ -157,7 +190,7 @@ class TeachingService {
     const plan = this.lessonPlans.find(
       (p) =>
         p.courseOfferingId === entry.courseOfferingId &&
-        p.unitNumber === entry.unitNumber
+        p.unitNumber === entry.unitNumber,
     );
     if (plan && plan.completedHours < plan.plannedHours) {
       await this.updateLessonPlanHours(plan.id, plan.completedHours + 1);
@@ -177,7 +210,9 @@ class TeachingService {
   }): Promise<ApiResponse<CourseStudyMaterial[]>> {
     let items = [...this.materials];
     if (params?.courseOfferingId && params.courseOfferingId !== "ALL") {
-      items = items.filter((m) => m.courseOfferingId === params.courseOfferingId);
+      items = items.filter(
+        (m) => m.courseOfferingId === params.courseOfferingId,
+      );
     }
     if (params?.unitNumber && params.unitNumber > 0) {
       items = items.filter((m) => m.unitNumber === params.unitNumber);
@@ -189,7 +224,7 @@ class TeachingService {
   }
 
   async uploadStudyMaterial(
-    material: Omit<CourseStudyMaterial, "id" | "uploadedAt" | "downloadCount">
+    material: Omit<CourseStudyMaterial, "id" | "uploadedAt" | "downloadCount">,
   ): Promise<ApiResponse<CourseStudyMaterial>> {
     const newMaterial: CourseStudyMaterial = {
       ...material,
@@ -222,7 +257,9 @@ class TeachingService {
   }): Promise<ApiResponse<CourseAssignment[]>> {
     let items = [...this.assignments];
     if (params?.courseOfferingId && params.courseOfferingId !== "ALL") {
-      items = items.filter((a) => a.courseOfferingId === params.courseOfferingId);
+      items = items.filter(
+        (a) => a.courseOfferingId === params.courseOfferingId,
+      );
     }
     if (params?.status && params.status !== "ALL") {
       items = items.filter((a) => a.status === params.status);
@@ -231,7 +268,10 @@ class TeachingService {
   }
 
   async createAssignment(
-    assignment: Omit<CourseAssignment, "id" | "totalSubmissions" | "evaluatedCount" | "averageScore">
+    assignment: Omit<
+      CourseAssignment,
+      "id" | "totalSubmissions" | "evaluatedCount" | "averageScore"
+    >,
   ): Promise<ApiResponse<CourseAssignment>> {
     const newAsg: CourseAssignment = {
       ...assignment,
@@ -244,7 +284,10 @@ class TeachingService {
     return { success: true, data: newAsg };
   }
 
-  async getSubmissions(assignmentId?: string, studentId?: string): Promise<ApiResponse<AssignmentSubmission[]>> {
+  async getSubmissions(
+    assignmentId?: string,
+    studentId?: string,
+  ): Promise<ApiResponse<AssignmentSubmission[]>> {
     let items = [...this.submissions];
     if (assignmentId && assignmentId !== "ALL") {
       items = items.filter((s) => s.assignmentId === assignmentId);
@@ -255,14 +298,25 @@ class TeachingService {
     return { success: true, data: items };
   }
 
-  async submitAssignment(submission: Omit<AssignmentSubmission, "id" | "submittedAt" | "status" | "isLate">): Promise<ApiResponse<AssignmentSubmission>> {
-    const targetAssignment = this.assignments.find((a) => a.id === submission.assignmentId);
+  async submitAssignment(
+    submission: Omit<
+      AssignmentSubmission,
+      "id" | "submittedAt" | "status" | "isLate"
+    >,
+  ): Promise<ApiResponse<AssignmentSubmission>> {
+    const targetAssignment = this.assignments.find(
+      (a) => a.id === submission.assignmentId,
+    );
     const now = new Date();
-    const isLate = targetAssignment ? now > new Date(targetAssignment.dueDate) : false;
+    const isLate = targetAssignment
+      ? now > new Date(targetAssignment.dueDate)
+      : false;
 
     // Check if late submissions are prohibited
     if (isLate && targetAssignment && !targetAssignment.allowLateSubmission) {
-      throw new Error("Deadline has passed and late submissions are strictly not permitted.");
+      throw new Error(
+        "Deadline has passed and late submissions are strictly not permitted.",
+      );
     }
 
     const newSub: AssignmentSubmission = {
@@ -275,7 +329,11 @@ class TeachingService {
 
     // Remove old submission from same student if re-submitting
     this.submissions = this.submissions.filter(
-      (s) => !(s.assignmentId === submission.assignmentId && s.studentId === submission.studentId)
+      (s) =>
+        !(
+          s.assignmentId === submission.assignmentId &&
+          s.studentId === submission.studentId
+        ),
     );
     this.submissions.push(newSub);
     safeStorageSet(STORAGE_KEYS.SUBMISSIONS, this.submissions);
@@ -283,7 +341,7 @@ class TeachingService {
     // Update assignment counter
     if (targetAssignment) {
       targetAssignment.totalSubmissions = this.submissions.filter(
-        (s) => s.assignmentId === submission.assignmentId
+        (s) => s.assignmentId === submission.assignmentId,
       ).length;
       safeStorageSet(STORAGE_KEYS.ASSIGNMENTS, this.assignments);
     }
@@ -298,14 +356,19 @@ class TeachingService {
       feedback: string;
       facultyId: string;
       facultyName: string;
-    }
+    },
   ): Promise<ApiResponse<AssignmentSubmission>> {
     const idx = this.submissions.findIndex((s) => s.id === submissionId);
     if (idx === -1) throw new Error("Submission not found");
 
     const targetSub = this.submissions[idx];
-    if (evalData.marksObtained < 0 || evalData.marksObtained > targetSub.maxMarks) {
-      throw new Error(`Marks must be between 0 and maximum ${targetSub.maxMarks}.`);
+    if (
+      evalData.marksObtained < 0 ||
+      evalData.marksObtained > targetSub.maxMarks
+    ) {
+      throw new Error(
+        `Marks must be between 0 and maximum ${targetSub.maxMarks}.`,
+      );
     }
 
     this.submissions[idx] = {
@@ -320,15 +383,24 @@ class TeachingService {
     safeStorageSet(STORAGE_KEYS.SUBMISSIONS, this.submissions);
 
     // Update assignment evaluated count and average
-    const targetAsg = this.assignments.find((a) => a.id === targetSub.assignmentId);
+    const targetAsg = this.assignments.find(
+      (a) => a.id === targetSub.assignmentId,
+    );
     if (targetAsg) {
       const allEvaluated = this.submissions.filter(
-        (s) => s.assignmentId === targetSub.assignmentId && s.status === "EVALUATED" && s.marksObtained !== undefined
+        (s) =>
+          s.assignmentId === targetSub.assignmentId &&
+          s.status === "EVALUATED" &&
+          s.marksObtained !== undefined,
       );
       targetAsg.evaluatedCount = allEvaluated.length;
       if (allEvaluated.length > 0) {
-        const sum = allEvaluated.reduce((acc, curr) => acc + (curr.marksObtained || 0), 0);
-        targetAsg.averageScore = Math.round((sum / allEvaluated.length) * 10) / 10;
+        const sum = allEvaluated.reduce(
+          (acc, curr) => acc + (curr.marksObtained || 0),
+          0,
+        );
+        targetAsg.averageScore =
+          Math.round((sum / allEvaluated.length) * 10) / 10;
       }
       safeStorageSet(STORAGE_KEYS.ASSIGNMENTS, this.assignments);
     }
@@ -340,11 +412,15 @@ class TeachingService {
   // FACULTY LEAVE WORKFLOW
   // =========================================================================
 
-  async getFacultyLeaveBalances(facultyId?: string): Promise<ApiResponse<FacultyLeaveBalance[]>> {
+  async getFacultyLeaveBalances(
+    facultyId?: string,
+  ): Promise<ApiResponse<FacultyLeaveBalance[]>> {
     return { success: true, data: [...this.facultyBalances] };
   }
 
-  async getFacultyLeaves(facultyId?: string): Promise<ApiResponse<FacultyLeaveApplication[]>> {
+  async getFacultyLeaves(
+    facultyId?: string,
+  ): Promise<ApiResponse<FacultyLeaveApplication[]>> {
     let items = [...this.facultyLeaves];
     if (facultyId) {
       items = items.filter((l) => l.facultyId === facultyId);
@@ -353,12 +429,14 @@ class TeachingService {
   }
 
   async applyFacultyLeave(
-    app: Omit<FacultyLeaveApplication, "id" | "status" | "appliedAt">
+    app: Omit<FacultyLeaveApplication, "id" | "status" | "appliedAt">,
   ): Promise<ApiResponse<FacultyLeaveApplication>> {
     // Check balance
     const bal = this.facultyBalances.find((b) => b.leaveType === app.leaveType);
     if (bal && bal.availableDays < app.totalDays) {
-      throw new Error(`Insufficient leave balance. Available: ${bal.availableDays} days, Requested: ${app.totalDays} days.`);
+      throw new Error(
+        `Insufficient leave balance. Available: ${bal.availableDays} days, Requested: ${app.totalDays} days.`,
+      );
     }
 
     const newApp: FacultyLeaveApplication = {
@@ -376,7 +454,7 @@ class TeachingService {
   async processFacultyLeaveHOD(
     leaveId: string,
     action: "APPROVE" | "REJECT",
-    remarks: string
+    remarks: string,
   ): Promise<ApiResponse<FacultyLeaveApplication>> {
     const idx = this.facultyLeaves.findIndex((l) => l.id === leaveId);
     if (idx === -1) throw new Error("Leave request not found");
@@ -391,7 +469,9 @@ class TeachingService {
     };
 
     if (action === "APPROVE") {
-      const bal = this.facultyBalances.find((b) => b.leaveType === app.leaveType);
+      const bal = this.facultyBalances.find(
+        (b) => b.leaveType === app.leaveType,
+      );
       if (bal) {
         bal.consumedDays += app.totalDays;
         bal.availableDays = Math.max(0, bal.allocatedDays - bal.consumedDays);

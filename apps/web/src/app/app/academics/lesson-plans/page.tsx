@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { teachingService } from "@/services/teaching.service";
 import { LessonPlanUnit } from "@/types/teaching";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
@@ -64,7 +70,11 @@ export default function LessonPlansPage() {
       }
     } catch (err) {
       console.error(err);
-      showToast({ type: "error", title: "Error", message: "Failed to load lesson plans." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to load lesson plans.",
+      });
     } finally {
       setLoading(false);
     }
@@ -77,24 +87,28 @@ export default function LessonPlansPage() {
   // Overall metrics
   const totalPlannedHours = useMemo(
     () => plans.reduce((acc, p) => acc + p.plannedHours, 0),
-    [plans]
+    [plans],
   );
   const totalCompletedHours = useMemo(
     () => plans.reduce((acc, p) => acc + p.completedHours, 0),
-    [plans]
+    [plans],
   );
   const overallSyllabusCompletion = useMemo(
     () =>
       totalPlannedHours > 0
         ? Math.round((totalCompletedHours / totalPlannedHours) * 100)
         : 0,
-    [totalPlannedHours, totalCompletedHours]
+    [totalPlannedHours, totalCompletedHours],
   );
 
   const handleCreatePlan = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.unitTitle.trim()) {
-      showToast({ type: "error", title: "Validation Error", message: "Unit Title is required." });
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Unit Title is required.",
+      });
       return;
     }
     try {
@@ -115,7 +129,10 @@ export default function LessonPlansPage() {
         completedHours: Number(formData.completedHours),
         topics,
         learningOutcomes: formData.learningOutcomes,
-        status: Number(formData.completedHours) >= Number(formData.plannedHours) ? "COMPLETED" : "NOT_STARTED",
+        status:
+          Number(formData.completedHours) >= Number(formData.plannedHours)
+            ? "COMPLETED"
+            : "NOT_STARTED",
         completionPercentage: 0,
       });
 
@@ -135,7 +152,11 @@ export default function LessonPlansPage() {
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Creation Failed", message: err.message || "Could not add unit." });
+      showToast({
+        type: "error",
+        title: "Creation Failed",
+        message: err.message || "Could not add unit.",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -146,7 +167,10 @@ export default function LessonPlansPage() {
     if (!selectedPlan) return;
     try {
       setSubmitting(true);
-      const res = await teachingService.updateLessonPlanHours(selectedPlan.id, Number(newCompletedHours));
+      const res = await teachingService.updateLessonPlanHours(
+        selectedPlan.id,
+        Number(newCompletedHours),
+      );
       if (res.success) {
         showToast({
           type: "success",
@@ -157,7 +181,11 @@ export default function LessonPlansPage() {
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Update Failed", message: err.message });
+      showToast({
+        type: "error",
+        title: "Update Failed",
+        message: err.message,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -176,13 +204,18 @@ export default function LessonPlansPage() {
             Lesson Plan Management
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Unit-wise lecture planning, learning outcomes mapping, and institutional syllabus completion tracking.
+            Unit-wise lecture planning, learning outcomes mapping, and
+            institutional syllabus completion tracking.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/academics/class-diary">
-            <Button variant="outline" size="sm" leftIcon={<Calendar className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Calendar className="h-3.5 w-3.5" />}
+            >
               Class Diary / Log
             </Button>
           </Link>
@@ -202,7 +235,10 @@ export default function LessonPlansPage() {
         <StatCard
           label="Syllabus Completion"
           value={`${overallSyllabusCompletion}%`}
-          change={{ value: overallSyllabusCompletion >= 50 ? "On Track" : "Lagging", trend: "up" }}
+          change={{
+            value: overallSyllabusCompletion >= 50 ? "On Track" : "Lagging",
+            trend: "up",
+          }}
           description={`${totalCompletedHours} of ${totalPlannedHours} planned lecture hours`}
           variant="amber"
           icon={<TrendingUp className="h-4 w-4" />}
@@ -234,15 +270,21 @@ export default function LessonPlansPage() {
       <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
         <div className="flex items-center gap-3">
           <BookOpen className="h-4 w-4 text-yellow-600" />
-          <span className="text-xs font-semibold text-slate-800">Assigned Course Offering:</span>
+          <span className="text-xs font-semibold text-slate-800">
+            Assigned Course Offering:
+          </span>
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
             className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
           >
-            <option value="co-cs301-a">CS301 — Data Structures & Algorithms (Sec A)</option>
+            <option value="co-cs301-a">
+              CS301 — Data Structures & Algorithms (Sec A)
+            </option>
             <option value="co-cs501-a">CS501 — Compiler Design (Sec A)</option>
-            <option value="co-cs402-b">CS402 — Operating Systems (Sec B)</option>
+            <option value="co-cs402-b">
+              CS402 — Operating Systems (Sec B)
+            </option>
           </select>
         </div>
 
@@ -254,12 +296,19 @@ export default function LessonPlansPage() {
       {/* Unit Progression Cards */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-400">Loading lesson plan units...</div>
+          <div className="p-8 text-center text-xs text-slate-400">
+            Loading lesson plan units...
+          </div>
         ) : plans.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-400">No lesson plan units configured yet.</div>
+          <div className="p-8 text-center text-xs text-slate-400">
+            No lesson plan units configured yet.
+          </div>
         ) : (
           plans.map((unit) => (
-            <Card key={unit.id} className="overflow-hidden hover:border-yellow-300 transition-all">
+            <Card
+              key={unit.id}
+              className="overflow-hidden hover:border-yellow-300 transition-all"
+            >
               <CardContent className="p-5 sm:p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-3">
@@ -308,7 +357,8 @@ export default function LessonPlansPage() {
                 <div>
                   <div className="flex items-center justify-between text-xs mb-1.5 font-medium">
                     <span className="text-slate-600">
-                      Syllabus Progress: {unit.completedHours} of {unit.plannedHours} Hours Completed
+                      Syllabus Progress: {unit.completedHours} of{" "}
+                      {unit.plannedHours} Hours Completed
                     </span>
                     <span className="text-slate-900 font-bold font-mono">
                       {unit.completionPercentage}%
@@ -323,7 +373,9 @@ export default function LessonPlansPage() {
                             ? "bg-yellow-500"
                             : "bg-slate-300"
                       }`}
-                      style={{ width: `${Math.min(100, unit.completionPercentage)}%` }}
+                      style={{
+                        width: `${Math.min(100, unit.completionPercentage)}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -344,7 +396,9 @@ export default function LessonPlansPage() {
 
                   {unit.learningOutcomes && (
                     <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-[11px] text-slate-500">
-                      <span className="font-semibold text-slate-700">Course Outcome (CO): </span>
+                      <span className="font-semibold text-slate-700">
+                        Course Outcome (CO):{" "}
+                      </span>
                       {unit.learningOutcomes}
                     </div>
                   )}
@@ -364,64 +418,100 @@ export default function LessonPlansPage() {
         <form onSubmit={handleCreatePlan} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Unit Number</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Unit Number
+              </label>
               <Input
                 type="number"
                 min="1"
                 max="10"
                 value={formData.unitNumber}
-                onChange={(e) => setFormData({ ...formData, unitNumber: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    unitNumber: Number(e.target.value),
+                  })
+                }
                 required
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Planned Hours</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Planned Hours
+              </label>
               <Input
                 type="number"
                 min="1"
                 max="40"
                 value={formData.plannedHours}
-                onChange={(e) => setFormData({ ...formData, plannedHours: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    plannedHours: Number(e.target.value),
+                  })
+                }
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Unit Title</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Unit Title
+            </label>
             <Input
               placeholder="e.g. Hierarchical Structures & Balanced Trees"
               value={formData.unitTitle}
-              onChange={(e) => setFormData({ ...formData, unitTitle: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, unitTitle: e.target.value })
+              }
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Topics (one per line)</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Topics (one per line)
+            </label>
             <textarea
               rows={4}
               className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               placeholder="Topic 1&#10;Topic 2&#10;Topic 3"
               value={formData.topicsText}
-              onChange={(e) => setFormData({ ...formData, topicsText: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, topicsText: e.target.value })
+              }
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Course Outcome / Learning Objective</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Course Outcome / Learning Objective
+            </label>
             <Input
               placeholder="State what the student will be able to demonstrate..."
               value={formData.learningOutcomes}
-              onChange={(e) => setFormData({ ...formData, learningOutcomes: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, learningOutcomes: e.target.value })
+              }
             />
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={submitting}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={submitting}
+            >
               {submitting ? "Saving..." : "Add Unit"}
             </Button>
           </div>
@@ -436,12 +526,18 @@ export default function LessonPlansPage() {
       >
         <form onSubmit={handleUpdateHours} className="space-y-4">
           <div className="text-xs text-slate-600">
-            Update completed lecture hours for <strong className="text-slate-900">{selectedPlan?.unitTitle}</strong>.
-            Total planned: <strong>{selectedPlan?.plannedHours} Hours</strong>.
+            Update completed lecture hours for{" "}
+            <strong className="text-slate-900">
+              {selectedPlan?.unitTitle}
+            </strong>
+            . Total planned: <strong>{selectedPlan?.plannedHours} Hours</strong>
+            .
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Completed Lecture Hours</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Completed Lecture Hours
+            </label>
             <Input
               type="number"
               min="0"
@@ -453,10 +549,20 @@ export default function LessonPlansPage() {
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setEditHoursModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setEditHoursModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={submitting}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={submitting}
+            >
               {submitting ? "Updating..." : "Save Progress"}
             </Button>
           </div>

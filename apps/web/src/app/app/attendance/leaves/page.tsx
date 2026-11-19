@@ -425,10 +425,7 @@ export default function LeaveManagementPage() {
         <div className="flex items-center gap-2">
           {isFaculty ? (
             <Link href="/app/faculty/leaves">
-              <Button
-                variant="outline"
-                className="gap-2 text-xs"
-              >
+              <Button variant="outline" className="gap-2 text-xs">
                 <Briefcase className="h-4 w-4" />
                 Apply for Faculty Leave &rarr;
               </Button>

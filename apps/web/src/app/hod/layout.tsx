@@ -78,7 +78,10 @@ export default function HodPortalLayout({
     <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
       {/* Brand & Department Header */}
       <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200">
-        <Link href="/hod/dashboard" className="flex items-center gap-2.5 min-w-0">
+        <Link
+          href="/hod/dashboard"
+          className="flex items-center gap-2.5 min-w-0"
+        >
           <div className="relative h-10 w-10 shrink-0">
             <Image
               src="/college-logo.jpg"
@@ -123,7 +126,10 @@ export default function HodPortalLayout({
             <div className="text-[10px] font-bold uppercase tracking-wider text-yellow-800">
               Department Portal
             </div>
-            <div className="text-xs font-bold text-slate-900 truncate" title={deptName}>
+            <div
+              className="text-xs font-bold text-slate-900 truncate"
+              title={deptName}
+            >
               {deptName}
             </div>
           </div>

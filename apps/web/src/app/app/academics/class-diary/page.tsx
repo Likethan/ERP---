@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { teachingService } from "@/services/teaching.service";
 import { ClassDiaryEntry, TeachingMethod } from "@/types/teaching";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
@@ -64,7 +70,11 @@ export default function ClassDiaryPage() {
       }
     } catch (err) {
       console.error(err);
-      showToast({ type: "error", title: "Error", message: "Failed to load class diary." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to load class diary.",
+      });
     } finally {
       setLoading(false);
     }
@@ -77,14 +87,21 @@ export default function ClassDiaryPage() {
   const totalSessionsLogged = entries.length;
   const avgAttendance = useMemo(() => {
     if (entries.length === 0) return 0;
-    const sum = entries.reduce((acc, curr) => acc + curr.attendancePercentage, 0);
+    const sum = entries.reduce(
+      (acc, curr) => acc + curr.attendancePercentage,
+      0,
+    );
     return Math.round((sum / entries.length) * 10) / 10;
   }, [entries]);
 
   const handleLogEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.topicsCovered.trim()) {
-      showToast({ type: "error", title: "Validation Error", message: "Topics Covered is required." });
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Topics Covered is required.",
+      });
       return;
     }
     try {
@@ -114,14 +131,19 @@ export default function ClassDiaryPage() {
         showToast({
           type: "success",
           title: "Session Logged",
-          message: "Class diary entry recorded and syllabus unit completion updated.",
+          message:
+            "Class diary entry recorded and syllabus unit completion updated.",
         });
         setCreateModalOpen(false);
         setFormData({ ...formData, topicsCovered: "", remarks: "" });
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Logging Failed", message: err.message });
+      showToast({
+        type: "error",
+        title: "Logging Failed",
+        message: err.message,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -140,13 +162,18 @@ export default function ClassDiaryPage() {
             Class Diary / Teaching Log
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Daily lecture session logbook tracking topics taught, pedagogy methods, attendance count, and HOD verification.
+            Daily lecture session logbook tracking topics taught, pedagogy
+            methods, attendance count, and HOD verification.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/academics/lesson-plans">
-            <Button variant="outline" size="sm" leftIcon={<Layers className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Layers className="h-3.5 w-3.5" />}
+            >
               Lesson Plans
             </Button>
           </Link>
@@ -190,20 +217,29 @@ export default function ClassDiaryPage() {
       <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
         <div className="flex items-center gap-3">
           <BookOpen className="h-4 w-4 text-yellow-600" />
-          <span className="text-xs font-semibold text-slate-800">Assigned Course Offering:</span>
+          <span className="text-xs font-semibold text-slate-800">
+            Assigned Course Offering:
+          </span>
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
             className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
           >
-            <option value="co-cs301-a">CS301 — Data Structures & Algorithms (Sec A)</option>
+            <option value="co-cs301-a">
+              CS301 — Data Structures & Algorithms (Sec A)
+            </option>
             <option value="co-cs501-a">CS501 — Compiler Design (Sec A)</option>
-            <option value="co-cs402-b">CS402 — Operating Systems (Sec B)</option>
+            <option value="co-cs402-b">
+              CS402 — Operating Systems (Sec B)
+            </option>
           </select>
         </div>
 
         <div className="text-xs text-slate-500">
-          Faculty: <strong className="text-slate-800">{activePersona?.name || "Dr. Rajesh Sharma"}</strong>
+          Faculty:{" "}
+          <strong className="text-slate-800">
+            {activePersona?.name || "Dr. Rajesh Sharma"}
+          </strong>
         </div>
       </div>
 
@@ -212,7 +248,8 @@ export default function ClassDiaryPage() {
         <CardHeader>
           <CardTitle>Recorded Teaching Log Entries</CardTitle>
           <CardDescription>
-            Chronological audit of lecture hours delivered with pedagogy records and student attendance counts.
+            Chronological audit of lecture hours delivered with pedagogy records
+            and student attendance counts.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
@@ -243,19 +280,30 @@ export default function ClassDiaryPage() {
                   </tr>
                 ) : (
                   entries.map((entry) => (
-                    <tr key={entry.id} className="hover:bg-yellow-50/20 transition-colors">
+                    <tr
+                      key={entry.id}
+                      className="hover:bg-yellow-50/20 transition-colors"
+                    >
                       <td className="py-3.5 px-4 font-mono font-medium text-slate-900">
                         {entry.date}
-                        <div className="text-[11px] text-slate-500 font-sans">{entry.timeSlot}</div>
+                        <div className="text-[11px] text-slate-500 font-sans">
+                          {entry.timeSlot}
+                        </div>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="font-semibold text-slate-800">Period {entry.periodNumber}</span>
-                        <div className="text-[11px] text-slate-500">Unit {entry.unitNumber}</div>
+                        <span className="font-semibold text-slate-800">
+                          Period {entry.periodNumber}
+                        </span>
+                        <div className="text-[11px] text-slate-500">
+                          Unit {entry.unitNumber}
+                        </div>
                       </td>
 
                       <td className="py-3.5 px-4 max-w-md">
-                        <div className="font-medium text-slate-900">{entry.topicsCovered}</div>
+                        <div className="font-medium text-slate-900">
+                          {entry.topicsCovered}
+                        </div>
                         {entry.remarks && (
                           <div className="text-[11px] text-slate-500 mt-0.5 italic">
                             "{entry.remarks}"
@@ -264,7 +312,10 @@ export default function ClassDiaryPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <Badge variant="outline" className="text-[10px] font-mono">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] font-mono"
+                        >
                           {entry.teachingMethod.replace(/_/g, " ")}
                         </Badge>
                       </td>
@@ -279,7 +330,10 @@ export default function ClassDiaryPage() {
                       </td>
 
                       <td className="py-3.5 px-4 text-right">
-                        <Badge variant={entry.verifiedByHod ? "success" : "warning"} dot>
+                        <Badge
+                          variant={entry.verifiedByHod ? "success" : "warning"}
+                          dot
+                        >
                           {entry.verifiedByHod ? "HOD Signed" : "Pending Sign"}
                         </Badge>
                       </td>
@@ -301,22 +355,33 @@ export default function ClassDiaryPage() {
         <form onSubmit={handleLogEntry} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Lecture Date</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Lecture Date
+              </label>
               <Input
                 type="date"
                 value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
                 required
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Period Number</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Period Number
+              </label>
               <Input
                 type="number"
                 min="1"
                 max="8"
                 value={formData.periodNumber}
-                onChange={(e) => setFormData({ ...formData, periodNumber: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    periodNumber: Number(e.target.value),
+                  })
+                }
                 required
               />
             </div>
@@ -324,24 +389,45 @@ export default function ClassDiaryPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Time Slot</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Time Slot
+              </label>
               <select
                 value={formData.timeSlot}
-                onChange={(e) => setFormData({ ...formData, timeSlot: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, timeSlot: e.target.value })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
-                <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM (P1)</option>
-                <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM (P2)</option>
-                <option value="11:15 AM - 12:15 PM">11:15 AM - 12:15 PM (P3)</option>
-                <option value="01:00 PM - 02:00 PM">01:00 PM - 02:00 PM (P4)</option>
-                <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM (P5)</option>
+                <option value="09:00 AM - 10:00 AM">
+                  09:00 AM - 10:00 AM (P1)
+                </option>
+                <option value="10:00 AM - 11:00 AM">
+                  10:00 AM - 11:00 AM (P2)
+                </option>
+                <option value="11:15 AM - 12:15 PM">
+                  11:15 AM - 12:15 PM (P3)
+                </option>
+                <option value="01:00 PM - 02:00 PM">
+                  01:00 PM - 02:00 PM (P4)
+                </option>
+                <option value="02:00 PM - 03:00 PM">
+                  02:00 PM - 03:00 PM (P5)
+                </option>
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Syllabus Unit</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Syllabus Unit
+              </label>
               <select
                 value={formData.unitNumber}
-                onChange={(e) => setFormData({ ...formData, unitNumber: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    unitNumber: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="1">Unit 1: Linear Structures</option>
@@ -354,62 +440,102 @@ export default function ClassDiaryPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Topics Covered in Class</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Topics Covered in Class
+            </label>
             <textarea
               rows={3}
               placeholder="Detail the exact concepts, algorithms, and proofs taught during this lecture..."
               className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               value={formData.topicsCovered}
-              onChange={(e) => setFormData({ ...formData, topicsCovered: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, topicsCovered: e.target.value })
+              }
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Pedagogy / Teaching Method</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Pedagogy / Teaching Method
+              </label>
               <select
                 value={formData.teachingMethod}
-                onChange={(e) => setFormData({ ...formData, teachingMethod: e.target.value as TeachingMethod })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    teachingMethod: e.target.value as TeachingMethod,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="CHALK_AND_BOARD">Chalk & Board</option>
                 <option value="POWERPOINT_ICT">PowerPoint ICT Slides</option>
-                <option value="LAB_DEMONSTRATION">Live Code Demonstration</option>
-                <option value="PROBLEM_SOLVING">Tutorial Problem Solving</option>
-                <option value="GROUP_DISCUSSION">Active Group Discussion</option>
+                <option value="LAB_DEMONSTRATION">
+                  Live Code Demonstration
+                </option>
+                <option value="PROBLEM_SOLVING">
+                  Tutorial Problem Solving
+                </option>
+                <option value="GROUP_DISCUSSION">
+                  Active Group Discussion
+                </option>
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Students Present</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Students Present
+              </label>
               <div className="flex items-center gap-2">
                 <Input
                   type="number"
                   min="0"
                   max="60"
                   value={formData.studentsPresent}
-                  onChange={(e) => setFormData({ ...formData, studentsPresent: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      studentsPresent: Number(e.target.value),
+                    })
+                  }
                   required
                 />
-                <span className="text-xs text-slate-500 whitespace-nowrap">/ {formData.totalStudents}</span>
+                <span className="text-xs text-slate-500 whitespace-nowrap">
+                  / {formData.totalStudents}
+                </span>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Observations & Student Engagement Remarks</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Observations & Student Engagement Remarks
+            </label>
             <Input
               placeholder="e.g. Students completed AVL rotation exercise on whiteboard."
               value={formData.remarks}
-              onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, remarks: e.target.value })
+              }
             />
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setCreateModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setCreateModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={submitting}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={submitting}
+            >
               {submitting ? "Recording..." : "Save to Class Diary"}
             </Button>
           </div>

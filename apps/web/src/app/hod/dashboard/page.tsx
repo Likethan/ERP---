@@ -69,7 +69,10 @@ export default function HodDashboardPage() {
         <div className="h-28 rounded-2xl bg-white border border-slate-200 p-6" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-28 rounded-xl bg-white border border-slate-200" />
+            <div
+              key={i}
+              className="h-28 rounded-xl bg-white border border-slate-200"
+            />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -85,7 +88,9 @@ export default function HodDashboardPage() {
       <div className="p-8 text-center rounded-2xl border border-red-200 bg-red-50 text-red-900">
         <AlertTriangle className="h-8 w-8 mx-auto text-red-500 mb-2" />
         <h2 className="text-lg font-bold">Department Data Unavailable</h2>
-        <p className="text-sm mt-1 text-red-700">{error || "Could not retrieve records."}</p>
+        <p className="text-sm mt-1 text-red-700">
+          {error || "Could not retrieve records."}
+        </p>
         <Button
           variant="outline"
           size="sm"
@@ -113,7 +118,8 @@ export default function HodDashboardPage() {
             {data.department.name}
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Head of Department: {data.department.head} • {stats.totalStudents} Students • {stats.totalFaculty} Faculty Members
+            Head of Department: {data.department.head} • {stats.totalStudents}{" "}
+            Students • {stats.totalFaculty} Faculty Members
           </p>
         </div>
 
@@ -225,8 +231,12 @@ export default function HodDashboardPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-800">{y.year}</span>
                   <div className="flex items-center gap-3">
-                    <span className="text-slate-500 font-mono">{y.strength} students</span>
-                    <span className="font-bold text-slate-900 font-mono">{y.percentage}% avg</span>
+                    <span className="text-slate-500 font-mono">
+                      {y.strength} students
+                    </span>
+                    <span className="font-bold text-slate-900 font-mono">
+                      {y.percentage}% avg
+                    </span>
                   </div>
                 </div>
                 <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -240,10 +250,19 @@ export default function HodDashboardPage() {
 
             <div className="pt-2 border-t border-slate-100 grid grid-cols-3 gap-2 text-center">
               {data.studentAnalytics.sectionDistribution.map((sec) => (
-                <div key={sec.section} className="p-2.5 rounded-lg bg-yellow-50/50 border border-yellow-200/50">
-                  <div className="text-[10px] font-bold text-yellow-800 uppercase">{sec.section}</div>
-                  <div className="text-sm font-bold text-slate-900 font-mono mt-0.5">{sec.students}</div>
-                  <div className="text-[10px] text-slate-500 font-mono">{sec.attendance}% rate</div>
+                <div
+                  key={sec.section}
+                  className="p-2.5 rounded-lg bg-yellow-50/50 border border-yellow-200/50"
+                >
+                  <div className="text-[10px] font-bold text-yellow-800 uppercase">
+                    {sec.section}
+                  </div>
+                  <div className="text-sm font-bold text-slate-900 font-mono mt-0.5">
+                    {sec.students}
+                  </div>
+                  <div className="text-[10px] text-slate-500 font-mono">
+                    {sec.attendance}% rate
+                  </div>
                 </div>
               ))}
             </div>
@@ -268,31 +287,45 @@ export default function HodDashboardPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                <div className="text-xs font-medium text-slate-500">Total Faculty</div>
+                <div className="text-xs font-medium text-slate-500">
+                  Total Faculty
+                </div>
                 <div className="text-2xl font-bold text-slate-900 font-mono mt-1">
                   {data.facultyAnalytics.total}
                 </div>
-                <div className="text-[10px] text-slate-500 mt-0.5">100% Ph.D./M.Tech</div>
+                <div className="text-[10px] text-slate-500 mt-0.5">
+                  100% Ph.D./M.Tech
+                </div>
               </div>
               <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
-                <div className="text-xs font-medium text-emerald-800">Present Today</div>
+                <div className="text-xs font-medium text-emerald-800">
+                  Present Today
+                </div>
                 <div className="text-2xl font-bold text-emerald-900 font-mono mt-1">
                   {data.facultyAnalytics.presentToday}
                 </div>
-                <div className="text-[10px] text-emerald-700 mt-0.5">Verified biometric</div>
+                <div className="text-[10px] text-emerald-700 mt-0.5">
+                  Verified biometric
+                </div>
               </div>
               <div className="p-3 rounded-xl border border-amber-200 bg-amber-50/50">
-                <div className="text-xs font-medium text-amber-800">On Duty / Leave</div>
+                <div className="text-xs font-medium text-amber-800">
+                  On Duty / Leave
+                </div>
                 <div className="text-2xl font-bold text-amber-900 font-mono mt-1">
                   {data.facultyAnalytics.onLeave}
                 </div>
-                <div className="text-[10px] text-amber-700 mt-0.5">Approved requests</div>
+                <div className="text-[10px] text-amber-700 mt-0.5">
+                  Approved requests
+                </div>
               </div>
             </div>
 
             <div className="p-3.5 rounded-xl border border-slate-200 bg-white">
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="font-semibold text-slate-700">Average Department Teaching Load</span>
+                <span className="font-semibold text-slate-700">
+                  Average Department Teaching Load
+                </span>
                 <span className="font-bold font-mono text-slate-900">
                   {data.facultyAnalytics.averageWorkloadHours} hrs / week
                 </span>
@@ -300,16 +333,22 @@ export default function HodDashboardPage() {
               <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-emerald-500"
-                  style={{ width: `${(data.facultyAnalytics.averageWorkloadHours / 20) * 100}%` }}
+                  style={{
+                    width: `${(data.facultyAnalytics.averageWorkloadHours / 20) * 100}%`,
+                  }}
                 />
               </div>
               <p className="text-[10px] text-slate-500 mt-2">
-                Statutory AICTE norm: 14–16 hrs/week for Associate/Professors, 16–18 hrs/week for Assistant Professors.
+                Statutory AICTE norm: 14–16 hrs/week for Associate/Professors,
+                16–18 hrs/week for Assistant Professors.
               </p>
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <Link href="/hod/timetable" className="text-xs font-medium text-yellow-800 hover:text-yellow-950 flex items-center gap-1">
+              <Link
+                href="/hod/timetable"
+                className="text-xs font-medium text-yellow-800 hover:text-yellow-950 flex items-center gap-1"
+              >
                 <Calendar className="h-3.5 w-3.5" />
                 Inspect Department Timetable Grid
               </Link>
@@ -340,13 +379,24 @@ export default function HodDashboardPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-slate-700">Current Week Daily Rates:</div>
+              <div className="text-xs font-semibold text-slate-700">
+                Current Week Daily Rates:
+              </div>
               <div className="grid grid-cols-5 gap-2">
                 {data.attendanceTrends.daily.map((d) => (
-                  <div key={d.day} className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-center">
-                    <div className="text-[11px] font-semibold text-slate-600">{d.day}</div>
-                    <div className="text-base font-bold font-mono text-slate-900 mt-1">{d.rate}%</div>
-                    <div className="text-[9px] text-emerald-600 font-semibold mt-0.5">Compliant</div>
+                  <div
+                    key={d.day}
+                    className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-center"
+                  >
+                    <div className="text-[11px] font-semibold text-slate-600">
+                      {d.day}
+                    </div>
+                    <div className="text-base font-bold font-mono text-slate-900 mt-1">
+                      {d.rate}%
+                    </div>
+                    <div className="text-[9px] text-emerald-600 font-semibold mt-0.5">
+                      Compliant
+                    </div>
                   </div>
                 ))}
               </div>
@@ -356,16 +406,20 @@ export default function HodDashboardPage() {
               <ShieldAlert className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <div className="text-xs font-bold text-rose-900">
-                  {stats.studentsShortageCount} Students Flagged Below 75% Attendance
+                  {stats.studentsShortageCount} Students Flagged Below 75%
+                  Attendance
                 </div>
                 <p className="text-[11px] text-rose-700 mt-0.5">
-                  University examination regulations require minimum 75% aggregate attendance. Automated advisory notices have been generated for parent communication.
+                  University examination regulations require minimum 75%
+                  aggregate attendance. Automated advisory notices have been
+                  generated for parent communication.
                 </p>
                 <Link
                   href="/hod/attendance"
                   className="inline-flex items-center text-xs font-bold text-rose-900 hover:underline mt-2 gap-1"
                 >
-                  Review Shortage Roster & Issue Warnings <ArrowRight className="h-3 w-3" />
+                  Review Shortage Roster & Issue Warnings{" "}
+                  <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
             </div>
@@ -390,10 +444,18 @@ export default function HodDashboardPage() {
                   className="flex items-start gap-3 p-2.5 rounded-lg border border-slate-100 hover:bg-yellow-50/30 transition-colors"
                 >
                   <div className="h-8 w-8 rounded-lg bg-yellow-100 text-yellow-950 flex items-center justify-center shrink-0 border border-yellow-300">
-                    {act.type === "attendance" && <CalendarCheck className="h-4 w-4" />}
-                    {act.type === "faculty" && <UserCheck className="h-4 w-4" />}
-                    {act.type === "student" && <GraduationCap className="h-4 w-4" />}
-                    {act.type === "request" && <FileCheck2 className="h-4 w-4" />}
+                    {act.type === "attendance" && (
+                      <CalendarCheck className="h-4 w-4" />
+                    )}
+                    {act.type === "faculty" && (
+                      <UserCheck className="h-4 w-4" />
+                    )}
+                    {act.type === "student" && (
+                      <GraduationCap className="h-4 w-4" />
+                    )}
+                    {act.type === "request" && (
+                      <FileCheck2 className="h-4 w-4" />
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
@@ -434,8 +496,12 @@ export default function HodDashboardPage() {
                   <GraduationCap className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-900">Student Roster</div>
-                  <div className="text-[10px] text-slate-500">720 CSE Students</div>
+                  <div className="text-xs font-bold text-slate-900">
+                    Student Roster
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    720 CSE Students
+                  </div>
                 </div>
               </div>
               <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
@@ -450,8 +516,12 @@ export default function HodDashboardPage() {
                   <Users className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-900">Faculty Directory</div>
-                  <div className="text-[10px] text-slate-500">28 Faculty Members</div>
+                  <div className="text-xs font-bold text-slate-900">
+                    Faculty Directory
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    28 Faculty Members
+                  </div>
                 </div>
               </div>
               <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
@@ -466,8 +536,12 @@ export default function HodDashboardPage() {
                   <CalendarCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-900">Attendance Monitoring</div>
-                  <div className="text-[10px] text-slate-500">88.4% Average Rate</div>
+                  <div className="text-xs font-bold text-slate-900">
+                    Attendance Monitoring
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    88.4% Average Rate
+                  </div>
                 </div>
               </div>
               <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
@@ -482,8 +556,12 @@ export default function HodDashboardPage() {
                   <Calendar className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-900">Timetable Grid</div>
-                  <div className="text-[10px] text-slate-500">Class & Lab Schedules</div>
+                  <div className="text-xs font-bold text-slate-900">
+                    Timetable Grid
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    Class & Lab Schedules
+                  </div>
                 </div>
               </div>
               <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />

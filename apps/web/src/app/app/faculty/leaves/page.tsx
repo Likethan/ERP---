@@ -9,7 +9,13 @@ import {
   FacultyLeaveBalance,
   FacultyLeaveType,
 } from "@/types/teaching";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
@@ -35,7 +41,11 @@ export default function FacultyLeaveManagementPage() {
   const { showToast } = useToast();
 
   const userRole = activePersona?.role || user?.roles?.[0]?.name || "FACULTY";
-  const isHOD = userRole === "HOD" || userRole === "PRINCIPAL" || userRole === "ADMIN" || userRole === "SUPER_ADMIN";
+  const isHOD =
+    userRole === "HOD" ||
+    userRole === "PRINCIPAL" ||
+    userRole === "ADMIN" ||
+    userRole === "SUPER_ADMIN";
 
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState<FacultyLeaveBalance[]>([]);
@@ -58,8 +68,11 @@ export default function FacultyLeaveManagementPage() {
 
   // HOD Review Modal
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState<FacultyLeaveApplication | null>(null);
-  const [reviewAction, setReviewAction] = useState<"APPROVE" | "REJECT">("APPROVE");
+  const [selectedLeave, setSelectedLeave] =
+    useState<FacultyLeaveApplication | null>(null);
+  const [reviewAction, setReviewAction] = useState<"APPROVE" | "REJECT">(
+    "APPROVE",
+  );
   const [hodRemarks, setHodRemarks] = useState("");
   const [reviewing, setReviewing] = useState(false);
 
@@ -74,7 +87,11 @@ export default function FacultyLeaveManagementPage() {
       if (leavesRes.success) setLeaves(leavesRes.data);
     } catch (err) {
       console.error(err);
-      showToast({ type: "error", title: "Error", message: "Failed to load leave records." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to load leave records.",
+      });
     } finally {
       setLoading(false);
     }
@@ -92,7 +109,11 @@ export default function FacultyLeaveManagementPage() {
   const handleApplyLeave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.reason.trim()) {
-      showToast({ type: "error", title: "Validation Error", message: "Reason is required." });
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Reason is required.",
+      });
       return;
     }
     try {
@@ -101,7 +122,8 @@ export default function FacultyLeaveManagementPage() {
         facultyId: activePersona?.id || "fac-cse-01",
         facultyName: activePersona?.name || "Dr. Rajesh Sharma",
         employeeCode: "EMP-CSE-01",
-        department: activePersona?.department || "Computer Science & Engineering",
+        department:
+          activePersona?.department || "Computer Science & Engineering",
         leaveType: formData.leaveType,
         startDate: formData.startDate,
         endDate: formData.endDate,
@@ -116,14 +138,19 @@ export default function FacultyLeaveManagementPage() {
         showToast({
           type: "success",
           title: "Leave Application Submitted",
-          message: "Application routed to Head of Department (Dr. K. S. Anand) for endorsement.",
+          message:
+            "Application routed to Head of Department (Dr. K. S. Anand) for endorsement.",
         });
         setApplyModalOpen(false);
         setFormData({ ...formData, reason: "" });
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Application Failed", message: err.message });
+      showToast({
+        type: "error",
+        title: "Application Failed",
+        message: err.message,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -137,20 +164,28 @@ export default function FacultyLeaveManagementPage() {
       const res = await teachingService.processFacultyLeaveHOD(
         selectedLeave.id,
         reviewAction,
-        hodRemarks || (reviewAction === "APPROVE" ? "Approved by HOD. Substitute noted." : "Rejected by HOD.")
+        hodRemarks ||
+          (reviewAction === "APPROVE"
+            ? "Approved by HOD. Substitute noted."
+            : "Rejected by HOD."),
       );
 
       if (res.success) {
         showToast({
           type: "success",
-          title: reviewAction === "APPROVE" ? "Leave Approved" : "Leave Rejected",
+          title:
+            reviewAction === "APPROVE" ? "Leave Approved" : "Leave Rejected",
           message: `Application updated. Faculty balance adjusted accordingly.`,
         });
         setReviewModalOpen(false);
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Action Failed", message: err.message });
+      showToast({
+        type: "error",
+        title: "Action Failed",
+        message: err.message,
+      });
     } finally {
       setReviewing(false);
     }
@@ -169,13 +204,19 @@ export default function FacultyLeaveManagementPage() {
             Apply for Faculty Leave
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Dedicated institutional faculty leave portal featuring balance accrual tracking, substitute class arrangements, and HOD endorsement workflows.
+            Dedicated institutional faculty leave portal featuring balance
+            accrual tracking, substitute class arrangements, and HOD endorsement
+            workflows.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link href="/app/attendance/leaves">
-            <Button variant="outline" size="sm" leftIcon={<UserCheck className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<UserCheck className="h-3.5 w-3.5" />}
+            >
               Student Leave Approvals
             </Button>
           </Link>
@@ -193,7 +234,10 @@ export default function FacultyLeaveManagementPage() {
       {/* Leave Balances Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {balances.map((b) => (
-          <Card key={b.leaveType} className="hover:border-yellow-300 transition-all">
+          <Card
+            key={b.leaveType}
+            className="hover:border-yellow-300 transition-all"
+          >
             <CardContent className="p-4 space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-slate-800">{b.label}</span>
@@ -202,8 +246,12 @@ export default function FacultyLeaveManagementPage() {
                 </span>
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold font-mono text-slate-900">{b.availableDays}</span>
-                <span className="text-xs text-slate-500 font-medium">Days Available</span>
+                <span className="text-2xl font-bold font-mono text-slate-900">
+                  {b.availableDays}
+                </span>
+                <span className="text-xs text-slate-500 font-medium">
+                  Days Available
+                </span>
               </div>
               <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                 <div
@@ -211,7 +259,9 @@ export default function FacultyLeaveManagementPage() {
                   style={{
                     width: `${Math.min(
                       100,
-                      Math.round((b.availableDays / (b.allocatedDays || 1)) * 100)
+                      Math.round(
+                        (b.availableDays / (b.allocatedDays || 1)) * 100,
+                      ),
                     )}%`,
                   }}
                 />
@@ -227,7 +277,8 @@ export default function FacultyLeaveManagementPage() {
           <div>
             <CardTitle>My Faculty Leave Applications</CardTitle>
             <CardDescription>
-              Audit ledger of leave requests, substitute teacher assignments, and HOD approvals.
+              Audit ledger of leave requests, substitute teacher assignments,
+              and HOD approvals.
             </CardDescription>
           </div>
 
@@ -273,7 +324,10 @@ export default function FacultyLeaveManagementPage() {
                   </tr>
                 ) : (
                   filteredLeaves.map((l) => (
-                    <tr key={l.id} className="hover:bg-yellow-50/20 transition-colors">
+                    <tr
+                      key={l.id}
+                      className="hover:bg-yellow-50/20 transition-colors"
+                    >
                       <td className="py-3.5 px-4 font-semibold text-slate-900">
                         {l.leaveType.replace(/_/g, " ")}
                         <div className="text-[11px] text-slate-500 font-normal">
@@ -282,7 +336,9 @@ export default function FacultyLeaveManagementPage() {
                       </td>
 
                       <td className="py-3.5 px-4 font-mono">
-                        <div className="font-bold text-slate-900">{l.totalDays} Day{l.totalDays > 1 ? "s" : ""}</div>
+                        <div className="font-bold text-slate-900">
+                          {l.totalDays} Day{l.totalDays > 1 ? "s" : ""}
+                        </div>
                         <div className="text-[11px] text-slate-500">
                           {l.startDate} to {l.endDate}
                         </div>
@@ -293,9 +349,12 @@ export default function FacultyLeaveManagementPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-slate-900">{l.substituteFacultyName}</div>
+                        <div className="font-medium text-slate-900">
+                          {l.substituteFacultyName}
+                        </div>
                         <div className="text-[11px] text-emerald-700 flex items-center gap-1">
-                          <CheckCircle2 className="h-3 w-3" /> Class Swaps Arranged
+                          <CheckCircle2 className="h-3 w-3" /> Class Swaps
+                          Arranged
                         </div>
                       </td>
 
@@ -355,10 +414,17 @@ export default function FacultyLeaveManagementPage() {
         <form onSubmit={handleApplyLeave} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Leave Category</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Leave Category
+              </label>
               <select
                 value={formData.leaveType}
-                onChange={(e) => setFormData({ ...formData, leaveType: e.target.value as FacultyLeaveType })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    leaveType: e.target.value as FacultyLeaveType,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="CASUAL">Casual Leave (CL)</option>
@@ -370,14 +436,21 @@ export default function FacultyLeaveManagementPage() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-700">Total Days Requested</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Total Days Requested
+              </label>
               <Input
                 type="number"
                 min="0.5"
                 step="0.5"
                 max="30"
                 value={formData.totalDays}
-                onChange={(e) => setFormData({ ...formData, totalDays: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    totalDays: Number(e.target.value),
+                  })
+                }
                 required
               />
             </div>
@@ -385,33 +458,45 @@ export default function FacultyLeaveManagementPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">From Date</label>
+              <label className="text-xs font-semibold text-slate-700">
+                From Date
+              </label>
               <Input
                 type="date"
                 value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, startDate: e.target.value })
+                }
                 required
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">To Date</label>
+              <label className="text-xs font-semibold text-slate-700">
+                To Date
+              </label>
               <Input
                 type="date"
                 value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, endDate: e.target.value })
+                }
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Justification / Reason for Leave</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Justification / Reason for Leave
+            </label>
             <textarea
               rows={3}
               placeholder="State official reason for leave request..."
               className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               value={formData.reason}
-              onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, reason: e.target.value })
+              }
               required
             />
           </div>
@@ -423,21 +508,31 @@ export default function FacultyLeaveManagementPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-700">Nominated Colleague for Lecture Swap</label>
+              <label className="text-[11px] font-semibold text-slate-700">
+                Nominated Colleague for Lecture Swap
+              </label>
               <select
                 value={formData.substituteFacultyName}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
                     substituteFacultyName: e.target.value,
-                    substituteFacultyId: e.target.value.includes("Ramesh") ? "fac-cse-02" : "fac-cse-03",
+                    substituteFacultyId: e.target.value.includes("Ramesh")
+                      ? "fac-cse-02"
+                      : "fac-cse-03",
                   })
                 }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
-                <option value="Dr. Ramesh Sundaram">Dr. Ramesh Sundaram (Associate Professor, CSE)</option>
-                <option value="Dr. Priya Natarajan">Dr. Priya Natarajan (Assistant Professor, CSE)</option>
-                <option value="Prof. Anand V.">Prof. Anand V. (Assistant Professor, CSE)</option>
+                <option value="Dr. Ramesh Sundaram">
+                  Dr. Ramesh Sundaram (Associate Professor, CSE)
+                </option>
+                <option value="Dr. Priya Natarajan">
+                  Dr. Priya Natarajan (Assistant Professor, CSE)
+                </option>
+                <option value="Prof. Anand V.">
+                  Prof. Anand V. (Assistant Professor, CSE)
+                </option>
               </select>
             </div>
 
@@ -446,20 +541,36 @@ export default function FacultyLeaveManagementPage() {
                 type="checkbox"
                 id="subArranged"
                 checked={formData.substituteClassesArranged}
-                onChange={(e) => setFormData({ ...formData, substituteClassesArranged: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    substituteClassesArranged: e.target.checked,
+                  })
+                }
                 className="h-4 w-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-400"
               />
               <label htmlFor="subArranged" className="text-xs text-slate-700">
-                I have coordinated with the colleague above to cover all scheduled lecture hours.
+                I have coordinated with the colleague above to cover all
+                scheduled lecture hours.
               </label>
             </div>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setApplyModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setApplyModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={submitting}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={submitting}
+            >
               {submitting ? "Submitting..." : "Submit Application to HOD"}
             </Button>
           </div>
@@ -474,14 +585,28 @@ export default function FacultyLeaveManagementPage() {
       >
         <form onSubmit={handleProcessHOD} className="space-y-4">
           <div className="text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200">
-            <div>Faculty: <strong className="text-slate-900">{selectedLeave?.facultyName}</strong> ({selectedLeave?.employeeCode})</div>
-            <div>Duration: <strong>{selectedLeave?.totalDays} Days</strong> ({selectedLeave?.startDate} to {selectedLeave?.endDate})</div>
-            <div>Substitute: <strong>{selectedLeave?.substituteFacultyName}</strong></div>
+            <div>
+              Faculty:{" "}
+              <strong className="text-slate-900">
+                {selectedLeave?.facultyName}
+              </strong>{" "}
+              ({selectedLeave?.employeeCode})
+            </div>
+            <div>
+              Duration: <strong>{selectedLeave?.totalDays} Days</strong> (
+              {selectedLeave?.startDate} to {selectedLeave?.endDate})
+            </div>
+            <div>
+              Substitute:{" "}
+              <strong>{selectedLeave?.substituteFacultyName}</strong>
+            </div>
             <div className="mt-1">Reason: "{selectedLeave?.reason}"</div>
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">HOD Decision</label>
+            <label className="text-xs font-semibold text-slate-700">
+              HOD Decision
+            </label>
             <div className="grid grid-cols-2 gap-3 mt-1">
               <Button
                 type="button"
@@ -505,7 +630,9 @@ export default function FacultyLeaveManagementPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Departmental Remarks / Endorsement Notes</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Departmental Remarks / Endorsement Notes
+            </label>
             <Input
               placeholder="e.g. Approved. Lecture swaps confirmed with Dr. Ramesh Sundaram."
               value={hodRemarks}
@@ -514,10 +641,20 @@ export default function FacultyLeaveManagementPage() {
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setReviewModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setReviewModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={reviewing}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={reviewing}
+            >
               {reviewing ? "Processing..." : "Submit Endorsement"}
             </Button>
           </div>

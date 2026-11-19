@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { hodService } from "@/services/hod.service";
 import { FacultyDetailView } from "@/types/domain";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
@@ -83,12 +89,19 @@ export default function HodFacultyDetailPage({
     return (
       <div className="p-8 text-center rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 max-w-xl mx-auto my-12">
         <ShieldAlert className="h-10 w-10 mx-auto text-rose-600 mb-2" />
-        <h2 className="text-lg font-bold">Cross-Department Access Prohibited</h2>
+        <h2 className="text-lg font-bold">
+          Cross-Department Access Prohibited
+        </h2>
         <p className="text-xs text-rose-700 mt-1 leading-relaxed">
-          As Head of Department for {deptName}, you do not have permission to view faculty profiles belonging to other academic departments.
+          As Head of Department for {deptName}, you do not have permission to
+          view faculty profiles belonging to other academic departments.
         </p>
         <Link href="/hod/faculty" className="inline-block mt-4">
-          <Button variant="primary" size="sm" className="bg-yellow-400 text-slate-950 hover:bg-yellow-500 font-bold">
+          <Button
+            variant="primary"
+            size="sm"
+            className="bg-yellow-400 text-slate-950 hover:bg-yellow-500 font-bold"
+          >
             Return to Department Faculty Roster
           </Button>
         </Link>
@@ -111,14 +124,21 @@ export default function HodFacultyDetailPage({
 
   // Calculate experience in years from joiningDate
   const joinYear = new Date(faculty.joiningDate).getFullYear();
-  const experienceYears = Math.max(1, new Date().getFullYear() - (joinYear || 2020));
+  const experienceYears = Math.max(
+    1,
+    new Date().getFullYear() - (joinYear || 2020),
+  );
 
   return (
     <div className="space-y-6">
       {/* Back Button */}
       <div className="flex items-center gap-2">
         <Link href="/hod/faculty">
-          <Button variant="ghost" size="sm" className="text-xs text-slate-600 hover:text-slate-950">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-slate-600 hover:text-slate-950"
+          >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Department Faculty
           </Button>
@@ -163,19 +183,25 @@ export default function HodFacultyDetailPage({
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 text-center">
             <div className="p-2.5 rounded-xl bg-yellow-50/60 border border-yellow-200/60">
-              <div className="text-[10px] text-slate-500 uppercase font-semibold">Weekly Load</div>
+              <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                Weekly Load
+              </div>
               <div className="text-lg font-bold font-mono text-slate-900 mt-0.5">
                 {faculty.teachingLoadHours} hrs
               </div>
             </div>
             <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div className="text-[10px] text-slate-500 uppercase font-semibold">Experience</div>
+              <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                Experience
+              </div>
               <div className="text-lg font-bold font-mono text-slate-900 mt-0.5">
                 {experienceYears}+ yrs
               </div>
             </div>
             <div className="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/60 col-span-2 sm:col-span-1">
-              <div className="text-[10px] text-emerald-800 uppercase font-semibold">Attendance</div>
+              <div className="text-[10px] text-emerald-800 uppercase font-semibold">
+                Attendance
+              </div>
               <div className="text-lg font-bold font-mono text-emerald-900 mt-0.5">
                 97.8%
               </div>
@@ -195,15 +221,21 @@ export default function HodFacultyDetailPage({
           <CardContent className="space-y-2 text-xs">
             <div>
               <span className="text-slate-500">Highest Qualification:</span>{" "}
-              <span className="font-semibold text-slate-900">{faculty.qualification}</span>
+              <span className="font-semibold text-slate-900">
+                {faculty.qualification}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Domain Specialization:</span>{" "}
-              <span className="font-semibold text-slate-900">{faculty.specialization}</span>
+              <span className="font-semibold text-slate-900">
+                {faculty.specialization}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Date of Joining:</span>{" "}
-              <span className="font-mono text-slate-800">{faculty.joiningDate}</span>
+              <span className="font-mono text-slate-800">
+                {faculty.joiningDate}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -221,11 +253,15 @@ export default function HodFacultyDetailPage({
             </div>
             <div className="flex items-center gap-1.5 text-slate-700">
               <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              <span>Course files & outcome assessment models approved by HOD</span>
+              <span>
+                Course files & outcome assessment models approved by HOD
+              </span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-700">
               <Award className="h-4 w-4 text-yellow-600" />
-              <span>NBA Criterion 5 (Faculty Contributions) portfolio updated</span>
+              <span>
+                NBA Criterion 5 (Faculty Contributions) portfolio updated
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -242,7 +278,8 @@ export default function HodFacultyDetailPage({
                 : "border-transparent text-slate-500 hover:text-slate-900"
             }`}
           >
-            Assigned Subjects & Sections ({faculty.assignedSubjects?.length || 0})
+            Assigned Subjects & Sections (
+            {faculty.assignedSubjects?.length || 0})
           </button>
           <button
             onClick={() => setActiveTab("workload")}
@@ -272,12 +309,16 @@ export default function HodFacultyDetailPage({
             <CardHeader className="pb-3">
               <CardTitle>Current Semester Instructional Allocations</CardTitle>
               <CardDescription>
-                Subjects, enrolled student counts, and sections assigned to {faculty.firstName} {faculty.lastName}.
+                Subjects, enrolled student counts, and sections assigned to{" "}
+                {faculty.firstName} {faculty.lastName}.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {(!faculty.assignedSubjects || faculty.assignedSubjects.length === 0) ? (
-                <p className="text-xs text-slate-500">No course offerings currently assigned.</p>
+              {!faculty.assignedSubjects ||
+              faculty.assignedSubjects.length === 0 ? (
+                <p className="text-xs text-slate-500">
+                  No course offerings currently assigned.
+                </p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left">
@@ -294,18 +335,27 @@ export default function HodFacultyDetailPage({
                     <tbody className="divide-y divide-slate-100">
                       {faculty.assignedSubjects.map((sub, idx) => (
                         <tr key={idx} className="hover:bg-yellow-50/30">
-                          <td className="p-3 font-mono font-bold text-slate-900">{sub.code}</td>
-                          <td className="p-3 font-medium text-slate-800">{sub.name}</td>
+                          <td className="p-3 font-mono font-bold text-slate-900">
+                            {sub.code}
+                          </td>
+                          <td className="p-3 font-medium text-slate-800">
+                            {sub.name}
+                          </td>
                           <td className="p-3 font-mono">Sem {sub.semester}</td>
                           <td className="p-3">
-                            <Badge variant="outline" className="font-mono text-[10px]">
+                            <Badge
+                              variant="outline"
+                              className="font-mono text-[10px]"
+                            >
                               Sec {sub.section}
                             </Badge>
                           </td>
                           <td className="p-3 text-right font-mono font-bold text-slate-900">
                             {sub.studentCount}
                           </td>
-                          <td className="p-3 text-slate-500">Hall 302, Academic Block A</td>
+                          <td className="p-3 text-slate-500">
+                            Hall 302, Academic Block A
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -322,21 +372,28 @@ export default function HodFacultyDetailPage({
             <CardHeader className="pb-3">
               <CardTitle>Faculty Teaching Load Breakdown</CardTitle>
               <CardDescription>
-                Weekly contact hours compared against statutory AICTE guidelines.
+                Weekly contact hours compared against statutory AICTE
+                guidelines.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center">
                   <div className="text-xs text-slate-500">Theory Lectures</div>
-                  <div className="text-xl font-bold font-mono text-slate-900 mt-1">10 hrs/wk</div>
+                  <div className="text-xl font-bold font-mono text-slate-900 mt-1">
+                    10 hrs/wk
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center">
                   <div className="text-xs text-slate-500">Lab Practicals</div>
-                  <div className="text-xl font-bold font-mono text-slate-900 mt-1">4 hrs/wk</div>
+                  <div className="text-xl font-bold font-mono text-slate-900 mt-1">
+                    4 hrs/wk
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50 text-center">
-                  <div className="text-xs text-emerald-800 font-semibold">Total Weekly Load</div>
+                  <div className="text-xs text-emerald-800 font-semibold">
+                    Total Weekly Load
+                  </div>
                   <div className="text-xl font-bold font-mono text-emerald-900 mt-1">
                     {faculty.teachingLoadHours} hrs/wk
                   </div>
@@ -344,15 +401,20 @@ export default function HodFacultyDetailPage({
               </div>
 
               <div className="p-3.5 rounded-xl border border-slate-200 bg-white">
-                <div className="text-xs font-semibold text-slate-800 mb-2">Workload Compliance Status</div>
+                <div className="text-xs font-semibold text-slate-800 mb-2">
+                  Workload Compliance Status
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" />
                   <span className="text-xs font-bold text-emerald-800">
-                    Compliant with AICTE workload norms for {faculty.designation}
+                    Compliant with AICTE workload norms for{" "}
+                    {faculty.designation}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
-                  Permitted teaching load range: 12 to 16 hours. The faculty has optimal capacity for departmental project guidance and research papers.
+                  Permitted teaching load range: 12 to 16 hours. The faculty has
+                  optimal capacity for departmental project guidance and
+                  research papers.
                 </p>
               </div>
             </CardContent>
@@ -365,26 +427,43 @@ export default function HodFacultyDetailPage({
             <CardHeader className="pb-3">
               <CardTitle>Biometric Attendance Summary & Leaves</CardTitle>
               <CardDescription>
-                Faculty institutional presence log for the current academic session.
+                Faculty institutional presence log for the current academic
+                session.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase">Working Days</div>
-                  <div className="text-lg font-bold font-mono text-slate-900 mt-1">90 Days</div>
+                  <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                    Working Days
+                  </div>
+                  <div className="text-lg font-bold font-mono text-slate-900 mt-1">
+                    90 Days
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
-                  <div className="text-[10px] text-emerald-800 font-semibold uppercase">Present Days</div>
-                  <div className="text-lg font-bold font-mono text-emerald-900 mt-1">88 Days</div>
+                  <div className="text-[10px] text-emerald-800 font-semibold uppercase">
+                    Present Days
+                  </div>
+                  <div className="text-lg font-bold font-mono text-emerald-900 mt-1">
+                    88 Days
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-amber-200 bg-amber-50/50">
-                  <div className="text-[10px] text-amber-800 font-semibold uppercase">Leaves Taken</div>
-                  <div className="text-lg font-bold font-mono text-amber-900 mt-1">2 Days</div>
+                  <div className="text-[10px] text-amber-800 font-semibold uppercase">
+                    Leaves Taken
+                  </div>
+                  <div className="text-lg font-bold font-mono text-amber-900 mt-1">
+                    2 Days
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-sky-200 bg-sky-50/50">
-                  <div className="text-[10px] text-sky-800 font-semibold uppercase">Attendance %</div>
-                  <div className="text-lg font-bold font-mono text-sky-900 mt-1">97.8%</div>
+                  <div className="text-[10px] text-sky-800 font-semibold uppercase">
+                    Attendance %
+                  </div>
+                  <div className="text-lg font-bold font-mono text-sky-900 mt-1">
+                    97.8%
+                  </div>
                 </div>
               </div>
             </CardContent>

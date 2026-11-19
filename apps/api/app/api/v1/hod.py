@@ -4,7 +4,6 @@ Provides department-scoped access for Department Heads with strict RBAC enforcem
 Ensures HOD can only access records belonging to their assigned academic department.
 """
 
-from datetime import date, datetime
 from typing import Annotated, Any
 from uuid import UUID
 
@@ -15,13 +14,12 @@ from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db_session
 from app.core.deps import get_current_active_user, get_tenant_context
-from app.core.exceptions import PermissionDeniedException
 from app.core.tenant import TenantContext
-from app.models.academics import CourseOffering, Subject, TimetableEntry
-from app.models.attendance import AttendanceAlert, AttendanceRecord, AttendanceSession
+from app.models.academics import CourseOffering, Subject
+from app.models.attendance import AttendanceAlert
 from app.models.core import Department, Program
 from app.models.people import FacultyProfile, StudentProfile, User
-from app.schemas.common import ApiResponse, PaginatedResponse
+from app.schemas.common import ApiResponse
 
 router = APIRouter(prefix="/hod", tags=["HOD Portal"])
 

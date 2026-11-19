@@ -120,11 +120,7 @@ export function resolveDemoPersona(raw: string): DemoPersona | null {
   }
 
   // 7. Head of Department identifiers
-  if (
-    id.includes("hod") ||
-    id.includes("anand") ||
-    id.startsWith("hod-")
-  ) {
+  if (id.includes("hod") || id.includes("anand") || id.startsWith("hod-")) {
     return DEMO_PERSONAS.find((p) => p.id === "user-hod-cse-01") || null;
   }
 
@@ -149,7 +145,11 @@ export function resolveDemoPersona(raw: string): DemoPersona | null {
   }
 
   // 10. Secondary portals
-  if (id.includes("account") || id.includes("bursar") || id.includes("finance")) {
+  if (
+    id.includes("account") ||
+    id.includes("bursar") ||
+    id.includes("finance")
+  ) {
     return DEMO_PERSONAS.find((p) => p.id === "user-accounts-01") || null;
   }
   if (id.includes("placement") || id.includes("tpo")) {

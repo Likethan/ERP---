@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { teachingService } from "@/services/teaching.service";
 import { CourseStudyMaterial, MaterialFileType } from "@/types/teaching";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
@@ -34,7 +40,11 @@ export default function StudyMaterialsPage() {
   const { showToast } = useToast();
 
   const userRole = activePersona?.role || user?.roles?.[0]?.name || "STUDENT";
-  const isFaculty = userRole === "FACULTY" || userRole === "HOD" || userRole === "ADMIN" || userRole === "SUPER_ADMIN";
+  const isFaculty =
+    userRole === "FACULTY" ||
+    userRole === "HOD" ||
+    userRole === "ADMIN" ||
+    userRole === "SUPER_ADMIN";
 
   const [loading, setLoading] = useState(true);
   const [materials, setMaterials] = useState<CourseStudyMaterial[]>([]);
@@ -73,7 +83,11 @@ export default function StudyMaterialsPage() {
       }
     } catch (err) {
       console.error(err);
-      showToast({ type: "error", title: "Error", message: "Failed to load materials." });
+      showToast({
+        type: "error",
+        title: "Error",
+        message: "Failed to load materials.",
+      });
     } finally {
       setLoading(false);
     }
@@ -90,19 +104,23 @@ export default function StudyMaterialsPage() {
       (m) =>
         m.title.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q) ||
-        m.fileName.toLowerCase().includes(q)
+        m.fileName.toLowerCase().includes(q),
     );
   }, [materials, searchQuery]);
 
   const totalDownloads = useMemo(
     () => materials.reduce((acc, m) => acc + m.downloadCount, 0),
-    [materials]
+    [materials],
   );
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim()) {
-      showToast({ type: "error", title: "Validation Error", message: "Title is required." });
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: "Title is required.",
+      });
       return;
     }
     try {
@@ -116,8 +134,11 @@ export default function StudyMaterialsPage() {
         title: formData.title,
         description: formData.description,
         materialType: formData.materialType,
-        fileUrl: formData.fileUrl || `/assets/materials/${formData.fileName || "document.pdf"}`,
-        fileName: formData.fileName || `${formData.title.replace(/\s+/g, "_")}.pdf`,
+        fileUrl:
+          formData.fileUrl ||
+          `/assets/materials/${formData.fileName || "document.pdf"}`,
+        fileName:
+          formData.fileName || `${formData.title.replace(/\s+/g, "_")}.pdf`,
         fileSize: formData.fileSize || "1.8 MB",
         uploadedByFacultyId: activePersona?.id || "fac-cse-01",
         uploadedByFacultyName: activePersona?.name || "Dr. Rajesh Sharma",
@@ -127,7 +148,8 @@ export default function StudyMaterialsPage() {
         showToast({
           type: "success",
           title: "Study Material Uploaded",
-          message: "Material published and immediately accessible by enrolled students.",
+          message:
+            "Material published and immediately accessible by enrolled students.",
         });
         setUploadModalOpen(false);
         setFormData({
@@ -140,7 +162,11 @@ export default function StudyMaterialsPage() {
         await loadData();
       }
     } catch (err: any) {
-      showToast({ type: "error", title: "Upload Failed", message: err.message });
+      showToast({
+        type: "error",
+        title: "Upload Failed",
+        message: err.message,
+      });
     } finally {
       setUploading(false);
     }
@@ -154,7 +180,9 @@ export default function StudyMaterialsPage() {
       message: `Opening ${mat.fileName} (${mat.fileSize}).`,
     });
     setMaterials((prev) =>
-      prev.map((m) => (m.id === mat.id ? { ...m, downloadCount: m.downloadCount + 1 } : m))
+      prev.map((m) =>
+        m.id === mat.id ? { ...m, downloadCount: m.downloadCount + 1 } : m,
+      ),
     );
   };
 
@@ -188,7 +216,8 @@ export default function StudyMaterialsPage() {
             Course Study Materials
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Curriculum slide decks, lecture notes, lab manuals, question banks, and reference links organized by course module.
+            Curriculum slide decks, lecture notes, lab manuals, question banks,
+            and reference links organized by course module.
           </p>
         </div>
 
@@ -241,9 +270,15 @@ export default function StudyMaterialsPage() {
               onChange={(e) => setSelectedCourse(e.target.value)}
               className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
             >
-              <option value="co-cs301-a">CS301 — Data Structures & Algorithms (Sec A)</option>
-              <option value="co-cs501-a">CS501 — Compiler Design (Sec A)</option>
-              <option value="co-cs402-b">CS402 — Operating Systems (Sec B)</option>
+              <option value="co-cs301-a">
+                CS301 — Data Structures & Algorithms (Sec A)
+              </option>
+              <option value="co-cs501-a">
+                CS501 — Compiler Design (Sec A)
+              </option>
+              <option value="co-cs402-b">
+                CS402 — Operating Systems (Sec B)
+              </option>
             </select>
           </div>
 
@@ -293,14 +328,19 @@ export default function StudyMaterialsPage() {
       {/* Materials Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {loading ? (
-          <div className="col-span-2 p-8 text-center text-xs text-slate-400">Loading study materials...</div>
+          <div className="col-span-2 p-8 text-center text-xs text-slate-400">
+            Loading study materials...
+          </div>
         ) : filteredMaterials.length === 0 ? (
           <div className="col-span-2 p-8 text-center text-xs text-slate-400">
             No materials found matching criteria.
           </div>
         ) : (
           filteredMaterials.map((mat) => (
-            <Card key={mat.id} className="hover:border-yellow-300 transition-all">
+            <Card
+              key={mat.id}
+              className="hover:border-yellow-300 transition-all"
+            >
               <CardContent className="p-5 flex flex-col justify-between h-full space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-3">
@@ -309,7 +349,10 @@ export default function StudyMaterialsPage() {
                         {getFileIcon(mat.materialType)}
                       </div>
                       <div>
-                        <Badge variant="outline" className="text-[10px] font-mono">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] font-mono"
+                        >
                           Unit {mat.unitNumber} • {mat.materialType}
                         </Badge>
                         <h3 className="text-sm font-bold text-slate-900 mt-1 leading-snug">
@@ -326,7 +369,8 @@ export default function StudyMaterialsPage() {
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <div className="text-[11px] text-slate-500">
-                    <span>{mat.fileName}</span> • <span className="font-mono">{mat.fileSize}</span>
+                    <span>{mat.fileName}</span> •{" "}
+                    <span className="font-mono">{mat.fileSize}</span>
                     <div className="text-[10px] text-slate-400 mt-0.5">
                       Uploaded by {mat.uploadedByFacultyName}
                     </div>
@@ -365,21 +409,32 @@ export default function StudyMaterialsPage() {
       >
         <form onSubmit={handleUpload} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-slate-700">Document Title</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Document Title
+            </label>
             <Input
               placeholder="e.g. Unit 3: Graph Algorithms & Flow Visualizer"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Syllabus Unit</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Syllabus Unit
+              </label>
               <select
                 value={formData.unitNumber}
-                onChange={(e) => setFormData({ ...formData, unitNumber: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    unitNumber: Number(e.target.value),
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="1">Unit 1: Linear Structures</option>
@@ -391,10 +446,17 @@ export default function StudyMaterialsPage() {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-700">Material Format</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Material Format
+              </label>
               <select
                 value={formData.materialType}
-                onChange={(e) => setFormData({ ...formData, materialType: e.target.value as MaterialFileType })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    materialType: e.target.value as MaterialFileType,
+                  })
+                }
                 className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="PDF">PDF Document (.pdf)</option>
@@ -407,54 +469,80 @@ export default function StudyMaterialsPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700">Description / Topic Outline</label>
+            <label className="text-xs font-semibold text-slate-700">
+              Description / Topic Outline
+            </label>
             <textarea
               rows={2}
               placeholder="Outline what concepts this material covers..."
               className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-yellow-400"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
           </div>
 
           {formData.materialType === "LINK" ? (
             <div>
-              <label className="text-xs font-semibold text-slate-700">Target URL</label>
+              <label className="text-xs font-semibold text-slate-700">
+                Target URL
+              </label>
               <Input
                 type="url"
                 placeholder="https://..."
                 value={formData.fileUrl}
-                onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, fileUrl: e.target.value })
+                }
                 required
               />
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-slate-700">File Name</label>
+                <label className="text-xs font-semibold text-slate-700">
+                  File Name
+                </label>
                 <Input
                   placeholder="CS301_LectureNotes.pdf"
                   value={formData.fileName}
-                  onChange={(e) => setFormData({ ...formData, fileName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fileName: e.target.value })
+                  }
                   required
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-700">Estimated File Size</label>
+                <label className="text-xs font-semibold text-slate-700">
+                  Estimated File Size
+                </label>
                 <Input
                   placeholder="e.g. 4.2 MB"
                   value={formData.fileSize}
-                  onChange={(e) => setFormData({ ...formData, fileSize: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fileSize: e.target.value })
+                  }
                 />
               </div>
             </div>
           )}
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setUploadModalOpen(false)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => setUploadModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" disabled={uploading}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              disabled={uploading}
+            >
               {uploading ? "Publishing..." : "Upload & Publish to Class"}
             </Button>
           </div>

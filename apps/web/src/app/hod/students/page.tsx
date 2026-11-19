@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { hodService } from "@/services/hod.service";
 import { StudentComprehensiveDetail } from "@/types/domain";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,13 +91,16 @@ export default function HodStudentsPage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-950 border border-yellow-300">
               Department Student Roster
             </span>
-            <span className="text-xs text-slate-500 font-mono">• {deptName}</span>
+            <span className="text-xs text-slate-500 font-mono">
+              • {deptName}
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
             Student Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Monitor student profiles, academic performance (CGPA/backlogs), and attendance compliance.
+            Monitor student profiles, academic performance (CGPA/backlogs), and
+            attendance compliance.
           </p>
         </div>
 
@@ -186,7 +195,10 @@ export default function HodStudentsPage() {
           {loading ? (
             <div className="p-6 space-y-3">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-12 rounded-lg bg-slate-100 animate-pulse" />
+                <div
+                  key={i}
+                  className="h-12 rounded-lg bg-slate-100 animate-pulse"
+                />
               ))}
             </div>
           ) : students.length === 0 ? (
@@ -218,10 +230,17 @@ export default function HodStudentsPage() {
                     const isShortage = att < 75;
 
                     return (
-                      <tr key={stu.id} className="hover:bg-yellow-50/30 transition-colors">
+                      <tr
+                        key={stu.id}
+                        className="hover:bg-yellow-50/30 transition-colors"
+                      >
                         <td className="p-3.5">
-                          <div className="font-mono font-bold text-slate-900">{stu.rollNumber}</div>
-                          <div className="font-mono text-[10px] text-slate-400">{stu.registrationNumber}</div>
+                          <div className="font-mono font-bold text-slate-900">
+                            {stu.rollNumber}
+                          </div>
+                          <div className="font-mono text-[10px] text-slate-400">
+                            {stu.registrationNumber}
+                          </div>
                         </td>
                         <td className="p-3.5">
                           <div className="font-bold text-slate-900">
@@ -234,7 +253,9 @@ export default function HodStudentsPage() {
                         <td className="p-3.5 font-mono">
                           Sem {stu.currentSemester} — Sec {stu.section}
                         </td>
-                        <td className="p-3.5 font-mono text-slate-600">{stu.batch}</td>
+                        <td className="p-3.5 font-mono text-slate-600">
+                          {stu.batch}
+                        </td>
                         <td className="p-3.5 text-center">
                           <div className="inline-flex items-center gap-1 font-mono font-bold">
                             <span
@@ -242,8 +263,8 @@ export default function HodStudentsPage() {
                                 att >= 75
                                   ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                                   : att >= 65
-                                  ? "bg-amber-50 text-amber-800 border border-amber-200"
-                                  : "bg-rose-50 text-rose-800 border border-rose-200"
+                                    ? "bg-amber-50 text-amber-800 border border-amber-200"
+                                    : "bg-rose-50 text-rose-800 border border-rose-200"
                               }`}
                             >
                               {att}%
@@ -293,9 +314,15 @@ export default function HodStudentsPage() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between p-4 border-t border-slate-200 text-xs">
               <span className="text-slate-500">
-                Page <span className="font-bold text-slate-900 font-mono">{page}</span> of{" "}
-                <span className="font-bold text-slate-900 font-mono">{totalPages}</span> (
-                {totalRecords} records)
+                Page{" "}
+                <span className="font-bold text-slate-900 font-mono">
+                  {page}
+                </span>{" "}
+                of{" "}
+                <span className="font-bold text-slate-900 font-mono">
+                  {totalPages}
+                </span>{" "}
+                ({totalRecords} records)
               </span>
 
               <div className="flex items-center gap-2">

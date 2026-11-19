@@ -32,17 +32,26 @@ function assert(condition: boolean, desc: string) {
 }
 
 async function runTestSuite() {
-  console.log("\n===============================================================================");
+  console.log(
+    "\n===============================================================================",
+  );
   console.log("CampusOS HOD Portal Phase 1 — Comprehensive Verification Suite");
-  console.log("===============================================================================\n");
+  console.log(
+    "===============================================================================\n",
+  );
 
   // ---------------------------------------------------------------------------
   // 1. HOD Persona and Authorization Credentials
   // ---------------------------------------------------------------------------
   console.log("--- TEST GROUP 1: HOD Authentication & Identity Resolution ---");
-  const hodPersona = DEMO_PERSONAS.find((p) => p.role === "HOD" || p.id === "user-hod-cse-01");
+  const hodPersona = DEMO_PERSONAS.find(
+    (p) => p.role === "HOD" || p.id === "user-hod-cse-01",
+  );
   assert(Boolean(hodPersona), "HOD demo persona exists in auth mock");
-  assert(hodPersona?.email === "hod.cse@campusos.edu", "HOD email matches hod.cse@campusos.edu");
+  assert(
+    hodPersona?.email === "hod.cse@campusos.edu",
+    "HOD email matches hod.cse@campusos.edu",
+  );
   assert(
     hodPersona?.department === "Computer Science & Engineering",
     "HOD department assigned to Computer Science & Engineering",
@@ -84,9 +93,16 @@ async function runTestSuite() {
   // ---------------------------------------------------------------------------
   // 2. Navigation Structure & Sidebar Routing
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 2: HOD Portal Navigation & Sidebar Routing ---");
-  const leadershipSection = HOD_PORTAL_NAV.find((s) => s.title === "DEPARTMENT LEADERSHIP");
-  assert(Boolean(leadershipSection), "DEPARTMENT LEADERSHIP section exists in HOD nav");
+  console.log(
+    "\n--- TEST GROUP 2: HOD Portal Navigation & Sidebar Routing ---",
+  );
+  const leadershipSection = HOD_PORTAL_NAV.find(
+    (s) => s.title === "DEPARTMENT LEADERSHIP",
+  );
+  assert(
+    Boolean(leadershipSection),
+    "DEPARTMENT LEADERSHIP section exists in HOD nav",
+  );
 
   const expectedNavHrefs = [
     "/hod/dashboard",
@@ -128,20 +144,38 @@ async function runTestSuite() {
   // ---------------------------------------------------------------------------
   // 3. Module 1: HOD Dashboard Statistics
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 3: Module 1 — Dashboard Statistics & Analytics ---");
-  const dashRes = await hodService.getDashboardStats("Computer Science & Engineering");
+  console.log(
+    "\n--- TEST GROUP 3: Module 1 — Dashboard Statistics & Analytics ---",
+  );
+  const dashRes = await hodService.getDashboardStats(
+    "Computer Science & Engineering",
+  );
   assert(dashRes.success === true, "Dashboard stats query returns success");
   const stats = dashRes.data.statistics;
-  assert(stats.totalStudents > 0, `Total students is non-zero and realistic: ${stats.totalStudents}`);
-  assert(stats.totalFaculty > 0, `Total faculty is non-zero and realistic: ${stats.totalFaculty}`);
-  assert(stats.totalSubjects >= 10, `Total subjects is non-zero: ${stats.totalSubjects}`);
-  assert(stats.totalClasses >= 4, `Total classes is non-zero: ${stats.totalClasses}`);
   assert(
-    stats.averageStudentAttendance >= 70 && stats.averageStudentAttendance <= 100,
+    stats.totalStudents > 0,
+    `Total students is non-zero and realistic: ${stats.totalStudents}`,
+  );
+  assert(
+    stats.totalFaculty > 0,
+    `Total faculty is non-zero and realistic: ${stats.totalFaculty}`,
+  );
+  assert(
+    stats.totalSubjects >= 10,
+    `Total subjects is non-zero: ${stats.totalSubjects}`,
+  );
+  assert(
+    stats.totalClasses >= 4,
+    `Total classes is non-zero: ${stats.totalClasses}`,
+  );
+  assert(
+    stats.averageStudentAttendance >= 70 &&
+      stats.averageStudentAttendance <= 100,
     `Average student attendance is valid percentage: ${stats.averageStudentAttendance}%`,
   );
   assert(
-    stats.averageFacultyAttendance >= 80 && stats.averageFacultyAttendance <= 100,
+    stats.averageFacultyAttendance >= 80 &&
+      stats.averageFacultyAttendance <= 100,
     `Average faculty attendance is valid percentage: ${stats.averageFacultyAttendance}%`,
   );
   assert(
@@ -170,25 +204,42 @@ async function runTestSuite() {
   // ---------------------------------------------------------------------------
   // 4. Module 2: Faculty Management & Workload
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 4: Module 2 — Department Faculty Management ---");
+  console.log(
+    "\n--- TEST GROUP 4: Module 2 — Department Faculty Management ---",
+  );
   const facultyRes = await hodService.getDepartmentFaculty({
     department: "Computer Science & Engineering",
   });
   assert(facultyRes.success === true, "Faculty list query succeeds");
-  assert(facultyRes.data.length > 0, `Faculty list returned ${facultyRes.data.length} records`);
+  assert(
+    facultyRes.data.length > 0,
+    `Faculty list returned ${facultyRes.data.length} records`,
+  );
 
   const sampleFaculty = facultyRes.data[0];
   assert(Boolean(sampleFaculty.id), "Faculty record has unique ID");
-  assert(Boolean(sampleFaculty.employeeCode), "Faculty record has employee code");
+  assert(
+    Boolean(sampleFaculty.employeeCode),
+    "Faculty record has employee code",
+  );
   assert(Boolean(sampleFaculty.firstName), "Faculty record has first name");
   assert(Boolean(sampleFaculty.designation), "Faculty record has designation");
-  assert(Boolean(sampleFaculty.qualification), "Faculty record has highest qualification");
-  assert(sampleFaculty.teachingLoadHours > 0, `Faculty teaching workload is specified: ${sampleFaculty.teachingLoadHours} hrs`);
+  assert(
+    Boolean(sampleFaculty.qualification),
+    "Faculty record has highest qualification",
+  );
+  assert(
+    sampleFaculty.teachingLoadHours > 0,
+    `Faculty teaching workload is specified: ${sampleFaculty.teachingLoadHours} hrs`,
+  );
 
   // Test single faculty detail
   const detail = await hodService.getFacultyById(sampleFaculty.id);
   assert(Boolean(detail), "Faculty profile detail retrieved by ID");
-  assert(detail?.id === sampleFaculty.id, "Faculty profile ID matches requested ID");
+  assert(
+    detail?.id === sampleFaculty.id,
+    "Faculty profile ID matches requested ID",
+  );
   assert(
     (detail?.assignedSubjects?.length ?? 0) >= 0,
     `Faculty profile contains assigned subjects list: ${detail?.assignedSubjects?.length}`,
@@ -197,18 +248,26 @@ async function runTestSuite() {
   // ---------------------------------------------------------------------------
   // 5. Module 3: Student Management & Academic Information
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 5: Module 3 — Department Student Management ---");
+  console.log(
+    "\n--- TEST GROUP 5: Module 3 — Department Student Management ---",
+  );
   const stuRes = await hodService.getDepartmentStudents(
     { pageSize: 20 },
     "Computer Science & Engineering",
   );
   assert(stuRes.success === true, "Students list query succeeds");
-  assert(stuRes.data.length > 0, `Students list returned ${stuRes.data.length} department records`);
+  assert(
+    stuRes.data.length > 0,
+    `Students list returned ${stuRes.data.length} department records`,
+  );
 
   const sampleStudent = stuRes.data[0];
   assert(Boolean(sampleStudent.rollNumber), "Student record has roll number");
   assert(Boolean(sampleStudent.firstName), "Student record has name");
-  assert(Boolean(sampleStudent.program?.name), "Student record has enrolled program");
+  assert(
+    Boolean(sampleStudent.program?.name),
+    "Student record has enrolled program",
+  );
   assert(
     sampleStudent.attendanceSummary?.overallPercentage >= 0,
     `Student has attendance percentage computed: ${sampleStudent.attendanceSummary?.overallPercentage}%`,
@@ -221,14 +280,24 @@ async function runTestSuite() {
   // Test single student detail
   const studentDetail = await hodService.getStudentById(sampleStudent.id);
   assert(Boolean(studentDetail), "Student 360° profile detail retrieved by ID");
-  assert(Boolean(studentDetail?.guardian?.name), "Student profile includes guardian contact name");
-  assert(Boolean(studentDetail?.guardian?.phone), "Student profile includes guardian phone number");
+  assert(
+    Boolean(studentDetail?.guardian?.name),
+    "Student profile includes guardian contact name",
+  );
+  assert(
+    Boolean(studentDetail?.guardian?.phone),
+    "Student profile includes guardian phone number",
+  );
 
   // ---------------------------------------------------------------------------
   // 6. Module 4: Attendance Monitoring & Shortage Identification
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 6: Module 4 — Attendance Monitoring & Shortage Alerts ---");
-  const attOverview = await hodService.getAttendanceOverview("Computer Science & Engineering");
+  console.log(
+    "\n--- TEST GROUP 6: Module 4 — Attendance Monitoring & Shortage Alerts ---",
+  );
+  const attOverview = await hodService.getAttendanceOverview(
+    "Computer Science & Engineering",
+  );
   assert(Boolean(attOverview), "Attendance overview data retrieved");
   assert(
     attOverview.statutory_threshold === 75.0,
@@ -246,26 +315,41 @@ async function runTestSuite() {
   // ---------------------------------------------------------------------------
   // 7. Module 5: Master Timetable Management
   // ---------------------------------------------------------------------------
-  console.log("\n--- TEST GROUP 7: Module 5 — Master Timetable Grid & Workloads ---");
+  console.log(
+    "\n--- TEST GROUP 7: Module 5 — Master Timetable Grid & Workloads ---",
+  );
   const periods = hodService.getTimetablePeriods();
-  assert(periods.length === 7, `Timetable defines 7 instructional periods: ${periods.length}`);
+  assert(
+    periods.length === 7,
+    `Timetable defines 7 instructional periods: ${periods.length}`,
+  );
 
   const schedule = hodService.getDepartmentSchedule(5, "A");
-  assert(schedule.length > 15, `Weekly timetable grid contains ${schedule.length} scheduled slots`);
+  assert(
+    schedule.length > 15,
+    `Weekly timetable grid contains ${schedule.length} scheduled slots`,
+  );
 
   const hasLab = schedule.some((s) => s.isLab === true);
   assert(hasLab, "Laboratory practical blocks identified in timetable grid");
 
   const workloads = hodService.getFacultyWorkloads();
-  assert(workloads.length >= 4, `Faculty workload summary includes ${workloads.length} professors`);
+  assert(
+    workloads.length >= 4,
+    `Faculty workload summary includes ${workloads.length} professors`,
+  );
   assert(
     workloads.every((w) => w.weeklyHours > 0),
     "All faculty workloads have non-zero weekly hours",
   );
 
-  console.log("\n===============================================================================");
+  console.log(
+    "\n===============================================================================",
+  );
   console.log(`Test Execution Completed: ${passed} PASSED, ${failed} FAILED`);
-  console.log("===============================================================================\n");
+  console.log(
+    "===============================================================================\n",
+  );
 
   if (failed > 0) {
     process.exit(1);

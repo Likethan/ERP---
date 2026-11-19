@@ -48,7 +48,8 @@ export interface ClassDiaryEntry {
   createdAt: string;
 }
 
-export type MaterialFileType = "PDF" | "DOCX" | "PPT" | "LINK" | "VIDEO" | "CODE";
+export type MaterialFileType =
+  "PDF" | "DOCX" | "PPT" | "LINK" | "VIDEO" | "CODE";
 
 export interface CourseStudyMaterial {
   id: string;
@@ -71,7 +72,8 @@ export interface CourseStudyMaterial {
 
 export type AssignmentStatus = "DRAFT" | "PUBLISHED" | "CLOSED";
 export type SubmissionFormat = "PDF" | "DOCX" | "ZIP" | "CODE" | "TEXT";
-export type SubmissionStatus = "SUBMITTED" | "EVALUATED" | "RESUBMISSION_REQUESTED";
+export type SubmissionStatus =
+  "SUBMITTED" | "EVALUATED" | "RESUBMISSION_REQUESTED";
 
 export interface CourseAssignment {
   id: string;
@@ -123,17 +125,10 @@ export interface AssignmentSubmission {
 }
 
 export type FacultyLeaveType =
-  | "CASUAL"
-  | "MEDICAL"
-  | "ON_DUTY"
-  | "EARNED"
-  | "SPECIAL_CASUAL";
+  "CASUAL" | "MEDICAL" | "ON_DUTY" | "EARNED" | "SPECIAL_CASUAL";
 
 export type FacultyLeaveStatus =
-  | "PENDING_HOD"
-  | "APPROVED"
-  | "REJECTED"
-  | "CANCELLED";
+  "PENDING_HOD" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export interface FacultyLeaveApplication {
   id: string;

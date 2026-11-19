@@ -57,9 +57,11 @@ export function FacultyDashboard() {
               ...fallbackRes.data,
               id: activePersona.id,
               firstName: activePersona.name.split(" ")[0] || "Faculty",
-              lastName: activePersona.name.split(" ").slice(1).join(" ") || "Member",
+              lastName:
+                activePersona.name.split(" ").slice(1).join(" ") || "Member",
               email: activePersona.email,
-              department: activePersona.department || fallbackRes.data.department,
+              department:
+                activePersona.department || fallbackRes.data.department,
             });
           }
         });
@@ -71,7 +73,7 @@ export function FacultyDashboard() {
       if (res.success) {
         const pending = res.data.reduce(
           (acc, a) => acc + (a.totalSubmissions - a.evaluatedCount),
-          0
+          0,
         );
         setPendingEvaluations(pending);
       }
@@ -80,7 +82,10 @@ export function FacultyDashboard() {
     teachingService.getLessonPlans().then((res) => {
       if (res.success && res.data.length > 0) {
         const planned = res.data.reduce((acc, p) => acc + p.plannedHours, 0);
-        const completed = res.data.reduce((acc, p) => acc + p.completedHours, 0);
+        const completed = res.data.reduce(
+          (acc, p) => acc + p.completedHours,
+          0,
+        );
         if (planned > 0) {
           setSyllabusCompletion(Math.round((completed / planned) * 100));
         }
@@ -172,7 +177,10 @@ export function FacultyDashboard() {
         <StatCard
           label="Syllabus Completion"
           value={`${syllabusCompletion}%`}
-          change={{ value: syllabusCompletion >= 50 ? "On Track" : "Lagging", trend: "up" }}
+          change={{
+            value: syllabusCompletion >= 50 ? "On Track" : "Lagging",
+            trend: "up",
+          }}
           description="Unit-wise curriculum delivery"
           variant="sky"
           icon={<TrendingUp className="h-4 w-4" />}
@@ -241,7 +249,11 @@ export function FacultyDashboard() {
                         </Badge>
                       ) : (
                         <Link href="/app/attendance/sessions">
-                          <Badge variant="warning" dot className="cursor-pointer hover:bg-yellow-200">
+                          <Badge
+                            variant="warning"
+                            dot
+                            className="cursor-pointer hover:bg-yellow-200"
+                          >
                             Mark Now
                           </Badge>
                         </Link>
@@ -263,9 +275,12 @@ export function FacultyDashboard() {
                 <Layers className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Lesson Plans & Syllabus</h4>
+                <h4 className="text-xs font-bold text-slate-900">
+                  Lesson Plans & Syllabus
+                </h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Unit-wise syllabus tracking, learning outcomes, and delivery hours.
+                  Unit-wise syllabus tracking, learning outcomes, and delivery
+                  hours.
                 </p>
               </div>
             </Link>
@@ -278,7 +293,9 @@ export function FacultyDashboard() {
                 <Calendar className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Class Diary / Teaching Log</h4>
+                <h4 className="text-xs font-bold text-slate-900">
+                  Class Diary / Teaching Log
+                </h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">
                   Log lecture delivery topics, pedagogy methods, and turnout.
                 </p>
@@ -293,9 +310,12 @@ export function FacultyDashboard() {
                 <FileText className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Course Study Materials</h4>
+                <h4 className="text-xs font-bold text-slate-900">
+                  Course Study Materials
+                </h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Upload lecture notes, slide decks, lab worksheets, and reference links.
+                  Upload lecture notes, slide decks, lab worksheets, and
+                  reference links.
                 </p>
               </div>
             </Link>
@@ -308,9 +328,12 @@ export function FacultyDashboard() {
                 <ClipboardCheck className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Assignments & Grading</h4>
+                <h4 className="text-xs font-bold text-slate-900">
+                  Assignments & Grading
+                </h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Set homework deadlines, review student submissions, and award marks.
+                  Set homework deadlines, review student submissions, and award
+                  marks.
                 </p>
               </div>
             </Link>
@@ -337,7 +360,8 @@ export function FacultyDashboard() {
                       {sub.code} — {sub.name}
                     </div>
                     <div className="text-[11px] text-slate-500 mt-0.5">
-                      Sem {sub.semester} ({sub.section}) • {sub.studentCount} Students
+                      Sem {sub.semester} ({sub.section}) • {sub.studentCount}{" "}
+                      Students
                     </div>
                   </div>
                   <Link href="/app/attendance/sessions">

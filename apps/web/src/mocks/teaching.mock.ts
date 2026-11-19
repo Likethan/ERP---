@@ -26,7 +26,8 @@ export const MOCK_LESSON_PLANS: LessonPlanUnit[] = [
       "Applications of stacks: Infix to postfix and evaluation",
       "Circular and double-ended queues (Deque)",
     ],
-    learningOutcomes: "Analyze computational complexity and design optimal linear data structures for real-world memory layouts.",
+    learningOutcomes:
+      "Analyze computational complexity and design optimal linear data structures for real-world memory layouts.",
     status: "COMPLETED",
     completionPercentage: 100,
     lastUpdated: "2026-10-15T10:00:00Z",
@@ -48,7 +49,8 @@ export const MOCK_LESSON_PLANS: LessonPlanUnit[] = [
       "Red-Black tree properties and invariants",
       "B-Trees and B+ Trees for secondary storage indexing",
     ],
-    learningOutcomes: "Implement self-balancing tree search algorithms to maintain O(log n) worst-case lookup operations.",
+    learningOutcomes:
+      "Implement self-balancing tree search algorithms to maintain O(log n) worst-case lookup operations.",
     status: "IN_PROGRESS",
     completionPercentage: 80,
     lastUpdated: "2026-11-12T14:30:00Z",
@@ -70,7 +72,8 @@ export const MOCK_LESSON_PLANS: LessonPlanUnit[] = [
       "Single-source shortest path: Dijkstra and Bellman-Ford",
       "Minimum spanning tree: Kruskal and Prim algorithms",
     ],
-    learningOutcomes: "Model complex relational networks and compute optimal flow and path solutions.",
+    learningOutcomes:
+      "Model complex relational networks and compute optimal flow and path solutions.",
     status: "IN_PROGRESS",
     completionPercentage: 30,
     lastUpdated: "2026-11-16T11:00:00Z",
@@ -92,7 +95,8 @@ export const MOCK_LESSON_PLANS: LessonPlanUnit[] = [
       "Fibonacci heaps and amortized time bounds",
       "Disjoint set union-find with path compression",
     ],
-    learningOutcomes: "Design O(1) expected-time dictionary lookups and efficient priority queues.",
+    learningOutcomes:
+      "Design O(1) expected-time dictionary lookups and efficient priority queues.",
     status: "NOT_STARTED",
     completionPercentage: 0,
     lastUpdated: "2026-09-01T09:00:00Z",
@@ -113,7 +117,8 @@ export const MOCK_LESSON_PLANS: LessonPlanUnit[] = [
       "Greedy method and matroid theory",
       "Introduction to P, NP, and NP-Complete reductions (SAT, Clique)",
     ],
-    learningOutcomes: "Distinguish computationally tractable problems from NP-complete challenges.",
+    learningOutcomes:
+      "Distinguish computationally tractable problems from NP-complete challenges.",
     status: "NOT_STARTED",
     completionPercentage: 0,
     lastUpdated: "2026-09-01T09:00:00Z",
@@ -134,12 +139,14 @@ export const MOCK_CLASS_DIARY: ClassDiaryEntry[] = [
     periodNumber: 1,
     unitNumber: 3,
     unitTitle: "Graph Algorithms & Network Flows",
-    topicsCovered: "Dijkstra's shortest path algorithm step-by-step trace using priority queues. Proof of non-negative edge weight requirement.",
+    topicsCovered:
+      "Dijkstra's shortest path algorithm step-by-step trace using priority queues. Proof of non-negative edge weight requirement.",
     teachingMethod: "CHALK_AND_BOARD",
     studentsPresent: 46,
     totalStudents: 48,
     attendancePercentage: 95.8,
-    remarks: "Students engaged well with the live heap-pointer demonstration. Assigned practice homework on Bellman-Ford counterexamples.",
+    remarks:
+      "Students engaged well with the live heap-pointer demonstration. Assigned practice homework on Bellman-Ford counterexamples.",
     verifiedByHod: true,
     createdAt: "2026-11-18T10:15:00Z",
   },
@@ -156,12 +163,14 @@ export const MOCK_CLASS_DIARY: ClassDiaryEntry[] = [
     periodNumber: 3,
     unitNumber: 3,
     unitTitle: "Graph Algorithms & Network Flows",
-    topicsCovered: "Topological sorting via DFS finish times and Kahn's in-degree queue algorithm. Cycle detection in directed graphs.",
+    topicsCovered:
+      "Topological sorting via DFS finish times and Kahn's in-degree queue algorithm. Cycle detection in directed graphs.",
     teachingMethod: "POWERPOINT_ICT",
     studentsPresent: 47,
     totalStudents: 48,
     attendancePercentage: 97.9,
-    remarks: "Projector slides utilized for animated vertex discovery time graphs. All student queries clarified.",
+    remarks:
+      "Projector slides utilized for animated vertex discovery time graphs. All student queries clarified.",
     verifiedByHod: true,
     createdAt: "2026-11-17T12:30:00Z",
   },
@@ -178,12 +187,14 @@ export const MOCK_CLASS_DIARY: ClassDiaryEntry[] = [
     periodNumber: 5,
     unitNumber: 2,
     unitTitle: "Hierarchical Structures & Balanced Trees",
-    topicsCovered: "Red-Black tree rebalancing: Case 1, 2, and 3 node recoloring and rotations upon key insertion.",
+    topicsCovered:
+      "Red-Black tree rebalancing: Case 1, 2, and 3 node recoloring and rotations upon key insertion.",
     teachingMethod: "PROBLEM_SOLVING",
     studentsPresent: 45,
     totalStudents: 48,
     attendancePercentage: 93.8,
-    remarks: "Worked through 3 board problems with students demonstrating right-left rotations.",
+    remarks:
+      "Worked through 3 board problems with students demonstrating right-left rotations.",
     verifiedByHod: true,
     createdAt: "2026-11-14T15:10:00Z",
   },
@@ -198,7 +209,8 @@ export const MOCK_STUDY_MATERIALS: CourseStudyMaterial[] = [
     section: "A",
     unitNumber: 1,
     title: "Unit 1: Linear Data Structures Comprehensive Notes & Code Samples",
-    description: "Detailed lecture notes covering doubly linked lists, stack evaluation, deque memory layout and Big-O proofs.",
+    description:
+      "Detailed lecture notes covering doubly linked lists, stack evaluation, deque memory layout and Big-O proofs.",
     materialType: "PDF",
     fileUrl: "/assets/materials/cs301-unit1-notes.pdf",
     fileName: "CS301_Unit1_Linear_Structures.pdf",
@@ -215,8 +227,10 @@ export const MOCK_STUDY_MATERIALS: CourseStudyMaterial[] = [
     courseName: "Data Structures & Algorithms",
     section: "A",
     unitNumber: 2,
-    title: "Unit 2: Balanced Trees, AVL Rotations & Red-Black Invariants Slide Deck",
-    description: "Official presentation slides with step-by-step tree rotation animations and worst-case search proofs.",
+    title:
+      "Unit 2: Balanced Trees, AVL Rotations & Red-Black Invariants Slide Deck",
+    description:
+      "Official presentation slides with step-by-step tree rotation animations and worst-case search proofs.",
     materialType: "PPT",
     fileUrl: "/assets/materials/cs301-unit2-trees.pptx",
     fileName: "CS301_Unit2_Balanced_Trees.pptx",
@@ -234,7 +248,8 @@ export const MOCK_STUDY_MATERIALS: CourseStudyMaterial[] = [
     section: "A",
     unitNumber: 3,
     title: "Unit 3: Graph Shortest Path & Flow Visualizer Reference",
-    description: "Interactive visualizer and MIT OpenCourseWare reference lecture on Dijkstra and Bellman-Ford algorithms.",
+    description:
+      "Interactive visualizer and MIT OpenCourseWare reference lecture on Dijkstra and Bellman-Ford algorithms.",
     materialType: "LINK",
     fileUrl: "https://visualgo.net/en/sssp",
     fileName: "VisuAlgo Graph Visualizer",
@@ -252,7 +267,8 @@ export const MOCK_STUDY_MATERIALS: CourseStudyMaterial[] = [
     section: "A",
     unitNumber: 3,
     title: "Lab Manual: Graph Algorithms in C++ / Python",
-    description: "Lab exercise worksheets with test datasets, timing benchmarks, and input/output test vectors.",
+    description:
+      "Lab exercise worksheets with test datasets, timing benchmarks, and input/output test vectors.",
     materialType: "DOCX",
     fileUrl: "/assets/materials/cs301-graph-lab-manual.docx",
     fileName: "CS301_Lab_Manual_Graphs.docx",
@@ -272,7 +288,8 @@ export const MOCK_ASSIGNMENTS: CourseAssignment[] = [
     courseName: "Data Structures & Algorithms",
     section: "A",
     title: "Assignment 1: Balanced BST & AVL Tree Simulator",
-    description: "Implement a self-balancing AVL tree in C++ or Python supporting insert, delete, search, and rank queries. Output must print tree structure and height after each rotation.",
+    description:
+      "Implement a self-balancing AVL tree in C++ or Python supporting insert, delete, search, and rank queries. Output must print tree structure and height after each rotation.",
     unitNumber: 2,
     assignedDate: "2026-10-25",
     dueDate: "2026-11-10",
@@ -297,7 +314,8 @@ export const MOCK_ASSIGNMENTS: CourseAssignment[] = [
     courseName: "Data Structures & Algorithms",
     section: "A",
     title: "Assignment 2: Dijkstra Shortest Path with Priority Queue Benchmark",
-    description: "Build an efficient shortest-path engine using adjacency lists and binary heap priority queues. Benchmark performance against road network datasets with up to 100,000 vertices.",
+    description:
+      "Build an efficient shortest-path engine using adjacency lists and binary heap priority queues. Benchmark performance against road network datasets with up to 100,000 vertices.",
     unitNumber: 3,
     assignedDate: "2026-11-15",
     dueDate: "2026-11-28",
@@ -322,7 +340,8 @@ export const MOCK_ASSIGNMENTS: CourseAssignment[] = [
     courseName: "Data Structures & Algorithms",
     section: "A",
     title: "Assignment 3: Disjoint Sets & Kruskal MST Implementation",
-    description: "Construct Kruskal's algorithm with path-compression union-find. Compare execution runtime on dense vs sparse graphs.",
+    description:
+      "Construct Kruskal's algorithm with path-compression union-find. Compare execution runtime on dense vs sparse graphs.",
     unitNumber: 4,
     assignedDate: "2026-11-20",
     dueDate: "2026-12-05",
@@ -356,7 +375,8 @@ export const MOCK_SUBMISSIONS: AssignmentSubmission[] = [
     status: "EVALUATED",
     marksObtained: 48,
     maxMarks: 50,
-    feedback: "Exceptional code quality! Rotations and balance-factor edge cases handled flawlessly. Great visual console tree printout.",
+    feedback:
+      "Exceptional code quality! Rotations and balance-factor edge cases handled flawlessly. Great visual console tree printout.",
     evaluatedByFacultyId: "fac-cse-01",
     evaluatedByFacultyName: "Dr. Rajesh Sharma",
     evaluatedAt: "2026-11-12T16:00:00Z",
@@ -393,7 +413,8 @@ export const MOCK_SUBMISSIONS: AssignmentSubmission[] = [
     status: "EVALUATED",
     marksObtained: 45,
     maxMarks: 50,
-    feedback: "Well-structured benchmarks and graphs. Good analysis of memory consumption on 100k nodes.",
+    feedback:
+      "Well-structured benchmarks and graphs. Good analysis of memory consumption on 100k nodes.",
     evaluatedByFacultyId: "fac-cse-01",
     evaluatedByFacultyName: "Dr. Rajesh Sharma",
     evaluatedAt: "2026-11-24T10:15:00Z",
@@ -458,12 +479,14 @@ export const MOCK_FACULTY_LEAVES: FacultyLeaveApplication[] = [
     startDate: "2026-11-05",
     endDate: "2026-11-06",
     totalDays: 2,
-    reason: "Keynote presentation at IEEE International Conference on Cloud Computing, Bengaluru.",
+    reason:
+      "Keynote presentation at IEEE International Conference on Cloud Computing, Bengaluru.",
     substituteFacultyId: "fac-cse-02",
     substituteFacultyName: "Dr. Ramesh Sundaram",
     substituteClassesArranged: true,
     status: "APPROVED",
-    hodRemarks: "Approved by HOD (Dr. K. S. Anand). Substitute faculty confirmed for period 1 and 3.",
+    hodRemarks:
+      "Approved by HOD (Dr. K. S. Anand). Substitute faculty confirmed for period 1 and 3.",
     appliedAt: "2026-10-28T09:15:00Z",
   },
   {

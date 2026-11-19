@@ -6,7 +6,13 @@ import { useAuth } from "@/lib/auth-context";
 import { hodService } from "@/services/hod.service";
 import { attendanceService } from "@/services/attendance.service";
 import { AttendanceStudentSummary } from "@/types/attendance";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,17 +41,23 @@ export default function HodAttendancePage() {
   const { activePersona } = useAuth();
   const deptName = activePersona.department || "Computer Science & Engineering";
 
-  const [activeTab, setActiveTab] = useState<"students" | "classes" | "shortage" | "trends">("students");
+  const [activeTab, setActiveTab] = useState<
+    "students" | "classes" | "shortage" | "trends"
+  >("students");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
 
   // Student ledger state
-  const [studentsList, setStudentsList] = useState<AttendanceStudentSummary[]>([]);
+  const [studentsList, setStudentsList] = useState<AttendanceStudentSummary[]>(
+    [],
+  );
   const [search, setSearch] = useState("");
   const [semesterFilter, setSemesterFilter] = useState("ALL");
   const [sectionFilter, setSectionFilter] = useState("ALL");
   const [riskFilter, setRiskFilter] = useState("ALL");
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [threshold] = useState(75.0);
 
   useEffect(() => {
@@ -56,7 +68,8 @@ export default function HodAttendancePage() {
           hodService.getAttendanceOverview(deptName),
           attendanceService.listStudentSummaries({
             department: deptName,
-            semester: semesterFilter !== "ALL" ? Number(semesterFilter) : undefined,
+            semester:
+              semesterFilter !== "ALL" ? Number(semesterFilter) : undefined,
             section: sectionFilter !== "ALL" ? sectionFilter : undefined,
             riskLevel: riskFilter !== "ALL" ? (riskFilter as any) : undefined,
             search: search.trim() || undefined,
@@ -88,13 +101,16 @@ export default function HodAttendancePage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-950 border border-yellow-300">
               Department Attendance Governance
             </span>
-            <span className="text-xs text-slate-500 font-mono">• {deptName}</span>
+            <span className="text-xs text-slate-500 font-mono">
+              • {deptName}
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
             Attendance Monitoring & Audit
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Real-time compliance monitoring, class-wise presence logs, and statutory 75% shortage tracking.
+            Real-time compliance monitoring, class-wise presence logs, and
+            statutory 75% shortage tracking.
           </p>
         </div>
 
@@ -210,7 +226,9 @@ export default function HodAttendancePage() {
 
             {/* Date Picker */}
             <div className="flex items-center gap-2 w-full md:w-auto">
-              <span className="text-xs text-slate-500 shrink-0 font-medium">Session Date:</span>
+              <span className="text-xs text-slate-500 shrink-0 font-medium">
+                Session Date:
+              </span>
               <Input
                 type="date"
                 value={selectedDate}
@@ -272,7 +290,10 @@ export default function HodAttendancePage() {
             {loading ? (
               <div className="p-6 space-y-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-10 rounded-lg bg-slate-100 animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-10 rounded-lg bg-slate-100 animate-pulse"
+                  />
                 ))}
               </div>
             ) : studentsList.length === 0 ? (
@@ -303,7 +324,10 @@ export default function HodAttendancePage() {
                       const isShort = stu.percentage < threshold;
 
                       return (
-                        <tr key={stu.studentId} className="hover:bg-yellow-50/30">
+                        <tr
+                          key={stu.studentId}
+                          className="hover:bg-yellow-50/30"
+                        >
                           <td className="p-3.5 font-mono font-bold text-slate-900">
                             {stu.rollNumber}
                           </td>
@@ -325,8 +349,8 @@ export default function HodAttendancePage() {
                                 stu.percentage >= 75
                                   ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                                   : stu.percentage >= 65
-                                  ? "bg-amber-50 text-amber-800 border border-amber-200"
-                                  : "bg-rose-50 text-rose-800 border border-rose-200"
+                                    ? "bg-amber-50 text-amber-800 border border-amber-200"
+                                    : "bg-rose-50 text-rose-800 border border-rose-200"
                               }`}
                             >
                               {stu.percentage}%
@@ -345,8 +369,13 @@ export default function HodAttendancePage() {
                           </td>
                           <td className="p-3.5 text-right">
                             <Link href={`/hod/students/${stu.studentId}`}>
-                              <Button variant="ghost" size="sm" className="text-xs text-slate-600 hover:text-slate-950">
-                                360° Profile <ArrowRight className="h-3 w-3 ml-1" />
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-xs text-slate-600 hover:text-slate-950"
+                              >
+                                360° Profile{" "}
+                                <ArrowRight className="h-3 w-3 ml-1" />
                               </Button>
                             </Link>
                           </td>
@@ -373,15 +402,22 @@ export default function HodAttendancePage() {
           <CardContent>
             <div className="space-y-4">
               {data?.class_wise?.map((c: any) => (
-                <div key={c.class_name} className="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                <div
+                  key={c.class_name}
+                  className="p-4 rounded-xl border border-slate-200 bg-white space-y-2"
+                >
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-bold text-sm text-slate-900">{c.class_name}</span>
+                      <span className="font-bold text-sm text-slate-900">
+                        {c.class_name}
+                      </span>
                       <span className="text-xs text-slate-500 ml-2 font-mono">
                         ({c.present} present / {c.total} total)
                       </span>
                     </div>
-                    <span className="font-mono font-bold text-sm text-slate-900">{c.rate}%</span>
+                    <span className="font-mono font-bold text-sm text-slate-900">
+                      {c.rate}%
+                    </span>
                   </div>
                   <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -407,7 +443,8 @@ export default function HodAttendancePage() {
                   Statutory Attendance Shortage List (&lt; 75%)
                 </CardTitle>
                 <CardDescription className="text-rose-700">
-                  Students below the 75% university examination cutoff. Parent intimations must be issued.
+                  Students below the 75% university examination cutoff. Parent
+                  intimations must be issued.
                 </CardDescription>
               </div>
               <Badge className="bg-rose-100 text-rose-900 border-rose-300 font-mono text-xs">
@@ -440,10 +477,18 @@ export default function HodAttendancePage() {
 
                     return (
                       <tr key={roll} className="hover:bg-rose-50/40">
-                        <td className="p-3.5 font-mono font-bold text-slate-900">{roll}</td>
-                        <td className="p-3.5 font-medium text-slate-900">{name}</td>
-                        <td className="p-3.5 font-mono">Sem {s.semester} — Sec {s.section}</td>
-                        <td className="p-3.5 text-center font-mono">{att} / {tot}</td>
+                        <td className="p-3.5 font-mono font-bold text-slate-900">
+                          {roll}
+                        </td>
+                        <td className="p-3.5 font-medium text-slate-900">
+                          {name}
+                        </td>
+                        <td className="p-3.5 font-mono">
+                          Sem {s.semester} — Sec {s.section}
+                        </td>
+                        <td className="p-3.5 text-center font-mono">
+                          {att} / {tot}
+                        </td>
                         <td className="p-3.5 text-center font-mono font-bold text-rose-600">
                           {pct}%
                         </td>
@@ -455,7 +500,11 @@ export default function HodAttendancePage() {
                             variant="outline"
                             size="sm"
                             className="text-xs text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold"
-                            onClick={() => alert(`Official parent intimation notice dispatched for ${name} (${roll}).`)}
+                            onClick={() =>
+                              alert(
+                                `Official parent intimation notice dispatched for ${name} (${roll}).`,
+                              )
+                            }
                           >
                             Dispatch Warning SMS/Email
                           </Button>
@@ -487,10 +536,19 @@ export default function HodAttendancePage() {
                 { label: "Week 3", rate: 87.9 },
                 { label: "Week 4", rate: 88.4 },
               ].map((w) => (
-                <div key={w.label} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center">
-                  <div className="text-xs font-semibold text-slate-600">{w.label}</div>
-                  <div className="text-2xl font-bold font-mono text-slate-900 mt-1">{w.rate}%</div>
-                  <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">Compliant</div>
+                <div
+                  key={w.label}
+                  className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center"
+                >
+                  <div className="text-xs font-semibold text-slate-600">
+                    {w.label}
+                  </div>
+                  <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
+                    {w.rate}%
+                  </div>
+                  <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">
+                    Compliant
+                  </div>
                 </div>
               ))}
             </div>
@@ -500,7 +558,10 @@ export default function HodAttendancePage() {
                 Audit Trail Notice for Department Head
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Attendance records are entered directly by course faculty after biometric or session finalize. All corrections and leave approvals undergo immutable digital audit logging in the CampusOS event registry.
+                Attendance records are entered directly by course faculty after
+                biometric or session finalize. All corrections and leave
+                approvals undergo immutable digital audit logging in the
+                CampusOS event registry.
               </p>
             </div>
           </CardContent>

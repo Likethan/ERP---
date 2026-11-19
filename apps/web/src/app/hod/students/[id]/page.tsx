@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { hodService } from "@/services/hod.service";
 import { StudentComprehensiveDetail } from "@/types/domain";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +43,9 @@ export default function HodStudentDetailPage({
   const { activePersona } = useAuth();
   const deptName = activePersona.department || "Computer Science & Engineering";
 
-  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(null);
+  const [student, setStudent] = useState<StudentComprehensiveDetail | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("academics");
   const [accessDenied, setAccessDenied] = useState(false);
@@ -82,12 +90,19 @@ export default function HodStudentDetailPage({
     return (
       <div className="p-8 text-center rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 max-w-xl mx-auto my-12">
         <ShieldAlert className="h-10 w-10 mx-auto text-rose-600 mb-2" />
-        <h2 className="text-lg font-bold">Cross-Department Student Access Denied</h2>
+        <h2 className="text-lg font-bold">
+          Cross-Department Student Access Denied
+        </h2>
         <p className="text-xs text-rose-700 mt-1 leading-relaxed">
-          As Head of Department for {deptName}, you are not authorized to inspect student records from other academic branches.
+          As Head of Department for {deptName}, you are not authorized to
+          inspect student records from other academic branches.
         </p>
         <Link href="/hod/students" className="inline-block mt-4">
-          <Button variant="primary" size="sm" className="bg-yellow-400 text-slate-950 hover:bg-yellow-500 font-bold">
+          <Button
+            variant="primary"
+            size="sm"
+            className="bg-yellow-400 text-slate-950 hover:bg-yellow-500 font-bold"
+          >
             Return to Department Students
           </Button>
         </Link>
@@ -116,7 +131,11 @@ export default function HodStudentDetailPage({
       {/* Back Button */}
       <div className="flex items-center gap-2">
         <Link href="/hod/students">
-          <Button variant="ghost" size="sm" className="text-xs text-slate-600 hover:text-slate-950">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-slate-600 hover:text-slate-950"
+          >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Department Students
           </Button>
@@ -144,7 +163,8 @@ export default function HodStudentDetailPage({
                 </Badge>
               </div>
               <p className="text-sm font-semibold text-slate-700 mt-0.5">
-                {student.program.name} • Sem {student.currentSemester} (Sec {student.section})
+                {student.program.name} • Sem {student.currentSemester} (Sec{" "}
+                {student.section})
               </p>
               <div className="flex items-center gap-4 text-xs text-slate-500 mt-2 flex-wrap">
                 <span className="flex items-center gap-1 font-mono">
@@ -155,7 +175,9 @@ export default function HodStudentDetailPage({
                   <Phone className="h-3.5 w-3.5 text-slate-400" />
                   {student.phone}
                 </span>
-                <span className="font-mono text-slate-400">Reg: {student.registrationNumber}</span>
+                <span className="font-mono text-slate-400">
+                  Reg: {student.registrationNumber}
+                </span>
               </div>
             </div>
           </div>
@@ -163,11 +185,15 @@ export default function HodStudentDetailPage({
           {/* Quick Metrics */}
           <div className="grid grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 text-center">
             <div className="p-2.5 rounded-xl bg-yellow-50/60 border border-yellow-200/60">
-              <div className="text-[10px] text-slate-500 uppercase font-semibold">Cumulative CGPA</div>
+              <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                Cumulative CGPA
+              </div>
               <div className="text-xl font-bold font-mono text-slate-900 mt-0.5">
                 {student.academicStats.cgpa}
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">Rank: #{student.academicStats.rank}</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">
+                Rank: #{student.academicStats.rank}
+              </div>
             </div>
             <div
               className={`p-2.5 rounded-xl border ${
@@ -176,7 +202,9 @@ export default function HodStudentDetailPage({
                   : "bg-emerald-50/60 border-emerald-200/60 text-emerald-900"
               }`}
             >
-              <div className="text-[10px] uppercase font-semibold">Attendance</div>
+              <div className="text-[10px] uppercase font-semibold">
+                Attendance
+              </div>
               <div className="text-xl font-bold font-mono mt-0.5">
                 {att.overallPercentage}%
               </div>
@@ -185,12 +213,16 @@ export default function HodStudentDetailPage({
               </div>
             </div>
             <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div className="text-[10px] text-slate-500 uppercase font-semibold">Backlogs</div>
+              <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                Backlogs
+              </div>
               <div className="text-xl font-bold font-mono text-slate-900 mt-0.5">
                 {student.academicStats.backlogs}
               </div>
               <div className="text-[9px] text-emerald-600 mt-0.5 font-semibold">
-                {student.academicStats.backlogs === 0 ? "Clear Arrears" : "Needs Remedial"}
+                {student.academicStats.backlogs === 0
+                  ? "Clear Arrears"
+                  : "Needs Remedial"}
               </div>
             </div>
           </div>
@@ -210,20 +242,28 @@ export default function HodStudentDetailPage({
           <CardContent className="space-y-2 text-xs">
             <div>
               <span className="text-slate-500">Guardian Name:</span>{" "}
-              <span className="font-semibold text-slate-900">{student.guardian.name}</span> (
-              {student.guardian.relation})
+              <span className="font-semibold text-slate-900">
+                {student.guardian.name}
+              </span>{" "}
+              ({student.guardian.relation})
             </div>
             <div>
               <span className="text-slate-500">Emergency Phone:</span>{" "}
-              <span className="font-mono font-bold text-slate-900">{student.guardian.phone}</span>
+              <span className="font-mono font-bold text-slate-900">
+                {student.guardian.phone}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Guardian Email:</span>{" "}
-              <span className="font-mono text-slate-800">{student.guardian.email}</span>
+              <span className="font-mono text-slate-800">
+                {student.guardian.email}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Occupation:</span>{" "}
-              <span className="text-slate-800">{student.guardian.occupation}</span>
+              <span className="text-slate-800">
+                {student.guardian.occupation}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -239,7 +279,9 @@ export default function HodStudentDetailPage({
           <CardContent className="space-y-2 text-xs">
             <div>
               <span className="text-slate-500">Admission Batch:</span>{" "}
-              <span className="font-mono font-semibold text-slate-900">{student.batch}</span>
+              <span className="font-mono font-semibold text-slate-900">
+                {student.batch}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Admission Quota:</span>{" "}
@@ -249,11 +291,15 @@ export default function HodStudentDetailPage({
             </div>
             <div>
               <span className="text-slate-500">Admission Date:</span>{" "}
-              <span className="font-mono text-slate-800">{student.admissionDate}</span>
+              <span className="font-mono text-slate-800">
+                {student.admissionDate}
+              </span>
             </div>
             <div>
               <span className="text-slate-500">Blood Group & Gender:</span>{" "}
-              <span className="text-slate-800">{student.bloodGroup} • {student.gender}</span>
+              <span className="text-slate-800">
+                {student.bloodGroup} • {student.gender}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -300,31 +346,40 @@ export default function HodStudentDetailPage({
             <CardHeader className="pb-3">
               <CardTitle>Academic Summary & Credits</CardTitle>
               <CardDescription>
-                Cumulative Grade Point Average, credits earned, and university rank.
+                Cumulative Grade Point Average, credits earned, and university
+                rank.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase">CGPA</div>
+                  <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                    CGPA
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     {student.academicStats.cgpa}
                   </div>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase">Credits Earned</div>
+                  <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                    Credits Earned
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     {student.academicStats.totalCreditsEarned} / 160
                   </div>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase">Class Rank</div>
+                  <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                    Class Rank
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     #{student.academicStats.rank}
                   </div>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase">Active Backlogs</div>
+                  <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                    Active Backlogs
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     {student.academicStats.backlogs}
                   </div>
@@ -336,7 +391,8 @@ export default function HodStudentDetailPage({
                   Department Placement Readiness
                 </div>
                 <p className="text-xs text-slate-600">
-                  Student is eligible for Tier-1 corporate placement drives. Zero standing arrears and CGPA above 8.0 criteria.
+                  Student is eligible for Tier-1 corporate placement drives.
+                  Zero standing arrears and CGPA above 8.0 criteria.
                 </p>
               </div>
             </CardContent>
@@ -349,29 +405,38 @@ export default function HodStudentDetailPage({
             <CardHeader className="pb-3">
               <CardTitle>Attendance Compliance Audit</CardTitle>
               <CardDescription>
-                Session presence vs statutory minimum 75% examination eligibility threshold.
+                Session presence vs statutory minimum 75% examination
+                eligibility threshold.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-xs text-slate-500">Total Instructional Sessions</div>
+                  <div className="text-xs text-slate-500">
+                    Total Instructional Sessions
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     {att.totalClasses}
                   </div>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-                  <div className="text-xs text-slate-500">Sessions Attended</div>
+                  <div className="text-xs text-slate-500">
+                    Sessions Attended
+                  </div>
                   <div className="text-xl font-bold font-mono text-slate-900 mt-1">
                     {att.attendedClasses}
                   </div>
                 </div>
                 <div
                   className={`p-3 rounded-xl border text-center ${
-                    isShortage ? "bg-rose-50 border-rose-200" : "bg-emerald-50 border-emerald-200"
+                    isShortage
+                      ? "bg-rose-50 border-rose-200"
+                      : "bg-emerald-50 border-emerald-200"
                   }`}
                 >
-                  <div className={`text-xs font-semibold ${isShortage ? "text-rose-800" : "text-emerald-800"}`}>
+                  <div
+                    className={`text-xs font-semibold ${isShortage ? "text-rose-800" : "text-emerald-800"}`}
+                  >
                     Overall Attendance
                   </div>
                   <div
@@ -392,7 +457,9 @@ export default function HodStudentDetailPage({
                       Attendance Shortage Notice Required
                     </div>
                     <p className="text-[11px] text-rose-700 mt-0.5">
-                      Student is {75 - att.overallPercentage}% below the 75% threshold. An official warning notice has been drafted for HOD endorsement.
+                      Student is {75 - att.overallPercentage}% below the 75%
+                      threshold. An official warning notice has been drafted for
+                      HOD endorsement.
                     </p>
                   </div>
                 </div>

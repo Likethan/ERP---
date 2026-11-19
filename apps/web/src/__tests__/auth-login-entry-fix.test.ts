@@ -33,23 +33,38 @@ console.log("=================================================");
 // -----------------------------------------------------------------------------
 // Student
 const studentByEmail = resolveDemoPersona("aarav.patel@student.campusos.edu");
-assert(studentByEmail?.id === "user-student-01", "Resolves Student by full email");
+assert(
+  studentByEmail?.id === "user-student-01",
+  "Resolves Student by full email",
+);
 
 const studentByRoll = resolveDemoPersona("2024-CSE-042");
-assert(studentByRoll?.id === "user-student-01", "Resolves Student by roll number (2024-CSE-042)");
+assert(
+  studentByRoll?.id === "user-student-01",
+  "Resolves Student by roll number (2024-CSE-042)",
+);
 
 const studentByKeyword = resolveDemoPersona("student");
-assert(studentByKeyword?.id === "user-student-01", "Resolves Student by keyword 'student'");
+assert(
+  studentByKeyword?.id === "user-student-01",
+  "Resolves Student by keyword 'student'",
+);
 
 // Faculty
 const facultyByEmail = resolveDemoPersona("rajesh.sharma@campusos.edu");
 assert(facultyByEmail?.id === "user-faculty-01", "Resolves Faculty by email");
 
 const facultyById = resolveDemoPersona("FAC-CSE-012");
-assert(facultyById?.id === "user-faculty-01", "Resolves Faculty by ID (FAC-CSE-012)");
+assert(
+  facultyById?.id === "user-faculty-01",
+  "Resolves Faculty by ID (FAC-CSE-012)",
+);
 
 const facultyByKeyword = resolveDemoPersona("faculty");
-assert(facultyByKeyword?.id === "user-faculty-01", "Resolves Faculty by keyword 'faculty'");
+assert(
+  facultyByKeyword?.id === "user-faculty-01",
+  "Resolves Faculty by keyword 'faculty'",
+);
 
 // HOD
 const hodByEmail = resolveDemoPersona("hod.cse@campusos.edu");
@@ -63,20 +78,32 @@ assert(hodByKeyword?.id === "user-hod-cse-01", "Resolves HOD by keyword 'hod'");
 
 // Vice Principal
 const vpByEmail = resolveDemoPersona("vp.academics@campusos.edu");
-assert(vpByEmail?.id === "user-vice-principal-01", "Resolves Vice Principal by email");
+assert(
+  vpByEmail?.id === "user-vice-principal-01",
+  "Resolves Vice Principal by email",
+);
 
 const vpByKeyword = resolveDemoPersona("vice-principal");
-assert(vpByKeyword?.id === "user-vice-principal-01", "Resolves Vice Principal by keyword 'vice-principal'");
+assert(
+  vpByKeyword?.id === "user-vice-principal-01",
+  "Resolves Vice Principal by keyword 'vice-principal'",
+);
 
 const vpByShortKeyword = resolveDemoPersona("vp");
-assert(vpByShortKeyword?.id === "user-vice-principal-01", "Resolves Vice Principal by keyword 'vp'");
+assert(
+  vpByShortKeyword?.id === "user-vice-principal-01",
+  "Resolves Vice Principal by keyword 'vp'",
+);
 
 // Admin / Super Admin
 const adminByEmail = resolveDemoPersona("registrar@campusos.edu");
 assert(adminByEmail?.id === "user-super-admin-01", "Resolves Admin by email");
 
 const adminByKeyword = resolveDemoPersona("admin");
-assert(adminByKeyword?.id === "user-super-admin-01", "Resolves Admin by keyword 'admin'");
+assert(
+  adminByKeyword?.id === "user-super-admin-01",
+  "Resolves Admin by keyword 'admin'",
+);
 
 // Unknown user should return null
 const unknownUser = resolveDemoPersona("nonexistent.user@random.com");
@@ -91,9 +118,18 @@ const studentUser = {
   roles: [{ id: "r1", name: "STUDENT", display_name: "Student" }],
 };
 const studentRoleSet = getNormalizedRoleSet(studentUser as any);
-assert(PORTALS.STUDENT.allowedRoles.some((r) => studentRoleSet.has(r)), "Student is authorized for Student Portal");
-assert(!PORTALS.ADMIN.allowedRoles.some((r) => studentRoleSet.has(r)), "Student is NOT authorized for Admin Portal");
-assert(!PORTALS.HOD.allowedRoles.some((r) => studentRoleSet.has(r)), "Student is NOT authorized for HOD Portal");
+assert(
+  PORTALS.STUDENT.allowedRoles.some((r) => studentRoleSet.has(r)),
+  "Student is authorized for Student Portal",
+);
+assert(
+  !PORTALS.ADMIN.allowedRoles.some((r) => studentRoleSet.has(r)),
+  "Student is NOT authorized for Admin Portal",
+);
+assert(
+  !PORTALS.HOD.allowedRoles.some((r) => studentRoleSet.has(r)),
+  "Student is NOT authorized for HOD Portal",
+);
 
 const facultyUser = {
   id: "user-faculty-01",
@@ -101,8 +137,14 @@ const facultyUser = {
   roles: [{ id: "r2", name: "FACULTY", display_name: "Faculty" }],
 };
 const facultyRoleSet = getNormalizedRoleSet(facultyUser as any);
-assert(PORTALS.FACULTY.allowedRoles.some((r) => facultyRoleSet.has(r)), "Faculty is authorized for Faculty Portal");
-assert(!PORTALS.STUDENT.allowedRoles.some((r) => facultyRoleSet.has(r)), "Faculty is NOT authorized for Student Portal");
+assert(
+  PORTALS.FACULTY.allowedRoles.some((r) => facultyRoleSet.has(r)),
+  "Faculty is authorized for Faculty Portal",
+);
+assert(
+  !PORTALS.STUDENT.allowedRoles.some((r) => facultyRoleSet.has(r)),
+  "Faculty is NOT authorized for Student Portal",
+);
 
 const hodUser = {
   id: "user-hod-cse-01",
@@ -110,7 +152,10 @@ const hodUser = {
   roles: [{ id: "r3", name: "HOD", display_name: "Head of Department" }],
 };
 const hodRoleSet = getNormalizedRoleSet(hodUser as any);
-assert(PORTALS.HOD.allowedRoles.some((r) => hodRoleSet.has(r)), "HOD is authorized for HOD Portal");
+assert(
+  PORTALS.HOD.allowedRoles.some((r) => hodRoleSet.has(r)),
+  "HOD is authorized for HOD Portal",
+);
 
 const vpUser = {
   id: "user-vice-principal-01",
@@ -118,7 +163,10 @@ const vpUser = {
   roles: [{ id: "r4", name: "PRINCIPAL", display_name: "Vice Principal" }],
 };
 const vpRoleSet = getNormalizedRoleSet(vpUser as any);
-assert(PORTALS.VICE_PRINCIPAL.allowedRoles.some((r) => vpRoleSet.has(r)), "Vice Principal (role PRINCIPAL) is authorized for Vice Principal Portal");
+assert(
+  PORTALS.VICE_PRINCIPAL.allowedRoles.some((r) => vpRoleSet.has(r)),
+  "Vice Principal (role PRINCIPAL) is authorized for Vice Principal Portal",
+);
 
 const adminUser = {
   id: "user-super-admin-01",
@@ -128,22 +176,39 @@ const adminUser = {
 const adminRoleSet = getNormalizedRoleSet(adminUser as any);
 assert(adminRoleSet.has("SUPER_ADMIN"), "Admin has SUPER_ADMIN role");
 assert(
-  PORTALS.STUDENT.allowedRoles.some((r) => adminRoleSet.has(r)) || adminRoleSet.has("SUPER_ADMIN"),
+  PORTALS.STUDENT.allowedRoles.some((r) => adminRoleSet.has(r)) ||
+    adminRoleSet.has("SUPER_ADMIN"),
   "Super Admin has universal access to Student Portal",
 );
 assert(
-  PORTALS.FACULTY.allowedRoles.some((r) => adminRoleSet.has(r)) || adminRoleSet.has("SUPER_ADMIN"),
+  PORTALS.FACULTY.allowedRoles.some((r) => adminRoleSet.has(r)) ||
+    adminRoleSet.has("SUPER_ADMIN"),
   "Super Admin has universal access to Faculty Portal",
 );
 
 // -----------------------------------------------------------------------------
 // 3. Path Authorization & Dashboard Entry Tests
 // -----------------------------------------------------------------------------
-assert(isPathAuthorized("/app/dashboard", studentUser as any), "Student is authorized for /app/dashboard");
-assert(isPathAuthorized("/app/dashboard", facultyUser as any), "Faculty is authorized for /app/dashboard");
-assert(isPathAuthorized("/app/dashboard", hodUser as any), "HOD is authorized for /app/dashboard");
-assert(isPathAuthorized("/app/dashboard", vpUser as any), "Vice Principal is authorized for /app/dashboard");
-assert(isPathAuthorized("/app/dashboard", adminUser as any), "Admin is authorized for /app/dashboard");
+assert(
+  isPathAuthorized("/app/dashboard", studentUser as any),
+  "Student is authorized for /app/dashboard",
+);
+assert(
+  isPathAuthorized("/app/dashboard", facultyUser as any),
+  "Faculty is authorized for /app/dashboard",
+);
+assert(
+  isPathAuthorized("/app/dashboard", hodUser as any),
+  "HOD is authorized for /app/dashboard",
+);
+assert(
+  isPathAuthorized("/app/dashboard", vpUser as any),
+  "Vice Principal is authorized for /app/dashboard",
+);
+assert(
+  isPathAuthorized("/app/dashboard", adminUser as any),
+  "Admin is authorized for /app/dashboard",
+);
 
 console.log("=================================================");
 console.log(`Auth Entry Tests Finished: Passed: ${passed}, Failed: ${failed}`);

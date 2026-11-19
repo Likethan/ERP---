@@ -3,8 +3,19 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { hodService, TimetablePeriod, TimetableScheduleItem, FacultyWorkloadItem } from "@/services/hod.service";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  hodService,
+  TimetablePeriod,
+  TimetableScheduleItem,
+  FacultyWorkloadItem,
+} from "@/services/hod.service";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
@@ -31,10 +42,21 @@ export default function HodTimetablePage() {
   const [viewMode, setViewMode] = useState<"grid" | "workload">("grid");
 
   const periods: TimetablePeriod[] = hodService.getTimetablePeriods();
-  const schedule: TimetableScheduleItem[] = hodService.getDepartmentSchedule(semester, section);
-  const facultyWorkloads: FacultyWorkloadItem[] = hodService.getFacultyWorkloads();
+  const schedule: TimetableScheduleItem[] = hodService.getDepartmentSchedule(
+    semester,
+    section,
+  );
+  const facultyWorkloads: FacultyWorkloadItem[] =
+    hodService.getFacultyWorkloads();
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   // Helper to find schedule entry for a given day and period
   const getCellItem = (day: string, periodNumber: number) => {
@@ -54,13 +76,16 @@ export default function HodTimetablePage() {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-950 border border-yellow-300">
               Department Academic Scheduling
             </span>
-            <span className="text-xs text-slate-500 font-mono">• {deptName}</span>
+            <span className="text-xs text-slate-500 font-mono">
+              • {deptName}
+            </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
             Timetable Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Read-only master timetable schedule, classroom allocations, laboratory blocks, and faculty teaching loads.
+            Read-only master timetable schedule, classroom allocations,
+            laboratory blocks, and faculty teaching loads.
           </p>
         </div>
 
@@ -142,7 +167,9 @@ export default function HodTimetablePage() {
             {/* Timetable Integrity Indicator */}
             <div className="flex items-center gap-2 p-2 px-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-semibold w-full sm:w-auto justify-center">
               <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>0 Scheduling Conflicts Detected (Faculty & Rooms Verified)</span>
+              <span>
+                0 Scheduling Conflicts Detected (Faculty & Rooms Verified)
+              </span>
             </div>
           </div>
         </CardContent>
@@ -157,7 +184,8 @@ export default function HodTimetablePage() {
                 Semester {semester} — Section {section} Master Timetable
               </CardTitle>
               <CardDescription>
-                Monday through Saturday schedule with classrooms, faculty, and laboratory slots.
+                Monday through Saturday schedule with classrooms, faculty, and
+                laboratory slots.
               </CardDescription>
             </div>
             <Badge variant="outline" className="font-mono text-xs">
@@ -173,8 +201,13 @@ export default function HodTimetablePage() {
                       Day / Period
                     </th>
                     {periods.map((p) => (
-                      <th key={p.period} className="p-2.5 border-r border-slate-200 text-center min-w-[150px]">
-                        <div className="font-bold text-slate-900">Period {p.period}</div>
+                      <th
+                        key={p.period}
+                        className="p-2.5 border-r border-slate-200 text-center min-w-[150px]"
+                      >
+                        <div className="font-bold text-slate-900">
+                          Period {p.period}
+                        </div>
                         <div className="text-[10px] text-slate-400 font-mono font-normal mt-0.5">
                           {p.time}
                         </div>
@@ -184,7 +217,10 @@ export default function HodTimetablePage() {
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {days.map((day) => (
-                    <tr key={day} className="hover:bg-yellow-50/20 transition-colors">
+                    <tr
+                      key={day}
+                      className="hover:bg-yellow-50/20 transition-colors"
+                    >
                       {/* Day Label */}
                       <td className="p-3 border-r border-slate-200 font-bold text-slate-800 bg-slate-50/70 text-center">
                         {day}
@@ -196,7 +232,10 @@ export default function HodTimetablePage() {
 
                         if (!item) {
                           return (
-                            <td key={p.period} className="p-2 border-r border-slate-200 bg-slate-50/40 text-center text-slate-400">
+                            <td
+                              key={p.period}
+                              className="p-2 border-r border-slate-200 bg-slate-50/40 text-center text-slate-400"
+                            >
                               <span className="text-[11px] font-mono">—</span>
                             </td>
                           );
@@ -251,7 +290,8 @@ export default function HodTimetablePage() {
           <CardHeader className="pb-3 border-b border-slate-100">
             <CardTitle>Department Faculty Workload Distribution</CardTitle>
             <CardDescription>
-              Teaching contact hours allocated across professors for current academic cycle.
+              Teaching contact hours allocated across professors for current
+              academic cycle.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -270,12 +310,18 @@ export default function HodTimetablePage() {
                 <tbody className="divide-y divide-slate-100">
                   {facultyWorkloads.map((fw) => (
                     <tr key={fw.facultyId} className="hover:bg-yellow-50/30">
-                      <td className="p-3.5 font-bold text-slate-900">{fw.facultyName}</td>
+                      <td className="p-3.5 font-bold text-slate-900">
+                        {fw.facultyName}
+                      </td>
                       <td className="p-3.5 text-slate-600">{fw.designation}</td>
                       <td className="p-3.5">
                         <div className="flex flex-wrap gap-1">
                           {fw.assignedSubjects.map((sub, i) => (
-                            <Badge key={i} variant="outline" className="font-mono text-[10px]">
+                            <Badge
+                              key={i}
+                              variant="outline"
+                              className="font-mono text-[10px]"
+                            >
                               {sub}
                             </Badge>
                           ))}
@@ -322,15 +368,21 @@ export default function HodTimetablePage() {
           <CardContent className="space-y-1.5 text-xs">
             <div className="flex justify-between">
               <span className="text-slate-600">Hall 302 (Block A):</span>
-              <span className="font-mono font-bold text-slate-900">CSE 5th Sem - Sec A</span>
+              <span className="font-mono font-bold text-slate-900">
+                CSE 5th Sem - Sec A
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600">Hall 304 (Block A):</span>
-              <span className="font-mono font-bold text-slate-900">CSE 5th Sem - Sec B</span>
+              <span className="font-mono font-bold text-slate-900">
+                CSE 5th Sem - Sec B
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600">Hall 306 (Block A):</span>
-              <span className="font-mono font-bold text-slate-900">CSE 5th Sem - Sec C</span>
+              <span className="font-mono font-bold text-slate-900">
+                CSE 5th Sem - Sec C
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -344,15 +396,21 @@ export default function HodTimetablePage() {
           <CardContent className="space-y-1.5 text-xs">
             <div className="flex justify-between">
               <span className="text-slate-600">CS Lab 1 (Programming):</span>
-              <span className="font-mono font-bold text-emerald-700">60 Terminals (Active)</span>
+              <span className="font-mono font-bold text-emerald-700">
+                60 Terminals (Active)
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600">CS Lab 2 (Database/OS):</span>
-              <span className="font-mono font-bold text-emerald-700">60 Terminals (Active)</span>
+              <span className="font-mono font-bold text-emerald-700">
+                60 Terminals (Active)
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600">CS Lab 3 (Networks/IoT):</span>
-              <span className="font-mono font-bold text-emerald-700">45 Terminals (Active)</span>
+              <span className="font-mono font-bold text-emerald-700">
+                45 Terminals (Active)
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -364,7 +422,10 @@ export default function HodTimetablePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-slate-500 leading-relaxed">
-            Per institutional ERP governance rules, Master Timetable modifications are approved by the Vice Principal (Academics) and HOD. Timetable edits trigger automatic calendar synchronization for all enrolled students and faculty.
+            Per institutional ERP governance rules, Master Timetable
+            modifications are approved by the Vice Principal (Academics) and
+            HOD. Timetable edits trigger automatic calendar synchronization for
+            all enrolled students and faculty.
           </CardContent>
         </Card>
       </div>

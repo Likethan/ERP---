@@ -63,7 +63,10 @@ export function HodDashboard() {
         <div className="h-28 rounded-2xl bg-white border border-slate-200 p-6" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-28 rounded-xl bg-white border border-slate-200" />
+            <div
+              key={i}
+              className="h-28 rounded-xl bg-white border border-slate-200"
+            />
           ))}
         </div>
       </div>
@@ -85,7 +88,8 @@ export function HodDashboard() {
             {data.department.name}
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">
-            Head of Department: {data.department.head} • {stats.totalStudents} Students • {stats.totalFaculty} Faculty Members
+            Head of Department: {data.department.head} • {stats.totalStudents}{" "}
+            Students • {stats.totalFaculty} Faculty Members
           </p>
         </div>
 
@@ -177,8 +181,12 @@ export function HodDashboard() {
               <GraduationCap className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900">Student Management</div>
-              <div className="text-[10px] text-slate-500">Rosters, Academics & Details</div>
+              <div className="text-xs font-bold text-slate-900">
+                Student Management
+              </div>
+              <div className="text-[10px] text-slate-500">
+                Rosters, Academics & Details
+              </div>
             </div>
           </div>
           <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
@@ -193,8 +201,12 @@ export function HodDashboard() {
               <Users className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900">Faculty Management</div>
-              <div className="text-[10px] text-slate-500">Workload, Profile & Courses</div>
+              <div className="text-xs font-bold text-slate-900">
+                Faculty Management
+              </div>
+              <div className="text-[10px] text-slate-500">
+                Workload, Profile & Courses
+              </div>
             </div>
           </div>
           <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
@@ -209,8 +221,12 @@ export function HodDashboard() {
               <CalendarCheck className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900">Attendance Hub</div>
-              <div className="text-[10px] text-slate-500">Ledgers & Shortage Alerts</div>
+              <div className="text-xs font-bold text-slate-900">
+                Attendance Hub
+              </div>
+              <div className="text-[10px] text-slate-500">
+                Ledgers & Shortage Alerts
+              </div>
             </div>
           </div>
           <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
@@ -225,8 +241,12 @@ export function HodDashboard() {
               <Calendar className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900">Timetable Grid</div>
-              <div className="text-[10px] text-slate-500">Class & Lab Allocations</div>
+              <div className="text-xs font-bold text-slate-900">
+                Timetable Grid
+              </div>
+              <div className="text-[10px] text-slate-500">
+                Class & Lab Allocations
+              </div>
             </div>
           </div>
           <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
@@ -239,7 +259,9 @@ export function HodDashboard() {
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <div>
               <CardTitle>Department Student Strength by Year</CardTitle>
-              <CardDescription>B.Tech CSE enrolment distribution</CardDescription>
+              <CardDescription>
+                B.Tech CSE enrolment distribution
+              </CardDescription>
             </div>
             <Link href="/hod/students">
               <Button variant="ghost" size="sm" className="text-xs">
@@ -253,8 +275,12 @@ export function HodDashboard() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-800">{y.year}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-500 font-mono">{y.strength} Students</span>
-                    <span className="font-bold text-slate-900 font-mono">{y.percentage}% rate</span>
+                    <span className="text-slate-500 font-mono">
+                      {y.strength} Students
+                    </span>
+                    <span className="font-bold text-slate-900 font-mono">
+                      {y.percentage}% rate
+                    </span>
                   </div>
                 </div>
                 <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -272,7 +298,9 @@ export function HodDashboard() {
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <div>
               <CardTitle>Attendance Radar & Alert Summary</CardTitle>
-              <CardDescription>75% statutory compliance requirement</CardDescription>
+              <CardDescription>
+                75% statutory compliance requirement
+              </CardDescription>
             </div>
             <Link href="/hod/attendance">
               <Button variant="ghost" size="sm" className="text-xs">
@@ -285,23 +313,29 @@ export function HodDashboard() {
               <ShieldAlert className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
               <div>
                 <div className="text-xs font-bold text-rose-900">
-                  {stats.studentsShortageCount} Students with Attendance Shortage
+                  {stats.studentsShortageCount} Students with Attendance
+                  Shortage
                 </div>
                 <p className="text-[11px] text-rose-700 mt-0.5">
-                  Action required: Issue parent advisories and review medical exemptions before semester examination hall ticket lock.
+                  Action required: Issue parent advisories and review medical
+                  exemptions before semester examination hall ticket lock.
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-center">
               <div className="p-2.5 rounded-lg border border-slate-200 bg-slate-50">
-                <div className="text-[10px] text-slate-500 font-semibold uppercase">Monthly Avg Rate</div>
+                <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                  Monthly Avg Rate
+                </div>
                 <div className="text-lg font-bold font-mono text-slate-900 mt-0.5">
                   {data.attendanceTrends.monthlyAverage}%
                 </div>
               </div>
               <div className="p-2.5 rounded-lg border border-slate-200 bg-slate-50">
-                <div className="text-[10px] text-slate-500 font-semibold uppercase">Statutory Cutoff</div>
+                <div className="text-[10px] text-slate-500 font-semibold uppercase">
+                  Statutory Cutoff
+                </div>
                 <div className="text-lg font-bold font-mono text-slate-900 mt-0.5">
                   {data.attendanceTrends.statutoryThreshold}%
                 </div>
