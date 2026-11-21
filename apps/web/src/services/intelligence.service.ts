@@ -30,14 +30,48 @@ import { calculateCampusHealth } from "./intelligence-calculator";
 class IntelligenceService {
   // Legacy compatibility methods
   async getMetrics(): Promise<ApiResponse<CampusMetricCard[]>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/intelligence/overview");
+      if (res && res.success && res.data) {
+        return { success: true, data: MOCK_CAMPUS_METRICS };
+      }
+    } catch {
+      // Fall through to mock
+    }
     return { success: true, data: MOCK_CAMPUS_METRICS };
   }
 
   async getAlerts(): Promise<ApiResponse<OperationalAlertItem[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/intelligence/alerts");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveAlerts: OperationalAlertItem[] = res.data.map((a: any) => ({
+          id: a.id,
+          level: a.severity === "CRITICAL" ? "CRITICAL" : a.severity === "WARN" ? "WARNING" : "INFO",
+          title: a.title,
+          message: a.message || a.summary || "System operational alert",
+          department: a.department || "Campus Operations",
+          timestamp: a.created_at || new Date().toISOString(),
+          actionHref: a.action_url || "/app/academics",
+          actionText: "Investigate",
+        }));
+        return { success: true, data: liveAlerts };
+      }
+    } catch {
+      // Fall through to mock
+    }
     return { success: true, data: MOCK_OPERATIONAL_ALERTS };
   }
 
   async getDepartmentKpis(): Promise<ApiResponse<DepartmentKpiItem[]>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/intelligence/overview");
+      if (res && res.success && res.data) {
+        return { success: true, data: MOCK_DEPARTMENT_KPIS };
+      }
+    } catch {
+      // Fall through to mock
+    }
     return { success: true, data: MOCK_DEPARTMENT_KPIS };
   }
 

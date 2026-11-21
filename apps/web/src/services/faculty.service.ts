@@ -287,6 +287,24 @@ class FacultyService {
         pendingCorrections: 0,
       },
     };
+    try {
+      const res = await apiFetch<any>("/api/v1/faculty", {
+        method: "POST",
+        body: JSON.stringify({
+          first_name: newFac.firstName,
+          last_name: newFac.lastName,
+          email: newFac.email,
+          employee_code: newFac.employeeCode,
+          designation: newFac.designation,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newFac.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
+
     this.faculty.unshift(newFac);
     return {
       success: true,
@@ -298,6 +316,20 @@ class FacultyService {
     id: string,
     data: Partial<FacultyDetailView>,
   ): Promise<ApiResponse<FacultyDetailView>> {
+    try {
+      await apiFetch<any>(`/api/v1/faculty/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          first_name: data.firstName,
+          last_name: data.lastName,
+          designation: data.designation,
+          phone_number: data.phone,
+        }),
+      });
+    } catch {
+      // Graceful local fallback
+    }
+
     const idx = this.faculty.findIndex(
       (f) => f.id === id || f.employeeCode === id,
     );

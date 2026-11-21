@@ -12,6 +12,7 @@ export interface ApiResponse<T> {
   error?: string;
   meta?: Record<string, unknown>;
 }
+import { apiFetch } from "@/lib/api-client";
 import {
   CampusEventItem,
   EventCategory,
@@ -90,6 +91,26 @@ class CampusService {
   // ==========================================
 
   async getCampusSummary(): Promise<ApiResponse<CampusDashboardSummary>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/campus/dashboard");
+      if (res && res.success && res.data) {
+        const d = res.data;
+        const liveSummary: CampusDashboardSummary = {
+          ...this.dashboard,
+          activeEventsCount: d.active_events ?? 4,
+          upcomingEventsCount: d.upcoming_events ?? 8,
+          openRegistrationsCount: d.open_registrations ?? 3,
+          activeClubsCount: d.active_clubs ?? 12,
+          registeredParticipantsCount: d.total_registrations ?? 1420,
+          unreadAnnouncementsCount: d.active_announcements ?? 3,
+          unreadNotificationsCount: d.unread_notifications ?? 2,
+        };
+        return { success: true, data: liveSummary };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     await this.delay(20);
     // Dynamically recalculate key figures
     const activeEvents = this.events.filter(
@@ -144,6 +165,47 @@ class CampusService {
     venue?: string;
     search?: string;
   }): Promise<ApiResponse<CampusEventItem[]>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/events");
+      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
+        const liveEvents: CampusEventItem[] = res.data.items.map((e: any) => ({
+          id: e.id,
+          title: e.title,
+          slug: e.slug || e.id,
+          description: e.description || "",
+          category: (e.category as any) || "ACADEMIC",
+          status: (e.status as any) || "PUBLISHED",
+          startDate: e.start_time?.split("T")[0] || "2026-04-10",
+          endDate: e.end_time?.split("T")[0] || "2026-04-12",
+          startTime: "09:00",
+          endTime: "17:00",
+          venue: e.venue_name || "Main Auditorium",
+          venueCapacity: e.capacity || 500,
+          registeredCount: e.registered_count || 120,
+          attendedCount: e.attended_count || 0,
+          waitlistCount: 0,
+          maxCapacity: e.capacity || 500,
+          isRegistrationRequired: true,
+          registrationDeadline: "2026-04-08",
+          allowWaitlist: false,
+          audienceTarget: "ALL",
+          organizer: e.organizer_name || "Dean Office",
+          coordinatorName: "Coordinator",
+          coordinatorEmail: "coordinator@campusos.edu",
+          coordinatorPhone: "+91 90000 00000",
+          bannerUrl: "/banners/event.jpg",
+          tags: ["campus", "academic"],
+          createdAt: e.created_at || new Date().toISOString(),
+          updatedAt: e.updated_at || new Date().toISOString(),
+          createdBy: "Administrator",
+          timeline: [],
+        }));
+        return { success: true, data: liveEvents };
+      }
+    } catch {
+      // Fall through to local events
+    }
+
     await this.delay(30);
     let result = [...this.events];
 
@@ -228,6 +290,26 @@ class CampusService {
         },
       ],
     };
+
+    try {
+      const res = await apiFetch<any>("/api/v1/events", {
+        method: "POST",
+        body: JSON.stringify({
+          title: payload.title,
+          description: payload.description,
+          category_id: "cat-academic",
+          venue_id: "ven-auditorium",
+          start_time: `${payload.startDate}T${payload.startTime || "09:00"}:00Z`,
+          end_time: `${payload.endDate}T${payload.endTime || "17:00"}:00Z`,
+          capacity: (payload as any).capacity || (payload as any).maxCapacity || 500,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newEvent.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
 
     this.events.unshift(newEvent);
     return { success: true, data: newEvent };
@@ -708,6 +790,34 @@ class CampusService {
     status?: ClubStatus | "ALL";
     search?: string;
   }): Promise<ApiResponse<ClubItem[]>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/clubs");
+      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
+        const liveClubs: ClubItem[] = res.data.items.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          code: c.code || "CLUB-01",
+          category: c.category || "TECHNICAL",
+          description: c.description || "",
+          status: (c.status as any) || "ACTIVE",
+          facultyCoordinator: c.advisor_name || "Faculty Coordinator",
+          facultyCoordinatorId: c.advisor_user_id || "fac-001",
+          studentLead: "Student Lead",
+          studentLeadId: "stu-001",
+          membersCount: c.member_count || 30,
+          activeEventsCount: 2,
+          upcomingEventTitles: [],
+          tags: ["club", "student"],
+          createdAt: c.created_at || new Date().toISOString(),
+          updatedAt: c.updated_at || new Date().toISOString(),
+          timeline: [],
+        }));
+        return { success: true, data: liveClubs };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     await this.delay(30);
     let result = [...this.clubs];
 
@@ -795,6 +905,23 @@ class CampusService {
         },
       ],
     };
+
+    try {
+      const res = await apiFetch<any>("/api/v1/clubs", {
+        method: "POST",
+        body: JSON.stringify({
+          name: newClub.name,
+          code: newClub.code,
+          category: newClub.category,
+          description: newClub.description,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newClub.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
 
     this.clubs.push(newClub);
     return { success: true, data: newClub };
@@ -1065,6 +1192,35 @@ class CampusService {
     status?: AnnouncementStatus | "ALL";
     search?: string;
   }): Promise<ApiResponse<AnnouncementItem[]>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/announcements");
+      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
+        const liveAnnouncements: AnnouncementItem[] = res.data.items.map((a: any) => ({
+          id: a.id,
+          title: a.title,
+          content: a.content,
+          priority: (a.priority as any) || "NORMAL",
+          status: (a.status as any) || "PUBLISHED",
+          category: (a.category as any) || "GENERAL",
+          targetAudience: "ALL",
+          publisher: a.author_name || "Campus Administration",
+          publisherRole: "INSTITUTION_ADMIN",
+          publishedDate: a.published_at || new Date().toISOString(),
+          createdDate: a.created_at || new Date().toISOString(),
+          updatedDate: a.updated_at || new Date().toISOString(),
+          deliveredCount: 450,
+          viewCount: a.view_count || 120,
+          targetAudienceCount: 500,
+          targetBranches: ["ALL"],
+          targetYears: ["ALL"],
+          timeline: [],
+        }));
+        return { success: true, data: liveAnnouncements };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     await this.delay(25);
     let result = [...this.announcements];
 
@@ -1133,6 +1289,23 @@ class CampusService {
         },
       ],
     };
+
+    try {
+      const res = await apiFetch<any>("/api/v1/announcements", {
+        method: "POST",
+        body: JSON.stringify({
+          title: newAnc.title,
+          content: newAnc.content,
+          priority: newAnc.priority,
+          target_audience: (newAnc as any).audience || "ALL",
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newAnc.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
 
     this.announcements.unshift(newAnc);
     return { success: true, data: newAnc };

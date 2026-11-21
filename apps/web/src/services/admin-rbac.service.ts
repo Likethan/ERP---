@@ -404,7 +404,32 @@ class AdminRbacService {
     return { success: true, data: newRoleItem };
   }
 
-  async revokeRole(userId: string, roleId: string): Promise<ApiResponse<{ message: string }>> {
+  async revokeRole(
+    userId: string,
+    roleId: string,
+    currentActorId?: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    // Invariant: Self-lockout prevention
+    if (currentActorId && currentActorId === userId) {
+      const isSuperAdminRole = roleId === "role-super-admin" || roleId === "role-superadmin";
+      if (isSuperAdminRole) {
+        throw new Error("Cannot revoke your own SUPER_ADMIN role. Self-lockout prevented.");
+      }
+    }
+
+    // Invariant: Last superadmin safeguard
+    const isTargetSuperAdmin = roleId === "role-super-admin" || roleId === "role-superadmin";
+    if (isTargetSuperAdmin) {
+      const activeSuperAdmins = this.users.filter(
+        (u) =>
+          u.status === "ACTIVE" &&
+          u.roles.some((r) => r.roleId === "role-super-admin" || r.roleName === "SUPER_ADMIN"),
+      );
+      if (activeSuperAdmins.length <= 1) {
+        throw new Error("Cannot revoke the sole remaining active SUPER_ADMIN. Last superadmin safeguard.");
+      }
+    }
+
     try {
       const res = await apiFetch<{ message: string }>(`/api/v1/admin/users/${userId}/roles/${roleId}`, {
         method: "DELETE",
@@ -426,7 +451,12 @@ class AdminRbacService {
   async updateUserStatus(
     userId: string,
     payload: AdminUserStatusUpdateParams,
+    currentActorId?: string,
   ): Promise<ApiResponse<AdminUserItem>> {
+    // Invariant: Self-deactivation prevention
+    if (currentActorId && currentActorId === userId && payload.status !== "ACTIVE") {
+      throw new Error("Cannot deactivate your own administrator account. Self-lockout prevented.");
+    }
     try {
       const res = await apiFetch<any>(`/api/v1/admin/users/${userId}/status`, {
         method: "PATCH",

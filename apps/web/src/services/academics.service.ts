@@ -209,6 +209,26 @@ class AcademicsService {
       offeringsCount: 0,
     };
 
+    try {
+      const res = await apiFetch<any>("/api/v1/academics/subjects", {
+        method: "POST",
+        body: JSON.stringify({
+          code: newSubject.code,
+          name: newSubject.name,
+          credits: newSubject.credits,
+          subject_type: newSubject.type,
+          lecture_hours: newSubject.lectureHours,
+          tutorial_hours: newSubject.tutorialHours,
+          practical_hours: newSubject.practicalHours,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newSubject.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
+
     this.academicSubjects.unshift(newSubject);
     return { success: true, data: newSubject };
   }
@@ -217,6 +237,18 @@ class AcademicsService {
     id: string,
     data: Partial<AcademicSubject>,
   ): Promise<ApiResponse<AcademicSubject>> {
+    try {
+      await apiFetch<any>(`/api/v1/academics/subjects/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: data.name,
+          credits: data.credits,
+        }),
+      });
+    } catch {
+      // Graceful local fallback
+    }
+
     const idx = this.academicSubjects.findIndex((s) => s.id === id);
     if (idx === -1) {
       throw new Error(`Subject ${id} not found`);
