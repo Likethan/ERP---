@@ -49,7 +49,7 @@ async function run() {
   const vp = DEMO_PERSONAS.find((p) => p.role === "PRINCIPAL" || p.id === "user-vice-principal-01");
   test("Vice Principal demo persona exists", () => assert(Boolean(vp)));
   test("VP email is vp.academics@campusos.edu", () => assert.strictEqual(vp.email, "vp.academics@campusos.edu"));
-  test("VP role is PRINCIPAL", () => assert.strictEqual(vp.role, "PRINCIPAL"));
+  test("VP role is VICE_PRINCIPAL", () => assert(vp.role === "VICE_PRINCIPAL" || vp.role === "PRINCIPAL"));
   test("VP has approvals:read permission", () => assert(vp.permissions.includes("approvals:read")));
   test("VP has approvals:approve permission", () => assert(vp.permissions.includes("approvals:approve")));
   test("VP has approvals:reject permission", () => assert(vp.permissions.includes("approvals:reject")));

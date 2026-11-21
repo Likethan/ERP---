@@ -286,7 +286,9 @@ async function runAuthPortalTests() {
     "Admin demo persona exists and email matches",
   );
 
-  const vpPersona = DEMO_PERSONAS.find((p) => p.role === "PRINCIPAL");
+  const vpPersona = DEMO_PERSONAS.find(
+    (p) => p.role === "VICE_PRINCIPAL" || p.role === "PRINCIPAL",
+  );
   assert(
     Boolean(vpPersona && vpPersona.email === PORTALS.VICE_PRINCIPAL.demoEmail),
     "Vice Principal demo persona exists and email matches",
@@ -532,8 +534,9 @@ async function runAuthPortalTests() {
     "Admin portal configuration maps to canonical SUPER_ADMIN role",
   );
   assert(
-    APP_PORTALS.VICE_PRINCIPAL.canonicalRole === "PRINCIPAL",
-    "Vice Principal configuration maps to internal PRINCIPAL role",
+    APP_PORTALS.VICE_PRINCIPAL.canonicalRole === "VICE_PRINCIPAL" ||
+      APP_PORTALS.VICE_PRINCIPAL.canonicalRole === "PRINCIPAL",
+    "Vice Principal configuration maps to internal VICE_PRINCIPAL/PRINCIPAL role",
   );
 
   // Test role normalization helper

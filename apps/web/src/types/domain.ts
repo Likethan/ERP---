@@ -26,6 +26,7 @@ export type RoleName =
   | "SUPER_ADMIN"
   | "ADMIN"
   | "PRINCIPAL"
+  | "VICE_PRINCIPAL"
   | "HOD"
   | "FACULTY"
   | "ACCOUNTS"

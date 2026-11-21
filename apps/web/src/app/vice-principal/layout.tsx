@@ -261,14 +261,20 @@ export default function VicePrincipalPortalLayout({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <div className="h-8 w-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
-              {activePersona.avatarInitials || "VP"}
+              {(user?.first_name
+                ? `${user.first_name[0]}${user.last_name ? user.last_name[0] : ""}`
+                : activePersona?.avatarInitials) || "VP"}
             </div>
             <div className="min-w-0">
               <div className="text-xs font-bold text-slate-900 truncate">
-                {activePersona.name || "Dr. Meenakshi Sundaram"}
+                {user?.first_name
+                  ? `${user.first_name} ${user.last_name || ""}`.trim()
+                  : activePersona?.name || "Vice Principal"}
               </div>
               <div className="text-[10px] text-slate-500 truncate">
-                {activePersona.roleTitle || "Vice Principal"}
+                {activePersona?.roleTitle ||
+                  user?.roles?.[0]?.display_name ||
+                  "Vice Principal"}
               </div>
             </div>
           </div>

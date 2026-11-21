@@ -193,6 +193,39 @@ function resolvePortalKey(
   return null;
 }
 
+function getValidDestination(
+  redirectUrl: string | null,
+  activeRole: PortalKey,
+): string {
+  const defaultDest =
+    activeRole === "VICE_PRINCIPAL"
+      ? "/vice-principal/dashboard"
+      : activeRole === "HOD"
+        ? "/hod/dashboard"
+        : activeRole === "FACULTY"
+          ? "/faculty/dashboard"
+          : activeRole === "STUDENT"
+            ? "/student/dashboard"
+            : activeRole === "ADMIN"
+              ? "/admin"
+              : "/app/dashboard";
+
+  if (
+    redirectUrl &&
+    (redirectUrl.startsWith("/app") ||
+      redirectUrl.startsWith("/vice-principal") ||
+      redirectUrl.startsWith("/hod") ||
+      redirectUrl.startsWith("/faculty") ||
+      redirectUrl.startsWith("/student") ||
+      redirectUrl.startsWith("/admin")) &&
+    !redirectUrl.includes("//") &&
+    !redirectUrl.includes("\\")
+  ) {
+    return redirectUrl;
+  }
+  return defaultDest;
+}
+
 function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -247,25 +280,12 @@ function LoginFormContent() {
   // If already authenticated, redirect directly to destination or dashboard
   useEffect(() => {
     if (!isLoading && user) {
-      const redirectUrl = searchParams.get("redirect");
-      if (
-        redirectUrl &&
-        redirectUrl.startsWith("/app") &&
-        !redirectUrl.includes("//") &&
-        !redirectUrl.includes("\\")
-      ) {
-        router.replace(redirectUrl);
-      } else {
-        router.replace("/app/dashboard");
-      }
+      const dest = getValidDestination(
+        searchParams.get("redirect"),
+        activeRole,
+      );
+      router.replace(dest); // router.replace("/app/dashboard")
       if (typeof window !== "undefined") {
-        const dest =
-          redirectUrl &&
-          redirectUrl.startsWith("/app") &&
-          !redirectUrl.includes("//") &&
-          !redirectUrl.includes("\\")
-            ? redirectUrl
-            : "/app/dashboard";
         setTimeout(() => {
           if (
             window.location.pathname === "/login" ||
@@ -276,7 +296,7 @@ function LoginFormContent() {
         }, 350);
       }
     }
-  }, [isLoading, user, router, searchParams]);
+  }, [isLoading, user, router, searchParams, activeRole]);
 
   const handleRoleSwitch = (roleKey: PortalKey) => {
     setActiveRole(roleKey);
@@ -323,25 +343,12 @@ function LoginFormContent() {
         }
       }
 
-      const redirectUrl = searchParams.get("redirect");
-      if (
-        redirectUrl &&
-        redirectUrl.startsWith("/app") &&
-        !redirectUrl.includes("//") &&
-        !redirectUrl.includes("\\")
-      ) {
-        router.replace(redirectUrl);
-      } else {
-        router.replace("/app/dashboard");
-      }
+      const dest = getValidDestination(
+        searchParams.get("redirect"),
+        activeRole,
+      );
+      router.replace(dest); // router.replace("/app/dashboard")
       if (typeof window !== "undefined") {
-        const dest =
-          redirectUrl &&
-          redirectUrl.startsWith("/app") &&
-          !redirectUrl.includes("//") &&
-          !redirectUrl.includes("\\")
-            ? redirectUrl
-            : "/app/dashboard";
         setTimeout(() => {
           if (
             window.location.pathname === "/login" ||
@@ -409,25 +416,12 @@ function LoginFormContent() {
         }
       }
 
-      const redirectUrl = searchParams.get("redirect");
-      if (
-        redirectUrl &&
-        redirectUrl.startsWith("/app") &&
-        !redirectUrl.includes("//") &&
-        !redirectUrl.includes("\\")
-      ) {
-        router.replace(redirectUrl);
-      } else {
-        router.replace("/app/dashboard");
-      }
+      const dest = getValidDestination(
+        searchParams.get("redirect"),
+        activeRole,
+      );
+      router.replace(dest); // router.replace("/app/dashboard")
       if (typeof window !== "undefined") {
-        const dest =
-          redirectUrl &&
-          redirectUrl.startsWith("/app") &&
-          !redirectUrl.includes("//") &&
-          !redirectUrl.includes("\\")
-            ? redirectUrl
-            : "/app/dashboard";
         setTimeout(() => {
           if (
             window.location.pathname === "/login" ||

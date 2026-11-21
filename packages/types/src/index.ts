@@ -11,6 +11,7 @@ export type UUID = string;
 export enum UserRole {
   SUPER_ADMIN = "SUPER_ADMIN",
   PRINCIPAL = "PRINCIPAL",
+  VICE_PRINCIPAL = "VICE_PRINCIPAL",
   HOD = "HOD",
   FACULTY = "FACULTY",
   ACCOUNTS = "ACCOUNTS",

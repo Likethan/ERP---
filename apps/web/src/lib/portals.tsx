@@ -84,8 +84,8 @@ export const PORTALS: Record<PortalKey, PortalConfig> = {
   },
   VICE_PRINCIPAL: {
     key: "VICE_PRINCIPAL",
-    canonicalRole: "PRINCIPAL",
-    allowedRoles: ["PRINCIPAL", "SUPER_ADMIN"],
+    canonicalRole: "VICE_PRINCIPAL",
+    allowedRoles: ["VICE_PRINCIPAL", "PRINCIPAL", "SUPER_ADMIN"],
     label: "Vice Principal Portal",
     shortTitle: "Vice Principal",
     description: "Institutional oversight and academic monitoring.",

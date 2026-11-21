@@ -75,8 +75,8 @@ export function resolveDemoPersona(raw: string): DemoPersona | null {
   found = DEMO_PERSONAS.find(
     (p) =>
       p.role.toLowerCase() === id ||
-      (id === "vice_principal" && p.role === "PRINCIPAL") ||
-      (id === "vice-principal" && p.role === "PRINCIPAL") ||
+      ((id === "vice_principal" || id === "vice-principal") &&
+        (p.role === "VICE_PRINCIPAL" || p.role === "PRINCIPAL")) ||
       (id === "admin" && p.role === "SUPER_ADMIN"),
   );
   if (found) return found;

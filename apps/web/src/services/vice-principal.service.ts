@@ -334,6 +334,95 @@ const MOCK_APPROVALS: StatutoryApprovalItem[] = [
       },
     ],
   },
+  {
+    id: "appr-vp-007",
+    title: "National Conference on Green Computing & Sustainable AI Sanction",
+    category: "ACADEMIC_EVENT",
+    department_id: "dept-cse",
+    department_name: "Computer Science & Engineering",
+    submitted_by: "Dr. K. S. Anand (HOD)",
+    submission_date: "2026-11-13T10:00:00Z",
+    urgency: "HIGH",
+    status: "PENDING",
+    details: {
+      proposed_dates: "2027-02-18 to 2027-02-19",
+      expected_delegates: 150,
+      invited_keynote: "Dr. P. Radhakrishnan (IISc Bangalore)",
+      venue: "Main Institutional Auditorium",
+    },
+    remarks: null,
+    decided_by: null,
+    decision_date: null,
+    audit_trail: [
+      {
+        action: "SUBMITTED",
+        by: "Dr. K. S. Anand (HOD)",
+        timestamp: "2026-11-13T10:00:00Z",
+        notes: "Conference proposal endorsed by Department Research Committee.",
+      },
+    ],
+  },
+  {
+    id: "appr-vp-008",
+    title: "Civil Materials Testing Lab Modernization & Calibration Sanction",
+    category: "DEPARTMENT_ADMIN_REQUEST",
+    department_id: "dept-civil",
+    department_name: "Civil Engineering",
+    submitted_by: "Dr. P. Balaji (HOD)",
+    submission_date: "2026-11-12T15:30:00Z",
+    urgency: "MEDIUM",
+    status: "PENDING",
+    details: {
+      laboratory: "Concrete & Highway Engineering Lab",
+      equipment:
+        "Universal Testing Machine Digital Calibration (NABL accredited)",
+      budget_allocation: "INR 1,80,000",
+      compliance_standard: "ISO/IEC 17025:2017",
+    },
+    remarks: null,
+    decided_by: null,
+    decision_date: null,
+    audit_trail: [
+      {
+        action: "SUBMITTED",
+        by: "Dr. P. Balaji (HOD)",
+        timestamp: "2026-11-12T15:30:00Z",
+        notes: "Submitted for Vice Principal statutory infrastructure vetting.",
+      },
+    ],
+  },
+  {
+    id: "appr-vp-009",
+    title: "Medical Attendance Condonation & Exam Eligibility Exception Review",
+    category: "SPECIAL_ACADEMIC_PERMISSION",
+    department_id: "dept-eee",
+    department_name: "Electrical & Electronics Engineering",
+    submitted_by: "Dr. S. Gayathri (HOD)",
+    submission_date: "2026-11-11T12:00:00Z",
+    urgency: "CRITICAL",
+    status: "PENDING",
+    details: {
+      student_roll: "24EEE0018",
+      student_name: "Meera Nair",
+      semester: 5,
+      actual_attendance_pct: 68.5,
+      reason:
+        "Dengue hospitalization (14 working days verified with hospital discharge summary)",
+      statutory_rule:
+        "Anna University Clause 7.1 Condonation for 65%-74% bracket on medical grounds",
+    },
+    remarks: null,
+    decided_by: null,
+    decision_date: null,
+    audit_trail: [
+      {
+        action: "SUBMITTED",
+        by: "Dr. S. Gayathri (HOD)",
+        timestamp: "2026-11-11T12:00:00Z",
+        notes: "Verified by Department Medical Advisory Committee.",
+      },
+    ],
+  },
 ];
 
 class VicePrincipalService {
@@ -1031,11 +1120,11 @@ class VicePrincipalService {
 
     item.status = newStatus;
     item.remarks = remarks;
-    item.decided_by = "Dr. Meenakshi Sundaram (Vice Principal)";
+    item.decided_by = "Office of the Vice Principal";
     item.decision_date = nowIso;
     item.audit_trail.push({
       action: newStatus,
-      by: "Dr. Meenakshi Sundaram (Vice Principal)",
+      by: "Office of the Vice Principal",
       timestamp: nowIso,
       notes: remarks,
     });
@@ -1263,7 +1352,7 @@ class VicePrincipalService {
       target_audience: payload.target_audience,
       priority: payload.priority,
       published_at: new Date().toISOString(),
-      author: "Dr. Meenakshi Sundaram (Vice Principal)",
+      author: "Office of the Vice Principal",
       summary: payload.summary,
       pinned: payload.pinned,
     };
