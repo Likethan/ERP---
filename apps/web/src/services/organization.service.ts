@@ -203,6 +203,8 @@ class OrganizationService {
     name: string;
     department_type: string;
     campus_id?: string;
+    hod_user_id?: string;
+    hod_name?: string;
   }): Promise<ApiResponse<Department>> {
     try {
       const res = await apiFetch<Department>("/api/v1/departments", {
@@ -223,8 +225,8 @@ class OrganizationService {
       code: payload.code.trim().toUpperCase(),
       name: payload.name.trim(),
       department_type: payload.department_type || "ACADEMIC",
-      hod_user_id: null,
-      hod_name: "Unassigned",
+      hod_user_id: payload.hod_user_id || null,
+      hod_name: payload.hod_name || "Unassigned",
       is_active: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),

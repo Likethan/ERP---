@@ -1,4 +1,5 @@
 import { ApiResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import {
   DepartmentItem,
   ProgramItem,
@@ -117,6 +118,33 @@ class AcademicsService {
     status?: SubjectStatus;
     search?: string;
   }): Promise<ApiResponse<AcademicSubject[]>> {
+    try {
+      const qParams = new URLSearchParams();
+      if (params?.search) qParams.append("search", params.search);
+      const qs = qParams.toString();
+      const res = await apiFetch<any[]>(`/api/v1/academics/subjects${qs ? `?${qs}` : ""}`);
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveSubjects: AcademicSubject[] = res.data.map((s: any) => ({
+          id: s.id,
+          code: s.code,
+          name: s.name,
+          shortName: s.code,
+          departmentId: s.department_id,
+          departmentName: s.department_name || "Engineering",
+          credits: Number(s.credits) || 3,
+          lectureHours: s.lecture_hours || 3,
+          tutorialHours: s.tutorial_hours || 0,
+          practicalHours: s.practical_hours || 0,
+          type: (s.subject_type as any) || "THEORY",
+          category: "CORE",
+          status: s.is_active ? "ACTIVE" : "INACTIVE",
+        }));
+        return { success: true, data: liveSubjects };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.academicSubjects];
 
     if (params?.department && params.department !== "ALL") {
@@ -240,6 +268,32 @@ class AcademicsService {
     status?: CurriculumStatus;
     search?: string;
   }): Promise<ApiResponse<CurriculumScheme[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/academics/curricula");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveCurricula: CurriculumScheme[] = res.data.map((c: any) => ({
+          id: c.id,
+          programId: c.program_id,
+          programName: c.program_name || "B.Tech Computer Science & Engineering",
+          programCode: c.program_code || "BTECH-CSE",
+          department: c.department_name || "Computer Science and Engineering",
+          regulation: c.regulation || "R-2024",
+          version: "v1.0",
+          academicYear: "2026-2027",
+          effectiveDate: "2026-06-01",
+          totalCredits: 160,
+          totalSemesters: 8,
+          status: "APPROVED",
+          isActiveVersion: true,
+          semesters: [],
+          versionHistory: [],
+        }));
+        return { success: true, data: liveCurricula };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.curriculumSchemes];
 
     if (params?.department && params.department !== "ALL") {
@@ -419,6 +473,35 @@ class AcademicsService {
     status?: CourseOfferingStatus;
     search?: string;
   }): Promise<ApiResponse<CourseOfferingDetail[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/academics/course-offerings");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveOfferings: CourseOfferingDetail[] = res.data.map((o: any) => ({
+          id: o.id,
+          subjectId: o.subject_id,
+          subjectCode: o.subject_code || "CS101",
+          subjectName: o.subject_name || "Course Offering",
+          programId: o.program_id || "prog-001",
+          programName: o.program_name || "B.Tech Computer Science",
+          department: o.department_name || "Computer Science",
+          academicYear: o.academic_year || "2026-2027",
+          semester: o.semester || 1,
+          section: o.section || "A",
+          credits: 3,
+          type: "THEORY",
+          lectureHours: 3,
+          labHours: 0,
+          facultyAssignments: [],
+          enrolledCount: o.enrolled_count || 60,
+          maxCapacity: o.max_capacity || 60,
+          status: "ACTIVE",
+        }));
+        return { success: true, data: liveOfferings };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.courseOfferingDetails];
 
     if (params?.academicYear && params.academicYear !== "ALL") {

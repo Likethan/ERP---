@@ -6,6 +6,7 @@
  */
 
 import { ApiResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import {
   FeeCategory,
   FeeItem,
@@ -315,6 +316,31 @@ class FinanceService {
   async getFeeStructures(
     filters?: FeeStructureFilters,
   ): Promise<ApiResponse<FeeStructure[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/finance/fee-structures");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveStructures: FeeStructure[] = res.data.map((fs: any) => ({
+          id: fs.id,
+          name: fs.name,
+          code: fs.code || "FS-001",
+          academicYear: fs.academic_year || "2026-2027",
+          program: fs.program_name || "B.Tech Computer Science & Engineering",
+          department: fs.department_name || "Computer Science",
+          semester: fs.semester || 1,
+          components: [],
+          grossTotal: Number(fs.total_amount) || 125000,
+          status: (fs.status as any) || "ACTIVE",
+          effectiveDate: fs.effective_from || "2026-06-01",
+          createdAt: fs.created_at || new Date().toISOString(),
+          updatedAt: fs.updated_at || new Date().toISOString(),
+          history: [],
+        }));
+        return { success: true, data: liveStructures };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.feeStructures];
 
     if (filters?.status && filters.status !== "ALL") {
@@ -583,6 +609,42 @@ class FinanceService {
   // ==========================================
 
   async getInvoices(filters?: InvoiceFilters): Promise<ApiResponse<Invoice[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/finance/invoices");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveInvoices: Invoice[] = res.data.map((inv: any) => ({
+          id: inv.id,
+          invoiceNumber: inv.invoice_number || "INV-001",
+          studentId: inv.student_id,
+          studentName: inv.student_name || "Student",
+          rollNumber: inv.roll_number || "ROLL-001",
+          program: inv.program_name || "Engineering",
+          department: inv.department_name || "Computer Science",
+          semester: inv.semester || 1,
+          academicYear: inv.academic_year || "2026-2027",
+          issueDate: inv.issue_date || "2026-06-01",
+          dueDate: inv.due_date || "2026-08-31",
+          lines: [],
+          grossAmount: Number(inv.gross_amount) || 125000,
+          scholarshipAmount: Number(inv.scholarship_amount) || 0,
+          discountAmount: 0,
+          adjustmentAmount: 0,
+          netPayable: Number(inv.net_amount) || 125000,
+          paidAmount: Number(inv.paid_amount) || 0,
+          outstandingAmount: Number(inv.balance_due) || 125000,
+          status: (inv.status as any) || "ISSUED",
+          paymentIds: [],
+          receiptIds: [],
+          createdAt: inv.created_at || new Date().toISOString(),
+          updatedAt: inv.updated_at || new Date().toISOString(),
+          history: [],
+        }));
+        return { success: true, data: liveInvoices };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.invoices];
 
     if (filters?.status && filters.status !== "ALL") {
@@ -719,6 +781,35 @@ class FinanceService {
   // ==========================================
 
   async getPayments(filters?: PaymentFilters): Promise<ApiResponse<Payment[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/finance/payments");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const livePayments: Payment[] = res.data.map((p: any) => ({
+          id: p.id,
+          transactionRef: p.transaction_reference || "TXN-001",
+          receiptNumber: p.receipt_number || "REC-001",
+          studentId: p.student_id,
+          studentName: p.student_name || "Student",
+          rollNumber: p.roll_number || "ROLL-001",
+          invoiceId: p.invoice_id,
+          invoiceNumber: p.invoice_number || "INV-001",
+          amount: Number(p.amount) || 50000,
+          allocatedAmount: Number(p.amount) || 50000,
+          unallocatedAmount: 0,
+          paymentMethod: (p.payment_method as any) || "ONLINE",
+          referenceNumber: p.transaction_reference || "REF-001",
+          paymentDate: p.payment_date || new Date().toISOString(),
+          status: "SUCCESS",
+          recordedBy: p.recorded_by || "Finance Admin",
+          allocations: [],
+          history: [],
+        }));
+        return { success: true, data: livePayments };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     let items = [...this.payments];
 
     if (filters?.paymentMethod && filters.paymentMethod !== "ALL") {

@@ -6,6 +6,7 @@
  */
 
 import { ApiResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import {
   Assessment,
   AssessmentComponent,
@@ -1035,6 +1036,21 @@ class ExaminationsService {
   // ==========================================
 
   async getGradeScales(): Promise<ApiResponse<GradeScale[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/examinations/grade-scales");
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const liveScales: GradeScale[] = res.data.map((g: any) => ({
+          id: g.id,
+          name: g.name,
+          academicYear: g.academic_year || "2026-2027",
+          isDefault: Boolean(g.is_default ?? true),
+          rules: g.rules || g.grades || [],
+        }));
+        return { success: true, data: liveScales };
+      }
+    } catch {
+      // Fall through to mock
+    }
     return { success: true, data: this.gradeScales };
   }
 

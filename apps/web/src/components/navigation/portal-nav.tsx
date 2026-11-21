@@ -42,6 +42,9 @@ import {
   Bot,
   ClipboardCheck,
   Wrench,
+  Shield,
+  Megaphone,
+  Sliders,
 } from "lucide-react";
 import type { AuthenticatedUser } from "@campusos/types";
 
@@ -819,6 +822,11 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
         icon: <Users className="h-4 w-4" />,
       },
       {
+        label: "User Roles & RBAC",
+        href: "/app/people/roles",
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
         label: "Workforce & HR",
         href: "/app/workforce",
         icon: <Building2 className="h-4 w-4" />,
@@ -865,6 +873,11 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
     title: "ACADEMICS, ATTENDANCE & EXAMS",
     items: [
       {
+        label: "Campus Announcements",
+        href: "/app/campus/announcements",
+        icon: <Megaphone className="h-4 w-4" />,
+      },
+      {
         label: "Curricula Schemes",
         href: "/app/academics/curricula",
         icon: <FileSpreadsheet className="h-4 w-4" />,
@@ -901,12 +914,12 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
     items: [
       {
         label: "Hostel Management",
-        href: "/app/hostel",
+        href: "/app/infrastructure/hostel",
         icon: <BedDouble className="h-4 w-4" />,
       },
       {
         label: "Fleet & Transport",
-        href: "/app/transport",
+        href: "/app/infrastructure/transport",
         icon: <Bus className="h-4 w-4" />,
       },
       {
@@ -923,6 +936,11 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
         label: "Accreditation & Audits",
         href: "/app/accreditation",
         icon: <Award className="h-4 w-4" />,
+      },
+      {
+        label: "Institutional Reports",
+        href: "/app/reports",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
       },
       {
         label: "Research Grants",
@@ -945,9 +963,19 @@ export const ADMIN_PORTAL_NAV: NavSection[] = [
     title: "PLATFORM GOVERNANCE & SECURITY",
     items: [
       {
-        label: "Security & RBAC Policies",
+        label: "Security Operations (SOC)",
         href: "/app/security",
         icon: <ShieldCheck className="h-4 w-4" />,
+      },
+      {
+        label: "Forensic Audit Log",
+        href: "/app/audit",
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        label: "System Configuration",
+        href: "/app/configuration",
+        icon: <Sliders className="h-4 w-4" />,
       },
       {
         label: "Records Lifecycle Retention",

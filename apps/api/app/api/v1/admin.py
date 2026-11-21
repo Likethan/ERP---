@@ -23,6 +23,9 @@ from app.core.permissions import (
     POLICY_READ,
     SEQUENCE_MANAGE,
     SEQUENCE_READ,
+    PEOPLE_ROLES_MANAGE,
+    PEOPLE_USERS_MANAGE,
+    PEOPLE_USERS_READ,
 )
 from app.core.tenant import TenantContext
 from app.models.configuration import ConfigurationDataType, ConfigurationScope
@@ -59,6 +62,14 @@ from app.schemas.configuration import (
     PolicyUpdate,
     SequenceGenerateResponse,
 )
+from app.schemas.admin_rbac import (
+    AdminRoleAssignRequest,
+    AdminRoleResponse,
+    AdminUserCreateRequest,
+    AdminUserResponse,
+    AdminUserStatusUpdateRequest,
+)
+from app.services.admin_rbac_service import AdminRbacService
 from app.services.configuration_preview_service import ConfigurationPreviewService
 from app.services.configuration_resolver import ConfigurationResolver
 from app.services.configuration_service import ConfigurationService
@@ -742,3 +753,137 @@ async def list_configuration_dependencies(
     repo = ConfigurationRepository(db)
     deps = await repo.list_dependencies(key=key, module=module)
     return ApiResponse(data=[ConfigurationDependencyResponse.model_validate(d) for d in deps])
+
+
+# =============================================================================
+# 8. ENTERPRISE USER & ROLE MANAGEMENT (RBAC)
+# =============================================================================
+
+
+@router.get(
+    "/roles",
+    response_model=ApiResponse[list[AdminRoleResponse]],
+    summary="List all system and tenant-specific roles with assigned permissions",
+)
+async def list_admin_roles(
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_USERS_READ))],
+) -> ApiResponse[list[AdminRoleResponse]]:
+    roles = await AdminRbacService.list_roles(db=db, tenant_id=tenant.tenant_id)
+    return ApiResponse(data=roles)
+
+
+@router.get(
+    "/users",
+    response_model=PaginatedResponse[AdminUserResponse],
+    summary="List tenant users with assigned roles, scoped by tenant",
+)
+async def list_admin_users(
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_USERS_READ))],
+    page: int = Query(1, ge=1),
+    page_size: int = Query(25, ge=1, le=100),
+    search: str | None = Query(None),
+    role: str | None = Query(None),
+    status: str | None = Query(None),
+) -> PaginatedResponse[AdminUserResponse]:
+    items, meta = await AdminRbacService.list_users(
+        db=db,
+        tenant_id=tenant.tenant_id,
+        page=page,
+        page_size=page_size,
+        search=search,
+        role_name=role,
+        status=status,
+    )
+    return PaginatedResponse(data=items, pagination=meta)
+
+
+@router.post(
+    "/users",
+    response_model=ApiResponse[AdminUserResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new institutional user with role assignment",
+)
+async def create_admin_user(
+    payload: AdminUserCreateRequest,
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_USERS_MANAGE))],
+) -> ApiResponse[AdminUserResponse]:
+    created = await AdminRbacService.create_user(
+        db=db,
+        tenant_id=tenant.tenant_id,
+        payload=payload,
+        actor_id=user.id,
+    )
+    return ApiResponse(data=created)
+
+
+@router.post(
+    "/users/{user_id}/roles",
+    response_model=ApiResponse[AdminUserResponse],
+    summary="Assign a role to a user",
+)
+async def assign_role_to_user(
+    user_id: UUID,
+    payload: AdminRoleAssignRequest,
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_ROLES_MANAGE))],
+) -> ApiResponse[AdminUserResponse]:
+    updated = await AdminRbacService.assign_role(
+        db=db,
+        tenant_id=tenant.tenant_id,
+        user_id=user_id,
+        payload=payload,
+        actor_id=user.id,
+    )
+    return ApiResponse(data=updated)
+
+
+@router.delete(
+    "/users/{user_id}/roles/{role_id}",
+    response_model=ApiResponse[AdminUserResponse],
+    summary="Revoke an assigned role from a user",
+)
+async def revoke_role_from_user(
+    user_id: UUID,
+    role_id: UUID,
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_ROLES_MANAGE))],
+) -> ApiResponse[AdminUserResponse]:
+    updated = await AdminRbacService.revoke_role(
+        db=db,
+        tenant_id=tenant.tenant_id,
+        user_id=user_id,
+        role_id=role_id,
+        actor_id=user.id,
+    )
+    return ApiResponse(data=updated)
+
+
+@router.patch(
+    "/users/{user_id}/status",
+    response_model=ApiResponse[AdminUserResponse],
+    summary="Update user account status (ACTIVE, SUSPENDED, INACTIVE)",
+)
+async def update_admin_user_status(
+    user_id: UUID,
+    payload: AdminUserStatusUpdateRequest,
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    user: Annotated[User, Depends(require_permission(PEOPLE_USERS_MANAGE))],
+) -> ApiResponse[AdminUserResponse]:
+    updated = await AdminRbacService.update_user_status(
+        db=db,
+        tenant_id=tenant.tenant_id,
+        user_id=user_id,
+        payload=payload,
+        actor_id=user.id,
+    )
+    return ApiResponse(data=updated)
+
