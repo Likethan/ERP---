@@ -167,7 +167,13 @@ class CampusService {
   }): Promise<ApiResponse<CampusEventItem[]>> {
     try {
       const res = await apiFetch<any>("/api/v1/events");
-      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
+      if (
+        res &&
+        res.success &&
+        res.data?.items &&
+        Array.isArray(res.data.items) &&
+        res.data.items.length > 0
+      ) {
         const liveEvents: CampusEventItem[] = res.data.items.map((e: any) => ({
           id: e.id,
           title: e.title,
@@ -301,7 +307,8 @@ class CampusService {
           venue_id: "ven-auditorium",
           start_time: `${payload.startDate}T${payload.startTime || "09:00"}:00Z`,
           end_time: `${payload.endDate}T${payload.endTime || "17:00"}:00Z`,
-          capacity: (payload as any).capacity || (payload as any).maxCapacity || 500,
+          capacity:
+            (payload as any).capacity || (payload as any).maxCapacity || 500,
         }),
       });
       if (res && res.success && res.data?.id) {
@@ -792,7 +799,13 @@ class CampusService {
   }): Promise<ApiResponse<ClubItem[]>> {
     try {
       const res = await apiFetch<any>("/api/v1/clubs");
-      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
+      if (
+        res &&
+        res.success &&
+        res.data?.items &&
+        Array.isArray(res.data.items) &&
+        res.data.items.length > 0
+      ) {
         const liveClubs: ClubItem[] = res.data.items.map((c: any) => ({
           id: c.id,
           name: c.name,
@@ -1194,27 +1207,35 @@ class CampusService {
   }): Promise<ApiResponse<AnnouncementItem[]>> {
     try {
       const res = await apiFetch<any>("/api/v1/announcements");
-      if (res && res.success && res.data?.items && Array.isArray(res.data.items) && res.data.items.length > 0) {
-        const liveAnnouncements: AnnouncementItem[] = res.data.items.map((a: any) => ({
-          id: a.id,
-          title: a.title,
-          content: a.content,
-          priority: (a.priority as any) || "NORMAL",
-          status: (a.status as any) || "PUBLISHED",
-          category: (a.category as any) || "GENERAL",
-          targetAudience: "ALL",
-          publisher: a.author_name || "Campus Administration",
-          publisherRole: "INSTITUTION_ADMIN",
-          publishedDate: a.published_at || new Date().toISOString(),
-          createdDate: a.created_at || new Date().toISOString(),
-          updatedDate: a.updated_at || new Date().toISOString(),
-          deliveredCount: 450,
-          viewCount: a.view_count || 120,
-          targetAudienceCount: 500,
-          targetBranches: ["ALL"],
-          targetYears: ["ALL"],
-          timeline: [],
-        }));
+      if (
+        res &&
+        res.success &&
+        res.data?.items &&
+        Array.isArray(res.data.items) &&
+        res.data.items.length > 0
+      ) {
+        const liveAnnouncements: AnnouncementItem[] = res.data.items.map(
+          (a: any) => ({
+            id: a.id,
+            title: a.title,
+            content: a.content,
+            priority: (a.priority as any) || "NORMAL",
+            status: (a.status as any) || "PUBLISHED",
+            category: (a.category as any) || "GENERAL",
+            targetAudience: "ALL",
+            publisher: a.author_name || "Campus Administration",
+            publisherRole: "INSTITUTION_ADMIN",
+            publishedDate: a.published_at || new Date().toISOString(),
+            createdDate: a.created_at || new Date().toISOString(),
+            updatedDate: a.updated_at || new Date().toISOString(),
+            deliveredCount: 450,
+            viewCount: a.view_count || 120,
+            targetAudienceCount: 500,
+            targetBranches: ["ALL"],
+            targetYears: ["ALL"],
+            timeline: [],
+          }),
+        );
         return { success: true, data: liveAnnouncements };
       }
     } catch {

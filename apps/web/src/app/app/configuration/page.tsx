@@ -113,7 +113,8 @@ export default function SystemConfigurationPage() {
             Enterprise System Configuration
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Govern institution-wide regulatory thresholds, statutory compliance parameters, automated job schedules, and communication channels.
+            Govern institution-wide regulatory thresholds, statutory compliance
+            parameters, automated job schedules, and communication channels.
           </p>
         </div>
 
@@ -228,7 +229,8 @@ export default function SystemConfigurationPage() {
                 Statutory Attendance Rules
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Configure threshold cutoffs governing student exam eligibility and shortage flags.
+                Configure threshold cutoffs governing student exam eligibility
+                and shortage flags.
               </p>
             </div>
 
@@ -250,7 +252,8 @@ export default function SystemConfigurationPage() {
                   className="h-9 text-xs"
                 />
                 <span className="text-[11px] text-slate-400">
-                  Standard regulatory cutoff across affiliated universities (typically 75.0%).
+                  Standard regulatory cutoff across affiliated universities
+                  (typically 75.0%).
                 </span>
               </div>
 
@@ -265,13 +268,15 @@ export default function SystemConfigurationPage() {
                   onChange={(e) =>
                     setAcademicConfig({
                       ...academicConfig,
-                      condonationThresholdPercent: parseFloat(e.target.value) || 0,
+                      condonationThresholdPercent:
+                        parseFloat(e.target.value) || 0,
                     })
                   }
                   className="h-9 text-xs"
                 />
                 <span className="text-[11px] text-slate-400">
-                  Students between this floor and minimum can apply for Principal condonation.
+                  Students between this floor and minimum can apply for
+                  Principal condonation.
                 </span>
               </div>
             </div>
@@ -295,7 +300,8 @@ export default function SystemConfigurationPage() {
                     onChange={(e) =>
                       setAcademicConfig({
                         ...academicConfig,
-                        minFacultyWorkloadHours: parseInt(e.target.value, 10) || 0,
+                        minFacultyWorkloadHours:
+                          parseInt(e.target.value, 10) || 0,
                       })
                     }
                     className="h-9 text-xs"
@@ -311,7 +317,8 @@ export default function SystemConfigurationPage() {
                     onChange={(e) =>
                       setAcademicConfig({
                         ...academicConfig,
-                        maxFacultyWorkloadHours: parseInt(e.target.value, 10) || 0,
+                        maxFacultyWorkloadHours:
+                          parseInt(e.target.value, 10) || 0,
                       })
                     }
                     className="h-9 text-xs"
@@ -327,7 +334,8 @@ export default function SystemConfigurationPage() {
                     onChange={(e) =>
                       setAcademicConfig({
                         ...academicConfig,
-                        hodTeachingReductionHours: parseInt(e.target.value, 10) || 0,
+                        hodTeachingReductionHours:
+                          parseInt(e.target.value, 10) || 0,
                       })
                     }
                     className="h-9 text-xs"
@@ -346,7 +354,8 @@ export default function SystemConfigurationPage() {
                 Authentication & Session Policies
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Defense-in-depth security controls protecting user credentials and token lifetimes.
+                Defense-in-depth security controls protecting user credentials
+                and token lifetimes.
               </p>
             </div>
 
@@ -402,7 +411,8 @@ export default function SystemConfigurationPage() {
                   }
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                Enforce mandatory MFA for all Super Administrators and Institution Administrators
+                Enforce mandatory MFA for all Super Administrators and
+                Institution Administrators
               </label>
 
               <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
@@ -431,7 +441,8 @@ export default function SystemConfigurationPage() {
                 Automated Background Cron Daemons
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Scheduled background tasks maintaining data synchronization and telemetry alerts.
+                Scheduled background tasks maintaining data synchronization and
+                telemetry alerts.
               </p>
             </div>
 
@@ -442,7 +453,8 @@ export default function SystemConfigurationPage() {
                   Attendance Shortage Radar
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 mb-2">
-                  Scans daily attendance registers at 18:00 and dispatches notification alerts to students with &lt;75% attendance.
+                  Scans daily attendance registers at 18:00 and dispatches
+                  notification alerts to students with &lt;75% attendance.
                 </p>
                 <span className="font-mono text-[11px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                   {jobConfig.attendanceRadarSchedule}
@@ -455,7 +467,8 @@ export default function SystemConfigurationPage() {
                   Fee Arrear Late Penalty Job
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 mb-2">
-                  Computes overdue invoice interest and applies late fee charges after grace periods expire.
+                  Computes overdue invoice interest and applies late fee charges
+                  after grace periods expire.
                 </p>
                 <span className="font-mono text-[11px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                   {jobConfig.feeLateFeeSchedule}
@@ -479,7 +492,8 @@ export default function SystemConfigurationPage() {
                 className="h-9 text-xs max-w-xs"
               />
               <span className="text-[11px] text-slate-400">
-                2555 days equals 7 statutory academic years per higher education record retention mandates.
+                2555 days equals 7 statutory academic years per higher education
+                record retention mandates.
               </span>
             </div>
           </Card>
@@ -493,7 +507,8 @@ export default function SystemConfigurationPage() {
                 Notification Relays & External SIS Gateways
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                SMTP and SMS outbound transport endpoints and external educational API sync.
+                SMTP and SMS outbound transport endpoints and external
+                educational API sync.
               </p>
             </div>
 
@@ -505,7 +520,10 @@ export default function SystemConfigurationPage() {
                 <Input
                   value={gatewayConfig.smtpHost}
                   onChange={(e) =>
-                    setGatewayConfig({ ...gatewayConfig, smtpHost: e.target.value })
+                    setGatewayConfig({
+                      ...gatewayConfig,
+                      smtpHost: e.target.value,
+                    })
                   }
                   className="h-9 text-xs"
                 />
@@ -542,7 +560,8 @@ export default function SystemConfigurationPage() {
                   }
                   className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                Enable automated NIRF / AISHE statutory accreditation telemetry export
+                Enable automated NIRF / AISHE statutory accreditation telemetry
+                export
               </label>
             </div>
           </Card>

@@ -44,10 +44,20 @@ class IntelligenceService {
   async getAlerts(): Promise<ApiResponse<OperationalAlertItem[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/intelligence/alerts");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveAlerts: OperationalAlertItem[] = res.data.map((a: any) => ({
           id: a.id,
-          level: a.severity === "CRITICAL" ? "CRITICAL" : a.severity === "WARN" ? "WARNING" : "INFO",
+          level:
+            a.severity === "CRITICAL"
+              ? "CRITICAL"
+              : a.severity === "WARN"
+                ? "WARNING"
+                : "INFO",
           title: a.title,
           message: a.message || a.summary || "System operational alert",
           department: a.department || "Campus Operations",

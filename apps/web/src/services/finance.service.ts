@@ -318,7 +318,12 @@ class FinanceService {
   ): Promise<ApiResponse<FeeStructure[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/finance/fee-structures");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveStructures: FeeStructure[] = res.data.map((fs: any) => ({
           id: fs.id,
           name: fs.name,
@@ -633,7 +638,12 @@ class FinanceService {
   async getInvoices(filters?: InvoiceFilters): Promise<ApiResponse<Invoice[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/finance/invoices");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveInvoices: Invoice[] = res.data.map((inv: any) => ({
           id: inv.id,
           invoiceNumber: inv.invoice_number || "INV-001",
@@ -825,7 +835,12 @@ class FinanceService {
   async getPayments(filters?: PaymentFilters): Promise<ApiResponse<Payment[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/finance/payments");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const livePayments: Payment[] = res.data.map((p: any) => ({
           id: p.id,
           transactionRef: p.transaction_reference || "TXN-001",

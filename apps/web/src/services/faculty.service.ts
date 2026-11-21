@@ -44,10 +44,16 @@ class FacultyService {
       }
       const qs = qParams.toString();
       const res = await apiFetch<any[]>(`/api/v1/faculty${qs ? `?${qs}` : ""}`);
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveFaculty: FacultyDetailView[] = res.data.map((f: any) => ({
           id: f.id,
-          employeeCode: f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
+          employeeCode:
+            f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
           firstName: f.first_name,
           lastName: f.last_name,
           email: f.email,
@@ -69,12 +75,19 @@ class FacultyService {
           },
         }));
 
-        const page = typeof params === "object" && params?.page ? params.page : 1;
-        const pageSize = typeof params === "object" && params?.pageSize ? params.pageSize : liveFaculty.length;
+        const page =
+          typeof params === "object" && params?.page ? params.page : 1;
+        const pageSize =
+          typeof params === "object" && params?.pageSize
+            ? params.pageSize
+            : liveFaculty.length;
         const totalRecords = liveFaculty.length;
         const totalPages = Math.ceil(totalRecords / pageSize) || 1;
         const startIndex = (page - 1) * pageSize;
-        const paginatedItems = liveFaculty.slice(startIndex, startIndex + pageSize);
+        const paginatedItems = liveFaculty.slice(
+          startIndex,
+          startIndex + pageSize,
+        );
 
         return {
           success: true,
@@ -174,7 +187,8 @@ class FacultyService {
         const f = res.data;
         const liveMember: FacultyDetailView = {
           id: f.id,
-          employeeCode: f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
+          employeeCode:
+            f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
           firstName: f.first_name,
           lastName: f.last_name,
           email: f.email,

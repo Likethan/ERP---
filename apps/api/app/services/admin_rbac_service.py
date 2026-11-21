@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.exceptions import ConflictException, NotFoundException, ValidationException
 from app.core.security import get_password_hash
-from app.models.people import Permission, Role, RolePermission, User, UserRoleAssignment
+from app.models.people import Role, RolePermission, User, UserRoleAssignment
 from app.schemas.admin_rbac import (
     AdminRoleAssignRequest,
     AdminRoleResponse,

@@ -279,7 +279,12 @@ class ExaminationsService {
   ): Promise<ApiResponse<Assessment[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/examinations/assessments");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveItems: Assessment[] = res.data.map((a: any) => ({
           id: a.id,
           name: a.title || a.name || "Assessment",
@@ -1116,7 +1121,12 @@ class ExaminationsService {
   async getGradeScales(): Promise<ApiResponse<GradeScale[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/examinations/grade-scales");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveScales: GradeScale[] = res.data.map((g: any) => ({
           id: g.id,
           name: g.name,

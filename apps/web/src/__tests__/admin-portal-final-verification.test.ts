@@ -131,7 +131,10 @@ describe("CampusOS Admin Portal — Final Production-Readiness Verification", ()
         credits: 5,
       });
       assert.equal(updateRes.success, true);
-      assert.equal(updateRes.data.name, "Distributed Cloud Architecture (Advanced)");
+      assert.equal(
+        updateRes.data.name,
+        "Distributed Cloud Architecture (Advanced)",
+      );
       assert.equal(updateRes.data.credits, 5);
 
       // Curricula
@@ -153,8 +156,20 @@ describe("CampusOS Admin Portal — Final Production-Readiness Verification", ()
         academicYear: "2026-2027",
         semester: 5,
         components: [
-          { id: "c-1", title: "Tuition", categoryName: "Tuition", amount: 65000, isMandatory: true },
-          { id: "c-2", title: "Lab & Library", categoryName: "Academic Facilities", amount: 15000, isMandatory: true },
+          {
+            id: "c-1",
+            title: "Tuition",
+            categoryName: "Tuition",
+            amount: 65000,
+            isMandatory: true,
+          },
+          {
+            id: "c-2",
+            title: "Lab & Library",
+            categoryName: "Academic Facilities",
+            amount: 15000,
+            isMandatory: true,
+          },
         ],
       });
       assert.equal(createFsRes.success, true);
@@ -352,8 +367,9 @@ describe("CampusOS Admin Portal — Final Production-Readiness Verification", ()
         },
         (err: Error) => {
           return (
-            err.message.includes("Cannot deactivate your own administrator account") ||
-            err.message.includes("Self-lockout prevented")
+            err.message.includes(
+              "Cannot deactivate your own administrator account",
+            ) || err.message.includes("Self-lockout prevented")
           );
         },
       );
@@ -371,8 +387,9 @@ describe("CampusOS Admin Portal — Final Production-Readiness Verification", ()
         },
         (err: Error) => {
           return (
-            err.message.includes("Cannot revoke the sole remaining active SUPER_ADMIN") ||
-            err.message.includes("Last superadmin safeguard")
+            err.message.includes(
+              "Cannot revoke the sole remaining active SUPER_ADMIN",
+            ) || err.message.includes("Last superadmin safeguard")
           );
         },
       );
@@ -432,9 +449,18 @@ describe("CampusOS Admin Portal — Final Production-Readiness Verification", ()
       }
 
       // Assert deprecated redirect stubs do not exist
-      assert.ok(!allHrefs.includes("/app/hostel"), "Dead redirect /app/hostel must not exist");
-      assert.ok(!allHrefs.includes("/app/transport"), "Dead redirect /app/transport must not exist");
-      assert.ok(!allHrefs.includes("/app/announcements"), "Dead redirect /app/announcements must not exist");
+      assert.ok(
+        !allHrefs.includes("/app/hostel"),
+        "Dead redirect /app/hostel must not exist",
+      );
+      assert.ok(
+        !allHrefs.includes("/app/transport"),
+        "Dead redirect /app/transport must not exist",
+      );
+      assert.ok(
+        !allHrefs.includes("/app/announcements"),
+        "Dead redirect /app/announcements must not exist",
+      );
 
       // Assert canonical destinations exist
       assert.ok(allHrefs.includes("/app/infrastructure/hostel"));

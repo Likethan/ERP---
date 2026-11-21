@@ -40,7 +40,9 @@ export default function ForensicAuditLogPage() {
   const [entityFilter, setEntityFilter] = useState("ALL");
 
   // Diff Modal State
-  const [selectedEntry, setSelectedEntry] = useState<AuditLogEntry | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<AuditLogEntry | null>(
+    null,
+  );
   const [diffOpen, setDiffOpen] = useState(false);
 
   const loadData = async () => {
@@ -68,8 +70,7 @@ export default function ForensicAuditLogPage() {
         (l.businessContext &&
           l.businessContext.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchesAction =
-        actionFilter === "ALL" || l.action === actionFilter;
+      const matchesAction = actionFilter === "ALL" || l.action === actionFilter;
 
       const matchesEntity =
         entityFilter === "ALL" || l.entityType === entityFilter;
@@ -79,9 +80,12 @@ export default function ForensicAuditLogPage() {
   }, [logs, searchQuery, actionFilter, entityFilter]);
 
   const privilegedActionsCount = logs.filter((l) =>
-    ["ROLE_ASSIGN", "ROLE_REVOKE", "STATUS_CHANGE", "MARKS_CORRECTION"].includes(
-      l.action,
-    ),
+    [
+      "ROLE_ASSIGN",
+      "ROLE_REVOKE",
+      "STATUS_CHANGE",
+      "MARKS_CORRECTION",
+    ].includes(l.action),
   ).length;
 
   const handleExportCSV = () => {
@@ -146,7 +150,9 @@ export default function ForensicAuditLogPage() {
             Forensic Audit Log & Compliance Explorer
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Searchable, append-only chronological ledger of all administrative mutations, privilege elevations, status changes, and academic operations.
+            Searchable, append-only chronological ledger of all administrative
+            mutations, privilege elevations, status changes, and academic
+            operations.
           </p>
         </div>
 
@@ -158,7 +164,9 @@ export default function ForensicAuditLogPage() {
             disabled={loading}
             className="flex items-center gap-1.5"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           <Button
@@ -252,7 +260,9 @@ export default function ForensicAuditLogPage() {
               <option value="Invoice">Invoice</option>
             </select>
 
-            {(searchQuery || actionFilter !== "ALL" || entityFilter !== "ALL") && (
+            {(searchQuery ||
+              actionFilter !== "ALL" ||
+              entityFilter !== "ALL") && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -281,13 +291,18 @@ export default function ForensicAuditLogPage() {
                 <th className="py-3 px-4 font-semibold">Action</th>
                 <th className="py-3 px-4 font-semibold">Target Entity</th>
                 <th className="py-3 px-4 font-semibold">Forensic Context</th>
-                <th className="py-3 px-4 font-semibold text-right">Audit Diff</th>
+                <th className="py-3 px-4 font-semibold text-right">
+                  Audit Diff
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500 dark:text-slate-400">
+                  <td
+                    colSpan={6}
+                    className="py-8 text-center text-slate-500 dark:text-slate-400"
+                  >
                     No forensic audit logs match the selected filter criteria.
                   </td>
                 </tr>
@@ -336,11 +351,12 @@ export default function ForensicAuditLogPage() {
                           variant={
                             l.action.includes("REVOKE") || l.action === "DELETE"
                               ? "destructive"
-                              : l.action.includes("ROLE") || l.action.includes("OVERRIDE")
-                              ? "warning"
-                              : l.action === "CREATE"
-                              ? "success"
-                              : "secondary"
+                              : l.action.includes("ROLE") ||
+                                  l.action.includes("OVERRIDE")
+                                ? "warning"
+                                : l.action === "CREATE"
+                                  ? "success"
+                                  : "secondary"
                           }
                           className="font-mono text-[10px]"
                         >

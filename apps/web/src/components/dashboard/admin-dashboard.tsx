@@ -78,7 +78,9 @@ export function AdminDashboard() {
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<FileSpreadsheet className="h-3.5 w-3.5 text-blue-600" />}
+              leftIcon={
+                <FileSpreadsheet className="h-3.5 w-3.5 text-blue-600" />
+              }
             >
               Reports Hub
             </Button>

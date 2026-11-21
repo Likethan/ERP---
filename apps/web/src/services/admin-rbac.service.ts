@@ -59,7 +59,8 @@ const MOCK_ROLES: AdminRoleItem[] = [
     id: "role-super-admin",
     name: "SUPER_ADMIN",
     displayName: "Super Administrator",
-    description: "Full root access across all institutions and system configurations",
+    description:
+      "Full root access across all institutions and system configurations",
     isSystem: true,
     permissionsCount: 840,
     permissions: ["*"],
@@ -68,46 +69,76 @@ const MOCK_ROLES: AdminRoleItem[] = [
     id: "role-inst-admin",
     name: "INSTITUTION_ADMIN",
     displayName: "Institution Administrator",
-    description: "Comprehensive management over campus, departments, users, and academics",
+    description:
+      "Comprehensive management over campus, departments, users, and academics",
     isSystem: true,
     permissionsCount: 420,
-    permissions: ["tenant:manage", "people:manage", "academics:manage", "finance:manage"],
+    permissions: [
+      "tenant:manage",
+      "people:manage",
+      "academics:manage",
+      "finance:manage",
+    ],
   },
   {
     id: "role-vice-principal",
     name: "VICE_PRINCIPAL",
     displayName: "Vice Principal",
-    description: "Institutional academic monitoring, department supervision, and institutional approvals",
+    description:
+      "Institutional academic monitoring, department supervision, and institutional approvals",
     isSystem: true,
     permissionsCount: 165,
-    permissions: ["academics:read", "approvals:manage", "curriculum:audit", "workload:view"],
+    permissions: [
+      "academics:read",
+      "approvals:manage",
+      "curriculum:audit",
+      "workload:view",
+    ],
   },
   {
     id: "role-hod",
     name: "HOD",
     displayName: "Head of Department",
-    description: "Department level academic leadership, faculty allocation, and student governance",
+    description:
+      "Department level academic leadership, faculty allocation, and student governance",
     isSystem: true,
     permissionsCount: 120,
-    permissions: ["dept:manage", "faculty:workload", "course:assign", "student:manage"],
+    permissions: [
+      "dept:manage",
+      "faculty:workload",
+      "course:assign",
+      "student:manage",
+    ],
   },
   {
     id: "role-faculty",
     name: "FACULTY",
     displayName: "Faculty / Instructor",
-    description: "Course delivery, attendance marking, grading, and student mentoring",
+    description:
+      "Course delivery, attendance marking, grading, and student mentoring",
     isSystem: true,
     permissionsCount: 65,
-    permissions: ["attendance:mark", "grades:post", "course:teach", "materials:upload"],
+    permissions: [
+      "attendance:mark",
+      "grades:post",
+      "course:teach",
+      "materials:upload",
+    ],
   },
   {
     id: "role-student",
     name: "STUDENT",
     displayName: "Student",
-    description: "Enrolled student portal access to courses, attendance, fees, and exams",
+    description:
+      "Enrolled student portal access to courses, attendance, fees, and exams",
     isSystem: true,
     permissionsCount: 25,
-    permissions: ["student:portal", "attendance:view", "fees:pay", "exam:register"],
+    permissions: [
+      "student:portal",
+      "attendance:view",
+      "fees:pay",
+      "exam:register",
+    ],
   },
 ];
 
@@ -211,14 +242,20 @@ class AdminRbacService {
   async listRoles(): Promise<ApiResponse<AdminRoleItem[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/admin/roles");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveRoles: AdminRoleItem[] = res.data.map((r: any) => ({
           id: r.id,
           name: r.name,
           displayName: r.display_name || r.name,
           description: r.description,
           isSystem: Boolean(r.is_system),
-          permissionsCount: r.permissions_count || (r.permissions ? r.permissions.length : 0),
+          permissionsCount:
+            r.permissions_count || (r.permissions ? r.permissions.length : 0),
           permissions: r.permissions || [],
         }));
         this.roles = liveRoles;
@@ -240,13 +277,18 @@ class AdminRbacService {
     try {
       const qParams = new URLSearchParams();
       if (params?.search) qParams.append("search", params.search);
-      if (params?.role && params.role !== "ALL") qParams.append("role", params.role);
-      if (params?.status && params.status !== "ALL") qParams.append("status", params.status);
+      if (params?.role && params.role !== "ALL")
+        qParams.append("role", params.role);
+      if (params?.status && params.status !== "ALL")
+        qParams.append("status", params.status);
       if (params?.page) qParams.append("page", params.page.toString());
-      if (params?.pageSize) qParams.append("page_size", params.pageSize.toString());
+      if (params?.pageSize)
+        qParams.append("page_size", params.pageSize.toString());
 
       const qs = qParams.toString();
-      const res = await apiFetch<any[]>(`/api/v1/admin/users${qs ? `?${qs}` : ""}`);
+      const res = await apiFetch<any[]>(
+        `/api/v1/admin/users${qs ? `?${qs}` : ""}`,
+      );
       if (res && res.success && Array.isArray(res.data)) {
         const liveUsers: AdminUserItem[] = res.data.map((u: any) => ({
           id: u.id,
@@ -283,7 +325,9 @@ class AdminRbacService {
       );
     }
     if (params?.role && params.role !== "ALL") {
-      filtered = filtered.filter((u) => u.roles.some((r) => r.roleName === params.role));
+      filtered = filtered.filter((u) =>
+        u.roles.some((r) => r.roleName === params.role),
+      );
     }
     if (params?.status && params.status !== "ALL") {
       filtered = filtered.filter((u) => u.status === params.status);
@@ -291,7 +335,9 @@ class AdminRbacService {
     return { success: true, data: filtered };
   }
 
-  async createUser(payload: AdminUserCreateParams): Promise<ApiResponse<AdminUserItem>> {
+  async createUser(
+    payload: AdminUserCreateParams,
+  ): Promise<ApiResponse<AdminUserItem>> {
     try {
       const body: any = {
         email: payload.email,
@@ -331,7 +377,10 @@ class AdminRbacService {
         return { success: true, data: newUser };
       }
     } catch (e: any) {
-      console.warn("[AdminRbacService] API create failed, using local fallback:", e);
+      console.warn(
+        "[AdminRbacService] API create failed, using local fallback:",
+        e,
+      );
     }
 
     const assignedRole = this.roles.find((r) => r.id === payload.roleId);
@@ -361,7 +410,10 @@ class AdminRbacService {
     return { success: true, data: mockUser };
   }
 
-  async assignRole(userId: string, payload: AdminRoleAssignParams): Promise<ApiResponse<AdminUserRoleItem>> {
+  async assignRole(
+    userId: string,
+    payload: AdminRoleAssignParams,
+  ): Promise<ApiResponse<AdminUserRoleItem>> {
     try {
       const res = await apiFetch<any>(`/api/v1/admin/users/${userId}/roles`, {
         method: "POST",
@@ -385,7 +437,10 @@ class AdminRbacService {
         };
       }
     } catch (e: any) {
-      console.warn("[AdminRbacService] API assignRole failed, using local fallback:", e);
+      console.warn(
+        "[AdminRbacService] API assignRole failed, using local fallback:",
+        e,
+      );
     }
 
     const role = this.roles.find((r) => r.id === payload.roleId);
@@ -411,34 +466,49 @@ class AdminRbacService {
   ): Promise<ApiResponse<{ message: string }>> {
     // Invariant: Self-lockout prevention
     if (currentActorId && currentActorId === userId) {
-      const isSuperAdminRole = roleId === "role-super-admin" || roleId === "role-superadmin";
+      const isSuperAdminRole =
+        roleId === "role-super-admin" || roleId === "role-superadmin";
       if (isSuperAdminRole) {
-        throw new Error("Cannot revoke your own SUPER_ADMIN role. Self-lockout prevented.");
+        throw new Error(
+          "Cannot revoke your own SUPER_ADMIN role. Self-lockout prevented.",
+        );
       }
     }
 
     // Invariant: Last superadmin safeguard
-    const isTargetSuperAdmin = roleId === "role-super-admin" || roleId === "role-superadmin";
+    const isTargetSuperAdmin =
+      roleId === "role-super-admin" || roleId === "role-superadmin";
     if (isTargetSuperAdmin) {
       const activeSuperAdmins = this.users.filter(
         (u) =>
           u.status === "ACTIVE" &&
-          u.roles.some((r) => r.roleId === "role-super-admin" || r.roleName === "SUPER_ADMIN"),
+          u.roles.some(
+            (r) =>
+              r.roleId === "role-super-admin" || r.roleName === "SUPER_ADMIN",
+          ),
       );
       if (activeSuperAdmins.length <= 1) {
-        throw new Error("Cannot revoke the sole remaining active SUPER_ADMIN. Last superadmin safeguard.");
+        throw new Error(
+          "Cannot revoke the sole remaining active SUPER_ADMIN. Last superadmin safeguard.",
+        );
       }
     }
 
     try {
-      const res = await apiFetch<{ message: string }>(`/api/v1/admin/users/${userId}/roles/${roleId}`, {
-        method: "DELETE",
-      });
+      const res = await apiFetch<{ message: string }>(
+        `/api/v1/admin/users/${userId}/roles/${roleId}`,
+        {
+          method: "DELETE",
+        },
+      );
       if (res && res.success) {
         return res;
       }
     } catch (e: any) {
-      console.warn("[AdminRbacService] API revokeRole failed, using local fallback:", e);
+      console.warn(
+        "[AdminRbacService] API revokeRole failed, using local fallback:",
+        e,
+      );
     }
 
     const user = this.users.find((u) => u.id === userId);
@@ -454,8 +524,14 @@ class AdminRbacService {
     currentActorId?: string,
   ): Promise<ApiResponse<AdminUserItem>> {
     // Invariant: Self-deactivation prevention
-    if (currentActorId && currentActorId === userId && payload.status !== "ACTIVE") {
-      throw new Error("Cannot deactivate your own administrator account. Self-lockout prevented.");
+    if (
+      currentActorId &&
+      currentActorId === userId &&
+      payload.status !== "ACTIVE"
+    ) {
+      throw new Error(
+        "Cannot deactivate your own administrator account. Self-lockout prevented.",
+      );
     }
     try {
       const res = await apiFetch<any>(`/api/v1/admin/users/${userId}/status`, {
@@ -488,7 +564,10 @@ class AdminRbacService {
         return { success: true, data: updated };
       }
     } catch (e: any) {
-      console.warn("[AdminRbacService] API updateUserStatus failed, using local fallback:", e);
+      console.warn(
+        "[AdminRbacService] API updateUserStatus failed, using local fallback:",
+        e,
+      );
     }
 
     const user = this.users.find((u) => u.id === userId);

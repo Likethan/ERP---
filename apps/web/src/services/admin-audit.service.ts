@@ -63,7 +63,8 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
     routeEndpoint: "POST /api/v1/admin/users/user-vp-001/roles",
     correlationId: "corr-101-987a-42bc",
-    businessContext: "Institutional appointment of Dr. K. Ramachandran to Vice Principal",
+    businessContext:
+      "Institutional appointment of Dr. K. Ramachandran to Vice Principal",
     createdAt: "2026-03-01T09:00:00Z",
   },
   {
@@ -89,7 +90,8 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
     routeEndpoint: "PATCH /api/v1/departments/dept-cse-01",
     correlationId: "corr-102-123f-9988",
-    businessContext: "Formal HOD appointment for Department of Computer Science",
+    businessContext:
+      "Formal HOD appointment for Department of Computer Science",
     createdAt: "2026-04-10T14:30:00Z",
   },
   {
@@ -116,7 +118,8 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
     userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
     routeEndpoint: "POST /api/v1/attendance/correction/approve",
     correlationId: "corr-103-bcde-5544",
-    businessContext: "Approved student medical attendance regularization following clinical documentation",
+    businessContext:
+      "Approved student medical attendance regularization following clinical documentation",
     createdAt: "2026-05-15T11:20:00Z",
   },
   {
@@ -168,7 +171,8 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     routeEndpoint: "POST /api/v1/vice-principal/approvals/appr-001/approve",
     correlationId: "corr-105-ff99-1122",
-    businessContext: "Vice Principal statutory ratification of academic grade moderation committee report",
+    businessContext:
+      "Vice Principal statutory ratification of academic grade moderation committee report",
     createdAt: "2026-06-10T10:45:00Z",
   },
 ];
@@ -187,8 +191,15 @@ class AdminAuditService {
       const qParams = new URLSearchParams();
       if (params?.search) qParams.append("search", params.search);
       const qs = qParams.toString();
-      const res = await apiFetch<any[]>(`/api/v1/vice-principal/audit${qs ? `?${qs}` : ""}`);
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      const res = await apiFetch<any[]>(
+        `/api/v1/vice-principal/audit${qs ? `?${qs}` : ""}`,
+      );
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveLogs: AuditLogEntry[] = res.data.map((l: any) => ({
           id: l.id || `aud-${Math.random()}`,
           tenantId: l.tenant_id || "ten-vsb-01",

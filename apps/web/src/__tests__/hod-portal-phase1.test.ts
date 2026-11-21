@@ -97,7 +97,8 @@ async function runTestSuite() {
     "\n--- TEST GROUP 2: HOD Portal Navigation & Sidebar Routing ---",
   );
   const leadershipSection = HOD_PORTAL_NAV.find(
-    (s) => s.title === "DEPARTMENT LEADERSHIP" || s.title === "ACADEMIC MANAGEMENT",
+    (s) =>
+      s.title === "DEPARTMENT LEADERSHIP" || s.title === "ACADEMIC MANAGEMENT",
   );
   assert(
     Boolean(leadershipSection),

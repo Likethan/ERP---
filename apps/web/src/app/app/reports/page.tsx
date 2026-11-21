@@ -42,86 +42,353 @@ const REPORT_TEMPLATES: ReportTemplate[] = [
     id: "rep-stu-strength",
     title: "Department-wise Student Strength & Enrollment Matrix",
     category: "academic",
-    description: "Enrollment breakdown classified by department, year of study, gender ratio, and admission quota.",
+    description:
+      "Enrollment breakdown classified by department, year of study, gender ratio, and admission quota.",
     mandatoryFor: "AICTE / University Annual Affiliation Review",
-    columns: ["Department", "1st Year", "2nd Year", "3rd Year", "4th Year", "Total Enrolled", "Quota (Merit/Govt)"],
+    columns: [
+      "Department",
+      "1st Year",
+      "2nd Year",
+      "3rd Year",
+      "4th Year",
+      "Total Enrolled",
+      "Quota (Merit/Govt)",
+    ],
     sampleData: [
-      { Department: "Computer Science & Engineering", "1st Year": 180, "2nd Year": 180, "3rd Year": 178, "4th Year": 175, "Total Enrolled": 713, "Quota (Merit/Govt)": "480 / 233" },
-      { Department: "Electronics & Communication", "1st Year": 120, "2nd Year": 120, "3rd Year": 118, "4th Year": 115, "Total Enrolled": 473, "Quota (Merit/Govt)": "320 / 153" },
-      { Department: "Mechanical Engineering", "1st Year": 60, "2nd Year": 60, "3rd Year": 58, "4th Year": 56, "Total Enrolled": 234, "Quota (Merit/Govt)": "160 / 74" },
-      { Department: "Information Technology", "1st Year": 120, "2nd Year": 120, "3rd Year": 119, "4th Year": 117, "Total Enrolled": 476, "Quota (Merit/Govt)": "320 / 156" },
-      { Department: "Artificial Intelligence & Data Science", "1st Year": 60, "2nd Year": 60, "3rd Year": 60, "4th Year": 59, "Total Enrolled": 239, "Quota (Merit/Govt)": "160 / 79" },
+      {
+        Department: "Computer Science & Engineering",
+        "1st Year": 180,
+        "2nd Year": 180,
+        "3rd Year": 178,
+        "4th Year": 175,
+        "Total Enrolled": 713,
+        "Quota (Merit/Govt)": "480 / 233",
+      },
+      {
+        Department: "Electronics & Communication",
+        "1st Year": 120,
+        "2nd Year": 120,
+        "3rd Year": 118,
+        "4th Year": 115,
+        "Total Enrolled": 473,
+        "Quota (Merit/Govt)": "320 / 153",
+      },
+      {
+        Department: "Mechanical Engineering",
+        "1st Year": 60,
+        "2nd Year": 60,
+        "3rd Year": 58,
+        "4th Year": 56,
+        "Total Enrolled": 234,
+        "Quota (Merit/Govt)": "160 / 74",
+      },
+      {
+        Department: "Information Technology",
+        "1st Year": 120,
+        "2nd Year": 120,
+        "3rd Year": 119,
+        "4th Year": 117,
+        "Total Enrolled": 476,
+        "Quota (Merit/Govt)": "320 / 156",
+      },
+      {
+        Department: "Artificial Intelligence & Data Science",
+        "1st Year": 60,
+        "2nd Year": 60,
+        "3rd Year": 60,
+        "4th Year": 59,
+        "Total Enrolled": 239,
+        "Quota (Merit/Govt)": "160 / 79",
+      },
     ],
   },
   {
     id: "rep-fac-workload",
     title: "Faculty Teaching Workload & Allocation Compliance Register",
     category: "academic",
-    description: "Weekly lecture, tutorial, and lab contact hours mapped against UGC workload policy thresholds (12-18 hrs).",
+    description:
+      "Weekly lecture, tutorial, and lab contact hours mapped against UGC workload policy thresholds (12-18 hrs).",
     mandatoryFor: "UGC / NAAC Criterion 2 (Teaching-Learning)",
-    columns: ["Faculty Name", "Department", "Designation", "Lecture Hrs", "Lab Hrs", "Total Contact Hrs", "Status"],
+    columns: [
+      "Faculty Name",
+      "Department",
+      "Designation",
+      "Lecture Hrs",
+      "Lab Hrs",
+      "Total Contact Hrs",
+      "Status",
+    ],
     sampleData: [
-      { "Faculty Name": "Dr. S. Natarajan", Department: "CSE", Designation: "Professor & HOD", "Lecture Hrs": 6, "Lab Hrs": 4, "Total Contact Hrs": 10, Status: "COMPLIANT (HOD Allowance)" },
-      { "Faculty Name": "Dr. Priya Sharma", Department: "CSE", Designation: "Associate Professor", "Lecture Hrs": 10, "Lab Hrs": 6, "Total Contact Hrs": 16, Status: "BALANCED" },
-      { "Faculty Name": "Prof. R. Venkatesh", Department: "ECE", Designation: "Assistant Professor", "Lecture Hrs": 12, "Lab Hrs": 4, "Total Contact Hrs": 16, Status: "BALANCED" },
-      { "Faculty Name": "Dr. M. Karthik", Department: "MECH", Designation: "Professor", "Lecture Hrs": 8, "Lab Hrs": 6, "Total Contact Hrs": 14, Status: "BALANCED" },
-      { "Faculty Name": "Prof. A. Meenakshi", Department: "IT", Designation: "Assistant Professor", "Lecture Hrs": 10, "Lab Hrs": 4, "Total Contact Hrs": 14, Status: "BALANCED" },
+      {
+        "Faculty Name": "Dr. S. Natarajan",
+        Department: "CSE",
+        Designation: "Professor & HOD",
+        "Lecture Hrs": 6,
+        "Lab Hrs": 4,
+        "Total Contact Hrs": 10,
+        Status: "COMPLIANT (HOD Allowance)",
+      },
+      {
+        "Faculty Name": "Dr. Priya Sharma",
+        Department: "CSE",
+        Designation: "Associate Professor",
+        "Lecture Hrs": 10,
+        "Lab Hrs": 6,
+        "Total Contact Hrs": 16,
+        Status: "BALANCED",
+      },
+      {
+        "Faculty Name": "Prof. R. Venkatesh",
+        Department: "ECE",
+        Designation: "Assistant Professor",
+        "Lecture Hrs": 12,
+        "Lab Hrs": 4,
+        "Total Contact Hrs": 16,
+        Status: "BALANCED",
+      },
+      {
+        "Faculty Name": "Dr. M. Karthik",
+        Department: "MECH",
+        Designation: "Professor",
+        "Lecture Hrs": 8,
+        "Lab Hrs": 6,
+        "Total Contact Hrs": 14,
+        Status: "BALANCED",
+      },
+      {
+        "Faculty Name": "Prof. A. Meenakshi",
+        Department: "IT",
+        Designation: "Assistant Professor",
+        "Lecture Hrs": 10,
+        "Lab Hrs": 4,
+        "Total Contact Hrs": 14,
+        Status: "BALANCED",
+      },
     ],
   },
   {
     id: "rep-att-shortage",
     title: "Statutory Student Attendance Shortage Radar (<75%)",
     category: "attendance",
-    description: "Authoritative list of students falling below the 75% institutional attendance cutoff for semester examinations.",
+    description:
+      "Authoritative list of students falling below the 75% institutional attendance cutoff for semester examinations.",
     mandatoryFor: "Controller of Examinations Eligibility Cutoff",
-    columns: ["Roll Number", "Student Name", "Department", "Semester", "Classes Held", "Attended", "Attendance %", "Eligibility"],
+    columns: [
+      "Roll Number",
+      "Student Name",
+      "Department",
+      "Semester",
+      "Classes Held",
+      "Attended",
+      "Attendance %",
+      "Eligibility",
+    ],
     sampleData: [
-      { "Roll Number": "23CS108", "Student Name": "Arun Kumar", Department: "CSE", Semester: 5, "Classes Held": 140, Attended: 98, "Attendance %": "70.0%", Eligibility: "CONDONATION_REQUIRED" },
-      { "Roll Number": "23EC042", "Student Name": "Kavitha S.", Department: "ECE", Semester: 5, "Classes Held": 136, Attended: 88, "Attendance %": "64.7%", Eligibility: "DETAINED" },
-      { "Roll Number": "23ME019", "Student Name": "Dinesh R.", Department: "MECH", Semester: 3, "Classes Held": 130, Attended: 91, "Attendance %": "70.0%", Eligibility: "CONDONATION_REQUIRED" },
-      { "Roll Number": "23IT055", "Student Name": "Suresh Babu", Department: "IT", Semester: 5, "Classes Held": 142, Attended: 85, "Attendance %": "59.8%", Eligibility: "DETAINED" },
+      {
+        "Roll Number": "23CS108",
+        "Student Name": "Arun Kumar",
+        Department: "CSE",
+        Semester: 5,
+        "Classes Held": 140,
+        Attended: 98,
+        "Attendance %": "70.0%",
+        Eligibility: "CONDONATION_REQUIRED",
+      },
+      {
+        "Roll Number": "23EC042",
+        "Student Name": "Kavitha S.",
+        Department: "ECE",
+        Semester: 5,
+        "Classes Held": 136,
+        Attended: 88,
+        "Attendance %": "64.7%",
+        Eligibility: "DETAINED",
+      },
+      {
+        "Roll Number": "23ME019",
+        "Student Name": "Dinesh R.",
+        Department: "MECH",
+        Semester: 3,
+        "Classes Held": 130,
+        Attended: 91,
+        "Attendance %": "70.0%",
+        Eligibility: "CONDONATION_REQUIRED",
+      },
+      {
+        "Roll Number": "23IT055",
+        "Student Name": "Suresh Babu",
+        Department: "IT",
+        Semester: 5,
+        "Classes Held": 142,
+        Attended: 85,
+        "Attendance %": "59.8%",
+        Eligibility: "DETAINED",
+      },
     ],
   },
   {
     id: "rep-fin-collection",
     title: "Institutional Fee Collections & Outstanding Aging Ledger",
     category: "finance",
-    description: "Aging analysis of outstanding tuition, hostel, and transport fees classified into 30/60/90+ day arrears.",
+    description:
+      "Aging analysis of outstanding tuition, hostel, and transport fees classified into 30/60/90+ day arrears.",
     mandatoryFor: "Board of Governance Financial Audit",
-    columns: ["Department", "Gross Billed", "Total Collected", "Collection %", "0-30 Days Due", "31-60 Days Due", "90+ Days Arrears"],
+    columns: [
+      "Department",
+      "Gross Billed",
+      "Total Collected",
+      "Collection %",
+      "0-30 Days Due",
+      "31-60 Days Due",
+      "90+ Days Arrears",
+    ],
     sampleData: [
-      { Department: "Computer Science & Engineering", "Gross Billed": "₹ 8,91,25,000", "Total Collected": "₹ 8,42,00,000", "Collection %": "94.5%", "0-30 Days Due": "₹ 24,25,000", "31-60 Days Due": "₹ 15,00,000", "90+ Days Arrears": "₹ 10,00,000" },
-      { Department: "Electronics & Communication", "Gross Billed": "₹ 5,91,25,000", "Total Collected": "₹ 5,55,00,000", "Collection %": "93.9%", "0-30 Days Due": "₹ 18,25,000", "31-60 Days Due": "₹ 11,00,000", "90+ Days Arrears": "₹ 7,00,000" },
-      { Department: "Mechanical Engineering", "Gross Billed": "₹ 2,92,50,000", "Total Collected": "₹ 2,75,00,000", "Collection %": "94.0%", "0-30 Days Due": "₹ 9,50,000", "31-60 Days Due": "₹ 5,00,000", "90+ Days Arrears": "₹ 3,00,000" },
-      { Department: "Information Technology", "Gross Billed": "₹ 5,95,00,000", "Total Collected": "₹ 5,68,00,000", "Collection %": "95.5%", "0-30 Days Due": "₹ 15,00,000", "31-60 Days Due": "₹ 8,00,000", "90+ Days Arrears": "₹ 4,00,000" },
+      {
+        Department: "Computer Science & Engineering",
+        "Gross Billed": "₹ 8,91,25,000",
+        "Total Collected": "₹ 8,42,00,000",
+        "Collection %": "94.5%",
+        "0-30 Days Due": "₹ 24,25,000",
+        "31-60 Days Due": "₹ 15,00,000",
+        "90+ Days Arrears": "₹ 10,00,000",
+      },
+      {
+        Department: "Electronics & Communication",
+        "Gross Billed": "₹ 5,91,25,000",
+        "Total Collected": "₹ 5,55,00,000",
+        "Collection %": "93.9%",
+        "0-30 Days Due": "₹ 18,25,000",
+        "31-60 Days Due": "₹ 11,00,000",
+        "90+ Days Arrears": "₹ 7,00,000",
+      },
+      {
+        Department: "Mechanical Engineering",
+        "Gross Billed": "₹ 2,92,50,000",
+        "Total Collected": "₹ 2,75,00,000",
+        "Collection %": "94.0%",
+        "0-30 Days Due": "₹ 9,50,000",
+        "31-60 Days Due": "₹ 5,00,000",
+        "90+ Days Arrears": "₹ 3,00,000",
+      },
+      {
+        Department: "Information Technology",
+        "Gross Billed": "₹ 5,95,00,000",
+        "Total Collected": "₹ 5,68,00,000",
+        "Collection %": "95.5%",
+        "0-30 Days Due": "₹ 15,00,000",
+        "31-60 Days Due": "₹ 8,00,000",
+        "90+ Days Arrears": "₹ 4,00,000",
+      },
     ],
   },
   {
     id: "rep-exam-results",
     title: "Semester Examination Pass/Fail & Grade Distribution Analysis",
     category: "exams",
-    description: "Comprehensive end-semester academic achievement metrics, pass percentages, and CGPA distributions.",
+    description:
+      "Comprehensive end-semester academic achievement metrics, pass percentages, and CGPA distributions.",
     mandatoryFor: "Academic Council & NAAC Criterion 2.6",
-    columns: ["Program", "Semester", "Appeared", "Passed", "Pass %", "First Class with Dist.", "First Class", "Backlogs"],
+    columns: [
+      "Program",
+      "Semester",
+      "Appeared",
+      "Passed",
+      "Pass %",
+      "First Class with Dist.",
+      "First Class",
+      "Backlogs",
+    ],
     sampleData: [
-      { Program: "B.Tech CSE", Semester: 5, Appeared: 178, Passed: 168, "Pass %": "94.4%", "First Class with Dist.": 62, "First Class": 88, Backlogs: 10 },
-      { Program: "B.Tech ECE", Semester: 5, Appeared: 118, Passed: 108, "Pass %": "91.5%", "First Class with Dist.": 38, "First Class": 58, Backlogs: 10 },
-      { Program: "B.Tech MECH", Semester: 5, Appeared: 58, Passed: 51, "Pass %": "87.9%", "First Class with Dist.": 14, "First Class": 30, Backlogs: 7 },
-      { Program: "B.Tech IT", Semester: 5, Appeared: 119, Passed: 112, "Pass %": "94.1%", "First Class with Dist.": 41, "First Class": 61, Backlogs: 7 },
+      {
+        Program: "B.Tech CSE",
+        Semester: 5,
+        Appeared: 178,
+        Passed: 168,
+        "Pass %": "94.4%",
+        "First Class with Dist.": 62,
+        "First Class": 88,
+        Backlogs: 10,
+      },
+      {
+        Program: "B.Tech ECE",
+        Semester: 5,
+        Appeared: 118,
+        Passed: 108,
+        "Pass %": "91.5%",
+        "First Class with Dist.": 38,
+        "First Class": 58,
+        Backlogs: 10,
+      },
+      {
+        Program: "B.Tech MECH",
+        Semester: 5,
+        Appeared: 58,
+        Passed: 51,
+        "Pass %": "87.9%",
+        "First Class with Dist.": 14,
+        "First Class": 30,
+        Backlogs: 7,
+      },
+      {
+        Program: "B.Tech IT",
+        Semester: 5,
+        Appeared: 119,
+        Passed: 112,
+        "Pass %": "94.1%",
+        "First Class with Dist.": 41,
+        "First Class": 61,
+        Backlogs: 7,
+      },
     ],
   },
   {
     id: "rep-stat-naac",
     title: "NAAC / NIRF Statutory Accreditation Telemetry Pack",
     category: "compliance",
-    description: "Exportable annual quality assurance tables matching NAAC Self-Study Report (SSR) and NIRF parameters.",
+    description:
+      "Exportable annual quality assurance tables matching NAAC Self-Study Report (SSR) and NIRF parameters.",
     mandatoryFor: "National Assessment & Accreditation Council (NAAC)",
-    columns: ["Metric Code", "Description", "Institutional Value", "Benchmark Target", "Compliance Status", "Supporting Documents"],
+    columns: [
+      "Metric Code",
+      "Description",
+      "Institutional Value",
+      "Benchmark Target",
+      "Compliance Status",
+      "Supporting Documents",
+    ],
     sampleData: [
-      { "Metric Code": "2.1.1", Description: "Average Enrolment percentage (3-year rolling)", "Institutional Value": "96.4%", "Benchmark Target": "90.0%", "Compliance Status": "EXCEEDED", "Supporting Documents": "12 Verified Records" },
-      { "Metric Code": "2.2.2", Description: "Student - Full time teacher ratio", "Institutional Value": "14.2 : 1", "Benchmark Target": "15.0 : 1", "Compliance Status": "COMPLIANT", "Supporting Documents": "8 Verified Records" },
-      { "Metric Code": "2.6.3", Description: "Average pass percentage of students", "Institutional Value": "92.8%", "Benchmark Target": "85.0%", "Compliance Status": "EXCEEDED", "Supporting Documents": "16 Verified Records" },
-      { "Metric Code": "5.2.1", Description: "Placement percentage of outgoing students", "Institutional Value": "88.5%", "Benchmark Target": "80.0%", "Compliance Status": "EXCEEDED", "Supporting Documents": "24 Offer Letters" },
+      {
+        "Metric Code": "2.1.1",
+        Description: "Average Enrolment percentage (3-year rolling)",
+        "Institutional Value": "96.4%",
+        "Benchmark Target": "90.0%",
+        "Compliance Status": "EXCEEDED",
+        "Supporting Documents": "12 Verified Records",
+      },
+      {
+        "Metric Code": "2.2.2",
+        Description: "Student - Full time teacher ratio",
+        "Institutional Value": "14.2 : 1",
+        "Benchmark Target": "15.0 : 1",
+        "Compliance Status": "COMPLIANT",
+        "Supporting Documents": "8 Verified Records",
+      },
+      {
+        "Metric Code": "2.6.3",
+        Description: "Average pass percentage of students",
+        "Institutional Value": "92.8%",
+        "Benchmark Target": "85.0%",
+        "Compliance Status": "EXCEEDED",
+        "Supporting Documents": "16 Verified Records",
+      },
+      {
+        "Metric Code": "5.2.1",
+        Description: "Placement percentage of outgoing students",
+        "Institutional Value": "88.5%",
+        "Benchmark Target": "80.0%",
+        "Compliance Status": "EXCEEDED",
+        "Supporting Documents": "24 Offer Letters",
+      },
     ],
   },
 ];
@@ -152,10 +419,7 @@ export default function InstitutionalReportsPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `${selectedReport.id}_${academicYear}.csv`,
-    );
+    link.setAttribute("download", `${selectedReport.id}_${academicYear}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -183,7 +447,9 @@ export default function InstitutionalReportsPage() {
             Institutional Reports & Analytics Hub
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Generate, preview, and export cross-domain regulatory and operational reports across Academics, Attendance, Finance, Examinations, and NAAC/NIRF accreditation.
+            Generate, preview, and export cross-domain regulatory and
+            operational reports across Academics, Attendance, Finance,
+            Examinations, and NAAC/NIRF accreditation.
           </p>
         </div>
 
@@ -384,7 +650,10 @@ export default function InstitutionalReportsPage() {
                 <thead>
                   <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
                     {selectedReport.columns.map((col, idx) => (
-                      <th key={idx} className="py-2.5 px-3 font-semibold whitespace-nowrap">
+                      <th
+                        key={idx}
+                        className="py-2.5 px-3 font-semibold whitespace-nowrap"
+                      >
                         {col}
                       </th>
                     ))}
@@ -411,7 +680,10 @@ export default function InstitutionalReportsPage() {
             </div>
 
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
-              <span>Showing {selectedReport.sampleData.length} records in verified preview</span>
+              <span>
+                Showing {selectedReport.sampleData.length} records in verified
+                preview
+              </span>
               <span className="font-mono text-[10px]">Checksum: SHA256-OK</span>
             </div>
           </Card>

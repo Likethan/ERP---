@@ -37,7 +37,9 @@ import {
 } from "@/services/admin-rbac.service";
 
 export default function AdminRolesManagementPage() {
-  const [activeTab, setActiveTab] = useState<"users" | "roles" | "policies">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "roles" | "policies">(
+    "users",
+  );
   const [roles, setRoles] = useState<AdminRoleItem[]>([]);
   const [users, setUsers] = useState<AdminUserItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -175,8 +177,13 @@ export default function AdminRolesManagementPage() {
     setActionLoading(true);
     setErrorMessage(null);
     try {
-      await adminRbacService.revokeRole(revokeTarget.user.id, revokeTarget.roleId);
-      setSuccessMessage(`Revoked role ${revokeTarget.roleName} from ${revokeTarget.user.email}`);
+      await adminRbacService.revokeRole(
+        revokeTarget.user.id,
+        revokeTarget.roleId,
+      );
+      setSuccessMessage(
+        `Revoked role ${revokeTarget.roleName} from ${revokeTarget.user.email}`,
+      );
       setRevokeConfirmOpen(false);
       setRevokeTarget(null);
       await loadData();
@@ -197,7 +204,9 @@ export default function AdminRolesManagementPage() {
         status: statusTarget.newStatus,
         reason: `Administrative status change by administrator to ${statusTarget.newStatus}`,
       });
-      setSuccessMessage(`Account ${statusTarget.user.email} marked as ${statusTarget.newStatus}`);
+      setSuccessMessage(
+        `Account ${statusTarget.user.email} marked as ${statusTarget.newStatus}`,
+      );
       setStatusConfirmOpen(false);
       setStatusTarget(null);
       await loadData();
@@ -210,7 +219,9 @@ export default function AdminRolesManagementPage() {
 
   const activeUsersCount = users.filter((u) => u.status === "ACTIVE").length;
   const privilegedUsersCount = users.filter((u) =>
-    u.roles.some((r) => ["SUPER_ADMIN", "INSTITUTION_ADMIN"].includes(r.roleName)),
+    u.roles.some((r) =>
+      ["SUPER_ADMIN", "INSTITUTION_ADMIN"].includes(r.roleName),
+    ),
   ).length;
 
   return (
@@ -235,7 +246,8 @@ export default function AdminRolesManagementPage() {
             User Accounts & Role-Based Access Control
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Provision user accounts, assign canonical institutional roles, enforce separation of duties, and audit active permissions.
+            Provision user accounts, assign canonical institutional roles,
+            enforce separation of duties, and audit active permissions.
           </p>
         </div>
 
@@ -247,7 +259,9 @@ export default function AdminRolesManagementPage() {
             disabled={loading}
             className="flex items-center gap-1.5"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           <Button
@@ -405,7 +419,9 @@ export default function AdminRolesManagementPage() {
                   <option value="INACTIVE">INACTIVE</option>
                 </select>
 
-                {(searchQuery || selectedRoleFilter !== "ALL" || selectedStatusFilter !== "ALL") && (
+                {(searchQuery ||
+                  selectedRoleFilter !== "ALL" ||
+                  selectedStatusFilter !== "ALL") && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -431,21 +447,30 @@ export default function AdminRolesManagementPage() {
                   <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
                     <th className="py-3 px-4 font-semibold">User Identity</th>
                     <th className="py-3 px-4 font-semibold">Status</th>
-                    <th className="py-3 px-4 font-semibold">Assigned Roles & Scopes</th>
+                    <th className="py-3 px-4 font-semibold">
+                      Assigned Roles & Scopes
+                    </th>
                     <th className="py-3 px-4 font-semibold">Registered</th>
-                    <th className="py-3 px-4 font-semibold text-right">Administrative Actions</th>
+                    <th className="py-3 px-4 font-semibold text-right">
+                      Administrative Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
                   {filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-slate-500 dark:text-slate-400">
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-slate-500 dark:text-slate-400"
+                      >
                         No user accounts match the selected filter criteria.
                       </td>
                     </tr>
                   ) : (
                     filteredUsers.map((u) => {
-                      const isSuperAdmin = u.roles.some((r) => r.roleName === "SUPER_ADMIN");
+                      const isSuperAdmin = u.roles.some(
+                        (r) => r.roleName === "SUPER_ADMIN",
+                      );
                       return (
                         <tr
                           key={u.id}
@@ -492,8 +517,8 @@ export default function AdminRolesManagementPage() {
                                 u.status === "ACTIVE"
                                   ? "success"
                                   : u.status === "SUSPENDED"
-                                  ? "destructive"
-                                  : "secondary"
+                                    ? "destructive"
+                                    : "secondary"
                               }
                             >
                               {u.status}
@@ -504,7 +529,9 @@ export default function AdminRolesManagementPage() {
                           <td className="py-3.5 px-4">
                             <div className="flex flex-wrap items-center gap-1.5">
                               {u.roles.length === 0 ? (
-                                <span className="text-slate-400 italic text-[11px]">No roles assigned</span>
+                                <span className="text-slate-400 italic text-[11px]">
+                                  No roles assigned
+                                </span>
                               ) : (
                                 u.roles.map((r) => (
                                   <span
@@ -514,7 +541,10 @@ export default function AdminRolesManagementPage() {
                                     <Shield className="h-2.5 w-2.5 text-indigo-500" />
                                     <span>{r.displayName || r.roleName}</span>
                                     {r.departmentId && (
-                                      <span className="text-[9px] text-slate-400"> (Dept)</span>
+                                      <span className="text-[9px] text-slate-400">
+                                        {" "}
+                                        (Dept)
+                                      </span>
                                     )}
                                     <button
                                       type="button"
@@ -559,12 +589,17 @@ export default function AdminRolesManagementPage() {
                               </Button>
 
                               <Button
-                                variant={u.status === "ACTIVE" ? "outline" : "primary"}
+                                variant={
+                                  u.status === "ACTIVE" ? "outline" : "primary"
+                                }
                                 size="sm"
                                 onClick={() => {
                                   setStatusTarget({
                                     user: u,
-                                    newStatus: u.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE",
+                                    newStatus:
+                                      u.status === "ACTIVE"
+                                        ? "SUSPENDED"
+                                        : "ACTIVE",
                                   });
                                   setStatusConfirmOpen(true);
                                 }}
@@ -614,10 +649,10 @@ export default function AdminRolesManagementPage() {
                           isSuper
                             ? "bg-amber-500/10 text-amber-600"
                             : isInstAdmin
-                            ? "bg-indigo-500/10 text-indigo-600"
-                            : isVp
-                            ? "bg-blue-500/10 text-blue-600"
-                            : "bg-slate-500/10 text-slate-600"
+                              ? "bg-indigo-500/10 text-indigo-600"
+                              : isVp
+                                ? "bg-blue-500/10 text-blue-600"
+                                : "bg-slate-500/10 text-slate-600"
                         }`}
                       >
                         <Shield className="h-4 w-4" />
@@ -626,7 +661,9 @@ export default function AdminRolesManagementPage() {
                         <h3 className="font-bold text-sm text-slate-900 dark:text-white">
                           {role.displayName || role.name}
                         </h3>
-                        <div className="text-[11px] font-mono text-slate-500">{role.name}</div>
+                        <div className="text-[11px] font-mono text-slate-500">
+                          {role.name}
+                        </div>
                       </div>
                     </div>
                     {role.isSystem && (
@@ -637,14 +674,17 @@ export default function AdminRolesManagementPage() {
                   </div>
 
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
-                    {role.description || "Canonical system role governing institution boundaries."}
+                    {role.description ||
+                      "Canonical system role governing institution boundaries."}
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80">
                     <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
                       <span>Permissions Coverage</span>
                       <span className="text-indigo-600 dark:text-indigo-400 font-mono">
-                        {role.permissionsCount > 0 ? `${role.permissionsCount} Ops` : "Standard Set"}
+                        {role.permissionsCount > 0
+                          ? `${role.permissionsCount} Ops`
+                          : "Standard Set"}
                       </span>
                     </div>
 
@@ -669,7 +709,12 @@ export default function AdminRolesManagementPage() {
                 <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
                   <span>Assigned Users</span>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {users.filter((u) => u.roles.some((r) => r.roleName === role.name)).length} accounts
+                    {
+                      users.filter((u) =>
+                        u.roles.some((r) => r.roleName === role.name),
+                      ).length
+                    }{" "}
+                    accounts
                   </span>
                 </div>
               </Card>
@@ -687,7 +732,9 @@ export default function AdminRolesManagementPage() {
               Enterprise RBAC Rules & Invariants
             </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 mb-6">
-              CampusOS enforces strict enterprise security boundaries across multi-tenant college environments to prevent privilege escalation and catastrophic self-lockout.
+              CampusOS enforces strict enterprise security boundaries across
+              multi-tenant college environments to prevent privilege escalation
+              and catastrophic self-lockout.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -697,7 +744,10 @@ export default function AdminRolesManagementPage() {
                   Self-Lockout & SuperAdmin Invariant
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  The system prevents an administrator from revoking their own <code>SUPER_ADMIN</code> role or deactivating their own account. Additionally, an institution must retain at least one active Super Administrator at all times.
+                  The system prevents an administrator from revoking their own{" "}
+                  <code>SUPER_ADMIN</code> role or deactivating their own
+                  account. Additionally, an institution must retain at least one
+                  active Super Administrator at all times.
                 </p>
               </div>
 
@@ -707,7 +757,10 @@ export default function AdminRolesManagementPage() {
                   Tenant & Department Isolation
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Roles scoped to a specific department (such as HOD or Faculty) are strictly bounded to that department&apos;s courses, students, and marks. Cross-department modifications require Institutional Administrator authorization.
+                  Roles scoped to a specific department (such as HOD or Faculty)
+                  are strictly bounded to that department&apos;s courses,
+                  students, and marks. Cross-department modifications require
+                  Institutional Administrator authorization.
                 </p>
               </div>
 
@@ -717,7 +770,10 @@ export default function AdminRolesManagementPage() {
                   Separation of Duties (SoD)
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Academic monitoring is separated between Vice Principal (institutional oversight, regulatory audits) and HOD (departmental allocation, roster operations). Financial actions require separate finance permissions.
+                  Academic monitoring is separated between Vice Principal
+                  (institutional oversight, regulatory audits) and HOD
+                  (departmental allocation, roster operations). Financial
+                  actions require separate finance permissions.
                 </p>
               </div>
 
@@ -727,7 +783,10 @@ export default function AdminRolesManagementPage() {
                   Immutable Audit Logging
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Every user creation, role assignment, revocation, and status modification writes an append-only audit record tagged with the actor&apos;s IP address, timestamp, and authorization context.
+                  Every user creation, role assignment, revocation, and status
+                  modification writes an append-only audit record tagged with
+                  the actor&apos;s IP address, timestamp, and authorization
+                  context.
                 </p>
               </div>
             </div>
@@ -752,7 +811,9 @@ export default function AdminRolesManagementPage() {
                 required
                 placeholder="e.g. Ramesh"
                 value={createForm.firstName}
-                onChange={(e) => setCreateForm({ ...createForm, firstName: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, firstName: e.target.value })
+                }
                 className="h-9 text-xs"
               />
             </div>
@@ -764,7 +825,9 @@ export default function AdminRolesManagementPage() {
                 required
                 placeholder="e.g. Kumar"
                 value={createForm.lastName}
-                onChange={(e) => setCreateForm({ ...createForm, lastName: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, lastName: e.target.value })
+                }
                 className="h-9 text-xs"
               />
             </div>
@@ -779,7 +842,9 @@ export default function AdminRolesManagementPage() {
               type="email"
               placeholder="e.g. ramesh.kumar@vsb.ac.in"
               value={createForm.email}
-              onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, email: e.target.value })
+              }
               className="h-9 text-xs"
             />
           </div>
@@ -792,7 +857,9 @@ export default function AdminRolesManagementPage() {
               <Input
                 placeholder="e.g. +91 98400 12345"
                 value={createForm.phoneNumber || ""}
-                onChange={(e) => setCreateForm({ ...createForm, phoneNumber: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, phoneNumber: e.target.value })
+                }
                 className="h-9 text-xs"
               />
             </div>
@@ -803,7 +870,9 @@ export default function AdminRolesManagementPage() {
               <Input
                 type="password"
                 value={createForm.password}
-                onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                onChange={(e) =>
+                  setCreateForm({ ...createForm, password: e.target.value })
+                }
                 className="h-9 text-xs"
               />
             </div>
@@ -815,7 +884,9 @@ export default function AdminRolesManagementPage() {
             </label>
             <select
               value={createForm.roleId}
-              onChange={(e) => setCreateForm({ ...createForm, roleId: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, roleId: e.target.value })
+              }
               className="w-full h-9 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <option value="">-- No initial role (assign later) --</option>
@@ -865,7 +936,9 @@ export default function AdminRolesManagementPage() {
             <select
               required
               value={assignRoleForm.roleId}
-              onChange={(e) => setAssignRoleForm({ ...assignRoleForm, roleId: e.target.value })}
+              onChange={(e) =>
+                setAssignRoleForm({ ...assignRoleForm, roleId: e.target.value })
+              }
               className="w-full h-9 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <option value="">-- Select a Role --</option>
@@ -878,8 +951,11 @@ export default function AdminRolesManagementPage() {
           </div>
 
           <div className="p-3 rounded bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-400">
-            <span className="font-semibold text-slate-800 dark:text-slate-200">Note: </span>
-            Assigning privileged roles grants immediate access across backend APIs. Ensure compliance with institution governance policies.
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
+              Note:{" "}
+            </span>
+            Assigning privileged roles grants immediate access across backend
+            APIs. Ensure compliance with institution governance policies.
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-4 border-t border-slate-200 dark:border-slate-800">
@@ -920,8 +996,8 @@ export default function AdminRolesManagementPage() {
             </div>
             <p>
               Revoking <strong>{revokeTarget?.roleName}</strong> from{" "}
-              <strong>{revokeTarget?.user.email}</strong> will terminate all capabilities
-              associated with this role immediately.
+              <strong>{revokeTarget?.user.email}</strong> will terminate all
+              capabilities associated with this role immediately.
             </p>
           </div>
 
@@ -964,7 +1040,8 @@ export default function AdminRolesManagementPage() {
 
           {statusTarget?.newStatus === "SUSPENDED" && (
             <div className="p-3 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300">
-              Suspended users will be immediately locked out of all portal login sessions until reactivated.
+              Suspended users will be immediately locked out of all portal login
+              sessions until reactivated.
             </div>
           )}
 
@@ -980,13 +1057,23 @@ export default function AdminRolesManagementPage() {
             </Button>
             <Button
               type="button"
-              variant={statusTarget?.newStatus === "SUSPENDED" ? "destructive" : "primary"}
+              variant={
+                statusTarget?.newStatus === "SUSPENDED"
+                  ? "destructive"
+                  : "primary"
+              }
               size="sm"
               onClick={handleStatusToggle}
               disabled={actionLoading}
-              className={statusTarget?.newStatus === "ACTIVE" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""}
+              className={
+                statusTarget?.newStatus === "ACTIVE"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : ""
+              }
             >
-              {actionLoading ? "Updating..." : `Confirm ${statusTarget?.newStatus}`}
+              {actionLoading
+                ? "Updating..."
+                : `Confirm ${statusTarget?.newStatus}`}
             </Button>
           </div>
         </div>

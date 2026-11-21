@@ -122,8 +122,15 @@ class AcademicsService {
       const qParams = new URLSearchParams();
       if (params?.search) qParams.append("search", params.search);
       const qs = qParams.toString();
-      const res = await apiFetch<any[]>(`/api/v1/academics/subjects${qs ? `?${qs}` : ""}`);
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      const res = await apiFetch<any[]>(
+        `/api/v1/academics/subjects${qs ? `?${qs}` : ""}`,
+      );
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveSubjects: AcademicSubject[] = res.data.map((s: any) => ({
           id: s.id,
           code: s.code,
@@ -302,11 +309,17 @@ class AcademicsService {
   }): Promise<ApiResponse<CurriculumScheme[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/academics/curricula");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
         const liveCurricula: CurriculumScheme[] = res.data.map((c: any) => ({
           id: c.id,
           programId: c.program_id,
-          programName: c.program_name || "B.Tech Computer Science & Engineering",
+          programName:
+            c.program_name || "B.Tech Computer Science & Engineering",
           programCode: c.program_code || "BTECH-CSE",
           department: c.department_name || "Computer Science and Engineering",
           regulation: c.regulation || "R-2024",
@@ -507,27 +520,34 @@ class AcademicsService {
   }): Promise<ApiResponse<CourseOfferingDetail[]>> {
     try {
       const res = await apiFetch<any[]>("/api/v1/academics/course-offerings");
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        const liveOfferings: CourseOfferingDetail[] = res.data.map((o: any) => ({
-          id: o.id,
-          subjectId: o.subject_id,
-          subjectCode: o.subject_code || "CS101",
-          subjectName: o.subject_name || "Course Offering",
-          programId: o.program_id || "prog-001",
-          programName: o.program_name || "B.Tech Computer Science",
-          department: o.department_name || "Computer Science",
-          academicYear: o.academic_year || "2026-2027",
-          semester: o.semester || 1,
-          section: o.section || "A",
-          credits: 3,
-          type: "THEORY",
-          lectureHours: 3,
-          labHours: 0,
-          facultyAssignments: [],
-          enrolledCount: o.enrolled_count || 60,
-          maxCapacity: o.max_capacity || 60,
-          status: "ACTIVE",
-        }));
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
+        const liveOfferings: CourseOfferingDetail[] = res.data.map(
+          (o: any) => ({
+            id: o.id,
+            subjectId: o.subject_id,
+            subjectCode: o.subject_code || "CS101",
+            subjectName: o.subject_name || "Course Offering",
+            programId: o.program_id || "prog-001",
+            programName: o.program_name || "B.Tech Computer Science",
+            department: o.department_name || "Computer Science",
+            academicYear: o.academic_year || "2026-2027",
+            semester: o.semester || 1,
+            section: o.section || "A",
+            credits: 3,
+            type: "THEORY",
+            lectureHours: 3,
+            labHours: 0,
+            facultyAssignments: [],
+            enrolledCount: o.enrolled_count || 60,
+            maxCapacity: o.max_capacity || 60,
+            status: "ACTIVE",
+          }),
+        );
         return { success: true, data: liveOfferings };
       }
     } catch {

@@ -19,18 +19,25 @@ from app.core.permissions import (
     FEATURE_FLAG_READ,
     MODULE_MANAGE,
     MODULE_READ,
+    PEOPLE_ROLES_MANAGE,
+    PEOPLE_USERS_MANAGE,
+    PEOPLE_USERS_READ,
     POLICY_MANAGE,
     POLICY_READ,
     SEQUENCE_MANAGE,
     SEQUENCE_READ,
-    PEOPLE_ROLES_MANAGE,
-    PEOPLE_USERS_MANAGE,
-    PEOPLE_USERS_READ,
 )
 from app.core.tenant import TenantContext
 from app.models.configuration import ConfigurationDataType, ConfigurationScope
 from app.models.people import User
 from app.repositories.configuration_repository import ConfigurationRepository
+from app.schemas.admin_rbac import (
+    AdminRoleAssignRequest,
+    AdminRoleResponse,
+    AdminUserCreateRequest,
+    AdminUserResponse,
+    AdminUserStatusUpdateRequest,
+)
 from app.schemas.common import ApiResponse, PaginatedMeta, PaginatedResponse
 from app.schemas.configuration import (
     ConfigurationDefinitionResponse,
@@ -61,13 +68,6 @@ from app.schemas.configuration import (
     PolicyResponse,
     PolicyUpdate,
     SequenceGenerateResponse,
-)
-from app.schemas.admin_rbac import (
-    AdminRoleAssignRequest,
-    AdminRoleResponse,
-    AdminUserCreateRequest,
-    AdminUserResponse,
-    AdminUserStatusUpdateRequest,
 )
 from app.services.admin_rbac_service import AdminRbacService
 from app.services.configuration_preview_service import ConfigurationPreviewService

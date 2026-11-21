@@ -425,7 +425,8 @@ export default function DepartmentsPage() {
                   <option value="">-- No HOD Assigned (Vacant) --</option>
                   {facultyList.map((f) => (
                     <option key={f.id} value={f.id}>
-                      {f.firstName} {f.lastName} ({f.designation} &bull; {f.employeeCode})
+                      {f.firstName} {f.lastName} ({f.designation} &bull;{" "}
+                      {f.employeeCode})
                     </option>
                   ))}
                 </select>
