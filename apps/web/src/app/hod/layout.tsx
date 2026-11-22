@@ -27,6 +27,12 @@ import {
   ClipboardList,
   TrendingUp,
   CheckSquare,
+  PartyPopper,
+  Briefcase,
+  Trophy,
+  BarChart3,
+  FileSpreadsheet,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +50,7 @@ interface HodNavSection {
 
 const HOD_NAV_SECTIONS: HodNavSection[] = [
   {
-    title: "ACADEMIC MANAGEMENT",
+    title: "CORE MANAGEMENT",
     items: [
       {
         label: "Dashboard",
@@ -67,12 +73,18 @@ const HOD_NAV_SECTIONS: HodNavSection[] = [
         label: "Attendance Management",
         href: "/hod/attendance",
         icon: <CalendarCheck className="h-4 w-4" />,
+        badge: "88.4%",
       },
       {
         label: "Timetable Management",
         href: "/hod/timetable",
         icon: <Calendar className="h-4 w-4" />,
       },
+    ],
+  },
+  {
+    title: "ACADEMIC MANAGEMENT",
+    items: [
       {
         label: "Subjects & Curriculum",
         href: "/hod/curriculum",
@@ -111,6 +123,46 @@ const HOD_NAV_SECTIONS: HodNavSection[] = [
         href: "/hod/approvals",
         icon: <CheckSquare className="h-4 w-4" />,
         badge: "5 Pending",
+      },
+      {
+        label: "Events & Activities",
+        href: "/hod/events",
+        icon: <PartyPopper className="h-4 w-4" />,
+        badge: "5 Active",
+      },
+      {
+        label: "Placement & Internship",
+        href: "/hod/placements",
+        icon: <Briefcase className="h-4 w-4" />,
+        badge: "87.8%",
+      },
+      {
+        label: "Achievements",
+        href: "/hod/achievements",
+        icon: <Trophy className="h-4 w-4" />,
+        badge: "6 Awards",
+      },
+    ],
+  },
+  {
+    title: "REPORTS & QUALITY",
+    items: [
+      {
+        label: "Reports & Analytics",
+        href: "/hod/reports",
+        icon: <FileSpreadsheet className="h-4 w-4" />,
+      },
+      {
+        label: "Department Analytics",
+        href: "/hod/analytics",
+        icon: <BarChart3 className="h-4 w-4" />,
+        badge: "Live KPIs",
+      },
+      {
+        label: "Accreditation & Documentation",
+        href: "/hod/accreditation",
+        icon: <ShieldCheck className="h-4 w-4" />,
+        badge: "93.0% NBA",
       },
     ],
   },

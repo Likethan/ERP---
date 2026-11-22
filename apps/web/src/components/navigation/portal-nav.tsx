@@ -459,7 +459,7 @@ export const FACULTY_PORTAL_NAV: NavSection[] = [
 // -----------------------------------------------------------------------------
 export const HOD_PORTAL_NAV: NavSection[] = [
   {
-    title: "ACADEMIC MANAGEMENT",
+    title: "CORE MANAGEMENT",
     items: [
       {
         label: "HOD Dashboard",
@@ -490,6 +490,11 @@ export const HOD_PORTAL_NAV: NavSection[] = [
         badge: "Master Grid",
         icon: <CalendarDays className="h-4 w-4" />,
       },
+    ],
+  },
+  {
+    title: "ACADEMIC MANAGEMENT",
+    items: [
       {
         label: "Subjects & Curriculum",
         href: "/hod/curriculum",
@@ -531,139 +536,44 @@ export const HOD_PORTAL_NAV: NavSection[] = [
         icon: <ShieldCheck className="h-4 w-4" />,
       },
       {
-        label: "Department Faculty Workloads",
-        href: "/app/faculty",
-        badge: "28 Faculty",
-        icon: <UserCheck className="h-4 w-4" />,
+        label: "Events & Activities",
+        href: "/hod/events",
+        badge: "5 Active",
+        icon: <PartyPopper className="h-4 w-4" />,
       },
       {
-        label: "Department Students Roster",
-        href: "/app/students",
-        badge: "720 Enrolled",
-        icon: <GraduationCap className="h-4 w-4" />,
+        label: "Placement & Internship",
+        href: "/hod/placements",
+        badge: "87.8%",
+        icon: <Briefcase className="h-4 w-4" />,
       },
       {
-        label: "Academic Structure",
-        href: "/app/academic-structure",
-        icon: <Building className="h-4 w-4" />,
+        label: "Achievements",
+        href: "/hod/achievements",
+        badge: "6 Awards",
+        icon: <Trophy className="h-4 w-4" />,
       },
+    ],
+  },
+  {
+    title: "REPORTS & QUALITY",
+    items: [
       {
-        label: "Department Programs",
-        href: "/app/programs",
-        icon: <Award className="h-4 w-4" />,
-      },
-      {
-        label: "Curricula Schemes",
-        href: "/app/academics/curricula",
+        label: "Reports & Analytics",
+        href: "/hod/reports",
         icon: <FileSpreadsheet className="h-4 w-4" />,
       },
       {
-        label: "Course Offerings",
-        href: "/app/academics/course-offerings",
-        icon: <Layers className="h-4 w-4" />,
-      },
-      {
-        label: "Master Timetable",
-        href: "/app/academics/timetable",
-        icon: <CalendarDays className="h-4 w-4" />,
-      },
-      {
-        label: "Academic Departments",
-        href: "/app/departments",
-        icon: <Building2 className="h-4 w-4" />,
-      },
-    ],
-  },
-  {
-    title: "ATTENDANCE GOVERNANCE",
-    items: [
-      {
-        label: "Attendance Sessions",
-        href: "/app/attendance/sessions",
-        icon: <CheckSquare className="h-4 w-4" />,
-      },
-      {
-        label: "Course Compliance Registers",
-        href: "/app/attendance/courses",
-        icon: <FileSpreadsheet className="h-4 w-4" />,
-      },
-      {
-        label: "Attendance Regulations",
-        href: "/app/attendance/policies",
-        icon: <ShieldAlert className="h-4 w-4" />,
-      },
-      {
-        label: "Department Attendance Reports",
-        href: "/app/attendance/reports",
-        badge: "88.4%",
+        label: "Department Analytics",
+        href: "/hod/analytics",
+        badge: "Live KPIs",
         icon: <BarChart3 className="h-4 w-4" />,
       },
       {
-        label: "Leave Endorsements",
-        href: "/app/attendance/leaves",
-        icon: <Calendar className="h-4 w-4" />,
-      },
-    ],
-  },
-  {
-    title: "EXAMINATION OVERSIGHT",
-    items: [
-      {
-        label: "Assessment Governance",
-        href: "/app/examinations/assessments",
-        icon: <FileEdit className="h-4 w-4" />,
-      },
-      {
-        label: "Marks & CIA Moderation",
-        href: "/app/examinations/marks",
-        badge: "Pending",
-        icon: <ClipboardCheck className="h-4 w-4" />,
-      },
-      {
-        label: "Department Exam Schedules",
-        href: "/app/examinations/schedules",
-        icon: <Calendar className="h-4 w-4" />,
-      },
-      {
-        label: "Results & Performance",
-        href: "/app/examinations/results",
-        icon: <GraduationCap className="h-4 w-4" />,
-      },
-      {
-        label: "Examinations Reports",
-        href: "/app/examinations/reports",
-        icon: <BarChart3 className="h-4 w-4" />,
-      },
-    ],
-  },
-  {
-    title: "MENTORSHIP & ACCREDITATION",
-    items: [
-      {
-        label: "Faculty Mentor Assignments",
-        href: "/app/student-support/assignments",
-        icon: <Users2 className="h-4 w-4" />,
-      },
-      {
-        label: "Department Mentee Records",
-        href: "/app/student-support/mentees",
-        icon: <Clock className="h-4 w-4" />,
-      },
-      {
-        label: "Department Accreditation",
-        href: "/app/accreditation",
-        badge: "3.78",
-        icon: <Award className="h-4 w-4" />,
-      },
-      {
-        label: "Department Research",
-        href: "/app/research",
-        icon: <FlaskConical className="h-4 w-4" />,
-      },
-      {
-        label: "Announcements",
-        href: "/app/announcements",
-        icon: <Bell className="h-4 w-4" />,
+        label: "Accreditation & Documentation",
+        href: "/hod/accreditation",
+        badge: "93.0% NBA",
+        icon: <ShieldCheck className="h-4 w-4" />,
       },
     ],
   },

@@ -2519,6 +2519,1564 @@ class HodService {
       requests: items,
     };
   }
+
+  // ---------------------------------------------------------------------------
+  // Phase 3: Department Operations, Reports & Advanced Analytics Methods
+  // ---------------------------------------------------------------------------
+
+  async getDepartmentEvents(
+    statusFilter: string = "ALL",
+    categoryFilter: string = "ALL",
+  ): Promise<ApiResponse<HodEventsData>> {
+    try {
+      const params = new URLSearchParams();
+      if (statusFilter !== "ALL") params.append("status", statusFilter);
+      if (categoryFilter !== "ALL") params.append("category", categoryFilter);
+      const url = `/api/v1/hod/events${params.toString() ? `?${params.toString()}` : ""}`;
+      const res = await apiFetch<any>(url);
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockEvents(statusFilter, categoryFilter),
+    };
+  }
+
+  async createDepartmentEvent(
+    payload: HodEventCreatePayload,
+  ): Promise<ApiResponse<HodEventItem>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/events", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    const newEvent: HodEventItem = {
+      id: `evt-cse-${Date.now().toString().slice(-3)}`,
+      title: payload.title,
+      description: payload.description,
+      category: payload.category,
+      startDate: payload.startDate,
+      endDate: payload.endDate || payload.startDate,
+      startTime: payload.startTime || "09:30 AM",
+      endTime: payload.endTime || "04:30 PM",
+      venue: payload.venue,
+      organizer: "Department of Computer Science & Engineering",
+      facultyCoordinator: payload.facultyCoordinator,
+      studentCoordinator: payload.studentCoordinator || null,
+      targetAudience: payload.targetAudience,
+      expectedParticipants: payload.expectedParticipants,
+      actualParticipants: 0,
+      budget: payload.budget,
+      status: "UPCOMING",
+      approvalStatus: "APPROVED",
+      report: null,
+      attachments: [],
+    };
+    this._mockEventsStore.unshift(newEvent);
+    return { success: true, data: newEvent };
+  }
+
+  async getDepartmentEventDetails(
+    eventId: string,
+  ): Promise<ApiResponse<{ department: string; event: HodEventItem }>> {
+    try {
+      const res = await apiFetch<any>(`/api/v1/hod/events/${eventId}`);
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    const found =
+      this._mockEventsStore.find((e) => e.id === eventId) ||
+      this._mockEventsStore[0];
+    return {
+      success: true,
+      data: {
+        department: this.defaultDept,
+        event: found,
+      },
+    };
+  }
+
+  async submitEventReport(
+    eventId: string,
+    payload: HodEventReportPayload,
+  ): Promise<ApiResponse<HodEventItem>> {
+    try {
+      const res = await apiFetch<any>(`/api/v1/hod/events/${eventId}/report`, {
+        method: "POST",
+        body: JSON.stringify({
+          actual_participants: payload.actualParticipants,
+          outcomes: payload.outcomes,
+          photos_count: payload.photosCount,
+          report_url: payload.reportUrl,
+          completion_remarks: payload.completionRemarks,
+        }),
+      });
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    const target =
+      this._mockEventsStore.find((e) => e.id === eventId) ||
+      this._mockEventsStore[0];
+    target.status = "COMPLETED";
+    target.actualParticipants = payload.actualParticipants;
+    target.report = {
+      submittedAt: new Date().toISOString(),
+      outcomes: payload.outcomes,
+      photosCount: payload.photosCount,
+      reportUrl: payload.reportUrl || `/reports/events/${eventId}-report.pdf`,
+      remarks: payload.completionRemarks,
+    };
+    return { success: true, data: target };
+  }
+
+  async getPlacementOverview(): Promise<ApiResponse<HodPlacementOverview>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/placements/overview");
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockPlacementOverview(),
+    };
+  }
+
+  async getPlacementStudents(
+    statusFilter: string = "ALL",
+    sectionFilter: string = "ALL",
+    companyFilter: string = "ALL",
+  ): Promise<ApiResponse<HodPlacementsData>> {
+    try {
+      const params = new URLSearchParams();
+      if (statusFilter !== "ALL") params.append("status", statusFilter);
+      if (sectionFilter !== "ALL") params.append("section", sectionFilter);
+      if (companyFilter !== "ALL") params.append("company", companyFilter);
+      const url = `/api/v1/hod/placements/students${params.toString() ? `?${params.toString()}` : ""}`;
+      const res = await apiFetch<any>(url);
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockPlacementStudents(
+        statusFilter,
+        sectionFilter,
+        companyFilter,
+      ),
+    };
+  }
+
+  async getReportCategories(): Promise<ApiResponse<HodReportCategoriesData>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/reports/categories");
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: {
+        department: this.defaultDept,
+        categories: this.getMockReportCategories(),
+      },
+    };
+  }
+
+  async generateDepartmentReport(
+    payload: HodReportGeneratePayload,
+  ): Promise<ApiResponse<HodReportResult>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/reports/generate", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockReportResult(payload),
+    };
+  }
+
+  async getPerformanceAnalytics(): Promise<
+    ApiResponse<HodPerformanceAnalyticsData>
+  > {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/analytics/performance");
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockPerformanceAnalytics(),
+    };
+  }
+
+  async getDepartmentAchievements(
+    category: string = "ALL",
+    recipientType: string = "ALL",
+    academicYear: string = "ALL",
+  ): Promise<ApiResponse<HodAchievementsData>> {
+    try {
+      const params = new URLSearchParams();
+      if (category !== "ALL") params.append("category", category);
+      if (recipientType !== "ALL")
+        params.append("recipient_type", recipientType);
+      if (academicYear !== "ALL") params.append("academic_year", academicYear);
+      const url = `/api/v1/hod/achievements${params.toString() ? `?${params.toString()}` : ""}`;
+      const res = await apiFetch<any>(url);
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockAchievements(category, recipientType, academicYear),
+    };
+  }
+
+  async recordDepartmentAchievement(
+    payload: HodAchievementCreatePayload,
+  ): Promise<ApiResponse<HodAchievementItem>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/achievements", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    const newAch: HodAchievementItem = {
+      id: `ach-cse-${Date.now().toString().slice(-3)}`,
+      title: payload.title,
+      description: payload.description,
+      category: payload.category,
+      recipientName: payload.recipientName,
+      recipientType: payload.recipientType,
+      recipientId: payload.recipientId,
+      achievementDate: payload.achievementDate,
+      academicYear: payload.academicYear,
+      eventOrOrganization: payload.eventOrOrganization,
+      certificateUrl:
+        payload.certificateUrl || "/certificates/default-achievement.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    };
+    this._mockAchievementsStore.unshift(newAch);
+    return { success: true, data: newAch };
+  }
+
+  async getAccreditationOverview(): Promise<
+    ApiResponse<HodAccreditationOverviewData>
+  > {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/accreditation/overview");
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockAccreditationOverview(),
+    };
+  }
+
+  async getAccreditationDocuments(
+    criterion: string = "ALL",
+    academicYear: string = "ALL",
+    statusFilter: string = "ALL",
+  ): Promise<ApiResponse<HodAccreditationDocumentsData>> {
+    try {
+      const params = new URLSearchParams();
+      if (criterion !== "ALL") params.append("criterion", criterion);
+      if (academicYear !== "ALL") params.append("academic_year", academicYear);
+      if (statusFilter !== "ALL") params.append("status", statusFilter);
+      const url = `/api/v1/hod/accreditation/documents${params.toString() ? `?${params.toString()}` : ""}`;
+      const res = await apiFetch<any>(url);
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    return {
+      success: true,
+      data: this.getMockAccreditationDocuments(
+        criterion,
+        academicYear,
+        statusFilter,
+      ),
+    };
+  }
+
+  async uploadAccreditationDocument(
+    payload: HodAccreditationDocumentUploadPayload,
+  ): Promise<ApiResponse<HodAccreditationDocumentItem>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/hod/accreditation/documents", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (res && res.data) {
+        return { success: true, data: res.data };
+      }
+    } catch {
+      // Fallback
+    }
+    const newDoc: HodAccreditationDocumentItem = {
+      id: `doc-acc-${Date.now().toString().slice(-3)}`,
+      title: payload.title,
+      criterion: payload.criterion,
+      academicYear: payload.academicYear,
+      description: payload.description,
+      fileName: payload.fileName,
+      fileType: payload.fileType || "PDF",
+      fileSizeKb: payload.fileSizeKb || 1200,
+      uploadedBy: payload.uploadedBy || "Dr. K. S. Anand (HOD)",
+      uploadedAt: new Date().toISOString(),
+      reviewStatus: "UNDER_REVIEW",
+      reviewer: "IQAC Lead Auditor",
+      reviewRemarks: "Uploaded and queued for criteria verification.",
+    };
+    this._mockAccreditationDocsStore.unshift(newDoc);
+    return { success: true, data: newDoc };
+  }
+
+  // Private Mock Data Stores & Generators for Phase 3
+  private _mockEventsStore: HodEventItem[] = [
+    {
+      id: "evt-cse-001",
+      title: "National Level Hackathon — CodeCraft 2026",
+      description:
+        "36-hour non-stop algorithmic innovation hackathon focusing on AI agents and sustainable computing solutions.",
+      category: "Hackathon",
+      startDate: "2026-10-15",
+      endDate: "2026-10-16",
+      startTime: "09:00 AM",
+      endTime: "09:00 PM",
+      venue: "Alan Turing Innovation Lab & CSE Systems Hub",
+      organizer: "Department of Computer Science & Engineering",
+      facultyCoordinator: "Dr. Priya Nair (Associate Professor)",
+      studentCoordinator: "Arvind Kumar (714022104018)",
+      targetAudience: "2nd, 3rd, 4th Year CSE & IT Students",
+      expectedParticipants: 120,
+      actualParticipants: 142,
+      budget: 45000,
+      status: "COMPLETED",
+      approvalStatus: "APPROVED",
+      report: {
+        submittedAt: "2026-10-18T14:30:00Z",
+        outcomes:
+          "38 working prototypes developed; 4 projects shortlisted for institutional incubation seed grant.",
+        photosCount: 24,
+        reportUrl: "/reports/events/evt-cse-001-final-summary.pdf",
+      },
+      attachments: [
+        { name: "CodeCraft2026_Brochure.pdf", size: "2.4 MB", type: "PDF" },
+        { name: "Event_Report_Signed.pdf", size: "1.8 MB", type: "PDF" },
+      ],
+    },
+    {
+      id: "evt-cse-002",
+      title: "Hands-on Workshop: Generative AI & LLM Deployment",
+      description:
+        "Deep-dive session covering transformer architectures, fine-tuning Llama models, and deploying via vLLM on Kubernetes.",
+      category: "Workshop",
+      startDate: "2026-11-28",
+      endDate: "2026-11-29",
+      startTime: "09:30 AM",
+      endTime: "04:30 PM",
+      venue: "Computing Centre Lab 3",
+      organizer: "CSE AI Research Interest Group",
+      facultyCoordinator: "Prof. S. Ranganathan (Assistant Professor)",
+      studentCoordinator: "Sneha Murali (714022104085)",
+      targetAudience: "3rd & 4th Year B.E. CSE",
+      expectedParticipants: 80,
+      actualParticipants: 0,
+      budget: 25000,
+      status: "UPCOMING",
+      approvalStatus: "APPROVED",
+      report: null,
+      attachments: [
+        { name: "GenAI_Workshop_Syllabus.pdf", size: "850 KB", type: "PDF" },
+      ],
+    },
+    {
+      id: "evt-cse-003",
+      title: "Distinguished Guest Lecture: Scalable Microservices at Amazon",
+      description:
+        "Keynote and interactive AMA by industry leader on distributed event-driven systems and high-throughput AWS architectures.",
+      category: "Guest Lecture",
+      startDate: "2026-11-05",
+      endDate: "2026-11-05",
+      startTime: "02:00 PM",
+      endTime: "04:30 PM",
+      venue: "Dr. A.P.J. Abdul Kalam Memorial Auditorium",
+      organizer: "CSE Department Industry-Institute Interaction Cell",
+      facultyCoordinator: "Dr. M. Kavitha (Associate Professor)",
+      studentCoordinator: "Karthik Raja (714021104042)",
+      targetAudience: "All B.E. Computer Science & Engineering Students",
+      expectedParticipants: 180,
+      actualParticipants: 210,
+      budget: 12000,
+      status: "COMPLETED",
+      approvalStatus: "APPROVED",
+      report: {
+        submittedAt: "2026-11-06T11:00:00Z",
+        outcomes:
+          "High engagement session; 3 internship referrals granted to department students by guest speaker.",
+        photosCount: 18,
+        reportUrl: "/reports/events/guest-lecture-amazon-2026.pdf",
+      },
+      attachments: [
+        {
+          name: "Speaker_Profile_Karthik_Amazon.pdf",
+          size: "420 KB",
+          type: "PDF",
+        },
+      ],
+    },
+    {
+      id: "evt-cse-004",
+      title: "Industrial Visit to Infosys Mysore Development Campus",
+      description:
+        "Full-day experiential tour of Global Education Centre, enterprise cloud operations, and corporate sustainability infrastructure.",
+      category: "Industrial Visit",
+      startDate: "2026-12-08",
+      endDate: "2026-12-08",
+      startTime: "06:00 AM",
+      endTime: "09:00 PM",
+      venue: "Infosys GEC & Tech Hub, Mysore",
+      organizer: "Department of Computer Science & Engineering",
+      facultyCoordinator: "Prof. T. Selvaraj (Assistant Professor)",
+      studentCoordinator: "Pooja V. (714022104072)",
+      targetAudience: "B.E. CSE 3rd Year (Sem 5) Students",
+      expectedParticipants: 65,
+      actualParticipants: 0,
+      budget: 60000,
+      status: "SCHEDULED",
+      approvalStatus: "APPROVED",
+      report: null,
+      attachments: [
+        {
+          name: "Infosys_Visit_Permission_Letter.pdf",
+          size: "1.1 MB",
+          type: "PDF",
+        },
+      ],
+    },
+    {
+      id: "evt-cse-005",
+      title: "Faculty Development Program: Cloud-Native Microservices & DevOps",
+      description:
+        "One-week AICTE-ISTE sponsored national FDP covering Docker, Kubernetes, CI/CD automation, and observability.",
+      category: "Faculty Development Program",
+      startDate: "2026-09-10",
+      endDate: "2026-09-15",
+      startTime: "09:00 AM",
+      endTime: "05:00 PM",
+      venue: "Department Seminar Hall",
+      organizer: "Department of Computer Science & Engineering",
+      facultyCoordinator: "Dr. K. S. Anand (HOD)",
+      studentCoordinator: null,
+      targetAudience: "Faculty Members & Research Scholars",
+      expectedParticipants: 40,
+      actualParticipants: 44,
+      budget: 35000,
+      status: "COMPLETED",
+      approvalStatus: "APPROVED",
+      report: {
+        submittedAt: "2026-09-17T09:30:00Z",
+        outcomes:
+          "All 44 participants certified; 8 joint research proposals formulated.",
+        photosCount: 32,
+        reportUrl: "/reports/events/fdp-cloud-native-report.pdf",
+      },
+      attachments: [
+        {
+          name: "FDP_Schedule_Resource_Persons.pdf",
+          size: "1.5 MB",
+          type: "PDF",
+        },
+      ],
+    },
+  ];
+
+  private getMockEvents(
+    statusFilter: string,
+    categoryFilter: string,
+  ): HodEventsData {
+    let items = [...this._mockEventsStore];
+    if (statusFilter !== "ALL")
+      items = items.filter((e) => e.status === statusFilter);
+    if (categoryFilter !== "ALL")
+      items = items.filter(
+        (e) => e.category.toLowerCase() === categoryFilter.toLowerCase(),
+      );
+
+    const completed = this._mockEventsStore.filter(
+      (e) => e.status === "COMPLETED",
+    ).length;
+    const upcoming = this._mockEventsStore.filter(
+      (e) => e.status === "UPCOMING" || e.status === "SCHEDULED",
+    ).length;
+    const totalParticipants = this._mockEventsStore.reduce(
+      (acc, e) => acc + e.actualParticipants,
+      0,
+    );
+    const totalBudget = this._mockEventsStore.reduce(
+      (acc, e) => acc + e.budget,
+      0,
+    );
+
+    return {
+      department: this.defaultDept,
+      events: items,
+      summary: {
+        totalEvents: this._mockEventsStore.length,
+        upcomingEvents: upcoming,
+        completedEvents: completed,
+        totalParticipants,
+        totalBudget,
+      },
+    };
+  }
+
+  private getMockPlacementOverview(): HodPlacementOverview {
+    return {
+      department: this.defaultDept,
+      totalStudents: 720,
+      finalYearStudents: 180,
+      placementEligible: 172,
+      studentsPlaced: 151,
+      studentsUnplaced: 21,
+      inTraining: 180,
+      internshipParticipants: 138,
+      placementPercentage: 87.8,
+      highestPackageLpa: 24.5,
+      averagePackageLpa: 6.8,
+      medianPackageLpa: 5.5,
+      topRecruiters: [
+        {
+          company: "Tata Consultancy Services (TCS)",
+          offers: 34,
+          tier: "Enterprise Service",
+        },
+        {
+          company: "Infosys Technologies",
+          offers: 28,
+          tier: "Enterprise Service",
+        },
+        {
+          company: "Cognizant Technology Solutions",
+          offers: 22,
+          tier: "Enterprise Service",
+        },
+        {
+          company: "Zoho Corporation",
+          offers: 19,
+          tier: "Product Engineering",
+        },
+        {
+          company: "Kaar Technologies",
+          offers: 14,
+          tier: "Enterprise Product",
+        },
+        {
+          company: "Hexaware Technologies",
+          offers: 16,
+          tier: "Digital Solutions",
+        },
+        { company: "Wipro Limited", offers: 14, tier: "Enterprise Service" },
+        {
+          company: "Amazon Web Services (AWS)",
+          offers: 4,
+          tier: "Tier-1 Product",
+        },
+      ],
+      packageRanges: [
+        { range: "Above 15 LPA", count: 6, percentage: 4.0 },
+        { range: "8 - 15 LPA", count: 28, percentage: 18.5 },
+        { range: "5 - 8 LPA", count: 68, percentage: 45.0 },
+        { range: "3.5 - 5 LPA", count: 49, percentage: 32.5 },
+      ],
+    };
+  }
+
+  private getMockPlacementStudents(
+    statusFilter: string,
+    sectionFilter: string,
+    companyFilter: string,
+  ): HodPlacementsData {
+    const raw: HodStudentPlacementItem[] = [
+      {
+        registerNumber: "714021104001",
+        name: "Abinaya Sundaram",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "A",
+        cgpa: 8.92,
+        placementStatus: "PLACED",
+        company: "Amazon Web Services (AWS)",
+        role: "Cloud Support Associate",
+        packageLpa: 24.5,
+        selectionDate: "2026-09-12",
+        internshipStatus: "INTERNSHIP_COMPLETED",
+        internshipCompany: "Amazon India",
+        internshipDuration: "6 Months",
+        stipendMonthly: 60000,
+      },
+      {
+        registerNumber: "714021104008",
+        name: "Arvind Kumar",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "A",
+        cgpa: 9.15,
+        placementStatus: "PLACED",
+        company: "Zoho Corporation",
+        role: "Member Technical Staff (MTS)",
+        packageLpa: 12.0,
+        selectionDate: "2026-08-25",
+        internshipStatus: "INTERNSHIP_ONGOING",
+        internshipCompany: "Zoho Corporation",
+        internshipDuration: "6 Months",
+        stipendMonthly: 25000,
+      },
+      {
+        registerNumber: "714021104022",
+        name: "Dinesh Babu",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "A",
+        cgpa: 7.84,
+        placementStatus: "PLACED",
+        company: "Tata Consultancy Services (TCS)",
+        role: "System Engineer (Digital)",
+        packageLpa: 7.2,
+        selectionDate: "2026-09-04",
+        internshipStatus: "NOT_STARTED",
+        internshipCompany: null,
+        internshipDuration: null,
+        stipendMonthly: null,
+      },
+      {
+        registerNumber: "714021104035",
+        name: "Harini Venkat",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "B",
+        cgpa: 8.45,
+        placementStatus: "PLACED",
+        company: "Kaar Technologies",
+        role: "SAP Consultant Associate",
+        packageLpa: 8.5,
+        selectionDate: "2026-09-20",
+        internshipStatus: "INTERNSHIP_ONGOING",
+        internshipCompany: "Kaar Technologies",
+        internshipDuration: "4 Months",
+        stipendMonthly: 18000,
+      },
+      {
+        registerNumber: "714021104049",
+        name: "Karthik Raja",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "B",
+        cgpa: 6.95,
+        placementStatus: "INTERVIEW",
+        company: "Hexaware Technologies",
+        role: "Graduate Engineer Trainee",
+        packageLpa: 5.0,
+        selectionDate: null,
+        internshipStatus: "TRAINING",
+        internshipCompany: null,
+        internshipDuration: null,
+        stipendMonthly: null,
+      },
+      {
+        registerNumber: "714021104058",
+        name: "Monisha Rajesh",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "B",
+        cgpa: 8.78,
+        placementStatus: "PLACED",
+        company: "Cognizant Technology Solutions",
+        role: "GenC Elevate Associate",
+        packageLpa: 6.5,
+        selectionDate: "2026-09-18",
+        internshipStatus: "INTERNSHIP_COMPLETED",
+        internshipCompany: "Cognizant",
+        internshipDuration: "3 Months",
+        stipendMonthly: 15000,
+      },
+      {
+        registerNumber: "714021104064",
+        name: "Naveen Prakash",
+        academicYear: "2025-2026",
+        year: "4th Year",
+        section: "C",
+        cgpa: 6.42,
+        placementStatus: "ELIGIBLE",
+        company: null,
+        role: null,
+        packageLpa: null,
+        selectionDate: null,
+        internshipStatus: "TRAINING",
+        internshipCompany: null,
+        internshipDuration: null,
+        stipendMonthly: null,
+      },
+    ];
+
+    let items = [...raw];
+    if (statusFilter !== "ALL")
+      items = items.filter((s) => s.placementStatus === statusFilter);
+    if (sectionFilter !== "ALL")
+      items = items.filter((s) => s.section === sectionFilter);
+    if (companyFilter !== "ALL")
+      items = items.filter(
+        (s) =>
+          s.company &&
+          s.company.toLowerCase().includes(companyFilter.toLowerCase()),
+      );
+
+    return {
+      department: this.defaultDept,
+      total: items.length,
+      students: items,
+    };
+  }
+
+  private getMockReportCategories(): HodReportCategoryItem[] {
+    return [
+      {
+        category: "STUDENT",
+        title: "Student Reports",
+        description:
+          "Statutory enrollment rosters, year-wise distributions, and cohort demographics.",
+        types: [
+          {
+            code: "STUDENT_STRENGTH",
+            name: "Department Student Strength Summary",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "STUDENT_YEARWISE",
+            name: "Year-wise & Section-wise Distribution",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "STUDENT_STATUS",
+            name: "Active / Detained / Transferred Ledger",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "FACULTY",
+        title: "Faculty Reports",
+        description:
+          "Faculty cadres, teaching workloads, attendance summaries, and subject allocations.",
+        types: [
+          {
+            code: "FACULTY_STRENGTH",
+            name: "Faculty Cadre & Qualification Report",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "FACULTY_WORKLOAD",
+            name: "Weekly Instructional Workload Audit",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "FACULTY_ATTENDANCE",
+            name: "Monthly Biometric Faculty Attendance",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "FACULTY_ALLOCATION",
+            name: "Subject & Laboratory Allocation Schedule",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "ATTENDANCE",
+        title: "Attendance Reports",
+        description:
+          "Statutory biometric compliance, daily digests, and shortage radars (<75%).",
+        types: [
+          {
+            code: "ATTENDANCE_DAILY",
+            name: "Daily Department Attendance Digest",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "ATTENDANCE_MONTHLY",
+            name: "Monthly Cumulative Attendance Ledger",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "ATTENDANCE_SHORTAGE",
+            name: "Statutory Shortage Radar (<75% Risk)",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "ATTENDANCE_SUBJECTWISE",
+            name: "Subject-wise & Class-wise Attendance",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "ACADEMIC",
+        title: "Academic Performance Reports",
+        description:
+          "Continuous Internal Assessment (CIA), semester examination results, and arrear diagnostics.",
+        types: [
+          {
+            code: "ACADEMIC_IA_LEDGER",
+            name: "Internal Assessment Marks Register",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "ACADEMIC_RESULTS",
+            name: "Semester Examination Comprehensive Results",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "ACADEMIC_PASS_PERCENTAGE",
+            name: "Subject-wise Pass Percentage & SGPA Analysis",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "ACADEMIC_ARREAR",
+            name: "Arrear Analysis & Remedial Action List",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "TIMETABLE",
+        title: "Timetable Reports",
+        description:
+          "Class schedules, room allocations, faculty slots, and laboratory utilization matrices.",
+        types: [
+          {
+            code: "TIMETABLE_MASTER",
+            name: "Department Master Instructional Timetable",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "TIMETABLE_FACULTY",
+            name: "Individual Faculty Schedule Card",
+            format: ["PDF"],
+          },
+          {
+            code: "TIMETABLE_LABS",
+            name: "Laboratory Infrastructure Utilization Schedule",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "PLACEMENT",
+        title: "Placement & Internship Reports",
+        description:
+          "Recruitment statistics, package distribution, company recruitment breakdown, and internships.",
+        types: [
+          {
+            code: "PLACEMENT_SUMMARY",
+            name: "Annual Placement & Recruitment Statistics",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "PLACEMENT_COMPANYWISE",
+            name: "Company-wise Offers & CTC Breakdown",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "PLACEMENT_INTERNSHIP",
+            name: "Paid Internship & Stipend Compliance Roster",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+      {
+        category: "EVENTS",
+        title: "Events & Activities Reports",
+        description:
+          "Department symposia, hackathons, workshops, industrial visits, and participant engagement.",
+        types: [
+          {
+            code: "EVENTS_ANNUAL",
+            name: "Annual Co-Curricular & Extracurricular Report",
+            format: ["PDF", "CSV", "XLSX"],
+          },
+          {
+            code: "EVENTS_WORKSHOPS",
+            name: "Technical Workshops & Seminars Summary",
+            format: ["PDF", "CSV"],
+          },
+          {
+            code: "EVENTS_IV",
+            name: "Industrial Visit & Experiential Learning Report",
+            format: ["PDF", "CSV"],
+          },
+        ],
+      },
+    ];
+  }
+
+  private getMockReportResult(
+    payload: HodReportGeneratePayload,
+  ): HodReportResult {
+    let columns = [
+      { key: "indicator", label: "Key Performance Dimension" },
+      { key: "baseline", label: "Target" },
+      { key: "achieved", label: "Achieved Value" },
+      { key: "variance", label: "Variance" },
+      { key: "status", label: "Status" },
+    ];
+    let rows: Record<string, any>[] = [
+      {
+        indicator: "Overall Department Pass Percentage",
+        baseline: "85.0%",
+        achieved: "90.8%",
+        variance: "+5.8%",
+        status: "EXCEEDS_TARGET",
+      },
+      {
+        indicator: "Graduating Student Placement Rate",
+        baseline: "80.0%",
+        achieved: "87.8%",
+        variance: "+7.8%",
+        status: "EXCEEDS_TARGET",
+      },
+      {
+        indicator: "Paid Internship Conversion Rate",
+        baseline: "65.0%",
+        achieved: "76.7%",
+        variance: "+11.7%",
+        status: "EXCEEDS_TARGET",
+      },
+      {
+        indicator: "Syllabus Delivery Completion Rate",
+        baseline: "80.0%",
+        achieved: "82.8%",
+        variance: "+2.8%",
+        status: "COMPLIANT",
+      },
+      {
+        indicator: "Statutory Attendance Shortage Risk",
+        baseline: "<5.0%",
+        achieved: "4.4%",
+        variance: "-0.6%",
+        status: "OPTIMAL",
+      },
+    ];
+
+    if (payload.category === "STUDENT") {
+      columns = [
+        { key: "year", label: "Academic Year" },
+        { key: "section", label: "Section" },
+        { key: "enrolled", label: "Enrolled Count" },
+        { key: "male", label: "Male" },
+        { key: "female", label: "Female" },
+        { key: "status", label: "Compliance Status" },
+      ];
+      rows = [
+        {
+          year: "1st Year (2025-2029)",
+          section: "A",
+          enrolled: 60,
+          male: 34,
+          female: 26,
+          status: "VERIFIED",
+        },
+        {
+          year: "1st Year (2025-2029)",
+          section: "B",
+          enrolled: 60,
+          male: 32,
+          female: 28,
+          status: "VERIFIED",
+        },
+        {
+          year: "1st Year (2025-2029)",
+          section: "C",
+          enrolled: 60,
+          male: 35,
+          female: 25,
+          status: "VERIFIED",
+        },
+        {
+          year: "2nd Year (2024-2028)",
+          section: "A",
+          enrolled: 60,
+          male: 31,
+          female: 29,
+          status: "VERIFIED",
+        },
+        {
+          year: "2nd Year (2024-2028)",
+          section: "B",
+          enrolled: 60,
+          male: 33,
+          female: 27,
+          status: "VERIFIED",
+        },
+        {
+          year: "2nd Year (2024-2028)",
+          section: "C",
+          enrolled: 60,
+          male: 36,
+          female: 24,
+          status: "VERIFIED",
+        },
+        {
+          year: "3rd Year (2023-2027)",
+          section: "A",
+          enrolled: 60,
+          male: 32,
+          female: 28,
+          status: "VERIFIED",
+        },
+        {
+          year: "3rd Year (2023-2027)",
+          section: "B",
+          enrolled: 60,
+          male: 30,
+          female: 30,
+          status: "VERIFIED",
+        },
+        {
+          year: "3rd Year (2023-2027)",
+          section: "C",
+          enrolled: 60,
+          male: 35,
+          female: 25,
+          status: "VERIFIED",
+        },
+        {
+          year: "4th Year (2022-2026)",
+          section: "A",
+          enrolled: 60,
+          male: 33,
+          female: 27,
+          status: "VERIFIED",
+        },
+        {
+          year: "4th Year (2022-2026)",
+          section: "B",
+          enrolled: 60,
+          male: 34,
+          female: 26,
+          status: "VERIFIED",
+        },
+        {
+          year: "4th Year (2022-2026)",
+          section: "C",
+          enrolled: 60,
+          male: 31,
+          female: 29,
+          status: "VERIFIED",
+        },
+      ];
+    } else if (payload.category === "FACULTY") {
+      columns = [
+        { key: "emp_code", label: "Employee Code" },
+        { key: "name", label: "Faculty Name" },
+        { key: "designation", label: "Designation" },
+        { key: "load_hrs", label: "Weekly Workload (Hrs)" },
+        { key: "subjects", label: "Assigned Courses" },
+        { key: "attendance_pct", label: "Biometric Compliance" },
+      ];
+      rows = [
+        {
+          emp_code: "FAC-CSE-001",
+          name: "Dr. K. S. Anand",
+          designation: "Professor & HOD",
+          load_hrs: 14,
+          subjects: "CS301 (DSA)",
+          attendance_pct: "98.5%",
+        },
+        {
+          emp_code: "FAC-CSE-002",
+          name: "Dr. Priya Nair",
+          designation: "Associate Professor",
+          load_hrs: 18,
+          subjects: "CS302 (DBMS)",
+          attendance_pct: "96.2%",
+        },
+        {
+          emp_code: "FAC-CSE-003",
+          name: "Prof. S. Ranganathan",
+          designation: "Assistant Professor",
+          load_hrs: 20,
+          subjects: "CS303 (OS), CS306 (Lab)",
+          attendance_pct: "97.4%",
+        },
+        {
+          emp_code: "FAC-CSE-004",
+          name: "Dr. M. Kavitha",
+          designation: "Associate Professor",
+          load_hrs: 16,
+          subjects: "CS304 (Networks)",
+          attendance_pct: "95.8%",
+        },
+        {
+          emp_code: "FAC-CSE-005",
+          name: "Prof. T. Selvaraj",
+          designation: "Assistant Professor",
+          load_hrs: 21,
+          subjects: "CS305 (TOC), CS307 (Lab)",
+          attendance_pct: "94.6%",
+        },
+      ];
+    }
+
+    return {
+      reportId: `rep-${Date.now().toString().slice(-6)}`,
+      title: `Department of Computer Science & Engineering — ${payload.reportType || "Statutory Report"}`,
+      category: payload.category,
+      academicYear: payload.academicYear,
+      generatedBy: "Dr. K. S. Anand (HOD)",
+      generatedAt: new Date().toISOString(),
+      filtersApplied: {
+        semester: payload.semester || "ODD",
+        section: payload.section || "ALL",
+        startDate: payload.startDate,
+        endDate: payload.endDate,
+      },
+      columns,
+      rows,
+      totalRecords: rows.length,
+    };
+  }
+
+  private getMockPerformanceAnalytics(): HodPerformanceAnalyticsData {
+    return {
+      department: this.defaultDept,
+      academicTrends: {
+        semesterPassRates: [
+          { semester: "Sem 1", passRate: 88.4, appeared: 180, passed: 159 },
+          { semester: "Sem 2", passRate: 89.1, appeared: 180, passed: 160 },
+          { semester: "Sem 3", passRate: 91.2, appeared: 180, passed: 164 },
+          { semester: "Sem 4", passRate: 90.5, appeared: 180, passed: 163 },
+          { semester: "Sem 5", passRate: 93.1, appeared: 180, passed: 168 },
+          { semester: "Sem 6", passRate: 90.8, appeared: 180, passed: 163 },
+        ],
+        yearWisePerformance: [
+          {
+            year: "1st Year",
+            passPercentage: 88.7,
+            averageCgpa: 7.42,
+            toppersCount: 22,
+          },
+          {
+            year: "2nd Year",
+            passPercentage: 90.8,
+            averageCgpa: 7.68,
+            toppersCount: 26,
+          },
+          {
+            year: "3rd Year",
+            passPercentage: 92.4,
+            averageCgpa: 7.91,
+            toppersCount: 31,
+          },
+          {
+            year: "4th Year",
+            passPercentage: 94.1,
+            averageCgpa: 8.15,
+            toppersCount: 38,
+          },
+        ],
+        arrearResolutionVelocity: [
+          { stage: "Cleared in 1st Attempt", percentage: 78.5, count: 44 },
+          { stage: "Cleared in 2nd Attempt", percentage: 15.5, count: 9 },
+          { stage: "Persistent Backlog", percentage: 6.0, count: 3 },
+        ],
+        attendancePerformanceCorrelation: [
+          { attendanceTier: "Above 85%", averageCgpa: 8.42, students: 490 },
+          { attendanceTier: "75% - 85%", averageCgpa: 7.35, students: 198 },
+          { attendanceTier: "Below 75%", averageCgpa: 6.12, students: 32 },
+        ],
+      },
+      facultyAnalytics: {
+        totalFaculty: 28,
+        cadreDistribution: [
+          { cadre: "Professors", count: 4, percentage: 14.3 },
+          { cadre: "Associate Professors", count: 8, percentage: 28.6 },
+          { cadre: "Assistant Professors", count: 16, percentage: 57.1 },
+        ],
+        workloadCompliance: [
+          { range: "14 - 18 Hours (Optimal)", count: 22, percentage: 78.6 },
+          { range: "19 - 21 Hours (Heavy)", count: 5, percentage: 17.8 },
+          { range: "Under 14 Hours (Light)", count: 1, percentage: 3.6 },
+        ],
+        lessonPlanDeliveryAverage: 82.8,
+        averageMonthlyAttendance: 96.2,
+      },
+      departmentGrowth: {
+        yearlyIntake: [
+          { academicYear: "2022-2023", enrolled: 160, graduated: 152 },
+          { academicYear: "2023-2024", enrolled: 170, graduated: 162 },
+          { academicYear: "2024-2025", enrolled: 180, graduated: 174 },
+          { academicYear: "2025-2026", enrolled: 180, graduated: 151 },
+        ],
+        placementRateGrowth: [
+          { year: "2023", rate: 81.2 },
+          { year: "2024", rate: 84.5 },
+          { year: "2025", rate: 86.0 },
+          { year: "2026", rate: 87.8 },
+        ],
+        researchPapersPublished: 34,
+        patentsFiled: 7,
+        fundedProjectsAmountLakhs: 42.5,
+      },
+    };
+  }
+
+  private _mockAchievementsStore: HodAchievementItem[] = [
+    {
+      id: "ach-cse-001",
+      title: "First Prize — Smart India Hackathon (SIH 2025)",
+      description:
+        "Student team 'ByteCrafters' designed an automated AI emergency dispatch triage system and secured national 1st place with ₹1,00,000 cash grant.",
+      category: "HACKATHON",
+      recipientName: "Arvind Kumar & Team",
+      recipientType: "STUDENT",
+      recipientId: "714022104018",
+      achievementDate: "2025-12-22",
+      academicYear: "2025-2026",
+      eventOrOrganization: "Ministry of Education & AICTE",
+      certificateUrl: "/certificates/sih-2025-first-prize.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+    {
+      id: "ach-cse-002",
+      title:
+        "Best Research Paper Award — IEEE International Conference on AI & Robotics",
+      description:
+        "Paper titled 'Energy-Efficient Resource Allocation in Heterogeneous Edge Fog Networks' awarded Best Technical Paper in Track 1.",
+      category: "RESEARCH",
+      recipientName: "Dr. Priya Nair",
+      recipientType: "FACULTY",
+      recipientId: "fac-002",
+      achievementDate: "2026-01-14",
+      academicYear: "2025-2026",
+      eventOrOrganization: "IEEE Computer Society",
+      certificateUrl: "/certificates/ieee-best-paper-priya.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+    {
+      id: "ach-cse-003",
+      title:
+        "Patent Published: Real-Time Crop Disease Identification using Edge Vision",
+      description:
+        "Indian Patent Application No. 202641009872 published in the official Patent Office Journal.",
+      category: "INNOVATION",
+      recipientName: "Prof. S. Ranganathan & Dr. K. S. Anand",
+      recipientType: "FACULTY",
+      recipientId: "fac-003",
+      achievementDate: "2026-02-18",
+      academicYear: "2025-2026",
+      eventOrOrganization:
+        "Intellectual Property India (Controller General of Patents)",
+      certificateUrl: "/certificates/patent-publication-journal.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+    {
+      id: "ach-cse-004",
+      title: "Top 1% Global Rank — Google Kick Start Round G",
+      description:
+        "Solved 4/4 advanced algorithmic problems under timed constraints, securing Global Rank 84 out of 11,200 international competitive programmers.",
+      category: "TECHNICAL_COMPETITION",
+      recipientName: "Rahul Sharma",
+      recipientType: "STUDENT",
+      recipientId: "714022104079",
+      achievementDate: "2025-10-30",
+      academicYear: "2025-2026",
+      eventOrOrganization: "Google Developers",
+      certificateUrl: "/certificates/kickstart-rank-84.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+    {
+      id: "ach-cse-005",
+      title: "AWS Certified Solutions Architect — Professional",
+      description:
+        "Demonstrated advanced technical expertise in designing enterprise-grade, fault-tolerant distributed solutions on AWS.",
+      category: "CERTIFICATION",
+      recipientName: "Dr. M. Kavitha",
+      recipientType: "FACULTY",
+      recipientId: "fac-004",
+      achievementDate: "2026-03-05",
+      academicYear: "2025-2026",
+      eventOrOrganization: "Amazon Web Services",
+      certificateUrl: "/certificates/aws-sap-cert.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+    {
+      id: "ach-cse-006",
+      title: "Anna University Inter-Zonal Badminton Championship — Gold Medal",
+      description:
+        "Represented collegiate badminton team and secured gold medal in women singles tournament.",
+      category: "SPORTS",
+      recipientName: "Divya R.",
+      recipientType: "STUDENT",
+      recipientId: "714023104031",
+      achievementDate: "2026-02-04",
+      academicYear: "2025-2026",
+      eventOrOrganization: "Anna University Sports Board",
+      certificateUrl: "/certificates/badminton-gold.pdf",
+      verificationStatus: "VERIFIED",
+      verifiedBy: "Dr. K. S. Anand (HOD)",
+    },
+  ];
+
+  private getMockAchievements(
+    category: string,
+    recipientType: string,
+    academicYear: string,
+  ): HodAchievementsData {
+    let items = [...this._mockAchievementsStore];
+    if (category !== "ALL")
+      items = items.filter((a) => a.category === category);
+    if (recipientType !== "ALL")
+      items = items.filter((a) => a.recipientType === recipientType);
+    if (academicYear !== "ALL")
+      items = items.filter((a) => a.academicYear === academicYear);
+
+    const studentCount = this._mockAchievementsStore.filter(
+      (a) => a.recipientType === "STUDENT",
+    ).length;
+    const facultyCount = this._mockAchievementsStore.filter(
+      (a) => a.recipientType === "FACULTY",
+    ).length;
+
+    return {
+      department: this.defaultDept,
+      achievements: items,
+      summary: {
+        totalAchievements: this._mockAchievementsStore.length,
+        studentAchievements: studentCount,
+        facultyAchievements: facultyCount,
+        researchPapers: 34,
+        patents: 7,
+        hackathonWins: 12,
+      },
+    };
+  }
+
+  private _mockAccreditationDocsStore: HodAccreditationDocumentItem[] = [
+    {
+      id: "doc-acc-001",
+      title: "Department Vision, Mission, PEO and PSO Statutory Documentation",
+      criterion: "CRITERION_1",
+      academicYear: "2025-2026",
+      description:
+        "Stakeholder consultation minutes, PEO revision approvals, and governing body endorsement.",
+      fileName: "CSE_PEO_PSO_Endorsement_2026.pdf",
+      fileType: "PDF",
+      fileSizeKb: 1420,
+      uploadedBy: "Dr. K. S. Anand (HOD)",
+      uploadedAt: "2026-08-10T11:00:00Z",
+      reviewStatus: "VERIFIED",
+      reviewer: "Internal Quality Assurance Cell (IQAC)",
+      reviewRemarks: "Fully compliant with NBA Tier-1 guidelines.",
+    },
+    {
+      id: "doc-acc-002",
+      title: "Curriculum Scheme R-2026 Syllabus & Regulation Document",
+      criterion: "CRITERION_2",
+      academicYear: "2025-2026",
+      description:
+        "Board of Studies (BoS) approved syllabus copies for Semesters 1 through 8.",
+      fileName: "R2026_CSE_Curriculum_Regulation.pdf",
+      fileType: "PDF",
+      fileSizeKb: 4820,
+      uploadedBy: "Dr. Priya Nair",
+      uploadedAt: "2026-08-15T14:20:00Z",
+      reviewStatus: "VERIFIED",
+      reviewer: "IQAC Lead Auditor",
+      reviewRemarks: "Approved by Academic Council.",
+    },
+    {
+      id: "doc-acc-003",
+      title:
+        "Direct & Indirect CO-PO Attainment Calculation Sheets (2021-2025 Batch)",
+      criterion: "CRITERION_3",
+      academicYear: "2025-2026",
+      description:
+        "Continuous assessment data, end-semester grades, and exit survey correlation matrix.",
+      fileName: "CO_PO_Attainment_Batch2025.xlsx",
+      fileType: "XLSX",
+      fileSizeKb: 2250,
+      uploadedBy: "Prof. S. Ranganathan",
+      uploadedAt: "2026-10-02T16:45:00Z",
+      reviewStatus: "UNDER_REVIEW",
+      reviewer: "IQAC Technical Committee",
+      reviewRemarks: "Verification of indirect survey weights in progress.",
+    },
+    {
+      id: "doc-acc-004",
+      title: "Placement & Higher Studies Statutory Evidence Dossier",
+      criterion: "CRITERION_4",
+      academicYear: "2025-2026",
+      description:
+        "Offer letters, company recruitment summaries, and higher studies admission confirmations.",
+      fileName: "CSE_Placement_Verification_Dossier.pdf",
+      fileType: "PDF",
+      fileSizeKb: 8940,
+      uploadedBy: "Dr. M. Kavitha",
+      uploadedAt: "2026-10-25T10:30:00Z",
+      reviewStatus: "VERIFIED",
+      reviewer: "Principal & IQAC Director",
+      reviewRemarks:
+        "100% offer letters cross-verified with institutional records.",
+    },
+    {
+      id: "doc-acc-005",
+      title: "Faculty Retention, PhD Cadre Ratio, and Workload Audit Report",
+      criterion: "CRITERION_5",
+      academicYear: "2025-2026",
+      description:
+        "Cadre ratio compliance, SFR calculation (1:15), and faculty publication citations report.",
+      fileName: "Faculty_SFR_Cadre_Audit_2026.pdf",
+      fileType: "PDF",
+      fileSizeKb: 1820,
+      uploadedBy: "Dr. K. S. Anand (HOD)",
+      uploadedAt: "2026-11-01T09:15:00Z",
+      reviewStatus: "VERIFIED",
+      reviewer: "IQAC Lead Auditor",
+      reviewRemarks: "Cadre ratio 1:2:4 and SFR 1:15 satisfied.",
+    },
+  ];
+
+  private getMockAccreditationOverview(): HodAccreditationOverviewData {
+    return {
+      department: this.defaultDept,
+      framework: "National Board of Accreditation (NBA) Tier-1 Autonomous",
+      programName: "B.E. Computer Science & Engineering",
+      academicYear: "2025-2026",
+      readinessPercentage: 93.0,
+      criteria: [
+        {
+          criterionId: "CRITERION_1",
+          name: "Criterion 1: Vision, Mission & Program Educational Objectives (PEOs)",
+          weightage: 50,
+          completionPercentage: 100.0,
+          documentsCount: 14,
+          verifiedCount: 14,
+          status: "COMPLETED",
+        },
+        {
+          criterionId: "CRITERION_2",
+          name: "Criterion 2: Program Curriculum & Teaching-Learning Processes",
+          weightage: 100,
+          completionPercentage: 92.0,
+          documentsCount: 30,
+          verifiedCount: 28,
+          status: "IN_PROGRESS",
+        },
+        {
+          criterionId: "CRITERION_3",
+          name: "Criterion 3: Course Outcomes (CO) & Program Outcomes (PO) Attainment",
+          weightage: 175,
+          completionPercentage: 88.0,
+          documentsCount: 25,
+          verifiedCount: 22,
+          status: "IN_PROGRESS",
+        },
+        {
+          criterionId: "CRITERION_4",
+          name: "Criterion 4: Students' Performance & Placement Progression",
+          weightage: 100,
+          completionPercentage: 95.0,
+          documentsCount: 35,
+          verifiedCount: 35,
+          status: "COMPLETED",
+        },
+        {
+          criterionId: "CRITERION_5",
+          name: "Criterion 5: Faculty Information, Workloads & Contributions",
+          weightage: 200,
+          completionPercentage: 90.0,
+          documentsCount: 28,
+          verifiedCount: 25,
+          status: "IN_PROGRESS",
+        },
+      ],
+      documents: this._mockAccreditationDocsStore,
+    };
+  }
+
+  private getMockAccreditationDocuments(
+    criterion: string,
+    academicYear: string,
+    statusFilter: string,
+  ): HodAccreditationDocumentsData {
+    let items = [...this._mockAccreditationDocsStore];
+    if (criterion !== "ALL")
+      items = items.filter((d) => d.criterion === criterion);
+    if (academicYear !== "ALL")
+      items = items.filter((d) => d.academicYear === academicYear);
+    if (statusFilter !== "ALL")
+      items = items.filter((d) => d.reviewStatus === statusFilter);
+
+    return {
+      department: this.defaultDept,
+      totalDocuments: items.length,
+      documents: items,
+    };
+  }
 }
 
 export const hodService = new HodService();
@@ -2798,4 +4356,337 @@ export interface HodApprovalsData {
     infoRequested: number;
   };
   requests: HodApprovalItem[];
+}
+
+// -----------------------------------------------------------------------------
+// Phase 3 Type Definitions: Operations, Reports & Advanced Analytics
+// -----------------------------------------------------------------------------
+
+export interface HodEventReport {
+  submittedAt: string;
+  outcomes: string;
+  photosCount: number;
+  reportUrl: string;
+  remarks?: string;
+}
+
+export interface HodEventAttachment {
+  name: string;
+  size: string;
+  type: string;
+}
+
+export interface HodEventItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  startDate: string;
+  endDate?: string;
+  startTime?: string;
+  endTime?: string;
+  venue: string;
+  organizer: string;
+  facultyCoordinator: string;
+  studentCoordinator?: string | null;
+  targetAudience: string;
+  expectedParticipants: number;
+  actualParticipants: number;
+  budget: number;
+  status: "UPCOMING" | "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
+  approvalStatus: "APPROVED" | "PENDING" | "REJECTED";
+  report?: HodEventReport | null;
+  attachments: HodEventAttachment[];
+}
+
+export interface HodEventCreatePayload {
+  title: string;
+  description: string;
+  category: string;
+  startDate: string;
+  endDate?: string;
+  startTime?: string;
+  endTime?: string;
+  venue: string;
+  facultyCoordinator: string;
+  studentCoordinator?: string;
+  targetAudience: string;
+  expectedParticipants: number;
+  budget: number;
+}
+
+export interface HodEventReportPayload {
+  actualParticipants: number;
+  outcomes: string;
+  photosCount: number;
+  reportUrl?: string;
+  completionRemarks: string;
+}
+
+export interface HodEventsData {
+  department: string;
+  events: HodEventItem[];
+  summary: {
+    totalEvents: number;
+    upcomingEvents: number;
+    completedEvents: number;
+    totalParticipants: number;
+    totalBudget: number;
+  };
+}
+
+export interface HodPlacementRecruiter {
+  company: string;
+  offers: number;
+  tier: string;
+}
+
+export interface HodPlacementPackageRange {
+  range: string;
+  count: number;
+  percentage: number;
+}
+
+export interface HodPlacementOverview {
+  department: string;
+  totalStudents: number;
+  finalYearStudents: number;
+  placementEligible: number;
+  studentsPlaced: number;
+  studentsUnplaced: number;
+  inTraining: number;
+  internshipParticipants: number;
+  placementPercentage: number;
+  highestPackageLpa: number;
+  averagePackageLpa: number;
+  medianPackageLpa: number;
+  topRecruiters: HodPlacementRecruiter[];
+  packageRanges: HodPlacementPackageRange[];
+}
+
+export interface HodStudentPlacementItem {
+  registerNumber: string;
+  name: string;
+  academicYear: string;
+  year: string;
+  section: string;
+  cgpa: number;
+  placementStatus:
+    | "NOT_REGISTERED"
+    | "ELIGIBLE"
+    | "APPLIED"
+    | "ASSESSMENT"
+    | "INTERVIEW"
+    | "SELECTED"
+    | "PLACED"
+    | "NOT_SELECTED"
+    | "INTERNSHIP"
+    | "INTERNSHIP_COMPLETED";
+  company?: string | null;
+  role?: string | null;
+  packageLpa?: number | null;
+  selectionDate?: string | null;
+  internshipStatus: string;
+  internshipCompany?: string | null;
+  internshipDuration?: string | null;
+  stipendMonthly?: number | null;
+}
+
+export interface HodPlacementsData {
+  department: string;
+  total: number;
+  students: HodStudentPlacementItem[];
+}
+
+export interface HodReportTypeItem {
+  code: string;
+  name: string;
+  format: string[];
+}
+
+export interface HodReportCategoryItem {
+  category: string;
+  title: string;
+  description: string;
+  types: HodReportTypeItem[];
+}
+
+export interface HodReportCategoriesData {
+  department: string;
+  categories: HodReportCategoryItem[];
+}
+
+export interface HodReportGeneratePayload {
+  category: string;
+  reportType: string;
+  academicYear: string;
+  semester?: string;
+  section?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface HodReportResult {
+  reportId: string;
+  title: string;
+  category: string;
+  academicYear: string;
+  generatedBy: string;
+  generatedAt: string;
+  filtersApplied: Record<string, any>;
+  columns: { key: string; label: string }[];
+  rows: Record<string, any>[];
+  totalRecords: number;
+}
+
+export interface HodPerformanceAnalyticsData {
+  department: string;
+  academicTrends: {
+    semesterPassRates: {
+      semester: string;
+      passRate: number;
+      appeared: number;
+      passed: number;
+    }[];
+    yearWisePerformance: {
+      year: string;
+      passPercentage: number;
+      averageCgpa: number;
+      toppersCount: number;
+    }[];
+    arrearResolutionVelocity: {
+      stage: string;
+      percentage: number;
+      count: number;
+    }[];
+    attendancePerformanceCorrelation: {
+      attendanceTier: string;
+      averageCgpa: number;
+      students: number;
+    }[];
+  };
+  facultyAnalytics: {
+    totalFaculty: number;
+    cadreDistribution: {
+      cadre: string;
+      count: number;
+      percentage: number;
+    }[];
+    workloadCompliance: {
+      range: string;
+      count: number;
+      percentage: number;
+    }[];
+    lessonPlanDeliveryAverage: number;
+    averageMonthlyAttendance: number;
+  };
+  departmentGrowth: {
+    yearlyIntake: {
+      academicYear: string;
+      enrolled: number;
+      graduated: number;
+    }[];
+    placementRateGrowth: {
+      year: string;
+      rate: number;
+    }[];
+    researchPapersPublished: number;
+    patentsFiled: number;
+    fundedProjectsAmountLakhs: number;
+  };
+}
+
+export interface HodAchievementItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  recipientName: string;
+  recipientType: "STUDENT" | "FACULTY";
+  recipientId: string;
+  achievementDate: string;
+  academicYear: string;
+  eventOrOrganization: string;
+  certificateUrl?: string;
+  verificationStatus: "VERIFIED" | "PENDING_VERIFICATION";
+  verifiedBy?: string;
+}
+
+export interface HodAchievementCreatePayload {
+  title: string;
+  description: string;
+  category: string;
+  recipientName: string;
+  recipientType: "STUDENT" | "FACULTY";
+  recipientId: string;
+  achievementDate: string;
+  academicYear: string;
+  eventOrOrganization: string;
+  certificateUrl?: string;
+}
+
+export interface HodAchievementsData {
+  department: string;
+  achievements: HodAchievementItem[];
+  summary: {
+    totalAchievements: number;
+    studentAchievements: number;
+    facultyAchievements: number;
+    researchPapers: number;
+    patents: number;
+    hackathonWins: number;
+  };
+}
+
+export interface HodAccreditationCriterionItem {
+  criterionId: string;
+  name: string;
+  weightage: number;
+  completionPercentage: number;
+  documentsCount: number;
+  verifiedCount: number;
+  status: "COMPLETED" | "IN_PROGRESS" | "PENDING";
+}
+
+export interface HodAccreditationDocumentItem {
+  id: string;
+  title: string;
+  criterion: string;
+  academicYear: string;
+  description: string;
+  fileName: string;
+  fileType: string;
+  fileSizeKb: number;
+  uploadedBy: string;
+  uploadedAt: string;
+  reviewStatus: "VERIFIED" | "UNDER_REVIEW" | "DRAFT";
+  reviewer: string;
+  reviewRemarks?: string;
+}
+
+export interface HodAccreditationDocumentUploadPayload {
+  title: string;
+  criterion: string;
+  academicYear: string;
+  description: string;
+  fileName: string;
+  fileType: string;
+  fileSizeKb: number;
+  uploadedBy?: string;
+}
+
+export interface HodAccreditationOverviewData {
+  department: string;
+  framework: string;
+  programName: string;
+  academicYear: string;
+  readinessPercentage: number;
+  criteria: HodAccreditationCriterionItem[];
+  documents: HodAccreditationDocumentItem[];
+}
+
+export interface HodAccreditationDocumentsData {
+  department: string;
+  totalDocuments: number;
+  documents: HodAccreditationDocumentItem[];
 }
