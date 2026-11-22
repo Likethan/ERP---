@@ -41,6 +41,141 @@ class StudentsService {
     ...MOCK_ACADEMIC_MILESTONES,
   };
 
+  public mapBackendStudent(b: any): StudentComprehensiveDetail {
+    return {
+      id: b.id,
+      rollNumber: b.roll_number || b.admission_number || "REG-001",
+      registrationNumber:
+        b.registration_number || b.admission_number || "ADM-001",
+      firstName: b.first_name,
+      lastName: b.last_name,
+      email: b.email,
+      phone: b.phone_number || "",
+      gender: b.gender || "Not specified",
+      dateOfBirth: b.date_of_birth || "",
+      bloodGroup: b.blood_group || "Not specified",
+      status: (b.status as any) || "ACTIVE",
+      admissionDate: b.admission_date || "",
+      program: {
+        id: b.program_id || "",
+        code: b.program_code || "N/A",
+        name: b.program_name || "Program not assigned",
+        department: b.department_name || b.program_name || "Department not assigned",
+      },
+      academicYear: b.academic_year || b.batch_name || "N/A",
+      currentSemester: b.current_semester || 1,
+      section: b.section_name || b.current_section_name || "N/A",
+      batch: b.batch_name || "N/A",
+      quota: b.quota || "MERIT",
+      address: b.address || {
+        street: "Not specified",
+        city: "",
+        state: "",
+        pincode: "",
+      },
+      guardian: b.guardian || {
+        name: b.emergency_contact_name || "Not specified",
+        relation: "Emergency Contact",
+        phone: b.emergency_contact_phone || "",
+        email: "",
+        occupation: "",
+      },
+      academicStats: b.academic_stats || {
+        cgpa: b.cgpa ?? 0,
+        totalCreditsEarned: b.total_credits_earned ?? 0,
+        backlogs: b.backlogs ?? 0,
+        rank: b.rank ?? 0,
+      },
+      attendanceSummary: b.attendance_summary || {
+        overallPercentage: b.attendance_percentage ?? 0,
+        totalClasses: b.total_classes ?? 0,
+        attendedClasses: b.attended_classes ?? 0,
+        status: b.attendance_percentage ? (b.attendance_percentage >= 75 ? "EXCELLENT" : "CRITICAL") : "SATISFACTORY",
+      },
+      financeSummary: b.finance_summary || {
+        totalBilled: b.total_billed ?? 0,
+        totalPaid: b.total_paid ?? 0,
+        pendingDue: b.pending_due ?? 0,
+        status: b.pending_due > 0 ? "PENDING_DUES" : "CLEAR",
+      },
+      placementSummary: b.placement_summary || {
+        isEligible: Boolean(b.is_placement_eligible),
+        appliedDrives: b.applied_drives ?? 0,
+        interviewsScheduled: b.interviews_scheduled ?? 0,
+        offersReceived: b.offers_received ?? 0,
+      },
+      enrolledCourses: b.enrolled_courses || [],
+      recentActivity: b.recent_activity || [],
+      documents: b.documents || [],
+      guardians: this.guardiansPool[b.id] || [],
+      documentsVault: this.documentsPool[b.id] || [],
+      milestones: this.milestonesPool[b.id] || [],
+    };
+  }
+
+  async getMe(options?: {
+    isDemo?: boolean;
+    isAuthenticated?: boolean;
+    signal?: AbortSignal;
+  }): Promise<ApiResponse<StudentComprehensiveDetail | null>> {
+    // 1. Unauthenticated users cannot fetch student profile
+    if (options && options.isAuthenticated === false) {
+      return {
+        success: false,
+        data: null,
+        error: "Unauthenticated",
+      };
+    }
+
+    // 2. Explicitly recognized demo student persona
+    if (options?.isDemo) {
+      const demoStudent = this.students.find(
+        (s) => s.id === "stu-24cse0101" || s.rollNumber.toLowerCase() === "24cse0101",
+      );
+      if (demoStudent) {
+        return {
+          success: true,
+          data: {
+            ...demoStudent,
+            guardians: this.guardiansPool[demoStudent.id] || [],
+            documentsVault: this.documentsPool[demoStudent.id] || [],
+            milestones: this.milestonesPool[demoStudent.id] || [],
+          },
+        };
+      }
+      return {
+        success: false,
+        data: null,
+        error: "Demo student persona mock data not found",
+      };
+    }
+
+    // 3. Real authenticated student: fetch strictly from backend
+    // Never fall back to mock student on 401, 403, 404, network or server error
+    try {
+      const res = await apiFetch<any>("/api/v1/students/me", {
+        signal: options?.signal,
+      });
+      if (res && res.success && res.data) {
+        return {
+          success: true,
+          data: this.mapBackendStudent(res.data),
+        };
+      }
+      return {
+        success: false,
+        data: null,
+        error: res?.error || "Failed to retrieve student profile",
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        data: null,
+        error: err?.message || "Failed to load authenticated student profile",
+      };
+    }
+  }
+
   async list(
     params?: StudentFilterParams,
   ): Promise<PaginatedResponse<StudentComprehensiveDetail>> {
@@ -241,76 +376,7 @@ class StudentsService {
     try {
       const res = await apiFetch<any>(`/api/v1/students/${id}`);
       if (res && res.success && res.data) {
-        const b = res.data;
-        const liveStudent: StudentComprehensiveDetail = {
-          id: b.id,
-          rollNumber: b.roll_number || b.admission_number || "REG-001",
-          registrationNumber:
-            b.registration_number || b.admission_number || "ADM-001",
-          firstName: b.first_name,
-          lastName: b.last_name,
-          email: b.email,
-          phone: b.phone_number || "+91 90000 00000",
-          gender: b.gender || "Male",
-          dateOfBirth: b.date_of_birth || "2004-01-01",
-          bloodGroup: b.blood_group || "O+",
-          status: (b.status as any) || "ACTIVE",
-          admissionDate: b.admission_date || "2023-08-01",
-          program: {
-            id: b.program_id || "prog-cse",
-            code: b.program_code || "BTECH-CSE",
-            name: b.program_name || "B.Tech Computer Science & Engineering",
-            department: "Computer Science & Engineering",
-          },
-          academicYear: "2026-2027",
-          currentSemester: b.current_semester || 1,
-          section: b.section_name || "A",
-          batch: "2023-2027",
-          quota: "MERIT",
-          address: {
-            street: "Campus Avenue",
-            city: "Coimbatore",
-            state: "Tamil Nadu",
-            pincode: "641001",
-          },
-          guardian: {
-            name: "Guardian",
-            relation: "Parent",
-            phone: "+91 90000 00001",
-            email: "parent@example.com",
-            occupation: "Professional",
-          },
-          academicStats: {
-            cgpa: 8.2,
-            totalCreditsEarned: 24,
-            backlogs: 0,
-            rank: 12,
-          },
-          attendanceSummary: {
-            overallPercentage: 88.5,
-            totalClasses: 120,
-            attendedClasses: 106,
-            status: "EXCELLENT",
-          },
-          financeSummary: {
-            totalBilled: 145000,
-            totalPaid: 145000,
-            pendingDue: 0,
-            status: "CLEAR",
-          },
-          placementSummary: {
-            isEligible: true,
-            appliedDrives: 0,
-            interviewsScheduled: 0,
-            offersReceived: 0,
-          },
-          enrolledCourses: [],
-          recentActivity: [],
-          documents: [],
-          guardians: this.guardiansPool[b.id] || [],
-          documentsVault: this.documentsPool[b.id] || [],
-          milestones: this.milestonesPool[b.id] || [],
-        };
+        const liveStudent = this.mapBackendStudent(res.data);
         return { success: true, data: liveStudent };
       }
     } catch {

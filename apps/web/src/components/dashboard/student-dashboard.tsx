@@ -18,6 +18,8 @@ import { placementsService } from "@/services/placements.service";
 import { StudentComprehensiveDetail } from "@/types/domain";
 import { TimetableSlotItem } from "@/mocks/academics.mock";
 import { JobDriveItem } from "@/mocks/placements.mock";
+import { useAuth } from "@/lib/auth-context";
+import { DEMO_PERSONAS } from "@/mocks/auth.mock";
 import {
   CheckCircle2,
   Clock,
@@ -32,32 +34,116 @@ import {
   Award,
   Layers,
   Heart,
+  AlertCircle,
 } from "lucide-react";
 
 export function StudentDashboard() {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [student, setStudent] = useState<StudentComprehensiveDetail | null>(
     null,
   );
+  const [isDemoSession, setIsDemoSession] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [todaySchedule, setTodaySchedule] = useState<TimetableSlotItem[]>([]);
   const [activeDrives, setActiveDrives] = useState<JobDriveItem[]>([]);
 
   useEffect(() => {
-    // Default student persona: Aarav Patel (24CSE0101)
-    studentsService.getById("stu-24cse0101").then((res) => {
-      if (res.data) setStudent(res.data);
-    });
+    if (authLoading) return;
+
+    let isSubscribed = true;
+    const abortController = new AbortController();
+
+    // 1. Restrict demo detection:
+    // Only the explicitly defined student demo persona ("user-student-01") with role "STUDENT"
+    // may load the Aarav Patel mock student data.
+    const isStudentDemo = Boolean(
+      user &&
+        DEMO_PERSONAS.some(
+          (p) =>
+            p.id === "user-student-01" &&
+            p.role === "STUDENT" &&
+            (p.id.toLowerCase() === user.id.toLowerCase() ||
+              p.email.toLowerCase() === user.email.toLowerCase()),
+        ),
+    );
+
+    setIsDemoSession(isStudentDemo);
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    studentsService
+      .getMe({
+        isDemo: isStudentDemo,
+        isAuthenticated: Boolean(user || isAuthenticated),
+        signal: abortController.signal,
+      })
+      .then((res) => {
+        if (!isSubscribed) return;
+        if (res.success && res.data) {
+          setStudent(res.data);
+          setErrorMessage(null);
+        } else {
+          setStudent(null);
+          setErrorMessage(
+            typeof res.error === "string"
+              ? res.error
+              : (res.error as any)?.message ||
+                  "Unable to load student profile. Please verify your student enrollment status.",
+          );
+        }
+      })
+      .catch((err) => {
+        if (!isSubscribed || err?.name === "AbortError") return;
+        setStudent(null);
+        setErrorMessage(
+          err?.message ||
+            "An error occurred while connecting to the student service. Please try again later.",
+        );
+      })
+      .finally(() => {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      });
+
     academicsService.getTimetable("MONDAY").then((res) => {
-      setTodaySchedule(res.data.slice(0, 4));
+      if (isSubscribed) {
+        setTodaySchedule(res.data.slice(0, 4));
+      }
     });
     placementsService.getDrives("INTERVIEWS_ACTIVE").then((res) => {
-      setActiveDrives(res.data);
+      if (isSubscribed) {
+        setActiveDrives(res.data);
+      }
     });
-  }, []);
 
-  if (!student) {
+    return () => {
+      isSubscribed = false;
+      abortController.abort();
+    };
+  }, [user, isAuthenticated, authLoading]);
+
+  if (authLoading || isLoading) {
     return (
-      <div className="p-8 text-center text-slate-400">
-        Loading student profile...
+      <div className="p-12 text-center text-slate-500 flex flex-col items-center justify-center space-y-3">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-yellow-500 border-t-transparent" />
+        <span className="text-sm font-medium">Loading student profile...</span>
+      </div>
+    );
+  }
+
+  if (errorMessage || !student) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50/50 p-8 text-center space-y-3 max-w-xl mx-auto my-8">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+          <AlertCircle className="h-6 w-6" />
+        </div>
+        <h2 className="text-lg font-bold text-red-950">Student Profile Not Found</h2>
+        <p className="text-xs text-red-700">
+          {errorMessage ||
+            "No student record is associated with your authenticated account. Please contact the administrator or registrar office."}
+        </p>
       </div>
     );
   }
@@ -69,7 +155,7 @@ export function StudentDashboard() {
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
             <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
-            Active Student Portal • {student.rollNumber}
+            {isDemoSession ? "Demo Student Portal" : "Active Student Portal"} • {student.rollNumber}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Welcome back, {student.firstName}!
@@ -102,40 +188,93 @@ export function StudentDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <StatCard
           label="Attendance Compliance"
-          value={`${student.attendanceSummary.overallPercentage}%`}
-          change={{ value: "Safe threshold (>75%)", trend: "up" }}
-          description={`${student.attendanceSummary.attendedClasses} of ${student.attendanceSummary.totalClasses} lectures attended`}
+          value={
+            student.attendanceSummary.totalClasses > 0
+              ? `${student.attendanceSummary.overallPercentage}%`
+              : "Not available"
+          }
+          change={
+            student.attendanceSummary.totalClasses > 0
+              ? { value: student.attendanceSummary.overallPercentage >= 75 ? "Safe threshold (>75%)" : "Below threshold", trend: student.attendanceSummary.overallPercentage >= 75 ? "up" : "down" }
+              : undefined
+          }
+          description={
+            student.attendanceSummary.totalClasses > 0
+              ? `${student.attendanceSummary.attendedClasses} of ${student.attendanceSummary.totalClasses} lectures attended`
+              : "Attendance recording pending"
+          }
           variant="emerald"
           icon={<CheckCircle2 className="h-4 w-4" />}
         />
         <StatCard
           label="Cumulative GPA"
-          value={student.academicStats.cgpa.toFixed(2)}
-          change={{
-            value: `Rank #${student.academicStats.rank} in CSE`,
-            trend: "up",
-          }}
-          description={`${student.academicStats.totalCreditsEarned} credits earned • 0 backlogs`}
+          value={
+            student.academicStats.cgpa > 0
+              ? student.academicStats.cgpa.toFixed(2)
+              : "Not available"
+          }
+          change={
+            student.academicStats.rank > 0
+              ? {
+                  value: `Rank #${student.academicStats.rank}`,
+                  trend: "up",
+                }
+              : undefined
+          }
+          description={
+            student.academicStats.totalCreditsEarned > 0 || student.academicStats.cgpa > 0
+              ? `${student.academicStats.totalCreditsEarned} credits earned • ${student.academicStats.backlogs} backlogs`
+              : "Semester grades awaiting publication"
+          }
           variant="indigo"
           icon={<GraduationCap className="h-4 w-4" />}
         />
         <StatCard
           label="Fee Dues Status"
           value={
-            student.financeSummary.pendingDue === 0
-              ? "₹0 Due"
-              : `₹${student.financeSummary.pendingDue}`
+            student.financeSummary.totalBilled > 0 || student.financeSummary.pendingDue > 0
+              ? student.financeSummary.pendingDue === 0
+                ? "₹0 Due"
+                : `₹${student.financeSummary.pendingDue.toLocaleString()}`
+              : "Not available"
           }
-          change={{ value: "All cleared", trend: "neutral" }}
-          description="Annual tuition & hostel levy settled"
+          change={
+            student.financeSummary.totalBilled > 0 || student.financeSummary.pendingDue > 0
+              ? {
+                  value: student.financeSummary.pendingDue === 0 ? "All cleared" : "Dues pending",
+                  trend: student.financeSummary.pendingDue === 0 ? "neutral" : "down",
+                }
+              : undefined
+          }
+          description={
+            student.financeSummary.totalBilled > 0
+              ? "Tuition & institutional levy status"
+              : "No fee invoices generated yet"
+          }
           variant="sky"
           icon={<DollarSign className="h-4 w-4" />}
         />
         <StatCard
           label="Placement Pipeline"
-          value={`${student.placementSummary.offersReceived} Offer`}
-          change={{ value: "18.5 LPA (Cisco)", trend: "up" }}
-          description="Round 2 Interview Scheduled"
+          value={
+            isDemoSession
+              ? `${student.placementSummary.offersReceived} Offer`
+              : student.placementSummary.isEligible
+                ? `${student.placementSummary.offersReceived} Offers`
+                : "Not available"
+          }
+          change={
+            isDemoSession
+              ? { value: "18.5 LPA (Cisco)", trend: "up" }
+              : undefined
+          }
+          description={
+            isDemoSession
+              ? "Round 2 Interview Scheduled"
+              : student.placementSummary.isEligible
+                ? `${student.placementSummary.appliedDrives} drives applied • ${student.placementSummary.interviewsScheduled} interviews`
+                : "Career placement registration pending"
+          }
           variant="amber"
           icon={<Briefcase className="h-4 w-4" />}
         />

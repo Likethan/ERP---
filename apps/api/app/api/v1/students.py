@@ -4,17 +4,19 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Request, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
-from app.core.deps import get_tenant_context, require_permission
+from app.core.deps import get_current_active_user, get_tenant_context, require_permission
+from app.core.exceptions import NotFoundException
 from app.core.permissions import (
     PEOPLE_STUDENTS_CREATE,
     PEOPLE_STUDENTS_READ,
     PEOPLE_STUDENTS_UPDATE,
 )
 from app.core.tenant import TenantContext
-from app.models.people import User
+from app.models.people import StudentProfile, User
 from app.schemas.common import ApiResponse, PaginatedResponse
 from app.schemas.people import (
     StudentCreateRequest,
@@ -71,6 +73,25 @@ async def create_student(
     student = await PeopleService.create_student(
         db, tenant.tenant_id, payload, author_user_id=current_user.id, ip_address=ip
     )
+    detail = await PeopleService.get_student_detail(db, tenant.tenant_id, student.id)
+    return ApiResponse(data=detail)
+
+
+@router.get("/me", response_model=ApiResponse[StudentDetailResponse])
+async def get_my_student_profile(
+    tenant: Annotated[TenantContext, Depends(get_tenant_context)],
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+) -> ApiResponse[StudentDetailResponse]:
+    """Retrieve the authenticated student's own complete profile."""
+    student = await db.scalar(
+        select(StudentProfile).where(
+            StudentProfile.user_id == current_user.id,
+            StudentProfile.tenant_id == tenant.tenant_id,
+        )
+    )
+    if not student:
+        raise NotFoundException("Student profile not found for current authenticated user.")
     detail = await PeopleService.get_student_detail(db, tenant.tenant_id, student.id)
     return ApiResponse(data=detail)
 
