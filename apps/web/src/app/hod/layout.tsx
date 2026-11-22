@@ -2,44 +2,23 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { ToastProvider } from "@/components/ui/toast";
 import { RoleSwitcher } from "@/components/navigation/role-switcher";
 import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  CalendarCheck,
-  Calendar,
   Menu,
   X,
-  Building,
-  Shield,
+  Search,
   LogOut,
-  ChevronRight,
+  ChevronDown,
   ExternalLink,
-  Sparkles,
-  BookOpen,
-  ListChecks,
-  FileText,
-  ClipboardList,
-  TrendingUp,
-  CheckSquare,
-  PartyPopper,
-  Briefcase,
-  Trophy,
-  BarChart3,
-  FileSpreadsheet,
-  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HodNavItem {
   label: string;
   href: string;
-  icon: React.ReactNode;
   badge?: string;
 }
 
@@ -50,96 +29,92 @@ interface HodNavSection {
 
 const HOD_NAV_SECTIONS: HodNavSection[] = [
   {
-    title: "CORE MANAGEMENT",
+    title: "OVERVIEW",
     items: [
       {
         label: "Dashboard",
         href: "/hod/dashboard",
-        icon: <LayoutDashboard className="h-4 w-4" />,
-      },
-      {
-        label: "Faculty Management",
-        href: "/hod/faculty",
-        icon: <Users className="h-4 w-4" />,
-        badge: "28 Faculty",
-      },
-      {
-        label: "Student Management",
-        href: "/hod/students",
-        icon: <GraduationCap className="h-4 w-4" />,
-        badge: "720 Enrolled",
-      },
-      {
-        label: "Attendance Management",
-        href: "/hod/attendance",
-        icon: <CalendarCheck className="h-4 w-4" />,
-        badge: "88.4%",
-      },
-      {
-        label: "Timetable Management",
-        href: "/hod/timetable",
-        icon: <Calendar className="h-4 w-4" />,
       },
     ],
   },
   {
-    title: "ACADEMIC MANAGEMENT",
+    title: "MY ACADEMICS",
     items: [
       {
-        label: "Subjects & Curriculum",
+        label: "Faculty Directory",
+        href: "/hod/faculty",
+        badge: "28",
+      },
+      {
+        label: "Student Directory",
+        href: "/hod/students",
+        badge: "720",
+      },
+      {
+        label: "Class Timetable",
+        href: "/hod/timetable",
+      },
+      {
+        label: "Curriculum & Syllabi",
         href: "/hod/curriculum",
-        icon: <BookOpen className="h-4 w-4" />,
         badge: "R-2026",
       },
       {
-        label: "Lesson Plan Monitoring",
+        label: "Lesson Plan Tracker",
         href: "/hod/lesson-plans",
-        icon: <ListChecks className="h-4 w-4" />,
         badge: "82.8%",
       },
+    ],
+  },
+  {
+    title: "MY ATTENDANCE",
+    items: [
       {
-        label: "Examination Management",
+        label: "Attendance Records",
+        href: "/hod/attendance",
+        badge: "88.5%",
+      },
+    ],
+  },
+  {
+    title: "MY EXAMINATIONS",
+    items: [
+      {
+        label: "Exam Schedules",
         href: "/hod/examinations",
-        icon: <FileText className="h-4 w-4" />,
       },
       {
-        label: "Internal Marks",
+        label: "Internal Marks Audit",
         href: "/hod/internal-marks",
-        icon: <ClipboardList className="h-4 w-4" />,
       },
       {
-        label: "Semester Results",
+        label: "Results & GPA Card",
         href: "/hod/results",
-        icon: <TrendingUp className="h-4 w-4" />,
         badge: "90.8%",
       },
     ],
   },
   {
-    title: "DEPARTMENT OPERATIONS",
+    title: "OPERATIONS & APPROVALS",
     items: [
       {
         label: "Leave & Approvals",
         href: "/hod/approvals",
-        icon: <CheckSquare className="h-4 w-4" />,
-        badge: "5 Pending",
+        badge: "5",
       },
       {
-        label: "Events & Activities",
+        label: "Department Events",
         href: "/hod/events",
-        icon: <PartyPopper className="h-4 w-4" />,
         badge: "5 Active",
       },
       {
-        label: "Placement & Internship",
+        label: "Placement Telemetry",
         href: "/hod/placements",
-        icon: <Briefcase className="h-4 w-4" />,
         badge: "87.8%",
       },
       {
-        label: "Achievements",
+        label: "Faculty Achievements",
         href: "/hod/achievements",
-        icon: <Trophy className="h-4 w-4" />,
         badge: "6 Awards",
       },
     ],
@@ -148,21 +123,17 @@ const HOD_NAV_SECTIONS: HodNavSection[] = [
     title: "REPORTS & QUALITY",
     items: [
       {
-        label: "Reports & Analytics",
+        label: "Reports Engine",
         href: "/hod/reports",
-        icon: <FileSpreadsheet className="h-4 w-4" />,
       },
       {
-        label: "Department Analytics",
+        label: "Live KPIs & Telemetry",
         href: "/hod/analytics",
-        icon: <BarChart3 className="h-4 w-4" />,
-        badge: "Live KPIs",
       },
       {
-        label: "Accreditation & Documentation",
+        label: "Accreditation & NBA",
         href: "/hod/accreditation",
-        icon: <ShieldCheck className="h-4 w-4" />,
-        badge: "93.0% NBA",
+        badge: "93.0%",
       },
     ],
   },
@@ -177,45 +148,47 @@ export default function HodPortalLayout({
   const router = useRouter();
   const { user, activePersona, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const deptName = activePersona.department || "Computer Science & Engineering";
+  const deptName =
+    activePersona?.department || "Computer Science & Engineering";
+  const userName = activePersona?.name || user?.name || "Dr. K. S. Anand";
+  const userInitials =
+    userName
+      .split(" ")
+      .map((n) => n[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "KA";
 
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
-      {/* Brand & Department Header */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200">
+    <div className="flex h-full flex-col bg-white border-r border-[#DCE3EB] text-[#172338]">
+      {/* Brand Header */}
+      <div className="flex h-14 items-center justify-between px-4 border-b border-[#DCE3EB]">
         <Link
           href="/hod/dashboard"
           className="flex items-center gap-2.5 min-w-0"
         >
-          <div className="relative h-10 w-10 shrink-0">
-            <Image
-              src="/college-logo.jpg"
-              alt="V.S.B. Engineering College"
-              fill
-              className="object-contain rounded-md"
-              priority
-            />
+          <div className="h-8 w-8 rounded bg-[#183153] flex items-center justify-center text-white font-black text-xs tracking-wider shrink-0 shadow-xs">
+            VSB
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold tracking-tight text-slate-900 truncate">
-                CampusOS
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="text-[13px] font-extrabold tracking-tight text-[#172338]">
+                CAMPUSOS
               </span>
-              <span className="rounded bg-yellow-100 px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase text-yellow-950 border border-yellow-300 shrink-0">
-                HOD
-              </span>
+              <span className="text-[10px] font-mono text-[#64748B]">v2.4</span>
             </div>
-            <div className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold truncate">
-              V.S.B. Engineering College
+            <div className="text-[10px] text-[#64748B] font-medium tracking-wide truncate mt-0.5">
+              V.S.B. Eng. College
             </div>
           </div>
         </Link>
         {mobileOpen && (
           <button
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden rounded-lg p-1.5 text-slate-400 hover:text-slate-800 hover:bg-yellow-50"
+            className="lg:hidden rounded p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100"
             aria-label="Close mobile menu"
           >
             <X className="h-5 w-5" />
@@ -223,38 +196,19 @@ export default function HodPortalLayout({
         )}
       </div>
 
-      {/* Department Context Badge */}
-      <div className="p-3 bg-yellow-50/50 border-b border-yellow-200/60">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-yellow-400 flex items-center justify-center text-slate-950 shrink-0 font-bold text-xs shadow-xs border border-yellow-500">
-            <Building className="h-3.5 w-3.5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-yellow-800">
-              Department Portal
-            </div>
-            <div
-              className="text-xs font-bold text-slate-900 truncate"
-              title={deptName}
-            >
-              {deptName}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+      {/* Navigation Sections */}
+      <nav className="flex-1 overflow-y-auto px-2.5 py-3 space-y-4">
         {HOD_NAV_SECTIONS.map((section) => (
-          <div key={section.title} className="space-y-1">
-            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+          <div key={section.title} className="space-y-0.5">
+            <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1">
               {section.title}
             </div>
             {section.items.map((item) => {
               const isActive =
-                pathname === item.href ||
-                (item.href !== "/hod/dashboard" &&
-                  pathname.startsWith(item.href));
+                item.href === "/hod/dashboard"
+                  ? pathname === "/hod/dashboard" || pathname === "/hod"
+                  : pathname === item.href ||
+                    pathname?.startsWith(item.href + "/");
 
               return (
                 <Link
@@ -262,32 +216,30 @@ export default function HodPortalLayout({
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all group",
+                    "flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] transition-colors font-medium",
                     isActive
-                      ? "bg-yellow-400 text-slate-950 shadow-xs font-bold border border-yellow-500/50"
-                      : "text-slate-600 hover:bg-yellow-50 hover:text-slate-950",
+                      ? "bg-[#183153] text-white shadow-xs font-semibold"
+                      : "text-[#64748B] hover:text-[#172338] hover:bg-[#F1F5F9]",
                   )}
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center min-w-0 gap-1.5">
                     <span
                       className={cn(
-                        "transition-colors",
-                        isActive
-                          ? "text-slate-950"
-                          : "text-slate-400 group-hover:text-slate-800",
+                        "text-[14px] leading-none shrink-0",
+                        isActive ? "text-[#C99A2E]" : "text-[#94A3B8]",
                       )}
                     >
-                      {item.icon}
+                      •
                     </span>
-                    <span>{item.label}</span>
+                    <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge && (
                     <span
                       className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[9px] font-mono",
+                        "text-[10px] font-mono px-1.5 py-0.2 rounded font-semibold shrink-0 ml-1.5",
                         isActive
-                          ? "bg-yellow-500/40 text-slate-950 font-bold"
-                          : "bg-slate-100 text-slate-600 border border-slate-200",
+                          ? "bg-[#1E3A5F] text-[#F8F1DF] border border-[#2D5382]"
+                          : "bg-slate-100 text-[#64748B] border border-slate-200",
                       )}
                     >
                       {item.badge}
@@ -298,40 +250,34 @@ export default function HodPortalLayout({
             })}
           </div>
         ))}
-
-        <div className="pt-4 mt-4 border-t border-slate-100">
-          <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-            Institutional Hub
-          </div>
-          <Link
-            href="/app/dashboard"
-            className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-          >
-            <span className="flex items-center gap-2">
-              <ExternalLink className="h-3.5 w-3.5" />
-              Full CampusOS Workspace
-            </span>
-            <ChevronRight className="h-3 w-3 text-slate-400" />
-          </Link>
-        </div>
       </nav>
 
-      {/* HOD Profile Footer */}
-      <div className="p-3 border-t border-slate-200 bg-yellow-50/40">
-        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-xs">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 font-bold text-xs border border-yellow-500">
-              {activePersona.avatarInitials || "KA"}
+      {/* Footer Profile / Switcher */}
+      <div className="p-3 border-t border-[#DCE3EB] bg-[#F8FAFC]">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="h-7 w-7 rounded bg-[#183153] text-white flex items-center justify-center font-bold text-[11px] shrink-0">
+              {userInitials}
             </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-bold text-slate-900 truncate">
-                {activePersona.name || "Dr. K. S. Anand"}
+            <div className="min-w-0">
+              <div className="text-[11px] font-bold text-[#172338] truncate">
+                {userName}
               </div>
-              <div className="text-[10px] text-slate-500 truncate">
-                Head of Department
+              <div className="text-[10px] text-[#64748B] truncate">
+                {activePersona.role} • {activePersona.department ? "HOD" : ""}
               </div>
             </div>
           </div>
+          <button
+            onClick={() => {
+              logout();
+              router.push("/login");
+            }}
+            title="Log Out"
+            className="p-1 rounded text-slate-400 hover:text-red-600 hover:bg-slate-100 transition-colors"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
     </div>
@@ -339,116 +285,93 @@ export default function HodPortalLayout({
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen bg-yellow-50/25 antialiased font-sans text-slate-800">
+      <div className="min-h-screen bg-[#F4F6F9] text-[#172338] font-sans">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-64 shrink-0 h-screen sticky top-0 overflow-hidden z-20">
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-56 lg:flex-col shadow-xs">
           {sidebarContent}
         </aside>
 
-        {/* Mobile Drawer */}
+        {/* Mobile Sidebar Overlay */}
         {mobileOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div
-              className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs animate-fade-in"
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
               onClick={() => setMobileOpen(false)}
             />
-            <div className="fixed inset-y-0 left-0 w-72 max-w-[85vw] shadow-2xl z-10 animate-slide-right">
+            <div className="fixed inset-y-0 left-0 w-64 shadow-xl">
               {sidebarContent}
             </div>
           </div>
         )}
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Topbar */}
-          <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-6 backdrop-blur-md">
-            {/* Left: Mobile Toggle & Scope Title */}
-            <div className="flex items-center gap-3">
+        <div className="lg:pl-56 flex flex-col min-h-screen">
+          {/* Top Bar matching reference */}
+          <header className="sticky top-0 z-30 h-12 bg-white border-b border-[#DCE3EB] px-4 flex items-center justify-between gap-3 shadow-2xs">
+            {/* Left: Mobile trigger & Global Search */}
+            <div className="flex items-center gap-3 flex-1 max-w-xl">
               <button
-                onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden rounded-lg p-2 text-slate-600 hover:bg-yellow-50 hover:text-slate-900 transition-colors"
-                aria-label="Toggle navigation"
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden p-1.5 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+                aria-label="Open mobile menu"
               >
                 <Menu className="h-5 w-5" />
               </button>
-              <div className="hidden sm:flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                <span className="text-xs font-semibold text-slate-600">
-                  {deptName}
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="text-xs font-mono font-medium text-slate-500">
-                  VSB-CAMPUS
+
+              <div className="relative w-full max-w-md hidden sm:block">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search courses, exams, dues services..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-8 pl-8 pr-14 text-xs bg-white border border-[#DCE3EB] rounded placeholder:text-slate-400 text-[#172338] focus:outline-none focus:border-[#1E3A5F] focus:ring-1 focus:ring-[#1E3A5F] transition-all"
+                />
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-mono text-slate-400 border border-slate-200 rounded px-1.5 py-0.5 bg-slate-50">
+                  CTRL+K
                 </span>
               </div>
             </div>
 
-            {/* Right: Role Switcher & User Menu */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <RoleSwitcher />
+            {/* Right: Theme label, Term Pill, User details */}
+            <div className="flex items-center gap-3 shrink-0">
+              {/* Theme identifier from reference */}
+              <div className="hidden xl:flex items-center text-[11px] font-semibold text-[#C99A2E]">
+                Theme 01: Oxford Navy & Warm Gold
+              </div>
 
-              {/* User Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 rounded-lg p-1 text-slate-700 hover:bg-yellow-50 transition-colors"
-                  aria-label="User menu"
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950 border border-yellow-500 text-xs font-bold font-mono shadow-xs">
-                    {activePersona.avatarInitials || "KA"}
+              {/* Term badge */}
+              <div className="hidden md:inline-flex items-center text-[11px] font-medium text-[#172338] bg-slate-50 border border-[#DCE3EB] px-2.5 py-0.5 rounded-full">
+                Fall 2026 • Sem 5
+              </div>
+
+              {/* Role Switcher */}
+              <div className="hidden sm:block">
+                <RoleSwitcher />
+              </div>
+
+              {/* User Identity & Avatar */}
+              <div className="flex items-center gap-2 pl-2 border-l border-[#DCE3EB]">
+                <div className="hidden sm:block text-right">
+                  <div className="text-[11px] font-bold text-[#172338] leading-tight">
+                    {userName}
                   </div>
-                </button>
-
-                {userDropdownOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setUserDropdownOpen(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50 animate-scale-in">
-                      <div className="px-3 py-2.5 border-b border-slate-100 mb-1">
-                        <div className="text-xs font-semibold text-slate-900 truncate">
-                          {activePersona.name}
-                        </div>
-                        <div className="text-[11px] text-slate-500 font-mono truncate mt-0.5">
-                          {activePersona.email}
-                        </div>
-                        <div className="mt-2 inline-flex items-center gap-1 rounded bg-yellow-100 px-2 py-0.5 text-[10px] font-mono text-yellow-950 border border-yellow-300 font-semibold">
-                          <Shield className="h-3 w-3 text-yellow-700" />
-                          HOD • {deptName}
-                        </div>
-                      </div>
-
-                      <div className="space-y-0.5 text-xs">
-                        <Link
-                          href="/app/dashboard"
-                          className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
-                          onClick={() => setUserDropdownOpen(false)}
-                        >
-                          <ExternalLink className="h-4 w-4 text-slate-400" />
-                          <span>Switch to Full ERP View</span>
-                        </Link>
-                        <button
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            logout();
-                            router.push("/login");
-                          }}
-                          className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          <span>Sign Out</span>
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
+                  <div className="text-[9px] font-mono text-[#64748B] leading-tight">
+                    2026-CSE-HOD • B.Tech CSE (HOD)
+                  </div>
+                </div>
+                <div
+                  className="h-7 w-7 rounded bg-[#183153] text-white flex items-center justify-center font-bold text-[11px] tracking-wider shrink-0 cursor-pointer shadow-2xs"
+                  title={`${userName} (${activePersona.role})`}
+                >
+                  {userInitials}
+                </div>
               </div>
             </div>
           </header>
 
-          {/* Page Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
+          {/* Page Body */}
+          <main className="flex-1 p-3 sm:p-4 max-w-[1700px] w-full mx-auto">
             {children}
           </main>
         </div>
