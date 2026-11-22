@@ -15,6 +15,7 @@ import {
   Briefcase,
   FileText,
   ArrowRight,
+  Shield,
 } from "lucide-react";
 
 export default function PeopleOverviewPage() {
@@ -54,6 +55,16 @@ export default function PeopleOverviewPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <Link href="/app/people/roles">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1.5"
+            >
+              <Shield className="h-3.5 w-3.5 text-indigo-500" />
+              User Roles & RBAC
+            </Button>
+          </Link>
           <Link href="/app/students">
             <Button
               variant="primary"

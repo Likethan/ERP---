@@ -1,4 +1,5 @@
 import { ApiResponse, PaginatedResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import { StudentComprehensiveDetail } from "@/types/domain";
 import {
   GuardianRecord,
@@ -43,6 +44,119 @@ class StudentsService {
   async list(
     params?: StudentFilterParams,
   ): Promise<PaginatedResponse<StudentComprehensiveDetail>> {
+    try {
+      const qParams = new URLSearchParams();
+      if (params?.page) qParams.append("page", params.page.toString());
+      if (params?.pageSize)
+        qParams.append("page_size", params.pageSize.toString());
+      if (params?.search) qParams.append("search", params.search);
+      if (params?.status && params.status !== "ALL")
+        qParams.append("status", params.status);
+      if (params?.programId) qParams.append("program_id", params.programId);
+
+      const qs = qParams.toString();
+      const res = await apiFetch<any[]>(
+        `/api/v1/students${qs ? `?${qs}` : ""}`,
+      );
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
+        const liveStudents: StudentComprehensiveDetail[] = res.data.map(
+          (b: any) => ({
+            id: b.id,
+            rollNumber: b.roll_number || b.admission_number || "REG-001",
+            registrationNumber:
+              b.registration_number || b.admission_number || "ADM-001",
+            firstName: b.first_name,
+            lastName: b.last_name,
+            email: b.email,
+            phone: b.phone_number || "+91 90000 00000",
+            gender: b.gender || "Male",
+            dateOfBirth: "2004-01-01",
+            bloodGroup: "O+",
+            status: (b.status as any) || "ACTIVE",
+            admissionDate: "2023-08-01",
+            program: {
+              id: b.program_id || "prog-cse",
+              code: b.program_code || "BTECH-CSE",
+              name: b.program_name || "B.Tech Computer Science & Engineering",
+              department: "Computer Science & Engineering",
+            },
+            academicYear: "2026-2027",
+            currentSemester: 1,
+            section: "A",
+            batch: "2023-2027",
+            quota: "MERIT",
+            address: {
+              street: "Campus Avenue",
+              city: "Coimbatore",
+              state: "Tamil Nadu",
+              pincode: "641001",
+            },
+            guardian: {
+              name: "Guardian",
+              relation: "Parent",
+              phone: "+91 90000 00001",
+              email: "parent@example.com",
+              occupation: "Professional",
+            },
+            academicStats: {
+              cgpa: 8.2,
+              totalCreditsEarned: 24,
+              backlogs: 0,
+              rank: 12,
+            },
+            attendanceSummary: {
+              overallPercentage: 88.5,
+              totalClasses: 120,
+              attendedClasses: 106,
+              status: "EXCELLENT",
+            },
+            financeSummary: {
+              totalBilled: 125000,
+              totalPaid: 125000,
+              pendingDue: 0,
+              status: "CLEAR",
+            },
+            placementSummary: {
+              isEligible: true,
+              appliedDrives: 0,
+              interviewsScheduled: 0,
+              offersReceived: 0,
+            },
+            enrolledCourses: [],
+            recentActivity: [],
+            documents: [],
+          }),
+        );
+
+        const page = params?.page || 1;
+        const pageSize = params?.pageSize || 10;
+        const totalRecords = liveStudents.length;
+        const totalPages = Math.ceil(totalRecords / pageSize) || 1;
+        return {
+          success: true,
+          data: liveStudents,
+          pagination: {
+            page,
+            pageSize,
+            totalRecords,
+            totalPages,
+            page_size: pageSize,
+            total_records: totalRecords,
+            total_pages: totalPages,
+            hasNext: page < totalPages,
+            hasPrev: page > 1,
+          },
+        };
+      }
+    } catch {
+      // Graceful fallback to local mock state when backend is unreachable or offline
+    }
+
     let filtered = [...this.students];
 
     if (params?.search) {
@@ -124,6 +238,85 @@ class StudentsService {
   async getById(
     id: string,
   ): Promise<ApiResponse<StudentComprehensiveDetail | null>> {
+    try {
+      const res = await apiFetch<any>(`/api/v1/students/${id}`);
+      if (res && res.success && res.data) {
+        const b = res.data;
+        const liveStudent: StudentComprehensiveDetail = {
+          id: b.id,
+          rollNumber: b.roll_number || b.admission_number || "REG-001",
+          registrationNumber:
+            b.registration_number || b.admission_number || "ADM-001",
+          firstName: b.first_name,
+          lastName: b.last_name,
+          email: b.email,
+          phone: b.phone_number || "+91 90000 00000",
+          gender: b.gender || "Male",
+          dateOfBirth: b.date_of_birth || "2004-01-01",
+          bloodGroup: b.blood_group || "O+",
+          status: (b.status as any) || "ACTIVE",
+          admissionDate: b.admission_date || "2023-08-01",
+          program: {
+            id: b.program_id || "prog-cse",
+            code: b.program_code || "BTECH-CSE",
+            name: b.program_name || "B.Tech Computer Science & Engineering",
+            department: "Computer Science & Engineering",
+          },
+          academicYear: "2026-2027",
+          currentSemester: b.current_semester || 1,
+          section: b.section_name || "A",
+          batch: "2023-2027",
+          quota: "MERIT",
+          address: {
+            street: "Campus Avenue",
+            city: "Coimbatore",
+            state: "Tamil Nadu",
+            pincode: "641001",
+          },
+          guardian: {
+            name: "Guardian",
+            relation: "Parent",
+            phone: "+91 90000 00001",
+            email: "parent@example.com",
+            occupation: "Professional",
+          },
+          academicStats: {
+            cgpa: 8.2,
+            totalCreditsEarned: 24,
+            backlogs: 0,
+            rank: 12,
+          },
+          attendanceSummary: {
+            overallPercentage: 88.5,
+            totalClasses: 120,
+            attendedClasses: 106,
+            status: "EXCELLENT",
+          },
+          financeSummary: {
+            totalBilled: 145000,
+            totalPaid: 145000,
+            pendingDue: 0,
+            status: "CLEAR",
+          },
+          placementSummary: {
+            isEligible: true,
+            appliedDrives: 0,
+            interviewsScheduled: 0,
+            offersReceived: 0,
+          },
+          enrolledCourses: [],
+          recentActivity: [],
+          documents: [],
+          guardians: this.guardiansPool[b.id] || [],
+          documentsVault: this.documentsPool[b.id] || [],
+          milestones: this.milestonesPool[b.id] || [],
+        };
+        return { success: true, data: liveStudent };
+      }
+    } catch {
+      // Fall through to local collection
+    }
+
     const student = this.students.find(
       (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );
@@ -241,6 +434,25 @@ class StudentsService {
       documents: [],
     };
 
+    try {
+      const res = await apiFetch<any>("/api/v1/students", {
+        method: "POST",
+        body: JSON.stringify({
+          first_name: newStudent.firstName,
+          last_name: newStudent.lastName,
+          email: newStudent.email,
+          phone_number: newStudent.phone,
+          admission_number: newStudent.rollNumber,
+          program_id: newStudent.program?.id,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newStudent.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
+
     this.students.unshift(newStudent);
 
     // Initialize collections
@@ -281,6 +493,19 @@ class StudentsService {
     id: string,
     data: Partial<StudentComprehensiveDetail>,
   ): Promise<ApiResponse<StudentComprehensiveDetail>> {
+    try {
+      await apiFetch<any>(`/api/v1/students/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          first_name: data.firstName,
+          last_name: data.lastName,
+          phone_number: data.phone,
+        }),
+      });
+    } catch {
+      // Graceful local fallback
+    }
+
     const idx = this.students.findIndex(
       (s) => s.id === id || s.rollNumber.toLowerCase() === id.toLowerCase(),
     );

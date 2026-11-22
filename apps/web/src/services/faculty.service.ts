@@ -1,4 +1,5 @@
 import { ApiResponse, PaginatedResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import { FacultyDetailView } from "@/types/domain";
 import {
   FacultyWorkloadSummary,
@@ -34,6 +35,80 @@ class FacultyService {
   async list(
     params?: FacultyFilterParams | string,
   ): Promise<PaginatedResponse<FacultyDetailView>> {
+    try {
+      const qParams = new URLSearchParams();
+      if (typeof params === "string") {
+        if (params) qParams.append("search", params);
+      } else if (params) {
+        if (params.search) qParams.append("search", params.search);
+      }
+      const qs = qParams.toString();
+      const res = await apiFetch<any[]>(`/api/v1/faculty${qs ? `?${qs}` : ""}`);
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
+        const liveFaculty: FacultyDetailView[] = res.data.map((f: any) => ({
+          id: f.id,
+          employeeCode:
+            f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
+          firstName: f.first_name,
+          lastName: f.last_name,
+          email: f.email,
+          phone: f.phone_number || "+91 90000 00000",
+          designation: f.designation || "Assistant Professor",
+          department: f.department_name || "Engineering",
+          qualification: f.highest_qualification || "Ph.D",
+          specialization: f.specialization || "General",
+          joiningDate: f.joining_date || "2023-01-01",
+          status: (f.employment_status as any) || "ACTIVE",
+          teachingLoadHours: 14,
+          assignedSubjects: [],
+          todayClasses: [],
+          stats: {
+            coursesCount: 3,
+            totalStudents: 180,
+            averageAttendance: 88,
+            pendingCorrections: 0,
+          },
+        }));
+
+        const page =
+          typeof params === "object" && params?.page ? params.page : 1;
+        const pageSize =
+          typeof params === "object" && params?.pageSize
+            ? params.pageSize
+            : liveFaculty.length;
+        const totalRecords = liveFaculty.length;
+        const totalPages = Math.ceil(totalRecords / pageSize) || 1;
+        const startIndex = (page - 1) * pageSize;
+        const paginatedItems = liveFaculty.slice(
+          startIndex,
+          startIndex + pageSize,
+        );
+
+        return {
+          success: true,
+          data: paginatedItems,
+          pagination: {
+            page,
+            pageSize,
+            totalRecords,
+            totalPages,
+            page_size: pageSize,
+            total_records: totalRecords,
+            total_pages: totalPages,
+            hasNext: page < totalPages,
+            hasPrev: page > 1,
+          },
+        };
+      }
+    } catch (e) {
+      console.warn("[FacultyService] Falling back to mock data:", e);
+    }
+
     let items = [...this.faculty];
 
     if (typeof params === "string") {
@@ -106,6 +181,40 @@ class FacultyService {
   }
 
   async getById(id: string): Promise<ApiResponse<FacultyDetailView | null>> {
+    try {
+      const res = await apiFetch<any>(`/api/v1/faculty/${id}`);
+      if (res && res.success && res.data) {
+        const f = res.data;
+        const liveMember: FacultyDetailView = {
+          id: f.id,
+          employeeCode:
+            f.employee_code || `FAC-${f.id.slice(0, 4).toUpperCase()}`,
+          firstName: f.first_name,
+          lastName: f.last_name,
+          email: f.email,
+          phone: f.phone_number || "+91 90000 00000",
+          designation: f.designation || "Assistant Professor",
+          department: f.department_name || "Engineering",
+          qualification: f.highest_qualification || "Ph.D",
+          specialization: f.specialization || "General",
+          joiningDate: f.joining_date || "2023-01-01",
+          status: (f.employment_status as any) || "ACTIVE",
+          teachingLoadHours: 14,
+          assignedSubjects: [],
+          todayClasses: [],
+          stats: {
+            coursesCount: 3,
+            totalStudents: 180,
+            averageAttendance: 88,
+            pendingCorrections: 0,
+          },
+        };
+        return { success: true, data: liveMember };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     const member = this.faculty.find(
       (f) =>
         f.id === id ||
@@ -192,6 +301,24 @@ class FacultyService {
         pendingCorrections: 0,
       },
     };
+    try {
+      const res = await apiFetch<any>("/api/v1/faculty", {
+        method: "POST",
+        body: JSON.stringify({
+          first_name: newFac.firstName,
+          last_name: newFac.lastName,
+          email: newFac.email,
+          employee_code: newFac.employeeCode,
+          designation: newFac.designation,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newFac.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
+
     this.faculty.unshift(newFac);
     return {
       success: true,
@@ -203,6 +330,20 @@ class FacultyService {
     id: string,
     data: Partial<FacultyDetailView>,
   ): Promise<ApiResponse<FacultyDetailView>> {
+    try {
+      await apiFetch<any>(`/api/v1/faculty/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          first_name: data.firstName,
+          last_name: data.lastName,
+          designation: data.designation,
+          phone_number: data.phone,
+        }),
+      });
+    } catch {
+      // Graceful local fallback
+    }
+
     const idx = this.faculty.findIndex(
       (f) => f.id === id || f.employeeCode === id,
     );

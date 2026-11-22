@@ -3,12 +3,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import type { Campus, Department } from "@campusos/types";
 import { organizationService } from "@/services/organization.service";
+import { facultyService } from "@/services/faculty.service";
+import type { FacultyDetailView } from "@/types/domain";
 import { useAuth } from "@/lib/auth-context";
 
 export default function DepartmentsPage() {
   const { hasPermission } = useAuth();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [campuses, setCampuses] = useState<Campus[]>([]);
+  const [facultyList, setFacultyList] = useState<FacultyDetailView[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +22,7 @@ export default function DepartmentsPage() {
   const [name, setName] = useState("");
   const [deptType, setDeptType] = useState("ACADEMIC");
   const [campusId, setCampusId] = useState<string>("");
+  const [hodUserId, setHodUserId] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [editingDepartment, setEditingDepartment] = useState<Department | null>(
@@ -31,12 +35,16 @@ export default function DepartmentsPage() {
     try {
       setLoading(true);
       setError(null);
-      const [deptRes, campRes] = await Promise.all([
+      const [deptRes, campRes, facRes] = await Promise.all([
         organizationService.listDepartments(undefined, search),
         organizationService.listCampuses(),
+        facultyService.list({ pageSize: 100 }),
       ]);
       setDepartments(deptRes.data);
       setCampuses(campRes.data);
+      if (facRes?.data) {
+        setFacultyList(facRes.data);
+      }
     } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : "Failed to load departments",
@@ -58,16 +66,22 @@ export default function DepartmentsPage() {
     setFormError(null);
     setSubmitting(true);
     try {
+      const appointedFaculty = facultyList.find((f) => f.id === hodUserId);
       await organizationService.createDepartment({
         code: code.trim().toUpperCase(),
         name: name.trim(),
         department_type: deptType,
         campus_id: campusId || undefined,
+        hod_user_id: hodUserId || undefined,
+        hod_name: appointedFaculty
+          ? `${appointedFaculty.firstName} ${appointedFaculty.lastName}`
+          : undefined,
       });
       setShowCreate(false);
       setCode("");
       setName("");
       setCampusId("");
+      setHodUserId("");
       await loadData();
     } catch (err: unknown) {
       setFormError(
@@ -86,10 +100,15 @@ export default function DepartmentsPage() {
     setSubmitting(true);
     setFormError(null);
     try {
+      const appointedFaculty = facultyList.find((f) => f.id === hodUserId);
       await organizationService.updateDepartment(editingDepartment.id, {
         name: name.trim(),
         department_type: deptType,
         campus_id: campusId || null,
+        hod_user_id: hodUserId || null,
+        hod_name: appointedFaculty
+          ? `${appointedFaculty.firstName} ${appointedFaculty.lastName}`
+          : null,
         is_active: editingDepartment.is_active,
       });
       setEditingDepartment(null);
@@ -124,6 +143,7 @@ export default function DepartmentsPage() {
               setCode("");
               setName("");
               setCampusId("");
+              setHodUserId("");
               setShowCreate(true);
             }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-indigo-500 transition-colors shadow-sm self-start sm:self-auto"
@@ -272,6 +292,7 @@ export default function DepartmentsPage() {
                           setName(d.name);
                           setDeptType(d.department_type);
                           setCampusId(d.campus_id || "");
+                          setHodUserId(d.hod_user_id || "");
                           setShowCreate(true);
                         }}
                         className="rounded-md border border-slate-700 px-2.5 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-slate-800"
@@ -391,6 +412,25 @@ export default function DepartmentsPage() {
                   </select>
                 </div>
               )}
+
+              <div>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Appointed Head of Department (HOD)
+                </label>
+                <select
+                  value={hodUserId}
+                  onChange={(e) => setHodUserId(e.target.value)}
+                  className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+                >
+                  <option value="">-- No HOD Assigned (Vacant) --</option>
+                  {facultyList.map((f) => (
+                    <option key={f.id} value={f.id}>
+                      {f.firstName} {f.lastName} ({f.designation} &bull;{" "}
+                      {f.employeeCode})
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               {editingDepartment && (
                 <label className="flex items-center gap-2 text-slate-300">

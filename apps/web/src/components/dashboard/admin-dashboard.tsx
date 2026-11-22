@@ -29,6 +29,8 @@ import {
   CheckCircle2,
   Calendar,
   Sparkles,
+  Shield,
+  FileSpreadsheet,
 } from "lucide-react";
 
 export function AdminDashboard() {
@@ -62,19 +64,39 @@ export function AdminDashboard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/app/people/roles">
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Shield className="h-3.5 w-3.5 text-indigo-600" />}
+            >
+              Roles & RBAC
+            </Button>
+          </Link>
+          <Link href="/app/reports">
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={
+                <FileSpreadsheet className="h-3.5 w-3.5 text-blue-600" />
+              }
+            >
+              Reports Hub
+            </Button>
+          </Link>
           <Link href="/app/intelligence">
             <Button
               variant="outline"
               size="sm"
               leftIcon={<Sparkles className="h-3.5 w-3.5 text-yellow-600" />}
             >
-              Campus Intelligence
+              Intelligence
             </Button>
           </Link>
           <Link href="/app/students">
             <Button variant="primary" size="sm">
-              Admissions Registry
+              Admissions
             </Button>
           </Link>
         </div>

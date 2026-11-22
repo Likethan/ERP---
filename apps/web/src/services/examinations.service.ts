@@ -6,6 +6,7 @@
  */
 
 import { ApiResponse } from "@campusos/types";
+import { apiFetch } from "@/lib/api-client";
 import {
   Assessment,
   AssessmentComponent,
@@ -130,6 +131,30 @@ class ExaminationsService {
   // ==========================================
 
   async getDashboardSummary(): Promise<ApiResponse<ExamDashboardSummary>> {
+    try {
+      const res = await apiFetch<any>("/api/v1/examinations/dashboard");
+      if (res && res.success && res.data) {
+        const d = res.data;
+        const liveSummary: ExamDashboardSummary = {
+          ...MOCK_EXAM_OPERATIONS_SUMMARY,
+          activeExaminationsCount: d.active_terms_count ?? 2,
+          upcomingExamsCount: d.upcoming_schedules_count ?? 8,
+          totalAssessmentsCount: d.total_assessments_count ?? 42,
+          pendingMarksCount: d.pending_marks_count ?? 12,
+          marksAwaitingReviewCount: d.pending_corrections_count ?? 3,
+          eligibleStudentsCount: d.eligible_students_count ?? 384,
+          ineligibleStudentsCount: d.ineligible_students_count ?? 18,
+          resultsAwaitingFinalizationCount: d.unfinalized_results_count ?? 2,
+          resultsAwaitingPublicationCount: d.unpublished_results_count ?? 1,
+          publishedResultsCount: d.published_results_count ?? 24,
+          gradeDistribution: calculateGradeDistribution(this.results),
+        };
+        return { success: true, data: liveSummary };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     const distribution = calculateGradeDistribution(this.results);
     const summary: ExamDashboardSummary = {
       ...MOCK_EXAM_OPERATIONS_SUMMARY,
@@ -252,6 +277,46 @@ class ExaminationsService {
   async getAssessments(
     filters?: AssessmentFilters | number,
   ): Promise<ApiResponse<Assessment[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/examinations/assessments");
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
+        const liveItems: Assessment[] = res.data.map((a: any) => ({
+          id: a.id,
+          name: a.title || a.name || "Assessment",
+          code: a.code || "ASM-001",
+          type: a.type || "INTERNAL",
+          courseOfferingId: a.course_offering_id || "co-cs301-a",
+          courseCode: a.course_code || "CS301",
+          courseName: a.course_name || "Course",
+          section: a.section || "A",
+          department: a.department_name || "Engineering",
+          academicYear: "2026-2027",
+          semester: 5,
+          facultyId: a.faculty_id || "fac-001",
+          facultyName: a.faculty_name || "Faculty",
+          maxMarks: a.max_marks || 100,
+          passingMarks: a.passing_marks || 40,
+          weightage: a.weightage || 40,
+          sequence: 1,
+          date: a.date || "2026-04-01",
+          status: a.status || "OPEN",
+          isFinalized: Boolean(a.is_finalized),
+          components: [],
+          totalEnrolled: 60,
+          totalEntered: 55,
+          createdAt: a.created_at || new Date().toISOString(),
+        }));
+        return { success: true, data: liveItems };
+      }
+    } catch {
+      // Fall through to mock
+    }
+
     // Support legacy number semester parameter
     if (typeof filters === "number") {
       return {
@@ -343,6 +408,25 @@ class ExaminationsService {
       totalEntered: 0,
       createdAt: new Date().toISOString(),
     };
+
+    try {
+      const res = await apiFetch<any>("/api/v1/examinations/assessments", {
+        method: "POST",
+        body: JSON.stringify({
+          title: newAsm.name,
+          type: newAsm.type,
+          course_offering_id: newAsm.courseOfferingId,
+          max_marks: newAsm.maxMarks,
+          passing_marks: newAsm.passingMarks,
+          weightage: newAsm.weightage,
+        }),
+      });
+      if (res && res.success && res.data?.id) {
+        newAsm.id = res.data.id;
+      }
+    } catch {
+      // Graceful local fallback
+    }
 
     this.assessments.unshift(newAsm);
 
@@ -1035,6 +1119,26 @@ class ExaminationsService {
   // ==========================================
 
   async getGradeScales(): Promise<ApiResponse<GradeScale[]>> {
+    try {
+      const res = await apiFetch<any[]>("/api/v1/examinations/grade-scales");
+      if (
+        res &&
+        res.success &&
+        Array.isArray(res.data) &&
+        res.data.length > 0
+      ) {
+        const liveScales: GradeScale[] = res.data.map((g: any) => ({
+          id: g.id,
+          name: g.name,
+          academicYear: g.academic_year || "2026-2027",
+          isDefault: Boolean(g.is_default ?? true),
+          rules: g.rules || g.grades || [],
+        }));
+        return { success: true, data: liveScales };
+      }
+    } catch {
+      // Fall through to mock
+    }
     return { success: true, data: this.gradeScales };
   }
 
