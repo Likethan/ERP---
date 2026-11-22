@@ -59,13 +59,13 @@ export function StudentDashboard() {
     // may load the Aarav Patel mock student data.
     const isStudentDemo = Boolean(
       user &&
-        DEMO_PERSONAS.some(
-          (p) =>
-            p.id === "user-student-01" &&
-            p.role === "STUDENT" &&
-            (p.id.toLowerCase() === user.id.toLowerCase() ||
-              p.email.toLowerCase() === user.email.toLowerCase()),
-        ),
+      DEMO_PERSONAS.some(
+        (p) =>
+          p.id === "user-student-01" &&
+          p.role === "STUDENT" &&
+          (p.id.toLowerCase() === user.id.toLowerCase() ||
+            p.email.toLowerCase() === user.email.toLowerCase()),
+      ),
     );
 
     setIsDemoSession(isStudentDemo);
@@ -139,7 +139,9 @@ export function StudentDashboard() {
         <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
           <AlertCircle className="h-6 w-6" />
         </div>
-        <h2 className="text-lg font-bold text-red-950">Student Profile Not Found</h2>
+        <h2 className="text-lg font-bold text-red-950">
+          Student Profile Not Found
+        </h2>
         <p className="text-xs text-red-700">
           {errorMessage ||
             "No student record is associated with your authenticated account. Please contact the administrator or registrar office."}
@@ -155,7 +157,9 @@ export function StudentDashboard() {
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-950 border border-yellow-300 mb-2">
             <span className="h-1.5 w-1.5 rounded-full bg-yellow-600" />
-            {isDemoSession ? "Demo Student Portal" : "Active Student Portal"} • {student.rollNumber}
+            {isDemoSession
+              ? "Demo Student Portal"
+              : "Active Student Portal"} • {student.rollNumber}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Welcome back, {student.firstName}!
@@ -195,7 +199,16 @@ export function StudentDashboard() {
           }
           change={
             student.attendanceSummary.totalClasses > 0
-              ? { value: student.attendanceSummary.overallPercentage >= 75 ? "Safe threshold (>75%)" : "Below threshold", trend: student.attendanceSummary.overallPercentage >= 75 ? "up" : "down" }
+              ? {
+                  value:
+                    student.attendanceSummary.overallPercentage >= 75
+                      ? "Safe threshold (>75%)"
+                      : "Below threshold",
+                  trend:
+                    student.attendanceSummary.overallPercentage >= 75
+                      ? "up"
+                      : "down",
+                }
               : undefined
           }
           description={
@@ -222,7 +235,8 @@ export function StudentDashboard() {
               : undefined
           }
           description={
-            student.academicStats.totalCreditsEarned > 0 || student.academicStats.cgpa > 0
+            student.academicStats.totalCreditsEarned > 0 ||
+            student.academicStats.cgpa > 0
               ? `${student.academicStats.totalCreditsEarned} credits earned • ${student.academicStats.backlogs} backlogs`
               : "Semester grades awaiting publication"
           }
@@ -232,17 +246,25 @@ export function StudentDashboard() {
         <StatCard
           label="Fee Dues Status"
           value={
-            student.financeSummary.totalBilled > 0 || student.financeSummary.pendingDue > 0
+            student.financeSummary.totalBilled > 0 ||
+            student.financeSummary.pendingDue > 0
               ? student.financeSummary.pendingDue === 0
                 ? "₹0 Due"
                 : `₹${student.financeSummary.pendingDue.toLocaleString()}`
               : "Not available"
           }
           change={
-            student.financeSummary.totalBilled > 0 || student.financeSummary.pendingDue > 0
+            student.financeSummary.totalBilled > 0 ||
+            student.financeSummary.pendingDue > 0
               ? {
-                  value: student.financeSummary.pendingDue === 0 ? "All cleared" : "Dues pending",
-                  trend: student.financeSummary.pendingDue === 0 ? "neutral" : "down",
+                  value:
+                    student.financeSummary.pendingDue === 0
+                      ? "All cleared"
+                      : "Dues pending",
+                  trend:
+                    student.financeSummary.pendingDue === 0
+                      ? "neutral"
+                      : "down",
                 }
               : undefined
           }

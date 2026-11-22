@@ -60,7 +60,8 @@ class StudentsService {
         id: b.program_id || "",
         code: b.program_code || "N/A",
         name: b.program_name || "Program not assigned",
-        department: b.department_name || b.program_name || "Department not assigned",
+        department:
+          b.department_name || b.program_name || "Department not assigned",
       },
       academicYear: b.academic_year || b.batch_name || "N/A",
       currentSemester: b.current_semester || 1,
@@ -90,7 +91,11 @@ class StudentsService {
         overallPercentage: b.attendance_percentage ?? 0,
         totalClasses: b.total_classes ?? 0,
         attendedClasses: b.attended_classes ?? 0,
-        status: b.attendance_percentage ? (b.attendance_percentage >= 75 ? "EXCELLENT" : "CRITICAL") : "SATISFACTORY",
+        status: b.attendance_percentage
+          ? b.attendance_percentage >= 75
+            ? "EXCELLENT"
+            : "CRITICAL"
+          : "SATISFACTORY",
       },
       financeSummary: b.finance_summary || {
         totalBilled: b.total_billed ?? 0,
@@ -130,7 +135,9 @@ class StudentsService {
     // 2. Explicitly recognized demo student persona
     if (options?.isDemo) {
       const demoStudent = this.students.find(
-        (s) => s.id === "stu-24cse0101" || s.rollNumber.toLowerCase() === "24cse0101",
+        (s) =>
+          s.id === "stu-24cse0101" ||
+          s.rollNumber.toLowerCase() === "24cse0101",
       );
       if (demoStudent) {
         return {

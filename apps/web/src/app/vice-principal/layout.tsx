@@ -114,7 +114,11 @@ export default function VicePrincipalPortalLayout({
       router.push("/login?role=vice_principal");
       return;
     }
-    const role = (user.roles?.[0]?.name || (user as any).role || "").toUpperCase();
+    const role = (
+      user.roles?.[0]?.name ||
+      (user as any).role ||
+      ""
+    ).toUpperCase();
     const allowed = ["PRINCIPAL", "VICE_PRINCIPAL", "SUPER_ADMIN", "ADMIN"];
     if (!allowed.includes(role)) {
       router.push("/app/dashboard");
