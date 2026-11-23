@@ -22,11 +22,11 @@ export default function AuthenticatedLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login");
+      router.replace("/login");
     }
   }, [isLoading, user, router]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3 text-slate-500">

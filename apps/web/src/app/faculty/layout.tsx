@@ -22,11 +22,11 @@ export default function FacultyLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login?role=faculty");
+      router.replace("/login?role=faculty");
     }
   }, [isLoading, user, router]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3 text-slate-500">

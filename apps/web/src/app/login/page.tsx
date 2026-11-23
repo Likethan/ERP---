@@ -291,17 +291,6 @@ function LoginFormContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // If already authenticated, redirect directly to destination or dashboard
-  useEffect(() => {
-    if (!isLoading && user) {
-      const dest = getValidDestination(
-        searchParams.get("redirect"),
-        activeRole,
-      );
-      router.push(dest);
-    }
-  }, [isLoading, user, router, searchParams, activeRole]);
-
   const handleRoleSwitch = (roleKey: PortalKey) => {
     setActiveRole(roleKey);
     setErrorMessage(null);

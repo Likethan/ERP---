@@ -154,7 +154,7 @@ export default function HodPortalLayout({
   React.useEffect(() => {
     if (isLoading) return;
     if (!user) {
-      router.push("/login?role=hod");
+      router.replace("/login?role=hod");
       return;
     }
     const role = (
@@ -164,9 +164,22 @@ export default function HodPortalLayout({
     ).toUpperCase();
     const allowed = ["HOD", "SUPER_ADMIN", "ADMIN"];
     if (!allowed.includes(role)) {
-      router.push("/app/dashboard");
+      router.replace("/app/dashboard");
     }
   }, [user, isLoading, router]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F4F6F9]">
+        <div className="flex flex-col items-center gap-3 text-slate-500">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-[#183153]" />
+          <span className="text-sm font-medium">
+            Resolving CampusOS HOD Workspace...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   const deptName =
     activePersona?.department || "Computer Science & Engineering";

@@ -112,7 +112,7 @@ export default function VicePrincipalPortalLayout({
   React.useEffect(() => {
     if (isLoading) return;
     if (!user) {
-      router.push("/login?role=vice_principal");
+      router.replace("/login?role=vice_principal");
       return;
     }
     const role = (
@@ -122,9 +122,22 @@ export default function VicePrincipalPortalLayout({
     ).toUpperCase();
     const allowed = ["PRINCIPAL", "VICE_PRINCIPAL", "SUPER_ADMIN", "ADMIN"];
     if (!allowed.includes(role)) {
-      router.push("/app/dashboard");
+      router.replace("/app/dashboard");
     }
   }, [user, isLoading, router]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-3 text-slate-500">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600" />
+          <span className="text-sm font-medium">
+            Resolving CampusOS Executive Workspace...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   const sidebarContent = (
     <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">
