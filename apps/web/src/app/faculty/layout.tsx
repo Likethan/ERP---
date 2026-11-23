@@ -22,7 +22,7 @@ export default function FacultyLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login");
+      router.push("/login?role=faculty");
     }
   }, [isLoading, user, router]);
 

@@ -67,6 +67,7 @@ class AuthService:
         password: str,
         client_ip: str = "127.0.0.1",
         user_agent: str | None = None,
+        portal: str | None = None,
     ) -> tuple[User, str, str]:
         """Authenticate user credentials and establish a secure session."""
         normalized_email = email.strip().lower()
@@ -156,6 +157,81 @@ class AuthService:
         # 5. Extract Roles & Permissions
         role_names = [ur.role.name for ur in user.roles if ur.role]
         permissions = sorted(resolve_user_permissions(user))
+
+        # Portal Role Validation & Institutional Assignments (Phase 3)
+        if portal:
+            norm_portal = portal.strip().upper().replace("-", "_")
+            portal_role_map = {
+                "ADMIN": {"SUPER_ADMIN", "ADMIN", "INSTITUTION_ADMIN"},
+                "SUPER_ADMIN": {"SUPER_ADMIN", "ADMIN", "INSTITUTION_ADMIN"},
+                "VICE_PRINCIPAL": {"VICE_PRINCIPAL", "PRINCIPAL"},
+                "PRINCIPAL": {"VICE_PRINCIPAL", "PRINCIPAL"},
+                "HOD": {"HOD"},
+                "FACULTY": {"FACULTY", "PROFESSOR"},
+                "STUDENT": {"STUDENT"},
+            }
+            allowed_roles = portal_role_map.get(norm_portal)
+            if allowed_roles:
+                user_role_set = set(role_names)
+                if not any(r in allowed_roles for r in user_role_set):
+                    if user.primary_tenant_id:
+                        db.add(
+                            AuditLog(
+                                tenant_id=user.primary_tenant_id,
+                                user_id=user.id,
+                                action="PORTAL_ACCESS_DENIED",
+                                entity_type="User",
+                                entity_id=user.id,
+                                ip_address=client_ip,
+                                user_agent=user_agent,
+                                business_context=f"User attempted login to unauthorized portal '{portal}'. Assigned roles: {role_names}",
+                            )
+                        )
+                    await db.commit()
+                    raise AuthenticationException(
+                        f"Authentication succeeded, but your account is not authorized for the {portal} portal. Please select the appropriate portal."
+                    )
+
+            # Department / Institutional Assignment Verification
+            if norm_portal == "HOD":
+                from app.models.core import Department
+                from app.models.people import FacultyProfile
+
+                has_dept_assignment = any(
+                    ur.department_id is not None
+                    for ur in user.roles
+                    if ur.role and ur.role.name == "HOD"
+                )
+                if not has_dept_assignment:
+                    dept_res = await db.execute(
+                        select(Department).where(
+                            Department.hod_user_id == user.id,
+                            Department.is_active.is_(True),
+                        )
+                    )
+                    if dept_res.scalar_one_or_none():
+                        has_dept_assignment = True
+                if not has_dept_assignment:
+                    fac_res = await db.execute(
+                        select(FacultyProfile).where(
+                            FacultyProfile.user_id == user.id,
+                            FacultyProfile.employment_status == "ACTIVE",
+                        )
+                    )
+                    fac_prof = fac_res.scalar_one_or_none()
+                    if fac_prof and fac_prof.department_id:
+                        has_dept_assignment = True
+
+                if not has_dept_assignment and "SUPER_ADMIN" not in role_names:
+                    raise AuthenticationException(
+                        "HOD account lacks a valid department assignment."
+                    )
+
+            if norm_portal in ("VICE_PRINCIPAL", "PRINCIPAL"):
+                if not user.primary_tenant_id and "SUPER_ADMIN" not in role_names:
+                    raise AuthenticationException(
+                        "Vice Principal account lacks a valid institutional assignment."
+                    )
 
         # 6. Establish Session & Tokens
         session_id = uuid4()

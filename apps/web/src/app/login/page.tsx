@@ -67,7 +67,7 @@ const ROLE_METAS: Record<PrimaryPortalKey, RoleMeta> = {
       roleTitle: "Student — B.Tech CSE (Year 3 / Sem 5)",
       avatarInitials: "AP",
       demoEmail: "aarav.patel@student.campusos.edu",
-      demoPassword: "Password@123",
+      demoPassword: "StudentSecret123!",
     },
   },
   FACULTY: {
@@ -87,7 +87,7 @@ const ROLE_METAS: Record<PrimaryPortalKey, RoleMeta> = {
       roleTitle: "Professor of Systems & Dean Academics",
       avatarInitials: "RS",
       demoEmail: "rajesh.sharma@campusos.edu",
-      demoPassword: "Password@123",
+      demoPassword: "FacultySecret123!",
     },
   },
   VICE_PRINCIPAL: {
@@ -107,7 +107,7 @@ const ROLE_METAS: Record<PrimaryPortalKey, RoleMeta> = {
       roleTitle: "Vice Principal (Academic & Operations)",
       avatarInitials: "AS",
       demoEmail: "vp.academics@campusos.edu",
-      demoPassword: "Password@123",
+      demoPassword: "ExecutiveSecret123!",
     },
   },
   HOD: {
@@ -128,7 +128,7 @@ const ROLE_METAS: Record<PrimaryPortalKey, RoleMeta> = {
       roleTitle: "Head of Department — Computer Science & Engineering",
       avatarInitials: "KA",
       demoEmail: "hod.cse@campusos.edu",
-      demoPassword: "Password@123",
+      demoPassword: "HodSecret123!",
     },
   },
   ADMIN: {
@@ -149,16 +149,17 @@ const ROLE_METAS: Record<PrimaryPortalKey, RoleMeta> = {
       roleTitle: "System & Campus Super Administrator",
       avatarInitials: "SA",
       demoEmail: "registrar@campusos.edu",
-      demoPassword: "Password@123",
+      demoPassword: "SuperSecret123!",
     },
   },
 };
 
-const FOUR_ROLES: PrimaryPortalKey[] = [
-  "STUDENT",
-  "FACULTY",
+const FIVE_ROLES: PrimaryPortalKey[] = [
+  "ADMIN",
   "VICE_PRINCIPAL",
   "HOD",
+  "FACULTY",
+  "STUDENT",
 ];
 
 function resolvePortalKey(
@@ -206,22 +207,35 @@ function getValidDestination(
           ? "/faculty/dashboard"
           : activeRole === "STUDENT"
             ? "/student/dashboard"
-            : activeRole === "ADMIN"
-              ? "/admin"
-              : "/app/dashboard";
+            : "/app/dashboard";
 
   if (
     redirectUrl &&
-    (redirectUrl.startsWith("/app") ||
-      redirectUrl.startsWith("/vice-principal") ||
-      redirectUrl.startsWith("/hod") ||
-      redirectUrl.startsWith("/faculty") ||
-      redirectUrl.startsWith("/student") ||
-      redirectUrl.startsWith("/admin")) &&
-    !redirectUrl.includes("//") &&
+    redirectUrl.startsWith("/") &&
+    !redirectUrl.startsWith("//") &&
     !redirectUrl.includes("\\")
   ) {
-    return redirectUrl;
+    if (
+      activeRole === "ADMIN" &&
+      (redirectUrl.startsWith("/app") || redirectUrl.startsWith("/admin"))
+    ) {
+      return redirectUrl;
+    }
+    if (
+      activeRole === "VICE_PRINCIPAL" &&
+      redirectUrl.startsWith("/vice-principal")
+    ) {
+      return redirectUrl;
+    }
+    if (activeRole === "HOD" && redirectUrl.startsWith("/hod")) {
+      return redirectUrl;
+    }
+    if (activeRole === "FACULTY" && redirectUrl.startsWith("/faculty")) {
+      return redirectUrl;
+    }
+    if (activeRole === "STUDENT" && redirectUrl.startsWith("/student")) {
+      return redirectUrl;
+    }
   }
   return defaultDest;
 }
@@ -284,17 +298,7 @@ function LoginFormContent() {
         searchParams.get("redirect"),
         activeRole,
       );
-      router.replace(dest); // router.replace("/app/dashboard")
-      if (typeof window !== "undefined") {
-        setTimeout(() => {
-          if (
-            window.location.pathname === "/login" ||
-            window.location.pathname === "/"
-          ) {
-            window.location.href = dest;
-          }
-        }, 350);
-      }
+      router.push(dest);
     }
   }, [isLoading, user, router, searchParams, activeRole]);
 
@@ -319,6 +323,7 @@ function LoginFormContent() {
       const authenticatedUser = await login({
         email: currentMeta.persona.demoEmail,
         password: currentMeta.persona.demoPassword,
+        portal: activeRole,
       });
 
       if (!authenticatedUser) {
@@ -330,9 +335,9 @@ function LoginFormContent() {
       const portalConfig = PORTALS[activeRole];
       if (portalConfig) {
         const roleSet = getNormalizedRoleSet(authenticatedUser);
-        const isAuthorized =
-          portalConfig.allowedRoles.some((r) => roleSet.has(r)) ||
-          roleSet.has("SUPER_ADMIN");
+        const isAuthorized = portalConfig.allowedRoles.some((r) =>
+          roleSet.has(r),
+        );
 
         if (!isAuthorized) {
           await clearSession();
@@ -347,17 +352,7 @@ function LoginFormContent() {
         searchParams.get("redirect"),
         activeRole,
       );
-      router.replace(dest); // router.replace("/app/dashboard")
-      if (typeof window !== "undefined") {
-        setTimeout(() => {
-          if (
-            window.location.pathname === "/login" ||
-            window.location.pathname === "/"
-          ) {
-            window.location.href = dest;
-          }
-        }, 350);
-      }
+      router.push(dest);
     } catch (err: unknown) {
       const message =
         err instanceof Error
@@ -390,6 +385,7 @@ function LoginFormContent() {
       const authenticatedUser = await login({
         email: trimmedIdentifier,
         password: password,
+        portal: activeRole,
       });
 
       if (!authenticatedUser) {
@@ -402,9 +398,9 @@ function LoginFormContent() {
       const portalConfig = PORTALS[activeRole];
       if (portalConfig) {
         const roleSet = getNormalizedRoleSet(authenticatedUser);
-        const isAuthorized =
-          portalConfig.allowedRoles.some((r) => roleSet.has(r)) ||
-          roleSet.has("SUPER_ADMIN");
+        const isAuthorized = portalConfig.allowedRoles.some((r) =>
+          roleSet.has(r),
+        );
 
         if (!isAuthorized) {
           // Immediately revoke session so unauthorized access is blocked
@@ -420,17 +416,7 @@ function LoginFormContent() {
         searchParams.get("redirect"),
         activeRole,
       );
-      router.replace(dest); // router.replace("/app/dashboard")
-      if (typeof window !== "undefined") {
-        setTimeout(() => {
-          if (
-            window.location.pathname === "/login" ||
-            window.location.pathname === "/"
-          ) {
-            window.location.href = dest;
-          }
-        }, 350);
-      }
+      router.push(dest);
     } catch (err: unknown) {
       const message =
         err instanceof Error
@@ -553,9 +539,9 @@ function LoginFormContent() {
             </p>
           </div>
 
-          {/* 4-Role Segment Bar */}
-          <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-slate-100/90 border border-slate-200/80 rounded-2xl shadow-2xs">
-            {FOUR_ROLES.map((roleKey) => {
+          {/* 5-Role Segment Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1.5 bg-slate-100/90 border border-slate-200/80 rounded-2xl shadow-2xs">
+            {FIVE_ROLES.map((roleKey) => {
               const isActive = activeRole === roleKey;
               const meta = ROLE_METAS[roleKey];
               return (
@@ -571,17 +557,20 @@ function LoginFormContent() {
                   )}
                   aria-label={`Select ${meta.label} Portal`}
                 >
-                  {roleKey === "STUDENT" && (
-                    <GraduationCap className="h-4 w-4 shrink-0" />
-                  )}
-                  {roleKey === "FACULTY" && (
-                    <Users className="h-4 w-4 shrink-0" />
+                  {roleKey === "ADMIN" && (
+                    <ShieldCheck className="h-4 w-4 shrink-0" />
                   )}
                   {roleKey === "VICE_PRINCIPAL" && (
                     <Landmark className="h-4 w-4 shrink-0" />
                   )}
                   {roleKey === "HOD" && (
                     <Building className="h-4 w-4 shrink-0" />
+                  )}
+                  {roleKey === "FACULTY" && (
+                    <Users className="h-4 w-4 shrink-0" />
+                  )}
+                  {roleKey === "STUDENT" && (
+                    <GraduationCap className="h-4 w-4 shrink-0" />
                   )}
                   <span className="truncate">{meta.tabLabel}</span>
                 </button>
@@ -768,12 +757,12 @@ function LoginFormContent() {
             </div>
           </div>
 
-          {/* Secondary Expander for Institutional Admin and Specialized Portals */}
+          {/* Secondary Expander for Specialized Portals */}
           <div className="pt-1 text-center">
             <details className="group inline-block text-left">
               <summary className="text-[11px] font-medium text-slate-400 hover:text-slate-700 cursor-pointer inline-flex items-center gap-1 select-none">
                 <span>
-                  Looking for Admin or secondary campus portals? (Accounts,
+                  Looking for secondary campus portals? (Accounts,
                   Placement, Warden, etc.)
                 </span>
                 <span className="text-[9px] text-slate-400 group-open:rotate-180 transition-transform">
@@ -781,23 +770,8 @@ function LoginFormContent() {
                 </span>
               </summary>
               <div className="mt-2.5 p-2.5 bg-slate-50 border border-slate-200 rounded-xl grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs shadow-2xs">
-                {/* Admin Portal option */}
-                <button
-                  type="button"
-                  onClick={() => handleRoleSwitch("ADMIN")}
-                  className={cn(
-                    "flex items-center gap-2 p-2 rounded-lg border text-left transition-colors cursor-pointer",
-                    activeRole === "ADMIN"
-                      ? "bg-amber-100 border-amber-300 font-bold text-amber-900"
-                      : "bg-white border-slate-200 hover:border-amber-300 text-slate-800",
-                  )}
-                >
-                  <ShieldCheck className="h-4 w-4 text-amber-800 shrink-0" />
-                  <span className="truncate">Admin Portal</span>
-                </button>
-                {/* Other specialized portals */}
                 {ALL_PORTAL_KEYS.filter(
-                  (k) => !FOUR_ROLES.includes(k as any) && k !== "ADMIN",
+                  (k) => !FIVE_ROLES.includes(k as any),
                 ).map((k) => {
                   const p = PORTALS[k];
                   const isCur = activeRole === k;

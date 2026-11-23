@@ -104,12 +104,13 @@ export default function VicePrincipalPortalLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, activePersona, logout } = useAuth();
+  const { user, activePersona, logout, isLoading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   // Authentication & Role Gate
   React.useEffect(() => {
+    if (isLoading) return;
     if (!user) {
       router.push("/login?role=vice_principal");
       return;
@@ -123,7 +124,7 @@ export default function VicePrincipalPortalLayout({
     if (!allowed.includes(role)) {
       router.push("/app/dashboard");
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
 
   const sidebarContent = (
     <div className="flex h-full flex-col bg-white border-r border-slate-200 text-slate-800">

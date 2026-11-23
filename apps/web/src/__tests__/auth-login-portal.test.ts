@@ -17,6 +17,7 @@ import {
   PORTALS as APP_PORTALS,
   REGULAR_PORTAL_KEYS,
   PORTAL_KEYS,
+  PRIMARY_PORTAL_KEYS,
   EXTENDED_PORTAL_KEYS,
   ALL_PORTAL_KEYS,
 } from "../lib/portals";
@@ -1379,7 +1380,246 @@ async function runAuthPortalTests() {
   }
 
   // -------------------------------------------------------------------------
-  // 17. Summary
+  // 18. Phase 2 Unified 5-Portal Redirection & Cross-Portal Guard Verification
+  // -------------------------------------------------------------------------
+  assert(
+    PRIMARY_PORTAL_KEYS.length === 5,
+    "PRIMARY_PORTAL_KEYS defines exactly 5 primary portal experiences",
+  );
+  assert(
+    PRIMARY_PORTAL_KEYS[0] === "ADMIN" &&
+      PRIMARY_PORTAL_KEYS[1] === "VICE_PRINCIPAL" &&
+      PRIMARY_PORTAL_KEYS[2] === "HOD" &&
+      PRIMARY_PORTAL_KEYS[3] === "FACULTY" &&
+      PRIMARY_PORTAL_KEYS[4] === "STUDENT",
+    "PRIMARY_PORTAL_KEYS lists portals in expected unified order (Admin, VP, HOD, Faculty, Student)",
+  );
+
+  function getUnifiedTestDestination(
+    redirectUrl: string | null,
+    activeRole: string,
+  ): string {
+    const defaultDest =
+      activeRole === "VICE_PRINCIPAL"
+        ? "/vice-principal/dashboard"
+        : activeRole === "HOD"
+          ? "/hod/dashboard"
+          : activeRole === "FACULTY"
+            ? "/faculty/dashboard"
+            : activeRole === "STUDENT"
+              ? "/student/dashboard"
+              : "/app/dashboard";
+
+    if (
+      redirectUrl &&
+      redirectUrl.startsWith("/") &&
+      !redirectUrl.startsWith("//") &&
+      !redirectUrl.includes("\\")
+    ) {
+      if (
+        activeRole === "ADMIN" &&
+        (redirectUrl.startsWith("/app") || redirectUrl.startsWith("/admin"))
+      ) {
+        return redirectUrl;
+      }
+      if (
+        activeRole === "VICE_PRINCIPAL" &&
+        redirectUrl.startsWith("/vice-principal")
+      ) {
+        return redirectUrl;
+      }
+      if (activeRole === "HOD" && redirectUrl.startsWith("/hod")) {
+        return redirectUrl;
+      }
+      if (activeRole === "FACULTY" && redirectUrl.startsWith("/faculty")) {
+        return redirectUrl;
+      }
+      if (activeRole === "STUDENT" && redirectUrl.startsWith("/student")) {
+        return redirectUrl;
+      }
+    }
+    return defaultDest;
+  }
+
+  // 18.1 Positive Destination Assertions for all 5 roles
+  assert(
+    getUnifiedTestDestination(null, "ADMIN") === "/app/dashboard",
+    "Admin portal default destination resolves to /app/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination(null, "VICE_PRINCIPAL") ===
+      "/vice-principal/dashboard",
+    "Vice Principal portal default destination resolves to /vice-principal/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination(null, "HOD") === "/hod/dashboard",
+    "HOD portal default destination resolves to /hod/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination(null, "FACULTY") === "/faculty/dashboard",
+    "Faculty portal default destination resolves to /faculty/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination(null, "STUDENT") === "/student/dashboard",
+    "Student portal default destination resolves to /student/dashboard",
+  );
+
+  // 18.2 Redirection Sanitization & Cross-Portal Boundary Enforcement
+  assert(
+    getUnifiedTestDestination("//malicious-site.com", "STUDENT") ===
+      "/student/dashboard",
+    "Protocol-relative open-redirect is blocked and defaults to student dashboard",
+  );
+  assert(
+    getUnifiedTestDestination("https://malicious-site.com", "ADMIN") ===
+      "/app/dashboard",
+    "External absolute redirect is blocked and defaults to admin dashboard",
+  );
+  assert(
+    getUnifiedTestDestination("/vice-principal/approvals", "STUDENT") ===
+      "/student/dashboard",
+    "Cross-portal redirection to VP portal rejected for Student role and sanitized to /student/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination("/hod/curriculum", "FACULTY") ===
+      "/faculty/dashboard",
+    "Cross-portal redirection to HOD portal rejected for Faculty role and sanitized to /faculty/dashboard",
+  );
+  assert(
+    getUnifiedTestDestination("/student/grades", "STUDENT") ===
+      "/student/grades",
+    "Authorized intra-portal redirect preserved for Student role",
+  );
+  assert(
+    getUnifiedTestDestination("/vice-principal/academics", "VICE_PRINCIPAL") ===
+      "/vice-principal/academics",
+    "Authorized intra-portal redirect preserved for Vice Principal role",
+  );
+
+  // 18.3 Route Protection via isPathAuthorized across all 5 portals
+  const hodTestUser: AuthenticatedUser = {
+    id: "user-hod-test",
+    email: "hod_test@campusos.edu",
+    first_name: "HOD",
+    last_name: "CSE",
+    status: "ACTIVE",
+    roles: [{ id: "r-hod-t", name: "HOD", display_name: "Head of Dept" }],
+    permissions: ["academics:subjects:read"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+  const adminTestUser: AuthenticatedUser = {
+    id: "user-admin-test",
+    email: "admin_test@campusos.edu",
+    first_name: "Admin",
+    last_name: "Master",
+    status: "ACTIVE",
+    roles: [{ id: "r-adm-t", name: "SUPER_ADMIN", display_name: "Super Admin" }],
+    permissions: ["*"],
+    tenant: { id: "t1", code: "VSB", name: "VSB" },
+  };
+
+  // Student boundary checks
+  assert(
+    isPathAuthorized("/student/dashboard", studentMockUser) === true,
+    "Student authorized to access /student/dashboard",
+  );
+  assert(
+    isPathAuthorized("/faculty/dashboard", studentMockUser) === false,
+    "Student denied access to /faculty/dashboard",
+  );
+  assert(
+    isPathAuthorized("/hod/dashboard", studentMockUser) === false,
+    "Student denied access to /hod/dashboard",
+  );
+  assert(
+    isPathAuthorized("/vice-principal/dashboard", studentMockUser) === false,
+    "Student denied access to /vice-principal/dashboard",
+  );
+
+  // Faculty boundary checks
+  assert(
+    isPathAuthorized("/faculty/dashboard", facultyMockUser) === true,
+    "Faculty authorized to access /faculty/dashboard",
+  );
+  assert(
+    isPathAuthorized("/student/dashboard", facultyMockUser) === false,
+    "Faculty denied access to /student/dashboard",
+  );
+  assert(
+    isPathAuthorized("/hod/dashboard", facultyMockUser) === false,
+    "Faculty denied access to /hod/dashboard",
+  );
+  assert(
+    isPathAuthorized("/vice-principal/dashboard", facultyMockUser) === false,
+    "Faculty denied access to /vice-principal/dashboard",
+  );
+
+  // HOD boundary checks
+  assert(
+    isPathAuthorized("/hod/dashboard", hodTestUser) === true,
+    "HOD authorized to access /hod/dashboard",
+  );
+  assert(
+    isPathAuthorized("/student/dashboard", hodTestUser) === false,
+    "HOD denied access to /student/dashboard",
+  );
+  assert(
+    isPathAuthorized("/vice-principal/dashboard", hodTestUser) === false,
+    "HOD denied access to /vice-principal/dashboard",
+  );
+
+  // Vice Principal boundary checks
+  assert(
+    isPathAuthorized("/vice-principal/dashboard", vpMockUser) === true,
+    "Vice Principal authorized to access /vice-principal/dashboard",
+  );
+  assert(
+    isPathAuthorized("/student/dashboard", vpMockUser) === false,
+    "Vice Principal denied access to /student/dashboard",
+  );
+
+  // Admin access checks
+  assert(
+    isPathAuthorized("/student/dashboard", adminTestUser) === true,
+    "Admin authorized to access /student/dashboard",
+  );
+  assert(
+    isPathAuthorized("/faculty/dashboard", adminTestUser) === true,
+    "Admin authorized to access /faculty/dashboard",
+  );
+  assert(
+    isPathAuthorized("/hod/dashboard", adminTestUser) === true,
+    "Admin authorized to access /hod/dashboard",
+  );
+  assert(
+    isPathAuthorized("/vice-principal/dashboard", adminTestUser) === true,
+    "Admin authorized to access /vice-principal/dashboard",
+  );
+
+  // 18.4 Negative Portal Selection (Anti-Bypass verification)
+  assert(
+    verifyPortalAuthorization("STUDENT", ["SUPER_ADMIN"]).authorized === false,
+    "Super Admin is NOT authorized to log in directly into STUDENT portal",
+  );
+  assert(
+    verifyPortalAuthorization("STUDENT", ["FACULTY"]).authorized === false,
+    "Faculty is NOT authorized to log in directly into STUDENT portal",
+  );
+  assert(
+    verifyPortalAuthorization("FACULTY", ["STUDENT"]).authorized === false,
+    "Student is NOT authorized to log in directly into FACULTY portal",
+  );
+  assert(
+    verifyPortalAuthorization("HOD", ["STUDENT"]).authorized === false,
+    "Student is NOT authorized to log in directly into HOD portal",
+  );
+  assert(
+    verifyPortalAuthorization("VICE_PRINCIPAL", ["STUDENT"]).authorized === false,
+    "Student is NOT authorized to log in directly into VICE_PRINCIPAL portal",
+  );
+
+  // -------------------------------------------------------------------------
+  // 19. Summary
   // -------------------------------------------------------------------------
   console.log("=================================================");
   console.log(

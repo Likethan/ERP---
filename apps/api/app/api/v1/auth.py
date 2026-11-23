@@ -117,6 +117,7 @@ async def login(
         password=payload.password,
         client_ip=client_ip,
         user_agent=user_agent,
+        portal=payload.portal,
     )
 
     tenant_info = None

@@ -25,6 +25,7 @@ interface AuthContextValue {
   login: (credentials: {
     email: string;
     password?: string;
+    portal?: string;
   }) => Promise<AuthenticatedUser | null>;
   logout: () => Promise<void>;
   clearSession: () => Promise<void>;
@@ -257,6 +258,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: {
     email: string;
     password?: string;
+    portal?: string;
   }): Promise<AuthenticatedUser | null> => {
     setIsLoading(true);
     const rawIdentifier = (credentials.email || "").trim();
@@ -292,12 +294,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return response.data;
       }
     } catch (err: unknown) {
-      // Backend authentication failed, or backend is offline / unseeded.
-      // Attempt local institutional demo persona resolution:
+      // If backend explicitly rejected the credentials or portal, propagate that error directly!
+      if (err instanceof ApiClientError) {
+        throw new Error(err.message || "Invalid username or password.");
+      }
+
+      // Backend is offline / unreachable: Fallback to local institutional demo persona resolution
       const matchedPersona = resolveDemoPersona(normalizedIdentifier);
 
       if (matchedPersona) {
-        // In local development or demo testing, authenticate matched persona
+        // Enforce portal-role restriction in demo mode as well
+        if (credentials.portal) {
+          const portalKey = credentials.portal as keyof typeof PORTALS;
+          const portalCfg = PORTALS[portalKey];
+          if (portalCfg) {
+            const isAuthorized =
+              portalCfg.allowedRoles.includes(matchedPersona.role) ||
+              (matchedPersona.role === "PRINCIPAL" && portalCfg.allowedRoles.includes("VICE_PRINCIPAL"));
+            if (!isAuthorized) {
+              throw new Error(
+                `Authentication succeeded, but your account is not authorized for the ${portalCfg.label}. Please select the appropriate portal.`
+              );
+            }
+          }
+        }
+
         setActivePersona(matchedPersona);
         const authenticatedUser = personaToUser(matchedPersona);
         setUser(authenticatedUser);
@@ -308,9 +329,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // If no demo persona match could be resolved, throw the error
-      if (err instanceof ApiClientError) {
-        throw new Error(err.message || "Invalid username or password.");
-      }
       throw new Error("Invalid username or password.");
     } finally {
       setIsLoading(false);

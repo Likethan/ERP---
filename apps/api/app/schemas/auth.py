@@ -8,6 +8,7 @@ from pydantic import BaseModel, EmailStr, Field
 class LoginRequest(BaseModel):
     email: EmailStr = Field(..., description="Institutional email address")
     password: str = Field(..., min_length=1, description="Account password")
+    portal: str | None = Field(None, description="Optional target portal selected by user (e.g. ADMIN, VICE_PRINCIPAL, HOD, FACULTY, STUDENT)")
 
 
 class AuthRoleInfo(BaseModel):

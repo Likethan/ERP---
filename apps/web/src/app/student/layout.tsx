@@ -22,7 +22,7 @@ export default function StudentLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login");
+      router.push("/login?role=student");
     }
   }, [isLoading, user, router]);
 

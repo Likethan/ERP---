@@ -2358,6 +2358,45 @@ export function isPathAuthorized(
   if (roleSet.has("SUPER_ADMIN") || roleSet.has("ADMIN")) return true;
   if (pathname === "/app/dashboard") return true;
 
+  // Dedicated portal prefix restrictions
+  if (pathname.startsWith("/vice-principal")) {
+    return (
+      roleSet.has("VICE_PRINCIPAL") ||
+      roleSet.has("PRINCIPAL") ||
+      roleSet.has("SUPER_ADMIN") ||
+      roleSet.has("ADMIN")
+    );
+  }
+  if (pathname.startsWith("/hod")) {
+    return (
+      roleSet.has("HOD") ||
+      roleSet.has("SUPER_ADMIN") ||
+      roleSet.has("ADMIN")
+    );
+  }
+  if (pathname.startsWith("/faculty")) {
+    return (
+      roleSet.has("FACULTY") ||
+      roleSet.has("PROFESSOR") ||
+      roleSet.has("SUPER_ADMIN") ||
+      roleSet.has("ADMIN")
+    );
+  }
+  if (pathname.startsWith("/student")) {
+    return (
+      roleSet.has("STUDENT") ||
+      roleSet.has("SUPER_ADMIN") ||
+      roleSet.has("ADMIN")
+    );
+  }
+  if (pathname.startsWith("/admin")) {
+    return (
+      roleSet.has("SUPER_ADMIN") ||
+      roleSet.has("ADMIN") ||
+      roleSet.has("INSTITUTION_ADMIN")
+    );
+  }
+
   // Standalone admin-only modules
   const adminOnlyPrefixes = [
     "/app/marketplace",

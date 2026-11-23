@@ -392,3 +392,127 @@ async def test_tenant_isolation_boundary(
     # Must resolve Tenant A, not Tenant B
     assert data["tenant"]["id"] == str(tenant_a.id)
     assert data["tenant"]["id"] != str(tenant_b.id)
+
+
+@pytest.mark.asyncio
+async def test_login_portal_matching_success(
+    client: AsyncClient,
+    super_admin_user: User,
+    faculty_user: User,
+) -> None:
+    """Verify that credentials matching the selected portal succeed."""
+    # 1. Super Admin -> ADMIN portal
+    res_admin = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": super_admin_user.email,
+            "password": "SuperSecret123!",
+            "portal": "ADMIN",
+        },
+    )
+    assert res_admin.status_code == 200
+    assert res_admin.json()["success"] is True
+
+    # 2. Faculty -> FACULTY portal
+    res_fac = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": faculty_user.email,
+            "password": "FacultyPass123!",
+            "portal": "FACULTY",
+        },
+    )
+    assert res_fac.status_code == 200
+    assert res_fac.json()["success"] is True
+
+
+@pytest.mark.asyncio
+async def test_login_portal_mismatch_rejection(
+    client: AsyncClient,
+    super_admin_user: User,
+    faculty_user: User,
+) -> None:
+    """Verify that selecting a mismatched portal rejects login even with valid credentials."""
+    # 1. Super Admin credentials with STUDENT portal selected
+    res_adm_student = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": super_admin_user.email,
+            "password": "SuperSecret123!",
+            "portal": "STUDENT",
+        },
+    )
+    assert res_adm_student.status_code == 401
+    assert "not authorized for the STUDENT portal" in res_adm_student.json()["error"]["message"]
+
+    # 2. Faculty credentials with HOD portal selected
+    res_fac_hod = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": faculty_user.email,
+            "password": "FacultyPass123!",
+            "portal": "HOD",
+        },
+    )
+    assert res_fac_hod.status_code == 401
+    assert "not authorized for the HOD portal" in res_fac_hod.json()["error"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_login_portal_hod_missing_department(
+    client: AsyncClient,
+    db_session: AsyncSession,
+    tenant_a: Institution,
+) -> None:
+    """Verify HOD user without department assignment is rejected when logging into HOD portal."""
+    from app.models.people import Role, UserRoleAssignment
+
+    # Create an HOD user without department assignment
+    uid = uuid.uuid4().hex[:6]
+    hod_user = User(
+        id=uuid.uuid4(),
+        primary_tenant_id=tenant_a.id,
+        email=f"hod_nodept_{uid}@apextech.edu",
+        password_hash=get_password_hash("HodPass123!"),
+        status="ACTIVE",
+        first_name="Orphan",
+        last_name="HOD",
+    )
+    db_session.add(hod_user)
+    await db_session.flush()
+
+    role_res = await db_session.execute(select(Role).where(Role.name == "HOD"))
+    hod_role = role_res.scalar_one_or_none()
+    if not hod_role:
+        hod_role = Role(
+            id=uuid.uuid4(),
+            name="HOD",
+            display_name="Head of Department",
+            is_system=True,
+        )
+        db_session.add(hod_role)
+        await db_session.flush()
+
+    # Assign HOD role WITHOUT department_id
+    db_session.add(
+        UserRoleAssignment(
+            id=uuid.uuid4(),
+            tenant_id=tenant_a.id,
+            user_id=hod_user.id,
+            role_id=hod_role.id,
+            department_id=None,
+        )
+    )
+    await db_session.commit()
+
+    res = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": hod_user.email,
+            "password": "HodPass123!",
+            "portal": "HOD",
+        },
+    )
+    assert res.status_code == 401
+    assert "HOD account lacks a valid department assignment" in res.json()["error"]["message"]
+

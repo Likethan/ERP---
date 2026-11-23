@@ -146,9 +146,27 @@ export default function HodPortalLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, activePersona, logout } = useAuth();
+  const { user, activePersona, logout, isLoading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Authentication & Role Gate
+  React.useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      router.push("/login?role=hod");
+      return;
+    }
+    const role = (
+      user.roles?.[0]?.name ||
+      (user as any).role ||
+      ""
+    ).toUpperCase();
+    const allowed = ["HOD", "SUPER_ADMIN", "ADMIN"];
+    if (!allowed.includes(role)) {
+      router.push("/app/dashboard");
+    }
+  }, [user, isLoading, router]);
 
   const deptName =
     activePersona?.department || "Computer Science & Engineering";
