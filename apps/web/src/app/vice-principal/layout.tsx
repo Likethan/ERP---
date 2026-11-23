@@ -108,6 +108,10 @@ export default function VicePrincipalPortalLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
+  if (pathname === "/vice-principal") {
+    return <>{children}</>;
+  }
+
   // Authentication & Role Gate
   React.useEffect(() => {
     if (isLoading) return;

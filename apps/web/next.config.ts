@@ -17,6 +17,35 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "@campusos/types"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/faculty",
+        destination: "/login?role=faculty",
+        permanent: false,
+      },
+      {
+        source: "/student",
+        destination: "/login?role=student",
+        permanent: false,
+      },
+      {
+        source: "/vice-principal",
+        destination: "/login?role=vice_principal",
+        permanent: false,
+      },
+      {
+        source: "/hod",
+        destination: "/login?role=hod",
+        permanent: false,
+      },
+      {
+        source: "/admin",
+        destination: "/login?role=admin",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

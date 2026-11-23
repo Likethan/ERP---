@@ -150,6 +150,10 @@ export default function HodPortalLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  if (pathname === "/hod") {
+    return <>{children}</>;
+  }
+
   // Authentication & Role Gate
   React.useEffect(() => {
     if (isLoading) return;
