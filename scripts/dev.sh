@@ -6,10 +6,10 @@ echo "  CampusOS Local Development Startup   "
 echo "========================================"
 
 # Backend setup
-if [ ! -d "apps/api/.venv" ]; then
-    echo "Creating Python virtual environment in apps/api/.venv..."
-    python3 -m venv apps/api/.venv
-    apps/api/.venv/bin/pip install -r apps/api/requirements-dev.txt
+if [ ! -d "backend/.venv" ]; then
+    echo "Creating Python virtual environment in backend/.venv..."
+    python3 -m venv backend/.venv
+    backend/.venv/bin/pip install -r backend/requirements-dev.txt
 fi
 
 # Frontend setup

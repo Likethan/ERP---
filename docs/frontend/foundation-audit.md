@@ -14,7 +14,7 @@ The CampusOS frontend foundation has been comprehensively audited, stabilized, a
 - **Application Shell:** Responsive global layout featuring collapsible sidebar with nested navigation groups, institution header with multi-campus selector, interactive topbar with real-time clock, instant search trigger, notification drawer with read/unread filtering, active user profile dropdown, and universal role switcher.
 - **Design System:** Cohesive enterprise UI system built on pure Vanilla CSS / modern Tailwind tokens with strict WCAG AA contrast, consistent typography (`Inter` / `JetBrains Mono`), dark/light mode parity, accessible dialogs, drawers, tabs, stat cards, and table skeletons.
 - **Service & Mock Architecture:** Strict separation between presentation pages, domain service classes, and mock data adapters, mirroring the future FastAPI REST contracts for seamless zero-regression backend adoption.
-- **Backend Safety Guarantee:** **0 backend files modified**. The FastAPI / SQLAlchemy modules in `apps/api/` remain untouched.
+- **Backend Safety Guarantee:** **0 backend files modified**. The FastAPI / SQLAlchemy modules in `backend/` remain untouched.
 
 ---
 
@@ -106,4 +106,4 @@ The application strictly obeys the three-tier client architecture:
 - **TypeScript:** Pass (`0 errors` across 140+ files)
 - **Next.js Production Build:** Pass (`51/51` pages statically & dynamically generated)
 - **ESLint:** Pass (`0 errors`)
-- **Backend Safety:** **0 files modified** outside `apps/web/`
+- **Backend Safety:** **0 files modified** outside `frontend/`

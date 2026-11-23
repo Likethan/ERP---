@@ -61,8 +61,8 @@ All endpoints require strict multi-tenant authorization (`TenantContext`) and RB
 
 ### Local Development / Background Worker
 ```bash
-# Run worker loop in apps/api directory
-cd apps/api
+# Run worker loop in backend directory
+cd backend
 python -m app.worker
 ```
 

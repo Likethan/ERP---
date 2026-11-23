@@ -37,7 +37,7 @@ Audited Activity History & Attendance Metrics
 
 ## 3. Absolute Frontend-Only Guarantee
 
-- **Zero Backend Business Logic**: No backend database models, migrations, schemas, repositories, or router endpoints in `apps/api` were modified or created.
+- **Zero Backend Business Logic**: No backend database models, migrations, schemas, repositories, or router endpoints in `backend` were modified or created.
 - **Service Isolation**: All UI pages consume typed service interfaces via `campusService`.
 - **Pure Calculators**: Centralized calculation functions in `campus-calculator.ts` eliminate formula duplication.
 - **Relational Mock Adapter**: Fully synchronized in-memory database linking events, venues, clubs, memberships, registrations, attendance rosters, announcements, notification inboxes, and preference channels.
@@ -76,7 +76,7 @@ Audited Activity History & Attendance Metrics
 
 ## 6. Centralized Pure Calculators
 
-Exported from `apps/web/src/services/campus-calculator.ts`:
+Exported from `frontend/src/services/campus-calculator.ts`:
 
 1. `calculateEventAttendanceRate(attended, registered)`: Formats exact integer percentage with zero-guarding.
 2. `calculateEventCapacityUsage(registered, capacity)`: Returns percentage of venue capacity occupied.

@@ -19,14 +19,14 @@ from pathlib import Path
 
 def get_api_dir() -> Path:
     repo_root = Path(__file__).resolve().parent.parent
-    api_dir = repo_root / "apps" / "api"
+    api_dir = repo_root / "backend"
     if not (api_dir / "alembic.ini").exists():
         raise FileNotFoundError(f"alembic.ini not found in {api_dir}")
     return api_dir
 
 
 def get_python_exe(api_dir: Path) -> str:
-    # Check for local venv in apps/api
+    # Check for local venv in backend
     for venv_path in [api_dir / ".venv", api_dir.parent.parent / ".venv"]:
         win_py = venv_path / "Scripts" / "python.exe"
         if win_py.exists():

@@ -56,7 +56,7 @@
 ## 4. End-to-End Browser Automation Readiness
 
 - **Status:** `BLOCKED`
-- **Specification:** `apps/web/e2e/critical-journeys.spec.ts` (12 Core User Journeys)
+- **Specification:** `frontend/e2e/critical-journeys.spec.ts` (12 Core User Journeys)
 - **Diagnostic Details:** Frontend development server (http://localhost:3000) is not running. E2E browser tests require an active Next.js server instance ('npm run dev').
 
 ---

@@ -11,7 +11,7 @@ from pathlib import Path
 
 # Set up paths
 workspace_root = Path(__file__).resolve().parent.parent
-api_dir = workspace_root / "apps" / "api"
+api_dir = workspace_root / "backend"
 sys.path.insert(0, str(api_dir))
 os.chdir(api_dir)
 

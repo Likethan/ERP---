@@ -52,8 +52,8 @@ jobs:
       - name: Build & Push API Image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/api
-          file: ./apps/api/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ steps.tag.outputs.repo }}/api:${{ steps.tag.outputs.val }}
@@ -63,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/web/Dockerfile
+          file: ./frontend/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ steps.tag.outputs.repo }}/web:${{ steps.tag.outputs.val }}

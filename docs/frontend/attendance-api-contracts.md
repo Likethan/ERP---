@@ -11,7 +11,7 @@ Page Component (e.g. /app/attendance/sessions/[id])
 Domain Hook / UI Component
        │
        ▼
-attendanceService (apps/web/src/services/attendance.service.ts)
+attendanceService (frontend/src/services/attendance.service.ts)
        │
        ▼
 Current: In-Memory Reactive Mock Adapter

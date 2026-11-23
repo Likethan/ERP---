@@ -2,7 +2,7 @@
 
 ## 1. Architectural Philosophy
 
-Eligibility evaluation is one of the most critical operational gates in institutional placements. Rather than reducing candidate qualification to a simplistic boolean flag (`true`/`false`), CampusOS implements a **Deterministic Rule-Based Eligibility Engine** (`apps/web/src/services/placement-calculator.ts`).
+Eligibility evaluation is one of the most critical operational gates in institutional placements. Rather than reducing candidate qualification to a simplistic boolean flag (`true`/`false`), CampusOS implements a **Deterministic Rule-Based Eligibility Engine** (`frontend/src/services/placement-calculator.ts`).
 
 The engine:
 1. Returns rich, structured evaluation snapshots detailing every configured requirement against the candidate's active academic record.

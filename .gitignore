@@ -57,7 +57,7 @@ backups/
 *.db
 local_storage/
 storage/
-apps/api/storage/
+backend/storage/
 pgdata/
 .pgdata/
 redisdata/

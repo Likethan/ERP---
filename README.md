@@ -23,9 +23,8 @@ Initially architected for a single high-scale institution, CampusOS is fundament
 
 ```text
 campusos/
-├── apps/
-│   ├── api/                      # Backend: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic
-│   └── web/                      # Frontend: Next.js 15 (App Router), TypeScript, Tailwind CSS
+├── frontend/                     # Web application: Next.js 15, TypeScript, Tailwind CSS
+├── backend/                      # API: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic
 ├── packages/
 │   ├── config/                   # Shared linting, formatting, and TypeScript configs
 │   └── types/                    # Shared TypeScript interfaces & API contracts
@@ -38,9 +37,11 @@ campusos/
 │   ├── ux/                       # Design system tokens & role-specific dashboards
 │   ├── ai/                       # AI assistant tool boundaries & RAG design
 │   ├── deployment/               # Local setup & production topology
+│   ├── operations/               # Operational runbooks
 │   └── decisions/                # Architecture Decision Records (ADRs)
 ├── infrastructure/               # Container definitions & deployment configs
 ├── scripts/                      # Developer automation scripts (cross-platform & PowerShell)
+├── docker-compose.prod.yml       # Production service orchestration
 ├── docker-compose.yml            # Local supporting services (PostgreSQL, Redis, MinIO)
 ├── package.json                  # Monorepo workspaces definition
 └── README.md
@@ -65,16 +66,16 @@ campusos/
 
 ```bash
 # Backend environment template
-cp apps/api/.env.example apps/api/.env
+cp backend/.env.example backend/.env
 
 # Frontend environment template
-cp apps/web/.env.example apps/web/.env.local
+cp frontend/.env.example frontend/.env.local
 ```
 
-#### 2. Install & Start Backend API (`apps/api`)
+#### 2. Install & Start Backend API (`backend`)
 
 ```bash
-cd apps/api
+cd backend
 
 # Create & activate virtual environment
 python -m venv .venv
@@ -99,14 +100,14 @@ uvicorn app.main:app --reload --port 8000
 - **Liveness Probe:** [http://localhost:8000/api/v1/health/live](http://localhost:8000/api/v1/health/live)
 - **Readiness Probe:** [http://localhost:8000/api/v1/health/ready](http://localhost:8000/api/v1/health/ready)
 
-#### 3. Install & Start Frontend Web Application (`apps/web`)
+#### 3. Install & Start Frontend Web Application (`frontend`)
 
 ```bash
 # In the repository root:
 npm install
 
 # Start Next.js development server
-npm run dev --workspace=apps/web
+npm run dev --workspace=frontend
 ```
 
 - **Web Application Portal:** [http://localhost:3000](http://localhost:3000)
@@ -115,7 +116,7 @@ npm run dev --workspace=apps/web
 #### 4. Background Workers & Distributed Scheduler
 
 ```bash
-cd apps/api
+cd backend
 
 # Run transactional outbox batch worker (processes pending domain events)
 python -m app.worker
@@ -132,7 +133,7 @@ CampusOS maintains strict, evidence-based test suites ensuring 100% test pass ra
 
 ### 1. Backend Automated Tests (747 Tests)
 ```bash
-cd apps/api
+cd backend
 
 # Run complete backend pytest suite (all 63 test files)
 .venv\Scripts\python.exe -m pytest -q
@@ -150,7 +151,7 @@ cd apps/api
 
 ### 2. Frontend Test Suites (21 Suites)
 ```bash
-cd apps/web
+cd frontend
 
 # Run all 21 frontend test suites:
 node ../../scratch/run_all_frontend_tests.mjs
@@ -167,18 +168,18 @@ npx tsx src/__tests__/sustainability-module.test.ts
 ### 3. Code Quality, Linting & Type Checking
 ```bash
 # Backend lint check (Ruff 0.6+):
-cd apps/api
+cd backend
 .venv\Scripts\ruff.exe check app
 
 # Frontend TypeScript strict type checking:
-npx tsc --noEmit -p apps/web/tsconfig.json
+npx tsc --noEmit -p frontend/tsconfig.json
 
 # Frontend ESLint:
-cd apps/web
+cd frontend
 npm run lint
 
 # Production Next.js build (verifies static prerendering across all 251 routes):
-cd apps/web
+cd frontend
 npm run build
 ```
 
@@ -226,13 +227,13 @@ Detailed architectural specifications and engineering standards are available in
 - [Domain Boundaries](./docs/architecture/domain-boundaries.md)
 - [Database & Multi-Tenancy Strategy](./docs/database/multi-tenancy-strategy.md)
 - [Security Architecture](./docs/security/architecture.md)
-- [Production Deployment Runbook](./docs/deployment.md)
-- [Production Security Checklist](./docs/production-security-checklist.md)
-- [Disaster Recovery Plan](./docs/disaster-recovery.md)
-- [Incident Response Plan](./docs/incident-response.md)
-- [Database Backup & Restore](./docs/backup-restore.md)
-- [Production Infrastructure Architecture](./docs/infrastructure.md)
-- [Environment Configuration Strategy](./docs/environment-configuration.md)
+- [Production Deployment Runbook](./docs/deployment/production-deployment.md)
+- [Production Security Checklist](./docs/security/production-checklist.md)
+- [Disaster Recovery Plan](./docs/deployment/disaster-recovery-plan.md)
+- [Incident Response Plan](./docs/security/incident-response.md)
+- [Database Backup & Restore](./docs/deployment/backup-restore.md)
+- [Production Infrastructure Architecture](./docs/deployment/production-infrastructure.md)
+- [Environment Configuration Strategy](./docs/deployment/environment-configuration.md)
 - [Design System & UX Philosophy](./docs/ux/design-system.md)
 - [AI Architecture & Guardrails](./docs/ai/architecture.md)
 - [Architecture Decision Records (ADRs)](./docs/decisions/)

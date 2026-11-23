@@ -5,7 +5,7 @@
 This document specifies the future-compatible REST API contracts for the CampusOS Placement Management module (`/api/v1/placement/*`).
 All frontend service methods (`placementService`) currently interface through the mock adapter (`MOCK_PLACEMENT_*`) adhering strictly to these request/response payloads.
 
-**Status**: Mock-backed frontend implementation. Zero backend modifications in `apps/api`.
+**Status**: Mock-backed frontend implementation. Zero backend modifications in `backend`.
 
 ---
 

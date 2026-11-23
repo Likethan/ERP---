@@ -2,7 +2,7 @@
 
 This document details the deterministic formulas and configuration rules governing multi-component scoring, percentage normalization, and UGC Choice Based Credit System (CBCS) 10-point letter grade assignment.
 
-Implementation: `apps/web/src/services/grading-calculator.ts`
+Implementation: `frontend/src/services/grading-calculator.ts`
 
 ---
 

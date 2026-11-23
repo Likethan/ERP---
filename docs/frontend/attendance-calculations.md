@@ -5,7 +5,7 @@
 All attendance calculations within CampusOS are centralized in a single standardized frontend computation service:
 
 ```text
-apps/web/src/services/attendance-calculator.ts
+frontend/src/services/attendance-calculator.ts
 ```
 
 This guarantees consistent calculations across the Operations Hub, Student 360°, Course Summaries, Reports, and Warning Banners, preventing discrepancies across UI views. In future releases, this mathematical contract will be identically enforced by the backend FastAPI service.

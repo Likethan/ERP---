@@ -1,6 +1,6 @@
 {
   "suite": "CampusOS E2E Browser Validation",
-  "spec_file": "apps/web/e2e/critical-journeys.spec.ts",
+  "spec_file": "frontend/e2e/critical-journeys.spec.ts",
   "spec_exists": true,
   "node_installed": true,
   "npm_installed": true,

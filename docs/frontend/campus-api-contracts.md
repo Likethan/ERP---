@@ -1,6 +1,6 @@
 # CampusOS — Campus Management REST API Contracts
 
-This specification defines the future REST API endpoints for the Campus module, matching the service interface implemented in `apps/web/src/services/campus.service.ts`.
+This specification defines the future REST API endpoints for the Campus module, matching the service interface implemented in `frontend/src/services/campus.service.ts`.
 
 ## Base Path
 ```text

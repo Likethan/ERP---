@@ -74,7 +74,7 @@ The Intelligence layer registers 14 standard domain tool contracts, each bound t
 
 ## Domain Health Models & Calculators
 
-The module centralizes deterministic domain health calculations in `apps/web/src/services/intelligence-calculator.ts`:
+The module centralizes deterministic domain health calculations in `frontend/src/services/intelligence-calculator.ts`:
 
 - **Attendance Risk**: Identifies students below 75% regulatory attendance threshold, categorizing severity (Critical <60%, High 60-74%, Normal ≥75%).
 - **Academic Risk**: Flags students with cumulative GPA < 6.5 or active backlogs/arrears.

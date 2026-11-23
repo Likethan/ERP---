@@ -16,9 +16,9 @@ The Placement module bridges institutional academic achievement with career outc
 ## 2. Architectural Scope & Boundaries
 
 ### Absolute Frontend-Only Guarantee
-- **Zero Backend Business Logic**: No endpoints, database models, migrations, or persistence services were modified or introduced in `apps/api`.
+- **Zero Backend Business Logic**: No endpoints, database models, migrations, or persistence services were modified or introduced in `backend`.
 - **API Continuity**: The interface strictly adheres to future REST endpoint contracts (`/api/v1/placement/*`).
-- **Reactive Mock Adapter**: Implemented in `apps/web/src/services/placement.service.ts` backed by stateful in-memory collections that maintain relational integrity between canonical students, corporate partners, job drives, position rules, applications, evaluations, offers, and placement outcomes.
+- **Reactive Mock Adapter**: Implemented in `frontend/src/services/placement.service.ts` backed by stateful in-memory collections that maintain relational integrity between canonical students, corporate partners, job drives, position rules, applications, evaluations, offers, and placement outcomes.
 
 ---
 

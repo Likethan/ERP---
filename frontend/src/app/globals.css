@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f7f8fa;
+    --foreground: #1d2939;
+    --border: #e4e7ec;
+    --input: #d0d5dd;
+    --ring: #d4a21c;
+    --card: #ffffff;
+    --card-foreground: #1d2939;
+    --card-subtle: #fffbeb;
+    --popover: #ffffff;
+    --popover-foreground: #1d2939;
+    --primary: #e8b43c;
+    --primary-foreground: #25200f;
+    --primary-hover: #d9a52e;
+    --secondary: #fff8e6;
+    --secondary-foreground: #40351b;
+    --secondary-hover: #fff1cc;
+    --muted: #f2f4f7;
+    --muted-foreground: #667085;
+    --accent: #fff3cf;
+    --accent-foreground: #40351b;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --success: #16a34a;
+    --success-foreground: #ffffff;
+    --warning: #d97706;
+    --warning-foreground: #ffffff;
+    --info: #0284c7;
+    --info-foreground: #ffffff;
+    --radius: 0.5rem;
+  }
+
+  .theme-light {
+    --background: #f7f8fa;
+    --foreground: #1d2939;
+    --border: #e4e7ec;
+    --input: #d0d5dd;
+    --ring: #d4a21c;
+    --card: #ffffff;
+    --card-foreground: #1d2939;
+    --card-subtle: #fffbeb;
+    --popover: #ffffff;
+    --popover-foreground: #1d2939;
+    --primary: #e8b43c;
+    --primary-foreground: #25200f;
+    --primary-hover: #d9a52e;
+    --secondary: #fff8e6;
+    --secondary-foreground: #40351b;
+    --secondary-hover: #fff1cc;
+    --muted: #f2f4f7;
+    --muted-foreground: #667085;
+    --accent: #fff3cf;
+    --accent-foreground: #40351b;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --success: #16a34a;
+    --success-foreground: #ffffff;
+    --warning: #d97706;
+    --warning-foreground: #ffffff;
+    --info: #0284c7;
+    --info-foreground: #ffffff;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    color: #25200f;
+    background: #f3d987;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d0d5dd;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #98a2b3;
+  }
+}

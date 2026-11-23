@@ -1,6 +1,6 @@
 """CampusOS Frontend Accessibility (a11y) Static Scanner & WCAG 2.1 AA Auditor.
 
-Scans all Next.js TSX routes in apps/web/src/app for:
+Scans all Next.js TSX routes in frontend/src/app for:
 - Image alt attribute presence
 - Button accessible names / aria-labels
 - Input labels and form associations
@@ -196,7 +196,7 @@ class AccessibilityAuditor:
 
 def main():
     root = Path(__file__).resolve().parent.parent
-    web_dir = root / "apps" / "web"
+    web_dir = root / "frontend"
     auditor = AccessibilityAuditor(web_dir)
     report = auditor.run_audit()
 

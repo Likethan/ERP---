@@ -25,7 +25,7 @@
 
 ## 2. Reusable UI Components Audited
 
-All 24 reusable UI primitives located in `apps/web/src/components/ui/` and `src/components/navigation/`:
+All 24 reusable UI primitives located in `frontend/src/components/ui/` and `src/components/navigation/`:
 
 1. **`Button`**: 6 visual variants, 4 sizes, loading spinner, prefix/suffix icon slots.
 2. **`Card`**: Standardized card container with header, title, description, content, and footer.
@@ -96,4 +96,4 @@ With the frontend foundation verified and stabilized, the recommended next dedic
 
 ## 6. Backend Integration Readiness
 
-The mock services in `apps/web/src/services/` already use standardized `ApiResponse<T>` wrappers and `apiFetch` helpers. When backend business logic is ready in future phases, each service can be switched to direct FastAPI endpoints by swapping the internal fetch calls without touching page components or UI layouts.
+The mock services in `frontend/src/services/` already use standardized `ApiResponse<T>` wrappers and `apiFetch` helpers. When backend business logic is ready in future phases, each service can be switched to direct FastAPI endpoints by swapping the internal fetch calls without touching page components or UI layouts.

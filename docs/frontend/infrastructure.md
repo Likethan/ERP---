@@ -35,7 +35,7 @@ Audit History Logging & Executive Operational Telemetry
 
 ## 3. Absolute Frontend-Only Guarantee
 
-- **Zero Backend Business Logic**: No backend database models, migrations, schemas, repositories, or router endpoints in `apps/api` were modified or created.
+- **Zero Backend Business Logic**: No backend database models, migrations, schemas, repositories, or router endpoints in `backend` were modified or created.
 - **Service Isolation**: All UI pages consume typed service interfaces via `infrastructureService`, `hostelsService`, `hostelRoomsService`, `hostelLeavesService`, `hostelComplaintsService`, `transportRoutesService`, `transportStopsService`, `transportVehiclesService`, `transportDriversService`, `transportAllocationsService`, `facilitiesService`, `maintenanceService`, and `infrastructureReportsService`.
 - **Pure Calculators**: Centralized deterministic calculation functions in `infrastructure-calculator.ts` eliminate formula duplication.
 - **Relational Mock Adapter**: Fully synchronized in-memory database linking hostel blocks, rooms, bed status, gate pass leaves, tickets, bus routes, pick-up stops, vehicle fleet, drivers, passes, facilities, equipment, work orders, and analytics.
@@ -68,7 +68,7 @@ Audit History Logging & Executive Operational Telemetry
 
 ## 5. Pure Deterministic Domain Calculators
 
-All infrastructure metrics are derived through pure, deterministic functions in `apps/web/src/services/infrastructure-calculator.ts`:
+All infrastructure metrics are derived through pure, deterministic functions in `frontend/src/services/infrastructure-calculator.ts`:
 
 - `calculateHostelOccupancy(occupiedBeds, totalBeds)`: Clamped percentage (0–100%) rounded to 1 decimal place.
 - `calculateRoomOccupancy(occupiedBeds, capacityBeds)`: Room-level utilization metric.

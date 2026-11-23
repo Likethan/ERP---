@@ -26,8 +26,8 @@ git status
 ### Step B: Backend Configuration
 
 ```bash
-# In apps/api
-cd apps/api
+# In backend
+cd backend
 cp .env.example .env
 ```
 
@@ -45,7 +45,7 @@ SECRET_KEY=campusos_insecure_local_dev_secret_key_change_in_production
 ### Step C: Frontend Configuration
 
 ```bash
-# In apps/web
+# In frontend
 cd ../web
 cp .env.example .env.local
 ```
@@ -65,7 +65,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 #### Terminal 1 — Backend API
 
 ```bash
-cd apps/api
+cd backend
 python -m venv .venv
 
 # On Windows PowerShell:
@@ -85,7 +85,7 @@ uvicorn app.main:app --reload --port 8000
 ```bash
 # From workspace root
 npm install
-npm run dev --workspace=apps/web
+npm run dev --workspace=frontend
 ```
 
 - Frontend Web App: `http://localhost:3000`
@@ -97,14 +97,14 @@ npm run dev --workspace=apps/web
 ### Frontend Lint & Format
 
 ```bash
-npm run lint --workspace=apps/web
+npm run lint --workspace=frontend
 npm run format:check
 ```
 
 ### Backend Lint & Typecheck
 
 ```bash
-cd apps/api
+cd backend
 ruff check .
 pytest
 ```

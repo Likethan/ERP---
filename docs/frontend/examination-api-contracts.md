@@ -1,6 +1,6 @@
 # CampusOS Examination & Assessment API Contracts
 
-This document formalizes the service contracts implemented by `examinationsService` (`apps/web/src/services/examinations.service.ts`). These TypeScript interfaces serve as the definitive blueprint for future FastAPI backend endpoints (`/api/v1/examinations/...`).
+This document formalizes the service contracts implemented by `examinationsService` (`frontend/src/services/examinations.service.ts`). These TypeScript interfaces serve as the definitive blueprint for future FastAPI backend endpoints (`/api/v1/examinations/...`).
 
 ---
 
