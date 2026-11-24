@@ -20,15 +20,16 @@ export default function StudentLayout({
   const { user, isLoading } = useAuth();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  if (pathname === "/student") {
-    return <>{children}</>;
-  }
-
   useEffect(() => {
+    if (pathname === "/student") return;
     if (!isLoading && !user) {
       router.replace("/login?role=student");
     }
-  }, [isLoading, user, router]);
+  }, [isLoading, user, router, pathname]);
+
+  if (pathname === "/student") {
+    return <>{children}</>;
+  }
 
   if (isLoading || !user) {
     return (

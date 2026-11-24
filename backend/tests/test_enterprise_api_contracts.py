@@ -76,7 +76,8 @@ def test_openapi_specification_completeness():
 
 def test_typescript_shared_types_contract_sync():
     """Verify that frontend TypeScript definitions in packages/types match backend domain definitions."""
-    types_path = Path(__file__).resolve().parent.parent.parent.parent / "packages" / "types" / "src" / "index.ts"
+    root = Path(__file__).resolve().parent.parent.parent
+    types_path = root / "packages" / "types" / "src" / "index.ts"
     assert types_path.exists(), f"TypeScript definitions not found at {types_path}"
 
     content = types_path.read_text(encoding="utf-8")

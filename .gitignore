@@ -57,11 +57,18 @@ backups/
 *.db
 local_storage/
 storage/
+backend/storage/
 apps/api/storage/
 pgdata/
 .pgdata/
 redisdata/
 miniodata/
+
+# Release Certification & Quality Artifacts
+release_readiness_report.json
+release_readiness_report.md
+accessibility_report.json
+e2e_validation_report.json
 
 # OS Files
 .DS_Store

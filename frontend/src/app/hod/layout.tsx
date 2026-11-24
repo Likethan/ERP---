@@ -150,12 +150,9 @@ export default function HodPortalLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  if (pathname === "/hod") {
-    return <>{children}</>;
-  }
-
   // Authentication & Role Gate
   React.useEffect(() => {
+    if (pathname === "/hod") return;
     if (isLoading) return;
     if (!user) {
       router.replace("/login?role=hod");
@@ -170,7 +167,11 @@ export default function HodPortalLayout({
     if (!allowed.includes(role)) {
       router.replace("/app/dashboard");
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, pathname]);
+
+  if (pathname === "/hod") {
+    return <>{children}</>;
+  }
 
   if (isLoading || !user) {
     return (

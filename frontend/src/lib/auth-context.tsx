@@ -310,10 +310,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (portalCfg) {
             const isAuthorized =
               portalCfg.allowedRoles.includes(matchedPersona.role) ||
-              (matchedPersona.role === "PRINCIPAL" && portalCfg.allowedRoles.includes("VICE_PRINCIPAL"));
+              (matchedPersona.role === "PRINCIPAL" &&
+                portalCfg.allowedRoles.includes("VICE_PRINCIPAL"));
             if (!isAuthorized) {
               throw new Error(
-                `Authentication succeeded, but your account is not authorized for the ${portalCfg.label}. Please select the appropriate portal.`
+                `Authentication succeeded, but your account is not authorized for the ${portalCfg.label}. Please select the appropriate portal.`,
               );
             }
           }

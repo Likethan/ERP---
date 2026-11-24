@@ -20,15 +20,16 @@ export default function FacultyLayout({
   const { user, isLoading } = useAuth();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  if (pathname === "/faculty") {
-    return <>{children}</>;
-  }
-
   useEffect(() => {
+    if (pathname === "/faculty") return;
     if (!isLoading && !user) {
       router.replace("/login?role=faculty");
     }
-  }, [isLoading, user, router]);
+  }, [isLoading, user, router, pathname]);
+
+  if (pathname === "/faculty") {
+    return <>{children}</>;
+  }
 
   if (isLoading || !user) {
     return (

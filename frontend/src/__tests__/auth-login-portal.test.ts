@@ -1513,7 +1513,9 @@ async function runAuthPortalTests() {
     first_name: "Admin",
     last_name: "Master",
     status: "ACTIVE",
-    roles: [{ id: "r-adm-t", name: "SUPER_ADMIN", display_name: "Super Admin" }],
+    roles: [
+      { id: "r-adm-t", name: "SUPER_ADMIN", display_name: "Super Admin" },
+    ],
     permissions: ["*"],
     tenant: { id: "t1", code: "VSB", name: "VSB" },
   };
@@ -1614,7 +1616,8 @@ async function runAuthPortalTests() {
     "Student is NOT authorized to log in directly into HOD portal",
   );
   assert(
-    verifyPortalAuthorization("VICE_PRINCIPAL", ["STUDENT"]).authorized === false,
+    verifyPortalAuthorization("VICE_PRINCIPAL", ["STUDENT"]).authorized ===
+      false,
     "Student is NOT authorized to log in directly into VICE_PRINCIPAL portal",
   );
 

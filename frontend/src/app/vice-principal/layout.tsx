@@ -108,12 +108,9 @@ export default function VicePrincipalPortalLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  if (pathname === "/vice-principal") {
-    return <>{children}</>;
-  }
-
   // Authentication & Role Gate
   React.useEffect(() => {
+    if (pathname === "/vice-principal") return;
     if (isLoading) return;
     if (!user) {
       router.replace("/login?role=vice_principal");
@@ -128,7 +125,11 @@ export default function VicePrincipalPortalLayout({
     if (!allowed.includes(role)) {
       router.replace("/app/dashboard");
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, pathname]);
+
+  if (pathname === "/vice-principal") {
+    return <>{children}</>;
+  }
 
   if (isLoading || !user) {
     return (

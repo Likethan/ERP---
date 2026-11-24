@@ -2369,9 +2369,7 @@ export function isPathAuthorized(
   }
   if (pathname.startsWith("/hod")) {
     return (
-      roleSet.has("HOD") ||
-      roleSet.has("SUPER_ADMIN") ||
-      roleSet.has("ADMIN")
+      roleSet.has("HOD") || roleSet.has("SUPER_ADMIN") || roleSet.has("ADMIN")
     );
   }
   if (pathname.startsWith("/faculty")) {

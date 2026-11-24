@@ -751,8 +751,8 @@ function LoginFormContent() {
             <details className="group inline-block text-left">
               <summary className="text-[11px] font-medium text-slate-400 hover:text-slate-700 cursor-pointer inline-flex items-center gap-1 select-none">
                 <span>
-                  Looking for secondary campus portals? (Accounts,
-                  Placement, Warden, etc.)
+                  Looking for secondary campus portals? (Accounts, Placement,
+                  Warden, etc.)
                 </span>
                 <span className="text-[9px] text-slate-400 group-open:rotate-180 transition-transform">
                   ▼
