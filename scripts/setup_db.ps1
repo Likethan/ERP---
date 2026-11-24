@@ -29,7 +29,7 @@ Write-Host "`n3. Granting privileges..." -ForegroundColor Yellow
 
 Write-Host "`n4. Testing connection as campusos_user..." -ForegroundColor Yellow
 $rootDir = Split-Path -Parent $PSScriptRoot
-$pythonBin = Join-Path $rootDir "apps\api\.venv\Scripts\python.exe"
+$pythonBin = Join-Path $rootDir "backend\.venv\Scripts\python.exe"
 
 if (Test-Path $pythonBin) {
     & $pythonBin -c "

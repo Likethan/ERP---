@@ -39,10 +39,10 @@ jobs:
         run: npm run typecheck --workspace=packages/types
 
       - name: Typecheck Next.js Web
-        run: npm run typecheck --workspace=apps/web
+        run: npm run typecheck --workspace=frontend
 
       - name: Lint Next.js Web
-        run: npm run lint --workspace=apps/web
+        run: npm run lint --workspace=frontend
 
       - name: Setup Python 3.11
         uses: actions/setup-python@v5
@@ -53,7 +53,7 @@ jobs:
       - name: Lint Backend Python (Ruff)
         run: |
           pip install ruff
-          ruff check apps/api/app
+          ruff check backend/app
 
   # ----------------------------------------------------------------------------
   # 2. Dependency Security Vulnerability Audit
@@ -81,7 +81,7 @@ jobs:
       - name: Python Dependency Audit
         run: |
           pip install pip-audit
-          pip-audit -r apps/api/requirements.txt || true
+          pip-audit -r backend/requirements.txt || true
 
   # ----------------------------------------------------------------------------
   # 3. Backend Test Suite & Migration Check
@@ -126,11 +126,11 @@ jobs:
       - name: Install Backend Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r apps/api/requirements-dev.txt
+          pip install -r backend/requirements-dev.txt
 
       - name: Verify Migration History
         run: |
-          cd apps/api
+          cd backend
           python -m alembic history
 
       - name: Run Backend Pytest Suite
@@ -140,7 +140,7 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           SECRET_KEY: test_secret_key_minimum_32_characters_for_pytest
         run: |
-          cd apps/api
+          cd backend
           pytest tests/ -v
 
   # ----------------------------------------------------------------------------
@@ -168,11 +168,11 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r apps/api/requirements-dev.txt
+          pip install -r backend/requirements-dev.txt
 
       - name: Run Step 34 Cross-Domain Quality Test Suites
         run: |
-          cd apps/api
+          cd backend
           pytest tests/test_enterprise_quality_workflows.py tests/test_enterprise_database_migrations.py tests/test_enterprise_api_contracts.py tests/test_enterprise_failure_injection.py tests/test_enterprise_ai_safety_eval.py -v
 
       - name: Run Static Accessibility Audit (WCAG 2.1 AA)
@@ -221,7 +221,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-        run: npm run build --workspace=apps/web
+        run: npm run build --workspace=frontend
 
   # ----------------------------------------------------------------------------
   # 6. Docker Production Image Build Verification
@@ -240,8 +240,8 @@ jobs:
       - name: Build Backend API Image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/api
-          file: ./apps/api/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: false
           tags: campusos/api:ci-test
 
@@ -249,6 +249,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/web/Dockerfile
+          file: ./frontend/Dockerfile
           push: false
           tags: campusos/web:ci-test

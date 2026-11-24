@@ -14,7 +14,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/types/package.json ./packages/types/
 COPY packages/config/package.json ./packages/config/
-COPY apps/web/package.json ./apps/web/
+COPY frontend/package.json ./frontend/
 
 # Deterministic clean install
 RUN npm ci
@@ -29,8 +29,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY packages ./packages
-COPY apps/web ./apps/web
-RUN mkdir -p apps/web/public
+COPY frontend ./frontend
+RUN mkdir -p frontend/public
 
 # Set production environment flags for build
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -39,7 +39,7 @@ ENV BUILD_STANDALONE=true
 
 # Build the Next.js application with standalone output
 RUN npm run build --workspace=packages/types
-RUN npm run build --workspace=apps/web
+RUN npm run build --workspace=frontend
 
 # ------------------------------------------------------------------------------
 # Stage 3: Production Runner (Minimal & Hardened)
@@ -57,9 +57,9 @@ RUN addgroup --system --gid 10001 nodejs && \
     adduser --system --uid 10001 nextjs
 
 # Copy public assets and standalone output
-COPY --from=builder /app/apps/web/public ./apps/web/public
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/frontend/public ./frontend/public
+COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./frontend/.next/static
 
 USER nextjs
 
@@ -70,4 +70,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD wget -qO- http://localhost:3000 || exit 1
 
 # Start the standalone Next.js server
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "frontend/server.js"]

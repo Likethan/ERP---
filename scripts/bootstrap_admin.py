@@ -22,8 +22,8 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-# Add apps/api to sys.path
-api_dir = Path(__file__).resolve().parent.parent / "apps" / "api"
+# Add backend to sys.path
+api_dir = Path(__file__).resolve().parent.parent / "backend"
 sys.path.insert(0, str(api_dir))
 
 from uuid import uuid4

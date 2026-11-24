@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { readdirSync } from "fs";
 import { join } from "path";
 
-const testsDir = "apps/web/src/__tests__";
+const testsDir = "frontend/src/__tests__";
 const files = readdirSync(testsDir)
   .filter((f) => f.endsWith(".ts"))
   .sort();
@@ -27,7 +27,7 @@ for (const file of files) {
   const start = Date.now();
   try {
     const out = execSync(
-      `npx tsx --tsconfig apps/web/tsconfig.json "${filePath}"`,
+      `npx tsx --tsconfig frontend/tsconfig.json "${filePath}"`,
       {
         encoding: "utf-8",
         stdio: ["pipe", "pipe", "pipe"],

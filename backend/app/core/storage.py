@@ -194,7 +194,7 @@ class LocalDocumentStorage(DocumentStorage):
 
     def __init__(self, base_dir: Path | str | None = None):
         if base_dir is None:
-            # Default storage inside apps/api/storage/documents
+            # Default storage inside backend/storage/documents
             self.base_dir = Path(os.getcwd()) / "storage" / "documents"
         else:
             self.base_dir = Path(base_dir).resolve()

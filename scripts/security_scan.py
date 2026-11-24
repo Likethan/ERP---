@@ -3,8 +3,8 @@
 
 Audits repository files for:
 1. Secret leakage and hardcoded credentials in tracked files
-2. Python dependency security posture in apps/api
-3. JavaScript dependency security posture in apps/web
+2. Python dependency security posture in backend
+3. JavaScript dependency security posture in frontend
 4. Static security configurations across CampusOS
 """
 
@@ -90,7 +90,7 @@ def scan_secrets(repo_root: Path) -> list[dict]:
 def audit_python_dependencies(repo_root: Path) -> list[str]:
     """Audit Python dependencies for security hygiene."""
     notes = []
-    req_file = repo_root / "apps" / "api" / "pyproject.toml"
+    req_file = repo_root / "backend" / "pyproject.toml"
     if req_file.exists():
         content = req_file.read_text(encoding="utf-8")
         if "argon2-cffi" in content:
@@ -105,7 +105,7 @@ def audit_python_dependencies(repo_root: Path) -> list[str]:
 def audit_frontend_dependencies(repo_root: Path) -> list[str]:
     """Audit Frontend dependencies for security posture."""
     notes = []
-    pkg_file = repo_root / "apps" / "web" / "package.json"
+    pkg_file = repo_root / "frontend" / "package.json"
     if pkg_file.exists():
         content = pkg_file.read_text(encoding="utf-8")
         if "next" in content:

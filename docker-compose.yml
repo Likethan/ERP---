@@ -58,7 +58,7 @@ services:
 
   api:
     build:
-      context: ./apps/api
+      context: ./backend
       dockerfile: Dockerfile
     container_name: campusos-api
     restart: unless-stopped
@@ -96,7 +96,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: frontend/Dockerfile
     container_name: campusos-web
     restart: unless-stopped
     ports:

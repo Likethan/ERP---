@@ -168,7 +168,7 @@ docker exec campusos-api alembic upgrade head
 docker exec campusos-api python -m app.scripts.seed_dev
 
 # Step 3: Wire frontend login to real API
-# Edit: apps/web/src/lib/auth-context.tsx
+# Edit: frontend/src/lib/auth-context.tsx
 # Replace mock persona with real POST /api/v1/auth/login
 
 # Step 4: Connect student/faculty CRUD pages to API

@@ -7,11 +7,11 @@ $CurrentDir = Get-Location
 
 # Check Python
 Write-Host "`n[1/3] Checking Python virtual environment..." -ForegroundColor Yellow
-$VenvPython = Join-Path $CurrentDir "apps\api\.venv\Scripts\python.exe"
+$VenvPython = Join-Path $CurrentDir "backend\.venv\Scripts\python.exe"
 if (-not (Test-Path $VenvPython)) {
-    Write-Host "Creating Python virtual environment in apps/api/.venv..." -ForegroundColor Gray
-    python -m venv "$CurrentDir\apps\api\.venv"
-    & "$CurrentDir\apps\api\.venv\Scripts\pip.exe" install -r "$CurrentDir\apps\api\requirements-dev.txt"
+    Write-Host "Creating Python virtual environment in backend/.venv..." -ForegroundColor Gray
+    python -m venv "$CurrentDir\backend\.venv"
+    & "$CurrentDir\backend\.venv\Scripts\pip.exe" install -r "$CurrentDir\backend\requirements-dev.txt"
 }
 
 # Check Frontend Node Modules

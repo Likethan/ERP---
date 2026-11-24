@@ -29,4 +29,4 @@ backups/
 *.md
 
 # Migrations
-apps/api/migrations/
+backend/migrations/

@@ -5,7 +5,7 @@ $CurrentDir = Get-Location
 
 # Frontend checks
 Write-Host "`n[1/3] Checking Frontend TypeScript & Lint..." -ForegroundColor Yellow
-npm run typecheck --workspace=apps/web
+npm run typecheck --workspace=frontend
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Frontend type check failed!" -ForegroundColor Red
     exit 1
@@ -21,11 +21,11 @@ if ($LASTEXITCODE -ne 0) {
 
 # Backend checks
 Write-Host "`n[3/3] Checking Backend Python Lint..." -ForegroundColor Yellow
-$VenvPython = Join-Path $CurrentDir "apps\api\.venv\Scripts\python.exe"
+$VenvPython = Join-Path $CurrentDir "backend\.venv\Scripts\python.exe"
 if (Test-Path $VenvPython) {
-    & "$CurrentDir\apps\api\.venv\Scripts\ruff.exe" check "$CurrentDir\apps\api"
+    & "$CurrentDir\backend\.venv\Scripts\ruff.exe" check "$CurrentDir\backend"
 } else {
-    Write-Host "Python virtual environment not found in apps/api/.venv. Skipping ruff check." -ForegroundColor DarkGray
+    Write-Host "Python virtual environment not found in backend/.venv. Skipping ruff check." -ForegroundColor DarkGray
 }
 
 Write-Host "`nAll code quality checks passed successfully!" -ForegroundColor Green

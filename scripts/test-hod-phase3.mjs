@@ -5,9 +5,9 @@ import createJITI from "jiti";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
-const jiti = createJITI(path.resolve(rootDir, "apps/web"), {
+const jiti = createJITI(path.resolve(rootDir, "frontend"), {
   alias: {
-    "@/": path.resolve(rootDir, "apps/web/src") + "/",
+    "@/": path.resolve(rootDir, "frontend/src") + "/",
     "@campusos/types": path.resolve(rootDir, "packages/types/src/index.ts"),
   },
   extensions: [".js", ".ts", ".mjs"],

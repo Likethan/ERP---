@@ -34,7 +34,7 @@ def check_port_listening(host: str, port: int, timeout: float = 1.0) -> bool:
 
 def validate_e2e_environment() -> dict[str, Any]:
     root = Path(__file__).resolve().parent.parent
-    web_dir = root / "apps" / "web"
+    web_dir = root / "frontend"
     e2e_spec = web_dir / "e2e" / "critical-journeys.spec.ts"
 
     report: dict[str, Any] = {
@@ -94,7 +94,7 @@ def validate_e2e_environment() -> dict[str, Any]:
         report["details"] = "Playwright test execution completed."
     except FileNotFoundError:
         report["status"] = "BLOCKED"
-        report["details"] = "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in apps/web."
+        report["details"] = "npx or Playwright runner not installed. Run 'npm install -D @playwright/test' in frontend."
     except Exception as e:
         report["status"] = "BLOCKED"
         report["details"] = f"Execution exception: {e}"

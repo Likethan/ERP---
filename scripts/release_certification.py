@@ -1,11 +1,11 @@
 """CampusOS Enterprise Release Certification & Quality Engineering Orchestrator.
 
 Aggregates verified execution metrics across:
-1. Cross-Domain Business Workflows (apps/api/tests/test_enterprise_quality_workflows.py)
-2. Database Migrations & Transaction Atomicity (apps/api/tests/test_enterprise_database_migrations.py)
-3. API Contracts & TypeScript Type Sync (apps/api/tests/test_enterprise_api_contracts.py)
-4. Failure Injection & Resilience (apps/api/tests/test_enterprise_failure_injection.py)
-5. AI Safety & PromptGuard Evaluations (apps/api/tests/test_enterprise_ai_safety_eval.py)
+1. Cross-Domain Business Workflows (backend/tests/test_enterprise_quality_workflows.py)
+2. Database Migrations & Transaction Atomicity (backend/tests/test_enterprise_database_migrations.py)
+3. API Contracts & TypeScript Type Sync (backend/tests/test_enterprise_api_contracts.py)
+4. Failure Injection & Resilience (backend/tests/test_enterprise_failure_injection.py)
+5. AI Safety & PromptGuard Evaluations (backend/tests/test_enterprise_ai_safety_eval.py)
 6. Frontend Static Accessibility Audit (scripts/accessibility_audit.py)
 7. E2E Browser Environment Validation (scripts/e2e_browser_validation.py)
 
@@ -98,7 +98,7 @@ def main():
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
 
-    api_dir = root / "apps" / "api"
+    api_dir = root / "backend"
     python_exe = api_dir / ".venv" / "Scripts" / "python.exe"
     if not python_exe.exists():
         python_exe = Path(sys.executable)
@@ -134,7 +134,7 @@ def main():
     print("    Running Accessibility Static Audit...")
     try:
         from scripts.accessibility_audit import AccessibilityAuditor
-        auditor = AccessibilityAuditor(root / "apps" / "web")
+        auditor = AccessibilityAuditor(root / "frontend")
         a11y_report = auditor.run_audit()
         a11y_status = a11y_report["status"]
     except Exception as e:
@@ -271,7 +271,7 @@ def main():
 ## 4. End-to-End Browser Automation Readiness
 
 - **Status:** `{e2e_status}`
-- **Specification:** `apps/web/e2e/critical-journeys.spec.ts` (12 Core User Journeys)
+- **Specification:** `frontend/e2e/critical-journeys.spec.ts` (12 Core User Journeys)
 - **Diagnostic Details:** {e2e_report.get("details", "")}
 
 ---

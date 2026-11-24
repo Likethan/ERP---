@@ -3,9 +3,9 @@ import path from "node:path";
 import createJITI from "jiti";
 
 const rootDir = process.cwd();
-const jiti = createJITI(path.resolve(rootDir, "apps/web"), {
+const jiti = createJITI(path.resolve(rootDir, "frontend"), {
   alias: {
-    "@/": path.resolve(rootDir, "apps/web/src") + "/",
+    "@/": path.resolve(rootDir, "frontend/src") + "/",
     "@campusos/types": path.resolve(rootDir, "packages/types/src/index.ts"),
   },
   extensions: [".js", ".ts", ".mjs"],
@@ -45,7 +45,7 @@ async function run() {
 
   // 1. Auth & Persona Mapping
   console.log("--- 1. Authentication & Vice Principal Role Mapping ---");
-  const { DEMO_PERSONAS } = jiti(path.resolve(rootDir, "apps/web/src/mocks/auth.mock.ts"));
+  const { DEMO_PERSONAS } = jiti(path.resolve(rootDir, "frontend/src/mocks/auth.mock.ts"));
   const vp = DEMO_PERSONAS.find((p) => p.role === "PRINCIPAL" || p.id === "user-vice-principal-01");
   test("Vice Principal demo persona exists", () => assert(Boolean(vp)));
   test("VP email is vp.academics@campusos.edu", () => assert.strictEqual(vp.email, "vp.academics@campusos.edu"));
@@ -62,7 +62,7 @@ async function run() {
   // 2. Service Layer & Feature Modules
   console.log("\n--- 2. Vice Principal Service & Feature Modules ---");
   const { vicePrincipalService } = jiti(
-    path.resolve(rootDir, "apps/web/src/services/vice-principal.service.ts")
+    path.resolve(rootDir, "frontend/src/services/vice-principal.service.ts")
   );
 
   // Feature A: Dashboard

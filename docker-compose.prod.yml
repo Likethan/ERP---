@@ -62,7 +62,7 @@ services:
 
   api:
     build:
-      context: ./apps/api
+      context: ./backend
       dockerfile: Dockerfile
     restart: always
     environment:
@@ -115,7 +115,7 @@ services:
 
   worker:
     build:
-      context: ./apps/api
+      context: ./backend
       dockerfile: Dockerfile
     restart: always
     command: ["python", "-m", "app.worker"]
@@ -144,7 +144,7 @@ services:
 
   scheduler:
     build:
-      context: ./apps/api
+      context: ./backend
       dockerfile: Dockerfile
     restart: always
     command: ["python", "-m", "app.scheduler"]
@@ -169,7 +169,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: frontend/Dockerfile
     restart: always
     environment:
       NODE_ENV: production

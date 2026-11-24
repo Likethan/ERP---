@@ -4,16 +4,16 @@
   "private": true,
   "description": "CampusOS — One Campus. One System. One Source of Truth.",
   "workspaces": [
-    "apps/*",
+    "frontend",
     "packages/*"
   ],
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "dev:frontend": "npm run dev --workspace=apps/web",
-    "dev:backend": "powershell -Command \"cd apps/api; .\\.venv\\Scripts\\activate; uvicorn app.main:app --reload --host 127.0.0.1 --port 8000\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "powershell -Command \"cd backend; .\\.venv\\Scripts\\activate; uvicorn app.main:app --reload --host 127.0.0.1 --port 8000\"",
     "dev:all": "node scripts/dev.mjs",
     "build": "npm run build --workspaces --if-present",
-    "start": "npm run start --workspace=apps/web",
+    "start": "npm run start --workspace=frontend",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""

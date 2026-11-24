@@ -99,18 +99,17 @@ freePort(5434);
 // 1. Resolve Python Binary
 const winVenv = path.join(
   rootDir,
-  "apps",
-  "api",
+  "backend",
   ".venv",
   "Scripts",
   "python.exe",
 );
-const unixVenv = path.join(rootDir, "apps", "api", ".venv", "bin", "python");
+const unixVenv = path.join(rootDir, "backend", ".venv", "bin", "python");
 
 let pythonBin = isWin ? winVenv : unixVenv;
 if (!fs.existsSync(pythonBin)) {
   console.log(
-    "\x1b[33m[SETUP] apps/api/.venv not found; falling back to system python...\x1b[0m",
+    "\x1b[33m[SETUP] backend/.venv not found; falling back to system python...\x1b[0m",
   );
   pythonBin = isWin ? "python.exe" : "python3";
 }
@@ -175,7 +174,7 @@ const apiProcess = spawn(
     "8000",
   ],
   {
-    cwd: path.join(rootDir, "apps", "api"),
+    cwd: path.join(rootDir, "backend"),
     shell: false,
     env: {
       ...process.env,
@@ -206,7 +205,7 @@ if (fs.existsSync(dbViewerScript)) {
 // 3. Spawn Frontend Next.js (:3000) via cmd.exe on Windows for safe .cmd invocation
 const webProcess = isWin
   ? spawn("cmd.exe", ["/d", "/s", "/c", "npm run dev"], {
-      cwd: path.join(rootDir, "apps", "web"),
+      cwd: path.join(rootDir, "frontend"),
       windowsVerbatimArguments: true,
       env: {
         ...process.env,
@@ -215,7 +214,7 @@ const webProcess = isWin
       },
     })
   : spawn("npm", ["run", "dev"], {
-      cwd: path.join(rootDir, "apps", "web"),
+      cwd: path.join(rootDir, "frontend"),
       env: {
         ...process.env,
         NODE_OPTIONS: "--max-old-space-size=4096",
