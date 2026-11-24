@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { RoleSwitcher } from "./role-switcher";
 import { CommandPalette } from "./command-palette";
 import { NotificationDrawer } from "./notification-drawer";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { Search, Bell, Menu, Shield, LogOut, Sparkles } from "lucide-react";
 
 interface TopbarProps {

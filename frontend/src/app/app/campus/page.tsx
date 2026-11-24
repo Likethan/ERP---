@@ -10,7 +10,7 @@ import {
   NotificationItem,
   CampusDashboardSummary,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   CalendarDays,
   PartyPopper,

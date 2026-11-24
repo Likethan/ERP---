@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { examinationsService } from "@/services/examinations.service";
 import { ExamDashboardSummary } from "@/types/examinations";
 import { StatCard } from "@/components/ui/stat-card";

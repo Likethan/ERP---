@@ -24,7 +24,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { DataGrid, ColumnDef, BulkAction } from "@/components/data-grid";
 import {
   UserCheck,

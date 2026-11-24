@@ -18,7 +18,7 @@ import { placementsService } from "@/services/placements.service";
 import { StudentComprehensiveDetail } from "@/types/domain";
 import { TimetableSlotItem } from "@/mocks/academics.mock";
 import { JobDriveItem } from "@/mocks/placements.mock";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { DEMO_PERSONAS } from "@/mocks/auth.mock";
 import {
   CheckCircle2,

@@ -1,0 +1,14 @@
+---
+description: Backend Python and FastAPI architecture conventions
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend Architecture (FastAPI + SQLAlchemy 2.0)
+
+- **Async everywhere**: Use `async def` for endpoints and service methods with `AsyncSession`.
+- **Layered flow**: `Router (HTTP/validation) -> Service (business logic) -> SQLAlchemy / Repository (data access)`.
+- **No business logic in routers**: Routers only parse request parameters, enforce auth/permissions via `Depends`, call a service, and return `ApiResponse` / `PaginatedResponse`.
+- **Tenant isolation**: Every query on tenant-scoped models MUST filter by `tenant_id` from the authenticated context.
+- **Linting & types**: Code must pass `ruff check app` and `mypy` type annotations (`from __future__ import annotations` or Python 3.11+ union syntax `X | None`).
+- **New modules**: Place new domain logic under `app/domains/<domain>/` or follow the existing module layout consistently without duplicating service names across `app/services/` and `app/domains/`.

@@ -9,7 +9,7 @@ import {
   CommunicationRecord,
   NotificationCategory,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   SlidersHorizontal,
   Bell,

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   Calendar,
   Clock,

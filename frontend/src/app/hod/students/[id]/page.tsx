@@ -3,7 +3,7 @@
 import React, { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { hodService } from "@/services/hod.service";
 import { StudentComprehensiveDetail } from "@/types/domain";
 import {

@@ -1,0 +1,13 @@
+---
+description: FastAPI router, response envelope, and error handling conventions
+globs: backend/app/api/**/*.py
+alwaysApply: false
+---
+
+# API v1 Conventions
+
+- **Response envelope**: Wrap responses in `ApiResponse[T]` or `PaginatedResponse[T]` from `app.schemas.common`.
+- **Exceptions**: Raise domain-specific `CampusOSException` subclasses from `app.core.exceptions` rather than raw `HTTPException` where applicable.
+- **Auth & RBAC/PBAC**: Always guard endpoints with `Depends(require_permissions(...))` or `get_current_user` from `app.core.deps` / `app.core.permissions`.
+- **Dependency injection**: Use `Annotated[AsyncSession, Depends(get_db_session)]` and typed `Depends` aliases.
+- **Sub-routers**: When a router grows beyond 20 endpoints, convert it to a package (`<module>/__init__.py` exporting `router`) and split into focused sub-router files.

@@ -1,0 +1,13 @@
+---
+description: SQLAlchemy 2.0 model and Alembic migration conventions
+globs: backend/app/models/**/*.py
+alwaysApply: false
+---
+
+# Database & SQLAlchemy Patterns
+
+- **SQLAlchemy 2.0 style**: Use `Mapped[...]` and `mapped_column(...)` for all new columns.
+- **Base & Mixins**: Inherit from the project `Base` and standard mixins (`TenantMixin`, `TimestampMixin`, `SoftDeleteMixin`, etc.) in `app.models.base`.
+- **Exports**: Register new models in `app/models/__init__.py` (or domain sub-exports) so Alembic autogenerate discovers them.
+- **Migrations**: Never edit applied Alembic migrations. Always generate a new revision and review it before running.
+- **Indexes & Constraints**: Explicitly name foreign keys, unique constraints, and composite indexes on `(tenant_id, ...)` for multi-tenant query performance.

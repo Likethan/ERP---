@@ -11,7 +11,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { DataGrid, ColumnDef, BulkAction } from "@/components/data-grid";
 import {
   FileSpreadsheet,

@@ -1,0 +1,18 @@
+---
+description: CampusOS project overview, monorepo layout, and core architectural decisions
+alwaysApply: true
+---
+
+# CampusOS (VSB ERP) — Project Overview
+
+- **Monorepo**: NPM Workspaces (`frontend/`, `packages/*`) + Python `backend/`.
+- **Backend**: Python 3.11+, FastAPI, SQLAlchemy 2.0 (async + `asyncpg`), Pydantic v2, Alembic, PostgreSQL 16, Redis 7, MinIO.
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript 5.7, Tailwind CSS 3.4, Lucide React, Playwright.
+- **Shared Packages**: `@campusos/types` (`packages/types`), `@campusos/config` (`packages/config`).
+- **Auth & Security**: JWT in HttpOnly cookies, RBAC + PBAC (`app/core/permissions`), multi-tenant isolation (`tenant_id` scoping), rate limiting, audit trails.
+
+## Core Principles
+
+1. **Preserve Core Logic**: Never alter business rules, tenant isolation, or permission checks during refactoring.
+2. **One Pattern Per Layer**: Follow the established patterns in each rule file rather than inventing new directory layouts.
+3. **Verify Before Finishing**: Always run `npm run typecheck` (frontend) and `ruff check app` + `pytest` (backend) after changes.

@@ -5,7 +5,7 @@ import type { Campus, Department } from "@campusos/types";
 import { organizationService } from "@/services/organization.service";
 import { facultyService } from "@/services/faculty.service";
 import type { FacultyDetailView } from "@/types/domain";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function DepartmentsPage() {
   const { hasPermission } = useAuth();

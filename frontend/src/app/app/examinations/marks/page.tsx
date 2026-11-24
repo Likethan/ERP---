@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { examinationsService } from "@/services/examinations.service";
 import { Assessment, Mark, MarkStatus } from "@/types/examinations";
 import { Button } from "@/components/ui/button";

@@ -9,7 +9,7 @@ import {
   EventAudienceTarget,
   EventVenueInfo,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { AudienceBuilder } from "@/components/campus/audience-builder";
 import {
   PartyPopper,

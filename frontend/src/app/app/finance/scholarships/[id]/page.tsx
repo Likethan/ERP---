@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/ui/stat-card";
 import { useToast, ToastType } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { financeService } from "@/services/finance.service";
 import { formatMoney } from "@/services/financial-calculator";
 import { Scholarship, StudentScholarship } from "@/types/finance";

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { hodService, HodDashboardStats } from "@/services/hod.service";
 import { StatCard } from "@/components/ui/stat-card";
 import {

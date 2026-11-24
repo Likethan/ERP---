@@ -1,0 +1,13 @@
+---
+description: Enforce file size limits and module splitting patterns across backend and frontend
+alwaysApply: true
+---
+
+# No God Files — File Size & Splitting Standards
+
+- **Target limit**: Keep files under **400 lines** (hard ceiling **500 lines** for new files).
+- **Backend routers**: Max ~15–20 endpoints per router file. Split large portal/domain routers into a package (`router_name/__init__.py` aggregating sub-routers).
+- **Backend services**: One cohesive domain responsibility per file. Extract calculators, validators, or workflow helpers into dedicated modules.
+- **Backend permissions/models**: Group by domain inside a package and re-export via `__init__.py` to keep imports stable.
+- **Frontend pages**: Keep `page.tsx` thin; extract modals, tables, tabs, and forms into colocated `_components/` folders.
+- **Frontend services**: Group by domain; split calculators/formatters from API transport methods.

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { ToastProvider } from "@/components/ui/toast";
 import { RoleSwitcher } from "@/components/navigation/role-switcher";
 import {

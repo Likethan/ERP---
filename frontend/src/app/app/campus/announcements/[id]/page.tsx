@@ -4,7 +4,7 @@ import React, { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { campusService } from "@/services/campus.service";
 import { AnnouncementItem } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   FileText,
   Calendar,

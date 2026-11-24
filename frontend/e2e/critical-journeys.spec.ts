@@ -22,9 +22,14 @@ test.describe("CampusOS Core Journeys — Identity & Authentication", () => {
   }) => {
     await page.goto("/login");
 
+    // Select Administrator Portal
+    await page
+      .getByRole("button", { name: "Select Administrator Portal" })
+      .click();
+
     // 1. Verify Login Form Accessibility & Structure
     const emailInput = page.locator(
-      'input[type="email"], input[name="email"], input[placeholder*="email" i]',
+      'input[name="identifier"], input[type="email"], input[name="email"], input[placeholder*="email" i]',
     );
     const passwordInput = page.locator(
       'input[type="password"], input[name="password"]',
@@ -45,12 +50,12 @@ test.describe("CampusOS Core Journeys — Identity & Authentication", () => {
       '[role="alert"], .text-red-500, .error-message',
     );
     await expect(
-      errorMessage.or(page.locator("text=Invalid credentials")),
+      errorMessage.or(page.locator("text=Invalid")),
     ).toBeVisible({ timeout: 5000 });
 
     // 3. Test Authorized Administrator Login
-    await emailInput.fill("admin@campusos.test");
-    await passwordInput.fill("AdminPass123!");
+    await emailInput.fill("registrar@campusos.edu");
+    await passwordInput.fill("SuperSecret123!");
     await submitBtn.click();
 
     // Expect navigation to Dashboard
@@ -81,8 +86,14 @@ test.describe("CampusOS Core Journeys — Identity & Authentication", () => {
 
 test.describe("CampusOS Core Journeys — Academic & Campus Workflows", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate with synthetic mock auth headers/storage if available
-    await page.goto("/app/dashboard");
+    await page.goto("/login");
+    await page
+      .getByRole("button", { name: "Select Administrator Portal" })
+      .click();
+    await page.locator('input[name="identifier"]').fill("registrar@campusos.edu");
+    await page.locator('input[name="password"]').fill("SuperSecret123!");
+    await page.locator('button[type="submit"]').click();
+    await page.waitForURL(/\/app/, { timeout: 10000 });
   });
 
   test("Journey 03: Institution Dashboard & Key Metric Summaries", async ({

@@ -10,7 +10,7 @@ import {
   AnnouncementItem,
   ClubRole,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   Building2,
   Users,

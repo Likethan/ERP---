@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import type {
   RecordCategoryModel,
   RecordDispositionCertificateModel,

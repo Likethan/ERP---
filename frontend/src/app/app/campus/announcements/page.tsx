@@ -9,7 +9,7 @@ import {
   AnnouncementStatus,
   EventAudienceTarget,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import { AudienceBuilder } from "@/components/campus/audience-builder";
 import {

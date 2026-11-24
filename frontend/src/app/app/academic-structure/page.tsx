@@ -10,7 +10,7 @@ import type {
   Program,
 } from "@campusos/types";
 import { organizationService } from "@/services/organization.service";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 
 type ActiveTab = "years" | "semesters" | "regulations" | "batches" | "sections";
 

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider } from "@/contexts/auth-context";
 
 export default function RootLayout({
   children,

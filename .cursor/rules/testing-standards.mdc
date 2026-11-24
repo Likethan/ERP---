@@ -1,0 +1,16 @@
+---
+description: Testing conventions for backend pytest and frontend unit/Playwright E2E tests
+globs: **/*.test.{ts,tsx},**/tests/**/*.py,**/e2e/**/*.ts
+alwaysApply: false
+---
+
+# Testing Standards
+
+- **Backend (`pytest`)**:
+  - Place tests in `backend/tests/` using `pytest-asyncio`.
+  - Always test tenant isolation (cross-tenant access must fail) and RBAC/PBAC permission boundaries.
+- **Frontend Unit/Integration (`src/__tests__/`)**:
+  - Test pure calculators, service contracts, and auth/portal resolution logic without brittle DOM snapshots.
+- **Frontend E2E (`frontend/e2e/`)**:
+  - Use Playwright (`playwright.config.ts`) for critical user journeys across desktop and mobile viewports.
+- **Zero-regression rule**: Never relax assertions or skip tests to make a suite pass.

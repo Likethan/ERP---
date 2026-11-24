@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { campusService } from "@/services/campus.service";
 import { CampusEventItem, EventCategory, EventStatus } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { DataGrid, ColumnDef } from "@/components/data-grid/data-grid";
 import {
   PartyPopper,

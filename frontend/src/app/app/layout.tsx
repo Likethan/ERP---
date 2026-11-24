@@ -8,7 +8,7 @@ import { Topbar } from "@/components/navigation/topbar";
 import { ToastProvider } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, ArrowLeft } from "lucide-react";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function AuthenticatedLayout({
   children,

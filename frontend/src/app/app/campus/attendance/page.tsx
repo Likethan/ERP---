@@ -9,7 +9,7 @@ import {
   EventAttendanceStatus,
   EventAttendanceSummary,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { calculateEventAttendanceRate } from "@/services/campus-calculator";
 import {
   CheckSquare,

@@ -1,0 +1,12 @@
+---
+description: Reusable UI component composition, Tailwind CSS, and accessibility standards
+globs: frontend/src/components/**/*.tsx
+alwaysApply: false
+---
+
+# UI Component Standards
+
+- **Primitives**: Reuse components from `@/components/ui` (`Button`, `Badge`, `Card`, `Dialog`, `Input`, `Select`, `Table`, `Tabs`, `Toast`, `StatCard`, `DataGrid`). Do not reinvent buttons, modals, or tables.
+- **Styling**: Use Tailwind CSS utility classes and `cn()` from `@/lib/utils` (`clsx` + `tailwind-merge`).
+- **Accessibility**: Include `aria-label` on icon-only buttons, semantic HTML (`<button>`, `<nav>`, `<main>`), and keyboard-accessible dialogs.
+- **Global vs Local**: Only put truly cross-domain reusable components in `src/components/`. Domain-specific widgets belong in `_components/` alongside their route.

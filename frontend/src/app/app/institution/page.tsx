@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import type { Campus, Institution } from "@campusos/types";
 import { organizationService } from "@/services/organization.service";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function InstitutionPage() {
   const { hasPermission } = useAuth();

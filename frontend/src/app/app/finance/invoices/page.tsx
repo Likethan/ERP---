@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { financeService } from "@/services/finance.service";
 import { formatMoney } from "@/services/financial-calculator";
 import { Invoice, InvoiceStatus, FeeStructure } from "@/types/finance";

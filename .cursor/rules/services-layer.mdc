@@ -1,0 +1,12 @@
+---
+description: Frontend API service layer patterns and error handling
+globs: frontend/src/services/**/*.ts
+alwaysApply: false
+---
+
+# Frontend Services Layer
+
+- **HTTP Client**: Always use `apiFetch` and `ApiClientError` from `@/lib/api-client` (handles base URL, credentials, timeouts, rate limits, and GET deduplication).
+- **Single source per domain**: Keep one canonical service file per domain (or `<domain>/index.ts` subfolder for large domains). Avoid duplicate singular/plural service files.
+- **Pure calculators**: Keep pure business/grade/fee calculation helpers separate from network calls (`*-calculator.ts`) so they are unit-testable without mocking `fetch`.
+- **Typing**: Explicitly type request payloads and response types; re-export from `src/services/index.ts`.

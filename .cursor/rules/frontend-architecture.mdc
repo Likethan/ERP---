@@ -1,0 +1,13 @@
+---
+description: Next.js 15 App Router, React 19, and TypeScript conventions
+globs: frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend Architecture (Next.js 15 + React 19)
+
+- **Server vs Client Components**: Default to Server Components for layouts and static shells. Only add `"use client"` when using hooks, event handlers, or browser APIs.
+- **Colocation**: Place page-specific subcomponents in `_components/` next to `page.tsx` rather than polluting global `src/components/`.
+- **Hooks & Contexts**: Put reusable hooks in `src/hooks/` and React contexts in `src/contexts/` (not `src/lib/`).
+- **Route resilience**: Add `loading.tsx` and `error.tsx` in route groups for smooth navigation and error boundaries.
+- **TypeScript**: Strict mode enabled; avoid `any`. Prefer shared types from `@campusos/types` or `src/types/`.

@@ -8,7 +8,7 @@ import {
   NotificationCategory,
   NotificationStatus,
 } from "@/types/campus";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   Bell,
   CheckCheck,

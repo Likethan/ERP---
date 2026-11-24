@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { attendanceService } from "@/services/attendance.service";
 import { AttendanceSummary, LowAttendanceAlertItem } from "@/types/attendance";
 import {

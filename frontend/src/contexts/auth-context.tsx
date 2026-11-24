@@ -10,8 +10,8 @@ import React, {
 import type { AuthenticatedUser } from "@campusos/types";
 import { DEMO_PERSONAS } from "@/mocks/auth.mock";
 import { DemoPersona } from "@/types/domain";
-import { PORTALS } from "./portals";
-import { apiFetch, ApiClientError } from "./api-client";
+import { PORTALS } from "@/lib/portals";
+import { apiFetch, ApiClientError } from "@/lib/api-client";
 
 interface AuthContextValue {
   user: AuthenticatedUser | null;

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 import { examinationsService } from "@/services/examinations.service";
 import { ExamEligibility, EligibilityStatus } from "@/types/examinations";
 import { DataGrid } from "@/components/data-grid/data-grid";
