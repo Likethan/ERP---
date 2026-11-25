@@ -24,7 +24,8 @@ export default function WorkspaceError({
           Unable to load workspace module
         </h2>
         <p className="mt-2 text-sm text-slate-500">
-          {error.message || "An unexpected error occurred while loading this module."}
+          {error.message ||
+            "An unexpected error occurred while loading this module."}
         </p>
         <div className="mt-6">
           <button

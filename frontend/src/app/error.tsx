@@ -25,7 +25,8 @@ export default function RootError({
           Something went wrong
         </h2>
         <p className="mt-2 text-sm text-slate-500">
-          {error.message || "An unexpected error occurred while rendering this page."}
+          {error.message ||
+            "An unexpected error occurred while rendering this page."}
         </p>
         <div className="mt-6 flex items-center justify-center gap-3">
           <button

@@ -407,7 +407,9 @@ class HodService {
   }
 
   async getStudentById(id: string): Promise<StudentComprehensiveDetail | null> {
-    const res = await apiFetch<StudentComprehensiveDetail>(`/api/v1/hod/students/${id}`);
+    const res = await apiFetch<StudentComprehensiveDetail>(
+      `/api/v1/hod/students/${id}`,
+    );
     return res.data;
   }
 

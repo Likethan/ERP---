@@ -29,7 +29,6 @@ interface SidebarProps {
   onCloseMobile?: () => void;
 }
 
-
 export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();

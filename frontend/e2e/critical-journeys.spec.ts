@@ -49,9 +49,9 @@ test.describe("CampusOS Core Journeys — Identity & Authentication", () => {
     const errorMessage = page.locator(
       '[role="alert"], .text-red-500, .error-message',
     );
-    await expect(
-      errorMessage.or(page.locator("text=Invalid")),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(errorMessage.or(page.locator("text=Invalid"))).toBeVisible({
+      timeout: 5000,
+    });
 
     // 3. Test Authorized Administrator Login
     await emailInput.fill("registrar@campusos.edu");
@@ -90,7 +90,9 @@ test.describe("CampusOS Core Journeys — Academic & Campus Workflows", () => {
     await page
       .getByRole("button", { name: "Select Administrator Portal" })
       .click();
-    await page.locator('input[name="identifier"]').fill("registrar@campusos.edu");
+    await page
+      .locator('input[name="identifier"]')
+      .fill("registrar@campusos.edu");
     await page.locator('input[name="password"]').fill("SuperSecret123!");
     await page.locator('button[type="submit"]').click();
     await page.waitForURL(/\/app/, { timeout: 10000 });
